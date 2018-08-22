@@ -8,6 +8,8 @@ SHRDLU is an adventure game based around natural language parsing (inspired by W
 
 Source code and a playable demo will be uploaded soon, but a demonstration video of Demo v1.1 can be found here: https://youtu.be/8FNBTs2yv4s
 
+*However, I am looking for betatesters, so, if anyone wants to give the game a try and give me some feedback, send me an email!*
+
 ## Notes
 
 - The game has been coded using <a href="http://www.typescriptlang.org">TypeScript</a>, which is basically an typed version of JavaScript, which is much more natural to code in. TypeScript compiles to JavaScript, and thus the game can run in any web browser that supports JavaScript. Although in principle any modern browser should do, I usually test using Safari and Chrome. The game is built in plain TypeScript, and no additional libraries have been used. 
