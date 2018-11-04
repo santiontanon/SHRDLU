@@ -12,6 +12,8 @@ Playable demo will be uploaded soon (I am waiting until after AIIDE, to get more
 
 ## Notes
 
+- If you are interested on how the AI in the game works, there is a PDF explaining it inside of the misc folder: https://github.com/santiontanon/SHRDLU/blob/master/misc/SHRDLU.pdf
+
 - The game has been coded using <a href="http://www.typescriptlang.org">TypeScript</a>, which is basically an typed version of JavaScript, which is much more natural to code in. TypeScript compiles to JavaScript, and thus the game can run in any web browser that supports JavaScript. Although in principle any modern browser should do, I usually test using Safari and Chrome. The game is built in plain TypeScript, and no additional libraries have been used. 
 
 - Concerning the visual style, I chose a 256x192 screen resolution with a 16 color palette. These were the specs of the <a href="https://en.wikipedia.org/wiki/MSX">MSX</a> computer, which was the 8bit computer with which I learned how to code when I was a kid.
