@@ -6,7 +6,7 @@
 
 SHRDLU is an adventure game based around natural language parsing (inspired by Winograd's <a href="https://en.wikipedia.org/wiki/SHRDLU">SHRDLU</a>). It is an experiment, so, I am not expecting the resulting game to be an amazing game, but just an exploration of the posibilities of this type of AI system in a game.
 
-Playable demo will be uploaded soon, but a demonstration video of Demo v1.1 can be found here: https://youtu.be/8FNBTs2yv4s
+Playable demo will be uploaded soon (I am waiting until after AIIDE, to get more people to test it and make sure it's robust enough!), but a demonstration video of Demo v1.1 can be found here: https://youtu.be/8FNBTs2yv4s
 
 *However, I am looking for betatesters, so, if anyone wants to give the game a try and give me some feedback, send me an email!*
 
