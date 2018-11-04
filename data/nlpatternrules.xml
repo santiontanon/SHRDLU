@@ -1,0 +1,2448 @@
+<!--
+
+Rules to parse natural language performatives.
+
+The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
+
+-->
+
+<NLPatternRules defaultPriority="100">
+	<!-- Patterns for performative "perf.callattention" -->
+	<NLPattern name="callattention-1"
+			   head="perf.callattention(LISTENER)"
+			   body="nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER) ('!'|'?')*"
+			   priority="50"/>
+
+	<!-- Patterns for performative "perf.greet" -->
+	<NLPattern name="greet-1"
+			   head="perf.greet(LISTENER)"
+			   body="('hello'|['oh'] 'hi'|['oh'] 'hey'|'yo')
+			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 ('!'|'?')*"/>
+
+	<!-- Patterns for performative "perf.greet" -->
+	<NLPattern name="greet-2"
+			   head="perf.greet(LISTENER)"
+			   body="nounPhrase(X2, N2, P2, C2) [','] ('hello'|'hi'|'hey')
+			   		 #derefFromContext(C2, LISTENER)
+			   		 ('!'|'?')*"/>
+
+	<!-- Patterns for performative "perf.farewell" -->
+	<NLPattern name="farewell-1"
+			   head="perf.farewell(LISTENER)"
+			   body="('farewell'|
+			          'see' 'you' ['later']|
+			          'talk' 'to' 'you' 'later'|
+			          'have' 'a' 'good' 'one'|
+			          'goodbye'|
+			          ['good'] 'bye'|
+			          'bye' 'bye'|
+			          'so' 'long')
+			         [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			         ('!'|'?')*"
+			   priority="200"/>
+
+	<!-- Patterns for performative "perf.thankyou" -->
+	<NLPattern name="thankyou-1"
+			   head="perf.thankyou(LISTENER)"
+			   body="('thank' 'you'|'thanks')
+			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 '!'*"
+			   priority="200"/>
+
+	<!-- Patterns for performative "perf.youarewelcome" -->
+	<NLPattern name="youarewelcome-1"
+			   head="perf.youarewelcome(LISTENER)"
+			   body="('you' verb('verb.be'[symbol], N, [second-person], [present-tense]) 'welcome'|'think' 'nothing' 'of' 'it')
+			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 '!'*"
+			   priority="200"/>
+
+	<!-- Patterns for performative "perf.ack.ok" -->
+	<NLPattern name="ok-1"
+			   head="perf.ack.ok(LISTENER)"
+			   body="('ok'|'okay'|'got' 'it'|'i' 'see'|'obviously'|'cool'|'coolio'|'fine')
+			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 '!'*"
+			   priority="200"/>
+
+	<!-- Patterns for performative "perf.q.howareyou" -->
+	<NLPattern name="howareyou-1"
+			   head="perf.q.howareyou(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('how' 'are' 'you'|'okay'|'how' 'are' 'you' 'doing'|'how' 'do' 'you' 'do')
+			   		 ('!'|'?')*"/>
+
+	<!-- Patterns for performative "perf.sentiment" -->
+	<NLPattern name="sentiment-good"
+			   head="perf.sentiment.good(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('good' | 'awesome' | 'great' | 'fantastic') ('!'|'?')*"/>
+
+	<NLPattern name="sentiment-bad"
+			   head="perf.sentiment.bad(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 (('ow'|'oww'|'owww') ('.')* | 'i' 'am'  'sorry' | 'too' 'bad' | 'that' ('is'|'\'s') 'bad') ('!'|'?')*"/>
+
+	<NLPattern name="sentiment-surprise"
+			   head="perf.sentiment.surprise(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('lol' | 'what' 'the' ('fuck'|'hell'|'heck') | 'wtf') ('!'|'?')*"/>
+
+	<!-- Patterns for performative "perf.inform" -->
+	<!-- rules for variants of "my name is david" -->
+	<NLPattern name="inform-myname1"
+			   head="perf.inform(LISTENER, name(SPEAKER,NAME))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'i' verb('verb.be'[symbol], [singular], [first-person], T) ['called'] proper-noun(NAME, [singular])"
+			   priority="200"/>
+	<NLPattern name="inform-myname2"
+			   head="perf.inform(LISTENER, name(SPEAKER,NAME))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('you' 'can'|'people') 'call' 'me' proper-noun(NAME, [singular])"/>
+
+	<!-- e.g.: "the crate is closed" -->
+	<NLPattern name="inform-X-is-adj-noun"
+			   head="perf.inform(LISTENER, #cons(X2,SUBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) #derefFromContext(C, SUBJECT)"/>
+	<NLPattern name="inform-X-is-not-adj-noun"
+			   head="perf.inform(LISTENER, #not(#cons(X2,SUBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) #derefFromContext(C, SUBJECT)"/>
+
+	<NLPattern name="inform-X-is-adj-property-with-value"
+			   head="perf.inform(LISTENER, #cons(X2:[property-with-value],SUBJECT,X2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
+	<NLPattern name="inform-X-is-not-adj"
+			   head="perf.inform(LISTENER, #not(#cons(X2:[property-with-value],SUBJECT,X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
+
+	<NLPattern name="inform-X-is-propernoun"
+			   head="perf.inform(LISTENER, QUERY)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 properNounCompound(X2, N) #derefQuery(C, X2, QUERY)"/>
+
+	<!-- e.g.: "all chairs are small" -->
+	<NLPattern head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #cons(X2, V:[#id])))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)) #derefUniversal(C, V, LEFTSIDE)"/>
+	<NLPattern head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2, V:[#id]))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) #derefUniversal(C, V, LEFTSIDE)"/>
+
+	<NLPattern head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #cons(X2:[property-with-value],V:[#id],X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #derefUniversal(C, V, LEFTSIDE)"
+			   priority="200"/>
+	<NLPattern head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2:[property-with-value],V:[#id],X2))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #derefUniversal(C, V, LEFTSIDE)"
+			   priority="200"/>
+
+
+	<!-- e.g.: "socrates was a man" -->
+	<NLPattern head="perf.inform(LISTENER, #list(LEFTSIDE, #cons(X2, V:[#id])))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) #derefHypothetical(C, V, LEFTSIDE)"/>
+	<NLPattern head="perf.inform(LISTENER, #list(LEFTSIDE, #not(#cons(X2, V:[#id]))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) #derefHypothetical(C, V, LEFTSIDE)"/>
+
+	<NLPattern head="perf.inform(LISTENER, #list(LEFTSIDE, #cons(X2:[property-with-value],V:[#id],X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #derefHypothetical(C, V, LEFTSIDE)"
+			   priority="200"/>
+	<NLPattern head="perf.inform(LISTENER, #list(LEFTSIDE, #not(#cons(X2:[property-with-value],V:[#id],X2))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #derefHypothetical(C, V, LEFTSIDE)"
+			   priority="200"/>
+
+	<!-- e.g.: "the ship is mine" -->
+	<NLPattern head="perf.inform(LISTENER, relation.owns(SPEAKER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 possessive-pronoun(PP2,[singular],G2,[first-person])
+			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern head="perf.inform(LISTENER, relation.owns(LISTENER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 possessive-pronoun(PP2,[singular],G2,[second-person])
+			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern head="perf.inform(LISTENER, relation.owns(OWNER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X2, [singular], P, C2) '\'s' 
+					 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C2, OWNER)"/>
+
+	<!-- e.g.: "I am in the kitchen" -->
+	<NLPattern head="perf.inform(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern head="perf.inform(LISTENER, #not(#cons(PREPOSITION, SUBJECT, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 'not' preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+
+	<!-- e.g.: "I have the white key" -->
+	<NLPattern name="inform-verb-context"
+			   head="perf.inform(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) [('will'|'shall')] verb(VERB, N, P, T) 
+			   		 nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern name="inform-donot-verb-context"
+			   head="perf.inform(LISTENER, #not(#cons(VERB, SUBJECT, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) ('will'|'shall'|verb('verb.do'[symbol], N, P, [present-tense])) 'not' verb(VERB, N3, P3, [infinitive-tense])
+			   		 nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern name="inform-verb-hypothetical"
+			   head="perf.inform(LISTENER, #and(#cons(VERB, SUBJECT, HV), OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
+			   		 nounPhrase(X2, N2, P2, C2) 
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefHypothetical(C2, HV, OBJECT)"/>	
+
+    <!-- e.g.: "the color of my key is white" -->
+	<NLPattern name="inform-property-with-value"
+			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         'the' noun(X2, [singular]) 'of'
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X3)
+			   		 #derefFromContext(C, OBJECT)"/>
+
+	<NLPattern name="inform-haveable-property-with-value"
+			   head="perf.inform(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, OBJECT2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         nounPhrase(X, N, P, C)
+    		         verb('verb.have'[symbol], N, P, T)
+    		         preposition(X3) 
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C2, OBJECT2)"/>
+
+	<NLPattern name="inform-role"
+			   head="perf.inform(LISTENER, role(OBJECT, OBJECT2, ROLE))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         nounPhrase(X, N:[singular], P, C)
+    		         verb('verb.be'[symbol], N, P, T)
+    		         indefinite-article(ART, [singular]) noun(ROLE, N)
+    		         preposition('space.at'[space.at]) 
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C3, OBJECT2)"
+			   priority="200"/>
+
+	<!-- Inform performatives for properties with value, without actual values -->
+	<NLPattern head="perf.inform(LISTENER, #cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         ['i' 'think']
+    		         nounPhrase(X, N:[singular], P, C)
+    		         verb(VERB, N, P, T)
+    		         possessive-determiner('determiner.my'[symbol], N)
+    		         noun(PROP, N2)
+    		         #derefFromContext(C, SPEAKER)"/>
+	<NLPattern head="perf.inform(LISTENER, #and(PRED:#cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)), #cons(TIMEADV:[time], PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         ['i' 'think']
+    		         nounPhrase(X, N:[singular], P, C)
+    		         verb(VERB, N, P, T)
+    		         possessive-determiner('determiner.my'[symbol], N)
+    		         noun(PROP, N2)
+    		         [adverb(TIMEADV)]
+    		         #derefFromContext(C, SPEAKER)"/>
+
+	<!-- Patterns for performative "perf.inform.answer" -->
+	<NLPattern name="answer-yes"
+			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure') ('!'|'?')*"/>
+	<NLPattern name="answer-yes2"
+			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ['sure' '!'* [',']] ('i' 'will') ('!'|'?')*"/>
+	<NLPattern name="answer-yes3"
+			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'i' 'think' 'so' ('!'|'?')*"/>
+	<NLPattern name="answer-yes-complex"
+			   head="perf.inform.answer(LISTENER, 'yes'[symbol], P)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure') [','] perf.inform(LISTENER, P) ('!'|'?')*"/>
+	<NLPattern name="answer-no"
+			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('no' ['way'] | 'nope' | 'nah' | 'absolutely' 'not' |
+			   		  'not' 'really') ('!'|'?')*"/>
+	<NLPattern name="answer-no2"
+			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'i' ('do'|'will') 'not' ('!'|'?')*"/>
+	<NLPattern name="answer-no3"
+			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'i' 'do' 'not' 'think' 'so' ('!'|'?')*"/>
+	<NLPattern name="answer-unknown"
+			   head="perf.inform.answer(LISTENER, 'unknown'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 (['i'] 'do' 'not' ('know'|'remember') |
+			          ['i' 'am'] 'not' 'sure') ('!'|'?')*"
+			   priority="200"/>
+			   
+	<NLPattern head="perf.inform.answer(LISTENER, C)"
+			   body="nounPhrase(X, N, P, C) ('!'|'?')*"/>
+	<NLPattern head="perf.inform.answer(LISTENER, proper-noun(X, N))"
+			   body="properNounCompound(X, N) ('!'|'?')*"/>
+
+
+	<!-- Patterns for performative "perf.q.predicate" -->
+	<NLPattern name="perf.q.predicate-1-present"
+			   head="perf.q.predicate(LISTENER, #cons(X2,SUBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) ['not'] nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern name="perf.q.predicate-1-past"
+			   head="perf.q.predicate(LISTENER, #and(PRED:#cons(X2,SUBJECT), time.past(PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern name="perf.q.predicate-1-timeadverb"
+			   head="perf.q.predicate(LISTENER, #and(PRED:#cons(X2,SUBJECT), #cons(TIMEADV:[time.past], PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) 
+			   		 adverb(TIMEADV) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #or(#not(LEFTSIDE), #cons(X2, V:[#id])))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
+			   		 #derefUniversal(C, V, LEFTSIDE)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(LEFTSIDE, #cons(X2, V:[#id])))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
+			   		 #derefHypothetical(C, V, LEFTSIDE)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(LEFTSIDE, #and(PRED:#cons(X2, V:[#id]), time.past(PRED))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) 
+			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
+			   		 #derefHypothetical(C, V, LEFTSIDE)"/>
+
+	<NLPattern head="perf.q.predicate(LISTENER, #cons(X2:[property-with-value], SUBJECT, X2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 ['not'] adjective(X2) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #or(#not(LEFTSIDE), #cons(X2:[property-with-value],V:[#id],X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 ['not'] adjective(X2) ('!'|'?')*
+			   		 #derefUniversal(C, V, LEFTSIDE)"
+			   priority="200"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(LEFTSIDE, #cons(X2:[property-with-value],V:[#id],X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 ['not'] adjective(X2) ('!'|'?')*
+			   		 #derefHypothetical(C, V, LEFTSIDE)"
+			   priority="200"/>
+
+	<NLPattern head="perf.q.predicate(LISTENER, name(SUBJECT,X2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 properNounCompound(X2, N) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+
+	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(SPEAKER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C)  
+			   		 possessive-pronoun(PP2,[singular],G2,[first-person]) ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(LISTENER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 possessive-pronoun(PP2,[singular],G2,[second-person]) ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(OWNER, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C)  
+			   		 nounPhrase(X2, [singular], P, C2) '\'s' ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C2, OWNER)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C)  
+			   		 ['not'] preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"
+			   priority="150"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(PREPOSITION, SUBJECT, OBJECT), time.past(PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C)  
+			   		 ['not'] preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+			   		 ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"
+			   priority="150"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(PREPOSITION, SUBJECT, OBJECT), time.past(PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.have'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C)  
+			   		 ['not'] 'been'
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+			   		 ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(PREPOSITION, SUBJECT, OBJECT), #cons(ADVTIME:[time], PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C)  
+			   		 ['not'] preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+			   		 adverb(ADVTIME) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(PREPOSITION, SUBJECT, OBJECT), #cons(ADVTIME:[time],PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.have'[symbol], N, P, T) nounPhrase(X, N, P, C)  
+			   		 ['not'] 'been'
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+			   		 adverb(ADVTIME) 
+			   		 ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>			   		 
+	<NLPattern name="predicate-is-there"
+			   head="perf.q.predicate(LISTENER, PREDICATE)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, T) ['there'] nounPhrase(X, N, P, C)  
+			   		 ('!'|'?')*
+					 #derefQuery(C, V, PREDICATE)"/>			   		 
+	<NLPattern name="predicate-is-there-uncountable"
+			   head="perf.q.predicate(LISTENER, PREDICATE)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], [singular], P, T) ['there'] nounPhrase(X, [uncountable], P, C)  
+			   		 ('!'|'?')*
+					 #derefQuery(C, V, PREDICATE)"/>			   		 
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #cons(PREPOSITION, V, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT)
+					 #derefQuery(C, V, PREDICATE)"
+			   priority="150"/>
+	<NLPattern head="perf.q.predicate(LISTENER, PREDICATE)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
+			   		 adverb(ADVERB) ('!'|'?')*
+					 #derefQuery(#and(C, adverb(ADVERB)), V, PREDICATE)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #cons(PREPOSITION, V, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
+			   		 adverb(ADVERB) ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT)
+					 #derefQuery(#and(C, adverb(ADVERB)), V, PREDICATE)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #and(#cons(PREPOSITION1, V, OBJECT),#cons(PREPOSITION2, V, OBJECT2))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there']
+			   		 nounPhrase(X, N, P, C)
+			   		 preposition(PREPOSITION1) nounPhrase(X2, [singular], P2, C2)
+			   		 preposition(PREPOSITION2) nounPhrase(X3, [singular], P3, C3) ('!'|'?')*
+			   		 #derefQuery(C, V, PREDICATE)
+			   		 #derefFromContext(C2, OBJECT)
+			   		 #derefFromContext(C3, OBJECT2)"
+			   priority="200"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #not(=(V, OBJECT))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] 'no' nounPhrase(X, N, P, C)
+			   		 preposition('~='[~=]) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT)
+					 #derefQuery(C, V, PREDICATE)"
+			   />
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #not(=(V, OBJECT))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'there' verb('verb.be'[symbol], NV, P, TV) 'no' nounPhrase(X, N, P, C)
+			   		 preposition('~='[~=]) nounPhrase(X2, [singular], P2, C2) '?' ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT)
+					 #derefQuery(C, V, PREDICATE)"
+			   />
+	<NLPattern name="perf.q.predicate-haveable-property-with-value"
+			   head="perf.q.predicate(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, OBJECT2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         verb('verb.do'[symbol], N, P, T)
+    		         nounPhrase(X, N, P, C)
+    		         'have'
+    		         preposition(X3) 
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C2, OBJECT2)"/>   
+	<NLPattern name="predicate-is-there-event"
+			   head="perf.q.predicate(LISTENER, #cons(ADJ, VARIABLE))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], NV, P, T) 'there' ('something'|'anything')
+			   		 adjective(ADJ) [('happening'|'going' 'on')]
+			   		 ('!'|'?')*"/>			   		 
+
+	<!-- e.g.: "can I go to the kitchen?" -->
+	<NLPattern name="perf.q.predicate-can"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.can'[symbol], N, P, T) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C3, OBJECT)"/>
+	<NLPattern name="perf.q.predicate-can-propernoun"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.can'[symbol], N, P, T) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 properNounCompound(X3, N3) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(proper-noun(X3, N3), OBJECT)"
+			   priority="500"/>
+
+	<!-- e.g.: "Do I have the white key?" -->
+	<NLPattern head="perf.q.predicate(LISTENER, #cons(VERB:'verb.have'[symbol], SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, T) 
+			   		 (nounPhrase(X2, [singular], P2, C2)|nounPhrase(X2, [uncountable], P2, C2)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"
+		   	   priority="200"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(#cons(VERB:'verb.have'[symbol], SUBJECT, QUERY_V), QUERY_EXP))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, T) 
+			   		 (nounPhrase(X2, [singular], P2, C2)|nounPhrase(X2, [uncountable], P2, C2)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefQuery(C2, QUERY_V, QUERY_EXP)"
+			   priority="200"/>
+
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(VERB, SUBJECT, OBJECT), time.past(PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, T) 
+			   		 (nounPhrase(X2, [singular], P2, C2)|nounPhrase(X2, [uncountable], P2, C2)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+
+	<!-- predicates involving actions with time constraints -->
+	<NLPattern head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [gerund-tense]) 
+			   		  ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PRED:#cons(VERB, SUBJECT), time.past(PRED)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [infinitive-tense]) 
+			   		  ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern head="perf.q.predicate(LISTENER, #and(ACTION:#cons(VERB, SUBJECT), #cons(TIMEADVERB:[time.past], ACTION)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [past-tense]) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 adverb(TIMEADVERB)
+			   		  ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)"/>
+
+	<NLPattern name="perf.q.predicate-only-x-prep-y"
+			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(PREP, QUERY_V, OBJECT), #cons(NOUN, QUERY_V))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 'the' 'only' 
+			   		 noun(NOUN, N2) preposition(PREP) 
+			   		 nounPhrase(X3, N3, P3, C3)  ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C3, OBJECT)"/>
+	<NLPattern name="perf.q.predicate-any-X-LOC"
+			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), CONSTRAINT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) 
+			   		 (preposition('space.at'[space.at]) nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LOCATION) | 
+			   		  adverb(X3:[space.location]) #derefFromContext(noun(X3,[singular]), LOCATION))
+			   		 ('!'|'?')*
+			   		 #derefQuery(C, QUERY_VARIABLE, CONSTRAINT)"
+			   priority="200"/>
+	<NLPattern name="perf.q.predicate-any-X-LOC-other-than"
+			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(#not(=(QUERY_VARIABLE, EXCEPTION)), CONSTRAINT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) 
+			   		 preposition('~='[~=]) nounPhrase(X3, N3, P3, C3)
+			   		 (preposition('space.at'[space.at]) nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LOCATION) | 
+			   		  adverb(X4:[space.location]) #derefFromContext(noun(X4,[singular]), LOCATION))
+			   		 ('!'|'?')*
+			   		 #derefQuery(C, QUERY_VARIABLE, CONSTRAINT)
+			   		 #derefFromContext(C3, EXCEPTION)"
+			   priority="250"/>
+	<NLPattern name="perf.q.predicate-any-X-LOC-other-than2"
+			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(#not(=(QUERY_VARIABLE, EXCEPTION)), CONSTRAINT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C) 
+			   		 (preposition('space.at'[space.at]) nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LOCATION) | 
+			   		  adverb(X4:[space.location]) #derefFromContext(noun(X4,[singular]), LOCATION))
+			   		 preposition('~='[~=]) nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C, QUERY_VARIABLE, CONSTRAINT)
+			   		 #derefFromContext(C3, EXCEPTION)"
+			   priority="250"/>
+	<NLPattern name="perf.q.predicate-someone-with-X"
+			   head="perf.q.predicate(LISTENER, #and(character(QV), #and(#not(=(QV,OBJECT)), #and(space.at(OBJECT, L), space.at(QV, L)))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) ['there'] 
+			   		 (indefinite-pronoun('pronoun.anyone'[symbol], N2, G2, P) | 
+			   		  indefinite-pronoun('pronoun.someone'[symbol], N2, G2, P)) ['there']
+			   		 'with'
+			   		 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT)"/>
+	<NLPattern name="perf.q.predicate-is-this-location"
+			   head="perf.q.predicate(LISTENER, space.at(SPEAKER, LOCATION))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'this'
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')*
+			   		 #derefFromContext(#and(adjective(X2, 'space.location'[space.location]), C2), LOCATION)"/>
+
+	<NLPattern name="perf.q.predicate-can-X-do-Y"
+			   head="perf.q.predicate(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X2, N, P, C) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)"
+			   priority="200"/>
+	<NLPattern name="perf.q.query-what-can-X-do"
+			   head="perf.q.query(LISTENER, QUERY_V, verb.can(OBJECT, QUERY_V))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 
+			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb('verb.do'[symbol], N2, P2, [infinitive-tense]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)"/>
+
+	<NLPattern head="perf.q.action(LISTENER, verb.see(SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, T) nounPhrase(X, N, P, C) verb('verb.see'[symbol], N, P, T) 
+			   		 (nounPhrase(X2, [singular], P2, C2)|nounPhrase(X2, [uncountable], P2, C2)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern head="perf.q.action(LISTENER, verb.see(SUBJECT, QUERY_V), QUERY_EXP)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, T) nounPhrase(X, N, P, C) verb('verb.see'[symbol], N, P, T) 
+			   		 (nounPhrase(X2, [singular], P2, C2)|nounPhrase(X2, [uncountable], P2, C2)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefQuery(C2, QUERY_V, QUERY_EXP)"/>			   		 
+
+    <!-- Patterns for performative "perf.q.whereis" (for where are objects or characters)-->
+    <NLPattern head="perf.q.whereis(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern head="perf.q.whereis(LISTENER, SUBJECT, LOCATION, QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(C, SUBJECT, QUERY)"/>
+
+    <NLPattern head="perf.q.whereis(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
+			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whereis(LISTENER, SUBJECT, LOCATION, QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
+			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(C, SUBJECT, QUERY)"
+    		   priority="250"/>
+    <NLPattern head="perf.q.whereis(LISTENER, SUBJECT, LOCATION, space.at(LOCATION, LOCATION_CONSTRAINT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X, N, P, C) 
+			   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X2, N2, P2, C2) 
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)
+    		   		 #derefFromContext(C2, LOCATION_CONSTRAINT)"/>
+    <NLPattern head="perf.q.whereto(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do'|'should') nounPhrase(X_S, N_S, P_S, C_S) 'go to'
+			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
+			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whereto(LISTENER, QUERY_VARIABLE, LOCATION, QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do'|'should') nounPhrase(X_S, N_S, P_S, C_S) 'go to'
+			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
+			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(C, QUERY_VARIABLE, QUERY)"
+    		   priority="250"/>
+
+    <NLPattern name="need-object-meaning-where"
+    		   head="perf.q.whereis(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 nounPhrase(X, N, P, C)
+			   		 #derefFromContext(C, SPEAKER)
+			   		 verb('verb.need'[symbol], N, P, [present-tense]) nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+    		   		 #derefFromContext(C2, SUBJECT)"
+    		   priority="200"/>
+
+
+    <!-- Special case rule for food / drinks -->
+    <NLPattern name="special-case-whereisfood1"
+    		   head="perf.q.whereis(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE, verb.find(SOMEONE, 'food'[food])))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
+			   		 [('the'|'some')] noun('food'[food],N) ('!'|'?')*"
+    		   priority="300"/>
+    <NLPattern name="special-case-whereisfood2"
+    		   head="perf.q.whereis(LISTENER, SOMEONE:'hypothetical-character'[#id], verb.can(SOMEONE, verb.find(SOMEONE, 'food'[food])))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N_S, P_S, [present-tense]) 'the' noun('food'[food],N) ('!'|'?')*"
+    		   priority="300"/>
+
+
+    <!-- Patterns for performative "perf.q.whereis" (for where can things be done) -->
+    <NLPattern head="perf.q.whereis(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE, #cons(VERB, SOMEONE, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do') subject-personal-pronoun(X1, N, G, P)
+			   		 verb(VERB, N_S, P_S, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		   		 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern head="perf.q.whereis(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE, #cons(VERB, SOMEONE, QUERY_VARIABLE:'hypothetical-object'[#id])), QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do') subject-personal-pronoun(X1, N, G, P)
+			   		 verb(VERB, N_S, P_S, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		   		 #derefQuery(C2, QUERY_VARIABLE, QUERY)"
+    		   priority="150"/>
+    <NLPattern head="perf.q.whereto(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE, #cons(VERB, SOMEONE, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do'|'should') subject-personal-pronoun(X1, N, G, P) 'go to'
+			   		 verb(VERB, N_S, P_S, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		   		 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern head="perf.q.whereto(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE, #cons(VERB, SOMEONE, QUERY_VARIABLE:'hypothetical-object'[#id])), QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('can'|'do'|'should') subject-personal-pronoun(X1, N, G, P) 'go to'
+			   		 verb(VERB, N_S, P_S, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		   		 #derefQuery(C2, QUERY_VARIABLE, QUERY)"
+    		   priority="150"/>
+
+    <NLPattern name="where-is-that-followup"
+    		   head="perf.q.whereis(LISTENER, SUBJECT)"
+    		   body="['and'] 'where' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-pronoun('far-demonstrative-pronoun'[symbol], N, G, P) ('!'|'?')* 
+    		   		 #derefFromContext(object-personal-pronoun('object-personal-pronoun.it'[symbol],N,[gender-neutral],P), SUBJECT)"/> 
+
+    <!-- Patterns for performative "perf.q.whereto", special rules for "where should I go?" or "what should I do?" that queries for goals -->
+    <NLPattern head="perf.q.whereto(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, #or(verb.can(SOMEONE, GOAL), #not(goal(SPEAKER, GOAL))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' ('do'|'should') subject-personal-pronoun(X1, N, G, P) ['go'] ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)"/>
+    <NLPattern head="perf.q.query(LISTENER, GOAL, goal(SPEAKER, GOAL))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' ('do'|'should') subject-personal-pronoun(X1, N, G, P) ['do'] ('!'|'?')* 
+			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)"/>
+
+    <!-- Patterns for performative "perf.q.query" (very specific ones that are not very generic) -->
+    <!-- 'how much do I weight?' -->
+    <NLPattern head="perf.q.query(LISTENER, V, weight(SUBJECT,V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' 'much' verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('weight'|'weigh') ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+    <!-- 'how heavy am I?' -->
+    <NLPattern head="perf.q.query(LISTENER, V, weight(SUBJECT,V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' 'heavy' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+    <!-- how tall am I? -->
+    <NLPattern head="perf.q.query(LISTENER, V, height(SUBJECT,V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' 'tall' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+    <!-- what are you doing? -->
+    <NLPattern name="what-are-you-doing"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #cons(V,SUBJECT,QUERY_VARIABLE))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb(V, N2, P2, [gerund-tense])
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="what-are-you-doing-adverb"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(ACTION:#cons(V,SUBJECT,QUERY_VARIABLE), #cons(TIMEADVERB:[time], ACTION)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb(V, N2, P2, [gerund-tense])
+			   		 adverb(TIMEADVERB)
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <!-- special case for age -->
+    <NLPattern name="how-old"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, property.age(SUBJECT, QUERY_VARIABLE))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' 'old' 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X, N, P, C)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+
+    <!-- what happened? -->
+    <NLPattern name="what-happens-present"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, verb.happen(WHO, QUERY_VARIABLE))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 
+			   		 (verb('verb.happen'[symbol], N, P, [present-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		  verb('verb.happen'[symbol], N, P, [gerund-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		  verb('verb.go'[symbol], N3, P3, [gerund-tense]) 'on') 
+			   		 ['to' nounPhrase(X2, N3, P3, C3) #derefFromContext(C3, WHO)]
+			   		 ('!'|'?')*"/>
+    <NLPattern name="what-happens-present-adj"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(verb.happen(WHO, QUERY_VARIABLE), #cons(ADJ, QUERY_VARIABLE)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 
+			   		 (verb('verb.happen'[symbol], N, P, [present-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		  verb('verb.happen'[symbol], N, P, [gerund-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		  verb('verb.go'[symbol], N3, P3, [gerund-tense]) 'on') 
+			   		 ['to' nounPhrase(X2, N3, P3, C3) #derefFromContext(C3, WHO)]
+			   		 'that' verb('verb.be'[symbol], N4, P4, [present-tense]) adjective(ADJ)
+			   		 ('!'|'?')*"/>
+    <NLPattern name="what-happens-past"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(VH:verb.happen(WHO, QUERY_VARIABLE), time.past(VH)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 
+			   		 (verb('verb.happen'[symbol], N, P, [past-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [past-tense])
+			   		  verb('verb.happen'[symbol], N, P, [gerund-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		  verb('verb.go'[symbol], N3, P3, [gerund-tense]) 'on')
+			   		 ['to' nounPhrase(X3, N3, P3, C3) #derefFromContext(C3, WHO)]
+			   		 ('!'|'?')*"/>
+    <NLPattern name="what-happens-past-adj"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(VH:verb.happen(WHO, QUERY_VARIABLE), #and(#cons(ADJ, QUERY_VARIABLE), time.past(VH))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 
+			   		 (verb('verb.happen'[symbol], N, P, [past-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [past-tense])
+			   		  verb('verb.happen'[symbol], N, P, [gerund-tense]) |
+			   		  verb('verb.be'[symbol], N2, P2, [past-tense])
+			   		  verb('verb.go'[symbol], N3, P3, [gerund-tense]) 'on')
+			   		 ['to' nounPhrase(X3, N3, P3, C3) #derefFromContext(C3, WHO)]
+			   		 'that' verb('verb.be'[symbol], N4, P4, T4) adjective(ADJ)
+			   		 ('!'|'?')*"/>
+    <NLPattern head="perf.q.query(LISTENER, QUERY_VARIABLE, verb.happen(WHO, QUERY_VARIABLE))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         verb('verb.do'[symbol], N, P, [past-tense])
+    		         ('something'|'anything')
+			   		 verb('verb.happen'[symbol], N2, P2, [infinitive-tense])
+			   		 ['to' nounPhrase(X3, N3, P3, C3) #derefFromContext(C3, WHO)]
+			   		 ('!'|'?')*"/>
+    <NLPattern name="whats-up"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, verb.happen(WHO, QUERY_VARIABLE))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('whats'|'what' verb('verb.be'[symbol], N, [third-person], [present-tense])) 'up' ('!'|'?')*"/>
+
+    <!-- Patterns for performative "perf.q.query" -->
+    <NLPattern head="perf.q.query(LISTENER, V, QUERY)"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(C, V, QUERY)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(V2,QUERY_ARG1,V))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.do'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X1, N, P, C1)
+			   		 verb(V2, N2, [no-person], [infinitive-tense]) 
+			   		  ('!'|'?')* 
+    		   		 #derefFromContext(C1, QUERY_ARG1)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(VERB, V, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb(VERB, N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(VERB, OBJECT, V)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, [gerund-tense]) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(VERB, OBJECT, V)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 indefinite-article(ART:'a'[symbol], N) 
+    		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(#and(#cons(ART, X, N), C), V, QUERY)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(PREPOSITION, V, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
+    		   		 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 adverb(ADVERB) ('!'|'?')* 
+    		   		 #derefQuery(adverb(ADVERB), V, QUERY)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, character(V))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 'there' ('!'|'?')*"
+    		   priority = "50"/>
+    <NLPattern name="whoelse1"
+    		   head="perf.q.query(LISTENER, V, #and(character(V), 
+    										   #and(#cons(VERB, V, OBJECT), 
+    										   #and(#not(=(V, SPEAKER)), 
+    										   	    #not(=(V, LISTENER))))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' 'else' verb(VERB, N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern name="whoelse2"
+    		   head="perf.q.query(LISTENER, V, #and(character(V), 
+    										   #and(QUERY,
+    										   #and(#not(=(V, SPEAKER)), 
+    										   	    #not(=(V, LISTENER))))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' 'else' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 indefinite-article(ART:'a'[symbol], N) 
+    		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(#and(#cons(ART, X, N), C), V, QUERY)"/>
+
+    <NLPattern name="whoelse3"
+    		   head="perf.q.query(LISTENER, V, #and(character(V), 
+    										   #and(#cons(PREPOSITION, V, OBJECT),
+    										   #and(#not(=(V, SPEAKER)), 
+    										   	    #not(=(V, LISTENER))))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' 'else' verb('verb.be'[symbol], N, P, [present-tense]) ['there']
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
+    		   		 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern name="whoelse4"
+    		   head="perf.q.query(LISTENER, V, #and(character(V), 
+    										   #and(QUERY,
+    										   #and(#not(=(V, SPEAKER)), 
+    										   	    #not(=(V, LISTENER))))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' 'else' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 adverb(ADVERB) ('!'|'?')* 
+    		   		 #derefQuery(adverb(ADVERB), V, QUERY)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), 
+    										   #and(#not(=(V, SPEAKER)), 
+    										   	    #not(=(V, LISTENER)))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' 'else' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 'there' ('!'|'?')*"
+    		   priority = "50"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #and(object(V), #cons(PREPOSITION, V, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
+    		   		 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #and(#cons(NOUN, V), #cons(PREPOSITION, V, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('what'|'which') noun(NOUN, NN) verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
+    		   		 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #and(object(V), QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 adverb(ADVERB) ('!'|'?')* 
+    		   		 #derefQuery(adverb(ADVERB), V, QUERY)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(PROPERTY_SYMBOL, OBJECT, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+					 nounPhrase(X, N2, P2, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(PROPERTY_SYMBOL, OBJECT, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+					 'the' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
+					 'of'
+			   		 nounPhrase(X, N2, P2, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(PROPERTY_SYMBOL, OBJECT, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 properNounCompound(X2, N2) '\'s'
+					 noun(PROPERTY_SYMBOL, [singular]) ('!'|'?')* 
+					 #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
+    		   		 #derefFromContext(proper-noun(X2, N2), OBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(ADJ, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 adjective(ADJ) ('!'|'?')* "/>
+
+	<!-- example: what do you do? --> 
+    <NLPattern name="perf.q.query-where-can"
+    		   head="perf.q.query(LISTENER, QUERY, verb.can(SUBJECT, #cons(VERB, SUBJECT, QUERY)))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.can'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.query-where-relation"
+    		   head="perf.q.query(LISTENER, QUERY, #cons(RELATION, SUBJECT, QUERY))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
+			   		 preposition(RELATION) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.query-where-not-relation"
+    		   head="perf.q.query(LISTENER, QUERY, #not(#cons(RELATION, SUBJECT, QUERY)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 'not'
+			   		 preposition(RELATION) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.query-where-haveable-property"
+    		   head="perf.q.query(LISTENER, QUERY, #cons(PROPERTY:[haveable-property-with-value], SUBJECT, QUERY))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 'have'
+			   		 preposition(PROPERTY) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.query-where-not-haveable-property"
+    		   head="perf.q.query(LISTENER, QUERY, #not(#cons(PROPERTY:[haveable-property-with-value], SUBJECT, QUERY)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.do'[symbol], N, P, [present-tense]) 'not' nounPhrase(X, N, P, C) 'have'
+			   		 preposition(PROPERTY) ('!'|'?')* 
+    		   		 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(#cons(TYPE, QUERY_VARIABLE), #cons(PREP, OBJECT, QUERY_VARIABLE)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('what'|'which') noun(TYPE, N) 
+			   		 verb('verb.be'[symbol], N2, P2, [present-tense]) nounPhrase(X3, N3, P3, C3)
+			   		 preposition(PREP)
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(C3, OBJECT)"/>
+
+	<NLPattern name="perf.q.query-know"
+			   head="perf.q.query(LISTENER, QUERY_V, QUERY)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X, N, P, C)
+			   		 verb('verb.know'[symbol], N2, P2, [infinitive-tense]) 
+			   		 ['what' 'is']
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		  ('!'|'?')*
+			   		 #derefFromContext(C, LISTENER)
+			   		 #derefQuery(C3, QUERY_V, QUERY)"/>
+
+	<!-- questions where verbs are missing arguments --> 
+    <NLPattern name="perf.q.query-verb-missing-argument"
+    		   head="perf.q.query(LISTENER, QUERY_V, #and(character(QUERY_V), COMPLETED_VERB))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+ 			   		 [ verb('verb.do'[symbol], N, P, T) ['you']
+			   		   verb('verb.know'[symbol], N2, P2, T2)
+			   		   [('anyone'|'someone')] ]
+			   		 'who' [verb('verb.may'[symbol], N3, P3, T3)]
+			   		 verb(VERB, N4, P4, [infinitive-tense]) 
+			   		  ('!'|'?')* 
+    		   		 #completeVerbArgumentsFromContext(#cons(VERB, QUERY_V), COMPLETED_VERB)"/>
+    <NLPattern name="perf.q.predicate-verb-missing-argument"
+    		   head="perf.q.predicate(LISTENER, COMPLETED_VERB)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.will'[symbol], N, P, T)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb(VERB, N3, P3, [infinitive-tense]) 
+			   		  ('!'|'?')* 
+			   		 #derefFromContext(C2, OBJECT)
+    		   		 #completeVerbArgumentsFromContext(#cons(VERB, OBJECT), COMPLETED_VERB)"/>
+    <NLPattern name="perf.q.predicate-verb-missing-argument2"
+    		   head="perf.q.predicate(LISTENER, COMPLETED_VERB)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], N, P, T) ['you']
+			   		 verb('verb.think'[symbol], N2, P2, T2)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 (verb('verb.will'[symbol], N4, P4, T4) verb(VERB, N5, P5, [infinitive-tense]) |
+			   		  verb(VERB, N5, P5, [present-tense]))
+			   		  ('!'|'?')* 
+			   		 #derefFromContext(C3, OBJECT)
+    		   		 #completeVerbArgumentsFromContext(#cons(VERB, OBJECT), COMPLETED_VERB)"/>
+    <NLPattern name="perf.q.predicate-verb-missing-argument3"
+    		   head="perf.q.predicate(LISTENER, #and(character(QUERY_V), COMPLETED_VERB))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+ 			   		 'is' 'there' ('anyone'|'someone')
+			   		 'who' 
+			   		 ( (verb('verb.may'[symbol], N3, P3, T3) | verb('verb.will'[symbol], N3, P3, T3)) 
+			   		   verb(VERB, N4, P4, [infinitive-tense]) |
+			   		   verb(VERB, N4, P4, [present-tense]) )
+			   		  ('!'|'?')* 
+    		   		 #completeVerbArgumentsFromContext(#cons(VERB, QUERY_V), COMPLETED_VERB)"/>
+
+	<NLPattern name="perf.q.query-know2"
+			   head="perf.q.query(LISTENER, WHO, #and(character(WHO), verb.know(WHO, #query(QUERY_V, QUERY))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who'
+			   		 ( (verb('verb.may'[symbol], N, P, T) | verb('verb.will'[symbol], N, P, T)) 
+			   		   verb('verb.know'[symbol], N2, P2, [infinitive-tense]) |
+			   		   verb('verb.know'[symbol], N2, P2, [present-tense]) )
+			   		 ['what' 'is']
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		  ('!'|'?')*
+			   		 #derefQuery(C3, QUERY_V, QUERY)"
+			   priority="200"/>
+
+	<!-- example: what do you do? --> 
+    <NLPattern head="perf.q.query(LISTENER, QUERY, role(OBJECT, QUERY))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 'do' ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"
+    		   		 priority="200"/>
+    <NLPattern head="perf.q.query(LISTENER, QUERY, role(OBJECT, LOCATION, QUERY))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.do'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 'do' 
+			   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X2, [singular], [third-person], C2)
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)
+    		   		 #derefFromContext(C2, LOCATION)"
+    		   		 priority="200"/>
+
+    <!-- Patterns for performative "perf.q.whois.name" and "perf.q.whois.noname" -->
+    <NLPattern head="perf.q.whois.name(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, T) 
+    		   		 properNounCompound(X, N) ('!'|'?')* 
+    		   		 #derefFromContext(proper-noun(X, N), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whois.name(LISTENER, V, name(V, NAME))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, [third-person], T) 
+    		   		 properNounCompound(NAME, N) ('!'|'?')*"
+    		   priority="50"/>
+    <NLPattern head="perf.q.whois.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 personal-pronoun(X, N, G, P) ('!'|'?')* 
+    		   		 #derefFromContext(personal-pronoun(X, N, G, P), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whois.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 definite-article('the'[symbol], N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons('the'[symbol], X, [plural]), C), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whois.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-determiner(DET, N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons(DET, X, N), C), SUBJECT)"
+    		   priority="200"/>
+
+    <NLPattern head="perf.q.whois.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-determiner(DET, N) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons(DET, X:'character'[character], N), noun(X, [singular])), SUBJECT)"/>
+
+
+    <!-- Patterns for performative "perf.q.whatis.name" and "perf.q.whatis.noname" -->
+    <NLPattern head="perf.q.whatis.name(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 properNounCompound(X, N) ('!'|'?')* 
+    		   		 #derefFromContext(proper-noun(X, N), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 personal-pronoun(X, N, G, P) ('!'|'?')* 
+    		   		 #derefFromContext(personal-pronoun(X, N, G, P), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 definite-article('the'[symbol], N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons('the'[symbol], X, [plural]), C), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-determiner(DET, N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) 
+    		   		 [[','] nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L) #derefFromContext(C_L, LISTENER)]
+    		   		 ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons(DET, X, N), C), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 definite-article(ART:'the'[symbol], N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) 
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons(ART, X, N), #and(C,#cons(PREPOSITION, X, O2))), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-determiner(DET, N)
+    		   		 nounPhraseNoDeterminer(X, N, P, C) 
+    		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2) ('!'|'?')* 
+    		   		 #derefFromContext(#and(#cons(DET, X, N), #and(C,#cons(PREPOSITION, X, O2))), SUBJECT)"
+    		   priority="200"/>
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-pronoun('close-demonstrative-pronoun'[symbol], N, G, P) ('!'|'?')* 
+    		   		 #derefFromContext(#and(close-demonstrative-determiner(X:'object'[object], N), noun(X,N)), SUBJECT)"/> 
+    <NLPattern head="perf.q.whatis.noname(LISTENER, SUBJECT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 demonstrative-pronoun('far-demonstrative-pronoun'[symbol], N, G, P) ('!'|'?')* 
+    		   		 #derefFromContext(#and(far-demonstrative-determiner(X:'object'[object], N), noun(X,N)), SUBJECT)"/> 
+
+    <!-- Patterns for performative "perf.q.when" -->
+    <NLPattern head="perf.q.when(LISTENER, [time.minute], [time.now])"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 'time' ('is' 'it' | 'are' 'we' 'in') ('!'|'?')*"
+			   priority = "200"/>
+    <NLPattern head="perf.q.when(LISTENER, SCALE:[time.unit], [time.now])"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' noun(SCALE_C, [singular]) #symbolToSort(SCALE_C,SCALE) ('is' 'it' | 'are' 'we' 'in') ('!'|'?')*"
+			   priority = "150"/>
+    <NLPattern head="perf.q.when(LISTENER, [time.day], [time.now])"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 'day' 'of' 'the' 'week' ('is' 'it' | 'are' 'we' 'in') ('!'|'?')*"/>
+    <NLPattern head="perf.q.when(LISTENER, [time.day], [time.now])"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' 'day' 'is' 'today' ('!'|'?')*"/>
+
+    <!-- Patterns for performative "perf.request.action/perf.q.action", when it's an action.give -->
+    <NLPattern name="perf.q.action-can-give"
+    		   head="perf.q.action(LISTENER, action.give(LISTENER,OBJECT,SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('verb.can'[symbol], N, P, T) subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please']
+    		         'have' 
+    		         nounPhrase(X2, N2, P2, CO) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		         #derefFromContext(CO, OBJECT)"
+    		         priority="200"/>
+    <NLPattern name="perf.q.action-can-give2"
+    		   head="perf.q.action(LISTENER, action.give(LISTENER,OBJECT,SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('verb.can'[symbol], N, P, T) subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please'] verb('action.give'[symbol], N2, P2, T2) object-personal-pronoun(X2, N2, G2, P2)
+    		         nounPhrase(X3, N3, P3, C3) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         #derefFromContext(subject-personal-pronoun(X2, N2, G2, P2), SPEAKER)
+    		         #derefFromContext(C3, OBJECT)"/>
+    <NLPattern head="perf.q.action(LISTENER, action.give(LISTENER,OBJECT,SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('verb.can'[symbol], N, P, T) subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please'] verb('action.give'[symbol], N2, P2, T2)
+    		         nounPhrase(X3, N3, P3, C3) 'to' 
+    		         object-personal-pronoun(X2, N2, G2, P2) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         #derefFromContext(subject-personal-pronoun(X2, N2, G2, P2), SPEAKER)
+    		         #derefFromContext(C3, OBJECT)"/>    		         
+    <NLPattern name="perf.request.action-subjectpronoun"
+    		   head="perf.request.action(LISTENER, action.give(LISTENER,OBJECT,SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('action.give'[symbol], N, P, T) object-personal-pronoun(X1, N, G, P)
+    		         nounPhrase(X2, N2, P2, CO) [[','] 'please'] '!'*
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		         #derefFromContext(CO, OBJECT)"/>
+    <NLPattern name="perf.request.action-subjectpronoun2"
+    		   head="perf.request.action(LISTENER, action.give(LISTENER,OBJECT,SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('action.give'[symbol], N, P, T)
+    		         nounPhrase(X2, N2, P2, CO) 'to' 
+    		         object-personal-pronoun(X1, N1, G1, P1) [[','] 'please'] '!'*
+    		         #derefFromContext(subject-personal-pronoun(X1, N1, G1, P1), SPEAKER)
+    		         #derefFromContext(CO, OBJECT)"/>
+    <NLPattern name="perf.request.action-subject-object"
+    		   head="perf.request.action(LISTENER, action.give(LISTENER,OBJECT,TARGET))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('action.give'[symbol], N, P, T)
+    		         nounPhrase(X2, N2, P2, CO) 'to' 
+    		         nounPhrase(X3, N3, P3, CO3) '!'*
+    		         #derefFromContext(CO, OBJECT)
+    		         #derefFromContext(CO3, TARGET)"/>
+    <NLPattern head="perf.q.action(LISTENER, verb.define(LISTENER,NOUN))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], [singular], P, [present-tense]) 
+			   		 indefinite-article('a'[symbol], [singular])  noun(NOUN_C, [singular]) #symbolToSort(NOUN_C,NOUN) ('!'|'?')*"
+			   priority="200"/>
+    <NLPattern head="perf.q.action(LISTENER, verb.define(LISTENER,NOUN))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.define'[symbol], [singular], P, [present-tense]) 
+			   		 noun(NOUN_C, N) #symbolToSort(NOUN_C,NOUN) ('!'|'?')*"
+			   priority="300"/>
+    <NLPattern head="perf.request.action(LISTENER, verb.define(LISTENER,NOUN))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.enumerate'[symbol], [singular], P, [present-tense]) 
+			   		 noun(NOUN_C:'three-laws-of-robotics'[three-laws-of-robotics], [plural]) #symbolToSort(NOUN_C,NOUN)"
+			   priority="300"/>
+    <NLPattern head="perf.q.action(LISTENER, verb.define(LISTENER,NOUN))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], [plural], P, [present-tense]) 
+			   		 noun(NOUN_C, [plural]) #symbolToSort(NOUN_C,NOUN) ('!'|'?')*"
+			   priority="200"/>
+    <NLPattern name="perf.request.action-with"
+    		   head="perf.request.action(LISTENER, verb.follow(LISTENER,OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] (verb('verb.come'[symbol], N, [second-person], T)|verb('verb.walk'[symbol], N, [second-person], T))
+    		   		 'with'
+    		         nounPhrase(X2, N2, P2, CO)
+    		         [[','] 'please'] '!'*
+    		         #derefFromContext(CO, OBJECT)"/>
+
+	<NLPattern name="perf.request.action1"
+			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"/>
+	<NLPattern name="perf.request.action-to"
+			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 'to'
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"/>
+	<NLPattern name="perf.request.action-propernoun"
+			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, NOUN))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 properNounCompound(NOUN, N3)
+			   		 #derefFromContext(C2, OBJECT2)"/>
+
+	<NLPattern name="perf.request.action1-negated"
+			   head="perf.request.action(LISTENER, #not(#cons(VERB, LISTENER, OBJECT2, OBJECT3)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
+			   		 'not'
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 nounPhrase(X3, N3, P3, C3) '!'*
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"/>
+	<NLPattern name="perf.request.action1-negated"
+			   head="perf.request.action(LISTENER, #not(#cons(VERB:'verb.call'[symbol], LISTENER, OBJECT2, NOUN)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
+			   		 'not'
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 noun(NOUN, N3) '!'*
+			   		 #derefFromContext(C2, OBJECT2)"
+		   	   priority="200"/>
+	<NLPattern name="perf.request.action-propernoun-negated"
+			   head="perf.request.action(LISTENER, #not(#cons(VERB, LISTENER, OBJECT2, NOUN)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
+			   		 'not'
+			   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2) '!'*
+			   		 properNounCompound(NOUN, N3)
+			   		 #derefFromContext(C2, OBJECT2)"/>
+
+	<NLPattern name="perf.request.action-taketo"
+			   head="perf.request.action(LISTENER, verb.take-to(LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 (verb('action.take'[symbol], N, P, [present-tense]) | verb('verb.show'[symbol], N, P, [present-tense]))
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 'to'
+			   		 nounPhrase(X3, N3, P3, C3) '!'*
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"
+			   priority="200"/>
+	<NLPattern name="perf.request.action-taketo2"
+			   head="perf.request.action(LISTENER, verb.take-to(LISTENER, SPEAKER, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.show'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 'the' ('way'|'path') 'to'
+			   		 nounPhrase(X3, N3, P3, C3) '!'*
+			   		 #derefFromContext(C2, SPEAKER)
+			   		 #derefFromContext(C3, OBJECT3)"
+			   priority="200"/>
+	<NLPattern name="perf.request.action-connectto"
+			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.connect'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('to'|'with')
+			   		 nounPhrase(X3, N3, P3, C3) ['again'] '!'*
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"
+			   priority="200"/>
+	<NLPattern name="perf.request.action-connectto2"
+			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.put'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 'through' 'to'
+			   		 nounPhrase(X3, N3, P3, C3) ['again'] '!'*
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"
+			   priority="200"/>
+	<NLPattern name="perf.request.action-connectto3"
+			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, SPEAKER, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'i'
+			   		 verb('verb.want'[symbol], N, P, [present-tense])
+			   		 'to'
+			   		 verb('action.talk'[symbol], N2, P2, T2)
+			   		 'to'
+			   		 nounPhrase(X3, N3, P3, C3) ['again'] '!'*
+			   		 #derefFromContext(C3, OBJECT3)"/>
+   	<NLPattern name="perf.q.action-connectto"
+			   head="perf.q.action(LISTENER, verb.connect-to(LISTENER, SPEAKER, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 verb('verb.can'[symbol], N, P, [present-tense])
+			   		 'i'
+			   		 verb('action.talk'[symbol], N2, P2, T2)
+			   		 ('to'|'with')
+			   		 nounPhrase(X3, N3, P3, C3) ['again'] ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT3)"/>
+
+
+	<NLPattern name="perf.q.action-taketo"
+			   head="perf.q.action(LISTENER, verb.take-to(LISTENER, SPEAKER, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 ('can'|'could') 'you'
+			   		 (verb('action.take'[symbol], N, P, [present-tense]) | verb('verb.show'[symbol], N, P, [present-tense]))
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 'to'
+			   		 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
+			   		 #derefFromContext(C2, SPEAKER)
+			   		 #derefFromContext(C3, OBJECT3)"
+			   priority="200"/>
+
+    <NLPattern name="perf.request.action-tell"
+    		   head="perf.request.action(LISTENER, action.talk(LISTENER, perf.request.action(TARGET, ACTION)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] (verb('verb.tell'[symbol], N, [second-person], T)|verb('verb.ask'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X2, N2, P2, CO)
+    		   		 #derefFromContext(CO, TARGET)
+    		   		 'to' 
+    		   		 perf.request.action(TARGET, ACTION)
+    		         [[','] 'please'] '!'*"/>
+    <NLPattern name="perf.request.action-tell2"
+    		   head="perf.q.action(LISTENER, action.talk(LISTENER, perf.request.action(TARGET, ACTION)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		   		 (verb('verb.tell'[symbol], N, [second-person], T)|verb('verb.ask'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X3, N3, P3, CO)
+    		   		 #derefFromContext(CO, TARGET)
+    		   		 'to' 
+    		   		 perf.request.action(TARGET, ACTION)
+    		         [[','] 'please'] ('!'|'?')*"/>
+
+  	<!-- Patterns for performative "perf.request.action" and "perf.q.action" (they are the same except the later is a question) -->
+    <NLPattern head="perf.q.action(LISTENER, #cons(V2, LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		         verb(V2, N2, [no-person], [infinitive-tense])
+    		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		   		 #derefFromContext(CO, OBJECT)"
+    		   		 priority="200"/>
+    <NLPattern name="perf.request.action-verb-np"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2)
+    		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] '!'* 
+    		         #derefFromContext(CO, OBJECT)"/>
+    <NLPattern head="perf.q.action(LISTENER, #cons(V2, LISTENER, QUERY_VARIABLE), QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		         verb(V2, N2, [no-person], [infinitive-tense])
+    		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		   		 #derefQuery(CO, QUERY_VARIABLE, QUERY)"/>
+    <NLPattern name="perf.request.action-verb-np2"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, QUERY_VARIABLE), QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2)
+    		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] '!'* 
+    		         #derefQuery(CO, QUERY_VARIABLE, QUERY)"/>    		         
+    <NLPattern name="perf.request.action-adverb"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[space.location]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2)
+    		         adverb(LSYMBOL) [[','] 'please'] '!'* #symbolToSort(LSYMBOL,LSORT)"
+    		   priority="200"/>
+
+    <NLPattern head="perf.q.action(LISTENER, #cons(V2, LISTENER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		         verb(V2, N2, [no-person], [infinitive-tense]) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)"/>
+    <NLPattern head="perf.request.action(LISTENER, #cons(V2, LISTENER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2) [[','] 'please'] '!'*"/>
+    <NLPattern head="perf.moreresults(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 ('who'|'what'|'where') 'else'
+    		          [[','] 'please'] ('?'|'!')*"/>
+    <NLPattern head="perf.moreresults(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
+    		          [[','] 'please'] ('?'|'!')*"/>
+
+    <!-- get out of here / get out, etc. rule -->
+    <NLPattern head="perf.request.action(LISTENER, verb.go(LISTENER, [space.away]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('verb.get'[symbol], N2, [second-person], T2) (noun('space.away'[space.away], [singular])|'out') [[','] 'please'] '!'*"
+    		         priority="300"/>
+
+    <!-- help! -->
+    <NLPattern head="perf.request.action(LISTENER, verb.help(LISTENER, SPEAKER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('verb.help'[symbol], N2, [second-person], T2) [[','] 'please'] '!'*"
+    		         priority="200"/>
+
+    <!-- perf.q.howmany patterns -->
+    <NLPattern name="perf.q.howmany-X-are-there"
+    		   head="perf.q.howmany(LISTENER, V, QUERY)"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there'] ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)"/>
+    <NLPattern name="perf.q.howmany-X-are-there-in"
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(PREPOSITION, V, OBJECT), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there']
+		   		 	 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+		   		 	 ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern name="perf.q.howmany-X-Y-have"
+    		   head="perf.q.howmany(LISTENER, V, #and(verb.have(OWNER, V), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.do'[symbol], N2, P2, [present-tense]) nounPhrase(X2, N2, P2, C2) 'have' ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefFromContext(C2, OWNER)"/>
+    <NLPattern name="perf.q.howmany-X-are-Y"
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(A, V), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)"/>
+    <NLPattern name="perf.q.howmany-X-are-Y2"
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(A:[property-with-value], V, A), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)"
+		   	   priority="200"/>
+
+ 	<!-- perf.q.when patterns --> 
+    <NLPattern name="perf.q.when-action"
+    		   head="perf.q.when(LISTENER, #cons(VERB,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'did' 
+		   		 	 nounPhrase(X, N, P, C) verb(VERB, NV, PV, [infinitive-tense]) 
+		   		 	 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)
+		   		 	 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="perf.q.when-action-no-object"
+    		   head="perf.q.when(LISTENER, #cons(VERB,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'did' 
+		   		 	 nounPhrase(X, N, P, C) verb(VERB, NV, PV, [infinitive-tense]) ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.when-passive-action"
+    		   head="perf.q.when(LISTENER, #cons(VERB,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' verb('verb.be'[symbol], N, P, [past-tense])
+		   		 	 nounPhrase(X, N, P, C) verb(VERB, NV, PV, [participle-tense]) ('!'|'?')* 
+		   		 	 #derefFromContext(C, OBJECT)"/>
+
+    <NLPattern name="perf.q.when-go-action"
+    		   head="perf.q.when(LISTENER, verb.go-to(SUBJECT,#cons(VERB,SUBJECT,OBJECT)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'did' 
+		   		 	 nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.go-to'[symbol], NV, PV, [infinitive-tense])
+		   		 	 verb(VERB, NV, PV, [infinitive-tense]) nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)
+		   		 	 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="perf.q.when-go-action2"
+    		   head="perf.q.when(LISTENER, verb.go-to(SUBJECT,#cons(VERB,SUBJECT,OBJECT)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'did' 
+		   		 	 nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.go-to'[symbol], NV, PV, [infinitive-tense])
+		   		 	 verb(VERB, NV, PV, [infinitive-tense]) noun(OBJECT, [plural]) ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)"/>
+
+    <NLPattern name="perf.q.when-relation"
+    		   head="perf.q.when(LISTENER, #cons(PREPOSITION,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'was' 
+		   		 	 nounPhrase(X, N, P, C) 
+		   		 	 preposition(PREPOSITION)
+ 					 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)
+		   		 	 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="perf.q.when-property"
+    		   head="perf.q.when(LISTENER, #cons(ADJECTIVE,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'when' 'was' 
+		   		 	 nounPhrase(X, N, P, C) 
+		   		 	 adjective(ADJECTIVE)  ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="perf.q.when-property-unit"
+    		   head="perf.q.when(LISTENER, UNIT:[time.unit], #cons(ADJECTIVE,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'what' noun(UNIT,N) 'was' 
+		   		 	 nounPhrase(X, N2, P, C) 
+		   		 	 adjective(ADJECTIVE)  ('!'|'?')* 
+		   		 	 #derefFromContext(C, SUBJECT)"/>
+
+ 	<!-- 'which' patterns --> 
+    <NLPattern name="which-is-my"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, QUERY)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'which' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefQuery(C, QUERY_VARIABLE, QUERY)"/>
+
+    <NLPattern name="lights-on1"
+    		   head="perf.request.action(LISTENER,verb.switch-on(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('light'|'lights') 'on' '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+    <NLPattern name="lights-off1"
+    		   head="perf.request.action(LISTENER,verb.switch-off(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('light'|'lights') 'off' '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+    <NLPattern name="lights-on2"
+    		   head="perf.request.action(LISTENER,verb.switch-on(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.switch-on'[symbol], N, P, [present-tense]) 'the' ('light'|'lights') '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+    <NLPattern name="lights-off2"
+    		   head="perf.request.action(LISTENER,verb.switch-off(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.switch-off'[symbol], N, P, [present-tense]) 'the' ('light'|'lights') '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+    <NLPattern name="lights-on3"
+    		   head="perf.request.action(LISTENER,verb.switch-on(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.switch'[symbol], N, P, [present-tense]) 'the' ('light'|'lights') 'on' '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+    <NLPattern name="lights-off3"
+    		   head="perf.request.action(LISTENER,verb.switch-off(LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.switch'[symbol], N, P, [present-tense]) 'the' ('light'|'lights') 'off' '!'*
+			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
+			   priority="200"/>
+
+ 	<!-- why question patterns --> 
+    <NLPattern name="why-gerund"
+    		   head="perf.q.why(LISTENER,#cons(V,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb(V, N2, P2, [gerund-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C3, OBJECT)"/>
+    <NLPattern name="why-do-1"
+    		   head="perf.q.why(LISTENER,#cons(V,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.do'[symbol], N, P, T) 
+			   		 nounPhrase(X, N2, P2, C) 
+			   		 verb(V, N3, P3, [present-tense]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-do-2"
+    		   head="perf.q.why(LISTENER,#cons(V,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.do'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb(V, N2, P2, [present-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C3, OBJECT)"/>
+    <NLPattern name="why-do-adverb"
+    		   head="perf.q.why(LISTENER,#cons(V,SUBJECT,LSORT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.do'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb(V, N2, P2, [present-tense]) 
+			   		 adverb(LSYMBOL) #symbolToSort(LSYMBOL,LSORT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-property"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 adjective(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-relation"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C)
+			   		 preposition(LSYMBOL)
+			   		 nounPhrase(X2, N2, P2, C2) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern name="why-relation-adverb"
+    		   head="perf.q.why(LISTENER,space.at(SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C)
+			   		 adverb(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #symbolToSort(LSYMBOL, LSORT)"/>
+    <NLPattern name="why-is-there-not"
+    		   head="perf.q.why(LISTENER,#not(#cons(SORT,QUERY_VARIABLE)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 'there' 'no'
+			   		 noun(SORT,N2)
+			   		 ('!'|'?')*"/>
+    <NLPattern name="why-there-is-not"
+    		   head="perf.q.why(LISTENER,#not(#cons(SORT,QUERY_VARIABLE)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 'there' verb('verb.be'[symbol], N, P, T) 'no'
+			   		 noun(SORT,N2)
+			   		 ('!'|'?')*"/>
+
+	<!-- e.g.: "I cannot parse the sentence" -->
+    <NLPattern name="cannot-verb"
+    		   head="perf.inform(LISTENER,#not(verb.can(OBJECT,#cons(VERB, OBJECT, 'sentence'[sentence]))))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 nounPhrase(X, N, P, C)
+			   		 verb('verb.can'[symbol], NV, PV, TV) 'not'
+			   		 verb(VERB, NV2, PV2, [infinitive-tense]) 
+			   		 'the' 'sentence'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, OBJECT)"
+			   priority="150"/>
+
+ 	<!-- followup question patterns --> 
+    <NLPattern name="where-followup"
+    		   head="perf.q.whereis(LISTENER)"
+		   	   body="'where' ('!'|'?')*"/>
+
+    <NLPattern name="where-followup-with-location"
+    		   head="perf.q.whereis(LISTENER, LOCATION, space.at(LOCATION, LOCATION_CONSTRAINT))"
+		   	   body="'where' 
+		   	   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X, N, P, C)
+			   		 #derefFromContext(C, LOCATION_CONSTRAINT)
+		   	   		 ('!'|'?')*"/>
+
+    <NLPattern name="howmany-followup"
+    		   head="perf.q.howmany(LISTENER)"
+		   	   body="'how' 'many' ('!'|'?')*"/>
+
+    <NLPattern name="why-followup"
+    		   head="perf.q.why(LISTENER)"
+		   	   body="'why' ('!'|'?')*"/>
+
+    <NLPattern name="why-followup2"
+    		   head="perf.q.why(LISTENER)"
+		   	   body="'how' 'come' ('!'|'?')*"/>
+
+    <NLPattern name="why-not-followup"
+    		   head="perf.q.why(LISTENER)"
+		   	   body="'why' 'not' ('!'|'?')*"/>
+
+    <NLPattern name="who-followup"
+    		   head="perf.q.query-followup(LISTENER,'character'[character])"
+		   	   body="'who' ('!'|'?')*"/>
+
+    <NLPattern name="which-followup"
+    		   head="perf.q.query-followup(LISTENER,'object'[object])"
+		   	   body="'which' [('one'|'ones')] ('!'|'?')*"/>
+
+    <NLPattern name="which-followup"
+    		   head="perf.q.query-followup(LISTENER,'any'[any])"
+		   	   body="['like'] 'what' ('!'|'?')*"/>
+
+    <NLPattern name="which-followup"
+    		   head="perf.q.query-followup(LISTENER,'any'[any])"
+		   	   body="'what' 'is' ['it'] ('!'|'?')*"/>
+
+    <NLPattern name="which-followup"
+    		   head="perf.q.query-followup(LISTENER, NOUN)"
+		   	   body="['i' 'mean' [',']] ('which'|'what') noun(NOUN, N) ('!'|'?')*"/>
+
+ 	<!-- perf.ack.denyrequest patterns --> 
+    <NLPattern head="perf.ack.denyrequest(LISTENER)"
+		   	   body="'i' 'can' 'not' 'do' 'that' '!'*"/>
+
+ 	<!-- cause explanation patterns --> 
+    <NLPattern name="cause1"
+    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
+					 'because'
+					 nounPhrase(X3, N3, P3, C3)  verb(V3, N3, P3, T3) nounPhrase(X4, N4, P4, C4)
+					 #derefFromContext(C, SUBJECT1)
+					 #derefFromContext(C2, OBJECT1)
+					 #derefFromContext(C3, SUBJECT2)
+					 #derefFromContext(C4, OBJECT2)
+					 "/>
+    <NLPattern name="cause2"
+    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
+					 'because'
+					 nounPhrase(X3, N3, P3, C3)  verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) #symbolToSort(O2SYMBOL,OBJECT2)
+					 #derefFromContext(C, SUBJECT1)
+					 #derefFromContext(C2, OBJECT1)
+					 #derefFromContext(C3, SUBJECT2)"/>
+
+	<!-- perf.q.how patterns --> 
+    <NLPattern name="perf.q.how-object"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))]
+		           	 nounPhrase(X, N, P, C)
+		           	 verb(VERB, N2, P2, [infinitive-tense])
+					 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #derefFromContext(C3, OBJECT)"/>
+    <!--NLPattern name="perf.q.how-locationnoun"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+		           	 nounPhrase(X, N, P, C)
+		           	 verb(VERB, N2, P2, [infinitive-tense])
+					 noun(LSYMBOL, [singular]) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #symbolToSort(LSYMBOL, LSORT)"/-->
+    <NLPattern name="perf.q.how-locationadverb"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+		           	 nounPhrase(X, N, P, C)
+		           	 verb(VERB, N2, P2, [infinitive-tense])
+					 adverb(LSYMBOL) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #symbolToSort(LSYMBOL, LSORT)"/>
+
+    <!--NLPattern name="perf.q.how-get-locationnoun"
+    		   head="perf.q.how(LISTENER, verb.go(SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.get'[symbol], N2, P2, [infinitive-tense])
+					 noun(LSYMBOL, [singular]) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #symbolToSort(LSYMBOL, LSORT)"
+			   priority="200"/-->
+    <NLPattern name="perf.q.how-get-locationadverb"
+    		   head="perf.q.how(LISTENER, verb.go(SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.get'[symbol], N2, P2, [infinitive-tense])
+					 adverb(LSYMBOL) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #symbolToSort(LSYMBOL, LSORT)"
+			   priority="200"/>
+
+    <NLPattern name="perf.q.how-noun"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT,LSORT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+		           	 nounPhrase(X, N, P, C)
+		           	 verb(VERB, N2, P2, [infinitive-tense])
+					 indefinite-article(ART, [singular]) noun(LSYMBOL, [singular]) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+					 #symbolToSort(LSYMBOL,LSORT)"/>
+
+    <NLPattern name="perf.q.how-object"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SPEAKER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 'how' 'to' verb(VERB, N2, P2, [infinitive-tense])
+					 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
+					 #derefFromContext(C3, OBJECT)"/>
+
+
+    <!-- Noun phrases: 
+    	X: the root "noun" or "proper noun"
+    	N: the grammatical number (singular/prular)
+    	P: the grammatical person (first/second/third)
+    	C: a clause that represent the whole nounPhrase
+	-->	
+	<NLPattern name="nounphrase-skipdeterminer"
+			   head="nounPhrase(X, N, P, C)"
+			   body="nounPhraseNoDeterminer(X, N, P, C)"/>
+	<NLPattern name="nounphrase-determiner"
+			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), C))"
+			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C)"/>
+	<NLPattern name="nounphrase-determiner-preposition1"
+			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(C,#cons(PREPOSITION, X, O2))))"
+			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="nounphrase-determiner-preposition2"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #cons(PREPOSITION, X, O2)))"
+			   body="noun(X, N) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="nounphrase-all-of"
+			   head="nounPhrase(X, [plural], P, #and(#cons(DET, X, [plural]), C))"
+			   body="definite-article('all'[symbol], [plural]) ['of'] demonstrative-determiner(DET, [plural]) nounPhraseNoDeterminer(X, [plural], P, C)"/>
+	<NLPattern name="nounphrase-all-the"
+			   head="nounPhrase(X, [plural], P, #and(the(X, [plural]), C))"
+			   body="definite-article('all'[symbol], [plural]) 'the' nounPhraseNoDeterminer(X, [plural], P, C)"/>
+	<NLPattern name="nounphrase-the other"
+			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(determiner.other(X, N), C)))"
+			   body="determiner(ART, N) 'other' nounPhraseNoDeterminer(X, N, P, C)"/>
+	<NLPattern name="nounphrase-subject-pronoun"
+			   head="nounPhrase(X, N, P, subject-personal-pronoun(X, N, G, P))"
+			   body="subject-personal-pronoun(X, N, G, P)"/>
+	<NLPattern name="nounphrase-object-pronoun"
+			   head="nounPhrase(X, N, P, object-personal-pronoun(X, N, G, P))"
+			   body="object-personal-pronoun(X, N, G, P)"/>
+	<NLPattern name="nounphrase-indefinite-pronoun"
+			   head="nounPhrase(X, N, P, indefinite-pronoun(X, N, G, P))"
+			   body="indefinite-pronoun(X, N, G, P)"/>
+	<NLPattern name="nounphrase-indefinite-pronoun-adjective"
+			   head="nounPhrase(X, N, P, #and(indefinite-pronoun(X, N, G, P), adjective(X, ADJ)))"
+			   body="indefinite-pronoun(X, N, G, P) adjective(ADJ)"/>
+	<NLPattern name="nounphrase-saxon-genitive1"
+			   head="nounPhrase(X2, N2, [third-person], #and(relation.owns(X,X2), #and(noun(X2, N2), C)))"
+			   body="nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>
+	<NLPattern name="nounphrase-saxon-genitive2"
+			   head="nounPhrase(X2, N2, [third-person], #and(relation.owns(X,X2), 
+														#and(noun(X2, N2), 
+														#and(#cons(ART, X, N), 
+															 C))))"
+			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>
+
+	<NLPattern name="nounphrase-adjective-phrase"
+			   head="nounPhraseNoDeterminer(X, N, [third-person], #and(adjective(X, A), noun(X, N)))"
+			   body="noun(X, N) 'that' 
+			   		 (verb('verb.be'[symbol], N, [third-person], T)|
+			   		  verb('verb.seem'[symbol], N, [third-person], T))
+			   		 adjective(A)"/>
+	<NLPattern name="nounphrase-noun"
+			   head="nounPhraseNoDeterminer(X, N, [third-person], noun(X, N))"
+			   body="noun(X, N)"/>
+	<NLPattern name="nounphrase-adjective"
+			   head="nounPhraseNoDeterminer(X, N, P, #and(adjective(X, A), C))"
+			   body="adjective(A) nounPhraseNoDeterminer(X, N, P, C)"/>
+	<NLPattern name="nounphrase-propernoun"
+			   head="nounPhraseNoDeterminer(X, N, [third-person], proper-noun(X, N))"
+			   body="proper-noun(X, N)"/>
+	<NLPattern name="nounphrase-propernoun"
+			   head="nounPhraseNoDeterminer(X, N, [third-person], proper-noun(X3, N))"
+			   body="proper-noun(X, N) proper-noun(X2, N) #concatenateSymbols(X,' '[symbol],X2,X3)"/>
+
+	<NLPattern name="propernoun-compound1"
+			   head="properNounCompound(X3, N)"
+			   body="proper-noun(X, N) proper-noun(X2, N) #concatenateSymbols(X,' '[symbol],X2,X3)"/>
+	<NLPattern name="propernoun-compound2"
+			   head="properNounCompound(X, N)"
+			   body="proper-noun(X, N)"/>
+
+</NLPatternRules>

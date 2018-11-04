@@ -1,0 +1,9 @@
+<Characters>
+	<CharacterClass class="human" super="character" name="human"/>
+	<CharacterClass class="man" super="character" name="man"/>
+	<CharacterClass class="woman" super="character" name="woman"/>
+	<CharacterClass class="animal" super="character" name="animal"/>
+	<CharacterClass class="robot" super="character" name="robot"/>
+	<!-- calling the "player character" "human" is a hack so that when the robots do not know the name of the character, they refer to it as "human", rather than "man", which sounds funny -->
+	<CharacterClass class="player-character" super="character" name="human"/> 
+</Characters>

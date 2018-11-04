@@ -1,0 +1,740 @@
+<ontology>
+    <sort name="any"/>
+    <sort name="number" super="any"/>
+    <sort name="symbol" super="any"/>
+
+    <sort name="number.1" super="number"/>
+    <sort name="number.2" super="number"/>
+    <sort name="number.3" super="number"/>
+    <sort name="number.4" super="number"/>
+    <sort name="number.5" super="number"/>
+    <sort name="number.6" super="number"/>
+    <sort name="number.7" super="number"/>
+    <sort name="number.8" super="number"/>
+    <sort name="number.9" super="number"/>
+    <sort name="number.10" super="number"/>
+
+    <!-- Special sorts for representing sentences, and parses -->
+    <sort name="#id" super="any"/> <!-- this one is used to denote entity ids -->
+    <sort name="#and" super="any"/>
+    <sort name="#or" super="any"/>
+    <sort name="#not" super="any"/>
+    <sort name="#cons" super="any"/>
+    <sort name="#list" super="any"/>
+    <sort name="#query" super="any"/>
+    <sort name="~=" super="any"/>
+
+    <sort name="#stateSort" super="any"/>   <!-- sorts inheriting from this one are considered as if they can change over time -->
+
+    <sort name="etcetera" super="any"/>
+
+    <sort name="abstract-entity" super="any"/>
+
+    <sort name="measuring-unit" super="abstract-entity"/>
+
+    <!-- Grammar concepts: -->
+    <sort name="grammar-concept" super="any"/>    
+    <sort name="part-of-speech" super="grammar-concept"/>    
+
+    <sort name="grammatical-number" super="grammar-concept"/>    
+    <sort name="singular" super="grammatical-number"/>    
+    <sort name="plural" super="grammatical-number"/>    
+    <sort name="uncountable" super="grammatical-number"/>
+
+    <sort name="gender" super="grammar-concept"/>    
+    <sort name="gender-masculine" super="gender"/>    
+    <sort name="gender-femenine" super="gender"/>    
+    <sort name="gender-neutral" super="gender"/>    
+
+    <sort name="grammatical-person" super="grammar-concept"/>    
+    <sort name="first-person" super="grammatical-person"/>    
+    <sort name="second-person" super="grammatical-person"/>    
+    <sort name="third-person" super="grammatical-person"/>    
+    <sort name="no-person" super="grammatical-person"/>    <!-- this is for infinitives, etc -->
+
+    <sort name="punctuation" super="part-of-speech"/>    
+    <sort name="comma" super="punctuation"/>    
+    <sort name="stop" super="punctuation"/>    
+    <sort name="colon" super="punctuation"/>    
+    <sort name="semicolon" super="punctuation"/>    
+    <sort name="dash" super="punctuation"/>    
+    <sort name="exclamation" super="punctuation"/>    
+    <sort name="question" super="punctuation"/>    
+    <sort name="quote" super="punctuation"/>    
+
+    <sort name="interjection" super="part-of-speech"/>   
+    <sort name="interjection-sound" super="interjection"/>   
+    <sort name="interjection-noun" super="interjection"/>   
+
+    <sort name="particle" super="part-of-speech"/>    
+    <sort name="yes" super="particle"/>    
+    <sort name="no" super="particle"/>
+    <sort name="particle.on" super="particle"/>
+    <sort name="particle.off" super="particle"/>
+    <sort name="nothing" super="particle"/>    
+    <!--sort name="unknown" super="particle"/-->
+
+    <sort name="determiner" super="part-of-speech"/>  
+    <sort name="possessive-determiner" super="determiner"/>  
+    <sort name="determiner.my" super="possessive-determiner"/>  
+    <sort name="determiner.our" super="possessive-determiner"/>  
+    <sort name="determiner.your" super="possessive-determiner"/>  
+    <sort name="determiner.his" super="possessive-determiner"/>  
+    <sort name="determiner.her" super="possessive-determiner"/>  
+    <sort name="determiner.its" super="possessive-determiner"/>  
+    <sort name="determiner.their" super="possessive-determiner"/>  
+
+    <sort name="demonstrative-determiner" super="determiner"/>  
+    <sort name="close-demonstrative-determiner" super="demonstrative-determiner"/>
+    <sort name="far-demonstrative-determiner" super="demonstrative-determiner"/>
+    <sort name="article" super="determiner"/>  
+    <sort name="indefinite-article" super="article"/>  
+    <sort name="a" super="indefinite-article"/> 
+    <sort name="some" super="indefinite-article"/> 
+    <sort name="article.any" super="indefinite-article"/> 
+    <sort name="much" super="indefinite-article"/> 
+    <sort name="definite-article" super="article"/>  
+    <sort name="the" super="definite-article"/>  
+    <sort name="all" super="definite-article"/>  
+    <sort name="every" super="definite-article"/>  
+
+    <sort name="determiner.other" super="determiner"/>  
+
+    <sort name="pronoun" super="part-of-speech"/>   
+    <sort name="personal-pronoun" super="pronoun"/>   
+    <sort name="subject-personal-pronoun" super="personal-pronoun"/>   
+    <sort name="object-personal-pronoun" super="personal-pronoun"/>   
+    <sort name="demonstrative-pronoun" super="pronoun"/>   
+    <sort name="reflexive-pronoun" super="pronoun"/>   
+    <sort name="interrogative-pronoun" super="pronoun"/>   
+    <sort name="possessive-pronoun" super="pronoun"/>  
+    <sort name="indefinite-pronoun" super="pronoun"/>    
+
+    <sort name="pronoun.everybody" super="indefinite-pronoun"/>    
+    <sort name="pronoun.anyone" super="indefinite-pronoun"/>    
+
+    <sort name="pronoun.something" super="indefinite-pronoun"/>    
+    <sort name="pronoun.anything" super="indefinite-pronoun"/>    
+
+    <sort name="preposition" super="part-of-speech"/>    
+    <sort name="numeral" super="part-of-speech"/>    
+    <sort name="cardinal" super="numeral"/>    
+    <sort name="ordinal" super="numeral"/>   
+
+    <sort name="proper-noun" super="part-of-speech"/>    
+
+    <sort name="noun" super="part-of-speech"/>    
+
+    <sort name="verb" super="part-of-speech"/>    
+    <sort name="modal-verb" super="verb"/>    
+    <sort name="conjunction" super="part-of-speech"/>    
+
+    <sort name="conjunction-contrast" super="conjunction"/>    
+    <sort name="conjunction-consequence" super="conjunction"/>    
+
+    <sort name="verb-tense" super="grammar-concept"/>
+    <sort name="infinitive-tense" super="verb-tense"/>    
+    <sort name="gerund-tense" super="verb-tense"/>    
+    <sort name="participle-tense" super="verb-tense"/>    
+    <sort name="present-tense" super="verb-tense"/>
+    <sort name="past-tense" super="verb-tense"/>
+
+    <sort name="adjective" super="part-of-speech"/>    
+
+    <sort name="adverb" super="part-of-speech"/>    
+
+    <sort name="nounPhrase" super="grammar-concept"/>    
+    <sort name="nounPhraseNoDeterminer" super="grammar-concept"/>    
+    <sort name="properNounCompound" super="grammar-concept"/>    
+
+    <sort name="parser-function" super="grammar-concept"/>   
+    <sort name="#derefFromContext" super="parser-function"/>   <!-- This function tries to find which object from the natural language context are referred to by a given clause -->
+    <sort name="#derefUniversal" super="parser-function"/>  <!-- This function generates a term that represents all the entities represented by the clause (e.g., in the sentence "all men are mortal", the noun phrase "all men" does not have a referent in the context, so it's a universal) --> 
+    <sort name="#derefHypothetical" super="parser-function"/>  <!-- This function dereferences a hypothetical entity (usually referred to by name), for example, in "Socrates was a man", the first time "Socrates" is mentioned, it it a hypothetical person, since it's not in the context. --> 
+    <sort name="#derefQuery" super="parser-function"/>  <!-- This function dereferences a query, for example in "what is your name?", the "your name" part is a query name(X,Y), where "X" is the dereference of "you" and "Y" is the query variable. --> 
+    <sort name="#symbolToSort" super="parser-function"/>
+    <sort name="#concatenateSymbols" super="parser-function"/>
+    <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
+
+    <!-- Regular concepts -->
+    <sort name="property" super="any"/>
+    <sort name="property-with-value" super="property"/>
+    <sort name="haveable-property" super="property"/>
+    <sort name="haveable-property-with-value" super="haveable-property,property-with-value"/>
+    <sort name="relation" super="any"/>
+    <sort name="relation-with-value" super="relation"/>
+    <sort name="symmetric-relation" super="relation"/>
+
+    <sort name="relation.cause" super="relation"/>
+    <sort name="relation.howto" super="relation"/>
+    
+    <sort name="performative" super="abstract-entity"/>
+    <sort name="perf.callattention" super="performative"/>  <!-- This is when you just say "Etaoin!" -->
+    <sort name="perf.greet" super="performative"/>
+    <sort name="perf.farewell" super="performative"/>
+    <sort name="perf.thankyou" super="performative"/>
+    <sort name="perf.youarewelcome" super="performative"/>
+    <sort name="perf.inform" super="performative"/>
+    <sort name="perf.inform.parseerror" super="perf.inform"/>   <!-- just so we can distinguish when an AI generates a performative to inform of a parse error -->
+    <sort name="perf.inform.answer" super="perf.inform"/>
+    <sort name="perf.acknowledge" super="performative"/>
+    <sort name="perf.ack.ok" super="perf.acknowledge"/>
+    <sort name="perf.ack.contradict" super="perf.acknowledge"/>
+    <sort name="perf.ack.invalidanswer" super="perf.acknowledge"/>
+    <sort name="perf.ack.denyrequest" super="perf.acknowledge"/>
+    <sort name="perf.sentiment" super="performative"/>
+    <sort name="perf.sentiment.good" super="perf.sentiment"/>
+    <sort name="perf.sentiment.bad" super="perf.sentiment"/>
+    <sort name="perf.sentiment.surprise" super="perf.sentiment"/>
+    <sort name="perf.request" super="performative"/>
+    <sort name="perf.request.action" super="perf.request"/>
+    <sort name="perf.question" super="perf.request"/>
+    <sort name="perf.q.predicate" super="perf.question"/>
+    <sort name="perf.q.predicate-negated" super="perf.question"/>
+    <sort name="perf.q.whereis" super="perf.question"/>
+    <sort name="perf.q.whereto" super="perf.question"/>
+    <sort name="perf.q.query" super="perf.question"/>
+    <sort name="perf.q.query-followup" super="perf.q.query"/>
+    <sort name="perf.q.whois.name" super="perf.question"/>
+    <sort name="perf.q.whois.noname" super="perf.question"/>
+    <sort name="perf.q.whatis.name" super="perf.question"/>
+    <sort name="perf.q.whatis.noname" super="perf.question"/>
+    <sort name="perf.q.action" super="perf.question,perf.request.action"/> <!-- this is similar to perf.request.action, except that it is a question, rather than a command -->
+    <sort name="perf.q.howareyou" super="perf.question"/>
+    <sort name="perf.q.when" super="perf.question"/>
+    <sort name="perf.q.howmany" super="perf.question"/>
+    <sort name="perf.q.why" super="perf.question"/>
+    <sort name="perf.q.how" super="perf.question"/>
+    <sort name="perf.moreresults" super="performative"/>   <!-- things like "who else?", "anyone else?", "what else?" -->
+
+    <sort name="object" super="any"/>
+    <sort name="obstacle" super="object"/>
+    <sort name="item" super="object"/>
+    <sort name="key" super="item"/>
+    <sort name="door" super="object"/>
+    <sort name="ShrdluAirlockDoor" super="door"/>
+    <sort name="food" super="item"/>
+    <sort name="drink" super="food"/>
+    <sort name="container" super="object"/>
+    <sort name="spade" super="item"/>
+    <sort name="obstacle-container" super="obstacle,container"/>
+    <sort name="pushable-wall" super="object"/>
+    <sort name="pressure-plate" super="object"/>
+    <sort name="lever" super="object"/>
+    <sort name="trigger" super="object"/>
+    <sort name="walking-object" super="object"/>
+    <sort name="character" super="walking-object,container"/>
+    <sort name="vehicle" super="walking-object,container"/>
+
+    <sort name="shape" super="any"/>
+    <sort name="shape.flat" super="shape"/>
+    <sort name="box" super="shape"/>
+    <sort name="tower" super="shape"/>
+    <sort name="tank" super="shape"/>
+
+    <sort name="body-part" super="object"/>    
+    <sort name="eye" super="body-part"/> 
+    <sort name="head" super="body-part"/> 
+
+    <sort name="flying-vehicle" super="vehicle"/>
+    <sort name="ship" super="flying-vehicle"/>
+    <sort name="land-vehicle" super="vehicle"/>
+    <sort name="rover" super="land-vehicle"/>
+    <sort name="shuttle" super="flying-vehicle"/>
+    <sort name="spaceship" super="ship"/>
+
+    <sort name="ai" super="object"/>
+    <sort name="disembodied-ai" super="ai,character"/>
+    <sort name="robot" super="ai,character"/>
+
+    <sort name="animal" super="character"/>
+    <sort name="human" super="animal,property"/>
+    <sort name="man" super="human,gender-masculine"/>
+    <sort name="woman" super="human,gender-femenine"/>
+
+    <sort name="mineral" super="item"/>
+    <sort name="bottle" super="item"/>
+    <sort name="card" super="item"/>
+    <sort name="water" super="drink"/>
+    <sort name="soda" super="drink"/>
+    <sort name="rope" super="item"/>
+    <sort name="explosive" super="item"/>
+    <sort name="cable" super="item"/>
+    <sort name="report" super="item"/>
+    <sort name="ration" super="food"/>
+    <sort name="sausage" super="food"/>
+    <sort name="vitamins" super="food"/>
+    <sort name="dumbbell" super="item"/>
+    <sort name="tube" super="item"/>
+    <sort name="milk" super="drink"/>
+    <sort name="powder-milk" super="drink"/>
+    <sort name="water-bottle" super="bottle,water"/>
+    <sort name="milk-bottle" super="bottle,milk"/>
+
+    <sort name="test-tube" super="tube"/>
+
+    <sort name="reel" super="item"/>
+    <sort name="plastic-reel" super="reel"/>
+
+    <sort name="tool" super="item"/>
+    <sort name="wrench" super="tool"/>
+    <sort name="screwdriver" super="tool"/>
+    <sort name="pliers" super="tool"/>
+
+    <sort name="clothing" super="item"/>
+    <sort name="suit" super="clothing"/>
+    <sort name="jumpsuit" super="suit"/>
+    <sort name="spacesuit" super="suit"/>
+    <sort name="helmet" super="clothing"/>
+
+    <sort name="diary" super="item"/>
+
+    <sort name="key-card" super="key,card"/>
+
+    <sort name="communicator" super="item"/>
+
+    <sort name="battery" super="item"/>
+
+    <sort name="hardware" super="object"/>
+
+    <sort name="shower" super="object"/>
+    <sort name="sink" super="object"/>
+    <sort name="toilet" super="obstacle"/>
+
+    <sort name="wall" super="obstacle"/>
+    <sort name="rock" super="obstacle"/>
+    <sort name="furniture" super="obstacle"/>
+    <sort name="light-furniture" super="furniture"/>
+    <sort name="chair" super="light-furniture"/>
+    <sort name="bed" super="furniture"/>
+    <sort name="infirmary-bed" super="bed"/>
+    <sort name="table" super="furniture"/>
+    <sort name="computer-table" super="table"/>
+    <sort name="stove" super="furniture"/>
+    <sort name="shelves" super="furniture"/>
+    <sort name="bench" super="light-furniture"/>
+    <sort name="gym-bench" super="bench"/>
+
+    <sort name="light" super="object"/>
+    <sort name="emergency-light" super="light"/>
+    <sort name="screen" super="object,shape.flat"/>
+    <sort name="equipment" super="obstacle,hardware"/>
+    <sort name="command-display" super="equipment,screen"/>
+
+    <sort name="crate" super="obstacle-container,furniture,box"/>
+    <sort name="barrel" super="obstacle-container,furniture"/>
+    <sort name="fridge" super="obstacle-container,furniture"/>
+    <sort name="pod" super="obstacle-container"/>
+    <sort name="stasis-pod" super="obstacle-container,pod"/>
+    <sort name="basket" super="obstacle-container"/>
+
+    <sort name="window" super="object"/>
+
+    <sort name="poster" super="object"/>
+
+    <sort name="can" super="item"/>
+    <sort name="system" super="object"/>
+    <sort name="memory-bank" super="object"/>
+
+    <sort name="machine" super="object"/>
+    <sort name="panel" super="object,shape.flat"/>
+
+    <sort name="computer" super="equipment,machine"/>
+    <sort name="computer-tower" super="computer,tower"/>
+    <sort name="printer" super="equipment,machine"/>
+    <sort name="3dprinter" super="printer"/>
+    <sort name="metal-3dprinter" super="3dprinter"/>
+    <sort name="plastic-3dprinter" super="3dprinter"/>
+    <sort name="washing-machine" super="equipment,machine"/>
+    <sort name="treadmill" super="furniture,machine"/>
+
+    <sort name="coordination" super="abstract-entity"/>
+    <sort name="route" super="abstract-entity"/>
+    <sort name="strength" super="abstract-entity,property"/>
+    <sort name="process" super="abstract-entity"/>
+    <sort name="sentence" super="abstract-entity"/>
+    <sort name="analysis" super="process"/>
+    <sort name="reanimation" super="process"/>
+    <sort name="test" super="process"/>
+    <sort name="anomaly" super="abstract-entity"/>
+    <sort name="communication" super="abstract-entity"/>
+    <sort name="transmission" super="abstract-entity"/>
+    <sort name="data" super="abstract-entity"/>
+
+    <sort name="situation" super="abstract-entity"/>
+    <sort name="emergency" super="situation"/>
+
+    <sort name="language" super="abstract-entity"/>
+
+    <sort name="sound" super="abstract-entity"/>
+    <sort name="voice" super="sound"/>
+
+    <sort name="feeling" super="abstract-entity"/>
+
+    <sort name="state" super="abstract-entity"/>
+    <sort name="state.welcome" super="state"/>
+    <sort name="state.wonder" super="state"/>
+
+    <sort name="event" super="any"/>
+    <sort name="cave-in" super="event"/>
+
+    <sort name="role" super="property-with-value,abstract-entity"/>
+    <sort name="unique-role" super="role"/>    <!-- roles that can be filled by just one character -->
+    <sort name="profession" super="role"/>
+    <sort name="medic" super="profession"/>
+    <sort name="supervisor" super="profession,unique-role"/>
+    <sort name="maintenance-robot" super="profession"/>
+    <sort name="rover-driver" super="profession"/>
+    <sort name="writer" super="profession"/>
+    <sort name="scifi-writer" super="profession"/>
+    <sort name="scientist" super="profession"/>
+    <sort name="astronomer" super="scientist"/>
+    <sort name="biologist" super="scientist"/>
+    <sort name="physicist" super="scientist"/>
+    <sort name="mathematician" super="scientist"/>
+    <sort name="captain" super="profession"/>
+
+    <sort name="in-stasis" super="property,#stateSort"/>
+    <sort name="alone" super="property,#stateSort"/>
+    <sort name="alone-in" super="relation,#stateSort"/>
+
+    <sort name="username" super="property-with-value,abstract-entity"/>
+    <sort name="password" super="property-with-value,abstract-entity"/>    
+
+    <sort name="relation.belongs" super="relation"/>
+    <sort name="relation.cause" super="relation"/>
+    <sort name="relation.composition" super="relation"/>
+    <sort name="relation.effect" super="relation"/>
+    <sort name="relation.origin" super="relation"/>
+    <sort name="relation.owns" super="relation"/>
+    <sort name="relation.purpose" super="relation"/>
+    <sort name="relation.target" super="relation"/>
+    <sort name="relation.tool" super="relation"/>
+    <sort name="relation.through" super="relation"/>
+
+    <sort name="relation.smaller" super="relation"/>
+    <sort name="relation.larger" super="relation"/>
+
+    <sort name="permitted-in" super="relation"/>
+    <sort name="permission-to-access" super="abstract-entity,haveable-property-with-value"/>
+
+    <sort name="relation-verb" super="verb,relation"/>
+    <sort name="movementverb" super="verb"/>    
+
+    <sort name="verb.be" super="verb"/>
+    <sort name="verb.do" super="verb,#stateSort"/>
+    <sort name="verb.will" super="modal-verb"/>
+    <sort name="verb.may" super="modal-verb"/>
+    <sort name="verb.can" super="modal-verb"/>
+    <sort name="verb.shall" super="modal-verb"/>
+    <sort name="verb.caused" super="relation-verb,relation.cause"/>
+    <sort name="verb.call" super="verb"/>
+    <sort name="verb.disambiguate" super="verb"/>
+    <sort name="verb.get" super="verb"/>
+    <sort name="verb.gather" super="verb.get"/>
+    <sort name="verb.go" super="verb"/>
+    <sort name="verb.go-to" super="verb.go"/>
+    <sort name="verb.take-to" super="verb"/>
+    <sort name="verb.come" super="verb.go"/>
+    <sort name="verb.come-back" super="verb.come"/>
+    <sort name="verb.come-to" super="verb.come"/>
+    <sort name="verb.access" super="verb"/>
+    <sort name="verb.enter" super="verb.go,verb.access"/>
+    <sort name="verb.reach" super="verb.go-to"/>
+    <sort name="verb.go-out" super="verb.go"/>
+    <sort name="verb.enumerate" super="verb"/>
+    <sort name="verb.leave" super="verb"/>
+    <sort name="verb.arrive" super="verb"/>
+    <sort name="verb.arrive-to" super="verb.arrive"/>
+    <sort name="verb.define" super="verb"/>
+    <sort name="verb.find" super="verb"/>
+    <sort name="verb.fill" super="verb"/>
+    <sort name="verb.follow" super="verb"/>
+    <sort name="verb.happen" super="verb,#stateSort"/>
+    <sort name="verb.know" super="verb"/>
+    <sort name="verb.remember" super="verb.know"/>
+    <sort name="verb.try" super="verb"/>
+    <sort name="verb.thank" super="verb"/>
+    <sort name="verb.think" super="verb"/>
+    <sort name="verb.have" super="relation-verb"/>
+    <sort name="relation.contains" super="verb.have"/>    
+    <sort name="verb.heal" super="verb"/>
+    <sort name="verb.hear" super="verb"/>
+    <sort name="verb.help" super="verb"/>
+    <sort name="verb.move" super="verb"/>
+    <sort name="verb.need" super="verb"/>
+    <sort name="verb.parse" super="verb"/>
+    <sort name="verb.put" super="verb"/>
+    <sort name="verb.repair" super="verb"/>
+    <sort name="verb.see" super="verb"/>
+    <sort name="verb.look-at" super="verb.see"/>
+    <sort name="verb.run" super="movementverb"/>
+    <sort name="verb.show" super="verb"/>
+    <sort name="verb.sleep" super="verb"/>
+    <sort name="verb.stand" super="verb"/>
+    <sort name="verb.test" super="verb"/>
+    <sort name="verb.understand" super="relation-verb"/>
+    <sort name="verb.seem" super="verb"/>
+    <sort name="verb.stop" super="verb"/>
+    <sort name="verb.wait" super="verb.stop"/>
+    <sort name="verb.walk" super="movementverb"/>
+    <sort name="verb.want" super="verb"/>
+    <sort name="verb.allow" super="verb"/>
+    <sort name="verb.build" super="verb"/>
+    <sort name="verb.switch" super="verb"/>
+    <sort name="verb.switch-on" super="verb.switch"/>
+    <sort name="verb.switch-off" super="verb.switch"/>
+    <sort name="verb.malfunction" super="verb"/>
+    <sort name="verb.supervise" super="verb"/>
+    <sort name="verb.occupy" super="verb"/>
+    <sort name="verb.colonize" super="verb.occupy"/>
+    <sort name="verb.connect" super="verb"/>
+    <sort name="verb.connect-to" super="verb.connect"/>
+    
+    <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
+    <sort name="action.talk" super="actionverb"/>
+    <sort name="action.take" super="actionverb"/>
+    <sort name="action.give" super="actionverb"/>
+    <sort name="action.drop" super="actionverb"/>
+    <sort name="action.push" super="actionverb"/>
+    <sort name="action.pull" super="actionverb"/>
+    <sort name="action.open" super="actionverb"/>
+    <sort name="action.close" super="actionverb"/>
+    <sort name="action.use" super="actionverb"/>
+    <sort name="action.interact" super="actionverb"/>
+    <sort name="action.die" super="actionverb"/>
+    <sort name="action.memorize" super="actionverb"/>
+    <sort name="action.answer.predicate" super="actionverb"/>
+    <sort name="action.answer.predicate-negated" super="actionverb"/>
+    <sort name="action.answer.whereis" super="actionverb"/>
+    <sort name="action.answer.whereto" super="actionverb"/>
+    <sort name="action.answer.whois.name" super="actionverb"/>
+    <sort name="action.answer.whois.noname" super="actionverb"/>
+    <sort name="action.answer.whatis.name" super="actionverb"/>
+    <sort name="action.answer.whatis.noname" super="actionverb"/>
+    <sort name="action.answer.query" super="actionverb"/>
+    <sort name="action.answer.query-followup" super="actionverb"/>
+    <sort name="action.answer.howmany" super="actionverb"/>
+    <sort name="action.answer.when" super="actionverb"/>
+    <sort name="action.answer.why" super="actionverb"/>
+    <sort name="action.answer.how" super="actionverb"/>
+    
+    <sort name="verb.tell" super="action.talk"/>
+    <sort name="verb.ask" super="action.talk"/>
+
+    <sort name="=" super="symmetric-relation"/>
+
+    <sort name="goal" super="property-with-value,#stateSort"/>
+
+    <sort name="intention" super="any"/>
+
+    <sort name="start" super="abstract-entity"/>    
+    <sort name="end" super="abstract-entity"/>   
+
+    <sort name="relation.opens" super="relation"/>
+
+    <sort name="time" super="any"/>
+    <sort name="time.location" super="time"/>
+    <sort name="time.current" super="time,property"/>
+    <sort name="time.permanent" super="time,property"/>
+    <sort name="time.at" super="time,relation"/>
+    <sort name="time.past" super="time"/>
+    <sort name="time.present" super="time"/>
+    <sort name="time.future" super="time"/>
+    <sort name="time.later" super="time.location,time.future"/>
+    <sort name="time.now" super="time.location,time.present"/>
+    <sort name="time.subsequently" super="time.later,relation"/>
+    <sort name="time.today" super="time.now"/>
+    <sort name="time.yesterday" super="time.past"/>
+    <sort name="time.first" super="time"/>
+    <sort name="time.never" super="time"/>
+    <sort name="time.start" super="time.location,start"/>
+    <sort name="time.end" super="time.location,end"/>
+    <sort name="time.date" super="time"/>
+
+    <sort name="time.unit" super="time,measuring-unit"/>
+    <sort name="time.second" super="time.unit"/>
+    <sort name="time.minute" super="time.unit"/>
+    <sort name="time.hour" super="time.unit"/>
+    <sort name="time.day" super="time.unit"/>
+    <sort name="time.week" super="time.unit"/>
+    <sort name="time.month" super="time.unit"/>
+    <sort name="time.year" super="time.unit"/>
+    <sort name="time.century" super="time.unit"/>
+    <sort name="time.millenium" super="time.unit"/>
+
+    <sort name="space" super="any"/>
+    <sort name="space.location" super="space"/>
+    <sort name="space.position" super="space.location"/>
+    <sort name="spatial-relation" super="space,relation,#stateSort"/>
+    <sort name="space.at" super="spatial-relation,#stateSort"/>
+    <sort name="space.on.top.of" super="space.at"/>
+    <sort name="space.outside" super="space.location"/>
+    <sort name="space.outside.of" super="spatial-relation,symmetric-relation"/>
+    <sort name="space.connects" super="spatial-relation,symmetric-relation"/>
+    <sort name="space.here" super="space.location"/>
+    <sort name="space.there" super="space.location"/>
+    <sort name="space.away" super="space.location"/>
+    <sort name="space.north.of" super="spatial-relation"/>
+    <sort name="space.east.of" super="spatial-relation"/>
+    <sort name="space.west.of" super="spatial-relation"/>
+    <sort name="space.south.of" super="spatial-relation"/>
+    <sort name="space.northeast.of" super="space.north.of,space.east.of"/>
+    <sort name="space.northwest.of" super="space.north.of,space.west.of"/>
+    <sort name="space.southeast.of" super="space.south.of,space.east.of"/>
+    <sort name="space.southwest.of" super="space.south.of,space.west.of"/>
+    <sort name="space.in.front.of" super="spatial-relation"/>
+    <sort name="space.behind" super="spatial-relation"/>
+    <sort name="space.bottom" super="space.location"/>
+    <sort name="space.top" super="space.location"/>
+    <sort name="space.front" super="space.location"/>
+    <sort name="space.back" super="space.location"/>
+    <sort name="space.start" super="space.location,start"/>
+    <sort name="space.end" super="space.location,end"/>
+    <sort name="space.exit" super="space.location"/>
+    <sort name="distance" super="space,relation-with-value,#stateSort,abstract-entity"/>
+
+    <sort name="celestial-entity" super="object,space.location"/>
+    <sort name="outer-space" super="space,celestial-entity"/>
+    <sort name="universe" super="celestial-entity"/>
+    <sort name="galaxy" super="celestial-entity"/>
+    <sort name="star-system" super="celestial-entity"/>
+    <sort name="celestial-body" super="celestial-entity"/>
+    <sort name="planet" super="celestial-body"/>
+    <sort name="star" super="celestial-body"/>
+    <sort name="satelite" super="celestial-body"/>
+    <sort name="moon" super="satelite"/>    
+
+    <sort name="damage" super="abstract-entity"/> 
+    <sort name="tear" super="space,object,damage"/>  
+
+    <sort name="distance.unit" super="measuring-unit,distance"/>
+    <sort name="milimeter" super="distance.unit"/>
+    <sort name="meter" super="distance.unit"/>
+    <sort name="kilometer" super="distance.unit"/>
+    <sort name="light-year" super="distance.unit"/>
+
+    <sort name="mass.unit" super="measuring-unit"/>
+    <sort name="gram" super="mass.unit"/>
+    <sort name="kilogram" super="mass.unit"/>
+    <sort name="ton" super="mass.unit"/>
+
+    <sort name="in-the-same-way" super="any"/>
+
+    <sort name="map" super="space.location"/>
+    <sort name="path" super="space,abstract-entity"/>
+    <sort name="tunnel" super="space.location"/>
+    <sort name="indoor.location" super="space.location"/>
+    <sort name="outdoor.location" super="space.location"/>
+    <sort name="building" super="space.location,obstacle"/>
+    <sort name="facility" super="space.location,obstacle"/>
+    <sort name="settlement" super="space.location"/>
+    <sort name="station" super="space.location"/>
+    <sort name="room" super="indoor.location"/>
+    <sort name="corridor" super="indoor.location"/>
+    <sort name="bedroom" super="room"/>
+    <sort name="kitchen" super="room"/>
+    <sort name="mess.hall" super="room"/>
+    <sort name="storage.room" super="room"/>
+    <sort name="bathroom" super="room"/>
+    <sort name="laundry.room" super="room"/>
+    <sort name="gym.room" super="room"/>
+    <sort name="infirmary" super="room"/>
+    <sort name="lab.room" super="room"/>
+    <sort name="garage" super="room"/>
+    <sort name="airlock" super="room"/>
+
+    <sort name="communication.tower" super="facility,tower"/>
+    <sort name="recycling.facility" super="facility"/>
+    <sort name="oxygentank.facility" super="facility,tank"/>
+    <sort name="waterfiltering.facility" super="facility"/>
+    <sort name="greenhouse.facility" super="facility"/>
+    <sort name="powerplant.facility" super="facility"/>
+    <sort name="solarpanel.facility" super="facility,panel"/>
+    <sort name="batteryrecharge.facility" super="facility"/>
+
+    <sort name="cave" super="outdoor.location"/>
+    <sort name="valley" super="outdoor.location"/>
+    <sort name="canyon" super="outdoor.location"/>
+
+    <sort name="three-laws-of-robotics" super="abstract-entity"/>
+
+    <sort name="name" super="property-with-value,abstract-entity"/>
+
+    <sort name="size" super="property"/>
+    <sort name="big" super="size"/>
+    <sort name="great" super="big"/>
+    <sort name="small" super="size"/>
+    <sort name="size.medium" super="size"/>
+
+    <sort name="length" super="property"/>
+    <sort name="short" super="length"/>
+    <sort name="long" super="length"/>
+
+    <sort name="temperature" super="property,#stateSort"/>
+    <sort name="cold" super="temperature"/>
+    <sort name="hot" super="temperature"/>
+
+    <sort name="height" super="property-with-value,abstract-entity"/>
+    <sort name="weight" super="property-with-value,abstract-entity"/>
+    <sort name="light-weight" super="weight"/>
+    <sort name="heavy-weight" super="weight"/>
+
+    <sort name="powered.state" super="property-with-value,abstract-entity"/>
+    <sort name="powered.on" super="powered.state"/>
+    <sort name="powered.off" super="powered.state"/>
+
+    <sort name="color" super="property-with-value,abstract-entity"/>
+    <sort name="red" super="color"/>
+    <sort name="green" super="color"/>
+    <sort name="blue" super="color"/>
+    <sort name="orange" super="color"/>
+    <sort name="yellow" super="color"/>
+    <sort name="white" super="color"/>
+    <sort name="purple" super="color"/>
+    <sort name="grey" super="color"/>
+    <sort name="black" super="color"/>
+
+    <sort name="cardinal-direction" super="property"/>
+    <sort name="east" super="cardinal-direction"/>
+    <sort name="north" super="cardinal-direction"/>
+    <sort name="south" super="cardinal-direction"/>
+    <sort name="west" super="cardinal-direction"/>
+    <sort name="northeast" super="cardinal-direction,north,east"/>
+    <sort name="northwest" super="cardinal-direction,north,west"/>
+    <sort name="southeast" super="cardinal-direction,south,east"/>
+    <sort name="southwest" super="cardinal-direction,south,west"/>
+
+    <sort name="property.opened" super="property,#stateSort"/>
+    <sort name="property.closed" super="property,#stateSort"/>
+    <sort name="property.broken" super="property"/>
+    <sort name="property.born" super="property-with-value"/>
+    <sort name="property.age" super="property-with-value"/>
+    <sort name="property.problem" super="property-with-value"/>
+    <sort name="property.strange" super="property"/>
+
+    <sort name="awake" super="property"/>
+    <sort name="erased" super="property"/>
+    <sort name="healthy" super="property"/>
+    <sort name="sick" super="property"/>
+    <sort name="mortal" super="property"/>
+    <sort name="sure" super="property"/>
+    <sort name="hungry" super="property"/>
+    <sort name="thirsty" super="property"/>
+    <sort name="bored" super="property"/>
+    <sort name="property.old" super="property"/>
+
+    <sort name="alive" super="property,#stateSort"/>
+    <sort name="dead" super="property"/>
+    <sort name="corpse" super="human,dead"/>
+
+    <sort name="fill-level" super="#stateSort"/>
+    <sort name="full" super="fill-level,property,#stateSort"/>
+    <sort name="fill.medium" super="fill-level,property,#stateSort"/>
+    <sort name="low" super="fill-level,property,#stateSort"/>
+    <sort name="empty" super="fill-level,property,#stateSort"/>
+
+    <sort name="oxygen-level" super="fill-level,property-with-value"/>
+
+    <sort name="else" super="property"/>
+</ontology>

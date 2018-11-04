@@ -1,0 +1,61 @@
+<Characters>
+	<CharacterClass class="qwerty" super="robot" name="Qwerty">
+		<animation name="idle-left" dx="2" dy="3" period="4" looping="false" file="robots.png">6</animation>
+		<animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="robots.png">0</animation>
+		<animation name="idle-right" dx="2" dy="3" period="4" looping="false" file="robots.png">4</animation>
+		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="robots.png">2</animation>
+
+		<animation name="moving-left" dx="2" dy="3" period="4" looping="false" file="robots.png">6,14</animation>
+		<animation name="moving-down" dx="2" dy="3" period="4" looping="false" file="robots.png">0,8</animation>
+		<animation name="moving-right" dx="2" dy="3" period="4" looping="false" file="robots.png">4,12</animation>
+		<animation name="moving-up" dx="2" dy="3" period="4" looping="false" file="robots.png">2,10</animation>
+
+		<animation name="talking-down" dx="2" dy="3" period="6" looping="true" file="robots.png">0,48</animation>
+		<animation name="talking-up" dx="2" dy="3" period="6" looping="true" file="robots.png">2,50</animation>
+		<animation name="talking-right" dx="2" dy="3" period="6" looping="true" file="robots.png">4,52</animation>
+		<animation name="talking-left" dx="2" dy="3" period="6" looping="true" file="robots.png">6,54</animation>
+
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="12"/>
+		<attribute name="sightRadius" value="80"/>
+		<attribute name="tallness" value="16"/>
+		<attribute name="direction" value="3"/>
+
+		<items>
+			<object id="communicator" class="communicator" width="8" height="8"/>
+			<object is="science-key" class="blue-key" width="8" height="8"/>
+			<object id="maintenance-key" class="maintenanceyellow-key" name="maintenance key" width="8" height="8"/>
+			<object id="command-key" class="red-key" width="8" height="8"/>
+			<object id="stasis-key" class="green-key" width="8" height="8"/>
+			<object id="garage-key" class="garagepurple-key" width="8" height="8"/>
+			<object id="bedroom5-key" class="white-key" width="8" height="8"/>
+			<object id="master-key" class="master-key" width="8" height="8"/>
+		</items>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</CharacterClass>
+
+	<CharacterClass class="shrdlu" super="robot" name="Shrdlu">
+		<animation name="idle-down" dx="3" dy="3" period="4" looping="false" file="robots.png">96</animation>
+		<animation name="idle-up" dx="3" dy="3" period="4" looping="false" file="robots.png">99</animation>
+		<animation name="idle-right" dx="3" dy="3" period="4" looping="false" file="robots.png">102</animation>
+		<animation name="idle-left" dx="3" dy="3" period="4" looping="false" file="robots.png">105</animation>
+
+		<animation name="talking-down" dx="3" dy="3" period="6" looping="true" file="robots.png">96,192</animation>
+		<animation name="talking-up" dx="3" dy="3" period="6" looping="true" file="robots.png">99,195</animation>
+		<animation name="talking-right" dx="3" dy="3" period="6" looping="true" file="robots.png">102,198</animation>
+		<animation name="talking-left" dx="3" dy="3" period="6" looping="true" file="robots.png">105,201</animation>
+
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="12"/>
+		<attribute name="sightRadius" value="80"/>
+		<attribute name="tallness" value="16"/>
+		<attribute name="direction" value="3"/>
+
+		<onStart>
+			<addPerceptionProperty property="red"/>
+		</onStart>
+	</CharacterClass>
+</Characters>
+

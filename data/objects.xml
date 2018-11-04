@@ -1,0 +1,1070 @@
+<Objects>
+	<ObjectClass class="furniture" super="obstacle" name="furniture">
+		<attribute name="takeable" value="false"/>
+	</ObjectClass>
+	<ObjectClass class="equipment" super="obstacle" name="equipment">
+		<attribute name="takeable" value="false"/>
+	</ObjectClass>
+	<ObjectClass class="computer" super="equipment" name="computer"/>
+	<ObjectClass class="printer" super="equipment" name="printer"/>
+	<ObjectClass class="3dprinter" super="printer" name="3d printer"/>
+	<ObjectClass class="tool" super="item" name="tool"/>
+	<ObjectClass class="poster" super="object" name="poster"/>
+
+    <ObjectClass class="light-furniture" super="pushable-wall,*furniture" name="light furniture"/>
+    <ObjectClass class="bench" super="light-furniture" name="bench"/>
+
+	<ObjectClass class="table" super="furniture" name="table">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">242</animation>		
+	</ObjectClass>
+
+	<ObjectClass class="long-table" super="table" name="table">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="4" dy="2" period="4" looping="false" file="background.png">252</animation>		
+		<onStart>
+			<addPerceptionProperty property="long"/>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>
+
+	<ObjectClass class="barrel" super="obstacle-container" name="barrel">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closeable" value="false"/>
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">226</animation>		
+		<onStart>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="washing-machine" super="equipment" name="washing machine">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">240</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A washing machine, but I have nothing to wash." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="basket" super="obstacle-container" name="basket">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closeable" value="false"/>
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">304</animation>		
+		<animation name="full" dx="1" dy="2" period="4" looping="false" file="background.png">241</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="screen" super="object" name="screen">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="8" looping="true" file="background.png">5,22,24,26</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This screen is just showing basic status information about the station..." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="window" super="object" name="window">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">7</animation>		
+		<onStart>
+			<addPerceptionProperty property="property.closed"/>
+		</onStart>
+		<!--attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This is a window, I can see the landscape outside. Red sand all the way until the horizon." thought="true"/>
+        </eventRule-->
+	</ObjectClass>	
+
+    <ObjectClass class="light" super="object" name="light">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">13</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="bed" super="furniture" name="bed"/>
+
+	<ObjectClass class="bedroom-bed" super="bed" name="bed">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="true"/>
+		<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">230</animation>		
+		<animation name="idle-left" dx="2" dy="2" period="4" looping="false" file="background.png">294</animation>		
+		<eventRule event="interact" once="false">
+			<sleepOther/> <!-- This will automatically set the "characterIn" variable -->
+		</eventRule>
+		<eventRule event="story_state" once="false" scope="object" variable="characterIn" value="true">
+			<animation>
+				<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">392</animation>		
+			</animation>
+			<animation>
+				<animation name="idle-left" dx="2" dy="2" period="4" looping="false" file="background.png">388</animation>		
+			</animation>
+		</eventRule>
+		<eventRule event="story_state" once="false" scope="object" variable="characterIn" value="false">
+			<animation>
+				<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">230</animation>		
+			</animation>
+			<animation>
+				<animation name="idle-left" dx="2" dy="2" period="4" looping="false" file="background.png">294</animation>		
+			</animation>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="infirmary-bed" super="bed" name="infirmary bed">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="true"/>
+		<animation name="idle-right" dx="3" dy="2" period="4" looping="false" file="background.png">121</animation>		
+		<eventRule event="interact" once="false">
+			<sleepOther/> <!-- This will automatically set the "characterIn" variable -->
+		</eventRule>
+		<eventRule event="story_state" once="false" scope="object" variable="characterIn" value="true">
+			<animation>
+				<animation name="idle-right" dx="3" dy="2" period="4" looping="false" file="background.png">185</animation>		
+			</animation>
+		</eventRule>
+		<eventRule event="story_state" once="false" scope="object" variable="characterIn" value="false">
+			<animation>
+				<animation name="idle-right" dx="3" dy="2" period="4" looping="false" file="background.png">121</animation>		
+			</animation>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="computer-table" super="table" name="computer table">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle-left" dx="1" dy="4" period="4" looping="false" file="background.png">235</animation>		
+		<animation name="idle-right" dx="1" dy="4" period="4" looping="false" file="background.png">236</animation>		
+		<animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="background.png">228</animation>		
+		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="background.png">448</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="There is a computer here. It's on, but it doesn't seem to recognize me, and I don't remember my username nor password... (if I ever had one)" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="stove" super="furniture" name="stove">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="true"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">248</animation>
+		<eventRule event="interact" once="false">
+			<if>
+				<condition>
+					<storyStateCheck scope="object" variable="power" value="off"/>
+				</condition>
+				<then>
+					<storyState scope="object" variable="power" value="on"/>
+					<addPerceptionProperty property="hot"/>
+					<animation>
+						<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">316</animation>
+					</animation>
+				</then>
+				<else>
+					<storyState scope="object" variable="power" value="off"/>
+					<removePerceptionProperty property="hot"/>
+					<animation>
+						<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">248</animation>
+					</animation>
+				</else>
+			</if>
+		</eventRule>
+		<onStart>
+			<storyState scope="object" variable="power" value="off"/>
+		</onStart>
+		<onStart>
+			<addPerceptionProperty property="black"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="chair" super="light-furniture" name="chair">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="true"/>
+		<animation name="idle-right" dx="1" dy="2" period="4" looping="false" file="background.png">238</animation>		
+		<animation name="idle-left" dx="1" dy="2" period="4" looping="false" file="background.png">239</animation>		
+		<animation name="idle-up" dx="1" dy="2" period="4" looping="false" file="background.png">318</animation>		
+		<animation name="idle-down" dx="1" dy="2" period="4" looping="false" file="background.png">319</animation>		
+		<eventRule event="interact">
+			<rotateRight/>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="gym-bench" super="bench" name="gym bench">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">246</animation>		
+		<onStart>
+			<addPerceptionProperty property="red"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="dumbbell" super="item" name="dumbbell"/>
+
+	<ObjectClass class="large-dumbbell" super="dumbbell" name="20lb dumbbell">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">244</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A large dumbbell" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="big"/>
+			<addPerceptionProperty property="black"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="small-dumbbell" super="dumbbell" name="10lb dumbbell">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">245</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A medium dumbbell" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="size.medium"/>
+			<addPerceptionProperty property="black"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="tiny-dumbbell" super="dumbbell" name="5lb dumbbell">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">276</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A small dumbbell" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="small"/>
+			<addPerceptionProperty property="black"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="treadmill" super="furniture" name="treadmill">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="true"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">305</animation>
+		<eventRule event="interact" once="false">
+			<if>
+				<condition>
+					<storyStateCheck scope="object" variable="power" value="off"/>
+				</condition>
+				<then>
+					<storyState scope="object" variable="power" value="on"/>
+					<animation>
+						<animation name="idle" dx="2" dy="2" period="3" looping="true" file="background.png">311,309,307,305</animation>
+					</animation>
+				</then>
+				<else>
+					<storyState scope="object" variable="power" value="off"/>
+					<animation>
+						<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">305</animation>
+					</animation>
+				</else>
+			</if>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="black"/>
+			<addPerceptionProperty property="white"/>
+			<storyState scope="object" variable="power" value="off"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="shower" super="object" name="shower">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">149</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="I really don't feel like having a shower now..." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="sink" super="object" name="sink">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">148</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="I don't feel like washing my hands right now." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="toilet" super="obstacle" name="toilet">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">288</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="I don't have any urges of that kind right now..." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="communicator" super="item" name="communicator">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">361</animation>		
+		<attribute name="useable" value="true"/>
+		<eventRule event="use">
+			<if>
+				<condition><inMapCheck map="Aurora Station"/></condition>
+				<then><talkOther text="It is working, Etaoin should hear me if I talk" thought="true"/></then>
+				<else>
+					<if>
+						<condition><inMapCheck map="Aurora Station Outdoors"/></condition>
+						<then><talkOther text="It is working, Etaoin should hear me if I talk" thought="true"/></then>
+						<else><talkOther text="I see a red light, I think it is out of range..." thought="true"/></else>
+					</if>
+				</else>
+			</if>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="small"/>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="key-card" super="key,card" name="key card">
+		<onStart>
+			<addPerceptionProperty property="small"/>
+		</onStart>
+	</ObjectClass>
+
+	<ObjectClass class="master-key" super="key-card" name="master key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">357</animation>		
+		<attribute name="keyID" value="MASTERKEY"/>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="white-key" super="key-card" name="bedroom key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">357</animation>		
+		<attribute name="keyID" value="BEDROOM5"/>
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="green-key" super="key-card" name="stasis key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">127</animation>		
+		<attribute name="keyID" value="STASIS"/>
+		<onStart>
+			<addPerceptionProperty property="green"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="blue-key" super="key-card" name="science key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">359</animation>		
+		<attribute name="keyID" value="SCIENCE"/>
+		<onStart>
+			<addPerceptionProperty property="blue"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="red-key" super="key-card" name="command key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">358</animation>		
+		<attribute name="keyID" value="COMMAND"/>
+		<onStart>
+			<addPerceptionProperty property="red"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="maintenanceyellow-key" super="key-card" name="maint. key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">360</animation>		
+		<attribute name="keyID" value="MAINTENANCE"/>
+		<onStart>
+			<addPerceptionProperty property="yellow"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="garagepurple-key" super="key-card" name="garage key">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">277</animation>		
+		<attribute name="keyID" value="GARAGE"/>
+		<onStart>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="wrench" super="tool" name="wrench">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">356</animation>		
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="screwdriver" super="tool" name="screwdriver">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">345</animation>		
+	</ObjectClass>		
+
+	<ObjectClass class="pliers" super="tool" name="pliers">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">346</animation>		
+	</ObjectClass>		
+
+	<ObjectClass class="cable" super="item" name="cable">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">347</animation>		
+		<onStart>
+			<addPerceptionProperty property="yellow"/>
+		</onStart>
+	</ObjectClass>		
+
+
+    <ObjectClass class="battery" super="item" name="battery">
+    </ObjectClass>
+
+	<ObjectClass class="empty-battery" super="battery" name="empty battery">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">475</animation>		
+		<onStart>
+			<addPerceptionProperty property="empty"/>
+		</onStart>
+	</ObjectClass>		
+
+	<ObjectClass class="full-battery" super="battery" name="full battery">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">476</animation>		
+		<onStart>
+			<addPerceptionProperty property="full"/>
+		</onStart>
+	</ObjectClass>		
+
+    <ObjectClass class="drink" super="food" name="drink"/>
+    <ObjectClass class="water" super="drink" name="drink"/>
+
+    <ObjectClass class="soda" super="drink,can" name="soda can">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">324</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+    	<if>
+  		  <condition><drinkIfThirsty timer="7200"/></condition>  <!-- 7200 is 2 hours of in-game time -->
+  		  <then><talkOther text="Refreshing!" thought="true"/><loseItem type="soda"/></then>
+  		  <else><talkOther text="I am not thirsty right now..." thought="true"/></else>
+        </if>
+      </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="sausage" super="food" name="sausage">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">325</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+	    <if>
+	  	  <condition><eatIfHungry timer="7200"/></condition>  <!-- 7200 is 2 hours of in-game time -->
+	  	  <then><talkOther text="That sausage was tasty!" thought="true"/><loseItem type="sausage"/></then>
+	  	  <else><talkOther text="I am not hungry right now..." thought="true"/></else>
+	    </if>
+	  </eventRule>
+    </ObjectClass>
+
+    <!--ObjectClass class="cooked-sausage" super="sausage" name="cooked sausage">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">505</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I am not hungry right now..." thought="true"/>
+	  </eventRule>
+    </ObjectClass-->
+
+    <ObjectClass class="ration" super="food" name="ration">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">390</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+	    <if>
+	  	  <condition><eatIfHungry timer="7200"/></condition>  <!-- 7200 is 2 hours of in-game time -->
+	  	  <then><talkOther text="Meh, that filled me up, but it wasn't very tasty..." thought="true"/><loseItem type="ration"/></then>
+	  	  <else><talkOther text="I am not hungry right now..." thought="true"/></else>
+	    </if>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="empty-bottle" super="item,bottle" name="empty bottle">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">463</animation>
+	  <onStart>
+		<addPerceptionProperty property="empty"/>
+  	  </onStart>
+    </ObjectClass>
+
+    <ObjectClass class="water-bottle" super="water,bottle" name="water bottle">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">391</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+    	<if>
+  		  <condition><drinkIfThirsty timer="7200"/></condition>  <!-- 7200 is 2 hours of in-game time -->
+  		  <then><talkOther text="Refreshing!" thought="true"/><loseItem type="water-bottle"/></then>
+  		  <else><talkOther text="I am not thirsty right now..." thought="true"/></else>
+        </if>
+	  </eventRule>
+  	  <onStart>
+	 	<addPerceptionProperty property="full"/>
+	  </onStart>
+    </ObjectClass>
+
+    <ObjectClass class="powder-milk" super="item,milk" name="powder milk">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">477</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+      	<if>
+			<condition>
+				<hasItemCheck type="water-bottle"/>
+			</condition>
+			<then>
+				<loseItem type="water-bottle"/>
+				<talkOther text="There! Mixed!" thought="true"/>
+				<gainItem><object class="milk-bottle"/></gainItem>
+				<loseItem type="powder-milk"/>
+			</then>
+			<else>
+				<talkOther text="I need to ix this with water..." thought="true"/>
+			</else>
+		</if>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="milk-bottle" super="milk,bottle" name="milk bottle">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">478</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+    	<if>
+  		  <condition><drinkIfThirsty timer="7200"/></condition>  <!-- 7200 is 2 hours of in-game time -->
+  		  <then><talkOther text="Not real milk, but it wasn't bad!" thought="true"/><loseItem type="milk-bottle"/></then>
+  		  <else><talkOther text="I am not thirsty right now..." thought="true"/></else>
+        </if>
+	  </eventRule>
+  	  <onStart>
+	 	<addPerceptionProperty property="full"/>
+	  </onStart>
+    </ObjectClass>
+
+    <ObjectClass class="vitamins" super="food" name="vitamins">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">479</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="Qwerty said I was healthy, I don't think I need them..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="jumpsuit" super="item,suit" name="jumpsuit">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">507</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I am already wearing one..." thought="true"/>
+	  </eventRule>
+	  <onStart>
+		<addPerceptionProperty property="white"/>
+	  </onStart>
+    </ObjectClass>
+
+    <ObjectClass class="test-tube" super="item,tube" name="test tube">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">508</animation>
+  	  <onStart>
+	 	<addPerceptionProperty property="empty"/>
+	  </onStart>
+    </ObjectClass>
+
+    <ObjectClass class="metal-spade" super="spade" name="spade">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">509</animation>
+    </ObjectClass>
+
+    <ObjectClass class="reel" super="item" name="reel"/>
+
+    <ObjectClass class="plastic-reel" super="reel" name="plastic reel">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">510</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I think these are spares feed lines for 3d printers..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="diary" super="item" name="diary">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
+    </ObjectClass>
+
+	<ObjectClass class="crate" super="obstacle-container" name="crate">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closed" value="true"/>
+		<animation name="closed" dx="1" dy="2" period="4" looping="false" file="background.png">227</animation>		
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">291</animation>		
+		<eventRule event="interact" once="false">
+			<playSound sound="data/sfx/openContainer.wav"/>
+		</eventRule>
+		<onStart>
+			<addPerceptionProperty property="orange"/>
+			<addPerceptionProperty property="yellow"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="shelves" super="furniture" name="shelves">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle-left" dx="1" dy="4" period="4" looping="false" file="background.png">237</animation>		
+		<animation name="idle-right" dx="1" dy="4" period="4" looping="false" file="background.png">237</animation>		
+		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="background.png">158</animation>		
+		<animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="background.png">250</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="gym-shelves" super="shelves" name="shelves">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle-down" dx="2" dy="2" period="4" looping="false" file="background.png">302</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="fridge" super="obstacle-container" name="fridge">
+		<attribute name="tallness" value="16"/>
+		<attribute name="closed" value="true"/>
+		<animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">352</animation>		
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">354</animation>		
+		<eventRule event="interact" once="false">
+			<playSound sound="data/sfx/openContainer.wav"/>
+		</eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="horizontal-door" super="door" name="door">
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">132,130,128</animation>
+      <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">130,132,134</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+    </ObjectClass>
+
+	<ObjectClass class="vertical-door" super="door" name="door">
+      <animation name="closed" dx="1" dy="4" period="4" looping="false" file="background.png">19,18,17,16</animation>
+      <animation name="idle" dx="1" dy="4" period="4" looping="false" file="background.png">17,18,19,20</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+    </ObjectClass>
+
+	<ObjectClass class="airlock-door" super="door" name="door">
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">144,142,140,138,136</animation>
+      <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">138,140,142,144,146</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+    </ObjectClass>
+
+	<ObjectClass class="airlock-outside-door" super="ShrdluAirlockDoor" name="airlock-outside-door">
+      <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">136</animation>
+      <attribute name="tallness" value="16"/>
+    </ObjectClass>
+
+	<ObjectClass class="corpse" super="human" name="corpse">
+		<attribute name="takeable" value="false"/>
+		<onStart>
+			<addPerceptionProperty property="dead"/>
+		</onStart>
+	</ObjectClass>
+
+	<ObjectClass class="stasis-pod" super="obstacle-container" name="stasis pod">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closed" value="false"/>
+		<animation name="closed" dx="3" dy="2" period="4" looping="false" file="background.png">182</animation>
+		<animation name="idle" dx="3" dy="2" period="4" looping="false" file="background.png">118</animation>
+		<eventRule event="interact" once="false">
+			<playSound sound="data/sfx/openContainer.wav"/>
+		</eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="broken-stasis-pod" super="obstacle-container" name="stasis pod">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closed" value="true"/>
+		<animation name="closed" dx="3" dy="2" period="4" looping="false" file="background.png">28</animation>
+		<animation name="idle" dx="3" dy="2" period="4" looping="false" file="background.png">92</animation>
+		<items>
+			<object id="corpse" class="corpse"/>
+		</items>
+		<eventRule event="interact" once="false">
+			<playSound sound="data/sfx/openContainer.wav"/>
+		</eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="computer-tower" super="computer" name="computer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">15</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Looks like a computer rack." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="wall-computer" super="computer" name="computer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">156,450</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This is a computer console, probably to interface directly with the stations main computers, I wouldn't know how to use it." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="scifi-posters" super="poster" name="poster">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">537</animation>		
+		<attribute name="interacteable" value="true"/>
+		<eventRule event="interact">
+			<cutScene cutscene="3"/>
+		</eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="microscope-table" super="table" name="microscope table">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">362</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A table with a microscope. I wouldn't dare touching it..." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="experiment-table" super="table" name="experiment table">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">364</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="There is some sort of cage with a reconstruction of an alien environment. Maybe someone was doing some science experiments..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="samples-table" super="table" name="samples table">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">366</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Some medical samples, I wouldn't dare touching it..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="metal-3dprinter" super="3dprinter" name="metal 3d printer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">368</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This seems like a large 3d printer" thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="plastic-3dprinter" super="3dprinter" name="plastic 3d printer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">372</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This seems like a large 3d printer" thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="command-display" super="equipment" name="command display">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="4" dy="3" period="4" looping="false" file="background.png">376</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Wow! This is a tactical display showing a detailed map of the surrouding area." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="rover" super="obstacle" name="rover">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">0</animation>
+		<animation name="idle-left" dx="5" dy="4" period="4" looping="false" file="vehicles.png">64</animation>
+		<animation name="idle-up" dx="4" dy="5" period="4" looping="false" file="vehicles.png">128</animation>
+		<animation name="idle-down" dx="4" dy="5" period="4" looping="false" file="vehicles.png">136</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+	      	<if>
+				<condition><storyStateCheck scope="game" variable="rover" value="working"/></condition>
+				<then>
+					<if>
+						<condition><storyStateCheck scope="game" variable="act1-corpse" value="discovered"/></condition>
+						<then>
+							<talkOther text="Ok! Let's go find Shrdlu!" thought="true"/>
+							<storyState scope="game" variable="act" value="act2"/>
+						</then>
+						<else>
+							<talkOther text="I could go find Shrdlu... but first I really want to see what's in that room behind the infirmary..." thought="true"/>
+						</else>
+					</if>
+				</then>
+				<else>
+			      	<if>
+						<condition><storyStateCheck scope="game" variable="rover" value="nobattery"/></condition>
+						<then>
+					      	<if>
+								<condition>
+									<hasItemCheck inventory="full battery"/>
+								</condition>
+								<then>
+									<loseItem inventory="full battery"/>
+									<storyState scope="game" variable="rover" value="working"/>
+									<talkOther text="There! Battery replaced!" thought="true"/>
+								</then>
+								<else><talkOther text="The battery of this rover was empty. I need to charge it or replace it..." thought="true"/></else>
+							</if>
+						</then>
+						<else>
+					      	<if>
+								<condition><storyStateCheck scope="game" variable="rover" value="nobattery-first"/></condition>
+								<then>
+									<talkOther text="Great! Now the battery is empty... Let me take it out to recharge it..." thought="true"/>
+									<gainItem id="empty-battery"><object class="empty-battery"/></gainItem>
+									<storyState scope="game" variable="rover" value="nobattery"/>
+								</then>
+								<else>
+							      	<if>
+										<condition>
+											<hasItemCheck inventory="pliers"/>
+											<hasItemCheck inventory="cable"/>
+										</condition>
+										<then>
+											<talkOther text="Allright, let me use this spare cable to fix it..." thought="true"/>
+											<loseItem inventory="cable"/>
+											<talkOther text="There! Fixed!" thought="true"/>
+											<storyState scope="game" variable="rover" value="nobattery-first"/>
+										</then>
+										<else>
+											<talkOther text="A bunch of cables are loose! I need to find tools to fix this before using the rover..." thought="true"/>
+											<talkOther text="Maybe Etaoin knows where the necessary tools are..." thought="true"/>
+										</else>
+							      	</if>        	
+								</else>
+					      	</if>        	
+						</else>
+			      	</if>        	
+				</else>
+	      	</if>        	
+        </eventRule>
+        <onStart>
+        	<storyState scope="game" variable="rover" value="broken"/>
+        </onStart>
+	</ObjectClass>		
+
+	<ObjectClass class="brokenrover" super="obstacle" name="rover">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">10</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This rover is missing the wheels!" thought="true"/>
+        </eventRule>
+  	</ObjectClass>		
+
+	<ObjectClass class="shuttle" super="obstacle" name="shuttle">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle-right" dx="5" dy="3" period="4" looping="false" file="vehicles.png">256</animation>
+		<animation name="idle-left" dx="5" dy="3" period="4" looping="false" file="vehicles.png">208</animation>
+		<animation name="idle-up" dx="4" dy="5" period="4" looping="false" file="vehicles.png">304</animation>
+		<animation name="idle-down" dx="4" dy="5" period="4" looping="false" file="vehicles.png">312</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This shuttle was never fully finished!" thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="brokenshuttle" super="obstacle" name="shuttle">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle-right" dx="5" dy="3" period="4" looping="false" file="vehicles.png">266</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This shuttle was never fully finished! It's missing it's right engine..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="helmet" super="item" name="helmet">
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">472</animation>
+      <attribute name="useable" value="true"/>
+      <eventRule event="use">
+      	<if>
+			<condition><storyStateCheck scope="game" variable="spacesuit" value="suit"/></condition>
+			<then>
+				<storyState scope="game" variable="spacesuit" value="helmet"/>
+				<attribute><attribute name="droppable" value="false"/></attribute>
+			</then>
+			<else>
+		      	<if>
+				<condition><storyStateCheck scope="game" variable="spacesuit" value="helmet"/></condition>
+				<then>
+					<if>
+						<condition><inMapCheck map="Aurora Station"/></condition>
+						<then>
+							<storyState scope="game" variable="spacesuit" value="suit"/>
+							<attribute><attribute name="droppable" value="true"/></attribute>
+						</then>
+						<else><talkOther text="I cannot take my helmet out here!" thought="true"/></else>
+					</if>
+				</then>
+				<else><talkOther text="I need to put on a spacesuit first!" thought="true"/></else>
+		      	</if>
+			</else>
+      	</if>
+      </eventRule>
+    </ObjectClass>
+
+	<ObjectClass class="spacesuit" super="item,suit" name="spacesuit"/>
+
+	<ObjectClass class="workingspacesuit" super="spacesuit" name="spacesuit">
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">473</animation>
+      <attribute name="useable" value="true"/>
+      <eventRule event="use">
+      	<if>
+			<condition><storyStateCheck scope="game" variable="spacesuit" value="false"/></condition>
+			<then>
+				<storyState scope="game" variable="spacesuit" value="suit"/>
+				<attribute><attribute name="droppable" value="false"/></attribute>
+			</then>
+			<else>
+				<if>
+					<condition><inMapCheck map="Aurora Station"/></condition>
+					<then>
+						<storyState scope="game" variable="spacesuit" value="false"/>
+						<attribute><attribute name="droppable" value="true"/></attribute>
+					</then>
+					<else><talkOther text="I cannot take my spacesuit out here!" thought="true"/></else>
+				</if>
+			</else>
+      	</if>
+      </eventRule>
+    </ObjectClass>
+
+	<ObjectClass class="brokenspacesuit" super="spacesuit" name="spacesuit">
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">474</animation>
+      <attribute name="useable" value="true"/>
+      <eventRule event="use">
+      	<talkOther text="This spacesuit is broken. It has a tear. I cannot use it like this! Maybe Etaoin knows where to fix it?" thought="true"/>
+      </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="facility" super="obstacle" name="facility">
+    </ObjectClass>    
+
+	<ObjectClass class="communication.tower" super="facility" name="communications tower">
+		<attribute name="tallness" value="24"/>
+		<animation name="idle" dx="3" dy="6" period="4" looping="false" file="background.png">545</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This seems like a communications tower." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="recycling.facility" super="facility" name="recycling facility">
+		<attribute name="tallness" value="16"/>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="These are recycling machines for different materials." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="paper.recycling.facility" super="recycling.facility" name="recycling facility">
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">486</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="plastic.recycling.facility" super="recycling.facility" name="recycling facility">
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">487</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="glass.recycling.facility" super="recycling.facility" name="recycling facility">
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">488</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="waste.recycling.facility" super="recycling.facility" name="recycling facility">
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">489</animation>		
+	</ObjectClass>	
+
+	<ObjectClass class="tank.facility" super="facility" name="recycling facility">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">582</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This is some sort of tank to store water or some other material." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="oxygentank.facility" super="facility" name="oxygen filtering">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="6" dy="5" period="4" looping="false" file="background.png">587</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This looks like an oxygen filtering and storage facility." thought="true"/>
+        	<talkOther text="Let me refill my oxygen tank here, just in case." thought="true"/>
+        	<refillOxygen/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="waterfiltering.facility" super="facility" name="water filtering">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">459</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Probably this is a water filter." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="greenhouse.facility" super="facility" name="greenhouse">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="8" dy="4" period="4" looping="false" file="background.png">497</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This is a greenhouse, to grow vegetables." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="solarpanel.facility" super="facility" name="solar panel">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">495</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="A solar panel, to produce electricity." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="batteryrecharge.facility" super="facility" name="recharging station">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">584</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<if>
+        		<condition><hasItemCheck inventory="empty battery"/></condition>
+        		<then>
+        			<loseItem inventory="empty battery"/>
+					<gainItem id="empty-battery"><object class="full-battery"/></gainItem>
+					<talkOther text="Ok! The battery is now charged!" thought="true"/>
+        		</then>
+        		<else><talkOther text="This looks like a battery recharging station." thought="true"/></else>
+        	</if>
+        </eventRule>
+	</ObjectClass>	
+
+</Objects>
