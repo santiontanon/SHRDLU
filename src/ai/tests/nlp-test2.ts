@@ -242,6 +242,7 @@ NLParseTest("anyone else", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pro
 
 // tests with dereference to context:
 NLParseTest("David", o.getSort("performative"), context, "perf.callattention('1'[#id])");
+NLParseTest("Hi there!", o.getSort("performative"), context, "perf.greet(V0)");
 NLParseTest("Hello, great Etaoin!", o.getSort("performative"), context, "perf.greet(V0:'etaoin'[#id])");
 NLParseTest("Hello human", o.getSort("performative"), context, "perf.greet(V0:'1'[#id])");
 NLParseTest("Hello white thing", o.getSort("performative"), context, "perf.greet(V0:'4'[#id])");
