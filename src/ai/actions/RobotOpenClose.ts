@@ -32,6 +32,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 //					s.y = (door.y+door.tallness)// - ai.robot.tallness;
 			        q.scripts.push(s);
 					ai.currentAction_scriptQueue = q;
+					ai.currentActionHandler = null;
 					ai.currentAction = intention;
 					ai.currentAction_requester = ir.requester;
 					ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),

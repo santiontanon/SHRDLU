@@ -65,6 +65,7 @@ class RobotGive_IntentionAction extends IntentionAction {
 					        var s2:A4Script = new A4Script(A4_SCRIPT_GIVE, itemToGiveID, null, 0, false, false);
 					        q.scripts.push(s2);
 							ai.currentAction_scriptQueue = q;
+							ai.currentActionHandler = null;
 							ai.currentAction = intention;
 							ai.currentAction_requester = requester;
 							ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),

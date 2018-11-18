@@ -83,8 +83,9 @@
 	<sentence provenance="background" sentence="name('aurora'[#id],'aurora'[symbol])"/>
 	<sentence provenance="background" sentence="name('aurora'[#id],'tau ceti e'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('aurora'[#id],'tau-ceti-system'[#id])"/>
+	<sentence provenance="background" sentence="gravity('aurora'[#id],'0.8'[gravity.unit.g])"/>
 
-	<sentence provenance="background" sentence="settlement('location-aurora-station'[#id])"/>
+	<sentence provenance="background" sentence="settlement('location-aurora-settlement'[#id])"/>
 	<sentence provenance="background" sentence="station('location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="space.at('spacer-valley'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('spacer-valley'[#id],'space'[#id])"/>
@@ -97,6 +98,7 @@
 	<sentence provenance="background" sentence="planet('earth'[#id])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('earth'[#id],'solar-system'[#id])"/>
+	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
 
 	<sentence provenance="background" sentence="~space.at('solar-system'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('tau-ceti-system'[#id],'solar-system'[#id])"/>
@@ -150,6 +152,9 @@
 	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id]), verb.want('shrdlu'[#id], 'mineral'[mineral]))"/>
 	<sentence provenance="background" sentence="relation.cause(verb.go-to('shrdlu'[#id],'location-east-cave'[#id]), verb.want('shrdlu'[#id], 'mineral'[mineral]))"/>
 	<sentence provenance="background" sentence="relation.cause(in-stasis(D), verb.come-to(D:'david'[#id],'aurora'[#id]))"/>
+	<sentence provenance="background" sentence="relation.cause(gravity(X,'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large])); ~space.at(X, 'aurora'[#id])"/>
+	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large]))"/>
+	<sentence provenance="background" sentence="relation.cause(weight(X,'light-weight'[light-weight]), gravity('aurora'[#id],'gravity.low'[gravity.low])); ~space.at(X, 'aurora'[#id])"/>
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
@@ -238,6 +243,7 @@
 	<sentence provenance="background" sentence="name('science-key'[#id],'lab key'[symbol])"/>
 	<sentence provenance="background" sentence="maintenanceyellow-key('maintenance-key'[#id])"/>
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance key'[symbol])"/>
+	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance room key'[symbol])"/>
 	<sentence provenance="background" sentence="red-key('command-key'[#id])"/>
 	<sentence provenance="background" sentence="name('command-key'[#id],'command key'[symbol])"/>
 	<sentence provenance="background" sentence="green-key('stasis-key'[#id])"/>
@@ -312,11 +318,36 @@
 	<sentence provenance="background" sentence="brokenspacesuit('broken-ss'[#id])"/>
 	<sentence provenance="background" sentence="space.at('broken-ss'[#id], 'location-garage'[#id])"/>
 
+	<sentence provenance="background" sentence="batteryrecharge.facility('batteryrecharge.facility'[#id])"/>
+	<sentence provenance="background" sentence="space.at('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>
+
+	<!-- 10 most spoken languages according to wikipedia, I thought 10 was enough :), plus Catalan, since I speak it :) -->
 	<sentence provenance="background" sentence="language('english'[#id])"/>
 	<sentence provenance="background" sentence="name('english'[#id],'english'[symbol])"/>
+	<sentence provenance="background" sentence="language('mandarin'[#id])"/>
+	<sentence provenance="background" sentence="name('mandarin'[#id],'mandarin'[symbol])"/>
+	<sentence provenance="background" sentence="language('chinese'[#id])"/>
+	<sentence provenance="background" sentence="name('chinese'[#id],'chinese'[symbol])"/>
+	<sentence provenance="background" sentence="language('spanish'[#id])"/>
+	<sentence provenance="background" sentence="name('spanish'[#id],'spanish'[symbol])"/>
+	<sentence provenance="background" sentence="language('arabic'[#id])"/>
+	<sentence provenance="background" sentence="name('arabic'[#id],'arabic'[symbol])"/>
+	<sentence provenance="background" sentence="language('french'[#id])"/>
+	<sentence provenance="background" sentence="name('french'[#id],'french'[symbol])"/>
+	<sentence provenance="background" sentence="language('russian'[#id])"/>
+	<sentence provenance="background" sentence="name('russian'[#id],'russian'[symbol])"/>
+	<sentence provenance="background" sentence="language('bengali'[#id])"/>
+	<sentence provenance="background" sentence="name('bengali'[#id],'bengali'[symbol])"/>
+	<sentence provenance="background" sentence="language('portuguese'[#id])"/>
+	<sentence provenance="background" sentence="name('portuguese'[#id],'portuguese'[symbol])"/>
+	<sentence provenance="background" sentence="language('catalan'[#id])"/>
+	<sentence provenance="background" sentence="name('catalan'[#id],'catalan'[symbol])"/>
 	<sentence provenance="background" sentence="verb.understand('etaoin'[#id], 'english'[#id])"/>
 	<sentence provenance="background" sentence="verb.understand('qwerty'[#id], 'english'[#id])"/>
 	<sentence provenance="background" sentence="verb.understand('shrdlu'[#id], 'english'[#id])"/>
+	<sentence provenance="background" sentence="verb.speak('etaoin'[#id], 'english'[#id])"/>
+	<sentence provenance="background" sentence="verb.speak('qwerty'[#id], 'english'[#id])"/>
+	<sentence provenance="background" sentence="verb.speak('shrdlu'[#id], 'english'[#id])"/>
 
 	<!-- common sense inference rules -->
 	<sentence provenance="background" sentence="~long(X:[#id]); ~short(X)"/>
@@ -349,6 +380,9 @@
 	<sentence provenance="background" sentence="permitted-in(X, Y); ~verb.can(X, verb.go(X, Y))"/>	
 	<sentence provenance="background" sentence="~permitted-in(X, Y); verb.can(X, verb.access(X, Y))"/>	
 	<sentence provenance="background" sentence="permitted-in(X, Y); ~verb.can(X, verb.access(X, Y))"/>	
+
+	<sentence provenance="background" sentence="gravity(Y, G); ~space.at(Y, X); ~gravity(X, G)"/>	
+	<sentence provenance="background" sentence="temperature(X, T); ~space.at(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	
 
 
 </knowledgeBase>

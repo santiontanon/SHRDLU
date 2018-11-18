@@ -226,6 +226,10 @@ class NLPattern {
 			var term2:Term = this.term.applyBindings(parse.bindings);
 			var  nlprl:NLParseRecord[] = this.specialfunction_symbolToSort(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;
+		} else if (this.term.functor.name == "#subsumes") {
+			var term2:Term = this.term.applyBindings(parse.bindings);
+			var  nlprl:NLParseRecord[] = this.specialfunction_subsumes(parse, term2.attributes[0], term2.attributes[1], parser.o);
+			return nlprl;
 		} else if (this.term.functor.name == "#concatenateSymbols") {
 			var term2:Term = this.term.applyBindings(parse.bindings);
 			var  nlprl:NLParseRecord[] = this.specialfunction_concatenateSymbols(parse, term2.attributes, parser.o);
@@ -860,6 +864,16 @@ class NLPattern {
 		} else {
 			return null;
 		}
+	}
+
+
+	specialfunction_subsumes(parse:NLParseRecord, sortAtt:TermAttribute, att:TermAttribute, o:Ontology) : NLParseRecord[]
+	{
+		if (sortAtt instanceof VariableTermAttribute) {
+			var s:Sort = sortAtt.sort
+			if (att.sort.is_a(s)) return [parse];
+		}
+		return null;
 	}
 
 

@@ -352,8 +352,9 @@ class NLGenerator {
 				return '' + v;
 			} else if (t.attributes[1].sort.name == v) {
 				var v2:string = this.pos.getTypeString(t.attributes[1].sort, 0);
-				if (v2 == null) v2 = this.pos.getNounString(t.attributes[1].sort, 0);
+				if (v2 == null) v2 = this.pos.getNounString(t.attributes[1].sort, 0, false);	// without trying ancestors
 				if (v2 == null) v2 = this.pos.getPropertyString(t.attributes[1].sort);
+				if (v2 == null) v2 = this.pos.getNounString(t.attributes[1].sort, 0, true);		// we are despearte, try ancestors
 				return v2;
 			} else {
 				console.error("termToEnglish_Inform_Answer: cannot render performative " + t);
@@ -505,7 +506,7 @@ class NLGenerator {
 		} else if (t.functor.is_a(this.nlg_cache_sort_propertywithvalue) && t.attributes.length == 2) {
 			var subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, false);
 			var verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.be"), 0, 2, 3);
-			var propertyStr:string = this.pos.getNounString(t.functor, 0);
+			var propertyStr:string = this.pos.getNounString(t.functor, 0, true);
 			var propertyStr2:string = null;
 			if (t.attributes[1] instanceof ConstantTermAttribute &&
 				t.attributes[1].sort.name != "symbol") {
@@ -559,7 +560,7 @@ class NLGenerator {
 			return this.termToEnglish_RequestAction(pt, speakerID, context, true, false);
 		} else if (t.functor.is_a(this.nlg_cache_sort_relation) &&
 				   !t.functor.is_a(this.nlg_cache_sort_verb)) {			
-//			console.log("termToEnglish_Inform: relation");
+//			console.log("termToEnglish_Inform: relation " + t.functor.name);
 			var subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			if (subjectStr != null) {
 				var relationsAggregateStr:string = "";
@@ -707,8 +708,8 @@ class NLGenerator {
 																								 ((t.attributes[0] instanceof ConstantTermAttribute) ? 
 																							     (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
 				if (objectStr == null || objectStr[0] == null) {
-					console.error("termToEnglish_Inform: objectStr == null or objectStr[0] == null!");
-					return t.toString();
+					console.error("termToEnglish_Inform: objectStr == null or objectStr[0] == null! for " + t.attributes[1])
+					return null;
 				}
 				if (objectStr[0][0] == 't' && objectStr[0][1] == 'o' && objectStr[0][2] == ' ' && 
 					t.functor.is_a(this.nlg_cache_sort_modal_verb)) objectStr[0] = objectStr[0].substring(3);
@@ -723,11 +724,11 @@ class NLGenerator {
 																							     (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
 				if (subjectStr == null || objectStr == null) {
 					console.error("termToEnglish_Inform: subjectStr == null or objectStr == null!");
-					return t.toString();
+					return null;
 				}
 				if (objectStr[0] == null) {
-					console.error("termToEnglish_Inform: objectStr[0] == null!");
-					return t.toString();
+					console.error("termToEnglish_Inform: objectStr[0] == null! for " + t.attributes[1]);
+					return null;
 				}
 				if (objectStr[0][0] == 't' && objectStr[0][1] == 'o' && objectStr[0][2] == ' ' && 
 					t.functor.is_a(this.nlg_cache_sort_modal_verb)) objectStr[0] = objectStr[0].substring(3);
@@ -1459,6 +1460,7 @@ class NLGenerator {
 		}	
 
 		if (entity instanceof TermTermAttribute) {
+//			console.log("termToEnglish_RelationOrVerbArgument: TermTermAttribute -> " + entity);
 			for(let tmp_t of tl) {
 				if (!(tmp_t instanceof TermTermAttribute)) {
 					console.error("termToEnglish_RelationArgument: could not render (one of the elements in the list is not a term) " + entity);	
@@ -1487,10 +1489,11 @@ class NLGenerator {
 				return this.termToEnglish_Relation(entityRaw, speakerID, context);
 			}
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_propertywithvalue) && entityTerm.attributes.length == 2) {
-				var subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[0], speakerID, true, context, true, null, false);
+				var subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);
 				var verbStr:string = this.pos.getVerbString(context.ai.o.getSort("verb.be"), 0, 2, 3);
-				var propertyStr:string = this.pos.getNounString(entityTerm.functor, 0);
+				var propertyStr:string = this.pos.getNounString(entityTerm.functor, 0, true);
 				var propertyStr2:string = null;
+
 				if (entityTerm.attributes[1] instanceof ConstantTermAttribute &&
 					entityTerm.attributes[1].sort.name != "symbol") {
 					if (entityTerm.attributes[1].sort.is_a(this.nlg_cache_sort_measuringunit)) {
@@ -1945,7 +1948,7 @@ class NLGenerator {
 		for(let t of ce.terms) {
 //			console.log("for " + entity + ": " + t);
 			if (t.functor.is_a(this.nlg_cache_sort_name)) nameTerms.push(t);
-			if (POSParser.sortIsConsideredForTypes(t.functor, this.o)) typeTerms.push(t);
+			if (t.attributes.length == 1 && POSParser.sortIsConsideredForTypes(t.functor, this.o)) typeTerms.push(t);
 			if (t.functor.is_a(this.nlg_cache_sort_property)) PRTerms.push(t);
 			if (considerRelations) {
 				if (t.functor.is_a(this.nlg_cache_sort_relation)) {
@@ -2203,11 +2206,11 @@ class NLGenerator {
 					var objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(att1, speakerID, true, context, false, null, true);
 					if (objectStr == null) return null;
 					if (objectStr[0] == "you") {
-						return ["what is your " + this.pos.getNounString(constraint.functor, 0), 2, undefined, 0];
+						return ["what is your " + this.pos.getNounString(constraint.functor, 0, true), 2, undefined, 0];
 					} else if (objectStr[0] == "me") {
-						return ["what is my " + this.pos.getNounString(constraint.functor, 0), 2, undefined, 0];
+						return ["what is my " + this.pos.getNounString(constraint.functor, 0, true), 2, undefined, 0];
 					} else {
-						return ["what is the " + this.pos.getNounString(constraint.functor, 0) + " of " + objectStr[0], 2, undefined, 0];
+						return ["what is the " + this.pos.getNounString(constraint.functor, 0, true) + " of " + objectStr[0], 2, undefined, 0];
 					}
 				}
 			} else {

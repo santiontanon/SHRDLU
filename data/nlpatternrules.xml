@@ -16,7 +16,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<!-- Patterns for performative "perf.greet" -->
 	<NLPattern name="greet-1"
 			   head="perf.greet(LISTENER)"
-			   body="('hello'|['oh'] 'hi'|['oh'] 'hey'|'yo')
+			   body="('hello' ['there']|['oh'] 'hi'|['oh'] 'hey' ['there']|'yo')
 			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
 			   		 ('!'|'?')*"/>
 
@@ -45,7 +45,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<!-- Patterns for performative "perf.thankyou" -->
 	<NLPattern name="thankyou-1"
 			   head="perf.thankyou(LISTENER)"
-			   body="('thank' 'you'|'thanks')
+			   body="['great' [',']] ('thank' 'you'| 'thanks')
 			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
 			   		 '!'*"
 			   priority="200"/>
@@ -72,7 +72,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [conjunction() [',']]
-			   		 ('how' 'are' 'you'|'okay'|'how' 'are' 'you' 'doing'|'how' 'do' 'you' 'do')
+			   		 ('how' verb('verb.be'[symbol], N, [second-person], T) 'you' ['doing']|
+			   		  'okay'|
+			   		  'how' 'do' 'you' 'do'|
+			   		  'how' verb('verb.be'[symbol], [singular], [third-person], T) 'it' 'going')
 			   		 ('!'|'?')*"/>
 
 	<!-- Patterns for performative "perf.sentiment" -->
@@ -329,7 +332,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [conjunction() [',']]
-			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure') ('!'|'?')*"/>
+			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure' | 'i' 'do') ('!'|'?')*"/>
 	<NLPattern name="answer-yes2"
 			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -354,7 +357,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [conjunction() [',']]
 			   		 ('no' ['way'] | 'nope' | 'nah' | 'absolutely' 'not' |
-			   		  'not' 'really') ('!'|'?')*"/>
+			   		  'not' 'really' | 'not' 'at' 'all' | 'hell' 'no' | 'fuck' 'no') ('!'|'?')*"/>
 	<NLPattern name="answer-no2"
 			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -771,6 +774,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')*
 			   		 #derefFromContext(#and(adjective(X2, 'space.location'[space.location]), C2), LOCATION)"/>
 
+	<NLPattern name="perf.q.predicate-speak-language"
+			   head="perf.q.predicate(LISTENER, verb.speak(SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 (verb('verb.do'[symbol], N, P, [present-tense]) | verb('verb.can'[symbol], N, P, [present-tense]))
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb('verb.speak'[symbol], N3, P3, [infinitive-tense]) 
+			   		 nounPhrase(X4, N4, P4, C4) ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(C4, OBJECT)"/>
+
 	<NLPattern name="perf.q.predicate-can-X-do-Y"
 			   head="perf.q.predicate(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -884,6 +899,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefFromContext(C2, SUBJECT)"
     		   priority="200"/>
 
+    <NLPattern name="whereis-other-people"
+    		   head="perf.q.whereis(LISTENER, QUERY_V, QUERY_L, #and(#cons(NAME, QUERY_V), #and(#not(=(QUERY_V, LISTENER)), #not(=(QUERY_V, SPEAKER)))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense])
+			   		 ['the']
+			   		 determiner('determiner.other'[symbol], N2)
+			   		 noun(NAME, N3) ('!'|'?')*"/>
 
     <!-- Special case rule for food / drinks -->
     <NLPattern name="special-case-whereisfood1"
@@ -900,7 +924,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [conjunction() [',']]
-			   		 'where' verb('verb.be'[symbol], N_S, P_S, [present-tense]) 'the' noun('food'[food],N) ('!'|'?')*"
+			   		 'where' verb('verb.be'[symbol], N_S, P_S, [present-tense]) ['the'] noun('food'[food],N) ('!'|'?')*"
     		   priority="300"/>
 
 
@@ -954,14 +978,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     <NLPattern head="perf.q.whereto(LISTENER, SOMEONE:'hypothetical-character'[#id], LOCATION, #or(verb.can(SOMEONE, GOAL), #not(goal(SPEAKER, GOAL))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [conjunction() [',']]
+			   		 [(conjunction()|'great') [',']]
 			   		 'where' ('do'|'should') subject-personal-pronoun(X1, N, G, P) ['go'] ('!'|'?')* 
 			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)"/>
     <NLPattern head="perf.q.query(LISTENER, GOAL, goal(SPEAKER, GOAL))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [conjunction() [',']]
-			   		 'what' ('do'|'should') subject-personal-pronoun(X1, N, G, P) ['do'] ('!'|'?')* 
+			   		 [(conjunction()|'great') [',']]
+			   		 'what' ('do'|'should') subject-personal-pronoun(X1, N, G, P) ['do'] ['now'] ('!'|'?')* 
 			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)"/>
 
     <!-- Patterns for performative "perf.q.query" (very specific ones that are not very generic) -->
@@ -1249,9 +1273,63 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [conjunction() [',']]
 			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
 					 'the' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
-					 'of'
+					 ('of'|'in')
 			   		 nounPhrase(X, N2, P2, C) ('!'|'?')* 
     		   		 #derefFromContext(C, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #cons(PROPERTY_SYMBOL, LOCATION, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+					 'the' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
+					 adverb(X4:[space.location]) 
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(noun(X4,[singular]), LOCATION)"/>
+
+    <NLPattern name="perf.q.query-temperature-special-case"
+    		   head="perf.q.query(LISTENER, V, #cons('temperature'[temperature], LOCATION, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+					 'the' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL,PROPERTY:[property-with-value])
+					 ['in' ['here']]
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+
+    <NLPattern name="perf.q.query-temperature-special-case2"
+    		   head="perf.q.query(LISTENER, V, #cons('temperature'[temperature], LOCATION, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' ('hot'|'warm'|'cold')
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'it'
+					 ('of'|'in')
+			   		 nounPhrase(X, N2, P2, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, LOCATION)"/>
+
+    <NLPattern name="perf.q.query-temperature-special-case3"
+    		   head="perf.q.query(LISTENER, V, #cons('temperature'[temperature], LOCATION, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' ('hot'|'warm'|'cold')
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'it'
+					 [('of'|'in')]
+					 adverb(X4:[space.location]) ('!'|'?')* 
+    		   		 #derefFromContext(noun(X4,[singular]), LOCATION)"/>
+
+    <NLPattern name="perf.q.query-temperature-special-case4"
+    		   head="perf.q.query(LISTENER, V, #cons('temperature'[temperature], LOCATION, V))"			
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [conjunction() [',']]
+			   		 'how' ('hot'|'warm'|'cold')
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'it'
+					 ['in' ['here']]
+			   		 ('!'|'?')* 
+    		   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
 
     <NLPattern head="perf.q.query(LISTENER, V, #cons(PROPERTY_SYMBOL, OBJECT, V))"			
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -1922,12 +2000,35 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
     		          [[','] 'please'] ('?'|'!')*"/>
 
+    <NLPattern head="perf.q.action(LISTENER, verb.follow(LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		         verb('verb.come'[symbol], N2, [no-person], [infinitive-tense])
+    		         'with'
+    		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		   		 #derefFromContext(CO, OBJECT)"/>
+
     <!-- get out of here / get out, etc. rule -->
     <NLPattern head="perf.request.action(LISTENER, verb.go(LISTENER, [space.away]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 ['please' [',']] 
-    		         verb('verb.get'[symbol], N2, [second-person], T2) (noun('space.away'[space.away], [singular])|'out') [[','] 'please'] '!'*"
+    		         verb('verb.get'[symbol], N2, [second-person], T2) (noun('space.away'[space.away], N3) | 'out') 
+    		         [[','] 'please']
+    		         [[','] nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER)] '!'*"
+    		         priority="300"/>
+    <!-- Special case, needed due to the way my multi-token identification works -->
+    <NLPattern head="perf.request.action(LISTENER, verb.go(LISTENER, [space.away]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         'get out of' 'the' 'way' 
+    		         [[','] 'please']
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(C_L2, LISTENER)] '!'*"
     		         priority="300"/>
 
     <!-- help! -->
@@ -1954,6 +2055,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)
 		   		 	 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern name="perf.q.howmany-X-are-there-here"
+    		   head="perf.q.howmany(LISTENER, V, #and(space.at(V, LOCATION), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there']
+		   		 	 ['in'] 'here'
+		   		 	 ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
     <NLPattern name="perf.q.howmany-X-Y-have"
     		   head="perf.q.howmany(LISTENER, V, #and(verb.have(OWNER, V), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2105,6 +2215,30 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(#and(close-demonstrative-determiner(X:'light'[light], N:[singular]), noun(X,N)), OBJECT)"
 			   priority="200"/>
 
+ 	<!-- request to stop an action --> 
+    <NLPattern name="stopaction-gerund"
+    		   head="perf.request.stopaction(LISTENER,#cons(VERB,LISTENER))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.stop'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [gerund-tense]) '!'*"/>
+    <NLPattern name="stopaction-gerund-obj"
+    		   head="perf.request.stopaction(LISTENER,#cons(VERB,LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.stop'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [gerund-tense]) 
+			   		 nounPhrase(X, N3, P3, C) '!'*
+			   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern name="stopaction-donot"
+    		   head="perf.request.stopaction(LISTENER,#cons(VERB,LISTENER,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.do'[symbol], N, P, [present-tense]) 'not'
+			   		 verb(VERB, N2, P2, [present-tense]) 
+			   		 nounPhrase(X, N3, P3, C) '!'*
+			   		 #derefFromContext(C, OBJECT)"/>
+
  	<!-- why question patterns --> 
     <NLPattern name="why-gerund"
     		   head="perf.q.why(LISTENER,#cons(V,SUBJECT,OBJECT))"
@@ -2158,9 +2292,96 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 'why' 
 			   		 verb('verb.be'[symbol], N, P, T) 
 			   		 nounPhrase(X, N, P, C) 
+			   		 ['so']
 			   		 adjective(LSYMBOL)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-property-with-value"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL:[property-with-value],SUBJECT,LSYMBOL))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 ['so']
+			   		 adjective(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
+    <NLPattern name="why-property2"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.do'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb('verb.feel'[symbol], N2, P2, [infinitive-tense]) 
+			   		 ['so']
+			   		 adjective(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-property-with-value2"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL:[property-with-value],SUBJECT,LSYMBOL))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.do'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb('verb.feel'[symbol], N2, P2, [infinitive-tense])
+			   		 ['so']
+			   		 adjective(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"
+			   priority="200"/>		
+    <NLPattern name="why-property-with-value3"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL:[property-with-value],SUBJECT,LSYMBOL2))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 'the' noun(LSYMBOL, N2)
+			   		 ('of'|'in') nounPhrase(X, N3, P3, C)  
+			   		 ['so'] adjective(LSYMBOL2) 
+			   		 #symbolToSort(LSYMBOL, LSYMBOLSORT) #subsumes(LSYMBOLSORT,LSYMBOL2) ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
+    <NLPattern name="why-property-with-value4"
+    		   head="perf.q.why(LISTENER,#cons(LSYMBOL:[property-with-value],LOCATION,LSYMBOL2))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 ['the'] noun(LSYMBOL, N2)
+			   		 ['so'] adjective(LSYMBOL2) 
+					 adverb(X3:[space.location]) ('!'|'?')*
+					 #derefFromContext(noun(X3,[singular]), LOCATION)
+			   		 #symbolToSort(LSYMBOL, LSYMBOLSORT) #subsumes(LSYMBOLSORT,LSYMBOL2)"/>
+
+    <NLPattern name="why-property-with-value5"
+    		   head="perf.q.why(LISTENER,#cons(PROP:[property-with-value],OBJECT,VALUE))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 properNounCompound(X, N2) '\'s'
+			   		 noun(PROP, N3)
+			   		 ['so'] adjective(VALUE)  ('!'|'?')*
+					 #derefFromContext(proper-noun(X, N2), OBJECT)
+					 #symbolToSort(PROP, PROPSORT)
+			   		 #subsumes(PROPSORT, VALUE)"
+			   priority="200"/>
+
+    <NLPattern name="why-gravity-implied-here"
+    		   head="perf.q.why(LISTENER, gravity(LOCATION,LSYMBOL2:[gravity]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 ['the'] noun('gravity'[gravity], N2)
+			   		 ['so'] adjective(LSYMBOL2) 
+					 ('!'|'?')*
+					 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+
     <NLPattern name="why-relation"
     		   head="perf.q.why(LISTENER,#cons(LSYMBOL,SUBJECT,OBJECT))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2184,6 +2405,50 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)
 			   		 #symbolToSort(LSYMBOL, LSORT)"/>
+    <NLPattern name="why-relation-adverb2"
+    		   head="perf.q.why(LISTENER,space.at(SUBJECT,LSORT:[space.location]))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'what' 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X, N, P, C)
+			   		 verb('verb.do'[symbol], N2, P2, [gerund-tense]) 
+			   		 adverb(LSYMBOL)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #symbolToSort(LSYMBOL, LSORT)"/>
+    <NLPattern name="why-is-there"
+    		   head="perf.q.why(LISTENER, QUERY)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) 'there'
+			   		 'a' nounPhraseNoDeterminer(X, [singular], P2, C)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C, QUERY_V, QUERY)"/>
+    <NLPattern name="why-is-there-in"
+    		   head="perf.q.why(LISTENER, #and(#cons(PREP, QUERY_V, OBJECT), QUERY))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) ['there']
+			   		 'a' nounPhraseNoDeterminer(X, [singular], P2, C2)
+			   		 preposition(PREP)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT)
+			   		 #derefQuery(C2, QUERY_V, QUERY)"/>
+    <NLPattern name="why-is-there-in-here"
+    		   head="perf.q.why(LISTENER, #and(space.at(QUERY_V, OBJECT), QUERY))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.be'[symbol], N, P, T) ['there']
+			   		 'a' nounPhraseNoDeterminer(X, [singular], P2, C3)
+			   		 ['in'] 'here'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here], [singular]), OBJECT)
+			   		 #derefQuery(C3, QUERY_V, QUERY)"/>
     <NLPattern name="why-is-there-not"
     		   head="perf.q.why(LISTENER,#not(#cons(SORT,QUERY_VARIABLE)))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

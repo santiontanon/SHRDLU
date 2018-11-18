@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "Demo v1.10"
+var SHRDLU_VERSION:string = "Demo v2.0"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1
@@ -856,7 +856,8 @@ class A4EngineApp {
                     }
                 }
                 // start text entering mode with any letter key:
-                if (this.game.HUD_state != SHRDLU_HUD_STATE_INVENTORY) {
+                if (this.game.HUD_state != SHRDLU_HUD_STATE_INVENTORY &&
+                    this.game.HUD_state != SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
                     for(let i:number = KEY_CODE_A;i<KEY_CODE_Z;i++) {
                         if (k.key_press(i)) {
                             this.game.textInputRequest();

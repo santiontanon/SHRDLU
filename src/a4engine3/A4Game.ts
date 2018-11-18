@@ -8,7 +8,7 @@ var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 4*50*60;    // 4 minutes of game time
 //var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 50*30;    // 30 seconds
 var COMMUNICATOR_CONNECTION_TIMEOUT:number = 50*60;    // 1 minute of game time
 
-var SHRDLU_START_DATE:number = 45186163200;
+var SHRDLU_START_DATE:number = 45186163200;    // Thursday, October 21st, 2432
 
 var A4_HASH_SIZE:number = 1000;
 
@@ -2248,6 +2248,11 @@ class A4Game {
 
     skipSpeechBubble() : boolean
     {
+        if (this.cutSceneActivated >= 0) {
+            this.cutScenes.ESCPressed(this.cutSceneActivated);
+            return true;
+        }
+
         if (this.currentPlayer.map.textBubbles.length > 0) {
             var bubble:A4TextBubble = this.currentPlayer.map.textBubbles[0][0];
             this.currentPlayer.map.textBubbles[0][1] = 0;
@@ -2501,7 +2506,6 @@ class A4Game {
     introact_request:number = 0;    // to notify the A4GameApp that an act is over, and we need to introduce the next one
     gameover_request:number = 0;    // to notify the A4GameApp that player is dead, and we need to go to the game over state
 
-    // to keep track of time:
     locations:AILocation[] = [];
     location_in:boolean[][];
     location_connects:boolean[][];
@@ -2511,6 +2515,10 @@ class A4Game {
     suit_oxygen:number = SHRDLU_MAX_SPACESUIT_OXYGEN;
     rooms_with_lights:string[] = [];
     rooms_with_lights_on:string[] = [];
+
+    aurora_station_temperature_sensor_indoors:number = 20;
+    aurora_station_temperature_sensor_outdoors:number = 44;
+
     error_messages_for_log:string[][] = [];
     in_game_actions_for_log:string[][] = [];
     //</shrdlu-specific>

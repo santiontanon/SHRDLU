@@ -283,7 +283,7 @@
   <object id="658" type="solarpanel.facility" x="600" y="352" width="16" height="16"/>
   <object id="659" type="solarpanel.facility" x="600" y="376" width="16" height="16"/>
   <object id="660" type="solarpanel.facility" x="600" y="400" width="16" height="16"/>
-  <object id="661" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
+  <object id="batteryrecharge.facility" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
   <object id="662" type="greenhouse.facility" x="320" y="24" width="64" height="32"/>
   <object id="663" type="greenhouse.facility" x="408" y="24" width="64" height="32"/>
   <object id="664" type="greenhouse.facility" x="320" y="64" width="64" height="32"/>

@@ -370,6 +370,7 @@ class NLContext {
 				   perf.functor.is_a(o.getSort("perf.q.predicate")) ||
 				   perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
 				   perf.functor.is_a(o.getSort("perf.request.action")) ||
+				   perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
 				   perf.functor.is_a(o.getSort("perf.q.action")) ||
 				   perf.functor.is_a(o.getSort("perf.q.why")) ||
 				   perf.functor.is_a(o.getSort("perf.q.how"))) {
@@ -742,7 +743,7 @@ class NLContext {
 					// find the location of the speaker:
 					let hereEntity:NLContextEntity = this.findLocationOfID(this.speaker);
 					if (hereEntity != null) {
-						return [hereEntity.objectID]
+						return [hereEntity.objectID];
 					}
 
 				} else if (nounTerm.attributes.length == 2 &&
@@ -755,8 +756,17 @@ class NLContext {
 					let candidateThereEntities:NLContextEntity[] = this.applySingularTheDeterminer(entities_mpl);
 					if (candidateThereEntities != null && candidateThereEntities.length == 1) thereEntity = candidateThereEntities[0];
 					if (thereEntity != null && thereEntity != hereEntity) {
-						return [thereEntity.objectID]
+						return [thereEntity.objectID];
 					}
+
+				} else if (nounTerm.attributes.length == 2 &&
+						   nounTerm.attributes[0] instanceof ConstantTermAttribute &&
+						   (<ConstantTermAttribute>nounTerm.attributes[0]).value == "space.outside") {
+					// Find the most specific location that is "outdoers" and the player is in right now
+					let outsideEntity:NLContextEntity = this.findMostSpecificOutdoorLocationOfID(this.speaker, o);
+					if (outsideEntity != null) {
+						return [outsideEntity.objectID];
+					}					
 
 				} else if (nounTerm.attributes.length == 2 &&
 						   nounTerm.attributes[0] instanceof ConstantTermAttribute) {
@@ -1131,6 +1141,48 @@ class NLContext {
 						(<ConstantTermAttribute>t.attributes[0]).value == id) {
 						return this.findByID((<ConstantTermAttribute>t.attributes[1]).value);
 					}
+				}
+			}
+		}
+		return null;		
+	}
+
+
+	findMostSpecificOutdoorLocationOfID(id:string, o:Ontology) : NLContextEntity
+	{
+		let open:NLContextEntity[] = [];
+		let closed:NLContextEntity[] = [];
+		let outdoors_sort:Sort = o.getSort("outdoor.location");
+
+		for(let entity of this.shortTermMemory) {
+			if (entity.objectID.value == id) {
+				for(let t of entity.terms) {
+					if (t.functor.name == "space.at" &&
+						t.attributes.length == 2 &&
+						t.attributes[0] instanceof ConstantTermAttribute &&
+						t.attributes[1] instanceof ConstantTermAttribute &&
+						(<ConstantTermAttribute>t.attributes[0]).value == id) {
+						open.push(entity);
+					}
+				}
+			}
+		}
+
+		while(open.length>0) {
+			let current:NLContextEntity = open[0];
+			open.splice(0,1);
+			closed.push(current);
+			for(let t of current.terms) {
+				if (t.functor.is_a(outdoors_sort)) {
+					return current;
+				}
+				if (t.functor.name == "space.at" &&
+					t.attributes.length == 2 &&
+					t.attributes[0] instanceof ConstantTermAttribute &&
+					t.attributes[1] instanceof ConstantTermAttribute &&
+					(<ConstantTermAttribute>t.attributes[0]).value == current.objectID.value) {
+					let next:NLContextEntity = this.findByID((<ConstantTermAttribute>t.attributes[1]).value);
+					if (next != null && closed.indexOf(next) == -1 && open.indexOf(next) == -1) open.push(next);
 				}
 			}
 		}

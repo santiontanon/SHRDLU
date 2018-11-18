@@ -154,6 +154,7 @@
     <sort name="#derefQuery" super="parser-function"/>  <!-- This function dereferences a query, for example in "what is your name?", the "your name" part is a query name(X,Y), where "X" is the dereference of "you" and "Y" is the query variable. --> 
     <sort name="#symbolToSort" super="parser-function"/>
     <sort name="#concatenateSymbols" super="parser-function"/>
+    <sort name="#subsumes" super="parser-function"/>
     <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
 
     <!-- Regular concepts -->
@@ -188,6 +189,7 @@
     <sort name="perf.sentiment.surprise" super="perf.sentiment"/>
     <sort name="perf.request" super="performative"/>
     <sort name="perf.request.action" super="perf.request"/>
+    <sort name="perf.request.stopaction" super="perf.request"/>
     <sort name="perf.question" super="perf.request"/>
     <sort name="perf.q.predicate" super="perf.question"/>
     <sort name="perf.q.predicate-negated" super="perf.question"/>
@@ -447,6 +449,7 @@
     <sort name="verb.arrive" super="verb"/>
     <sort name="verb.arrive-to" super="verb.arrive"/>
     <sort name="verb.define" super="verb"/>
+    <sort name="verb.feel" super="verb"/>
     <sort name="verb.find" super="verb"/>
     <sort name="verb.fill" super="verb"/>
     <sort name="verb.follow" super="verb"/>
@@ -519,6 +522,7 @@
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
     
+    <sort name="verb.speak" super="action.talk"/>
     <sort name="verb.tell" super="action.talk"/>
     <sort name="verb.ask" super="action.talk"/>
 
@@ -570,7 +574,7 @@
     <sort name="space.at" super="spatial-relation,#stateSort"/>
     <sort name="space.on.top.of" super="space.at"/>
     <sort name="space.outside" super="space.location"/>
-    <sort name="space.outside.of" super="spatial-relation,symmetric-relation"/>
+    <sort name="space.outside.of" super="spatial-relation"/>
     <sort name="space.connects" super="spatial-relation,symmetric-relation"/>
     <sort name="space.here" super="space.location"/>
     <sort name="space.there" super="space.location"/>
@@ -608,11 +612,17 @@
     <sort name="damage" super="abstract-entity"/> 
     <sort name="tear" super="space,object,damage"/>  
 
+    <sort name="length" super="property"/>
+    <sort name="short" super="length"/>
+    <sort name="long" super="length"/>
+    <sort name="length.large" super="long"/>
+
+    <sort name="length.unit" super="measuring-unit,length"/>
     <sort name="distance.unit" super="measuring-unit,distance"/>
-    <sort name="milimeter" super="distance.unit"/>
-    <sort name="meter" super="distance.unit"/>
-    <sort name="kilometer" super="distance.unit"/>
-    <sort name="light-year" super="distance.unit"/>
+    <sort name="milimeter" super="distance.unit,length.unit"/>
+    <sort name="meter" super="distance.unit,length.unit"/>
+    <sort name="kilometer" super="distance.unit,length.unit"/>
+    <sort name="light-year" super="distance.unit,length.unit"/>
 
     <sort name="mass.unit" super="measuring-unit"/>
     <sort name="gram" super="mass.unit"/>
@@ -628,8 +638,8 @@
     <sort name="outdoor.location" super="space.location"/>
     <sort name="building" super="space.location,obstacle"/>
     <sort name="facility" super="space.location,obstacle"/>
-    <sort name="settlement" super="space.location"/>
-    <sort name="station" super="space.location"/>
+    <sort name="settlement" super="outdoor.location"/>
+    <sort name="station" super="indoor.location"/>
     <sort name="room" super="indoor.location"/>
     <sort name="corridor" super="indoor.location"/>
     <sort name="bedroom" super="room"/>
@@ -667,11 +677,17 @@
     <sort name="small" super="size"/>
     <sort name="size.medium" super="size"/>
 
-    <sort name="length" super="property"/>
-    <sort name="short" super="length"/>
-    <sort name="long" super="length"/>
+    <sort name="gravity" super="property-with-value,abstract-entity"/>
+    <sort name="gravity.low" super="gravity"/>
+    <sort name="gravity.high" super="gravity"/>
 
-    <sort name="temperature" super="property,#stateSort"/>
+    <sort name="radius" super="property-with-value,length"/>
+
+    <sort name="acceleration.unit" super="measuring-unit"/>
+    <sort name="gravity.unit.g" super="acceleration.unit,gravity"/>
+
+    <sort name="temperature" super="property-with-value,#stateSort,abstract-entity"/>
+    <sort name="temperature.unit.celsius" super="measuring-unit,temperature"/>
     <sort name="cold" super="temperature"/>
     <sort name="hot" super="temperature"/>
 

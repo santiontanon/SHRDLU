@@ -200,8 +200,12 @@ class EtaoinAI extends A4RuleBasedAI {
 		// etaoin perceives itself:
 		if (this.self_perception_term == null) {
 			this.self_perception_term = Term.fromString("disembodied-ai('"+this.selfID+"'[#id])", this.o);
-		}
+		}		
 		this.addTermToPerception(this.self_perception_term)
+
+		this.addTermToPerception(Term.fromString("temperature('location-aurora-station'[#id],'"+this.game.aurora_station_temperature_sensor_indoors+"'[temperature.unit.celsius])", this.o));
+		this.addTermToPerception(Term.fromString("temperature('location-aurora-settlement'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
+		this.addTermToPerception(Term.fromString("temperature('spacer-valley'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
 	}
 
 

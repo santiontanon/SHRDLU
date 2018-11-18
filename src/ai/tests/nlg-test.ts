@@ -72,7 +72,8 @@ var ceg7:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k2', g
                                                Term.fromString("color('k2'[#id],'red'[red])",g_o)]);
 var ceg8:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room1', g_o.getSort("#id")),
                                               null, 0, 
-                                              [Term.fromString("kitchen('room1'[#id])",g_o)]);
+                                              [Term.fromString("kitchen('room1'[#id])",g_o),
+                                               Term.fromString("temperature('room1'[#id],'25'[temperature.unit.celsius])",g_o)]);
 var ceg9:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s2', g_o.getSort("#id")),
                                               null, 100, 
                                               [Term.fromString("ship('s2'[#id])",g_o),
@@ -266,3 +267,10 @@ testNLG("perf.inform('1'[#id], #and(X:verb.can('1'[#id], #and(Y:action.talk('1'[
 testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with the blue key card now");
 
 testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'qwerty'[#id]), V4:action.talk(V3)))", "etaoin", "qwerty walks and qwerty talks");
+
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'[#id], V4:'gravity.low'[gravity.low]), V5:radius(V6:'room2'[#id], V7:'length.large'[length.large])))", "etaoin", "the kitchen's gravity is low because of the bedroom's radius is large");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1'[#id], V4:'light-weight'[light-weight]), V5:gravity(V6:'room2'[#id], V7:'gravity.low'[gravity.low])))", "etaoin", "your weight is light because of the bedroom's gravity is low");
+
+testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.understand(V3:'etaoin'[#id], V4:#and(V5:the(V6:'temperature'[temperature], V2_0:[singular]), V8:noun(V6, V2_0)))))", "etaoin", "I do not understand the temperature");
+
+testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora station'[symbol]))", "etaoin", "the kitchen's name is aurora station");

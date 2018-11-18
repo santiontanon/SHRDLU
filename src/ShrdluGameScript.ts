@@ -375,15 +375,21 @@ class ShrdluGameScript {
 		case 14: // player stands up
 			if (this.act_intro_state_timer == 0) {
 				this.game.currentPlayer.getOutOfBed(this.game);
-			} else if (this.act_intro_state_timer == 60) {
+				this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
+															   "Wow! I feel very light, why?! where am I?", A4_DIRECTION_NONE, this.game);
+
+			} else if (this.act_intro_state_timer > 60 && !this.game.currentPlayer.isTalking()) {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, verb.try($PLAYER,verb.walk($PLAYER))))");
-			} else if (this.act_intro_state_timer > 60) {
-				if (!this.game.qwertyAI.robot.isTalking()) this.act_intro_state = 15;
+				this.act_intro_state = 15;
 			}
 			break;
 
 		case 15:
+			if (!this.game.qwertyAI.robot.isTalking()) this.act_intro_state = 16;
+			break;
+
+		case 16:
 			if (this.act_intro_state_timer == 0) {
 				this.app.tutorialMessages.push([" To move around, use the arrow keys. ",
 											    " For now, just walk around the room  ",
@@ -844,7 +850,7 @@ class ShrdluGameScript {
 			if (this.act_1_state_timer == 30) {
 				if (this.game.currentPlayer.isIdle()) {
 					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
-																   "I feel better now, but still don't know what is this place...", A4_DIRECTION_NONE, this.game);
+																   "I feel better now and gotten used to feeling lighter, but still don't know what is this place...", A4_DIRECTION_NONE, this.game);
 				} else {
 					this.act_1_state_timer--;	// wait until player is idle!
 				}

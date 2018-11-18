@@ -31,14 +31,22 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 			var results:TermAttribute[] = [];
 			for(let b of inf.inferences[0].endResults) {
 				for(let [variable, value] of b.l) {
-					if (variable == queryVariable &&
-						results.indexOf(value) == -1) {
-						// we have a result!
-						results.push(value);
+					if (variable == queryVariable) {
+						let found:boolean = false;
+						for(let value2 of results) {
+							if (Term.equalsAttribute(value2, value, new Bindings())) {
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							// we have a result!
+							results.push(value);
+						}
 					}
 				}
 			}
-//				console.log("result: " + result);
+			console.log("results: " + results);
 			if (results.length > 0) {
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'"+results.length+"'[number]))", ai.o);
 				// store the state in case there are more answers to be given later using perf.more answers

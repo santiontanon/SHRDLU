@@ -667,7 +667,8 @@ class RuleBasedAI {
 				performativeHandled = true;
 			} else if (perf2.functor.is_a(this.o.getSort("perf.question"))) {
 				// in this case, we accept the performative. It will be handled below
-			} else if (perf2.functor.is_a(this.o.getSort("perf.request.action"))) {
+			} else if (perf2.functor.is_a(this.o.getSort("perf.request.action")) ||
+				       perf2.functor.is_a(this.o.getSort("perf.request.stopaction"))) {
 				// in this case, we accept the performative. It will be handled below
 			} else {
 				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.invalidanswer('"+context.speaker+"'[#id]))", this.o), speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
@@ -856,6 +857,48 @@ class RuleBasedAI {
 					var term:Term = Term.fromString(tmp, this.o);
 					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 				}
+			} else if (perf2.functor.name == "perf.request.stopaction") {
+				if (perf2.attributes[1] instanceof TermTermAttribute) {
+					let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
+					if (perf2.attributes.length>=3 &&
+						perf2.attributes[2] instanceof TermTermAttribute) {
+						// this means that the action request has a variable and we need to start an inference process:
+						let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
+						let target1Terms:Term[] = [];
+						let target1Signs:boolean[] = [];
+						for(let i:number = 0;i<intention_l.length;i++) {
+							if (intention_l[i].functor.name == "#not") {
+								target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
+								target1Signs.push(true);
+							} else {
+								target1Terms.push(intention_l[i]);
+								target1Signs.push(false);
+							}
+						}
+
+						// 2) start the inference process:
+						let target1:Sentence[] = [];
+						target1.push(new Sentence(target1Terms, target1Signs));
+						let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new StopAction_InferenceEffect(action), this.o);
+						ir.triggeredBy = perf2;
+						ir.triggeredBySpeaker = context.speaker;
+						this.inferenceProcesses.push(ir);
+					} else {
+						if (this.stopAction(action)) {
+							var term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
+							this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+						} else {
+							var tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+							var term:Term = Term.fromString(tmp, this.o);
+							var cause:Term = Term.fromString("#not("+action+")", this.o);
+							this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), new CauseRecord(cause, null, this.time_in_seconds), this.time_in_seconds));
+						}
+					}
+				} else {
+					var tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+					var term:Term = Term.fromString(tmp, this.o);
+					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				}
 			} else if (perf2.functor.name == "perf.moreresults") {
 				if (context.lastEnumeratedQuestion_answered != null) {
 					if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
@@ -923,6 +966,12 @@ class RuleBasedAI {
 		for(let ih of this.intentionHandlers) {
 			if (ih.canHandle(actionRequest, this)) return true;
 		}
+		return false;
+	}
+
+
+	stopAction(actionRequest:Term) : boolean
+	{
 		return false;
 	}
 

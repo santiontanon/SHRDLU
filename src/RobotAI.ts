@@ -125,8 +125,32 @@ class RobotAI extends A4RuleBasedAI {
 			}
 			this.addTermToPerception(this.etaoin_perception_term)
 		}
+
+		if (location != null) {
+			if (this.robot.map.name == "Aurora Station") {
+				this.addTermToPerception(Term.fromString("temperature('"+location.id+"'[#id],'"+this.game.aurora_station_temperature_sensor_indoors+"'[temperature.unit.celsius])", this.o));				
+			} else {
+				this.addTermToPerception(Term.fromString("temperature('"+location.id+"'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
+			}
+		}
 	}
 
+
+	stopAction(actionRequest:Term) : boolean
+	{
+		if (super.stopAction(actionRequest)) return true;
+
+		if (this.currentAction != null && 
+			this.currentAction.equalsNoBindings(actionRequest) == 1) {
+			this.currentAction = null;
+			this.currentAction_requester = null;
+			this.currentAction_scriptQueue = null;
+			this.currentActionHandler = null;
+			return true;
+		}
+
+		return false;
+	}
 
     executeScriptQueues()
     {

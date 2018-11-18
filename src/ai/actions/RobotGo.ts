@@ -168,6 +168,7 @@ class RobotGo_IntentionAction extends IntentionAction {
         s.y = destinationY;
         q.scripts.push(s);
 		ai.currentAction_scriptQueue = q;
+		ai.currentActionHandler = null;
 		ai.currentAction = intention;
 		ai.currentAction_requester = requester;
 		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
