@@ -16,8 +16,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<!-- Patterns for performative "perf.greet" -->
 	<NLPattern name="greet-1"
 			   head="perf.greet(LISTENER)"
-			   body="('hello' ['there']|['oh'] 'hi'|['oh'] 'hey' ['there']|'yo')
+			   body="('hello' ['there']|['oh'] 'hi' ['there']|['oh'] 'hey' ['there']|'yo')
 			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 ('!'|'?')*"/>
+
+	<NLPattern name="greet-hithere"
+			   head="perf.greet(LISTENER)"
+			   body="'hi' 'there' [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
 			   		 ('!'|'?')*"/>
 
 	<!-- Patterns for performative "perf.greet" -->
