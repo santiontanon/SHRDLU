@@ -296,6 +296,9 @@
     <sort name="communicator" super="item"/>
 
     <sort name="battery" super="item"/>
+    <sort name="rover-battery" super="item"/>
+    <sort name="tire" super="item"/>
+    <sort name="engine" super="item"/>
 
     <sort name="hardware" super="object"/>
 
@@ -324,6 +327,7 @@
     <sort name="command-display" super="equipment,screen"/>
 
     <sort name="crate" super="obstacle-container,furniture,box"/>
+    <sort name="toolbox" super="crate"/>
     <sort name="barrel" super="obstacle-container,furniture"/>
     <sort name="fridge" super="obstacle-container,furniture"/>
     <sort name="pod" super="obstacle-container"/>

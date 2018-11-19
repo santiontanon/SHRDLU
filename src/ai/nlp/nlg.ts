@@ -1883,6 +1883,10 @@ class NLGenerator {
 					preComplementsStr = "something that is " + preComplementsStr;
 				}
 			}
+			if (word == null && 
+				(sort.name == "property" || sort.name == "property-with-value")) {
+				word = "property";
+			}
 
 			if (word == null) {
 				continue;

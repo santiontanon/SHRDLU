@@ -592,7 +592,8 @@ class ShrdluGameScript {
 				this.app.tutorialMessages.push([" Some doors need to be operated by   ",
 												" hand. Take the key card qwerty just ",
 												" dropped, walk to your bedroom door  ",
-												" and press SPACE to open it.         ",
+												" and open it. Press SPACE when facing",
+												" an object to interact with it.      ",
 											    "",
 											    "  [press ESC to close this message]  "]);
 			} else {
@@ -605,6 +606,7 @@ class ShrdluGameScript {
 			break;
 
 		case 112:
+		/*
 			if (this.act_intro_state_timer == 0) {
 				this.app.tutorialMessages.push([" To interact with objects, just walk ",
 												" on to them and press SPACE. Walk up ",
@@ -613,6 +615,7 @@ class ShrdluGameScript {
 											    "",
 											    "  [press ESC to close this message]  "]);
 			} else {
+				*/
 				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
 					this.game.currentPlayer.y >= 192 && this.game.currentPlayer.y<240 &&
 					this.game.currentPlayer.state == A4CHARACTER_STATE_IN_BED) {
@@ -620,7 +623,7 @@ class ShrdluGameScript {
 					this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
 					this.act_intro_state = 113;
 				}
-			}
+//			}
 			break;
 
 		case 113:

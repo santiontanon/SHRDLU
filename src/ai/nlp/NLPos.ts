@@ -304,6 +304,8 @@ class POSParser {
       "maintenance guy",
       "maintenance person",
       "rover driver",
+      "rover battery",
+      "rover batteries",
       "user name",
       "stasis room door",
       "stasis door",
@@ -964,6 +966,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("bathroom", "bathroom", o);
     this.addTokenPOS(new PartOfSpeech("battery", "battery", Term.fromString("noun('battery'[battery], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("batteries", "battery", Term.fromString("noun('battery'[battery], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("rover battery", "rover-battery", Term.fromString("noun('rover-battery'[rover-battery], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("rover batteries", "rover-battery", Term.fromString("noun('rover-battery'[rover-battery], [plural])", o), 1.0));
     this.addStandardNounPOS("bed", "bed", o);
     this.addStandardNounPOS("bedroom", "bedroom", o);
     this.addStandardNounPOS("bench", "bench", o);
@@ -982,6 +986,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("century", "time.century", o);
     this.addStandardNounPOS("chair", "chair", o);
     this.addStandardNounPOS("character", "character", o);
+    this.addStandardNounPOS("colour", "color", o);    // synonym, so, it's out of order
     this.addStandardNounPOS("color", "color", o);    
     this.addStandardNounPOS("communication", "communication", o);
     this.addStandardNounPOS("comm tower", "communication.tower", o);
@@ -1016,6 +1021,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("emergencies", "emergency", Term.fromString("noun('emergency'[emergency], [plural])", o), 1.0));
     this.addStandardNounPOS("end", "space.end", o);
     this.addStandardNounPOS("end", "time.end", o);
+    this.addStandardNounPOS("engine", "engine", o);
     this.addTokenPOS(new PartOfSpeech("equipment", "equipment", Term.fromString("noun('equipment'[equipment], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("event", "event", o);
     this.addStandardNounPOS("exit", "space.exit", o);
@@ -1024,6 +1030,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("facility", "facility", Term.fromString("noun('facility'[facility], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("facilities", "facility", Term.fromString("noun('facility'[facility], [plural])", o), 1.0));
     this.addStandardNounPOS("feeling", "feeling", o);
+    this.addStandardNounPOS("fixing tool", "tool", o);
     this.addUncountableNounPOS("food", "food", o);
     this.addStandardNounPOS("fridge", "fridge", o);
     this.addStandardNounPOS("front", "space.front", o);
@@ -1126,6 +1133,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("process", "process", Term.fromString("noun('process'[process], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("processes", "process", Term.fromString("noun('process'[process], [plural])", o), 1.0));
     this.addStandardNounPOS("profession", "profession", o);
+    this.addTokenPOS(new PartOfSpeech("property", "property", Term.fromString("noun('property'[property], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("properties", "property", Term.fromString("noun('property'[property], [plural])", o), 1.0));
     this.addStandardNounPOS("question", "perf.question", o);
     this.addStandardNounPOS("radius", "radius", o);    
     this.addStandardNounPOS("ration", "ration", o);
@@ -1203,10 +1212,13 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("the 3 laws of robotics", "three-laws-of-robotics", Term.fromString("noun('three-laws-of-robotics'[three-laws-of-robotics], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("the three laws of robotics", "three-laws-of-robotics", Term.fromString("noun('three-laws-of-robotics'[three-laws-of-robotics], [plural])", o), 1.0));
     this.addStandardNounPOS("time", "time", o);
+    this.addStandardNounPOS("tyre", "tire", o);  // synonym, so it's out of order
+    this.addStandardNounPOS("tire", "tire", o);
     this.addTokenPOS(new PartOfSpeech("today", "time.today", Term.fromString("noun('time.today'[time.today], [singular])", o), 1.0));
     this.addStandardNounPOS("toilet", "toilet", o);
     this.addStandardNounPOS("tool", "tool", o);
-    this.addStandardNounPOS("fixing tool", "tool", o);
+    this.addTokenPOS(new PartOfSpeech("toolbox", "toolbox", Term.fromString("noun('toolbox'[toolbox], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("toolboxes", "toolbox", Term.fromString("noun('toolbox'[toolbox], [plural])", o), 1.0));
     this.addStandardNounPOS("tower", "tower", o);
     this.addStandardNounPOS("transmission", "transmission", o);
     this.addStandardNounPOS("treadmill", "treadmill", o);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="116" height="50" tilewidth="8" tileheight="8" infinite="0" nextobjectid="599">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="116" height="50" tilewidth="8" tileheight="8" infinite="0" nextobjectid="622">
  <properties>
   <property name="name" value="Aurora Station"/>
  </properties>
@@ -1334,7 +1334,7 @@
   		<object id="broken-ss" type="brokenspacesuit"/>
   	</items>
   </object>
-  <object id="599" type="crate" x="720" y="72" width="8" height="16">
+  <object id="toolbox" type="toolbox" x="720" y="72" width="8" height="16">
   	<items>
   		<object id="wrench" type="wrench"/>
   		<object id="screwdriver" type="screwdriver"/>

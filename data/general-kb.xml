@@ -13,6 +13,7 @@
 	<sentence provenance="background" sentence="name('asimov'[#id],'asimov'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('asimov'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('asimov'[#id],'scifi-writer'[scifi-writer])"/>
+	<sentence provenance="background" sentence="dead('asimov'[#id])"/>
 
 	<sentence provenance="background" sentence="man('clarke'[#id])"/>
 	<sentence provenance="background" sentence="name('clarke'[#id],'arthur c. clarke'[symbol])"/>
@@ -20,18 +21,21 @@
 	<sentence provenance="background" sentence="name('clarke'[#id],'clarke'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('clarke'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('clarke'[#id],'scifi-writer'[scifi-writer])"/>
+	<sentence provenance="background" sentence="dead('clarke'[#id])"/>
 
 	<sentence provenance="background" sentence="man('sagan'[#id])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'carl sagan'[symbol])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'sagan'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('sagan'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('sagan'[#id],'astronomer'[astronomer])"/>
+	<sentence provenance="background" sentence="dead('sagan'[#id])"/>
 
 	<sentence provenance="background" sentence="man('einstein'[#id])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'albert einstein'[symbol])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'einstein'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('einstein'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('einstein'[#id],'physicist'[physicist])"/>
+	<sentence provenance="background" sentence="dead('einstein'[#id])"/>
 
 	<sentence provenance="background" sentence="man('newton'[#id])"/>
 	<sentence provenance="background" sentence="name('newton'[#id],'isaac newton'[symbol])"/>
@@ -39,24 +43,28 @@
 	<sentence provenance="background" sentence="name('newton'[#id],'newton'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('newton'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('newton'[#id],'scientist'[scientist])"/>
+	<sentence provenance="background" sentence="dead('newton'[#id])"/>
 
 	<sentence provenance="background" sentence="man('babbage'[#id])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'charles babbage'[symbol])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'babbage'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('babbage'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('babbage'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="dead('babbage'[#id])"/>
 
 	<sentence provenance="background" sentence="woman('lovelace'[#id])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'ada lovelace'[symbol])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'lovelace'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('lovelace'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('lovelace'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="dead('lovelace'[#id])"/>
 
 	<sentence provenance="background" sentence="man('turing'[#id])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'alan turing'[symbol])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'turing'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('turing'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="role('turing'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="dead('turing'[#id])"/>
 
 	<!-- general knowledge about locations -->
 	<sentence provenance="background" sentence="universe('universe'[#id])"/>
@@ -317,6 +325,8 @@
 	<sentence provenance="background" sentence="space.at('pliers'[#id], 'location-maintenance'[#id])"/>
 	<sentence provenance="background" sentence="brokenspacesuit('broken-ss'[#id])"/>
 	<sentence provenance="background" sentence="space.at('broken-ss'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="toolbox('toolbox'[#id])"/>
+	<sentence provenance="background" sentence="space.at('toolbox'[#id], 'location-maintenance'[#id])"/>
 
 	<sentence provenance="background" sentence="batteryrecharge.facility('batteryrecharge.facility'[#id])"/>
 	<sentence provenance="background" sentence="space.at('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>

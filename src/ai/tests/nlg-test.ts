@@ -274,3 +274,5 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.understand(V3:'etaoin'[#id], V4:#and(V5:the(V6:'temperature'[temperature], V2_0:[singular]), V8:noun(V6, V2_0)))))", "etaoin", "I do not understand the temperature");
 
 testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora station'[symbol]))", "etaoin", "the kitchen's name is aurora station");
+
+testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property"); 

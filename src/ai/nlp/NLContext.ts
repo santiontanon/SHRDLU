@@ -591,7 +591,7 @@ class NLContext {
 		var pronounTerms:Term[] = [];
 		var adjectiveTerms:Term[] = [];
 		var determinerTerms:Term[] = [];
-		var relationTerms:Term[] = [];
+		var relationTerms:Term[][] = [];
 		var otherTerms:Term[] = [];
 		for(let tmp of clauseElements) {
 			if (tmp instanceof TermTermAttribute) {
@@ -608,7 +608,7 @@ class NLContext {
 				} else if (tmp2.functor.is_a(determinerSort)) {
 					determinerTerms.push(tmp2);
 				} else if (tmp2.functor.is_a(relationSort)) {
-					relationTerms.push(tmp2);
+					relationTerms.push([tmp2]);
 				} else {
 					otherTerms.push(tmp2);
 				}
@@ -815,19 +815,25 @@ class NLContext {
 //									var ownerRelation:Term = Term.fromString("relation.owns('"+this.speaker+"'[#id])", o);
 //									ownerRelation.addAttribute(determinerTerm.attributes[0]);
 //									relationTerms.push(ownerRelation);
-									let belongsRelation:Term = Term.fromString("relation.belongs()", o);
-									belongsRelation.addAttribute(determinerTerm.attributes[0]);
-									belongsRelation.addAttribute(new ConstantTermAttribute(this.speaker, o.getSort("#id")));
-									relationTerms.push(belongsRelation);
+									let belongsRelation:Term = new Term(o.getSort("relation.owns"), 
+																	    [new ConstantTermAttribute(this.speaker, o.getSort("#id")),
+																	     determinerTerm.attributes[0]]);
+									let haveRelation:Term = new Term(o.getSort("verb.have"), 
+																	    [new ConstantTermAttribute(this.speaker, o.getSort("#id")),
+																	     determinerTerm.attributes[0]]);
+									relationTerms.push([belongsRelation, haveRelation]);
 								} else if (determinerTerm.functor.name == "determiner.your") {
 									// find owner:
 //									let ownerRelation:Term = Term.fromString("relation.owns('"+this.ai.selfID+"'[#id])", o);
 //									ownerRelation.addAttribute(determinerTerm.attributes[0]);
 //									relationTerms.push(ownerRelation);
-									let belongsRelation:Term = Term.fromString("relation.belongs()", o);
-									belongsRelation.addAttribute(determinerTerm.attributes[0]);
-									belongsRelation.addAttribute(new ConstantTermAttribute(this.ai.selfID, o.getSort("#id")));
-									relationTerms.push(belongsRelation);
+									let belongsRelation:Term = new Term(o.getSort("relation.owns"), 
+																	    [new ConstantTermAttribute(this.ai.selfID, o.getSort("#id")),
+																	     determinerTerm.attributes[0]]);
+									let haveRelation:Term = new Term(o.getSort("verb.have"), 
+																	    [new ConstantTermAttribute(this.ai.selfID, o.getSort("#id")),
+																	     determinerTerm.attributes[0]]);
+									relationTerms.push([belongsRelation, haveRelation]);
 								} else {
 									console.log("context.deref: determiner " + determinerTerm + " not yet supported!");
 								}
@@ -881,7 +887,8 @@ class NLContext {
 						}	
 
 						// apply relations:
-						for(let relationTerm of relationTerms) {
+						for(let relationTermL of relationTerms) {
+							let relationTerm:Term = relationTermL[0];
 							// check if it's a spatial relation (which are not in the logic representation, to save computation requirements):
 							if (relationTerm.functor.is_a(spatialRelationSort)) {
 //								console.log("Before " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
@@ -927,12 +934,14 @@ class NLContext {
 																   relationTerm.attributes[0]) == 1 &&
 									relationTerm.attributes[1] instanceof ConstantTermAttribute) {
 	//								console.log("Considering relation (1): " + relationTerm);
-									entities_mpl = this.filterByRelation1(relationTerm, entities_mpl, o, pos);
+									// entities_mpl = this.filterByRelation1(relationTerm, entities_mpl, o, pos);
+									entities_mpl = this.filterByAtLeastOneRelation1(relationTermL, entities_mpl, o, pos);
 								} else if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   relationTerm.attributes[1]) == 1 &&
 									relationTerm.attributes[0] instanceof ConstantTermAttribute) {
 	//								console.log("Considering relation (2): " + relationTerm);
-									entities_mpl = this.filterByRelation2(relationTerm, entities_mpl, o, pos);
+									// entities_mpl = this.filterByRelation2(relationTerm, entities_mpl, o, pos);
+									entities_mpl = this.filterByAtLeastOneRelation2(relationTermL, entities_mpl, o, pos);
 								}
 							}
 						}	
@@ -1306,6 +1315,28 @@ class NLContext {
 
 
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
+	filterByAtLeastOneRelation1(relationL:Term[], entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
+	{
+		var results_mpl:NLContextEntity[][] = [];
+		for(let entities of entities_mpl) {
+			let results:NLContextEntity[] = [];
+			for(let entity of entities) {
+				for(let relation of relationL) {
+					let tmp:TermAttribute = relation.attributes[0];
+					relation.attributes[0] = entity.objectID;
+					if (results.indexOf(entity) == -1 && 
+						entity.relationMatch(relation, o, pos)) results.push(entity);
+					relation.attributes[0] = tmp;
+				}
+			}
+			results_mpl.push(results);
+		}
+
+		return results_mpl;
+	}
+
+
+	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
 	filterByRelation2(relation:Term, entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
 	{
 		var results_mpl:NLContextEntity[][] = [];
@@ -1316,6 +1347,28 @@ class NLContext {
 				relation.attributes[1] = entity.objectID;
 				if (entity.relationMatch(relation, o, pos)) results.push(entity);
 				relation.attributes[1] = tmp;
+			}
+			results_mpl.push(results);
+		}
+
+		return results_mpl;
+	}
+
+
+	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
+	filterByAtLeastOneRelation2(relationL:Term[], entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
+	{
+		var results_mpl:NLContextEntity[][] = [];
+		for(let entities of entities_mpl) {
+			let results:NLContextEntity[] = [];
+			for(let entity of entities) {
+				for(let relation of relationL) {
+					let tmp:TermAttribute = relation.attributes[1];
+					relation.attributes[1] = entity.objectID;
+					if (results.indexOf(entity) == -1 && 
+						entity.relationMatch(relation, o, pos)) results.push(entity);
+					relation.attributes[1] = tmp;
+				}
 			}
 			results_mpl.push(results);
 		}

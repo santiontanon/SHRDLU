@@ -620,7 +620,8 @@ class RuleBasedAI {
 	    			} else if (errorType == DEREF_ERROR_CANNOT_DISAMBIGUATE) {
 		    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.disambiguate('"+this.selfID+"'[#id], "+tmp+")))))", this.o), null, null, null, this.time_in_seconds));
 	    			} else {
-		    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+this.selfID+"'[#id], "+tmp+"))))", this.o), null, null, null, this.time_in_seconds));
+//		    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+this.selfID+"'[#id], "+tmp+"))))", this.o), null, null, null, this.time_in_seconds));
+		    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.parse('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.time_in_seconds));
 	    			}
 	    		} else if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) {
 	    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+this.selfID+"'[#id], '"+this.naturalLanguageParser.error_unrecognizedTokens[0]+"'[symbol]))))", this.o), null, null, null, this.time_in_seconds));
