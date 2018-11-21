@@ -32,9 +32,7 @@ SHRDLU is by no means the first game to use NLP techniques. Besides the classic 
 
 - The font used for the game is the original font used in the BIOS of 1983 MSX computers. I used this procedure to generate it: http://www.ateijelo.com/blog/2016/09/13/making-an-msx-font
 
-- Concerning the use of time in the game: I know dates and times in a 24 hour system with Earh years doesn't make any sense in an alien planet with an undisclosed day/night or star revolution cycle. However, I decided to go with Earth time and dates, to keep the AI simple, and now having to create domain knowledge rules to handle time scale conversions, etc. So, this was a small concesion to make time-handling in the AI-side easier.
-
-- Also, if you enjoy the game, there are a few other games you should Google for: check out Façade, MKUltra and the recent Event[0] (and if you know of other games with interesting use of NLP, let me know!)
+- Concerning the use of time in the game: I know dates and times in a 24 hour system with Earh years doesn't make any sense in an alien planet with an undisclosed day/night or star revolution cycle. However, I decided to go with Earth time and dates, to keep the AI simple, and not having to create domain knowledge rules to handle time scale conversions, etc. So, this was a small concesion to make time-handling in the AI-side easier.
 
 - I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, and every one who played my demo at AIIDE 2018, every one gave me great feedback! Thank you one more time! :D
 	
