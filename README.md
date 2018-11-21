@@ -17,8 +17,9 @@ Alternatively, you can view a demo video here (of version v1.1): https://youtu.b
 SHRDLU is by no means the first game to use NLP techniques. Besides the classic parser-based interactive fiction games like Zork, or The Hobbit, or those that have keyword based conversations (like many (MANY) RPG games), several games attempt to use natural language parsing to allow players to interact in open-ended natural language. For example (this is not an exhaustive list):
 - <a href="https://en.wikipedia.org/wiki/Façade_(video_game)">Façade</a>
 - <a href="https://www.aaai.org/ocs/index.php/AIIDE/AIIDE15/paper/view/11549">MKUltra</a>
-- <a href="https://en.wikipedia.org/wiki/Event_0">Event[0]</a>
 - The <a href="https://www.lablablab.net/?page_id=9">LabLabLab</a> games (like SimHamlet)
+- <a href="https://en.wikipedia.org/wiki/Event_0">Event[0]</a>
+- <a href="https://en.wikipedia.org/wiki/Bot_Colony">Bot Colony</a>
 
 
 ## Notes
