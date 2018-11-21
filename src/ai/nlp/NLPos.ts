@@ -956,6 +956,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("animal", "animal", o);
     this.addTokenPOS(new PartOfSpeech("anomaly", "anomaly", Term.fromString("noun('anomaly'[anomaly], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anomalies", "anomaly", Term.fromString("noun('anomaly'[anomaly], [plural])", o), 1.0));
+    this.addStandardNounPOS("arm", "arm", o);
     this.addStandardNounPOS("artificial intelligence", "ai", o);
     this.addTokenPOS(new PartOfSpeech("aside", "space.away", Term.fromString("noun('space.away'[space.away], [singular])", o), 1.0));
     this.addStandardNounPOS("astronomer", "astronomer", o);
@@ -972,6 +973,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("bedroom", "bedroom", o);
     this.addStandardNounPOS("bench", "bench", o);
     this.addStandardNounPOS("biologist", "biologist", o);
+    this.addStandardNounPOS("body", "body", o);
+    this.addStandardNounPOS("body part", "body-part", o);
     this.addStandardNounPOS("bottle", "bottle", o);
     this.addStandardNounPOS("bottom", "space.bottom", o);
     this.addTokenPOS(new PartOfSpeech("box", "box", Term.fromString("noun('box'[box], [singular])", o), 1.0));
@@ -1032,6 +1035,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("feeling", "feeling", o);
     this.addStandardNounPOS("fixing tool", "tool", o);
     this.addUncountableNounPOS("food", "food", o);
+    this.addTokenPOS(new PartOfSpeech("foot", "foot", Term.fromString("noun('foot'[foot], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("feet", "foot", Term.fromString("noun('foot'[foot], [plural])", o), 1.0));
     this.addStandardNounPOS("fridge", "fridge", o);
     this.addStandardNounPOS("front", "space.front", o);
     this.addStandardNounPOS("functionality", "role", o);
@@ -1044,6 +1049,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("gym", "gym.room", o);
     this.addStandardNounPOS("gym bench", "gym-bench", o);
     this.addStandardNounPOS("gymnasium", "gym.room", o);
+    this.addStandardNounPOS("hand", "hand", o);
     this.addTokenPOS(new PartOfSpeech("hardware", "hardware", Term.fromString("noun('hardware'[hardware], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("head", "head", o);
     this.addTokenPOS(new PartOfSpeech("height", "height", Term.fromString("noun('height'[height], [singular])", o), 1.0));
@@ -1070,6 +1076,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("laboratories", "lab.room", Term.fromString("noun('lab.room'[lab.room], [plural])", o), 1.0));
     this.addStandardNounPOS("language", "language", o);
     this.addStandardNounPOS("laundry room", "laundry.room", o);
+    this.addStandardNounPOS("leg", "leg", o);
     this.addStandardNounPOS("light", "light", o);
     this.addStandardNounPOS("location", "space.location", o);
     this.addStandardNounPOS("machine", "machine", o);
@@ -1663,6 +1670,16 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
         if (tokens[i] == "cannot") {
             tokens[i] = "can";
             tokens.splice(i+1,0,"not");
+        }
+    }    
+
+    for(let i:number = 0;i<tokens.length;i++) {
+        if (tokens[i] == "can" &&
+            tokens[i+1] == "'" &&
+            tokens[i+2] == "t") {
+            tokens[i] = "can";
+            tokens[i+1] = "not";
+            tokens.splice(i+2,1);
         }
     }    
 

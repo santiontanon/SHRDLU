@@ -807,7 +807,9 @@ NLParseTestUnifyingListener("am I the only human?", o.getSort("performative"),  
 NLParseTestUnifyingListener("am I the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
 NLParseTestUnifyingListener("am I the only human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
 NLParseTestUnifyingListener("am I the last human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
-
+NLParseTestUnifyingListener("Why can't you repair the crate??", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can('etaoin'[#id], verb.repair('etaoin'[#id],'5'[#id]))))");
+NLParseTestUnifyingListener("there is a corpse here", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))");
+NLParseTestUnifyingListener("there is a crate in the kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(crate(X), space.at(X,'room1'[#id])))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

@@ -234,9 +234,14 @@
     <sort name="tower" super="shape"/>
     <sort name="tank" super="shape"/>
 
+    <sort name="body" super="object"/> 
     <sort name="body-part" super="object"/>    
     <sort name="eye" super="body-part"/> 
     <sort name="head" super="body-part"/> 
+    <sort name="hand" super="body-part"/> 
+    <sort name="arm" super="body-part"/> 
+    <sort name="leg" super="body-part"/> 
+    <sort name="foot" super="body-part"/> 
 
     <sort name="flying-vehicle" super="vehicle"/>
     <sort name="ship" super="flying-vehicle"/>

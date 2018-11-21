@@ -30,7 +30,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 					}
 
 					var newIntention:Term = null;
-					if (lastPerf != null) newIntention = this.convertPerformativeToWhyQuestionAnswerIntention(lastPerf, ai);
+					if (lastPerf != null) newIntention = this.convertPerformativeToWhyQuestionAnswerIntention(lastPerf, ai, context);
 					if (newIntention != null) {
 						intention = newIntention;
 					} else {
@@ -85,18 +85,44 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 	}
 
 
-	convertPerformativeToWhyQuestionAnswerIntention(nlcp:NLContextPerformative, ai:RuleBasedAI) : Term
+	convertPerformativeToWhyQuestionAnswerIntention(nlcp:NLContextPerformative, ai:RuleBasedAI, context:NLContext) : Term
 	{
 		if (nlcp.performative.functor.is_a(ai.o.getSort("perf.inform")) &&
 			(nlcp.performative.attributes[1] instanceof TermTermAttribute)) {
 			console.log("convertPerformativeToWhyQuestionAnswerIntention: perf.inform");
-			var predicate:Term = (<TermTermAttribute>nlcp.performative.attributes[1]).term;
-			var newIntention:Term = new Term(ai.o.getSort("action.answer.why"),
+			let predicate:Term = (<TermTermAttribute>nlcp.performative.attributes[1]).term;
+			let newIntention:Term = new Term(ai.o.getSort("action.answer.why"),
 									 		 [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
 											  nlcp.performative.attributes[0],
 										 	  new TermTermAttribute(predicate)]);
 			console.log("convertPerformativeToWhyQuestionAnswerIntention, newIntention: " + newIntention);
 			return newIntention;
+		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.ack.denyrequest")) &&
+				   nlcp.performative.attributes.length >= 1 &&
+				   nlcp.performative.attributes[0] instanceof ConstantTermAttribute) {
+			// Look to see which was the request for action:
+			let request:NLContextPerformative = null;
+			for(let p of context.performatives) {
+				if (p.speaker != nlcp.speaker && 
+					(p.performative.functor.name == "perf.request.action" ||
+					 p.performative.functor.name == "perf.q.action") &&
+					 p.performative.attributes.length >= 2) {
+					request = p;
+				break;
+				}
+			}
+			if (request == null) return null;
+			console.log("convertPerformativeToWhyQuestionAnswerIntention: perf.ack.denyrequest with request: " + request.performative);
+			let requestedAction:TermAttribute = request.performative.attributes[1];
+			let term:Term = new Term(ai.o.getSort("#not"),[new TermTermAttribute(new Term(ai.o.getSort("verb.can"), 
+																						  [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+																						   requestedAction]))]);
+			let newIntention:Term = new Term(ai.o.getSort("action.answer.why"),
+											 [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+											  nlcp.performative.attributes[0],
+										 	  new TermTermAttribute(term)]);
+			console.log("convertPerformativeToWhyQuestionAnswerIntention, newIntention: " + newIntention);
+			return newIntention;			
 		}
 
 		return null;

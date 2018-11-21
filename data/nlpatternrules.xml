@@ -285,6 +285,28 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefHypothetical(C2, HV, OBJECT)"/>	
 
+	<!-- "there is a crate here" / "there is a crate in the kitchen" -->
+	<NLPattern head="perf.inform(LISTENER, #and(space.at(QUERY_V, LOCATION), QUERY))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'there' verb('verb.be'[symbol], N, P, [present-tense])
+			   		 'a' nounPhraseNoDeterminer(X2, N2, P2, C2)
+					 noun(X3:[space.location], N3) ('!')* 
+    		   		 #derefFromContext(noun(X3, N3), LOCATION)
+					 #derefQuery(C2, QUERY_V, QUERY)"/>	
+
+	<NLPattern head="perf.inform(LISTENER, #and(#cons(PREP, QUERY_V, OBJECT), QUERY))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'there' verb('verb.be'[symbol], N, P, [present-tense])
+			   		 'a' nounPhraseNoDeterminer(X2, N2, P2, C2)
+					 preposition(PREP)
+					 nounPhrase(X3, N3, P3, C3) ('!')* 
+    		   		 #derefFromContext(C3, OBJECT)
+					 #derefQuery(C2, QUERY_V, QUERY)"/>	
+					 
     <!-- e.g.: "the color of my key is white" -->
 	<NLPattern name="inform-property-with-value"
 			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
@@ -2506,6 +2528,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 'there' verb('verb.be'[symbol], N, P, T) 'no'
 			   		 noun(SORT,N2)
 			   		 ('!'|'?')*"/>
+    <NLPattern name="why-can-not-action"
+    		   head="perf.q.why(LISTENER,#not(verb.can(SUBJECT,#cons(VERB,SUBJECT,OBJECT))))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'why' 
+			   		 verb('verb.can'[symbol], N, P, T) 'not' 
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb(VERB, N3, P3, T3)
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(C4, OBJECT)"/>
 
 	<!-- e.g.: "I cannot parse the sentence" -->
     <NLPattern name="cannot-verb"

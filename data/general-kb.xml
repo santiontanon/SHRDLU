@@ -124,6 +124,7 @@
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'qwerty'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'jcuken'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'shrdlu'[#id])"/>
+	<sentence provenance="background" sentence="#not(verb.have('etaoin'[#id],[body]))"/>
 	<sentence provenance="background" sentence="verb.do('etaoin'[#id],'nothing'[nothing])"/>
 
 	<sentence provenance="background" sentence="qwerty('qwerty'[#id])"/>
@@ -150,6 +151,7 @@
 	<sentence provenance="background" sentence="memory-bank('jcuken-memory'[#id])"/>
 	<sentence provenance="background" sentence="relation.owns('jcuken'[#id],'jcuken-memory'[#id])"/>
 	<sentence provenance="background" sentence="verb.do('etaoin'[#id],'nothing'[nothing])"/>
+	<sentence provenance="background" sentence="~robot(X);verb.have(X,[body])"/>
 
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id])"/>
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id],'location-aurora-station'[#id])"/>
@@ -163,6 +165,9 @@
 	<sentence provenance="background" sentence="relation.cause(gravity(X,'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large])); ~space.at(X, 'aurora'[#id])"/>
 	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large]))"/>
 	<sentence provenance="background" sentence="relation.cause(weight(X,'light-weight'[light-weight]), gravity('aurora'[#id],'gravity.low'[gravity.low])); ~space.at(X, 'aurora'[#id])"/>
+	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.repair(E,X))), #not(verb.have(E,[body])))"/>
+	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.go(E,X))), #not(verb.have(E,[body])))"/>
+	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], action.take(E,X))), #not(verb.have(E,[body])))"/>
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
