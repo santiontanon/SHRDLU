@@ -485,6 +485,7 @@
     <sort name="verb.see" super="verb"/>
     <sort name="verb.look-at" super="verb.see"/>
     <sort name="verb.run" super="movementverb"/>
+    <sort name="verb.send" super="verb"/>
     <sort name="verb.show" super="verb"/>
     <sort name="verb.sleep" super="verb"/>
     <sort name="verb.stand" super="verb"/>

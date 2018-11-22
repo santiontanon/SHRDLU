@@ -46,7 +46,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				}
 
 				console.log(ai.selfID + " trying to say: " + performative);
-				txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, context);
+				txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, null, context);
 				txt = ai.game.naturalLanguageGenerator.capitalize(txt);
 			}
 		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {

@@ -64,7 +64,7 @@ for(let sortToDefine of sortsToDefine) {
 		console.log("    Cannot define: " + sortToDefine.name);
 	} else {
 		var term:Term = Term.fromString("perf.inform('1'[#id],verb.be(["+sortToDefine.name+"],"+definitionAsTerm+"))", g_o);
-		var str:string = g_nlg.termToEnglish(term, g_ai.selfID, g_context);
+		var str:string = g_nlg.termToEnglish(term, g_ai.selfID, null, g_context);
 		console.log(str);
 	}
 }

@@ -823,22 +823,22 @@ NLParseTestUnifyingListener("how do i get outside of the kitchen", o.getSort("pe
 NLParseTestUnifyingListener("You need a space suit", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(verb.need('etaoin'[#id], X), spacesuit(X)))"); 
 NLParseTestUnifyingListener("You will need a space suit", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(#and(V:verb.need('etaoin'[#id], X), spacesuit(X)), time.future(V)))");
 NLParseTestUnifyingListener("how should i find the crate", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.find('1'[#id], '5'[#id]))");
-
 NLParseTestUnifyingListener("whose crate is this?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, relation.owns(X, '5'[#id]))");
 NLParseTestUnifyingListener("who is the owner of this crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, relation.owns(X, '5'[#id]))");
 NLParseTestUnifyingListener("who owns this crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V1:[any], V2:#and(V3:character(V1), V4:verb.own(V1, V5:'5'[#id])))");
-
 NLParseTestUnifyingListener("am I the last human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id])))))");
 NLParseTestUnifyingListener("am I the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(human(X), space.at(X, 'room1'[#id]))))");
 NLParseTestUnifyingListener("why am i the only human?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(#not(=(X,'1'[#id])), #and(alive(X), human(X)))))");
 NLParseTestUnifyingListener("why am i the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(#not(=(X,'1'[#id])), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id]))))))");
 NLParseTestUnifyingListener("why are there no humans here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(human(X), space.at(X, 'room1'[#id]))))");
 NLParseTestUnifyingListener("why don't i remember anything?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(verb.remember('1'[#id], 'pronoun.anything'[pronoun.anything])))");
-
 NLParseTestUnifyingListener("how do i turn on the ship", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.switch-on('1'[#id], '2'[#id]))"); 
 NLParseTestUnifyingListener("who is in the other rooms?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(space.at(X, Y), #and(room(Y), #not(=(Y, 'room1'[#id]))))))");
 NLParseTestUnifyingListener("were there other humans here before?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #and(#not(=(X,'1'[#id])), #and(V:space.at(X, 'room1'[#id]), time.past(V)))))");
 
+NLParseTestUnifyingListener("etaoin send the crate here", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
+NLParseTestUnifyingListener("can you send the crate here?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
+NLParseTestUnifyingListener("send the crate to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
 
 // NLParseTestUnifyingListener("turn the ship on", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], turn-on('etaoin'[#id], '2'[#id]))"); 
 // NLParseTestUnifyingListener("how do I turn the ship on", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], turn-on('etaoin'[#id], '2'[#id]))");

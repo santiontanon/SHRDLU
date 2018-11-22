@@ -39,9 +39,20 @@ class NLGenerator {
 	}
 
 
-	termToEnglish(t:Term, speakerID:string, context:NLContext) : string
+	// listenerID will usually be null, if it is != null, the sentence will start with a reference to that listener, 
+	// to help the listener know we are talking to her
+	termToEnglish(t:Term, speakerID:string, listenerID:ConstantTermAttribute, context:NLContext) : string
 	{
-		return this.termToEnglishInternal(t, speakerID, context, true);
+		let listenerPrefix:string = "";
+		if (listenerID != null) {
+			var targetString:string = this.termToEnglish_EntityName(listenerID, context);
+			if (targetString != null) {
+				// special case to prevent "hello man!", which sounds like "hello dude!"
+				if (targetString == "man") targetString = "human";
+				listenerPrefix = targetString + ", ";
+			}			
+		}
+		return listenerPrefix + this.termToEnglishInternal(t, speakerID, context, true);
 	}
 
 

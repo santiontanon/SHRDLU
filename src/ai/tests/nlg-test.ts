@@ -16,7 +16,7 @@ var g_context:NLContext = g_ai.contextForSpeaker('1');
 function testNLG(performative:string, speaker:string, result:string)
 {
 	var t:Term = Term.fromString(performative, g_o);
-	var str:string = g_nlg.termToEnglish(t, speaker, g_context);
+	var str:string = g_nlg.termToEnglish(t, speaker, null, g_context);
 	if (str != result) {
 		console.error("NLG output is not what was expected for "+t+"! \n" + str + "\ninstead of:\n" + result);
 	} else {

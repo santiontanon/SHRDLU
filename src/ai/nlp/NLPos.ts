@@ -240,6 +240,7 @@ class POSParser {
       "outer space",
       "tardis 8",
       "key card",
+      "access key",
       "aurora station",
       "comm tower",
       "communication tower",
@@ -944,6 +945,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
       this.addTokenPOS(new PartOfSpeech(proper_noun, proper_noun, Term.fromString("proper-noun('"+proper_noun+"'[symbol], [singular])", o), 1.0));
     }
 
+    // synonyms (those that I don't want the AI to use):
+    this.addStandardNounPOS("access key", "key-card", o);
+
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o);
     this.addStandardNounPOS("age", "property.age", o);
@@ -1353,6 +1357,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.see", "see","sees","saw","seen","seeing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.seem", "seem","seems","seemed","seemed","seeming", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.send", "send","sends","sent","sent","sending", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.shall", "shall","shall","should",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.show", "show","shows","showed","shown","showing", true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.sleep", "sleep","sleeps","slept","slept","sleeping", false, multitokens_raw, o);

@@ -9,19 +9,21 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:EtaoinAI = <EtaoinAI>ai_raw;
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
+		let ai:EtaoinAI = <EtaoinAI>ai_raw;
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
+		let needToSpecifyListener:boolean = false; 
+		let performative:Term = null;
 
 		if (intention.attributes[1] instanceof TermTermAttribute) {
-			var performative:Term = (<TermTermAttribute>(intention.attributes[1])).term;
-			var txt:string = null;
+			performative = (<TermTermAttribute>(intention.attributes[1])).term;
 			if ((performative.attributes[0] instanceof ConstantTermAttribute) &&
 				ai.canSee((<ConstantTermAttribute>performative.attributes[0]).value)) {
 				// if we are already talking, just wait:
 				if (ai.player_object.map.textBubbles.length > 0) return null;
-				var targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;
-				var context:NLContext = ai.contextForSpeaker(targetID);
+				let targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;
+				let context:NLContext = ai.contextForSpeaker(targetID);
+				let txt:string = null;
 
 				if (!context.inConversation &&
 					performative.functor.name != "perf.callattention" &&
@@ -29,47 +31,60 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 					// we need to greet first:
 					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
 					ai.queuedIntentions.push(ir);
+				} else {
+					for(let c of ai.contexts) {
+						if (c!=context && c.inConversation) {
+							needToSpecifyListener = true;
+							c.inConversation = false;	// terminate the other conversations
+						}
+					}
 				}
 
 				if (requester instanceof ConstantTermAttribute &&
 					(<ConstantTermAttribute>requester).value != targetID) {
 					// someone asked us to tell someone else something, change the spatial adverbs accordingly (here/there):
+					// this also replaces "verb.come" to "ver.go-to" with the appropriate location
 					ai.replaceSpatialAdverbsInReferenceToAnotherSpeaker(performative, (<ConstantTermAttribute>requester).value);
 				}
 
 				console.log(ai.selfID + " trying to say: " + performative);
-				txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, context);
+				if (needToSpecifyListener) {
+					txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, <ConstantTermAttribute>performative.attributes[0], context);
+				} else {
+					txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, null, context);
+				}
 				txt = ai.game.naturalLanguageGenerator.capitalize(txt);
+
+				if (txt != null) {
+					ai.game.addMessage(ai.selfID + ": " + txt);
+					ai.player_object.map.textBubbles.push(
+						[new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null),
+						 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
+						);
+
+					// create a perception buffer entry:
+					let targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
+					if (targetObject != null) {
+			            targetObject.map.addPerceptionBufferRecord(
+			                new PerceptionBufferRecord("talk", ai.selfID, ai.o.getSort("disembodied-ai"),
+			                                           null, null, txt,
+			                                           null, null,
+			                                           targetObject.x, targetObject.y+targetObject.tallness, targetObject.x+targetObject.getPixelWidth(), targetObject.y+targetObject.getPixelHeight()));
+			        }
+
+					// update natural language context:
+					if (performative != null) context.newPerformative(ai.selfID, txt, performative, ir.cause, ai.o, ai.time_in_seconds);
+					for(let c2 of ai.contexts) {
+						if (c2 != context) c2.inConversation = false;
+					}
+				}
 			}
-		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
-			txt = (<ConstantTermAttribute>intention.attributes[1]).value;					
+//		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
+//			txt = (<ConstantTermAttribute>intention.attributes[1]).value;					
 		} else {
-			console.error("EtaoinAI.executeIntention: malformed performative: " + performative.toString());
+			console.error("EtaoinAI.executeIntention: malformed intention: " + intention.toString());
 		}
 
-		if (txt != null) {
-			ai.game.addMessage(ai.selfID + ": " + txt);
-			ai.player_object.map.textBubbles.push(
-				[new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null),
-				 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
-				);
-
-			// create a perception buffer entry:
-			var targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
-			if (targetObject != null) {
-	            targetObject.map.addPerceptionBufferRecord(
-	                new PerceptionBufferRecord("talk", ai.selfID, ai.o.getSort("disembodied-ai"),
-	                                           null, null, txt,
-	                                           null, null,
-	                                           targetObject.x, targetObject.y+targetObject.tallness, targetObject.x+targetObject.getPixelWidth(), targetObject.y+targetObject.getPixelHeight()));
-	        }
-
-			// update natural language context:
-			if (performative != null) context.newPerformative(ai.selfID, txt, performative, ir.cause, ai.o, ai.time_in_seconds);
-			for(let c2 of ai.contexts) {
-				if (c2 != context) c2.inConversation = false;
-			}
-		}
 		return true;
 	}
 

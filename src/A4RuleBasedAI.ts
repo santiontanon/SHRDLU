@@ -871,10 +871,23 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	replaceSpatialAdverbsInReferenceToAnotherSpeaker(performative:Term, originalSpeaker:string)
+	replaceSpatialAdverbsInReferenceToAnotherSpeaker(term:Term, originalSpeaker:string)
 	{
-		for(let i:number = 0;i<performative.attributes.length;i++) {
-			performative.attributes[i] = this.replaceSpatialAdverbsInReferenceToAnotherSpeaker_internal(performative.attributes[i], originalSpeaker);
+		if (term.functor.is_a(this.o.getSort("verb.come"))) {
+			if (term.attributes.length == 1) {
+				term.functor = this.o.getSort("verb.go-to");
+				// add destination:
+				var speakerObject:A4Object = this.game.findObjectByIDJustObject(originalSpeaker);
+				if (speakerObject != null) {
+					var location:AILocation = this.game.getAILocation(speakerObject);
+					if (location != null) {
+						term.attributes.push(new ConstantTermAttribute(location.id, this.cache_sort_id));
+					}
+				}
+			}
+		} 
+		for(let i:number = 0;i<term.attributes.length;i++) {
+			term.attributes[i] = this.replaceSpatialAdverbsInReferenceToAnotherSpeaker_internal(term.attributes[i], originalSpeaker);
 		}
 	}
 

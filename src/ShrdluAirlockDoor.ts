@@ -15,6 +15,7 @@ class ShrdluAirlockDoor extends A4Obstacle {
 
         if (a_name == "otherDoorID") {
             this.otherDoorID = attribute_xml.getAttribute("value");
+            if (this.otherDoorID == "null") this.otherDoorID = null;
             return true;
         } else if (a_name == "requireSuit") {
 	        this.requireSuit = false;
@@ -38,7 +39,7 @@ class ShrdluAirlockDoor extends A4Obstacle {
     {
         var xmlString:string = super.savePropertiesToXML(game);
 
-        xmlString += this.saveObjectAttributeToXML("otherDoorID",this.otherDoorID) + "\n";
+        if (this.otherDoorID != null) xmlString += this.saveObjectAttributeToXML("otherDoorID",this.otherDoorID) + "\n";
         xmlString += this.saveObjectAttributeToXML("requireSuit",this.requireSuit) + "\n";
         xmlString += this.saveObjectAttributeToXML("targetMap",this.targetMap) + "\n";
         xmlString += this.saveObjectAttributeToXML("targetX",this.targetX) + "\n";
