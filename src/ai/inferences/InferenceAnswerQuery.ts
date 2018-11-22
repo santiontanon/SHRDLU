@@ -130,7 +130,7 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 
 	static loadFromXML(xml:Element, ai:RuleBasedAI, o:Ontology, variables:TermAttribute[], variableNames:string[]) : InferenceEffect
 	{
-		let t:Term = Term.fromStringInternal(xml.getAttribute("effectParameter"), o, variableNames, variables);
+		let t:Term = Term.fromStringInternal(xml.getAttribute("effectParameter"), o, variableNames, variables).term;
 		let speaker:string = xml.getAttribute("speaker");
 		if (speaker != null) {
 			let nlcp:number = Number(xml.getAttribute("nlcp"));

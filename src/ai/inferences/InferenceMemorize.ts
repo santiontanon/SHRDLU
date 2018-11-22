@@ -74,7 +74,7 @@ class Memorize_InferenceEffect extends InferenceEffect {
 
 	static loadFromXML(xml:Element, ai:RuleBasedAI, o:Ontology, variables:TermAttribute[], variableNames:string[]) : InferenceEffect
 	{
-		let t:Term = Term.fromStringInternal(xml.getAttribute("effectParameter"), o, variableNames, variables);
+		let t:Term = Term.fromStringInternal(xml.getAttribute("effectParameter"), o, variableNames, variables).term;
 		return new Memorize_InferenceEffect(t);
 	}
 	

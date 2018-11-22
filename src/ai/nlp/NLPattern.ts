@@ -702,22 +702,26 @@ class NLPattern {
 		}
 
 		var queryTerms:TermAttribute[] = [];
+		var verbOrRelationTerm:TermAttribute = null;	// this is so that if we have an adverb of time, we know which term to qualify
 		if (queryFunctorSort != null) {
 			if (queryLocationID == null) {
 				if (querySubjectID == null ||
 					!queryFunctorSort.is_a(o.getSort("property-with-value"))) {
 					if (queryFunctorSort.name != "any") {
-						queryTerms.push(new TermTermAttribute(new Term(queryFunctorSort, [queryVariable])));
+						verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [queryVariable]));
+						queryTerms.push(verbOrRelationTerm);
 					}
 				} else {
-					queryTerms.push(new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryVariable])));
+					verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryVariable]));
+					queryTerms.push(verbOrRelationTerm);
 				}
 			} else {
 				if (querySubjectID == null) {
 					console.warn("specialfunction_derefQuery: case not considered, querySubjectID == null and queryLocationID != null!");
 					return null;
 				} else {
-					queryTerms.push(new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryLocationID, queryVariable])));
+					verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryLocationID, queryVariable]));
+					queryTerms.push(verbOrRelationTerm);
 					if (otherRelations.indexOf(TermUsedForQueryLocationID) != -1) {
 						otherRelations.splice(otherRelations.indexOf(TermUsedForQueryLocationID), 1);
 					}
@@ -733,7 +737,6 @@ class NLPattern {
 			queryTerms.push(new TermTermAttribute(new Term(o.getSort("relation.owns"), [listenerVariable, queryVariable])));	
 		}
 		for(let adjective of adjectives) {
-
 			if (adjective.is_a(o.getSort("property-with-value"))) {
 				if (adjective.is_a(o.getSort("role"))) {
 					queryTerms.push(new TermTermAttribute(new Term(adjective,[queryVariable, queryLocationID, new ConstantTermAttribute(adjective.name, adjective)])));
@@ -742,29 +745,6 @@ class NLPattern {
 				}
 			} else {
 				queryTerms.push(new TermTermAttribute(new Term(adjective,[queryVariable])));
-			}
-		}
-		for(let adverb of adverbs) {
-			if (adverb.attributes.length > 0 &&
-				adverb.attributes[0] instanceof ConstantTermAttribute) {
-				var adverbString:string = (<ConstantTermAttribute>adverb.attributes[0]).value;
-				if (adverbString == "space.here") {
-					// find the location of the speaker:
-					var hereEntity:NLContextEntity = context.findLocationOfID(context.speaker);
-					if (hereEntity != null) {
-						queryTerms.push(new TermTermAttribute(new Term(o.getSort("space.at"),[queryVariable, hereEntity.objectID])));
-					}
-				} else if (adverbString == "space.there") {
-					// Find if there is a location we just talked about (and that is not the place where the speaker is):
-					var hereEntity:NLContextEntity = context.findLocationOfID(context.speaker);
-					var thereEntity:NLContextEntity = null;
-					var entities_mpl:NLContextEntity[][] = context.findEntitiesOfSort(o.getSort("space.location"), o);
-					var candidateThereEntities:NLContextEntity[] = context.applySingularTheDeterminer(entities_mpl);
-					if (candidateThereEntities != null && candidateThereEntities.length == 1) thereEntity = candidateThereEntities[0];
-					if (thereEntity != null && thereEntity != hereEntity) {
-						queryTerms.push(new TermTermAttribute(new Term(o.getSort("space.at"),[queryVariable, thereEntity.objectID])));
-					}
-				}
 			}
 		}
 		for(let relation of otherRelations) {
@@ -780,9 +760,57 @@ class NLPattern {
 				}
 			}
 			if (found) {
-				queryTerms.push(new TermTermAttribute(new Term(relation.functor, atts)));
+				verbOrRelationTerm = new TermTermAttribute(new Term(relation.functor, atts));
+				queryTerms.push(verbOrRelationTerm);
 			} else {
 				console.log("specialfunction_derefQuery: otherRelation does not have queryFunctor ("+queryFunctor+") as a parameter: " + relation);
+			}
+		}
+		for(let adverb of adverbs) {
+			if (adverb.attributes.length > 0 &&
+				adverb.attributes[0] instanceof ConstantTermAttribute) {
+				var adverbString:string = (<ConstantTermAttribute>adverb.attributes[0]).value;
+				if (adverbString == "space.here") {
+					// find the location of the speaker:
+					var hereEntity:NLContextEntity = context.findLocationOfID(context.speaker);
+					if (hereEntity != null) {
+						verbOrRelationTerm = new TermTermAttribute(new Term(o.getSort("space.at"),[queryVariable, hereEntity.objectID]));
+						queryTerms.push(verbOrRelationTerm);
+					}
+				} else if (adverbString == "space.there") {
+					// Find if there is a location we just talked about (and that is not the place where the speaker is):
+					var hereEntity:NLContextEntity = context.findLocationOfID(context.speaker);
+					var thereEntity:NLContextEntity = null;
+					var entities_mpl:NLContextEntity[][] = context.findEntitiesOfSort(o.getSort("space.location"), o);
+					var candidateThereEntities:NLContextEntity[] = context.applySingularTheDeterminer(entities_mpl);
+					if (candidateThereEntities != null && candidateThereEntities.length == 1) thereEntity = candidateThereEntities[0];
+					if (thereEntity != null && thereEntity != hereEntity) {
+						verbOrRelationTerm = new TermTermAttribute(new Term(o.getSort("space.at"),[queryVariable, thereEntity.objectID]));
+						queryTerms.push(verbOrRelationTerm);
+					}
+				}
+			}
+		}
+		// we iterate twice over the adverbs, since the time-related ones have to be processed last:
+		for(let adverb of adverbs) {
+			if (adverb.attributes.length > 0 &&
+				adverb.attributes[0] instanceof ConstantTermAttribute) {
+				var adverbString:string = (<ConstantTermAttribute>adverb.attributes[0]).value;
+				if (adverbString == "time.past") {
+					if (verbOrRelationTerm != null) {
+						queryTerms.push(new TermTermAttribute(new Term(o.getSort("time.past"),[verbOrRelationTerm])));					
+					} else {
+						// we have a time adverb, but we don't know what to qualify with it!
+						return null;
+					}
+				} else if (adverbString == "time.future") {
+					if (verbOrRelationTerm != null) {
+						queryTerms.push(new TermTermAttribute(new Term(o.getSort("time.future"),[verbOrRelationTerm])));					
+					} else {
+						// we have a time adverb, but we don't know what to qualify with it!
+						return null;
+					}
+				}
 			}
 		}
 		if (properNounTerm != null) {
@@ -1187,7 +1215,7 @@ class NLPattern {
 
 	static fromStringTerm(str:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : NLPattern
 	{
-		var term:Term = Term.fromStringInternal(str, o, variableNames, variableValues);
+		var term:Term = Term.fromStringInternal(str, o, variableNames, variableValues).term;
 
 		if (term == null) return null;
 

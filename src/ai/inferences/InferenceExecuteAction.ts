@@ -38,7 +38,7 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 
 	static loadFromXML(xml:Element, ai:RuleBasedAI, o:Ontology, variables:TermAttribute[], variableNames:string[]) : InferenceEffect
 	{
-		let t:Term = Term.fromStringInternal(xml.getAttribute("action"), o, variableNames, variables);
+		let t:Term = Term.fromStringInternal(xml.getAttribute("action"), o, variableNames, variables).term;
 		return new ExecuteAction_InferenceEffect(t);
 	}
 	

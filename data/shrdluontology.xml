@@ -405,9 +405,12 @@
     <sort name="mathematician" super="scientist"/>
     <sort name="captain" super="profession"/>
 
+    <sort name="owner" super="abstract-entity"/>
+
     <sort name="in-stasis" super="property,#stateSort"/>
     <sort name="alone" super="property,#stateSort"/>
     <sort name="alone-in" super="relation,#stateSort"/>
+    <sort name="last" super="property,#stateSort"/>
 
     <sort name="username" super="property-with-value,abstract-entity"/>
     <sort name="password" super="property-with-value,abstract-entity"/>    
@@ -475,6 +478,7 @@
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
     <sort name="verb.need" super="verb"/>
+    <sort name="verb.own" super="verb,relation.owns"/>
     <sort name="verb.parse" super="verb"/>
     <sort name="verb.put" super="verb"/>
     <sort name="verb.repair" super="verb"/>

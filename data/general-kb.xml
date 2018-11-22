@@ -168,6 +168,7 @@
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.repair(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.go(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], action.take(E,X))), #not(verb.have(E,[body])))"/>
+	<sentence provenance="background" sentence="relation.cause(#not(verb.remember(E:'david'[#id], 'pronoun.anything'[pronoun.anything])), #and(V:in-stasis('david'[#id]), time.past(V)))"/>
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
@@ -184,6 +185,9 @@
 	<sentence provenance="background" sentence="~battery(B) ; relation.howto(verb.fill(X, B), verb.go-to(X, 'location-powerplant'[#id]))"/>
 	<sentence provenance="background" sentence="~relation.opens(KEY, ROOM) ; relation.howto(action.open(X, ROOM), action.use(X, KEY))"/>
 	<sentence provenance="background" sentence="~celestial-body(P); space.at(X, P) ; relation.howto(verb.go-to(X, P), verb.need(X, [spaceship]))"/>
+	<sentence provenance="background" sentence="~space.at(Y, Z) ; relation.howto(verb.find(X, Y), verb.go-to(X, Z))"/>
+	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-on(X, Y), verb.can(E:'etaoin'[#id], verb.switch-on(E, Y)))"/>
+	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-off(X, Y), verb.can(E:'etaoin'[#id], verb.switch-off(E, Y)))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>

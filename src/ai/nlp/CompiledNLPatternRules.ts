@@ -16,6 +16,7 @@ class CompiledNLPatternRules extends NLPatternContainer {
 		this.root = new CompiledNLPatternState();
 		for(let rule of parser.rules) {
 			if (rule.head.functor.is_a(sort)) {
+//				console.log("rule head: " + rule.head);
 				this.root.addRule(rule, this.speakerVariable, this.listenerVariable);	
 			}
 		}
@@ -61,6 +62,7 @@ class CompiledNLPatternRules extends NLPatternContainer {
 //			parse.ruleNames = [this.name].concat(parse.ruleNames);
 //			parse.priorities = [this.priority].concat(parse.priorities);
 //			parse.result = this.head.applyBindings(parse.bindings);
+//			console.log("Parse completed, result (before resolvecons): " + parse.result);
 			NLParser.resolveCons(parse.result, parser.o);
 //			console.log("CompiledNLPatternRules.parse: Parse completed, result: " + parse.result.toString());
 			results.push(parse);
@@ -112,10 +114,11 @@ class CompiledNLPatternState {
 		for(let i:number = 0;i<tmp.length;i++) {
 			let s:CompiledNLPatternState = tmp[i][0];
 			let b:Bindings = tmp[i][1];
-			s.priorities.push(rule.priority);
 
 			// set the proper LISTENER and SPEAKER variables:
 			let rule2:Term = rule.head.applyBindings(b);
+//			console.log("rule.head: " + rule.head);
+//			console.log("rule2: " + rule2);
 			let variables:VariableTermAttribute[] = rule2.getAllVariables();
 			let b2:Bindings = new Bindings();
 			for(let v of variables) {
@@ -124,7 +127,9 @@ class CompiledNLPatternState {
 			}
 			if (b2.l.length > 0)  rule2 = rule2.applyBindings(b2);
 
+			s.priorities.push(rule.priority);
 			s.heads.push(rule2);	
+			s.ruleNames.push(rule.name)
 		}
 	}
 
@@ -315,7 +320,7 @@ class CompiledNLPatternState {
 			// found a parse!
 //			console.log("parse found with bindings: " + parse.bindings);
 			parse.result = this.heads[i].applyBindings(parse.bindings);
-			parse.ruleNames = [rule.name].concat(parse.ruleNames);
+			parse.ruleNames = [this.ruleNames[i]].concat(parse.ruleNames);
 			parse.priorities = [this.priorities[i]].concat(parse.priorities);
 			parses.push(parse);
 //			console.log("result: " + parse.result);
@@ -431,6 +436,7 @@ class CompiledNLPatternState {
 	priorities:number[] = [];	// if parsing ends at this node, what would be the priority of the parse
 	heads:Term[] = [];		// if parsing can end at this node, this is the term that will be returned
 	transitions:CompiledNLPatternTransition[] = [];
+	ruleNames:string[] = [];
 }
 
 

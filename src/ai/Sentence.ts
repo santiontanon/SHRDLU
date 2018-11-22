@@ -244,7 +244,7 @@ class Sentence {
 					console.error("Sentence.fromString: semicolon found too early!");
 					return null;
 				}
-				var t:Term = Term.fromStringInternal(tokens[i], o, variableNames, variableValues); 
+				var t:Term = Term.fromStringInternal(tokens[i], o, variableNames, variableValues).term; 
 				if (t == null) return null;
 				s.terms.push(t);
 				s.sign.push(sign);

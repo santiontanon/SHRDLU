@@ -89,6 +89,8 @@ abstract class TermAttribute {
     // this function requires the variable to be an exact match:
     abstract applyBindings(bindings:Bindings) : TermAttribute;
 
+    abstract applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
+
 
     abstract clone(map:[TermAttribute,TermAttribute][]) : TermAttribute;
 
@@ -128,6 +130,12 @@ class ConstantTermAttribute extends TermAttribute {
 
 
     applyBindings(bindings:Bindings) : TermAttribute
+    {
+        return this;
+    }
+
+
+    applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
     {
         return this;
     }
@@ -191,6 +199,17 @@ class VariableTermAttribute extends TermAttribute {
     }
 
 
+    applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
+    {
+        for(let b of bindings.l) {
+            if (b[0] == this) {
+                return b[1].applyBindings_internal(bindings, map);
+            }
+        }
+        return this;
+    }
+
+
     clone(map:[TermAttribute,TermAttribute][]) : TermAttribute
     {
         for(let [v1,v2] of map) {
@@ -240,6 +259,12 @@ class TermTermAttribute extends TermAttribute {
     applyBindings(bindings:Bindings) : TermAttribute
     {
         return new TermTermAttribute(this.term.applyBindings(bindings));
+    }
+
+
+    applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
+    {
+        return this.term.applyBindings_internal(bindings, map);
     }
 
 
@@ -614,14 +639,24 @@ class Term {
     applyBindings(bindings:Bindings) : Term
     {
         if (bindings.l.length == 0) return this;
+        return (<TermTermAttribute>this.applyBindings_internal(bindings, [])).term;
+    }
 
+
+    applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
+    {
+        for(let [v1,v2] of map) {
+            if (v1 == this) return v2;
+        }
         var t:Term = new Term(this.functor, []);
+        var t_a:TermAttribute = new TermTermAttribute(t);
+        map.push([this, t_a]);
         for(let att of this.attributes) {
-            var att2:TermAttribute = att.applyBindings(bindings);
+            var att2:TermAttribute = att.applyBindings_internal(bindings, map);
             t.attributes.push(att2);
         }
 
-        return t;
+        return t_a;
     }
 
 
@@ -825,18 +860,19 @@ class Term {
 
     static fromString(str:string, o:Ontology) : Term
     {
-        return Term.fromStringInternal(str, o, [], []);
+        return Term.fromStringInternal(str, o, [], []).term;
     }
 
 
     static fromStringInternal(str:string, o:Ontology, 
-                              variableNames:string[], variableValues:TermAttribute[]) : Term
+                              variableNames:string[], variableValues:TermAttribute[]) : TermTermAttribute
     {
         var tmp:string = "";
         var len:number = str.length;
         var idx:number = 0;
         var c:string = null;
         var term:Term = new Term(null,[]);
+        var term_a:TermTermAttribute = new TermTermAttribute(term);
         var state:number = 0;
 
 //        console.log("Term.fromStringInternal: " + str);
@@ -856,11 +892,12 @@ class Term {
                     return null;
                 }
                 variableNames.push(tmp);
-                variableValues.push(new TermTermAttribute(term));
+                variableValues.push(term_a);
                 tmp = "";
                 state = 1;
             } else if (c=='(') {
                 term.functor = o.getSort(tmp);
+                term_a.sort = term.functor;
                 if (term.functor == null) {
                     console.error("Term.fromString: unknown sort " + tmp + "!");
                     return null;
@@ -955,7 +992,7 @@ class Term {
             term.attributes.push(att);
         }
 
-        return term;
+        return term_a;
     }
 
 
@@ -1082,16 +1119,15 @@ class Term {
 
                     } else {
                         // VariableName:functor( ... )
-                        var a_term:TermAttribute = new TermTermAttribute(Term.fromStringInternal(attributeString, o, variableNames, variableValues));
+                        var a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
                         if (a_term == null) return null;
                         return a_term;
-                        break;
                     }
                 }
 
             } else if (c == "(") {
                 // functor( ... )
-                var a_term:TermAttribute = new TermTermAttribute(Term.fromStringInternal(attributeString, o, variableNames, variableValues));
+                var a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
                 if (a_term == null) return null;
                 return a_term;
             } 
@@ -1099,14 +1135,18 @@ class Term {
         }
 
         // VariableName
+//        console.log("variableNames: " + variableNames);
+//        console.log("   variableName: " + tmp);
         idx = variableNames.indexOf(tmp);
         if (idx == -1) {
+//            console.log("   it's a new one");
             var a_sort:Sort = o.getSort("any");
             var a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
             variableNames.push(tmp);
             variableValues.push(a_term);
             return a_term;
         } else {
+//            console.log("   we had it before");
             return variableValues[idx];
         }
     }

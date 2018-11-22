@@ -126,7 +126,6 @@ class NLPatternRule extends NLPatternContainer {
 			parse.priorities = [this.priority].concat(parse.priorities);
 			parse.result = this.head.applyBindings(parse.bindings);
 			NLParser.resolveCons(parse.result, parser.o);
-//			console.log("Parse completed, result: " + result.toString() + "\n. Bindings: " + parse.bindings);
 			results.push(parse);
 		}
 
@@ -183,7 +182,7 @@ class NLPatternRule extends NLPatternContainer {
 	{
         var variableNames:string[] = [];
         var variableValues:VariableTermAttribute[] = [];
-		var h:Term = Term.fromStringInternal(head, o, variableNames, variableValues);
+		var h:Term = Term.fromStringInternal(head, o, variableNames, variableValues).term;
 		if (h == null) {
 			console.error("NLPatternRule.fromString: cannot parse head: " + head);
 			return null;

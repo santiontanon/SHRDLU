@@ -71,8 +71,8 @@ class InferenceRecord {
 		var tt:Term = null;
 		var tb:Term = null;
 		var tbs:string = null;
-		if (xml.getAttribute("timeTerm") != null) tt = Term.fromStringInternal(xml.getAttribute("timeTerm"), o, variableNames, variables);
-		if (xml.getAttribute("triggeredBy") != null) tb = Term.fromStringInternal(xml.getAttribute("triggeredBy"), o, variableNames, variables);
+		if (xml.getAttribute("timeTerm") != null) tt = Term.fromStringInternal(xml.getAttribute("timeTerm"), o, variableNames, variables).term;
+		if (xml.getAttribute("triggeredBy") != null) tb = Term.fromStringInternal(xml.getAttribute("triggeredBy"), o, variableNames, variables).term;
 		if (xml.getAttribute("triggeredBySpeaker") != null) tbs = xml.getAttribute("triggeredBySpeaker");
 
 		let effect_xml:Element = getFirstElementChildrenByTag(xml ,"InferenceEffect");
@@ -218,7 +218,7 @@ class IntentionRecord {
 	{
 		let variables:TermAttribute[] = [];
 		let variableNames:string[] = [];
-		let action:Term = Term.fromStringInternal(xml.getAttribute("action"), o, variableNames, variables);
+		let action:Term = Term.fromStringInternal(xml.getAttribute("action"), o, variableNames, variables).term;
 		let requester:TermAttribute = null;
 		let rps:string = xml.getAttribute("requestingPerformativeSpeaker");
 		let requestingPerformative:NLContextPerformative = null;

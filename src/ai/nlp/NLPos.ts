@@ -717,10 +717,8 @@ NLPAddTokenPOS("next to", PartOfSpeech.generatePreposition("next to", POS_TYPE_P
 this.addTokenPOS(new PartOfSpeech("other than", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
   /*
   "out from",
-  *
-NLPAddTokenPOS("out of", PartOfSpeech.generatePreposition("out of", POS_TYPE_PPREPOSITION_PLACE));
-NLPAddTokenPOS("out of", PartOfSpeech.generatePreposition("out of", POS_TYPE_PPREPOSITION_ORIGIN));
 */
+this.addTokenPOS(new PartOfSpeech("out of", "space.outside.of", Term.fromString("preposition('space.outside.of'[space.outside.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("outside of", "space.outside.of", Term.fromString("preposition('space.outside.of'[space.outside.of])", o), 1.0));
   /*
   "owing to",
@@ -1111,6 +1109,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("out of here", "space.away", Term.fromString("noun('space.away'[space.away], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("out", "space.outside", Term.fromString("noun('space.outside'[space.outside], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("outside", "space.outside", Term.fromString("noun('space.outside'[space.outside], [singular])", o), 1.0));
+    this.addStandardNounPOS("owner", "owner", o);
     this.addStandardNounPOS("oxygen level", "oxygen-level", o);
     this.addStandardNounPOS("oxygen tank", "oxygentank.facility", o);
     this.addStandardNounPOS("panel", "panel", o);
@@ -1319,6 +1318,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.go", "go","goes","went","gone","going", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-out", "go out of","goes out of","went out of","gone out of","going out of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-out", "get out of","gets out of","got out of","gotten out of","getting out of", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.go-out", "get outside of","gets outside of","got outside of","gotten outside of","getting outside of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-out", "go outside of","goes outside of","went outside of","gone outside of","going outside of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "go into","goes into","went into","gone into","going into", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "go to","goes to","went to","gone to","going to", false, multitokens_raw, o);
@@ -1338,6 +1338,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.move", "move","moves","moved","moved","moving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.need", "need","needs","needed","needed","needing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.open", "open","opens","opened","opened","opening", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.own", "own","owns","owned","owned","owning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.supervise", "oversee","oversees","oversaw","overseen","overseeing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.parse", "parse","parses","parsed","parsed","parsing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.allow", "permit","permits","permitted","permitted","permitting", false, multitokens_raw, o);
@@ -1422,6 +1423,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("in stasis", "in-stasis", Term.fromString("adjective('in-stasis'[in-stasis])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("large", "big", Term.fromString("adjective('big'[big])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("large", "length.large", Term.fromString("adjective('length.large'[length.large])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("last", "last", Term.fromString("adjective('last'[last])", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("later", "time.later", Term.fromString("adjective('time.later'[time.later])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("light", "light-weight", Term.fromString("adjective('light-weight'[light-weight])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("long", "long", Term.fromString("adjective('long'[long])", o), 1.0));
@@ -2232,6 +2234,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     var idx:number = tense;
     if (tense>=3) {
       idx = 3 + (tense-3)*6 + number*3 + person;
+    }
+    if (tmp == null) {
+      console.error("getVerbString: cannot render verb " + s)
+      return null;
     }
 //    console.log("getVerbString("+s.name+", " + idx + " = (" + number + ", " + person + ", " + tense + ") : " + tmp);
     return tmp[idx];

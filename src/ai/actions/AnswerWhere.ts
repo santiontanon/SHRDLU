@@ -230,6 +230,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 										 		 [nlcp.performative.attributes[0],
 											 	  new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
 												  objectTerms[0].attributes[0],
+												  new VariableTermAttribute(ai.o.getSort("any"), null),
 												  nlcp.performative.attributes[1]]);
 				console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
 				return newIntention;

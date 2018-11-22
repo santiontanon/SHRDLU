@@ -200,7 +200,8 @@ testNLG("perf.request.action(V0:'1'[#id], verb.come(V0, [space.here]))", "etaoin
 
 testNLG("perf.inform('1'[#id], space.outside.of('s1'[#id],'room1'[#id]))", "etaoin", "my ship is outside of the kitchen");
 testNLG("perf.inform('1'[#id], #and(space.at(S:'s1'[#id],'room1'[#id]), space.outside.of(S,'room2'[#id]) ))", "etaoin", "my ship is in the kitchen outside of the bedroom");
-testNLG("perf.inform.answer('1'[#id], #and(space.at(S:'s1'[#id],'room1'[#id]), space.outside.of(S,'room2'[#id]) ))", "etaoin", "my ship is in the kitchen outside of the bedroom");
+testNLG("perf.inform.answer('1'[#id], #and(space.at(S:'s1'[#id],'room1'[#id]), space.outside.of(S,'room2'[#id]) ))", "etaoin", "my ship is in the kitchen and outside of the bedroom");
+testNLG("perf.inform.answer('1'[#id], #and(space.at(S:'s1'[#id],'room1'[#id]), space.at(S,'room2'[#id]) ))", "etaoin", "my ship is in the kitchen and the bedroom");
 
 testNLG("perf.inform('1'[#id], verb.be([robot], [ai]) )", "etaoin", "a robot is an artificial intelligence");
 testNLG("perf.inform('1'[#id], verb.be([robot], #and([ai],[character])) )", "etaoin", "a robot is an artificial intelligence and a character");
@@ -243,14 +244,11 @@ testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.want('
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.know('etaoin'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))))", "etaoin", "because I do not know the path");
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(door('1'[#id]))))", "etaoin", "because you are not a door");
 testNLG("perf.inform.answer('1'[#id], relation.cause([any] , verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) ))))", "etaoin", "because you can find the chair in the kitchen in the bedroom");
-
 testNLG("perf.request.action(V0:'1'[#id], V1:action.give(V0, V3:'k1'[#id], V2:'qwerty'[#id]))", "etaoin", "please, give the blue key card to qwerty");
 testNLG("perf.request.action(V0:'1'[#id], V1:action.talk(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id]))))", "etaoin", "please, tell qwerty to follow me");
 testNLG("perf.inform(V0:'1'[#id], V1:verb.tell(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id])), V3))", "etaoin", "you tell qwerty to follow me");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.tell(V2:'1'[#id], V3:perf.request.action(V4:'qwerty'[#id], V5:verb.repair(V4, V6:'s2'[#id])), V4))", "etaoin", "you tell qwerty to repair a red ship");
-
 testNLG("perf.inform(V0:'1'[#id], role('qwerty'[#id],'scifi-writer'[scifi-writer]))", "etaoin", "qwerty is a science fiction writer");
-
 testNLG("perf.request.action(V0:'1'[#id], verb.go-to(V0,'room1'[#id]))", "etaoin", "please, go to the kitchen");
 testNLG("perf.request.action(V0:'1'[#id], verb.go(V0,'northeast'[northeast]))", "etaoin", "please, go northeast");
 testNLG("perf.request.action(V0:'1'[#id], verb.go(V0,'northeast'[northeast],'room1'[#id]))", "etaoin", "please, go northeast to the kitchen");
@@ -258,21 +256,16 @@ testNLG("perf.request.action(V0:'1'[#id], time.subsequently(verb.go(V0,'northeas
 testNLG("perf.inform(V0:'1'[#id], time.subsequently(verb.go(V0,'northeast'[northeast],'room1'[#id]), verb.go(V0,'south'[south],'room2'[#id])))", "etaoin", "go northeast to the kitchen, then go south to the bedroom");
 testNLG("perf.inform(V0:'1'[#id], verb.find(X, 'qwerty'[#id]))", "etaoin", "find qwerty");
 testNLG("perf.inform(V0:'1'[#id], verb.go-to(X, 'verb.sleep'[verb.sleep]))", "etaoin", "go to sleep");
-
 testNLG("perf.inform(V0:'1'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))", "etaoin", "I take you to the kitchen");
-
 testNLG("perf.q.how('1'[#id], verb.help('etaoin'[#id],'1'[#id]))", "etaoin", "How can I help you?");
-
 testNLG("perf.inform('1'[#id], #and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), time.now(X)))", "etaoin", "you can talk to qwerty now");
 testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with the blue key card now");
-
-testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'qwerty'[#id]), V4:action.talk(V3)))", "etaoin", "qwerty walks and qwerty talks");
-
+testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'qwerty'[#id]), V4:action.talk(V3)))", "etaoin", "qwerty walks and talks");
+testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'1'[#id]), V4:action.talk(V3)))", "etaoin", "you walk and talk");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'[#id], V4:'gravity.low'[gravity.low]), V5:radius(V6:'room2'[#id], V7:'length.large'[length.large])))", "etaoin", "the kitchen's gravity is low because of the bedroom's radius is large");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1'[#id], V4:'light-weight'[light-weight]), V5:gravity(V6:'room2'[#id], V7:'gravity.low'[gravity.low])))", "etaoin", "your weight is light because of the bedroom's gravity is low");
-
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.understand(V3:'etaoin'[#id], V4:#and(V5:the(V6:'temperature'[temperature], V2_0:[singular]), V8:noun(V6, V2_0)))))", "etaoin", "I do not understand the temperature");
-
 testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora station'[symbol]))", "etaoin", "the kitchen's name is aurora station");
-
 testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property"); 
+testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:name(V3:'1'[#id], V4:'david'[symbol]), V5:#and(V6:name(V7:'qwerty'[#id], V8:'qwerty'[symbol]), V9:#and(V10:name(V11:'etaoin'[#id], V12:'etaoin'[symbol]), V13:'etcetera'[etcetera]))))", "etaoin", "your name is david, the robot's name is qwerty, my name is etaoin, ...");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remember(V4:'1'[#id], V5:'pronoun.anything'[pronoun.anything])), V6:#and(V7:in-stasis(V8:'1'[#id]), V9:time.past(V7))))", "etaoin", "you do not remember anything because of that you were in stasis");

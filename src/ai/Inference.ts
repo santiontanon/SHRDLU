@@ -540,6 +540,8 @@ class InterruptibleResolution
 				
 				var p:Term = s1.terms[i].applyBindings(bindings);
 				var q:Term = s2.terms[j].applyBindings(bindings);
+//				console.log("p: " + p);
+//				console.log("q: " + q);
 				var bindings2:Bindings = new Bindings();
 				bindings2 = bindings2.concat(bindings);
 				if (!p.unify(q, occursCheck, bindings2)) continue;

@@ -2,6 +2,6 @@
 	<!-- story knowledge -->	
 
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->
-	<sentence provenance="background" sentence="verb.know('shrdlu'[#id], #query(V, name(X, Y))); ~name(X, Y)"/>
+	<sentence provenance="background" sentence="verb.know('shrdlu'[#id], name(X, Y)); ~name(X, Y)"/>
 
 </knowledgeBase>

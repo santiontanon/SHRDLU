@@ -507,26 +507,13 @@ class NLContext {
 	searchForIDsInClause(clause:Term, IDs:ConstantTermAttribute[], o:Ontology)
 	{
 //		console.log("searchForIDsInClause");
-		if (clause.functor.name == "#and" ||
-			clause.functor.name == "#list" ||
-			clause.functor.name == "#or" ||
-			clause.functor.name == "#not") {
-			for(let i:number = 0;i<clause.attributes.length;i++) {
-				if (clause.attributes[i] instanceof TermTermAttribute) 
-					this.searchForIDsInClause((<TermTermAttribute>clause.attributes[i]).term, IDs, o);
-			}
-		} else {
-			if (clause.functor.is_a(o.getSort("object")) ||
-				clause.functor.is_a(o.getSort("property")) ||
-				clause.functor.is_a(o.getSort("relation")) ||
-				clause.functor.is_a(o.getSort("verb"))) {
-				for(let i:number = 0;i<clause.attributes.length;i++) {
-					if (clause.attributes[i] instanceof ConstantTermAttribute &&
-						clause.attributes[i].sort.name == "#id") {
-	//					console.log("searchForIDsInClause: " + clause.attributes[0]);
-						IDs.push(<ConstantTermAttribute>(clause.attributes[i]));
-					}
-				}
+		for(let i:number = 0;i<clause.attributes.length;i++) {
+			if (clause.attributes[i] instanceof ConstantTermAttribute &&
+				clause.attributes[i].sort.name == "#id") {
+//					console.log("searchForIDsInClause: " + clause.attributes[0]);
+				IDs.push(<ConstantTermAttribute>(clause.attributes[i]));
+			} else if (clause.attributes[i] instanceof TermTermAttribute) {
+				this.searchForIDsInClause((<TermTermAttribute>clause.attributes[i]).term, IDs, o);
 			}
 		}
 	}
@@ -1099,6 +1086,8 @@ class NLContext {
 			return [msl[0][0]];
 		} else if (msl[0].length>1) {
 			// mentions:
+			// console.log("    msl[0][0].mentionTime: " + msl[0][0].mentionTime + " (" + msl[0][0].objectID + ")");
+			// console.log("    msl[0][1].mentionTime: " + msl[0][1].mentionTime + " (" + msl[0][0].objectID + ")");
 			if (msl[0][0].mentionTime > 
 				msl[0][1].mentionTime) {
 				return [msl[0][0]];
@@ -1423,11 +1412,13 @@ class NLContext {
 				for(let perf of performativesToConsider) {
 					if (perf.performative.functor.name == "perf.q.query" &&
 						perf.performative.attributes.length == 3) {
-						let attribute:Term = new Term(o.getSort("#query"), 
-									 				  [perf.performative.attributes[1], 
-													   perf.performative.attributes[2]]);
+//						let attribute:Term = new Term(o.getSort("#query"), 
+//									 				  [perf.performative.attributes[1], 
+//													   perf.performative.attributes[2]]);
+//						let output:Term = new Term(verbSort, [firstAttribute, 
+//															  new TermTermAttribute(attribute)]);
 						let output:Term = new Term(verbSort, [firstAttribute, 
-															  new TermTermAttribute(attribute)]);
+															  perf.performative.attributes[2]]);
 						possibleOutputs.push(new TermTermAttribute(output))
 					} else {
 /*
