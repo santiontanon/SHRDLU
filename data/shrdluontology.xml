@@ -127,6 +127,7 @@
 
     <sort name="verb" super="part-of-speech"/>    
     <sort name="modal-verb" super="verb"/>    
+    <sort name="phrasal-verb" super="verb"/>    
     <sort name="conjunction" super="part-of-speech"/>    
 
     <sort name="conjunction-contrast" super="conjunction"/>    
@@ -156,6 +157,8 @@
     <sort name="#concatenateSymbols" super="parser-function"/>
     <sort name="#subsumes" super="parser-function"/>
     <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
+    <sort name="#token" super="parser-function"/>  <!-- #token('hello') is equivalent to 'hello', 
+                                                        just so that we can match with a constant in a variable -->
 
     <!-- Regular concepts -->
     <sort name="property" super="any"/>
@@ -478,6 +481,7 @@
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
     <sort name="verb.need" super="verb"/>
+    <sort name="verb.obtain" super="verb"/>
     <sort name="verb.own" super="verb,relation.owns"/>
     <sort name="verb.parse" super="verb"/>
     <sort name="verb.put" super="verb"/>

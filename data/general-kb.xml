@@ -188,6 +188,8 @@
 	<sentence provenance="background" sentence="~space.at(Y, Z) ; relation.howto(verb.find(X, Y), verb.go-to(X, Z))"/>
 	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-on(X, Y), verb.can(E:'etaoin'[#id], verb.switch-on(E, Y)))"/>
 	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-off(X, Y), verb.can(E:'etaoin'[#id], verb.switch-off(E, Y)))"/>
+	<sentence provenance="background" sentence="permitted-in(X, Y) ; relation.howto(verb.access(X, Y), verb.need(X, permission-to-access(X, Y)))"/>
+	<sentence provenance="background" sentence="~permitted-in(X, Y) ; ~relation.opens(KEY, Y) ; relation.howto(verb.access(X, Y), verb.need(X, KEY))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>

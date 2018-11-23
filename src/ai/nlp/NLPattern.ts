@@ -238,6 +238,25 @@ class NLPattern {
 			var term2:Term = this.term.applyBindings(parse.bindings);
 			var  nlprl:NLParseRecord[] = this.specialfunction_completeVerbArgumentsFromContext(parse, this.term.attributes[0], this.term.attributes[1], context, parser.o);
 			return nlprl;
+		} else if (this.term.functor.name == "#token" && this.term.attributes.length == 1) {
+			var term2:Term = this.term.applyBindings(parse.bindings);
+			if (term2.attributes[0] instanceof ConstantTermAttribute) {
+				let token:string = (<ConstantTermAttribute>term2.attributes[0]).value;
+				if (parse.nextTokens == null) return null;
+				var parses:NLParseRecord[] = [];
+				for(let nextToken of parse.nextTokens) {
+					if (nextToken.token == null) {
+						var parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), context, rule, parser, AI);
+						if (parses2 != null) parses = parses.concat(parses2);
+					} else if (nextToken.token == token) {
+						// match!
+						parses.push(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities));
+					}
+				}
+				if (parses.length == 0) return null;
+				return parses;
+			}
+			return null;
 		} else {
 			console.error("NLPattern.parse: special function "+this.term.functor+" not supported!");
 			return null;

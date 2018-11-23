@@ -18,11 +18,16 @@ class Memorize_IntentionAction extends IntentionAction {
 		let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(intention.attributes[2])).term);
 		console.log("term to sentences: " + s_l);	
 		let variablesPresent:boolean = false;
+		let timeModifierPresent:boolean = false;
 
 		// negate the statement:
 		let negated_s:Sentence = new Sentence([],[]);
 		for(let s of s_l) {
 			if (s.getAllVariables().length > 0) variablesPresent = true;
+			for(let t of s.terms) {
+				if (t.functor.is_a(ai.o.getSort("time.past"))) timeModifierPresent = true;
+				if (t.functor.is_a(ai.o.getSort("time.future"))) timeModifierPresent = true;
+			}
 			let tmp:Sentence[] = s.negate();
 			if (tmp == null || tmp.length != 1) {
 				console.error("executeIntention memorize: cannot negate statement!: " + intention);		
@@ -32,6 +37,14 @@ class Memorize_IntentionAction extends IntentionAction {
 			negated_s.sign = negated_s.sign.concat(tmp[0].sign);
 		}
 		console.log("executeIntention memorize: negated_s = " + negated_s);
+
+		if (timeModifierPresent) {
+			console.log("time modifiers present, not memorizing for now...");
+			var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
+			var term:Term = Term.fromString(tmp, ai.o);
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			return true;			
+		}
 
 		// check for the special case where the player is stating that they "know/remember" something, so we follow up
 		// asking about it:

@@ -1287,6 +1287,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.colonize", "populate","populates","populated","populated","populating", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.allow", "allow","allows","allowed","allowed","allowing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.arrive", "arrive","arrives","arrived","arrived","arriving", false, multitokens_raw, o);
@@ -1341,6 +1342,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.malfunction", "malfunction","malfunctions","malfunctioned","malfunctioned","malfunctioning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.move", "move","moves","moved","moved","moving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.need", "need","needs","needed","needed","needing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.obtain", "obtain","obtains","obtained","obtained","obtaining", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.open", "open","opens","opened","opened","opening", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.own", "own","owns","owned","owned","owning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.supervise", "oversee","oversees","oversaw","overseen","overseeing", false, multitokens_raw, o);
@@ -1366,8 +1368,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.stop", "stop","stops","stopped","stopped","stopping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.supervise", "supervise","supervises","supervised","supervised","supervising", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.switch", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.switch-on", "switch on","switches on","switched on","switched on","switching on", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.switch-off", "switch off","switches off","switched off","switched off","switching off", false, multitokens_raw, o);
+//    this.addStandardVerbPOS("verb.switch-on", "switch on","switches on","switched on","switched on","switching on", false, multitokens_raw, o);
+//    this.addStandardVerbPOS("verb.switch-off", "switch off","switches off","switched off","switched off","switching off", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.take", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.talk", "talk","talks","talked","talked","talking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.tell", "tell","tells","told","told","telling", false, multitokens_raw, o);
@@ -1377,8 +1379,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.try", "try","tries","tried","tried","trying", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.speak", "speak","speaks","spoke","spoke","speaking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.switch", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.switch-on", "turn on","turns on","turned on","turned on","turning on", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.switch-off", "turn off","turns off","turned off","turned off","turning off", false, multitokens_raw, o);
+//    this.addStandardVerbPOS("verb.switch-on", "turn on","turns on","turned on","turned on","turning on", false, multitokens_raw, o);
+//    this.addStandardVerbPOS("verb.switch-off", "turn off","turns off","turned off","turned off","turning off", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.understand", "understand","understands","understood","understood","understanding", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.use", "use","uses","used","used","using", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.walk", "walk","walks","walked","walked","walking", false, multitokens_raw, o);
@@ -1387,6 +1389,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.will", "will","will","would",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.will", "'ll","'ll","'d",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.may", "may","may","might",null,null, true, multitokens_raw, o);
+
+    this.addPhrasalVerbPOS("verb.switch-on","on", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):
     this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
@@ -1591,6 +1598,41 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("verb('"+sortStr+"'[symbol], [grammatical-number], [first-person], [past-tense])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("verb('"+sortStr+"'[symbol], [grammatical-number], [second-person], [past-tense])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("verb('"+sortStr+"'[symbol], [grammatical-number], [third-person], [past-tense])", o), 1.0));
+
+    if (inf!=null && inf.indexOf(" ")>=0) multitokens.push(inf);
+    if (present3!=null && present3.indexOf(" ")>=0) multitokens.push(present3);
+    if (past!=null && past.indexOf(" ")>=0) multitokens.push(past);
+    if (participle!=null && participle.indexOf(" ")>=0) multitokens.push(participle);
+    if (gerund!=null && gerund.indexOf(" ")>=0) multitokens.push(gerund);
+  }
+
+
+  addPhrasalVerbPOS(sortStr:string, preposition:string, inf:string, present3:string, past:string, participle:string, gerund:string, modal:boolean, multitokens:string[], o:Ontology)
+  {
+    /*
+    // this messes up the parser when I set up to prefer multitokens, since "to X" prevents parsing "to" as a preposition...
+    if (!modal) {
+      this.addTokenPOS(new PartOfSpeech("to " + inf, sortStr, Term.fromString("verb('"+sortStr+"'[symbol], [grammatical-number], [no-person], [infinitive-tense])", o), 1.0));
+      multitokens.push("to " + inf);
+    }
+    */
+    this.addTokenPOS(new PartOfSpeech(inf, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [no-person], [infinitive-tense], '"+preposition+"'[symbol])", o), 1.0));
+    if (gerund!=null) this.addTokenPOS(new PartOfSpeech(gerund, sortStr, Term.fromString("verb('"+sortStr+"'[symbol], [grammatical-number], [no-person], [gerund-tense], '"+preposition+"'[symbol])", o), 1.0));
+    if (participle!=null) {
+      this.addTokenPOS(new PartOfSpeech(participle, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [no-person], [participle-tense], '"+preposition+"'[symbol])", o), 1.0));
+      if (o.getSortSilent("property."+participle) != null) {
+        this.addTokenPOS(new PartOfSpeech(participle, "property."+participle, Term.fromString("adjective('property."+participle+"'[symbol], '"+preposition+"'[symbol])", o), 1.0));
+      }
+    }
+
+    this.addTokenPOS(new PartOfSpeech(inf, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [first-person], [present-tense], '"+preposition+"'[symbol])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech(inf, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [second-person], [present-tense], '"+preposition+"'[symbol])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech(present3, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [singular], [third-person], [present-tense], '"+preposition+"'[symbol])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech(inf, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [plural], [third-person], [present-tense], '"+preposition+"'[symbol])", o), 1.0));
+
+    this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [first-person], [past-tense], '"+preposition+"'[symbol])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [second-person], [past-tense], '"+preposition+"'[symbol])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech(past, sortStr, Term.fromString("phrasal-verb('"+sortStr+"'[symbol], [grammatical-number], [third-person], [past-tense], '"+preposition+"'[symbol])", o), 1.0));
 
     if (inf!=null && inf.indexOf(" ")>=0) multitokens.push(inf);
     if (present3!=null && present3.indexOf(" ")>=0) multitokens.push(present3);

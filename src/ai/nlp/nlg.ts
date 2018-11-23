@@ -1358,99 +1358,6 @@ class NLGenerator {
 		return false;		
 	}
 
-	/*
-	- This returns: [rendered string, person (0 = first, 1 = second, 2 = third), gender ('male', 'female'), and number (0 = singular, 1 = plural)]
-	*/
-	/*
-	termToEnglish_VerbArgument(entityRaw:TermAttribute, speakerID:string, considerRelations:boolean, context:NLContext, subject:boolean, mainVerbSubjectID:string, useNameIfAvailable:boolean) : [string, number, string, number]
-	{
-		var tl:TermAttribute[] = [entityRaw];
-		if (entityRaw instanceof TermTermAttribute) {
-			if ((<TermTermAttribute>entityRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
-			}
-		}
-		var entity:TermAttribute = null;
-		// first search for a "noun":
-		for(let i:number = 0;i<tl.length;i++) {
-			var entity_tmp = tl[i];
-			if (entity_tmp instanceof TermTermAttribute) {
-				var entityTerm:Term = (<TermTermAttribute>entity_tmp).term;
-				if (entityTerm.functor.is_a(context.ai.o.getSort("noun"))) {
-					entity = entity_tmp;
-					break; 
-				}
-				
-			}
-		}
-		if (entity == null) {
-			for(let i:number = 0;i<tl.length;i++) {
-				entity = tl[i];
-				var next:boolean = false;
-				if (entity instanceof TermTermAttribute) {
-					var entityTerm:Term = (<TermTermAttribute>entity).term;
-					if (entityTerm.functor.is_a(context.ai.o.getSort("determiner"))) next = true;
-					if (entityTerm.functor.is_a(context.ai.o.getSort("adjective"))) next = true;
-				}
-				if (!next) break;	// we found it!
-			}
-		}
-
-		if (entity instanceof ConstantTermAttribute) {
-			if (entity.sort == this.nlg_cache_sort_id) {
-				return this.termToEnglish_Entity(entity, speakerID, considerRelations, context, subject, useNameIfAvailable);
-			} else if (entity.sort.is_a(this.nlg_cache_sort_measuringunit)) {
-				return this.termToEnglish_MeasuringUnit((<ConstantTermAttribute>entity).value, entity.sort);
-			} else {
-				return [(<ConstantTermAttribute>entity).value,2,undefined,0];
-			}
-		}
-		if ((entity instanceof VariableTermAttribute) ||
-			(entity instanceof TermTermAttribute &&
-			 (<TermTermAttribute>entity).term.functor.name == "noun")) return this.termToEnglish_ConceptEntity(entityRaw, speakerID, context);
-
-		if ((entity instanceof TermTermAttribute &&
-			 (<TermTermAttribute>entity).term.functor.name == "proper-noun")) {
-			var properNounTerm:Term = (<TermTermAttribute>entity).term;
-			if (properNounTerm.attributes[0] instanceof ConstantTermAttribute) {
-				return [(<ConstantTermAttribute>(properNounTerm.attributes[0])).value, 0, null, 2];
-			}
-		}	
-
-		if (entity instanceof TermTermAttribute) {
-			for(let tmp_t of tl) {
-				if (!(tmp_t instanceof TermTermAttribute)) {
-					console.error("termToEnglish_VerbArgument: could not render (one of the elements in the list is not a term) " + entity);	
-					return null;
-				}
-			}
-			var entity_term:Term = (<TermTermAttribute>tl[0]).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
-			if (entity_term.functor.name == "#query" && entity_term.attributes.length==1) return this.termToEnglish_QueryInternal(entity_term.attributes[0], tl.slice(1), speakerID, context);
-			if (entity_term.functor.is_a(this.nlg_cache_sort_verb)) return this.termToEnglish_NestedVerb((<TermTermAttribute>entityRaw).term, speakerID, mainVerbSubjectID, true, context);
-			if (entity_term.functor.is_a(this.nlg_cache_sort_timedate)) return [this.termToEnglish_Date(entity_term.attributes[0], entity_term.attributes[1].sort), 2, undefined, 0];
-			if (entity_term.functor.is_a(this.nlg_cache_sort_pronoun) &&
-				entity_term.attributes.length >= 2 && 
-				entity_term.attributes[0] instanceof ConstantTermAttribute) {
-				var pronoun:string = (<ConstantTermAttribute>entity_term.attributes[0]).value;
-				var num:number = (entity_term.attributes[1].sort.name == 'plural' ? 1:0);
-				var gender:number = 0;
-				if (entity_term.attributes[2].sort.name == 'gender-femenine') gender = 1;
-				if (entity_term.attributes[2].sort.name == 'gender-neutral') gender = 2;
-				return [this.pos.getPronounStringString(pronoun, num, gender), 2, undefined, num];
-			}
-			if (entity_term.functor.is_a(this.nlg_cache_sort_property) && entity_term.attributes.length == 1) {
-				return this.termToEnglish_Property(entityRaw, speakerID, context);
-			}
-			if (entity_term.functor.is_a(this.nlg_cache_sort_relation) && entity_term.attributes.length == 2) {
-				return this.termToEnglish_Relation(entityRaw, speakerID, context);
-			}
-		}
-
-		console.error("termToEnglish_VerbArgument: could not render " + entityRaw);
-		return null;
-	}
-	*/
-
 
 	termToEnglish_VerbArgument(entityRaw:TermAttribute, speakerID:string, considerRelations:boolean, context:NLContext, subject:boolean, mainVerbSubjectID:string, useNameIfAvailable:boolean) : [string, number, string, number]
 	{
@@ -1462,6 +1369,7 @@ class NLGenerator {
 	{
 		return this.termToEnglish_RelationOrVerbArgument(entityRaw, speakerID, considerRelations, context, subject, mainVerbSubjectID, useNameIfAvailable, false);
 	}
+
 
 	/*
 	- This returns: [rendered string, person (0 = first, 1 = second, 2 = third), gender ('male', 'female'), and number (0 = singular, 1 = plural)]
@@ -1555,6 +1463,42 @@ class NLGenerator {
 			}
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_relation) && entityTerm.attributes.length == 2) {
 				return this.termToEnglish_Relation(entityRaw, speakerID, context);
+			}
+			if (entityTerm.functor.is_a(this.nlg_cache_sort_haveablepropertywithvalue) && entityTerm.attributes.length == 2) {
+				let infinitive:boolean = false;
+				let subjectStr:[string, number, string, number] = null;
+				if ((entityTerm.attributes[0] instanceof ConstantTermAttribute) &&
+					(<ConstantTermAttribute>entityTerm.attributes[0]).value == mainVerbSubjectID) {
+					infinitive = true;
+				} else {	
+					subjectStr = this.termToEnglish_VerbArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);
+				}
+				var objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(entityTerm.attributes[1], speakerID, true, context, true, null, false);
+				var verbStr:string = null;
+				if (infinitive) {
+					verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.have"), 0, 0, 0);
+				} else {
+					verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.have"), subjectStr[3], subjectStr[1], 3);
+				}
+				var propertyStr:string = this.pos.getPropertyString(entityTerm.functor);
+				if (verbStr != null && propertyStr != null) {
+					if (infinitive) {
+						if (negated_t) {
+							return ["not to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						} else {
+							return ["to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						}
+					} else {
+						if (negated_t) {
+							verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
+							return [subjectStr[0] + " " + verbStr + " not have " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						} else {
+							return [subjectStr[0] + " " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						}
+					}
+				}
+				console.warn("termToEnglish_RelationOrVerbArgument: cannot render haveable property with value: " + entityTerm);
+				return null;
 			}
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_propertywithvalue) && entityTerm.attributes.length == 2) {
 				var subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);
