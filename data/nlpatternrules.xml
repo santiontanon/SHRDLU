@@ -2919,6 +2919,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.query-followup(LISTENER, NOUN)"
 		   	   body="['i' 'mean' [',']] ('which'|'what') noun(NOUN, N) ('!'|'?')*"/>
 
+    <NLPattern name="which-how"
+    		   head="perf.q.how(LISTENER)"
+		   	   body="'how' [('do'|'can') 'i' 'do' 'that'] ('!'|'?')*"/>
+
  	<!-- perf.ack.denyrequest patterns --> 
     <NLPattern head="perf.ack.denyrequest(LISTENER)"
 		   	   body="'i' 'can' 'not' 'do' 'that' '!'*"/>

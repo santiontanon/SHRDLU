@@ -12,6 +12,34 @@ class AnswerHow_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+		if (intention.attributes.length == 2) {
+			if (intention.attributes[1] instanceof ConstantTermAttribute) {
+				var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+				console.log(ai.selfID + " answer followup how to " + targetID);
+				// this is a follow up question! see if we can reconstruct the question...
+				var context:NLContext = ai.contextForSpeakerWithoutCreatingANewOne(targetID);
+				if (context != null) {
+					// get the last sentence we said:
+					var lastPerf:NLContextPerformative = context.lastPerformativeBy(ai.selfID);
+
+					var newIntention:Term = null;
+					if (lastPerf != null) newIntention = this.convertPerformativeToHowQuestionAnswerIntention(lastPerf, ai, context);
+					if (newIntention != null) {
+						intention = newIntention;
+					} else {
+						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						return true;
+					}
+				} else {
+					// this should never happen
+					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+					return true;
+				}
+			}
+		}
+
 		if (intention.attributes.length>=3 &&
 			intention.attributes[2] instanceof TermTermAttribute) {
 			var action:Term = (<TermTermAttribute>intention.attributes[2]).term;
@@ -46,6 +74,26 @@ class AnswerHow_IntentionAction extends IntentionAction {
 			}
 		}
 		return true;		
+	}
+
+
+	convertPerformativeToHowQuestionAnswerIntention(nlcp:NLContextPerformative, ai:RuleBasedAI, context:NLContext) : Term
+	{
+		if ((nlcp.performative.functor.is_a(ai.o.getSort("perf.request.action")) ||
+		     nlcp.performative.functor.is_a(ai.o.getSort("perf.q.action"))) &&
+			(nlcp.performative.attributes[1] instanceof TermTermAttribute)) {
+			console.log("convertPerformativeToHowQuestionAnswerIntention: perf.request.action/perf.q.action");
+
+			let predicate:Term = (<TermTermAttribute>nlcp.performative.attributes[1]).term;
+			let newIntention:Term = new Term(ai.o.getSort("action.answer.how"),
+									 		 [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+											  nlcp.performative.attributes[0],
+										 	  new TermTermAttribute(predicate)]);
+			console.log("convertPerformativeToHowQuestionAnswerIntention, newIntention: " + newIntention);
+			return newIntention;
+		}
+
+		return null;
 	}
 
 

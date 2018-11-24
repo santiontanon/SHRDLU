@@ -727,6 +727,7 @@ NLParseTestUnifyingListener("like what?", o.getSort("performative"),  context, '
 NLParseTestUnifyingListener("what is?", o.getSort("performative"),  context, 'etaoin', "perf.q.query-followup(S:'etaoin'[#id],'any'[any])");
 NLParseTestUnifyingListener("which room?", o.getSort("performative"),  context, 'etaoin', "perf.q.query-followup(S:'etaoin'[#id],'room'[room])");
 NLParseTestUnifyingListener("I mean which room?", o.getSort("performative"),  context, 'etaoin', "perf.q.query-followup(S:'etaoin'[#id],'room'[room])");
+NLParseTestUnifyingListener("how?", o.getSort("performative"),  context, 'etaoin', "perf.q.how(S:'etaoin'[#id])");
 
 NLParseTestUnifyingListener("I don't", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
 NLParseTestUnifyingListener("Oh hi!", o.getSort("performative"),  context, 'etaoin', "perf.greet(V0:'etaoin'[#id])");

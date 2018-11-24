@@ -248,6 +248,35 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.moreresults"))) {
 			// ...
 
+		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.action")) &&
+				   nlcp.performative.attributes.length>=2 &&
+				   nlcp.performative.attributes[1] instanceof TermTermAttribute) {
+			// perf.q.action(LISTENER_0:[any], V1:verb.see(LISTENER_0, QUERY_V_0:[any]), V3:rover(QUERY_V_0))
+			// perf.q.whereis(V:'etaoin'[#id], V, L, space.at(L,'location-aurora-station'[#id]))
+			let action:Term = (<TermTermAttribute>nlcp.performative.attributes[1]).term;
+			if (action.functor.is_a(ai.o.getSort("verb.see")) &&
+				action.attributes.length==2) {
+				console.log("convertPerformativeToWhereQuestionAnswerIntention: perf.q.action(verb.see)");
+				if (nlcp.performative.attributes.length == 2 &&
+					action.attributes[1] instanceof ConstantTermAttribute) {
+					var newIntention:Term = new Term(ai.o.getSort("action.answer.whereis"),
+											 		 [nlcp.performative.attributes[0],
+													  new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+												  	  action.attributes[1]]);
+					console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
+					return newIntention;					
+				} else if (nlcp.performative.attributes.length == 3 &&
+						   action.attributes[1] instanceof VariableTermAttribute) {
+					var newIntention:Term = new Term(ai.o.getSort("action.answer.whereis"),
+											 		 [nlcp.performative.attributes[0],
+													  new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+												  	  action.attributes[1],
+													  new VariableTermAttribute(ai.o.getSort("#id"), null),
+													  nlcp.performative.attributes[2]]);
+					console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
+					return newIntention;					
+				}
+			}
 		}
 
 		return null;
