@@ -717,10 +717,17 @@ class Term {
 
     // Sentences or sets of sentences can be represnted by a single term using the 
     // #and, #or and #not functors. This function decodes such notation into a set of sentences:
-    static termToSentences(term:Term) : Sentence[]
+    static termToSentences(term:Term, o:Ontology) : Sentence[]
     {
         var sentences:Sentence[] = [];
-        var sentenceTerms:Term[] = [];
+
+        // We start by bringing the #not inwards:
+        console.log("before bringNotInwards: " + term);
+        term = Term.bringNotInwards(term, o);
+        console.log("after bringNotInwards: " + term);
+
+        var sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
+        /*
         while(term.functor.name == "#and") {
             var t1:Term = (<TermTermAttribute>term.attributes[0]).term;
             var t2:Term = (<TermTermAttribute>term.attributes[1]).term;
@@ -736,10 +743,30 @@ class Term {
             }
         }
         if (term!=null) sentenceTerms.push(term);
+        */
 
-        for(let sentenceTerm of sentenceTerms) {
+        for(let sentenceTermA of sentenceTermAs) {
+            if (!(sentenceTermA instanceof TermTermAttribute)) return null;
+            var sentenceTerm:Term = (<TermTermAttribute>sentenceTermA).term;
+            var termTermAs:TermAttribute[] = NLParser.elementsInList(sentenceTerm, "#or");
+    
             var terms:Term[] = [];
             var sign:boolean[] = [];
+
+            for(let termTermA of termTermAs) {
+                if (!(termTermA instanceof TermTermAttribute)) return null;
+                var termTerm:Term = (<TermTermAttribute>termTermA).term;
+                if (termTerm.functor.name == "#not" &&
+                    termTerm.attributes.length == 1 &&
+                    termTerm.attributes[0] instanceof TermTermAttribute) {
+                    terms.push((<TermTermAttribute>termTerm.attributes[0]).term);
+                    sign.push(false);
+                } else {
+                    terms.push(termTerm);
+                    sign.push(true);
+                }
+            }
+            /*
             while(sentenceTerm.functor.name == "#or") {
                 var tmp:Term = (<TermTermAttribute>sentenceTerm.attributes[0]).term;
                 if (tmp.functor.name == "#not") {
@@ -759,11 +786,58 @@ class Term {
                 sign.push(true);
             }
             terms.push(tmp);
+            */
             sentences.push(new Sentence(terms, sign));
         }
 
 //        console.log("termToSentences: " + sentences);
         return sentences;
+    }
+
+    static bringNotInwards(term:Term, o:Ontology) : Term
+    {
+        if (term.functor.name == "#not" && 
+            term.attributes.length == 1 &&
+            term.attributes[0] instanceof TermTermAttribute) {
+            let subterm:Term = (<TermTermAttribute>term.attributes[0]).term;
+            if (subterm.functor.name == "#or") {
+                let term2:Term = new Term(o.getSort("#and"), []);
+                for(let att of subterm.attributes) {
+                    if (att instanceof TermTermAttribute) {
+                        term2.attributes.push(new TermTermAttribute(
+                                                new Term(term.functor,
+                                                         [new TermTermAttribute(Term.bringNotInwards((<TermTermAttribute>att).term, o))])));
+                    } else {
+                        term2.attributes.push(new TermTermAttribute(new Term(term.functor, [att])));
+                    }
+                }
+                return term2;
+            } else if (subterm.functor.name == "#and") {
+                let term2:Term = new Term(o.getSort("#or"), []);
+                for(let att of subterm.attributes) {
+                    if (att instanceof TermTermAttribute) {
+                        term2.attributes.push(new TermTermAttribute(
+                                                new Term(term.functor,
+                                                  [new TermTermAttribute(Term.bringNotInwards((<TermTermAttribute>att).term, o))])));
+                    } else {
+                        term2.attributes.push(new TermTermAttribute(new Term(term.functor, [att])));
+                    }
+                }
+                return term2;
+            } else {
+                return term;
+            }
+        } else {
+            let term2:Term = new Term(term.functor, []);
+            for(let att of term.attributes) {
+                if (att instanceof TermTermAttribute) {
+                    term2.attributes.push(new TermTermAttribute(Term.bringNotInwards((<TermTermAttribute>att).term, o)));
+                } else {
+                    term2.attributes.push(att);
+                }
+            }
+            return term2;
+        }
     }
 
 

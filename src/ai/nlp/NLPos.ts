@@ -2088,7 +2088,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
       for(let POS of POS_l) {
         var sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
-          if (POS.term.functor.name == "verb")  {
+          if (POS.term.functor.name == "verb" ||
+              POS.term.functor.name == "phrasal-verb")  {
             // "verb('verb.be'[symbol], [singular], [first-person], [present-tense])
             var number:number = null;
             var person:number = null;
@@ -2138,6 +2139,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
                     token[0] =='t' &&
                     token[1] =='o' &&
                     token[2] ==' ') continue;
+                if (POS.term.functor.name == "phrasal-verb") {
+                  token += " " + (<ConstantTermAttribute>POS.term.attributes[4]).value;
+                }
                 tmp[idx] = token;
               }
 //              console.log(POS.sortName + " =(verb)= " + token + " [" + idxs + "]");

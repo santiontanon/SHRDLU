@@ -181,7 +181,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 							additionalTerms.push(new Sentence([additionalTerm], [additionalSign]));
 						}
 					} else if (additionalTerm.functor.name == "#or") {
-						additionalTerms = additionalTerms.concat(Term.termToSentences(additionalTerm));
+						additionalTerms = additionalTerms.concat(Term.termToSentences(additionalTerm, ai.o));
 					} else {
 						if (additionalTerm.containsVariable(whereVariable)) {
 							// needs to be added to the query, otherwise, it's not going to work...

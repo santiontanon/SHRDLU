@@ -50,7 +50,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 		console.log(ai.selfID + " answer query: " + intention.attributes[0] + " - " + intention.attributes[1] + " - "  + intention.attributes[2]);
 		if (intention.attributes[2] instanceof TermTermAttribute) {
 			let queryPerformative:Term = (<TermTermAttribute>intention.attributes[2]).term;
-			let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(queryPerformative.attributes[2])).term);
+			let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(queryPerformative.attributes[2])).term, ai.o);
 
 			// search for time-related sentences (which just indicate the time at which this query must be performed):
 			// or terms that require KB updates (e.g., property.age):

@@ -235,10 +235,12 @@ class NLContext {
 			if (distance != null) {
 				e.distanceFromSpeaker = distance;
 			}
-			return e;
-		}
+			// return e;
+			e.terms = [];		// entities need to be updated every time, otherwise, info is outdated!
+		} else {
 //		console.log("newContextEntity: creating " + ID + " from scratch...");
-		e = new NLContextEntity(idAtt, time, distance, []);
+			e = new NLContextEntity(idAtt, time, distance, []);
+		}
 
 		// find everything we can about it:
 		var oSort:Sort = o.getSort("object");
@@ -355,6 +357,7 @@ class NLContext {
 			perf.functor.is_a(o.getSort("perf.greet")) ||
 			perf.functor.is_a(o.getSort("perf.farewell")) ||
 			perf.functor.is_a(o.getSort("perf.ack.ok")) ||
+			perf.functor.is_a(o.getSort("perf.ack.unsure")) ||
 			perf.functor.is_a(o.getSort("perf.ack.contradict")) ||
 			perf.functor.is_a(o.getSort("perf.ack.invalidanswer")) ||
 			perf.functor.is_a(o.getSort("perf.ack.denyrequest")) ||

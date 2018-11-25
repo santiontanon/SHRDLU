@@ -20,17 +20,17 @@ class RuleBasedAIDebugger {
 			}
 		} else if (mouse_y < WINDOW_HEIGHT/2) {
 			if (mouse_x < WINDOW_WIDTH/2) {
-				this.leftScroll -= 5;
+				this.leftScroll -= 20;
 				if (this.leftScroll<=0) this.leftScroll = 0;
 			} else {
-				this.rightScroll -= 5;
+				this.rightScroll -= 20;
 				if (this.rightScroll<=0) this.rightScroll = 0;
 			}
 		} else {
 			if (mouse_x < WINDOW_WIDTH/2) {
-				this.leftScroll += 5;
+				this.leftScroll += 20;
 			} else {
-				this.rightScroll += 5;
+				this.rightScroll += 20;
 			}
 
 		}

@@ -119,7 +119,7 @@ testNLG_entity(new ConstantTermAttribute('1',idSort), "etaoin", "you");
 testNLG_entity(new ConstantTermAttribute('etaoin',idSort), "etaoin", "I");
 testNLG_entity(new ConstantTermAttribute('qwerty',idSort), "etaoin", "qwerty");
 testNLG_entity(new ConstantTermAttribute('c1',idSort), "etaoin", "a crate");
-testNLG_entity(new ConstantTermAttribute('k1',idSort), "etaoin", "the blue key card");
+testNLG_entity(new ConstantTermAttribute('k1',idSort), "etaoin", "your key card");
 testNLG_entity(new ConstantTermAttribute('k2',idSort), "etaoin", "the red key card");
 testNLG_entity(new ConstantTermAttribute('s1',idSort), "etaoin", "my ship");
 testNLG_entity(new ConstantTermAttribute('s2',idSort), "etaoin", "a red ship");
@@ -206,9 +206,9 @@ testNLG("perf.inform.answer('1'[#id], #and(space.at(S:'s1'[#id],'room1'[#id]), s
 testNLG("perf.inform('1'[#id], verb.be([robot], [ai]) )", "etaoin", "a robot is an artificial intelligence");
 testNLG("perf.inform('1'[#id], verb.be([robot], #and([ai],[character])) )", "etaoin", "a robot is an artificial intelligence and a character");
 
-testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], 'k2'[#id]))", "etaoin", "the blue key card and the red key card");
-testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], #and('k2'[#id],'etcetera'[etcetera])))", "etaoin", "the blue key card, the red key card, ...");
-testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], #and('k2'[#id], 'c2'[#id])))", "etaoin", "the blue key card, the red key card and the crate of qwerty");
+testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], 'k2'[#id]))", "etaoin", "your key card and the red key card");
+testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], #and('k2'[#id],'etcetera'[etcetera])))", "etaoin", "your key card, the red key card, ...");
+testNLG("perf.inform.answer('1'[#id], #and('k1'[#id], #and('k2'[#id], 'c2'[#id])))", "etaoin", "your key card, the red key card and the crate of qwerty");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:'yellow'[yellow])", "etaoin", "yellow");
 
 testNLG("perf.inform(V0:'1'[#id], verb.be([corpse],[human]))", "etaoin", "a corpse is a human");
@@ -244,7 +244,7 @@ testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.want('
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.know('etaoin'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))))", "etaoin", "because I do not know the path");
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(door('1'[#id]))))", "etaoin", "because you are not a door");
 testNLG("perf.inform.answer('1'[#id], relation.cause([any] , verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) ))))", "etaoin", "because you can find the chair in the kitchen in the bedroom");
-testNLG("perf.request.action(V0:'1'[#id], V1:action.give(V0, V3:'k1'[#id], V2:'qwerty'[#id]))", "etaoin", "please, give the blue key card to qwerty");
+testNLG("perf.request.action(V0:'1'[#id], V1:action.give(V0, V3:'k1'[#id], V2:'qwerty'[#id]))", "etaoin", "please, give your key card to qwerty");
 testNLG("perf.request.action(V0:'1'[#id], V1:action.talk(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id]))))", "etaoin", "please, tell qwerty to follow me");
 testNLG("perf.inform(V0:'1'[#id], V1:verb.tell(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id])), V3))", "etaoin", "you tell qwerty to follow me");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.tell(V2:'1'[#id], V3:perf.request.action(V4:'qwerty'[#id], V5:verb.repair(V4, V6:'s2'[#id])), V4))", "etaoin", "you tell qwerty to repair a red ship");
@@ -259,7 +259,7 @@ testNLG("perf.inform(V0:'1'[#id], verb.go-to(X, 'verb.sleep'[verb.sleep]))", "et
 testNLG("perf.inform(V0:'1'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))", "etaoin", "I take you to the kitchen");
 testNLG("perf.q.how('1'[#id], verb.help('etaoin'[#id],'1'[#id]))", "etaoin", "How can I help you?");
 testNLG("perf.inform('1'[#id], #and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), time.now(X)))", "etaoin", "you can talk to qwerty now");
-testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with the blue key card now");
+testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with your key card now");
 testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'qwerty'[#id]), V4:action.talk(V3)))", "etaoin", "qwerty walks and talks");
 testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'1'[#id]), V4:action.talk(V3)))", "etaoin", "you walk and talk");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'[#id], V4:'gravity.low'[gravity.low]), V5:radius(V6:'room2'[#id], V7:'length.large'[length.large])))", "etaoin", "the kitchen's gravity is low because of the bedroom's radius is large");
@@ -272,3 +272,7 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remem
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to-access(V2, V4:'room1'[#id])))", "etaoin", "you need to have permission to enter the kitchen");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");
+
+testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can turn on qwerty"); 
+
+

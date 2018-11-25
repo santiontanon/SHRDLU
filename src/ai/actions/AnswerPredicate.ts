@@ -14,7 +14,7 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		var requester:TermAttribute = ir.requester;
 
 		console.log(ai.selfID + " answer predicate: " + intention.attributes[2]);	
-		var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term);
+		var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term, ai.o);
 		console.log("term to sentences: " + s_l);	
 		var variablesPresent:boolean = false;
 

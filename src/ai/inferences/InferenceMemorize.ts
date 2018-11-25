@@ -1,9 +1,10 @@
 class Memorize_InferenceEffect extends InferenceEffect {
 
-	constructor(effectParameter:Term) 
+	constructor(effectParameter:Term, negated:boolean) 
 	{
 		super()
 		this.effectParameter = effectParameter;
+		this.negated = negated;
 	}
 
 
@@ -18,16 +19,12 @@ class Memorize_InferenceEffect extends InferenceEffect {
 		var targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
 		var memorize:boolean = false;
 
-		if (inf.inferences.length == 1) {
-			// this means that there was a variable in the query, and thus only the negation was launched:
+		if (this.negated) {
+			// this was the complex case:
 			if (inf.inferences[0].endResults.length == 0) {
-				// memorize:
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				memorize = true;
-			} else if (inf.inferences[0].endResults[0].l.length == 0) {
-				// contradiction:
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
+				// there was no contradiction...
+				// We are not sure..., let's not memorize, just in case...
+				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.unsure('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
 				// we already knew, just say ok:
@@ -36,16 +33,11 @@ class Memorize_InferenceEffect extends InferenceEffect {
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
-				if (inf.inferences[1].endResults.length == 0) {
-					// memorize:
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-					memorize = true;
-				} else {
-					// we already knew, just say ok:
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				}
+				// there was no contradiction... we can add the sentence safely
+				// we already knew, just say ok:
+				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				memorize = true;
 			} else {
 				// contradiction:
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
@@ -54,7 +46,7 @@ class Memorize_InferenceEffect extends InferenceEffect {
 		}
 
 		if (memorize) {
-			var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term);
+			var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
 			for(let s of s_l) {
 				if (s.terms.length == 1 && s.sign[0] == true) {
 					ai.addLongTermTerm(s.terms[0], MEMORIZE_PROVENANCE);
@@ -68,16 +60,19 @@ class Memorize_InferenceEffect extends InferenceEffect {
 
 	saveToXMLInternal(ai:RuleBasedAI, variables:TermAttribute[], variableNames:string[]) : string
 	{
-		return "<InferenceEffect type=\"Memorize_InferenceEffect\" effectParameter=\""+this.effectParameter.toStringXMLInternal(variables, variableNames)+"\"/>";
+		return "<InferenceEffect type=\"Memorize_InferenceEffect\" "+
+			   "effectParameter=\""+this.effectParameter.toStringXMLInternal(variables, variableNames)+"\" "+
+			   "negated=\""+this.negated+"/>";
 	}
 
 
 	static loadFromXML(xml:Element, ai:RuleBasedAI, o:Ontology, variables:TermAttribute[], variableNames:string[]) : InferenceEffect
 	{
 		let t:Term = Term.fromStringInternal(xml.getAttribute("effectParameter"), o, variableNames, variables).term;
-		return new Memorize_InferenceEffect(t);
+		return new Memorize_InferenceEffect(t, xml.getAttribute("negated")=="true");
 	}
 	
 
 	effectParameter:Term = null;
+	negated:boolean = false;
 }

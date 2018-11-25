@@ -183,6 +183,7 @@
     <sort name="perf.inform.answer" super="perf.inform"/>
     <sort name="perf.acknowledge" super="performative"/>
     <sort name="perf.ack.ok" super="perf.acknowledge"/>
+    <sort name="perf.ack.unsure" super="perf.acknowledge"/>
     <sort name="perf.ack.contradict" super="perf.acknowledge"/>
     <sort name="perf.ack.invalidanswer" super="perf.acknowledge"/>
     <sort name="perf.ack.denyrequest" super="perf.acknowledge"/>

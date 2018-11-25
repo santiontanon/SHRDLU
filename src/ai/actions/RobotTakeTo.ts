@@ -19,30 +19,30 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
+		let ai:RobotAI = <RobotAI>ai_raw;
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
 
 		// execute the memorize action:
 		console.log(ai.selfID + " take-to: " + intention);	
 
-		var destinationMap:A4Map = null;
-		var hasPermission:boolean = true;
+		let destinationMap:A4Map = null;
+		let hasPermission:boolean = true;
 
 		// find the target destination:
 		// destination is the third attribute:
-		var targetID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
-		var targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
+		let targetID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
+		let targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
 		if (targetObject != null) {
 			destinationMap = targetObject.map;
 			this.destinationX = targetObject.x;
 			this.destinationY = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
 		} else {
-			var targetLocation:AILocation = ai.game.getAILocationByID(targetID);
+			let targetLocation:AILocation = ai.game.getAILocationByID(targetID);
 			if (targetLocation != null) {
 				if (ai.locationsWherePlayerIsNotPermitted.indexOf(targetID) == -1) {
-//						var tmp2:[number,number] = targetLocation.centerCoordinatesInMap(ai.robot.map);
-					var tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+//						let tmp2:[number,number] = targetLocation.centerCoordinatesInMap(ai.robot.map);
+					let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 					if (tmp2 != null) {
 						destinationMap = ai.robot.map;
 						this.destinationX = tmp2[0];
@@ -113,7 +113,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
+		let ai:RobotAI = <RobotAI>ai_raw;
 
 		if (this.guideeObject instanceof A4Character) {
 			if (ai.robot.x == this.destinationX && ai.robot.y == this.destinationY) return true;
@@ -131,9 +131,15 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				return false;
 			}
 
+			// if we are at the destination, stop!
+			if (ai.robot.x == this.destinationX && ai.robot.y == this.destinationY) {
+				// arrived!
+				return true;
+			}
+
 			// go to destination:
-	        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        var s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
+	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
 	        s.x = this.destinationX;
 	        s.y = this.destinationY;
 	        q.scripts.push(s);
@@ -142,8 +148,8 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 		} else if (this.guideeObject instanceof A4Item) {
 			if (ai.robot.inventory.indexOf(this.guideeObject) == -1) {
 				// we don't have the item, go pick it up!
-				var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-				var s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
+				let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+				let s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
 				s.x = this.guideeObject.x;
 				s.y = (this.guideeObject.y+this.guideeObject.tallness)// - ai.robot.tallness;;
 				q.scripts.push(s);
@@ -153,16 +159,16 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				// we have it, good!
 				if (ai.robot.x == this.destinationX && ai.robot.y == this.destinationY) {
 					// drop the item, and we are gone!
-			        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-			        var s:A4Script = new A4Script(A4_SCRIPT_DROP, this.guideeObject.ID, null, 0, false, false);
+			        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+			        let s:A4Script = new A4Script(A4_SCRIPT_DROP, this.guideeObject.ID, null, 0, false, false);
 			        q.scripts.push(s);
 					ai.currentAction_scriptQueue = q;
 
 					return true;
 				} else {
 					// go to destination:
-			        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-			        var s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
+			        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+			        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
 			        s.x = this.destinationX;
 			        s.y = this.destinationY;
 			        q.scripts.push(s);

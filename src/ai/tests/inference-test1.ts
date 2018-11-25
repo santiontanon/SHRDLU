@@ -106,7 +106,7 @@ for(let str of sentence_text_l) {
 console.log("-------------------------");
 var term1_text:string = "#and(V0:#and(V1:#not(V2:=(V:[any], V4:'etaoin'[#id])), V5:#and(V6:#not(V7:=(V, V8:'david'[#id])), V9:character(V))), V10:space.at(V, V11:'location-aurora-station'[#id]))";
 var parsed_term1:Term = Term.fromString(term1_text, o);
-var sentences_from_term1:Sentence[] = Term.termToSentences(parsed_term1);
+var sentences_from_term1:Sentence[] = Term.termToSentences(parsed_term1, o);
 console.log("Term: " + parsed_term1);
 console.log("Sentences: " + sentences_from_term1);
 if (sentences_from_term1.length != 4) {

@@ -1313,6 +1313,12 @@ class ShrdluGameScript {
 				if (this.act_1_stasis_thread_state_timer == 0) {
 					this.game.qwertyAI.respondToPerformatives = false;	// to prevent the player messing up with the sequence
 					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'broken-ss'[#id]), time.future(V)) ))");
+					// clear whatever qwerty is doing now:
+				    this.game.qwertyAI.currentAction = null;
+				    this.game.qwertyAI.currentAction_requester = null;
+				    this.game.qwertyAI.currentAction_scriptQueue = null;
+				    this.game.qwertyAI.currentActionHandler = null;
+
 					var currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
 					if (currentRoom.id != "location-as25") {
 						// if we are not in the infirmary, qwerty asks the player to follow it:

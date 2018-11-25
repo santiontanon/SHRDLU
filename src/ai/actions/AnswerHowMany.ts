@@ -53,7 +53,7 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 			}
 
 
-			var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(queryPerformative.attributes[2])).term);
+			var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(queryPerformative.attributes[2])).term, ai.o);
 			// negate the query:
 			var negated_s:Sentence = new Sentence([],[]);
 			for(let s of s_l) {
