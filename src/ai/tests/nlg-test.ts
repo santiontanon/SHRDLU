@@ -271,4 +271,4 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:name(V3:'1'[#id], V4:'david'
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remember(V4:'1'[#id], V5:'pronoun.anything'[pronoun.anything])), V6:#and(V7:in-stasis(V8:'1'[#id]), V9:time.past(V7))))", "etaoin", "you do not remember anything because of that you were in stasis");
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to-access(V2, V4:'room1'[#id])))", "etaoin", "you need to have permission to enter the kitchen");
-
+testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");

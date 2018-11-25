@@ -3,7 +3,7 @@ class A4AICharacter extends A4Character {
     constructor(name:string, sort:Sort)
     {
         super(name, sort);
-        this.AI = new A4AI(this, this.sightRadius);
+        this.AI = new A4AI(this);
     }
 
 

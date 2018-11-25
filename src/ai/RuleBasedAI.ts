@@ -1763,17 +1763,19 @@ class RuleBasedAI {
 		str += "</shortTermMemory>\n";
 
 		str += "<longTermMemory>\n";
+		/*
 		for(let se of this.longTermMemory.plainPreviousSentenceList) {
 			if (se.provenance != BACKGROUND_PROVENANCE) {
-				str += "<sentence activation=\""+se.activation+"\" " +
+				str += "<previousSentence activation=\""+se.activation+"\" " +
 					   "provenance=\""+se.provenance+"\" " +
 					   "sentence=\""+se.sentence.toStringXML()+"\" "+
 					   "time=\""+se.time+"\"/>\n";
 			}
 		}
+		*/
 		for(let se of this.longTermMemory.previousSentencesWithNoCurrentSentence) {
 			if (se.provenance != BACKGROUND_PROVENANCE) {
-				str += "<sentence activation=\""+se.activation+"\" " +
+				str += "<previousSentence activation=\""+se.activation+"\" " +
 					   "provenance=\""+se.provenance+"\" " +
 					   "sentence=\""+se.sentence.toStringXML()+"\" "+
 					   "time=\""+se.time+"\" "+
@@ -1782,10 +1784,7 @@ class RuleBasedAI {
 		}
 		for(let se of this.longTermMemory.plainSentenceList) {
 			if (se.provenance != BACKGROUND_PROVENANCE) {
-				str += "<sentence activation=\""+se.activation+"\" " +
-					   "provenance=\""+se.provenance+"\" " +
-					   "sentence=\""+se.sentence.toStringXML()+"\" "+
-					   "time=\""+se.time+"\"/>\n";
+				str += this.saveSentenceEntryToXML(se, false);
 			}
 		}
 		str += "</longTermMemory>\n";
@@ -1823,6 +1822,26 @@ class RuleBasedAI {
 		
 		str += "</RuleBasedAI>";
 
+		return str;
+	}
+
+
+	saveSentenceEntryToXML(se:SentenceEntry, previous:boolean) : string
+	{
+		let str:string = "";
+		if (se.previousInTime == null) {
+			str += "<"+(previous ? "previousSentence":"sentence")+" activation=\""+se.activation+"\" " +
+				   "provenance=\""+se.provenance+"\" " +
+				   "sentence=\""+se.sentence.toStringXML()+"\" "+
+				   "time=\""+se.time+"\"/>\n";
+		} else {
+			str += "<"+(previous ? "previousSentence":"sentence")+" activation=\""+se.activation+"\" " +
+				   "provenance=\""+se.provenance+"\" " +
+				   "sentence=\""+se.sentence.toStringXML()+"\" "+
+				   "time=\""+se.time+"\">\n";
+			str += this.saveSentenceEntryToXML(se.previousInTime, true);
+			str += "</"+(previous ? "previousSentence":"sentence")+">\n"
+		}
 		return str;
 	}
 

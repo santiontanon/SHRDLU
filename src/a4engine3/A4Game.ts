@@ -634,37 +634,37 @@ class A4Game {
 
     saveGame(saveName:string)
     {
-//        var debug_xmlString:string = "";
+        var debug_xmlString:string = "";
         var xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, xmlString);
 
-//        debug_xmlString += xmlString;
+        debug_xmlString += xmlString;
 
         for(let i:number = 0;i<this.maps.length;i++) {
             xmlString = this.maps[i].saveToXML(this);
-//            debug_xmlString += "\n\n\n" + xmlString;
+            debug_xmlString += "\n\n\n" + xmlString;
             localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-map" + i, xmlString);
             console.log("A4Game.saveGame: map "+i+" xmlString length " + xmlString.length);
 
         }
 
         xmlString = this.etaoinAI.saveToXML();
-//        debug_xmlString += "\n\n\n" + xmlString;
+        debug_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: etaoin xmlString length " + xmlString.length);
-//        console.log(xmlString);
+        console.log(xmlString);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-etaoin", xmlString);
 
         xmlString = this.qwertyAI.saveToXML();
-//        debug_xmlString += "\n\n\n" + xmlString;
+        debug_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: qwerty xmlString length " + xmlString.length);
-//        console.log(xmlString);
+        console.log(xmlString);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-qwerty", xmlString);
 
         xmlString = this.shrdluAI.saveToXML();
-//        debug_xmlString += "\n\n\n" + xmlString;
+        debug_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: shrdlu xmlString length " + xmlString.length);
-//        console.log(xmlString);
+        console.log(xmlString);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-shrdlu", xmlString);
 
         // savegame name:

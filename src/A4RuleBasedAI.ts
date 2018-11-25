@@ -426,7 +426,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	// reference object is used in case o2 is not a directional object, to determine what is "behind" and "in front"
 	checkSpatialRelation(relation:Sort, o1ID:string, o2ID:string, referenceObject:string) : boolean
 	{
-		if (relation.name == "space.at" ||
+		if (relation.is_a(this.cache_sort_space_at) ||
 			relation.name == "space.outside.of") {
 			var loc2:AILocation = this.game.getAILocationByID(o2ID);	// see if o2 is a location
 			if (loc2 == null) return null;
@@ -440,10 +440,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 			if (loc1 == null) return null;
 			if (loc1 == loc2) {
-				if (relation.name == "space.at") return true;
+				if (relation.is_a(this.cache_sort_space_at)) return true;
 				return false;
 			}
-			if (relation.name == "space.at") {
+			if (relation.is_a(this.cache_sort_space_at)) {
 				return this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)];
 			} else {
 				return !this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)] &&

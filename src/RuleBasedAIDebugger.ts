@@ -12,10 +12,27 @@ class RuleBasedAIDebugger {
 			if (mouse_x < WINDOW_WIDTH/2) {
 				this.leftTab++;
 				this.leftTab = this.leftTab%6;
+				this.leftScroll = 0;
 			} else {
 				this.righttab++;
 				this.righttab = this.righttab%6;
+				this.rightScroll = 0;
 			}
+		} else if (mouse_y < WINDOW_HEIGHT/2) {
+			if (mouse_x < WINDOW_WIDTH/2) {
+				this.leftScroll -= 5;
+				if (this.leftScroll<=0) this.leftScroll = 0;
+			} else {
+				this.rightScroll -= 5;
+				if (this.rightScroll<=0) this.rightScroll = 0;
+			}
+		} else {
+			if (mouse_x < WINDOW_WIDTH/2) {
+				this.leftScroll += 5;
+			} else {
+				this.rightScroll += 5;
+			}
+
 		}
 	}	
 
@@ -27,16 +44,16 @@ class RuleBasedAIDebugger {
         ctx.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         ctx.globalAlpha = 1;
         
-        this.drawTab(this.leftTab, 0, 0, WINDOW_WIDTH/2, WINDOW_HEIGHT);
-        this.drawTab(this.righttab, WINDOW_WIDTH/2, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        this.drawTab(this.leftTab, 0, 0, WINDOW_WIDTH/2, WINDOW_HEIGHT, this.leftScroll);
+        this.drawTab(this.righttab, WINDOW_WIDTH/2, 0, WINDOW_WIDTH, WINDOW_HEIGHT, this.rightScroll);
 	}
 
 
-	drawTab(type:number, x0:number, y0:number, x1:number, y1:number)
+	drawTab(type:number, x0:number, y0:number, x1:number, y1:number, scroll:number)
 	{
 		if (type == 0) this.drawPerceptionTab(x0, y0, x1, y1);
 		else if (type == 1) this.drawShortTermMemoryTab(x0, y0, x1, y1);
-		else if (type == 2) this.drawLongTermMemoryTab(x0, y0, x1, y1);
+		else if (type == 2) this.drawLongTermMemoryTab(x0, y0, x1, y1, scroll);
 		else if (type == 3) this.drawIntentionsTab(x0, y0, x1, y1);
 		else if (type == 4) this.drawOntologyTab(x0, y0, x1, y1);
 		else if (type == 5) this.drawContextTab(x0, y0, x1, y1);
@@ -91,14 +108,19 @@ class RuleBasedAIDebugger {
 	}
 
 
-	drawLongTermMemoryTab(x0:number, y0:number, x1:number, y1:number)
+	drawLongTermMemoryTab(x0:number, y0:number, x1:number, y1:number, scroll:number)
 	{
 		var fontWidth:number = 6;
 		var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 		fillTextTopLeft("Long-term Memory:", x0+4, y0+4, fontFamily16px, "white");
 		
-		var y:number = y0+4+16+4;
+		let y:number = y0+4+16+4;
+		let scroll_skip:number = 0; 
 		for(let se of this.AI.longTermMemory.plainSentenceList) {
+			if (scroll_skip < scroll) {
+				scroll_skip++;
+				continue;
+			}
 			var r:Sentence = se.sentence;
 			var str:string = "- ["+se.provenance+"] " + r.toString();
 			while(str.length > maxTextLength) {
@@ -224,4 +246,7 @@ class RuleBasedAIDebugger {
 	AI:RuleBasedAI = null;
 	leftTab:number = 0;
 	righttab:number = 1;
+
+	leftScroll:number = 0;
+	rightScroll:number = 0;
 }

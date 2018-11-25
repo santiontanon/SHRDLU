@@ -593,8 +593,8 @@ NLPAddTokenPOS("from", PartOfSpeech.generatePreposition("from", POS_TYPE_PPREPOS
 NLPAddTokenPOS("from", PartOfSpeech.generatePreposition("from", POS_TYPE_PPREPOSITION_ORIGIN));
 */
 this.addTokenPOS(new PartOfSpeech("in", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 /*
-  ["inside",  "PREP"],
   ["into",  "PREP"],
   ["less",  "PREP"],
   ["like",  "PREP"],
@@ -703,7 +703,9 @@ NLPAddTokenPOS("due to", PartOfSpeech.generatePreposition("close to", POS_TYPE_P
 this.addTokenPOS(new PartOfSpeech("except for", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
   /*
   "far from",
-  "inside of",
+  */
+this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
+  /*
   "instead of",
   "left of",
   "near to",
@@ -1498,8 +1500,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.reverseRelations["relation.belongs"] = "relation.owns";
     this.reverseRelations["relation.cause"] = "relation.effect";
     this.reverseRelations["relation.effect"] = "relation.cause";
-    this.reverseRelations["relation.contains"] = "space.at";
+    this.reverseRelations["relation.contains"] = "space.inside.of";
     this.reverseRelations["space.at"] = "relation.contains";
+    this.reverseRelations["space.inside.of"] = "relation.contains";
 
     // generate the sort to English table
     this.generateTypeSortToEnglishTable(o);

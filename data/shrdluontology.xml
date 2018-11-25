@@ -590,6 +590,7 @@
     <sort name="space.position" super="space.location"/>
     <sort name="spatial-relation" super="space,relation,#stateSort"/>
     <sort name="space.at" super="spatial-relation,#stateSort"/>
+    <sort name="space.inside.of" super="space.at"/>
     <sort name="space.on.top.of" super="space.at"/>
     <sort name="space.outside" super="space.location"/>
     <sort name="space.outside.of" super="spatial-relation"/>

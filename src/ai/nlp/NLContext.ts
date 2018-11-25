@@ -217,6 +217,8 @@ class NLContext {
 		this.speaker = speaker;
 		this.ai = ai;
 		this.mentionMemorySize = mentionMemorySize;
+		this.cache_sort_space_at = this.ai.o.getSort("space.at");
+		this.cache_sort_contains = this.ai.o.getSort("relation.contains");
 	}
 
 
@@ -971,12 +973,29 @@ class NLContext {
 							}
 //							console.log("the determiner with entities_mpl: " + entities_mpl + "\nResult: " + entities);
 						} else if (this_determiner) {
-							// remove the speaker from the list of cancidates:
+							// remove the speaker, and the content of the inventory from the list of candidates:
+							// since it's very weird to use "this" to refer to the inventory...
+							let toDelete:NLContextEntity[] = []
 							for(let idx:number = 0;idx<entities_mpl[1].length;idx++) {
 								if (entities_mpl[1][idx].objectID.value == this.speaker) {
-									entities_mpl[1].splice(idx,1);
-									break;
+									toDelete.push(entities_mpl[1][idx]);
+								} else if (entities_mpl[1][idx].distanceFromSpeaker == 0 &&
+										   entities_mpl[1][idx].relationMatch(new Term(o.getSort("verb.have"),[new ConstantTermAttribute(this.speaker, o.getSort("#id")),
+										   																	  entities_mpl[1][idx].objectID]), o, pos)) {
+									toDelete.push(entities_mpl[1][idx]);
+								} else {
+									// see if the object is contained in any other object we can see, and also remove:
+									for(let t of entities_mpl[1][idx].terms) {
+										if (t.functor.is_a(this.cache_sort_contains) &&
+											t.attributes.length>=2 &&
+											Term.equalsAttribute(t.attributes[1], entities_mpl[1][idx].objectID, new Bindings())) {
+											toDelete.push(entities_mpl[1][idx]);
+										}
+									}
 								}
+							}
+							for(let e of toDelete) {
+								entities_mpl[1].splice(entities_mpl[1].indexOf(e), 1);
 							}
 
 							if (entities_mpl[1].length>0) {
@@ -1119,7 +1138,7 @@ class NLContext {
 		for(let entity of this.shortTermMemory) {
 			if (entity.objectID.value == id) {
 				for(let t of entity.terms) {
-					if (t.functor.name == "space.at" &&
+					if (t.functor.is_a(this.cache_sort_space_at) &&
 						t.attributes.length == 2 &&
 						t.attributes[0] instanceof ConstantTermAttribute &&
 						t.attributes[1] instanceof ConstantTermAttribute &&
@@ -1132,7 +1151,7 @@ class NLContext {
 		for(let entity of this.mentions) {
 			if (entity.objectID.value == id) {
 				for(let t of entity.terms) {
-					if (t.functor.name == "space.at" &&
+					if (t.functor.is_a(this.cache_sort_space_at) &&
 						t.attributes.length == 2 &&
 						t.attributes[0] instanceof ConstantTermAttribute &&
 						t.attributes[1] instanceof ConstantTermAttribute &&
@@ -1155,7 +1174,7 @@ class NLContext {
 		for(let entity of this.shortTermMemory) {
 			if (entity.objectID.value == id) {
 				for(let t of entity.terms) {
-					if (t.functor.name == "space.at" &&
+					if (t.functor.is_a(this.cache_sort_space_at) &&
 						t.attributes.length == 2 &&
 						t.attributes[0] instanceof ConstantTermAttribute &&
 						t.attributes[1] instanceof ConstantTermAttribute &&
@@ -1174,7 +1193,7 @@ class NLContext {
 				if (t.functor.is_a(outdoors_sort)) {
 					return current;
 				}
-				if (t.functor.name == "space.at" &&
+				if (t.functor.is_a(this.cache_sort_space_at) &&
 					t.attributes.length == 2 &&
 					t.attributes[0] instanceof ConstantTermAttribute &&
 					t.attributes[1] instanceof ConstantTermAttribute &&
@@ -1594,6 +1613,9 @@ class NLContext {
 	shortTermMemory:NLContextEntity[] = [];
 	mentions:NLContextEntity[] = [];
 	performatives:NLContextPerformative[] = [];
+
+	cache_sort_space_at:Sort = null;
+	cache_sort_contains:Sort = null;
 
 	// conversation state:
 	inConversation:boolean = false;

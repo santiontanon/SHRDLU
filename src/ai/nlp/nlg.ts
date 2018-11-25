@@ -233,8 +233,17 @@ class NLGenerator {
 			(<TermTermAttribute>(t.attributes[1])).term.functor.name == "#and") {
 			var o:Ontology = context.ai.o;
 			var t_l:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>(t.attributes[1])).term, "#and");
+			let timeTerm:TermAttribute = null;
 			// this "list" rendering format is only for when we want to generate text for lists of answers:
-			if (t_l.length > 1) {
+			for(let t of t_l) {
+				if ((t instanceof TermTermAttribute) &&
+					((<TermTermAttribute>t).term.functor.is_a(o.getSort("time.past")) ||
+					 (<TermTermAttribute>t).term.functor.is_a(o.getSort("time.future")))) {
+					timeTerm = t;
+					break;
+				}
+			}
+			if (t_l.length > 1 && timeTerm == null) {
 				let etcetera:boolean = false;
 				let last_answer:TermAttribute = t_l[t_l.length-1];
 				if ((last_answer instanceof ConstantTermAttribute )&&
@@ -303,7 +312,7 @@ class NLGenerator {
 			}
 
 			// check to see if there is more than one verb, to handle them separately:
-			{
+			if (timeTerm == null) {
 				let verbs:Term[] = [];
 				let verbNegated:boolean[] = [];
 				let nonVerbs:boolean = false;

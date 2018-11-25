@@ -395,6 +395,9 @@
 	<sentence provenance="background" sentence="~relation.owns(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
 	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); relation.owns(Y,X)"/>
 
+	<sentence provenance="background" sentence="~relation.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); relation.contains(Y,X)"/>
+
 	<sentence provenance="background" sentence="~permitted-in(X, Y); permission-to-access(X, Y)"/>
 	<sentence provenance="background" sentence="permitted-in(X, Y); ~permission-to-access(X, Y)"/>
 	<sentence provenance="background" sentence="~permitted-in(X, Y); verb.can(X, verb.go(X, Y))"/>	
