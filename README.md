@@ -1,6 +1,6 @@
 # SHRDLU
 
-Playable demo! https://www.cs.drexel.edu/~santi/games/SHRDLUdemo20/shrdlu.html
+Playable demo v2.1! https://www.cs.drexel.edu/~santi/games/SHRDLUdemo21/shrdlu.html
 
 <img src="https://github.com/santiontanon/SHRDLU/blob/master/misc/SHRDLU-ss1.png?raw=true" alt="title" width="512"/> 
 
@@ -34,5 +34,5 @@ SHRDLU is by no means the first game to use NLP techniques. Besides the classic 
 
 - Concerning the use of time in the game: I know dates and times in a 24 hour system with Earh years doesn't make any sense in an alien planet with an undisclosed day/night or star revolution cycle. However, I decided to go with Earth time and dates, to keep the AI simple, and not having to create domain knowledge rules to handle time scale conversions, etc. So, this was a small concesion to make time-handling in the AI-side easier.
 
-- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, and every one who played my demo at AIIDE 2018, every one gave me great feedback! Thank you one more time! :D
+- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens and every one who played my demo at AIIDE 2018! Thank you one more time! :D
 	
