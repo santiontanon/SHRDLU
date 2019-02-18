@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "Demo v2.1"
+var SHRDLU_VERSION:string = "Demo v2.2"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1
@@ -138,18 +138,18 @@ class A4EngineApp {
 
             if (controls_xml != null && controls_xml.length > 0) {
                 var key_xml:Element = null;
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"messageconsole_up"); this.key_messageconsole_up = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"messageconsole_down"); this.key_messageconsole_down = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"inventory_toggle"); this.key_inventory_toggle = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"left"); this.key_left = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"right"); this.key_right = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"up"); this.key_up = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"down"); this.key_down = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"take"); this.key_take = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"talk"); this.key_talk = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"use_item"); this.key_use_item = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"next_item"); this.key_next_item = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildrenByTag(controls_xml[0],"fast_time"); this.key_fast_time = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"messageconsole_up"); this.key_messageconsole_up = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"messageconsole_down"); this.key_messageconsole_down = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"inventory_toggle"); this.key_inventory_toggle = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"left"); this.key_left = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"right"); this.key_right = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"up"); this.key_up = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"down"); this.key_down = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"take"); this.key_take = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"talk"); this.key_talk = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"use_item"); this.key_use_item = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"next_item"); this.key_next_item = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"fast_time"); this.key_fast_time = Number(key_xml.getAttribute("key"));
             } else {
                 this.setDefaultConfiguration();
             }
@@ -512,17 +512,20 @@ class A4EngineApp {
                                     function(arg:any, ID:number) {
                                             ID -= 9;    // convert from menu item ID to slot ID
                                             var app = <A4EngineApp>arg;
-                                            var xmlString:string = localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID);
+                                            var xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
+                                            console.log("Decompresed string is: " + xmlString.length);        
 //                                            console.log(xmlString);
                                             var dp:DOMParser = new DOMParser();
                                             var xml:Document = dp.parseFromString(xmlString, "text/xml");
+                                            var gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
+
 //                                            console.log(xml);
                                             app.titlescreen_state = 3;
                                             app.titlescreen_timer = 0;
                                             app.ingame_menu = 0;
                                             app.quit_request = false;
-                                            app.game = new A4Game(xml.documentElement, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
-                                            app.game.finishLoadingGame(true, "slot" + ID, app);
+                                            app.game = new A4Game(gamexml, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
+                                            app.game.finishLoadingGame(xml.documentElement, app);
                                        });
                             } else {
                                 menuItems.push("slot" + (i+1));
@@ -595,7 +598,7 @@ class A4EngineApp {
                 BInterface.reset();
 
                 app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
-                app.game.finishLoadingGame(false, null, this);
+                app.game.finishLoadingGame(null, this);
 
                 return A4ENGINE_STATE_ACT1INTRO;
             }
@@ -992,13 +995,15 @@ class A4EngineApp {
                 return A4ENGINE_STATE_INTRO;
             } else {
                 var ID:number = (this.quit_request_action - QUIT_REQUEST_ACTION_LOAD1) + 1;
-                var xmlString:string = localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID);
-//                            console.log(xmlString);
+                var xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
+                console.log("Decompresed string is: " + xmlString.length);        
+
                 var dp:DOMParser = new DOMParser();
                 var xml:Document = dp.parseFromString(xmlString, "text/xml");
 //                            console.log(xml);
-                this.game = new A4Game(xml.documentElement, this.game_path, this.GLTM, this.SFXM, this.SFX_volume);
-                this.game.finishLoadingGame(true, "slot" + ID, this);
+                var gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
+                this.game = new A4Game(gamexml, this.game_path, this.GLTM, this.SFXM, this.SFX_volume);
+                this.game.finishLoadingGame(xml.documentElement, this);
                 BInterface.reset();
                 this.ingame_menu = 0;
                 this.state_cycle = 0;

@@ -48,7 +48,7 @@ class A4Object {
                 console.error("Unknown attribute: " + a_name + " for object " + xml.getAttribute("class"));
             }
         }
-        var properties_l_xml:Element = getFirstElementChildrenByTag(xml, "properties");
+        var properties_l_xml:Element = getFirstElementChildByTag(xml, "properties");
         if (properties_l_xml != null) {
             var properties_xml:Element[] = getElementChildrenByTag(properties_l_xml, "property");
             for(let i:number = 0;i<properties_xml.length;i++) {

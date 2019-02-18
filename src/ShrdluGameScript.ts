@@ -1726,7 +1726,7 @@ class ShrdluGameScript {
         xmlString += "act_1_asked_about_corpse=\""+this.act_1_asked_about_corpse[0]+","+
         										   this.act_1_asked_about_corpse[1]+","+
         										   this.act_1_asked_about_corpse[2]+"\"\n";   
-        xmlString += ">\n";     
+        xmlString += "/>\n";     
         for(let tmp in this.thoughtBubbleQueue) {
         	xmlString += "<thoughtBubbleQueue value=\""+tmp+"\"/>\n";  
     	}

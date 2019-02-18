@@ -65,7 +65,7 @@ class A4Character extends A4WalkingObject {
     {
         super.loadObjectAdditionalContent(xml, game, of, objectsToRevisit_xml, objsctsToRevisit_object);
 
-        let items_xml:Element = getFirstElementChildrenByTag(xml, "items");
+        let items_xml:Element = getFirstElementChildByTag(xml, "items");
         if (items_xml!=null) {
 //            var item_xml_l:NodeListOf<Element> = items_xml.children;
             let item_xml_l:HTMLCollection = items_xml.children;

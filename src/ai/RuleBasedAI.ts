@@ -75,11 +75,11 @@ class InferenceRecord {
 		if (xml.getAttribute("triggeredBy") != null) tb = Term.fromStringInternal(xml.getAttribute("triggeredBy"), o, variableNames, variables).term;
 		if (xml.getAttribute("triggeredBySpeaker") != null) tbs = xml.getAttribute("triggeredBySpeaker");
 
-		let effect_xml:Element = getFirstElementChildrenByTag(xml ,"InferenceEffect");
+		let effect_xml:Element = getFirstElementChildByTag(xml ,"InferenceEffect");
 		if (effect_xml != null) e = InferenceEffectFactory.loadFromXML(effect_xml, ai, o, variables, variableNames);
 
 		var additionalSentences:Sentence[] = [];
-		var additionalSentences_xml:Element = getFirstElementChildrenByTag(xml ,"additionalSentences");
+		var additionalSentences_xml:Element = getFirstElementChildByTag(xml ,"additionalSentences");
 		if (additionalSentences_xml != null) {
 			for(let s_xml of getElementChildrenByTag(additionalSentences_xml, "sentence")) {
 				var s:Sentence = Sentence.fromStringInternal(s_xml.firstChild.nodeValue, o, variableNames, variables);
@@ -169,7 +169,7 @@ class CauseRecord {
 	static fromXML(xml:Element, o:Ontology) : CauseRecord
 	{
 		var cause:CauseRecord = null;
-		var p_xml = getFirstElementChildrenByTag(xml, "cause");
+		var p_xml = getFirstElementChildByTag(xml, "cause");
 		if (p_xml != null) {
 			cause = CauseRecord.fromXML(p_xml, o);
 		}
@@ -231,7 +231,7 @@ class IntentionRecord {
 				requestingPerformative = context.performatives[Number(xml.getAttribute("requestingPerformativeSpeaker"))];
 			}
 		}
-		let cause_xml:Element = getFirstElementChildrenByTag(xml, "CauseRecord");
+		let cause_xml:Element = getFirstElementChildByTag(xml, "CauseRecord");
 		if (cause_xml != null) {
 			cause = CauseRecord.fromXML(cause_xml, o);
 		}
@@ -446,8 +446,8 @@ class RuleBasedAI {
 			let provenance:string = sentence_xml.getAttribute("provenance");
 			let time:number = this.time_in_seconds;
 			if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
-			let se:SentenceEntry = this.longTermMemory.addSentence(rule, provenance, 1, time);
-			sentence_xml = getFirstElementChildrenByTag(sentence_xml,"previousSentence");
+			let history:Sentence[] = [rule]
+			sentence_xml = getFirstElementChildByTag(sentence_xml,"previousSentence");
 			while(sentence_xml != null) {
 				let rule:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
 				let provenance:string = sentence_xml.getAttribute("provenance");
@@ -455,9 +455,18 @@ class RuleBasedAI {
 				let timeEnd:number = this.time_in_seconds;
 				if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
 				if (sentence_xml.getAttribute("timeEnd") != null) timeEnd = Number(sentence_xml.getAttribute("timeEnd"));
-				let se2:SentenceEntry = this.longTermMemory.addPreviousSentence(rule, provenance, 1, time, timeEnd, se);
-				se = se2;
-				sentence_xml = getFirstElementChildrenByTag(sentence_xml,"previousSentence");
+				if (provenance == BACKGROUND_PROVENANCE) {
+					// this was a sentence that already was in the BK, so no need to add it
+					sentence_xml = null;	// end of recursion
+				} else {
+					history.push(rule)
+					sentence_xml = getFirstElementChildByTag(sentence_xml,"previousSentence");
+				}
+			}
+			history.reverse()
+			// we add the sentences in reverse order, to reconstruct the "previousSentence" structure:
+			for(let s of history) {
+				this.longTermMemory.addStateSentenceIfNew(s, provenance, 1, time);
 			}
 		}
 		for(let sentence_xml of getElementChildrenByTag(xml,"previousSentence")) {
@@ -1676,7 +1685,7 @@ class RuleBasedAI {
 		this.time_in_seconds = Number(xml.getAttribute("timeInSeconds"));
 		this.questionPatienceTimmer = Number(xml.getAttribute("questionPatienceTimmer"));
 
-		var stm_xml = getFirstElementChildrenByTag(xml, "shortTermMemory");
+		var stm_xml = getFirstElementChildByTag(xml, "shortTermMemory");
 		if (stm_xml != null) {
 			this.shortTermMemory = new TermContainer();
 			for(let term_xml of getElementChildrenByTag(stm_xml, "term")) {
@@ -1695,7 +1704,7 @@ class RuleBasedAI {
 			}
 		}
 
-		var ltm_xml = getFirstElementChildrenByTag(xml, "longTermMemory");
+		var ltm_xml = getFirstElementChildByTag(xml, "longTermMemory");
 		if (ltm_xml != null) {
 //			this.longTermMemory = new SentenceContainer();
 			this.loadLongTermRulesFromXML(ltm_xml);
@@ -1714,7 +1723,7 @@ class RuleBasedAI {
 			this.intentions.push(intention);
 		}
 		this.queuedIntentions = [];
-		let queuedIntentions_xml:Element = getFirstElementChildrenByTag(xml, "queuedIntentions");
+		let queuedIntentions_xml:Element = getFirstElementChildByTag(xml, "queuedIntentions");
 		if (queuedIntentions_xml != null) {
 			for(let intention_xml of getElementChildrenByTag(queuedIntentions_xml, "IntentionRecord")) {
 				let intention:IntentionRecord = IntentionRecord.fromXML(intention_xml, this, this.o);
@@ -1722,7 +1731,7 @@ class RuleBasedAI {
 			}
 		}
 		this.intentionsCausedByRequest = [];
-		let intentionsCausedByRequest_xml:Element = getFirstElementChildrenByTag(xml, "intentionsCausedByRequest");
+		let intentionsCausedByRequest_xml:Element = getFirstElementChildByTag(xml, "intentionsCausedByRequest");
 		if (intentionsCausedByRequest_xml != null) {
 			for(let intention_xml of getElementChildrenByTag(intentionsCausedByRequest_xml, "IntentionRecord")) {
 				let intention:IntentionRecord = IntentionRecord.fromXML(intention_xml, this, this.o);
@@ -1731,7 +1740,7 @@ class RuleBasedAI {
 		}
 
 		// inference:
-		let inference_xml:Element = getFirstElementChildrenByTag(xml, "inference");
+		let inference_xml:Element = getFirstElementChildByTag(xml, "inference");
 		if (inference_xml != null) {
 			this.inferenceProcesses = [];
 			for(let ir_xml of getElementChildrenByTag(inference_xml, "InferenceRecord")) {

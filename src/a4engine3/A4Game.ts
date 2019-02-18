@@ -75,7 +75,7 @@ var A4_MAX_MESSAGE_LENGTH:number = 42;
 
 var CYCLES_IN_PERCEPTION_BUFFER:number = 50;
 var TEXT_INITIAL_DELAY:number = 60;
-var TEXT_SPEED:number = 10;
+var TEXT_SPEED:number = 8;
 var EYESOPEN_SPEED:number = 180;
 
 var animationNames:string[] = [
@@ -166,7 +166,7 @@ class A4Game {
         console.log("game title: " + this.gameTitle);
         console.log("game subtitle: " + this.gameSubtitle);
 
-        var title_xml:Element = getFirstElementChildrenByTag(xml, "titleImage");
+        var title_xml:Element = getFirstElementChildByTag(xml, "titleImage");
         if (title_xml!=null) {
             console.log("Title image:" + title_xml.firstChild.nodeValue);
             this.gameTitleImage = title_xml.firstChild.nodeValue;
@@ -179,7 +179,7 @@ class A4Game {
             this.cycle = Number(xml.getAttribute("cycle"));
         }
 
-        var story_xml:Element = getFirstElementChildrenByTag(xml, "story");
+        var story_xml:Element = getFirstElementChildByTag(xml, "story");
         if (story_xml!=null) {
             var story_lines:Element[] = getElementChildrenByTag(story_xml,"line");
             this.storyText = [];
@@ -208,7 +208,7 @@ class A4Game {
             this.addEnding(ID, endingText);
         }
 
-        var tiles_xml:Element = getFirstElementChildrenByTag(xml, "tiles");
+        var tiles_xml:Element = getFirstElementChildByTag(xml, "tiles");
         
         var targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
         this.tileWidth = Number(tiles_xml.getAttribute("sourcewidth"));
@@ -297,10 +297,10 @@ class A4Game {
     }
 
 
-    // saveName only needs to be defined if loadFromBrowserStorage == true
-    finishLoadingGame(loadFromBrowserStorage:boolean, saveName:string, app:A4EngineApp)
+    // if "saveGameXml" is != null, this is a call to restore from a save state
+    finishLoadingGame(saveGameXml:Element, app:A4EngineApp)
     {
-        var tiles_xml:Element = getFirstElementChildrenByTag(this.xml, "tiles");
+        var tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
         var targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
         for(let idx:number = 0;idx<tiles_xml.children.length;idx++) {
             var c:Element = tiles_xml.children[idx];
@@ -389,33 +389,29 @@ class A4Game {
         var objectsToRevisit_xml:Element[] = [];
         var objectsToRevisit_object:A4Object[] = [];
         {
-            var maps_xml:Element[] = getElementChildrenByTag(this.xml, "map");
-            for(let i:number = 0;i<maps_xml.length;i++) {
-                var map_xml:Element = maps_xml[i];
-                var tmx_file:string = map_xml.getAttribute("file");
+            if (saveGameXml != null) {
+                var maps_xml:Element[] = getElementChildrenByTag(saveGameXml, "map");
+                for(let i:number = 0;i<maps_xml.length;i++) {
+                    tmx = maps_xml[i];
+                    var map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    this.maps.push(map);
+                }
+            } else {
+                var maps_xml:Element[] = getElementChildrenByTag(this.xml, "map");
+                for(let i:number = 0;i<maps_xml.length;i++) {
+                    var map_xml:Element = maps_xml[i];
+                    var tmx_file:string = map_xml.getAttribute("file");
 
-                var tmx:Element = null;
-                if (loadFromBrowserStorage) {
-                    var mapName_tmp:string = tmx_file.substring(0,tmx_file.length-4);    // remove ".xml" 
-                    var mapBrowserKey:string = A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-" + mapName_tmp;
-                    console.log("loading A4Map from browser storage... " + mapBrowserKey);
-                    var xmlString:string = localStorage.getItem(mapBrowserKey);
-//                    console.log(xmlString);
-                    var dp:DOMParser = new DOMParser();
-                    var doc:Document = dp.parseFromString(xmlString, "text/xml");
-//                    console.log(xml);
-                    tmx = doc.documentElement;
-                } else {
+                    var tmx:Element = null;
                     console.log("loading A4Map from file... " + this.game_path + "/" + tmx_file);
                     var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
                     xmlhttp.overrideMimeType("text/xml");
                     xmlhttp.open("GET", this.game_path + "/" + tmx_file, false); 
                     xmlhttp.send();
                     tmx = xmlhttp.responseXML.documentElement;
+                    var map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    this.maps.push(map);
                 }
-
-                var map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
-                this.maps.push(map);
             }
 
             // link bridges/bridge destinations:
@@ -494,7 +490,7 @@ class A4Game {
 
         // load messages:
         {
-            var console_xml:Element = getFirstElementChildrenByTag(this.xml, "console");
+            var console_xml:Element = getFirstElementChildByTag(this.xml, "console");
             if (console_xml != null) {
                 for(let message_xml of getElementChildrenByTag(console_xml, "message")) {
                     if (message_xml.getAttribute("timeStamp") != null) {
@@ -535,32 +531,11 @@ class A4Game {
                                       ["data/general-kb.xml","data/qwerty-kb.xml"]);
         this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Shrdlu")[0]), this, 
                                       ["data/general-kb.xml","data/shrdlu-kb.xml"]);
-        if (loadFromBrowserStorage) {
-            var mapBrowserKey:string = A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-etaoin";
-            console.log("loading RuleBasedAI from browser storage... " + mapBrowserKey);
-            var xmlString:string = localStorage.getItem(mapBrowserKey);
-            var dp:DOMParser = new DOMParser();
-            var doc:Document = dp.parseFromString(xmlString, "text/xml");
-            var xml:Element = doc.documentElement;
-            this.etaoinAI.restoreFromXML(xml);
-
-            mapBrowserKey = A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-qwerty";
-            console.log("loading RuleBasedAI from browser storage... " + mapBrowserKey);
-            xmlString = localStorage.getItem(mapBrowserKey);
-            dp = new DOMParser();
-            doc = dp.parseFromString(xmlString, "text/xml");
-            xml = doc.documentElement;
-            this.qwertyAI.restoreFromXML(xml);
-
-            mapBrowserKey = A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-shrdlu";
-            if (mapBrowserKey != null) {
-                console.log("loading RuleBasedAI from browser storage... " + mapBrowserKey);
-                xmlString = localStorage.getItem(mapBrowserKey);
-                dp = new DOMParser();
-                doc = dp.parseFromString(xmlString, "text/xml");
-                xml = doc.documentElement;
-                this.shrdluAI.restoreFromXML(xml);
-            }
+        if (saveGameXml) {
+            var ais_xml:Element[] = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
+            this.etaoinAI.restoreFromXML(ais_xml[0]);
+            this.qwertyAI.restoreFromXML(ais_xml[1]);
+            this.shrdluAI.restoreFromXML(ais_xml[2]);
         }
 
         // set initial camera:
@@ -624,7 +599,7 @@ class A4Game {
             this.maps[i].recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, this.map_location_names[i]);
         }        
 
-        let script_e:Element = getFirstElementChildrenByTag(this.xml,"ShrdluGameScript");
+        let script_e:Element = getFirstElementChildByTag(this.xml,"ShrdluGameScript");
         if (script_e != null) this.gameScript.restoreFromXML(script_e);
 
         console.log("A4Game created\n");
@@ -634,38 +609,47 @@ class A4Game {
 
     saveGame(saveName:string)
     {
-        var debug_xmlString:string = "";
+        var complete_xmlString:string = "<SHRDLU_savegame>\n";
         var xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
-        localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, xmlString);
+        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, xmlString);
 
-        debug_xmlString += xmlString;
+        complete_xmlString += xmlString;
 
         for(let i:number = 0;i<this.maps.length;i++) {
             xmlString = this.maps[i].saveToXML(this);
-            debug_xmlString += "\n\n\n" + xmlString;
-            localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-map" + i, xmlString);
+            complete_xmlString += "\n\n\n" + xmlString;
+            //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-map" + i, xmlString);
             console.log("A4Game.saveGame: map "+i+" xmlString length " + xmlString.length);
 
         }
 
         xmlString = this.etaoinAI.saveToXML();
-        debug_xmlString += "\n\n\n" + xmlString;
+        complete_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: etaoin xmlString length " + xmlString.length);
         console.log(xmlString);
-        localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-etaoin", xmlString);
+        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-etaoin", xmlString);
 
         xmlString = this.qwertyAI.saveToXML();
-        debug_xmlString += "\n\n\n" + xmlString;
+        complete_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: qwerty xmlString length " + xmlString.length);
         console.log(xmlString);
-        localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-qwerty", xmlString);
+        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-qwerty", xmlString);
 
         xmlString = this.shrdluAI.saveToXML();
-        debug_xmlString += "\n\n\n" + xmlString;
+        complete_xmlString += "\n\n\n" + xmlString;
         console.log("A4Game.saveGame: shrdlu xmlString length " + xmlString.length);
         console.log(xmlString);
-        localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-shrdlu", xmlString);
+        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-shrdlu", xmlString);
+
+        complete_xmlString += "</SHRDLU_savegame>";
+
+        // save it:
+        console.log("Size of sample is: " + complete_xmlString.length);
+        var compressed = LZString.compressToUTF16(complete_xmlString);
+        console.log("Size of compressed sample is: " + compressed.length);
+        localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, compressed);
+        // downloadStringAsFile(complete_xmlString, "A4Game-saveGame.xml");
 
         // savegame name:
         var seconds:number = Math.floor(this.cycle/60)%60;
@@ -683,8 +667,6 @@ class A4Game {
             name += seconds;
         }
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-name", name);
-
-//        downloadStringAsFile(debug_xmlString, "A4Game-saveGame.xml");        
     }
 
 

@@ -170,7 +170,7 @@ class NLContextPerformative {
 	static fromXML(xml:Element, o:Ontology) : NLContextPerformative
 	{
 		var cause:CauseRecord = null;
-		var p_xml = getFirstElementChildrenByTag(xml, "cause");
+		var p_xml = getFirstElementChildByTag(xml, "cause");
 		if (p_xml != null) {
 			cause = CauseRecord.fromXML(p_xml, o);
 		}
@@ -1490,21 +1490,21 @@ class NLContext {
 	{
 		let c:NLContext = new NLContext(xml.getAttribute("speaker"), ai, mentionMemorySize);
 
-		let p_xml:Element = getFirstElementChildrenByTag(xml, "shortTermMemory");
+		let p_xml:Element = getFirstElementChildByTag(xml, "shortTermMemory");
 		if (p_xml != null) {
 			for(let ce_xml of getElementChildrenByTag(p_xml, "NLContextEntity")) {
 				let ce:NLContextEntity = NLContextEntity.fromXML(ce_xml, o);
 				if (ce != null) c.shortTermMemory.push(ce);
 			}
 		}
-		let m_xml:Element = getFirstElementChildrenByTag(xml, "mentions");
+		let m_xml:Element = getFirstElementChildByTag(xml, "mentions");
 		if (m_xml != null) {
 			for(let ce_xml of getElementChildrenByTag(m_xml, "NLContextEntity")) {
 				let ce:NLContextEntity = NLContextEntity.fromXML(ce_xml, o);
 				if (ce != null) c.mentions.push(ce);
 			}
 		}
-		let pf_xml:Element = getFirstElementChildrenByTag(xml, "performatives");
+		let pf_xml:Element = getFirstElementChildByTag(xml, "performatives");
 		if (pf_xml != null) {
 			for(let cp_xml of getElementChildrenByTag(pf_xml, "NLContextPerformative")) {
 				let cp:NLContextPerformative = NLContextPerformative.fromXML(cp_xml, o);
@@ -1512,25 +1512,25 @@ class NLContext {
 			}
 		}
 
-		let tmp_xml:Element = getFirstElementChildrenByTag(xml, "inConversation");
+		let tmp_xml:Element = getFirstElementChildByTag(xml, "inConversation");
 		if (tmp_xml != null) c.inConversation = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "lastPerformativeInvolvingThisCharacterWasToUs");
+		tmp_xml = getFirstElementChildByTag(xml, "lastPerformativeInvolvingThisCharacterWasToUs");
 		if (tmp_xml != null) c.lastPerformativeInvolvingThisCharacterWasToUs = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "expectingYes");
+		tmp_xml = getFirstElementChildByTag(xml, "expectingYes");
 		if (tmp_xml != null) c.expectingYes = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "expectingThankYou");
+		tmp_xml = getFirstElementChildByTag(xml, "expectingThankYou");
 		if (tmp_xml != null) c.expectingThankYou = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "expectingYouAreWelcome");
+		tmp_xml = getFirstElementChildByTag(xml, "expectingYouAreWelcome");
 		if (tmp_xml != null) c.expectingYouAreWelcome = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "expectingGreet");
+		tmp_xml = getFirstElementChildByTag(xml, "expectingGreet");
 		if (tmp_xml != null) c.expectingGreet = tmp_xml.getAttribute("value") == "true";
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "expectingFarewell");
+		tmp_xml = getFirstElementChildByTag(xml, "expectingFarewell");
 		if (tmp_xml != null) c.expectingFarewell = tmp_xml.getAttribute("value") == "true";
 
 		for(let tmp_xml2 of getElementChildrenByTag(xml, "expectingAnswerToQuestion_stack")) {
@@ -1543,7 +1543,7 @@ class NLContext {
 			c.expectingConfirmationToRequestTimeStamp_stack.push(Number(tmp_xml2.getAttribute("time")));
 		}
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "lastEnumeratedQuestion_answered");
+		tmp_xml = getFirstElementChildByTag(xml, "lastEnumeratedQuestion_answered");
 		if (tmp_xml != null) c.lastEnumeratedQuestion_answered = c.performatives[Number(tmp_xml.getAttribute("value"))];
 
 		c.lastEnumeratedQuestion_answers = null;
@@ -1553,13 +1553,13 @@ class NLContext {
 			c.lastEnumeratedQuestion_answers.push(Term.parseAttribute(tmp_xml2.getAttribute("value"), o, [], []));
 		}
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "lastEnumeratedQuestion_next_answer_index");
+		tmp_xml = getFirstElementChildByTag(xml, "lastEnumeratedQuestion_next_answer_index");
 		if (tmp_xml != null) c.lastEnumeratedQuestion_next_answer_index = Number(tmp_xml.getAttribute("value"));
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "nextHypotheticalID");
+		tmp_xml = getFirstElementChildByTag(xml, "nextHypotheticalID");
 		if (tmp_xml != null) c.nextHypotheticalID = Number(tmp_xml.getAttribute("value"));
 
-		tmp_xml = getFirstElementChildrenByTag(xml, "lastDerefErrorType");
+		tmp_xml = getFirstElementChildByTag(xml, "lastDerefErrorType");
 		if (tmp_xml != null) c.lastDerefErrorType = Number(tmp_xml.getAttribute("value"));
 
 		return c;

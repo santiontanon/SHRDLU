@@ -15,19 +15,21 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 
 //		var where_answer:number = INFERENCE_RECORD_EFFECT_ANSWER_WHEREIS;
 //		if (intention.functor == ai.o.getSort("action.answer.whereto")) where_answer = INFERENCE_RECORD_EFFECT_ANSWER_WHERETO;
+		console.log("AnswerWhere.execute: " + intention);
 
 		if (intention.attributes.length == 2) {
 			if (intention.attributes[1] instanceof ConstantTermAttribute) {
 				var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
-				console.log(ai.selfID + " answer followup where to " + targetID);
+				console.log(ai.selfID + " answer followup where is/to " + targetID);
 				// this is a follow up question! see if we can reconstruct the question...
 				var context:NLContext = ai.contextForSpeakerWithoutCreatingANewOne(targetID);
 				if (context != null) {
-					// get the last sentence we said:
+					// get the last sentence we said (the last one that is not a follow up):
 					var lastPerf:NLContextPerformative = null;
 					// we don't use "lastPerformativeBy", since that would just return the "where?"
 					for(let i:number = 1;i<context.performatives.length;i++) {
-						if (context.performatives[i].speaker == targetID) {
+						if (context.performatives[i].speaker == targetID && 
+							context.performatives[i].performative.attributes.length > 1) {
 							lastPerf = context.performatives[i];
 							break;
 						}
@@ -49,6 +51,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 					return true;
 				}
 			}
+			// console.log("AnswerWhere.execute (new intention): " + intention);
 		} else if (intention.attributes.length == 4) {
 			if (intention.attributes[1] instanceof ConstantTermAttribute) {
 				var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
@@ -105,7 +108,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 		}
 
 
-		console.log(ai.selfID + " answer where: " + intention.attributes[2]);	
+		console.log(ai.selfID + " answer where: " + intention);	
 		if (intention.attributes[2] instanceof ConstantTermAttribute &&
 			intention.attributes.length == 3) {
 			// we add the sentence with positive sign, to see if it introduces a contradiction
@@ -238,7 +241,17 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 
 		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.whereis")) ||
 			       nlcp.performative.functor.is_a(ai.o.getSort("perf.q.whereto"))) {
-			return nlcp.performative;
+			if (nlcp.performative.attributes.length == 2) {
+				var newIntention:Term = new Term(nlcp.performative.functor,
+										 		 [nlcp.performative.attributes[0],
+											 	  new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
+												  nlcp.performative.attributes[1]]);
+				console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
+				return newIntention;
+			} else {
+				// console.log("convertPerformativeToWhereQuestionAnswerIntention perf.q.whereis/perf.q.whereto: " + nlcp.performative);
+				return nlcp.performative;
+			}
 		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.query"))) {
 			// ...
 

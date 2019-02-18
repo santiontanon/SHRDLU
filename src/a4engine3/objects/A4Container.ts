@@ -12,7 +12,7 @@ class A4Container extends A4Item {
     {
         super.loadObjectAdditionalContent(xml, game, of, objectsToRevisit_xml, objsctsToRevisit_object);
         
-        var items_xml:Element = getFirstElementChildrenByTag(xml, "items");
+        var items_xml:Element = getFirstElementChildByTag(xml, "items");
         if (items_xml != null) {
 //            var item_xml_l:NodeListOf<Element> = items_xml.children;
             var item_xml_l:HTMLCollection = items_xml.children;

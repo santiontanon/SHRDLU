@@ -9,7 +9,7 @@ function getElementChildrenByTag(xml:Element, tag:string) : Element[]
 }
 
 
-function getFirstElementChildrenByTag(xml:Element, tag:string) : Element
+function getFirstElementChildByTag(xml:Element, tag:string) : Element
 {
     for(let i:number = 0;i<xml.children.length;i++) {
         var xml2:Element = xml.children[i];

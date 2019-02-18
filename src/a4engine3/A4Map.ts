@@ -75,7 +75,7 @@ class A4Map {
         this.width = Number(xml.getAttribute("width"));
         this.height = Number(xml.getAttribute("height"));
 
-        var properties_xml:Element = getFirstElementChildrenByTag(xml, "properties");
+        var properties_xml:Element = getFirstElementChildByTag(xml, "properties");
         var properties_xmls:Element[] = getElementChildrenByTag(properties_xml, "property");
         for(let i:number = 0;i<properties_xmls.length;i++) {
             var property:Element = properties_xmls[i];
@@ -110,7 +110,7 @@ class A4Map {
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers.push(new A4MapLayer(this.width, this.height, gfs));
             if (i<layers_xmls.length) {
-                var layer_properties_xml:Element = getFirstElementChildrenByTag(layers_xmls[i], "properties");
+                var layer_properties_xml:Element = getFirstElementChildByTag(layers_xmls[i], "properties");
                 var layer_properties_xmls:Element[] = getElementChildrenByTag(layer_properties_xml, "property");
                 for(let j:number = 0;j<layer_properties_xmls.length;j++) {
                     var property:Element = layer_properties_xmls[j];
@@ -119,7 +119,7 @@ class A4Map {
                     }
                 }
 
-                var data_xml:Element = getFirstElementChildrenByTag(layers_xmls[i], "data");
+                var data_xml:Element = getFirstElementChildByTag(layers_xmls[i], "data");
                 var encoding:string = data_xml.getAttribute("encoding");
                 if (encoding == "csv") {
                     var values:string[] = data_xml.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));

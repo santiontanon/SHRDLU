@@ -13,7 +13,7 @@ class A4AICharacter extends A4Character {
         
         // conversation graph:
         /*
-        var conversationgraph_xml:Element = getFirstElementChildrenByTag(xml,"conversationGraph");
+        var conversationgraph_xml:Element = getFirstElementChildByTag(xml,"conversationGraph");
         if (conversationgraph_xml!=null) {
             var file:string = conversationgraph_xml.getAttribute("name");
             if (file!=null) {

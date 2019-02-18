@@ -210,13 +210,13 @@ class RobotAI extends A4RuleBasedAI {
 		for(let onatg_xml of getElementChildrenByTag(xml, "objectsNotAllowedToGive")) {
 			this.objectsNotAllowedToGive.push(onatg_xml.getAttribute("value"));
 		}
-		let ca_xml:Element = getFirstElementChildrenByTag(xml, "currentAction");
+		let ca_xml:Element = getFirstElementChildByTag(xml, "currentAction");
 		if (ca_xml == null) {
 			this.currentAction = null;
 		} else {
 			this.currentAction = Term.fromString(ca_xml.getAttribute("value"), this.o);
 		}
-		let car_xml:Element = getFirstElementChildrenByTag(xml, "currentAction_requester");
+		let car_xml:Element = getFirstElementChildByTag(xml, "currentAction_requester");
 		if (car_xml == null) {
 			this.currentAction_requester = null;
 		} else {
@@ -224,7 +224,7 @@ class RobotAI extends A4RuleBasedAI {
 		}
 
 		this.currentAction_scriptQueue = null;
-        var casq_xml:Element = getFirstElementChildrenByTag(xml, "currentAction_scriptQueue");
+        var casq_xml:Element = getFirstElementChildByTag(xml, "currentAction_scriptQueue");
         if (casq_xml != null) {
             var tmpq:A4ScriptExecutionQueue = null;
             var casq_xml_l:HTMLCollection = casq_xml.children;
@@ -237,9 +237,9 @@ class RobotAI extends A4RuleBasedAI {
             this.currentAction_scriptQueue = tmpq;
         }
         this.currentActionHandler = null;
-        var cah_xml:Element = getFirstElementChildrenByTag(xml, "currentActionHandler");
+        var cah_xml:Element = getFirstElementChildByTag(xml, "currentActionHandler");
         if (cah_xml != null) {
-        	var ah_xml:Element = getFirstElementChildrenByTag(cah_xml, "IntentionAction");
+        	var ah_xml:Element = getFirstElementChildByTag(cah_xml, "IntentionAction");
         	if (ah_xml != null) {
 	        	this.currentActionHandler = IntentionActionFactory.loadFromXML(ah_xml, this);
 	        }

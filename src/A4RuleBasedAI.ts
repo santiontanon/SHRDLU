@@ -1041,15 +1041,15 @@ class A4RuleBasedAI extends RuleBasedAI {
 	{
 		super.restoreFromXML(xml);
 
-		let xml_tmp:Element = getFirstElementChildrenByTag(xml, "respondToPerformatives");
+		let xml_tmp:Element = getFirstElementChildByTag(xml, "respondToPerformatives");
 		if (xml_tmp != null) {
 			this.respondToPerformatives = xml_tmp.getAttribute("value") == "true";
 		}
-		xml_tmp = getFirstElementChildrenByTag(xml, "locationsWherePlayerIsNotPermitted");
+		xml_tmp = getFirstElementChildByTag(xml, "locationsWherePlayerIsNotPermitted");
 		if (xml_tmp != null) {
 			this.locationsWherePlayerIsNotPermitted = xml_tmp.getAttribute("value").split(",");
 		}
-		xml_tmp = getFirstElementChildrenByTag(xml, "doorsPlayerIsNotPermittedToOpen");
+		xml_tmp = getFirstElementChildByTag(xml, "doorsPlayerIsNotPermittedToOpen");
 		if (xml_tmp != null) {
 			this.doorsPlayerIsNotPermittedToOpen = xml_tmp.getAttribute("value").split(",");
 		}

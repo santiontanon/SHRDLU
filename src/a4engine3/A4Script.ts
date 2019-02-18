@@ -1469,7 +1469,7 @@ class A4Script {
                     case A4_SCRIPT_SELL:
                     case A4_SCRIPT_DROP:
                         s.ID = xml.getAttribute("inventory");
-                        s.objectDefinition = getFirstElementChildrenByTag(xml, "object");
+                        s.objectDefinition = getFirstElementChildByTag(xml, "object");
                         break;
 
                     case A4_SCRIPT_LOSEITEM:
@@ -1479,7 +1479,7 @@ class A4Script {
 
                     case A4_SCRIPT_GAINITEM:
                         s.ID = xml.getAttribute("id");
-                        s.objectDefinition = getFirstElementChildrenByTag(xml, "object");
+                        s.objectDefinition = getFirstElementChildByTag(xml, "object");
                         break;
 
                     case A4_SCRIPT_DELAY:
@@ -1494,9 +1494,9 @@ class A4Script {
                         break;
 
                     case A4_SCRIPT_IF:
-                        var if_condition_node:Element = s.objectDefinition = getFirstElementChildrenByTag(xml, "condition");
-                        var if_then_node:Element = s.objectDefinition = getFirstElementChildrenByTag(xml, "then");
-                        var if_else_node:Element = s.objectDefinition = getFirstElementChildrenByTag(xml, "else");
+                        var if_condition_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "condition");
+                        var if_then_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "then");
+                        var if_else_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "else");
 
                         for(let i:number = 0;i<if_condition_node.children.length;i++) {
                             var subscript:A4Script = A4Script.fromXML(if_condition_node.children[i]);
@@ -1578,12 +1578,12 @@ class A4Script {
 
                     case A4_SCRIPT_ANIMATION:
                         // we just store the whole XML, since the animation script is basically the animation xml block
-                        s.objectDefinition = getFirstElementChildrenByTag(xml,"animation");
+                        s.objectDefinition = getFirstElementChildByTag(xml,"animation");
                         break;
 
                     case A4_SCRIPT_ATTRIBUTE:
                         // we just store the whole XML, since the animation script is basically the animation xml block
-                        s.objectDefinition = getFirstElementChildrenByTag(xml,"attribute");
+                        s.objectDefinition = getFirstElementChildByTag(xml,"attribute");
                         break;
 
                     case A4_SCRIPT_INMAPCHECK:

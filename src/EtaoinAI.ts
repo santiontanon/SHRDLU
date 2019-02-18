@@ -253,7 +253,7 @@ class EtaoinAI extends A4RuleBasedAI {
 	{
 		super.restoreFromXML(xml);
 
-		let xml_tmp:Element = getFirstElementChildrenByTag(xml, "oxygen_message_timer");
+		let xml_tmp:Element = getFirstElementChildByTag(xml, "oxygen_message_timer");
 		if (xml_tmp != null) {
 			this.oxygen_message_timer = Number(xml_tmp.getAttribute("value"));
 		}

@@ -93,7 +93,7 @@ class AILocation {
 			var mapName:string = map_xml.getAttribute("name");
 			var w:number = Number(map_xml.getAttribute("width"));
 			var h:number = Number(map_xml.getAttribute("height"));
-			var data:string = getFirstElementChildrenByTag(map_xml,"data").firstChild.nodeValue;
+			var data:string = getFirstElementChildByTag(map_xml,"data").firstChild.nodeValue;
 			var splitData:string[] = data.split(",");
 			for(let i:number = 0;i<splitData.length;i++) splitData[i] = splitData[i].trim();
 //			console.log("location data for " + mapName + ": " + splitData);
