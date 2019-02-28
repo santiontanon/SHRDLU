@@ -251,10 +251,10 @@
   <object id="628" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="24" width="104" height="16"/>
   <object id="629" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="16" y="192" width="16" height="32"/>
   <object id="630" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="448" width="40" height="16"/>
-  <!--object id="624" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="632" y="16" width="16" height="448"/>
+  <object id="624" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="632" y="16" width="16" height="448"/>
   <object id="625" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="8" width="648" height="16"/>
   <object id="626" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="16" height="448"/>
-  <object id="627" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="464" width="648" height="16"/-->
+  <object id="627" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="464" width="648" height="16"/>
   <object id="631" type="communication.tower" x="44" y="136" width="24" height="48"/>
   <object id="633" type="paper.recycling.facility" x="240" y="128" width="8" height="24"/>
   <object id="634" type="paper.recycling.facility" x="248" y="128" width="8" height="24"/>
@@ -283,7 +283,7 @@
   <object id="658" type="solarpanel.facility" x="600" y="352" width="16" height="16"/>
   <object id="659" type="solarpanel.facility" x="600" y="376" width="16" height="16"/>
   <object id="660" type="solarpanel.facility" x="600" y="400" width="16" height="16"/>
-  <object id="batteryrecharge.facility" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
+  <object id="661" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
   <object id="662" type="greenhouse.facility" x="320" y="24" width="64" height="32"/>
   <object id="663" type="greenhouse.facility" x="408" y="24" width="64" height="32"/>
   <object id="664" type="greenhouse.facility" x="320" y="64" width="64" height="32"/>

@@ -28,6 +28,8 @@ class RobotAI extends A4RuleBasedAI {
 
 		this.precalculateLocationKnowledge(game, o);
 
+		this.robot.AI.doorsNotToOpenWhileWalking = this.doorsPlayerIsNotPermittedToOpen;
+
 		console.log("RobotAI.constructor end...");
 	}
 
@@ -205,6 +207,7 @@ class RobotAI extends A4RuleBasedAI {
 	restoreFromXML(xml:Element)
 	{
 		super.restoreFromXML(xml);
+		this.robot.AI.doorsNotToOpenWhileWalking = this.doorsPlayerIsNotPermittedToOpen;
 
 		this.objectsNotAllowedToGive = [];
 		for(let onatg_xml of getElementChildrenByTag(xml, "objectsNotAllowedToGive")) {
@@ -244,8 +247,6 @@ class RobotAI extends A4RuleBasedAI {
 	        	this.currentActionHandler = IntentionActionFactory.loadFromXML(ah_xml, this);
 	        }
         }
-
-
 	}
 
 

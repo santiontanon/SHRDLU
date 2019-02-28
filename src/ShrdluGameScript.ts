@@ -23,10 +23,10 @@ class ShrdluGameScript {
 
 	update() 
 	{
-//		if (this.act == "intro") {
-//			this.skip_to_act_end_of_intro();
-//			this.skip_to_act_1();
-//		}
+		if (this.act == "intro") {
+			//this.skip_to_act_end_of_intro();
+			this.skip_to_act_1();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -86,8 +86,8 @@ class ShrdluGameScript {
 		this.act = "1";
 
 		// start in the garage:
-		this.game.currentPlayer.x = 864;
-		this.game.currentPlayer.y = 40;
+		//this.game.currentPlayer.x = 864;
+		//this.game.currentPlayer.y = 40;
 //		this.act_1_state = 11;	// waiting for player to ask about other humans
 //		this.act_1_state = 15;	// etaoin will ask to go find Shrdlu
 		this.act_1_state = 19;
@@ -95,11 +95,11 @@ class ShrdluGameScript {
 		var term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
-//		this.game.currentPlayer.inventory.push(this.game.qwertyAI.robot.inventory[1]);	// maintenance key
-//		this.game.qwertyAI.robot.inventory.splice(1,1);
-//		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("workingspacesuit", this.game, false, false));
-//		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("full-battery", this.game, false, false));
-//		this.game.setStoryStateVariable("act1-corpse", "discovered");
+		this.game.currentPlayer.inventory.push(this.game.qwertyAI.robot.inventory[1]);	// maintenance key
+		this.game.qwertyAI.robot.inventory.splice(1,1);
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("workingspacesuit", this.game, false, false));
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("full-battery", this.game, false, false));
+		this.game.setStoryStateVariable("act1-corpse", "discovered");
 
 		var term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);

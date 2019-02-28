@@ -447,12 +447,14 @@ class RuleBasedAI {
 			let time:number = this.time_in_seconds;
 			if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
 			let history:Sentence[] = [rule]
+			let hasPrevious:boolean = false;
 			sentence_xml = getFirstElementChildByTag(sentence_xml,"previousSentence");
 			while(sentence_xml != null) {
 				let rule:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
 				let provenance:string = sentence_xml.getAttribute("provenance");
 				let time:number = this.time_in_seconds;
 				let timeEnd:number = this.time_in_seconds;
+				hasPrevious = true;
 				if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
 				if (sentence_xml.getAttribute("timeEnd") != null) timeEnd = Number(sentence_xml.getAttribute("timeEnd"));
 				if (provenance == BACKGROUND_PROVENANCE) {
@@ -466,7 +468,11 @@ class RuleBasedAI {
 			history.reverse()
 			// we add the sentences in reverse order, to reconstruct the "previousSentence" structure:
 			for(let s of history) {
-				this.longTermMemory.addStateSentenceIfNew(s, provenance, 1, time);
+				if (hasPrevious) {
+					this.longTermMemory.addStateSentenceIfNew(s, provenance, 1, time);
+				} else {
+					this.longTermMemory.addSentence(s, provenance, 1, time);
+				}
 			}
 		}
 		for(let sentence_xml of getElementChildrenByTag(xml,"previousSentence")) {

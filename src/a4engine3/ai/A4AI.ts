@@ -572,7 +572,7 @@ class A4AI {
                 // if it's a door, and we have the key, then ignore the door:
                 var add:boolean = true;
                 if ((o instanceof A4Door) && 
-                    ((this.openDoorsWhenWalking &&
+                    ((this.doorsNotToOpenWhileWalking.indexOf((<A4Door>o).doorID) == -1 &&
                       (this.character.hasKey((<A4Door>o).doorID) ||
                       this.character.hasKey("MASTERKEY"))) ||    
                      (<A4Door>o).automatic)) add = false;
@@ -1057,7 +1057,7 @@ class A4AI {
     pathFinding_lastUpdated:number = -1;
     pathFinding_iterations:number = 0;    // for debugging purposes
 
-    openDoorsWhenWalking:boolean = true;
+    doorsNotToOpenWhileWalking:string[] = [];
 
     period:number = 1;       // the AI will only run once each m_period cycles
     cycle:number = 0;        // current cycle

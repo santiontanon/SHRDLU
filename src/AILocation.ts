@@ -220,7 +220,19 @@ class AILocation {
 			game.map_location_names.push(location_names);
 		}
 
+		for(let connection_xml of getElementChildrenByTag(xml,"location_connects")) {
+			var l1_name:string = connection_xml.getAttribute("l1");
+			var l2_name:string = connection_xml.getAttribute("l2");
+
+			var l1_idx:number = game.locations.indexOf(game.getAILocationByID(l1_name));
+			var l2_idx:number = game.locations.indexOf(game.getAILocationByID(l2_name));
+
+			game.location_connects[l1_idx][l2_idx] = true;	
+			game.location_connects[l2_idx][l1_idx] = true;
+		}		
+
 		// add missing links manually (this could be done automatically, but why bother :)):
+		/*
 		{
 			var al1:number = game.locations.indexOf(game.getAILocationByID("location-as31"));
 			var al2:number = game.locations.indexOf(game.getAILocationByID("location-as32"));
@@ -255,6 +267,7 @@ class AILocation {
 			
 			game.location_connects[sv][ec] = true;	game.location_connects[ec][sv] = true;
 		}
+		*/
 	}
 
 }

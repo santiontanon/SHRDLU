@@ -6,7 +6,6 @@ class QwertyAI extends RobotAI {
 		console.log("QwertyAI.constructor end...");
 		this.robot.ID = "qwerty";
 		this.selfID = "qwerty";
-		this.robot.AI.openDoorsWhenWalking = false;
 
 		this.addLongTermTerm(Term.fromString("name('"+this.robot.ID+"'[#id],'qwerty'[symbol])", this.o), BACKGROUND_PROVENANCE);
 

@@ -81,30 +81,36 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 		}
 
+		let n_space_at:number = 0;
+		let n_not_space_at:number = 0;
+		let n_space_connects:number = 0;
+
 		for(let idx_l1:number = 0;idx_l1<game.locations.length;idx_l1++) {
 			var l1:AILocation = game.locations[idx_l1];
 			for(let idx_l2:number = 0;idx_l2<game.locations.length;idx_l2++) {
 				var l2:AILocation = game.locations[idx_l2];
 				if (l1 == l2) continue;
 				if (game.location_in[idx_l1][idx_l2]) {
-					var somethignInBetween:boolean = false;
+					var somethingInBetween:boolean = false;
 					for(let idx_l3:number = 0;idx_l3<game.locations.length;idx_l3++) {
 						if (idx_l3 != idx_l1 && idx_l3 != idx_l2 &&
 							game.location_in[idx_l1][idx_l3] &&
 							game.location_in[idx_l3][idx_l2]) {
-							somethignInBetween = true;
+							somethingInBetween = true;
 							break;
 						}
 					}
-					if (!somethignInBetween) {
+					if (!somethingInBetween) {
 						var term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						//console.log(term.toString());
 						this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+						n_space_at++;
 					}
 				} else {
 					var s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 					//console.log(term.toString());
 					this.addLongTermRuleNow(s, BACKGROUND_PROVENANCE);
+					n_not_space_at++;
 				}
 			}
 		}
@@ -122,10 +128,11 @@ class A4RuleBasedAI extends RuleBasedAI {
 					var term:Term = Term.fromString(str, o);
 					//console.log(term.toString());
 					this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+					n_space_connects++;
 				}
 			}
 		}
-//		console.log("RuleBasedAI.precalculateLocationKnowledge... 4");
+		console.log("RuleBasedAI.precalculateLocationKnowledge: " + n_space_at + ", " + n_not_space_at + ", " + n_space_connects);
 	}
 
 

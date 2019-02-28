@@ -48,7 +48,7 @@
 		<animation name="talking-left" dx="3" dy="3" period="6" looping="true" file="robots.png">105,201</animation>
 
 		<attribute name="canSwim" value="false"/>
-		<attribute name="walk_speed" value="12"/>
+		<attribute name="walk_speed" value="16"/>
 		<attribute name="sightRadius" value="80"/>
 		<attribute name="tallness" value="16"/>
 		<attribute name="direction" value="3"/>
