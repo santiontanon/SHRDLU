@@ -1125,7 +1125,7 @@ class A4Character extends A4WalkingObject {
 
     disembark() : boolean
     {
-        // 1) find a non-colliding positino around the vehicle:
+        // 1) find a non-colliding position around the vehicle:
         let best_x:number, best_y:number;
         let best_d:number = null;
         let cx:number = this.vehicle.x+this.vehicle.getPixelWidth()/2;

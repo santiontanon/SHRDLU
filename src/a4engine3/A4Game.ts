@@ -2235,6 +2235,7 @@ class A4Game {
         // 1) spawn a new vehicle on the outside
         let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-rover", this, true, false);
         if (newRover == null) return false;
+        newRover.direction = 2;
         let map:A4Map = this.getMap("Spacer Valley South")
         if (map == null) return false;
         if (!map.walkable(336, 408, 40, 40, newRover)) return false;
@@ -2247,6 +2248,30 @@ class A4Game {
         // 3) teleport the player, and embark
         player.warp(336, 408, map);
         player.embark(newRover);
+    }
+
+
+    putRoverBackInGarage(rover:A4Vehicle) : boolean
+    {
+        // 1) spawn a new vehicle on the garage
+        let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("garage-rover", this, true, false);
+        if (newRover == null) return false;
+        newRover.direction = 2;
+        let map:A4Map = this.getMap("Aurora Station")
+        if (map == null) return false;
+        if (!map.walkable(848, 72, 40, 40, newRover)) return false;
+        if (!map.walkable(848, 112, 16, 16, newRover)) return false;
+        newRover.warp(848, 72, map);
+
+        // 2) remove rover from the outside
+        rover.disembark(this.currentPlayer);
+        this.currentPlayer.state = A4CHARACTER_STATE_IDLE;
+        this.currentPlayer.vehicle = null;
+        rover.map.removeObject(rover);
+        this.requestDeletion(rover);
+
+        // 3) teleport the player, and embark
+        this.currentPlayer.warp(848+8, 112-16, map);
     }
 
 

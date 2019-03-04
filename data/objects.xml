@@ -887,9 +887,6 @@
 				</else>
 	      	</if>        	
         </eventRule>
-        <onStart>
-        	<storyState scope="game" variable="rover" value="broken"/>
-        </onStart>
 	</ObjectClass>		
 
 	<ObjectClass class="broken-rover" super="obstacle,*rover" name="rover">

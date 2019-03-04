@@ -4,7 +4,7 @@ Note (santi):
 - SHRDLU was built on top of the A4Engine (a little game engine I wrote to test some PCG algorithms, 
   and that can be found here: https://github.com/santiontanon/A4Engine). I translated the engine to TypeScript and started
   building SHRDLU on top of that. After the game was working, I started then removing all the functionality from the
-  A4Engine that SHRDLU doesn't need (such as magic, attacks, equiping items, etc.).
+  A4Engine that SHRDLU doesn't need (such as magic, attacks, equiping items, etc.), and adding some SHRDLU-specific code.
 - This class (A4EngineApp) implements the basic finite state machine for the control flow of the game (transitioning from the main
   menu, to the game, etc.). The A4Game class is the one that actually implements the game, and the one that stores the game state.
 

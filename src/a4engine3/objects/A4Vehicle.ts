@@ -161,6 +161,21 @@ class A4Vehicle extends A4WalkingObject {
                                     game.addMessage("Something is blocking the way!");
                             }
                         }
+
+                        //  check if we have collided with the station, and get the rover into the garage:
+                        if (this.map.name == "Spacer Valley South" &&
+                            ((this.direction == A4_DIRECTION_LEFT && this.x == 38*this.map.tileWidth &&
+                              this.y >= 47*this.map.tileHeight && this.y <= 60*this.map.tileHeight) ||
+                             (this.direction == A4_DIRECTION_RIGHT && this.x == 28*this.map.tileWidth &&
+                              this.y >= 47*this.map.tileHeight && this.y <= 60*this.map.tileHeight) ||
+
+                             (this.direction == A4_DIRECTION_DOWN && this.y == 47*this.map.tileHeight &&
+                              this.x >= 29*this.map.tileWidth && this.x <= 37*this.map.tileWidth) ||
+                             (this.direction == A4_DIRECTION_UP && this.y == 54*this.map.tileHeight &&
+                              this.x >= 29*this.map.tileWidth && this.x <= 37*this.map.tileWidth)
+                            )) {
+                            game.putRoverBackInGarage(this);
+                        }
                         break;
                     }
                 }
@@ -173,7 +188,7 @@ class A4Vehicle extends A4WalkingObject {
                 // it also makes the character move sideways a bit, if they need to align to fit through a corridor
                 let step:number = game.tileWidth;
                 if (this.direction==A4_DIRECTION_UP || this.direction==A4_DIRECTION_DOWN) step = game.tileHeight;
-                let bridge:A4MapBridge = null;
+                //let bridge:A4MapBridge = null;
                 let pixelsMoved:number = 0;
                 let old_x:number = this.x;
                 let old_y:number = this.y;
@@ -186,6 +201,7 @@ class A4Vehicle extends A4WalkingObject {
                     if ((this.x%game.tileWidth)==0 && (this.y%game.tileHeight)==0) {
                         this.state = A4CHARACTER_STATE_IDLE;
                         this.walkingCounter = 0;
+                        /*
                         bridge = this.map.getBridge(this.x+this.getPixelWidth()/2,this.y+this.getPixelHeight()/2);
                         if (bridge!=null) {
                             // if we enter a bridge, but it's not with the first pixel we moved, then stop and do not go through the bridfge,
@@ -197,6 +213,7 @@ class A4Vehicle extends A4WalkingObject {
                             }
                             break;
                         }
+                        */
                     }                    
 
                     // walk in blocks of a tile wide:
@@ -215,6 +232,7 @@ class A4Vehicle extends A4WalkingObject {
                     if ((this.x%game.tileWidth)==0 && (this.y%game.tileHeight)==0) break;
                 }
                 if (this.walkingCounter>=step) this.walkingCounter-=step;
+                /*
                 if (bridge!=null) {
                     // teleport!
                     let target:[number,number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
@@ -225,6 +243,7 @@ class A4Vehicle extends A4WalkingObject {
                             game.addMessage("Something is blocking the way!");
                     }
                 }
+                */
                 break;
             }
             case A4CHARACTER_STATE_DYING:
