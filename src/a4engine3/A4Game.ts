@@ -925,14 +925,16 @@ class A4Game {
             var m:A4Map = wr.map;
             var createRecord:boolean = wr.o.isCharacter() || wr.o.isVehicle();
             var acceptWarp:boolean = true;
+            /*
             if (wr.o.isCharacter() && (<A4Character>(wr.o)).vehicle!=null &&
                 (<A4Character>(wr.o)).vehicle.map==wr.map) {
                 acceptWarp = true;
             } else {
-                if (createRecord &&
-                    m!=null &&
-                    !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
-            }
+            */
+            if (createRecord &&
+                m!=null &&
+                !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
+            //}
             
             if (acceptWarp) {
                 var isCurrentPlayer:boolean = (wr.o == this.currentPlayer);
@@ -2225,6 +2227,26 @@ class A4Game {
         } else {
             return false;
         }
+    }
+
+
+    takeRoverOutOfTheGarage(rover:A4Vehicle, player:A4Character) : boolean
+    {
+        // 1) spawn a new vehicle on the outside
+        let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-rover", this, true, false);
+        if (newRover == null) return false;
+        let map:A4Map = this.getMap("Spacer Valley South")
+        if (map == null) return false;
+        if (!map.walkable(336, 408, 40, 40, newRover)) return false;
+        newRover.warp(336, 408, map);
+
+        // 2) remove rover from the game
+        rover.map.removeObject(rover);
+        this.requestDeletion(rover);
+
+        // 3) teleport the player, and embark
+        player.warp(336, 408, map);
+        player.embark(newRover);
     }
 
 

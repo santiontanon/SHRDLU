@@ -248,11 +248,11 @@
   <object id="606" type="window" x="136" y="400" width="16" height="16"/>
   <object id="607" type="window" x="56" y="400" width="16" height="16"/>
   <object id="623" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="616" y="216" width="16" height="64"/>
-  <object id="628" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="24" width="104" height="16"/>
+  <object id="628" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="8" width="104" height="24"/>
   <object id="629" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="16" y="192" width="16" height="32"/>
-  <object id="630" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="448" width="40" height="16"/>
+  <object id="630" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="440" width="40" height="24"/>
   <object id="624" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="632" y="16" width="16" height="448"/>
-  <object id="625" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="8" width="648" height="16"/>
+  <object id="625" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="0" width="648" height="16"/>
   <object id="626" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="16" height="448"/>
   <object id="627" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="464" width="648" height="16"/>
   <object id="631" type="communication.tower" x="44" y="136" width="24" height="48"/>

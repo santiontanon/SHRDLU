@@ -876,10 +876,10 @@ class A4Map {
     {
         for(let o of this.objects) {
             if (o!=subject) {
-                if (subject.isCharacter() && o.isVehicle()) {
-                    // characters can always walk onto empty vehicles:
-                    if ((<A4Vehicle>o).isEmpty()) continue;
-                }
+//                if (subject.isCharacter() && o.isVehicle()) {
+//                    // characters can always walk onto empty vehicles:
+//                    if ((<A4Vehicle>o).isEmpty()) continue;
+//                }
                 if (!o.isWalkable()) {
                     if (o.collision(x,y,dx,dy)) return false;
                 }
@@ -895,10 +895,10 @@ class A4Map {
         for(let o of this.objects) {
             if (o == toIgnore) continue;
             if (o != subject) {
-                if (subject.isCharacter() && o.isVehicle()) {
-                    // characters can always walk onto empty vehicles:
-                    if ((<A4Vehicle>o).isEmpty()) continue;
-                }
+//                if (subject.isCharacter() && o.isVehicle()) {
+//                    // characters can always walk onto empty vehicles:
+//                    if ((<A4Vehicle>o).isEmpty()) continue;
+//                }
                 if (!o.isWalkable()) {
                     if (o.collision(x,y,dx,dy)) return false;
                 }
@@ -942,9 +942,10 @@ class A4Map {
             if (rettiles && !this.layers[i].walkableOnlyBackground(x,y,dx,dy, subject)) rettiles = false;
 //            if (retobjects && !this.layers[i].walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
         }
-        if (retobjects && !this.walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
+        if (rettiles && !this.walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
 
         // if there is a vehicle, characters can always walk on them (unless there is a collision with an object):
+        /*
         if (!rettiles && retobjects && subject.isCharacter()) {
             var buffer:A4Object[] = this.getAllObjects(x, y, dx, dy);
             for(let o of buffer) {
@@ -963,6 +964,7 @@ class A4Map {
                 }
             }
         }
+        */
 //        console.log(x+","+y+" with "+dx+","+dy+": " + rettiles + " - " + retobjects);
         return rettiles && retobjects;        
     }
@@ -972,8 +974,10 @@ class A4Map {
     {
         for(let b of this.bridges) {
     //        output_debug_message("A4Map::getBridge: comparing %i,%i to %i,%i-%i,%i\n",x,y,b->m_x,b->m_y,b->m_dx,b->m_dy);
-            if (b.x<=x && b.x+b.width>x &&
-                b.y<=y && b.y+b.height>y) {
+            //if (b.x<=x && b.x+b.width>x &&
+            //    b.y<=y && b.y+b.height>y) {
+            if (b.x < x && b.x+b.width  > x &&
+                b.y < y && b.y+b.height > y) {
                 return b;
             }
         }

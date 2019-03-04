@@ -1104,8 +1104,10 @@ class A4EngineApp {
                     this.game.cutSceneActivated = 0;
                     this.introact_state = 0;
                     this.introact_state_timer = 0;
+                    if (act >= 2) this.game.gameScript.act = "" + act;
 
-                    if (act == 2) {
+                    //if (act == 2) {
+                    if (act == 3) {
                         this.introact_state = 2;
                         var menuItems:string[] = [];
                         var menuCallbacks:((any, number) => void)[] = [];

@@ -1263,12 +1263,12 @@
   </object>
   <object id="557" type="computer-tower" x="904" y="344" width="8" height="24"/>
   <object id="558" type="computer-tower" x="816" y="344" width="8" height="24"/>
-  <object id="559" type="rover" x="848" y="72" width="40" height="32">
+  <object id="559" type="garage-rover" x="848" y="72" width="40" height="32">
    <properties>
     <property name="direction" type="int" value="2"/>
    </properties>
   </object>
-  <object id="560" type="brokenrover" x="848" y="120" width="40" height="32">
+  <object id="560" type="broken-rover" x="848" y="120" width="40" height="32">
    <properties>
     <property name="direction" type="int" value="2"/>
    </properties>

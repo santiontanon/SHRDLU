@@ -269,6 +269,19 @@ class A4Character extends A4WalkingObject {
                             this.state = A4CHARACTER_STATE_IDLE;
                             this.currentAnimation = A4_ANIMATION_IDLE_LEFT+this.direction;
                             this.animations[this.currentAnimation].reset();
+
+                            // check if we are pushing against the edge of a map with a "bridge":
+                            let bridge:A4MapBridge = null;
+                            bridge = this.checkIfPushingAgainstMapEdgeBridge(this.direction)
+                            if (bridge!=null) {
+                                // teleport!
+                                var target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
+                                if (target!=null) {
+                                    game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);
+                                } else {
+                                    if (this == <A4Character>game.currentPlayer) game.addMessage("Something is blocking the way!");
+                                }
+                            }
                             break;
                         }
                     }
@@ -278,14 +291,14 @@ class A4Character extends A4WalkingObject {
                     // it follows the idea of Bresenham's algorithms for proportionally scaling the speed of
                     // the characters without using any floating point calculations.
                     // it also makes the character move sideways a bit, if they need to align to fit through a corridor
-                    var step:number = game.tileWidth;
+                    let step:number = game.tileWidth;
                     if (this.direction==A4_DIRECTION_UP || this.direction==A4_DIRECTION_DOWN) step = game.tileHeight;
-                    var bridge:A4MapBridge = null;
-                    var pixelsMoved:number = 0;
-                    var old_x:number = this.x;
-                    var old_y:number = this.y;
+                    let bridge:A4MapBridge = null;
+                    let pixelsMoved:number = 0;
+                    let old_x:number = this.x;
+                    let old_y:number = this.y;
                     while(this.walkingCounter<=step) {
-                        var dir:number = this.direction;
+                        let dir:number = this.direction;
                         this.x += direction_x_inc[dir];
                         this.y += direction_y_inc[dir];
                         this.walkingCounter += this.getWalkSpeed();
@@ -324,12 +337,10 @@ class A4Character extends A4WalkingObject {
                     if (this.walkingCounter>=step) this.walkingCounter-=step;
                     if (bridge!=null) {
                         // teleport!
-                        var target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, game.tileWidth, game.tileHeight);
+                        let target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
                         if (target!=null) {
-                            game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]-this.tallness);//, this.layer);
+                            game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);//, this.layer);
                         } else {
-                            this.x = old_x;
-                            this.y = old_y;
                             if (this == <A4Character>game.currentPlayer) game.addMessage("Something is blocking the way!");
                         }
                     }
@@ -544,6 +555,24 @@ class A4Character extends A4WalkingObject {
     }
 
 
+    checkIfPushingAgainstMapEdgeBridge(direction:number) : A4MapBridge
+    {
+        if (direction == A4_DIRECTION_LEFT && this.x == 0) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_RIGHT && this.x == (this.map.width*this.map.tileWidth-this.getPixelWidth())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()-1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_UP && this.y == 0) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+1);
+            return bridge;
+        } else if (direction == A4_DIRECTION_DOWN && this.y == (this.map.height*this.map.tileHeight-this.getPixelHeight())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+this.getPixelHeight()-1);
+            return bridge;
+        }
+        return null;
+    }
+
 
     draw(offsetx:number, offsety:number, game:A4Game)
     {
@@ -723,14 +752,17 @@ class A4Character extends A4WalkingObject {
                                                                                       this.vehicle.ID, this.vehicle.sort, null,
                                                                                       null, null,
                                                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                        this.disembark();
-                        game.in_game_actions_for_log.push(["disembark("+this.ID+","+this.vehicle.ID+")",""+game.in_game_seconds]);
+                        let vehicle:A4Object = this.vehicle;
+                        if (this.disembark()) {
+                            game.in_game_actions_for_log.push(["disembark("+this.ID+","+vehicle.ID+")",""+game.in_game_seconds]);
+                        }
                     } else {
                         if (this.state == A4CHARACTER_STATE_IN_BED) {
                             this.getOutOfBed(game);
                         } else {
                             if (!this.takeAction(game)) {
                                 if (!this.useAction(game)) {
+                                    /*
                                     // see if there is a vehicle:
                                     var v:A4Object = this.map.getVehicleObject(this.x + this.getPixelWidth()/2 - 1, this.y + this.getPixelHeight()/2 - 1, 2, 2);
                                     if (v!=null) {
@@ -741,9 +773,10 @@ class A4Character extends A4WalkingObject {
                                                                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                                         game.in_game_actions_for_log.push(["embark("+this.ID+","+v.ID+")",""+game.in_game_seconds]);
                                     } else {
-                                        // interact with the object in front:
-                                        this.issueCommandWithArguments(A4CHARACTER_COMMAND_INTERACT,A4_DIRECTION_NONE,direction, null, game);
-                                    }
+                                    */
+                                    // interact with the object in front:
+                                    this.issueCommandWithArguments(A4CHARACTER_COMMAND_INTERACT,A4_DIRECTION_NONE,direction, null, game);
+                                    //}
                                 }
                             }
                         }
@@ -1033,11 +1066,36 @@ class A4Character extends A4WalkingObject {
     }
 
 
-    disembark()
+    disembark() : boolean
     {
-        this.vehicle.disembark(this);
-        this.state = A4CHARACTER_STATE_IDLE;
-        this.vehicle = null;
+        // 1) find a non-colliding positino around the vehicle:
+        let best_x:number, best_y:number;
+        let best_d:number = null;
+        let cx:number = this.vehicle.x+this.vehicle.getPixelWidth()/2;
+        let cy:number = this.vehicle.y+this.vehicle.tallness + (this.vehicle.getPixelHeight()-this.vehicle.tallness)/2;
+        let ccx:number = this.getPixelWidth()/2;
+        let ccy:number = this.tallness + (this.getPixelHeight()-this.tallness)/2;
+        for(let y:number = this.vehicle.y-this.getPixelHeight();y<this.vehicle.y+this.vehicle.getPixelHeight()+this.getPixelHeight();y+=this.map.tileHeight) {
+            for(let x:number = this.vehicle.x-this.getPixelWidth();x<this.vehicle.x+this.vehicle.getPixelWidth()+this.getPixelWidth();x+=this.map.tileWidth) {
+                if (this.map.walkable(x, y, this.getPixelWidth(), this.getPixelHeight(), this)) {
+                    let d:number = Math.abs(x+ccx-cx) + Math.abs(y+ccy-cy);
+                    if (best_d == null || d<best_d) {
+                        best_d = d;
+                        best_x = x;
+                        best_y = y;
+                    }
+                }
+            }
+        }
+        if (best_d != null) {
+            this.vehicle.disembark(this);
+            this.x = best_x;
+            this.y = best_y;
+            this.state = A4CHARACTER_STATE_IDLE;
+            this.vehicle = null;
+            return true;
+        }
+        return false;
     }
 
 

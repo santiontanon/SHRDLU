@@ -62,8 +62,9 @@ var A4_SCRIPT_REMOVEPERCEPTIONPROPERTY:number = 56;
 
 var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
+var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 
-var A4_N_SCRIPTS:number = 63;
+var A4_N_SCRIPTS:number = 64;
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -131,6 +132,7 @@ scriptNames[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = "removePerceptionProperty";
 
 scriptNames[A4_SCRIPT_CUTSCENE] = "cutScene";
 scriptNames[A4_SCRIPT_REFILLOXYGEN] = "refillOxygen";
+scriptNames[A4_SCRIPT_EMBARK_ON_GARAGE] = "embarkOnGarage"
 
 var scriptFunctions:((A4Script, A4Object, A4Map, A4Game, A4Character) => number)[] = new Array(A4_N_SCRIPTS);
 
@@ -777,6 +779,14 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
                 return SCRIPT_FAILED;
             }
         }
+    } else if (o.isVehicle() && otherCharacter != null) {
+        let c:A4Character = otherCharacter;
+        otherCharacter.embark(<A4Vehicle>o);
+        otherCharacter.map.addPerceptionBufferRecord(new PerceptionBufferRecord("embark", c.ID, c.sort, 
+                                                                   o.ID, o.sort, null,
+                                                                   null, null,
+                                                                   c.x, c.y, c.x+c.getPixelWidth(), c.y+c.getPixelHeight()));
+        return SCRIPT_FINISHED;
     } else {
         return SCRIPT_FAILED;
     }
@@ -1252,6 +1262,18 @@ scriptFunctions[A4_SCRIPT_REFILLOXYGEN] = function(script:A4Script, o:A4Object, 
 }
 
 
+scriptFunctions[A4_SCRIPT_EMBARK_ON_GARAGE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (otherCharacter != game.currentPlayer) return SCRIPT_FAILED;
+    if (o.sort.is_a_string("garage-rover")) {
+        game.takeRoverOutOfTheGarage(<A4Vehicle>o, otherCharacter);
+    } else if (o.sort.is_a_string("garage-shuttle")) {
+        // ...
+    }
+    return SCRIPT_FINISHED;
+}
+
+
 class A4Script {
 
     constructor(type:number, ID:string, text:string, value:number, thought:boolean, wait:boolean)
@@ -1607,6 +1629,9 @@ class A4Script {
                     case A4_SCRIPT_REFILLOXYGEN:
                         break;
 
+                    case A4_SCRIPT_EMBARK_ON_GARAGE:
+                        break;
+
                     default:
                         console.error("No loading code for script type: " + xml.tagName);
                 }
@@ -1932,6 +1957,8 @@ class A4Script {
             case A4_SCRIPT_REFILLOXYGEN:
                 break;
 
+            case A4_SCRIPT_EMBARK_ON_GARAGE:
+                break;
         }
 
         if (!tagClosed) {

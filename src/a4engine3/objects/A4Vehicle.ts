@@ -12,7 +12,7 @@ class A4Vehicle extends A4WalkingObject {
     {
         super.loadObjectAdditionalContent(xml, game, of, objectsToRevisit_xml, objsctsToRevisit_object);
         
-        var l:Element[] = getElementChildrenByTag(xml, "load");
+        let l:Element[] = getElementChildrenByTag(xml, "load");
         if (l.length>0) {
             objectsToRevisit_xml.push(xml);
             objsctsToRevisit_object.push(this);
@@ -23,7 +23,7 @@ class A4Vehicle extends A4WalkingObject {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 
         if (a_name == "hp") {
             this.hp = Number(attribute_xml.getAttribute("value"));
@@ -43,14 +43,14 @@ class A4Vehicle extends A4WalkingObject {
 
     revisitObject(xml:Element, game:A4Game)
     {
-        var l:Element[] = getElementChildrenByTag(xml,"load");
+        let l:Element[] = getElementChildrenByTag(xml,"load");
         for(let n of l) {
-            var o_ID:string = n.getAttribute("ID");
-            var tmp:A4Object[] = game.findObjectByID(o_ID);
+            let o_ID:string = n.getAttribute("ID");
+            let tmp:A4Object[] = game.findObjectByID(o_ID);
             if (tmp==null) {
                 console.error("Revisiting A4Vehicle, and cannot find object with ID " + o_ID);
             } else {
-                var o:A4Object = tmp[tmp.length-1];
+                let o:A4Object = tmp[tmp.length-1];
                 this.load.push(o);
             }
         }
@@ -59,7 +59,7 @@ class A4Vehicle extends A4WalkingObject {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("hp",this.hp) + "\n";
         xmlString += this.saveObjectAttributeToXML("max_hp",this.max_hp) + "\n";
@@ -74,7 +74,9 @@ class A4Vehicle extends A4WalkingObject {
 
     update(game:A4Game) : boolean
     {
-        var max_movement_pixels_requested:number = 0;
+        let ret:boolean = super.update(game);
+
+        let max_movement_pixels_requested:number = 0;
         
         if (this.hp<=0) this.state = A4CHARACTER_STATE_DYING;
 
@@ -87,10 +89,10 @@ class A4Vehicle extends A4WalkingObject {
             }
         }
         if (this.state == A4CHARACTER_STATE_IDLE) {
-            var most_recent_viable_walk_command:number = A4_DIRECTION_NONE;
-            var timer:number = 0;
+            let most_recent_viable_walk_command:number = A4_DIRECTION_NONE;
+            let timer:number = 0;
             for(let i:number = 0;i<A4_NDIRECTIONS;i++) {
-                if (this.direction_command_received_this_cycle[i] && this.canMove(i, false)) {
+                if (this.direction_command_received_this_cycle[i]) {//} && this.canMove(i, false)) {
                     if (most_recent_viable_walk_command==A4_DIRECTION_NONE ||
                         this.continuous_direction_command_timers[i]<timer) {
                         most_recent_viable_walk_command = i;
@@ -140,20 +142,43 @@ class A4Vehicle extends A4WalkingObject {
                 } else {
 //                    this.animations[this.currentAnimation].update();
                 }
+                if ((this.x%this.map.tileWidth == 0) && (this.y%this.map.tileHeight == 0)) {
+                    if (!this.canMove(this.direction, false)) {
+                        this.state = A4CHARACTER_STATE_IDLE;
+                        this.currentAnimation = A4_ANIMATION_IDLE_LEFT+this.direction;
+                        this.animations[this.currentAnimation].reset();
+
+                        // check if we are pushing against the edge of a map with a "bridge":
+                        let bridge:A4MapBridge = null;
+                        bridge = this.checkIfPushingAgainstMapEdgeBridge(this.direction)
+                        if (bridge!=null) {
+                            // teleport!
+                            let target:[number,number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
+                            if (target!=null) {
+                                game.requestWarp(this, bridge.linkedTo.map, target[0], target[1]);
+                            } else {
+                                if (this.load.indexOf(game.currentPlayer)!=-1)
+                                    game.addMessage("Something is blocking the way!");
+                            }
+                        }
+                        break;
+                    }
+                }
+
                 this.stateCycle++;
 
                 // the following kind of messy code just makes characters walk at the proper speed
-                // it follows the idea of Brsenham's algorithms for proportionally scaling the speed of
+                // it follows the idea of Bresenham's algorithms for proportionally scaling the speed of
                 // the characters without using any floating point calculations.
                 // it also makes the character move sideways a bit, if they need to align to fit through a corridor
-                var step:number = game.tileWidth;
+                let step:number = game.tileWidth;
                 if (this.direction==A4_DIRECTION_UP || this.direction==A4_DIRECTION_DOWN) step = game.tileHeight;
-                var bridge:A4MapBridge = null;
-                var pixelsMoved:number = 0;
-                var old_x:number = this.x;
-                var old_y:number = this.y;
+                let bridge:A4MapBridge = null;
+                let pixelsMoved:number = 0;
+                let old_x:number = this.x;
+                let old_y:number = this.y;
                 while(this.walkingCounter<=step) {
-                    var dir:number = this.direction;
+                    let dir:number = this.direction;
                     this.x += direction_x_inc[dir];
                     this.y += direction_y_inc[dir];
                     this.walkingCounter += this.getWalkSpeed();
@@ -191,14 +216,11 @@ class A4Vehicle extends A4WalkingObject {
                 }
                 if (this.walkingCounter>=step) this.walkingCounter-=step;
                 if (bridge!=null) {
-                    //                        output_debug_message("Stepped over a bridge!\n");
                     // teleport!
-                    var target:[number,number] = bridge.linkedTo.findAvailableTargetLocation(this, game.tileWidth, game.tileHeight);
+                    let target:[number,number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
                     if (target!=null) {
-                        game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);//, this.layer);
+                        game.requestWarp(this, bridge.linkedTo.map, target[0], target[1]);
                     } else {
-                        this.x = old_x;
-                        this.y = old_y;
                         if (this.load.indexOf(game.currentPlayer)!=-1)
                             game.addMessage("Something is blocking the way!");
                     }
@@ -223,7 +245,7 @@ class A4Vehicle extends A4WalkingObject {
                 this.stateCycle++;
                 if (this.stateCycle>=this.getWalkSpeed()) {
                     // drop the load of characters:
-                    var l:A4Object[] = [];    // we need "l" to avoic concurrent modifications of this.load
+                    let l:A4Object[] = [];    // we need "l" to avoic concurrent modifications of this.load
                     for(let o of this.load) {
                         l.push(o);
                         game.requestWarp(o, this.map, this.x, this.y);//, o.layer);
@@ -237,7 +259,7 @@ class A4Vehicle extends A4WalkingObject {
                 break;
         }
 
-        return true;
+        return ret;
     }
 
 
@@ -258,6 +280,25 @@ class A4Vehicle extends A4WalkingObject {
     }
 
 
+    checkIfPushingAgainstMapEdgeBridge(direction:number) : A4MapBridge
+    {
+        if (direction == A4_DIRECTION_LEFT && this.x == 0) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_RIGHT && this.x == (this.map.width*this.map.tileWidth-this.getPixelWidth())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()-1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_UP && this.y == 0) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+1);
+            return bridge;
+        } else if (direction == A4_DIRECTION_DOWN && this.y == (this.map.height*this.map.tileHeight-this.getPixelHeight())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+this.getPixelHeight()-1);
+            return bridge;
+        }
+        return null;
+    }
+
+
     embark(l:A4Object) 
     {
         this.load.push(l);
@@ -266,7 +307,7 @@ class A4Vehicle extends A4WalkingObject {
 
     disembark(l:A4Object) 
     {
-        var idx:number = this.load.indexOf(l);
+        let idx:number = this.load.indexOf(l);
         if (idx>=0) {
             this.load.splice(idx, 1);
         }
@@ -302,7 +343,7 @@ class A4Vehicle extends A4WalkingObject {
     {
         for(let o of this.load) {
             if (o.name == name) return [o];
-            var o2:A4Object[] = o.findObjectByName(name);
+            let o2:A4Object[] = o.findObjectByName(name);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
@@ -313,11 +354,20 @@ class A4Vehicle extends A4WalkingObject {
     {
         for(let o of this.load) {
             if (o.ID == ID) return [o];
-            var o2:A4Object[] = o.findObjectByID(ID);
+            let o2:A4Object[] = o.findObjectByID(ID);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
     }   
+
+
+    warp(x:number, y:number, map:A4Map)//, layer:number)
+    {
+        super.warp(x, y, map);
+        for(let load of this.load) {
+            load.warp(x, y, map);
+        }
+    }
 
 
     // attributes:

@@ -23,13 +23,17 @@ class ShrdluGameScript {
 
 	update() 
 	{
+		/*
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			this.skip_to_act_1();
+			//this.skip_to_act_1();
+			this.skip_to_end_of_act_1();
 		}
+		*/
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
+		if (this.act == "2") this.update_act_2();
 		// ...
 
 		this.processQueuedThoughtBubbles();
@@ -111,13 +115,21 @@ class ShrdluGameScript {
 		this.game.etaoinAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 		this.game.qwertyAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 
-		// start in the infirmary:
-		this.game.currentPlayer.x = 12*8;
-		this.game.currentPlayer.y = 28*8;
+		// start in spacer valley
+		//this.game.requestWarp(this.game.currentPlayer, this.game.maps[2], 40*8, 51*8);
 		var suit_l:A4Object[] = this.game.findObjectByID("broken-ss");
 		(<A4Container>(suit_l[0])).content.splice((<A4Container>(suit_l[0])).content.indexOf(suit_l[1]), 1);
 		this.game.currentPlayer.inventory.push(suit_l[1]);		
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("helmet", this.game, false, false));
+	}
+
+
+	skip_to_end_of_act_1()
+	{
+		this.skip_to_act_1();
+		this.game.currentPlayer.x = 864;
+		this.game.currentPlayer.y = 40;
+		this.game.setStoryStateVariable("rover", "working");
 	}
 
 
@@ -1527,6 +1539,26 @@ class ShrdluGameScript {
 	}	
 
 
+	/* --------------------------------------------------------
+		ACT 2: SHRDLU
+	   -------------------------------------------------------- */
+	update_act_2() 
+	{
+		var previous_state:number = this.act_2_state;
+
+		// ...
+
+		switch(this.act_2_state) {
+		case 0:
+			if (this.game.currentPlayer.isIdle()) {
+				this.queueThoughtBubble("This rover seems bigger on the inside than it is on the outside!");
+				this.act_2_state = 1;
+			}
+			break;
+		}
+	}
+
+
 	questionAboutBeingAlone(perf:Term) : boolean
 	{
 		var v:TermAttribute = null;
@@ -1815,4 +1847,7 @@ class ShrdluGameScript {
 
 	act_1_asked_about_bruce_alper:boolean[] = [false,false,false];
 	act_1_asked_about_corpse:boolean[] = [false,false,false];
+
+
+	act_2_state:number = 0;
 }

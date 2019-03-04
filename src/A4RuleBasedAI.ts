@@ -84,6 +84,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let n_space_at:number = 0;
 		let n_not_space_at:number = 0;
 		let n_space_connects:number = 0;
+		// let debug_text:string = "";
 
 		for(let idx_l1:number = 0;idx_l1<game.locations.length;idx_l1++) {
 			var l1:AILocation = game.locations[idx_l1];
@@ -105,12 +106,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 						//console.log(term.toString());
 						this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
 						n_space_at++;
+						// debug_text += term + "\n";
 					}
 				} else {
 					var s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 					//console.log(term.toString());
 					this.addLongTermRuleNow(s, BACKGROUND_PROVENANCE);
 					n_not_space_at++;
+					// debug_text += s + "\n";
 				}
 			}
 		}
@@ -129,10 +132,12 @@ class A4RuleBasedAI extends RuleBasedAI {
 					//console.log(term.toString());
 					this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
 					n_space_connects++;
+					// debug_text += str + "\n";
 				}
 			}
 		}
 		console.log("RuleBasedAI.precalculateLocationKnowledge: " + n_space_at + ", " + n_not_space_at + ", " + n_space_connects);
+		// downloadStringAsFile(debug_text, "location-predicates.txt");
 	}
 
 
