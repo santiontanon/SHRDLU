@@ -227,6 +227,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		if (this.baseindoors_location == null) {
 			this.baseindoors_location = this.game.getAILocationByID("location-aurora-station");
 			this.baseoutdoors_location = this.game.getAILocationByID("location-aurora-settlement");
+			this.spacervalleysouth_location = this.game.getAILocationByID("spacer-valley-south");
 		}
 		var l:AILocation = this.game.getAILocation(o);
 		if (l == null) return false;
@@ -241,6 +242,7 @@ class EtaoinAI extends A4RuleBasedAI {
 				// communicator works only in the base (indoor or outdoor):
 				if (l == this.baseindoors_location) return true;
 				if (l == this.baseoutdoors_location) return true;
+				if (l == this.spacervalleysouth_location) return true;
 				if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.baseoutdoors_location)]) return true;
 			}
 		}
@@ -280,6 +282,7 @@ class EtaoinAI extends A4RuleBasedAI {
 
 	baseindoors_location:AILocation = null;
 	baseoutdoors_location:AILocation = null;
+	spacervalleysouth_location:AILocation = null;
 
 	// attention:
 	attention:AttentionRecord[] = [];

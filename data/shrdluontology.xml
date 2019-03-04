@@ -525,6 +525,8 @@
     <sort name="action.use" super="actionverb"/>
     <sort name="action.interact" super="actionverb"/>
     <sort name="action.die" super="actionverb"/>
+    <sort name="action.embark" super="actionverb,verb.enter"/>
+    <sort name="action.disembark" super="actionverb,verb.leave"/>
     <sort name="action.memorize" super="actionverb"/>
     <sort name="action.answer.predicate" super="actionverb"/>
     <sort name="action.answer.predicate-negated" super="actionverb"/>

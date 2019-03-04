@@ -12,6 +12,8 @@ var A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_TALKING:number = 9;
 var A4CHARACTER_STATE_IN_BED_THOUGHT_BUBBLE:number = 10;
 var A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_THOUGHT_BUBBLE:number = 11;
 var A4CHARACTER_STATE_DYING:number = 12;
+var A4CHARACTER_STATE_IN_VEHICLE_TALKING:number = 13;
+var A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE:number = 14;
 
 
 var A4CHARACTER_COMMAND_IDLE:number = 0;
@@ -516,6 +518,7 @@ class A4Character extends A4WalkingObject {
                     this.talkingTarget = null;
                 }
                 break;  
+                
             case A4CHARACTER_STATE_IN_BED_THOUGHT_BUBBLE:
                 if (this.stateCycle==0) {
                     if (this.map == game.currentPlayer.map) {
@@ -532,6 +535,7 @@ class A4Character extends A4WalkingObject {
                     this.talkingTarget = null;
                 }
                 break;        
+
             case A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_THOUGHT_BUBBLE:
                 if (this.stateCycle==0) {
                     if (this.map == game.currentPlayer.map) {
@@ -548,7 +552,51 @@ class A4Character extends A4WalkingObject {
                     this.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
                     this.talkingTarget = null;
                 }
-                break;                        
+                break;  
+
+            case A4CHARACTER_STATE_IN_VEHICLE_TALKING:
+                if (this.stateCycle==0) {
+                    if (this.map == game.currentPlayer.map) {
+                        if (this == <A4Character>(game.currentPlayer)) {
+                            game.addMessageWithColor(">"+this.talkingText, MSX_COLOR_LIGHT_GREEN);
+                        } else {
+                            game.addMessageWithColor(this.name + ": " +this.talkingText, MSX_COLOR_WHITE);
+                        }
+                    }
+                }
+                this.stateCycle++;
+                if (this.stateCycle>=this.talkingBubbleDuration) {
+                    // after the speech bubble is done, we record it in the map:
+                    if (this.map == game.currentPlayer.map) {
+                        this.map.addPerceptionBufferRecord(
+                            new PerceptionBufferRecord("talk", this.ID, this.sort, 
+                                                       null, null, this.talkingText,
+                                                       null, null,
+                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                    }                    
+                    this.talkingText = null;
+                    this.talkingBubble = null;
+                    this.state = A4CHARACTER_STATE_IN_VEHICLE;
+                    this.talkingTarget = null;
+                }
+                break;     
+
+            case A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE:
+                if (this.stateCycle==0) {
+                    if (this.map == game.currentPlayer.map) {
+                        if (this == <A4Character>(game.currentPlayer)) {
+                            game.addMessageWithColor("("+this.talkingText + ")", MSX_COLOR_GREEN);
+                        }
+                    }
+                }
+                this.stateCycle++;
+                if (this.stateCycle>=this.talkingBubbleDuration) {
+                    this.talkingText = null;
+                    this.talkingBubble = null;
+                    this.state = A4CHARACTER_STATE_IN_VEHICLE;
+                    this.talkingTarget = null;
+                }
+                break;     
             }
 
         return ret;
@@ -638,7 +686,9 @@ class A4Character extends A4WalkingObject {
                this.state == A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_TALKING ||
                this.state == A4CHARACTER_STATE_THOUGHT_BUBBLE ||
                this.state == A4CHARACTER_STATE_IN_BED_THOUGHT_BUBBLE ||
-               this.state == A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_THOUGHT_BUBBLE;
+               this.state == A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_THOUGHT_BUBBLE ||
+               this.state == A4CHARACTER_STATE_IN_VEHICLE_TALKING ||
+               this.state == A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE;
     }
 
 
@@ -657,7 +707,8 @@ class A4Character extends A4WalkingObject {
     {
         if (this.state!=A4CHARACTER_STATE_IDLE &&
             this.state!=A4CHARACTER_STATE_IN_BED &&
-            this.state!=A4CHARACTER_STATE_IN_BED_CANNOT_GETUP) return false;
+            this.state!=A4CHARACTER_STATE_IN_BED_CANNOT_GETUP &&
+            this.state!=A4CHARACTER_STATE_IN_VEHICLE) return false;
 
         switch(command) {
             case A4CHARACTER_COMMAND_TALK:
@@ -690,6 +741,12 @@ class A4Character extends A4WalkingObject {
                             this.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_TALKING;
                         } else {
                             this.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP_THOUGHT_BUBBLE;
+                        }
+                    } else if (this.state == A4CHARACTER_STATE_IN_VEHICLE) {
+                        if (command == A4CHARACTER_COMMAND_TALK) {
+                            this.state = A4CHARACTER_STATE_IN_VEHICLE_TALKING;
+                        } else {
+                            this.state = A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE;
                         }
                     }
                     this.stateCycle = 0;                

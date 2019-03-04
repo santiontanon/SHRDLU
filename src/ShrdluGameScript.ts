@@ -1546,16 +1546,23 @@ class ShrdluGameScript {
 	{
 		var previous_state:number = this.act_2_state;
 
-		// ...
-
 		switch(this.act_2_state) {
 		case 0:
-			if (this.game.currentPlayer.isIdle()) {
+			// wait a few cycles to ensure the character is already in the vehicle
+			if (this.game.currentPlayer.isIdle() && this.act_2_state_timer>=10) {
 				this.queueThoughtBubble("This rover seems bigger on the inside than it is on the outside!");
 				this.act_2_state = 1;
 			}
 			break;
 		}
+
+		if (previous_state == this.act_intro_state) {
+			this.act_2_state_timer++;
+		} else {
+			this.act_2_state_timer = 0;
+			this.act_2_state_start_time = this.game.in_game_seconds;
+		}
+
 	}
 
 
@@ -1850,4 +1857,6 @@ class ShrdluGameScript {
 
 
 	act_2_state:number = 0;
+	act_2_state_timer:number = 0;
+	act_2_state_start_time:number = 0;
 }
