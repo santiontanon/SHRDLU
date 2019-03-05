@@ -1330,7 +1330,7 @@
 
   <object id="598" type="crate" x="888" y="24" width="8" height="16">
   	<items>
-  		<object type="helmet"/>
+  		<!--object type="helmet"/-->
   		<object id="broken-ss" type="brokenspacesuit"/>
   	</items>
   </object>

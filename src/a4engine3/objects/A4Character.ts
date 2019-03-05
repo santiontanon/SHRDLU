@@ -805,6 +805,25 @@ class A4Character extends A4WalkingObject {
             case A4CHARACTER_COMMAND_TAKE:
                 {
                     if (this.isInVehicle()) {
+                        // Humans can only get out of vehicles if they have a spacesuit:
+                        if (this.sort.is_a_string("human")) {
+                            let helmet:A4Item = null;
+                            let suit:A4Item = null;
+                            for(let item of game.currentPlayer.inventory) {
+                                if (item.sort.is_a_string("helmet")) helmet = <A4Item>item;
+                                if (item.sort.is_a_string("workingspacesuit")) suit = <A4Item>item;
+                            }
+                            if (helmet != null && suit != null) {
+                                helmet.droppable = false;
+                                suit.droppable = false;
+                                game.setStoryStateVariable("spacesuit", "helmet");
+                            } else {
+                                this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
+                                                            "I am not going out there without a spacesuit!!", A4_DIRECTION_NONE, game);
+                                break;
+                            }
+                        }
+
                         this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("disembark", this.ID, this.sort, 
                                                                                       this.vehicle.ID, this.vehicle.sort, null,
                                                                                       null, null,
