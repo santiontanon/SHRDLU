@@ -258,10 +258,13 @@
     <sort name="disembodied-ai" super="ai,character"/>
     <sort name="robot" super="ai,character"/>
 
-    <sort name="animal" super="character"/>
+    <sort name="living-being" super="any"/>
+
+    <sort name="animal" super="character,living-being"/>
     <sort name="human" super="animal,property"/>
     <sort name="man" super="human,gender-masculine"/>
     <sort name="woman" super="human,gender-femenine"/>
+    <sort name="fungi" super="living-being"/>
 
     <sort name="mineral" super="item"/>
     <sort name="bottle" super="item"/>
@@ -771,6 +774,8 @@
     <sort name="fill.medium" super="fill-level,property,#stateSort"/>
     <sort name="low" super="fill-level,property,#stateSort"/>
     <sort name="empty" super="fill-level,property,#stateSort"/>
+
+    <sort name="luminiscent" super="property"/>
 
     <sort name="oxygen-level" super="fill-level,property-with-value"/>
 

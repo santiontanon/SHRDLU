@@ -32,4 +32,31 @@ class A4PushableWall extends A4Object {
 	        if (character != null) map.reevaluateVisibilityRequest();
 		}
 	}
+
+
+    loadObjectAttribute(attribute_xml:Element) : boolean
+    {
+        if (super.loadObjectAttribute(attribute_xml)) return true;
+        var a_name:string = attribute_xml.getAttribute("name");
+
+        if (a_name == "weight") {
+            this.weight = Number(attribute_xml.getAttribute("value"));
+            return true;
+        }
+
+        return false;
+    }
+
+
+    savePropertiesToXML(game:A4Game) : string
+    {
+        var xmlString:string = super.savePropertiesToXML(game);
+
+        xmlString += this.saveObjectAttributeToXML("weight",this.weight) + "\n";
+
+        return xmlString;
+    }
+
+
+    weight:number = 1;
 }

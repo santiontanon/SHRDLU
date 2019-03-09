@@ -12,8 +12,12 @@
 	<ObjectClass class="poster" super="object" name="poster"/>
 	<ObjectClass class="rover" super="object" name="rover"/>
 	<ObjectClass class="shuttle" super="object" name="shuttle"/>
+	<ObjectClass class="rock" super="object" name="rock"/>
 
-    <ObjectClass class="light-furniture" super="pushable-wall,*furniture" name="light furniture"/>
+    <ObjectClass class="light-furniture" super="pushable-wall,*furniture" name="light furniture">
+    	<attribute name="weight" value="1"/>
+    </ObjectClass>
+
     <ObjectClass class="bench" super="light-furniture" name="bench"/>
 
 	<ObjectClass class="table" super="furniture" name="table">
@@ -757,7 +761,29 @@
 		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">362</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="A table with a microscope. I wouldn't dare touching it..." thought="true"/>
+        	<if>
+        		<condition>
+        			<hasItemCheck type="luminiscent-fungi"/>
+        		</condition>
+        		<then>
+        			<if>
+        				<condition>
+        					<storyStateCheck scope="game" variable="luminiscent-fungi" value="taken"/>
+        				</condition>
+        				<then>
+		        			<talkOther text="Hmmm, let me put this dust in the microscope, and let's hope I can learn something from it..." thought="true" wait="true"/>
+		        			<storyState scope="game" variable="luminiscent-fungi" value="analyzed"/>
+		        			<!--cutScene cutscene="4"/-->
+        				</then>
+        				<else>
+		        			<talkOther text="I have already analyzed the dust, not sure what else can the microscope tell me..." thought="true"/>
+        				</else>
+        			</if>        			
+        		</then>
+        		<else>
+	        		<talkOther text="A table with a microscope. I wouldn't know what to do with it..." thought="true"/>
+	        	</else>
+        	</if>
         </eventRule>
 	</ObjectClass>	
 
@@ -1100,5 +1126,51 @@
         </eventRule>
   	</ObjectClass>
 
+	<ObjectClass class="boulder" super="pushable-wall,*rock" name="boulder"/>
+	<ObjectClass class="small-boulder" super="boulder" name="small boulder">
+		<attribute name="tallness" value="0"/>
+		<attribute name="weight" value="2"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">456</animation>		
+		<onStart>
+			<addPerceptionProperty property="small"/>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="large-boulder" super="boulder" name="large boulder">
+		<attribute name="tallness" value="0"/>
+		<attribute name="weight" value="4"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">742</animation>		
+		<onStart>
+			<addPerceptionProperty property="big"/>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+    
+	<ObjectClass class="fungi" super="item" name="fungi"/>
+
+	<ObjectClass class="luminiscent-fungi" super="fungi" name="weird dust">
+		<attribute name="tallness" value="0"/>
+		<attribute name="drawDarkIfNoLight" value="false"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">992</animation>		
+		<onStart>
+			<addPerceptionProperty property="small"/>
+			<addPerceptionProperty property="green"/>
+			<addPerceptionProperty property="luminiscent"/>
+		</onStart>
+		<eventRule event="pickup">
+			<if>
+				<condition>
+					<storyStateCheck scope="game" variable="luminiscent-fungi" value="taken"/>
+				</condition>
+				<then>
+				</then>
+				<else>
+		        	<talkOther text="This is weird... there seems to be a sort of luminiscent dust here..." thought="true"/>
+		        	<talkOther text="What could it be? Maybe I should take a sample back to the station..." thought="true"/>
+		        	<storyState scope="game" variable="luminiscent-fungi" value="taken"/>
+				</else>
+			</if>
+		</eventRule>
+	</ObjectClass>	
 
 </Objects>

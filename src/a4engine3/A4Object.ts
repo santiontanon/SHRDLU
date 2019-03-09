@@ -165,6 +165,10 @@ class A4Object {
         } else if (name == "tallness") {
             this.tallness = Number(attribute_xml.getAttribute("value"));
             return true;
+        } else if (name == "drawDarkIfNoLight") {
+            this.drawDarkIfNoLight = false;
+            if (attribute_xml.getAttribute("value") == "true") this.drawDarkIfNoLight = true;
+            return true;
         }
         return false;        
     }
@@ -258,6 +262,7 @@ class A4Object {
         xmlString += this.saveObjectAttributeToXML("burrowed",this.burrowed) + "\n";
         xmlString += this.saveObjectAttributeToXML("direction",this.direction) + "\n";
         xmlString += this.saveObjectAttributeToXML("tallness",this.tallness) + "\n";
+        if (!this.drawDarkIfNoLight) xmlString += this.saveObjectAttributeToXML("drawDarkIfNoLight",this.drawDarkIfNoLight) + "\n";
 
         var onStarttagOpen:boolean = false;
         for(let v in this.storyState) {
@@ -377,8 +382,12 @@ class A4Object {
 
     drawDark(offsetx:number, offsety:number, game:A4Game)
     {
-        if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
-            this.animations[this.currentAnimation].drawDark((this.x + offsetx), (this.y + offsety));
+        if (this.drawDarkIfNoLight) {
+            if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
+                this.animations[this.currentAnimation].drawDark((this.x + offsetx), (this.y + offsety));
+            }
+        } else {
+            this.draw(offsetx, offsety, game);
         }
     }
 
@@ -756,6 +765,8 @@ class A4Object {
     burrowed:boolean = false;
     canSwim:boolean = false;
     canWalk:boolean = true;
+    drawDarkIfNoLight:boolean = true;    // If this is set to false, turning the light off will not affect this object
+                                         // this is used, for example, for objects that emit their own light
 
     direction:number = A4_DIRECTION_NONE;
 

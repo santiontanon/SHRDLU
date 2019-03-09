@@ -20,6 +20,7 @@
 		<attribute name="sightRadius" value="80"/>
 		<attribute name="tallness" value="16"/>
 		<attribute name="direction" value="3"/>
+		<attribute name="strength" value="2"/>
 
 		<items>
 			<object id="communicator" class="communicator" width="8" height="8"/>
@@ -52,6 +53,7 @@
 		<attribute name="sightRadius" value="80"/>
 		<attribute name="tallness" value="16"/>
 		<attribute name="direction" value="3"/>
+		<attribute name="strength" value="4"/>
 
 		<onStart>
 			<addPerceptionProperty property="red"/>

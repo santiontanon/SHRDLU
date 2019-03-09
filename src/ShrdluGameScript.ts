@@ -27,7 +27,8 @@ class ShrdluGameScript {
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			this.skip_to_end_of_act_1();
+			//this.skip_to_end_of_act_1();
+			this.skip_to_act_2();
 		}
 		*/
 
@@ -130,6 +131,19 @@ class ShrdluGameScript {
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
 		this.game.setStoryStateVariable("rover", "working");
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-fungi", this.game, false, false));
+		this.game.setStoryStateVariable("luminiscent-fungi", "taken");
+	}
+
+
+	skip_to_act_2()
+	{
+		this.skip_to_end_of_act_1();
+		this.act = "2";
+		// West cave:
+		// this.game.currentPlayer.warp(4*8, 16*8, this.game.maps[5])
+		// Science lab:
+		this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0])
 	}
 
 

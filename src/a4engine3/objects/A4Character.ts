@@ -132,6 +132,9 @@ class A4Character extends A4WalkingObject {
         } else if (a_name == "thirstTimer") {
             this.thirstTimer = Number(attribute_xml.getAttribute("value"));
             return true;
+        } else if (a_name == "strength") {
+            this.strength = Number(attribute_xml.getAttribute("value"));
+            return true;
         }
 
         return false;
@@ -178,6 +181,7 @@ class A4Character extends A4WalkingObject {
         if (this.sleepingInBed!=null) xmlString += this.saveObjectAttributeToXML("sleepingInBed",this.sleepingInBed.ID) + "\n";
         xmlString += this.saveObjectAttributeToXML("hungerTimer",this.hungerTimer) + "\n";
         xmlString += this.saveObjectAttributeToXML("thirstTimer",this.thirstTimer) + "\n";
+        xmlString += this.saveObjectAttributeToXML("strength",this.strength) + "\n";
 
         if (this.inventory.length>0) {
             xmlString += "<items>\n";
@@ -926,19 +930,24 @@ class A4Character extends A4WalkingObject {
                     for(let o of collisions) {
 //                        console.log("checking object " + o.name);
                         if (o.isPushable()) {
-//                            console.log("object " + o.name + " is pushable");
-                            this.direction = argument;
-                            this.state = A4CHARACTER_STATE_WALKING;
-                            this.stateCycle = 0;
-                            this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("push", this.ID, this.sort, 
-                                                                                          o.ID, o.sort, null,
-                                                                                          null, null,
-                                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                            o.event(A4_EVENT_PUSH,this,this.map,game);
-                            this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
-                            game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+                            if (this.strength >= (<A4PushableWall>o).weight) {
+    //                            console.log("object " + o.name + " is pushable");
+                                this.direction = argument;
+                                this.state = A4CHARACTER_STATE_WALKING;
+                                this.stateCycle = 0;
+                                this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("push", this.ID, this.sort, 
+                                                                                              o.ID, o.sort, null,
+                                                                                              null, null,
+                                                                                              this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                o.event(A4_EVENT_PUSH,this,this.map,game);
+                                this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
+                                game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+                            } else {
+                                if (this == <A4Character>game.currentPlayer) {
+                                    this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, "too heavy!!", A4_DIRECTION_NONE, game);
+                                }
+                            }
                             break;
-
                         }
                     }
                 }
@@ -1275,6 +1284,7 @@ class A4Character extends A4WalkingObject {
 
 	// attributes:
     inventory:A4Object[] = [];
+    strength:number = 1
 
 //    talking_state:number;
 //    talking_state_cycle:number;

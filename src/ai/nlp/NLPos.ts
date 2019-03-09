@@ -975,12 +975,14 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("rover batteries", "rover-battery", Term.fromString("noun('rover-battery'[rover-battery], [plural])", o), 1.0));
     this.addStandardNounPOS("bed", "bed", o);
     this.addStandardNounPOS("bedroom", "bedroom", o);
+    this.addStandardNounPOS("being", "living-being", o);
     this.addStandardNounPOS("bench", "bench", o);
     this.addStandardNounPOS("biologist", "biologist", o);
     this.addStandardNounPOS("body", "body", o);
     this.addStandardNounPOS("body part", "body-part", o);
     this.addStandardNounPOS("bottle", "bottle", o);
     this.addStandardNounPOS("bottom", "space.bottom", o);
+    this.addStandardNounPOS("boulder", "rock", o);
     this.addTokenPOS(new PartOfSpeech("box", "box", Term.fromString("noun('box'[box], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("boxes", "box", Term.fromString("noun('box'[box], [plural])", o), 1.0));
     this.addStandardNounPOS("cable", "cable", o);
@@ -1044,6 +1046,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("fridge", "fridge", o);
     this.addStandardNounPOS("front", "space.front", o);
     this.addStandardNounPOS("functionality", "role", o);
+    this.addTokenPOS(new PartOfSpeech("fungi", "fungi", Term.fromString("noun('fungi'[furniture], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("fungus", "fungi", Term.fromString("noun('fungi'[furniture], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("furniture", "furniture", Term.fromString("noun('furniture'[furniture], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("g", "gravity.unit.g", o);
     this.addStandardNounPOS("galaxy", "galaxy", o);
@@ -1082,6 +1086,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("laundry room", "laundry.room", o);
     this.addStandardNounPOS("leg", "leg", o);
     this.addStandardNounPOS("light", "light", o);
+    this.addStandardNounPOS("living being", "living-being", o);
     this.addStandardNounPOS("location", "space.location", o);
     this.addStandardNounPOS("machine", "machine", o);
     this.addStandardNounPOS("maintenance guy", "maintenance-robot", o);
@@ -1446,6 +1451,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("long", "long", Term.fromString("adjective('long'[long])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("low", "low", Term.fromString("adjective('low'[low])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("low", "gravity.low", Term.fromString("adjective('gravity.low'[gravity.low])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("luminiscent", "luminiscent", Term.fromString("adjective('luminiscent'[luminiscent])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("medium", "size.medium", Term.fromString("adjective('size.medium'[size.medium])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("medium", "fill.medium", Term.fromString("adjective('fill.medium'[fill.medium])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("mortal", "mortal", Term.fromString("adjective('mortal'[mortal])", o), 1.0));
