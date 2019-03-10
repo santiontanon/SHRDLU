@@ -771,9 +771,9 @@
         					<storyStateCheck scope="game" variable="luminiscent-fungi" value="taken"/>
         				</condition>
         				<then>
-		        			<talkOther text="Hmmm, let me put this dust in the microscope, and let's hope I can learn something from it..." thought="true" wait="true"/>
+		        			<talkOther text="Let me put this dust in the microscope, and let's hope I can learn something from it..." thought="true" wait="true"/>
 		        			<storyState scope="game" variable="luminiscent-fungi" value="analyzed"/>
-		        			<!--cutScene cutscene="4"/-->
+		        			<cutScene cutscene="4"/>
         				</then>
         				<else>
 		        			<talkOther text="I have already analyzed the dust, not sure what else can the microscope tell me..." thought="true"/>

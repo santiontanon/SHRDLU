@@ -1,6 +1,7 @@
 var CUTSCENE_CORPSE:number = 1;
 var CUTSCENE_DIARY:number = 2;
 var CUTSCENE_POSTER:number = 3;
+var CUTSCENE_FUNGI:number = 4;
 
 
 class ShrdluCutScenes {
@@ -17,6 +18,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_CORPSE) return this.updateCutSceneCorpse();
 		if (cutScene == CUTSCENE_DIARY) return this.updateCutSceneDiary();
 		if (cutScene == CUTSCENE_POSTER) return this.updateCutScenePoster();
+		if (cutScene == CUTSCENE_FUNGI) return this.updateCutSceneFungi();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -26,6 +28,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_CORPSE) this.drawCutSceneCorpse(screen_width, screen_height);
 		if (cutScene == CUTSCENE_DIARY) this.drawCutSceneDiary(screen_width, screen_height);
 		if (cutScene == CUTSCENE_POSTER) this.drawCutScenePoster(screen_width, screen_height);
+		if (cutScene == CUTSCENE_FUNGI) this.drawCutSceneFungi(screen_width, screen_height);
 	}
 
 
@@ -37,63 +40,63 @@ class ShrdluCutScenes {
 
 	updateCutSceneCorpse() : boolean
 	{
-		switch(this.cutSceneCorpseState) {
+		switch(this.cutSceneState) {
 			case 0:
 				// showing the image and waiting...
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 180 || this.ESCpressedRecord) {
-					this.cutSceneCorpseStateTimer = 0;
-					this.cutSceneCorpseState = 1;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 1;
 				}
 				break;
 		
 			case 1:
 				// "What?! There is a dead person here! And it looks like he has been here for a long time!"
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneCorpseStateTimer = 0;
-					this.cutSceneCorpseState = 2;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 2;
 				}
 				break;
 		
 			case 2:
 				// "The screen says this pod stopped functioning January 2nd 2412."
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneCorpseStateTimer = 0;
-					this.cutSceneCorpseState = 3;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 3;
 				}
 				break;
 		
 			case 3:
 				// "I can't remember what year it is, but that sounds like the distant future to me..."
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneCorpseStateTimer = 0;
-					this.cutSceneCorpseState = 4;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 4;
 				}
 				break;
 		
 			case 4:
 				// "This is all very strange... I need to investigate some more..."		}
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneCorpseStateTimer = 0;
-					this.cutSceneCorpseState = 5;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 5;
 				}
 				break;
 
 			case 5:
 				// "This is all very strange... I need to investigate some more..."		}
-				this.cutSceneCorpseStateTimer++;
-				if (this.cutSceneCorpseStateTimer >= 180 || this.ESCpressedRecord) {
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(What?! There is a dead person here! And it looks like he has been here for a long time!)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(The screen says this pod stopped functioning January 2nd 2412!)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(I can't remember what year it is, but that sounds like the distant future to me...)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(This is all very strange... I need to investigate some more...)", MSX_COLOR_GREEN);
-					this.cutSceneCorpseState = 0;
-					this.cutSceneCorpseStateTimer = 0;
+					this.cutSceneState = 0;
+					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
 					return true;
 				}
@@ -111,33 +114,41 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		var img:GLTile = this.game.GLTM.get("data/cutscene-corpse1.png");
+		let img:GLTile = this.game.GLTM.get("data/cutscene-corpse1.png");
 		if (img != null) img.draw(0,0);
 
-		switch(this.cutSceneCorpseState) {	
+		switch(this.cutSceneState) {	
 			case 1:
-				var text:A4TextBubble = new A4TextBubble("What?! There is a dead person here! And it looks like he has been here for a long time!", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 8, 128, 0, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("What?! There is a dead person here! And it looks like he has been here for a long time!", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 8, 128, 0, true, 1);
+					break;
+				}
 		
 			case 2:
-				var text:A4TextBubble = new A4TextBubble("The screen says this pod stopped functioning February 2nd 2412", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 8, 128, 0, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("The screen says this pod stopped functioning February 2nd 2412", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 8, 128, 0, true, 1);
+					break;
+				}
 		
 			case 3:
-				var text:A4TextBubble = new A4TextBubble("I can't remember what year it is, but that sounds like the distant future to me...", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 8, 128, 0, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("I can't remember what year it is, but that sounds like the distant future to me...", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 8, 128, 0, true, 1);
+					break;
+				}
 		
 			case 4:
-				var text:A4TextBubble = new A4TextBubble("This is all very strange... I need to investigate some more...", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 8, 128, 0, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("This is all very strange... I need to investigate some more...", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 8, 128, 0, true, 1);
+					break;
+				}
 		}
 
 		ctx.restore();
@@ -146,63 +157,63 @@ class ShrdluCutScenes {
 
 	updateCutSceneDiary() : boolean
 	{
-		switch(this.cutSceneDiaryState) {
+		switch(this.cutSceneState) {
 			case 0:
 				// showing the image and waiting...
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 180 || this.ESCpressedRecord) {
-					this.cutSceneDiaryStateTimer = 0;
-					this.cutSceneDiaryState = 1;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 1;
 				}
 				break;
 		
 			case 1:
 				// "What?! There is a dead person here! And it looks like he has been here for a long time!"
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneDiaryStateTimer = 0;
-					this.cutSceneDiaryState = 2;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 2;
 				}
 				break;
 		
 			case 2:
 				// "The screen says this pod stopped functioning January 2nd 2412."
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneDiaryStateTimer = 0;
-					this.cutSceneDiaryState = 3;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 3;
 				}
 				break;
 		
 			case 3:
 				// "I can't remember what year it is, but that sounds like the distant future to me..."
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneDiaryStateTimer = 0;
-					this.cutSceneDiaryState = 4;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 4;
 				}
 				break;
 		
 			case 4:
 				// "This is all very strange... I need to investigate some more..."		}
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutSceneDiaryStateTimer = 0;
-					this.cutSceneDiaryState = 5;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 5;
 				}
 				break;
 
 			case 5:
 				// "This is all very strange... I need to investigate some more..."		}
-				this.cutSceneDiaryStateTimer++;
-				if (this.cutSceneDiaryStateTimer >= 180 || this.ESCpressedRecord) {
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(This is a personal diary of someone called Bruce Alper)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(Still can't remember who is that. It could even be me for all I know!)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(That is the only entry... it seems Bruce dropped the diary in the storage room and forgot about it...)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(But this is even more confusing. So, there was at least 12 people in this station. Where is everyone?!)", MSX_COLOR_GREEN);
-					this.cutSceneDiaryState = 0;
-					this.cutSceneDiaryStateTimer = 0;
+					this.cutSceneState = 0;
+					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
 					return true;
 				}
@@ -220,33 +231,41 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		var img:GLTile = this.game.GLTM.get("data/cutscene-diary1.png");
+		let img:GLTile = this.game.GLTM.get("data/cutscene-diary1.png");
 		if (img != null) img.draw(0,0);
 
-		switch(this.cutSceneDiaryState) {	
+		switch(this.cutSceneState) {	
 			case 1:
-				var text:A4TextBubble = new A4TextBubble("This is a personal diary of someone called Bruce Alper", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("This is a personal diary of someone called Bruce Alper", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					break;
+				}
 		
 			case 2:
-				var text:A4TextBubble = new A4TextBubble("Still can't remember who is that. It could even be me for all I know!", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("Still can't remember who is that. It could even be me for all I know!", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					break;
+				}
 		
 			case 3:
-				var text:A4TextBubble = new A4TextBubble("That is the only entry... it seems Bruce dropped the diary in the storage room and forgot about it...", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("That is the only entry... it seems Bruce dropped the diary in the storage room and forgot about it...", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					break;
+				}
 		
 			case 4:
-				var text:A4TextBubble = new A4TextBubble("But this is even more confusing. So, there was at least 12 people in this station. Where is everyone?!", 
-														 30, fontFamily8px, 6, 8, this.game, null);
-				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
-				break;
+				{
+					let text:A4TextBubble = new A4TextBubble("But this is even more confusing. So, there was at least 12 people in this station. Where is everyone?!", 
+															 30, fontFamily8px, 6, 8, this.game, null);
+					text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					break;
+				}
 		}
 
 		ctx.restore();
@@ -255,32 +274,32 @@ class ShrdluCutScenes {
 
 	updateCutScenePoster() : boolean
 	{
-		switch(this.cutScenePosterState) {
+		switch(this.cutSceneState) {
 			case 0:
 				// showing the image and waiting...
-				this.cutScenePosterStateTimer++;
-				if (this.cutScenePosterStateTimer >= 180 || this.ESCpressedRecord) {
-					this.cutScenePosterStateTimer = 0;
-					this.cutScenePosterState = 1;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 1;
 				}
 				break;
 		
 			case 1:
 				// "Wow, someone was a big classic science fiction fan here!"
-				this.cutScenePosterStateTimer++;
-				if (this.cutScenePosterStateTimer >= 600 || this.ESCpressedRecord) {
-					this.cutScenePosterStateTimer = 0;
-					this.cutScenePosterState = 2;
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 2;
 				}
 				break;
 		
 			case 2:
-				this.cutScenePosterStateTimer++;
-				if (this.cutScenePosterStateTimer >= 600 || this.ESCpressedRecord) {
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(Look at these posters! Someone was a classic science fiction fan here!)", MSX_COLOR_GREEN);
-					this.cutScenePosterState = 0;
-					this.cutScenePosterStateTimer = 0;
+					this.cutSceneState = 0;
+					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
 					return true;
 				}
@@ -298,12 +317,12 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		var img:GLTile = this.game.GLTM.get("data/cutscene-poster1.png");
+		let img:GLTile = this.game.GLTM.get("data/cutscene-poster1.png");
 		if (img != null) img.draw(0,0);
 
-		switch(this.cutScenePosterState) {	
+		switch(this.cutSceneState) {	
 			case 1:
-				var text:A4TextBubble = new A4TextBubble("Look at these posters! Someone was a classic science fiction fan here!", 
+				let text:A4TextBubble = new A4TextBubble("Look at these posters! Someone was a classic science fiction fan here!", 
 														 30, fontFamily8px, 6, 8, this.game, null);
 				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
 				break;		
@@ -313,16 +332,76 @@ class ShrdluCutScenes {
 	}
 
 
+	updateCutSceneFungi() : boolean
+	{
+		let stateTimes:number[] = [180, 600, 180, 600, 600, 600, 600, 180, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("I placed the strange luminiscent dust in the microscope tray, I think it works automatically...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("Look at that! This is no ordinary dust! It looks like some sort of cell... or machine!!!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("I don't think I was a biologist here, since I don't understand any of the readings though...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("But this is crazy! This is clearly not from earth origin!! Is this why we are in this planet?", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("I should ask Etaoin or Shrdlu to see if they have found life in Aurora...", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
 
 
-	cutSceneCorpseState:number = 0;
-	cutSceneCorpseStateTimer:number = 0;
+	drawCutSceneFungi(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-	cutSceneDiaryState:number = 0;
-	cutSceneDiaryStateTimer:number = 0;
+		let stateImgs:string[] = ["data/cutscene-fungi1.png", 
+								  "data/cutscene-fungi1.png",
+								  "data/cutscene-fungi2.png",
+								  "data/cutscene-fungi2.png",
+								  "data/cutscene-fungi2.png",
+								  "data/cutscene-fungi2.png",
+								  "data/cutscene-fungi2.png",
+								  "data/cutscene-fungi2.png",
+								  null];
+		let stateText:string[] = [null,
+								  "I placed the strange luminiscent dust in the microscope tray, I think it works automatically...",
+								  null,
+								  "Look at that! This is no ordinary dust! It looks like some sort of cell... or machine!!!",
+								  "I don't think I was a biologist here, since I don't understand any of the readings though...",
+								  "But this is crazy! This is clearly not from earth origin!! Is this why we are in this planet?",
+								  "I should ask Etaoin or Shrdlu to see if they have found life in Aurora...",
+								  null,
+								  null];
 
-	cutScenePosterState:number = 0;
-	cutScenePosterStateTimer:number = 0;
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}
+
+
+	cutSceneState:number = 0;
+	cutSceneStateTimer:number = 0;
 
 	ESCpressedRecord:boolean = false;
 
