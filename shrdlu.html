@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<style>
+@font-face {
+    font-family: MSX68;
+    src: url("fonts/MSX68.ttf");
+}
+</style>
+
+<html lang="en">
+<head>
+
+<script src="src/ai/Sort.js"></script>
+<script src="src/ai/Ontology.js"></script>
+<script src="src/ai/Term.js"></script>
+<script src="src/ai/Sentence.js"></script>
+<script src="src/ai/Inference.js"></script>
+<script src="src/ai/TermContainer.js"></script>
+<script src="src/ai/SentenceContainer.js"></script>
+<script src="src/ai/AIDates.js"></script>
+<script src="src/ai/nlp/NLPos.js"></script>
+<script src="src/ai/nlp/NLPatternRule.js"></script>
+<script src="src/ai/nlp/NLPattern.js"></script>
+<script src="src/ai/nlp/NLParser.js"></script>
+<script src="src/ai/nlp/CompiledNLPatternRules.js"></script>
+<script src="src/ai/nlp/NLContext.js"></script>
+<script src="src/ai/nlp/nlg.js"></script>
+<script src="src/ai/TimeInference.js"></script>
+<script src="src/ai/RuleBasedAI.js"></script>
+
+<script src="src/auxiliar/auxiliar.js"></script>
+<script src="src/auxiliar/auxiliar-gfx.js"></script>
+<script src="src/auxiliar/Expression.js"></script>
+<script src="src/auxiliar/GLTile.js"></script>
+<script src="src/auxiliar/GLTManager.js"></script>
+<script src="src/auxiliar/SFXManager.js"></script>
+<script src="src/auxiliar/KeyboardState.js"></script>
+<script src="src/auxiliar/BInterfaceElement.js"></script>
+<script src="src/auxiliar/BButton.js"></script>
+<script src="src/auxiliar/BFrame.js"></script>
+<script src="src/auxiliar/BTextInputFrame.js"></script>
+<script src="src/auxiliar/BInterface.js"></script>
+
+<script src="src/a4engine3/A4Animation.js"></script>
+<script src="src/a4engine3/A4TextBubble.js"></script>
+<script src="src/a4engine3/A4GraphicFile.js"></script>
+<script src="src/a4engine3/A4Agenda.js"></script>
+<script src="src/a4engine3/A4Script.js"></script>
+<script src="src/a4engine3/A4EventRule.js"></script>
+<script src="src/a4engine3/A4MapLayer.js"></script>
+<script src="src/a4engine3/A4Map.js"></script>
+<script src="src/a4engine3/WME.js"></script>
+<script src="src/a4engine3/A4AI.js"></script>
+<script src="src/a4engine3/AIMemory.js"></script>
+<script src="src/a4engine3/A4Object.js"></script>
+<script src="src/a4engine3/A4MapBridge.js"></script>
+<script src="src/a4engine3/A4Trigger.js"></script>
+<script src="src/a4engine3/A4Item.js"></script>
+<script src="src/a4engine3/A4Obstacle.js"></script>
+<script src="src/a4engine3/A4Container.js"></script>
+<script src="src/a4engine3/A4ObstacleContainer.js"></script>
+<script src="src/a4engine3/A4WalkingObject.js"></script>
+<script src="src/a4engine3/A4Character.js"></script>
+<script src="src/a4engine3/A4Vehicle.js"></script>
+<script src="src/a4engine3/A4AICharacter.js"></script>
+<script src="src/a4engine3/A4PlayerCharacter.js"></script>
+<script src="src/a4engine3/A4Door.js"></script>
+<script src="src/a4engine3/A4Lever.js"></script>
+<script src="src/a4engine3/A4PressurePlate.js"></script>
+<script src="src/a4engine3/A4Key.js"></script>
+<script src="src/a4engine3/A4PushableWall.js"></script>
+<script src="src/a4engine3/A4Food.js"></script>
+<script src="src/a4engine3/A4Spade.js"></script>
+<script src="src/a4engine3/A4ObjectFactory.js"></script>
+<script src="src/a4engine3/A4Game.js"></script>
+<script src="src/a4engine3/A4EngineApp.js"></script>
+
+<script src="src/ShrdluAirlockDoor.js"></script>
+<script src="src/shrdlu-interface.js"></script>
+<script src="src/AILocation.js"></script>
+<script src="src/A4RuleBasedAI.js"></script>
+<script src="src/EtaoinAI.js"></script>
+<script src="src/RobotAI.js"></script>
+<script src="src/QwertyAI.js"></script>
+<script src="src/ShrdluAI.js"></script>
+<script src="src/ai/actions/EtaoinTalk.js"></script>
+<script src="src/ai/actions/EtaoinOpen.js"></script>
+<script src="src/ai/actions/EtaoinClose.js"></script>
+<script src="src/ai/actions/EtaoinSwitchOn.js"></script>
+<script src="src/ai/actions/EtaoinSwitchOff.js"></script>
+<script src="src/ai/actions/EtaoinConnectTo.js"></script>
+<script src="src/ai/actions/RobotFollow.js"></script>
+<script src="src/ai/actions/RobotGive.js"></script>
+<script src="src/ai/actions/RobotGo.js"></script>
+<script src="src/ai/actions/RobotTakeTo.js"></script>
+<script src="src/ai/actions/RobotOpenClose.js"></script>
+<script src="src/ai/actions/RobotStop.js"></script>
+<script src="src/ai/actions/RobotTake.js"></script>
+<script src="src/ai/actions/RobotTalk.js"></script>
+<script src="src/ai/actions/Call.js"></script>
+<script src="src/ai/actions/Help.js"></script>
+<script src="src/ai/actions/Memorize.js"></script>
+<script src="src/ai/actions/AnswerPredicate.js"></script>
+<script src="src/ai/actions/AnswerWhere.js"></script>
+<script src="src/ai/actions/AnswerWhoIs.js"></script>
+<script src="src/ai/actions/AnswerWhatIs.js"></script>
+<script src="src/ai/actions/AnswerQuery.js"></script>
+<script src="src/ai/actions/AnswerHowMany.js"></script>
+<script src="src/ai/actions/AnswerWhen.js"></script>
+<script src="src/ai/actions/AnswerWhy.js"></script>
+<script src="src/ai/actions/AnswerHow.js"></script>
+<script src="src/ai/actions/AnswerDefine.js"></script>
+<script src="src/ai/actions/AnswerHearSee.js"></script>
+<script src="src/ai/actions/IntentionActionFactory.js"></script>
+<script src="src/ai/inferences/InferenceMemorize.js"></script>
+<script src="src/ai/inferences/InferenceExecuteAction.js"></script>
+<script src="src/ai/inferences/InferenceAnswerPredicate.js"></script>
+<script src="src/ai/inferences/InferenceAnswerWhatIs.js"></script>
+<script src="src/ai/inferences/InferenceAnswerWhere.js"></script>
+<script src="src/ai/inferences/InferenceAnswerWho.js"></script>
+<script src="src/ai/inferences/InferenceAnswerQuery.js"></script>
+<script src="src/ai/inferences/InferenceAnswerHowMany.js"></script>
+<script src="src/ai/inferences/InferenceAnswerWhy.js"></script>
+<script src="src/ai/inferences/InferenceAnswerHow.js"></script>
+<script src="src/ai/inferences/InferenceAnswerHowGoto.js"></script>
+<script src="src/ai/inferences/InferenceEffectFactory.js"></script>
+<script src="src/RuleBasedAIDebugger.js"></script>
+<script src="src/ShrdluGameScript.js"></script>
+<script src="src/ShrdluCutScenes.js"></script>
+
+<script src="src/lib/lz-string.js"></script>
+
+<script src="src/main.js"></script>
+<!--script src="nlp/nlp-test.js"></script-->
+</head>
+
+<body>
+<p align="center">
+	<canvas id="cnvs" width="1024" height="768"></canvas>
+</p>
+
+<p id="log"></p>
+</body>
+
+</html>
