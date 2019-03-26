@@ -564,9 +564,9 @@
     <property name="direction" type="int" value="0"/>
    </properties>
   </object>
-  <object id="305" type="computer-table" x="584" y="192" width="8" height="32">
+  <object id="305" type="msx-computer-table" x="584" y="192" width="16" height="32">
    <properties>
-    <property name="direction" type="int" value="2"/>
+    <property name="direction" type="int" value="3"/>
    </properties>
   </object>
   <object id="306" type="computer-table" x="528" y="192" width="8" height="32">
@@ -624,9 +624,9 @@
     <property name="direction" type="int" value="2"/>
    </properties>
   </object>
-  <object id="317" type="chair" x="592" y="200" width="8" height="16">
+  <object id="317" type="chair" x="592" y="216" width="8" height="16">
    <properties>
-    <property name="direction" type="int" value="0"/>
+    <property name="direction" type="int" value="1"/>
    </properties>
   </object>
   <object id="318" type="chair" x="600" y="360" width="8" height="16">
@@ -1293,7 +1293,7 @@
   <object id="577" type="light" x="400" y="208" width="8" height="8"/>
   <object id="578" type="light" x="480" y="192" width="8" height="8"/>
   <object id="579" type="light" x="536" y="192" width="8" height="8"/>
-  <object id="580" type="light" x="592" y="192" width="8" height="8"/>
+  <object id="580" type="light" x="616" y="192" width="8" height="8"/>
   <object id="581" type="light" x="496" y="304" width="8" height="8"/>
   <object id="582" type="light" x="552" y="304" width="8" height="8"/>
   <object id="583" type="light" x="608" y="304" width="8" height="8"/>

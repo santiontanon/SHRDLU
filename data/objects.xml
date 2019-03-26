@@ -156,6 +156,21 @@
 		</onStart>
 	</ObjectClass>	
 
+	<ObjectClass class="msx-computer-table" super="table" name="computer table">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle-left" dx="1" dy="4" period="4" looping="false" file="background.png">235</animation>		
+		<animation name="idle-right" dx="1" dy="4" period="4" looping="false" file="background.png">236</animation>		
+		<animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="background.png">648</animation>		
+		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="background.png">448</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Look at this! This computer must be centuries old! And look at that screen! Why is it so thick?!" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>		
+
 	<ObjectClass class="stove" super="furniture" name="stove">
 		<attribute name="tallness" value="8"/>
 		<attribute name="interacteable" value="true"/>
@@ -194,8 +209,8 @@
 		<attribute name="interacteable" value="true"/>
 		<animation name="idle-right" dx="1" dy="2" period="4" looping="false" file="background.png">238</animation>		
 		<animation name="idle-left" dx="1" dy="2" period="4" looping="false" file="background.png">239</animation>		
-		<animation name="idle-up" dx="1" dy="2" period="4" looping="false" file="background.png">318</animation>		
-		<animation name="idle-down" dx="1" dy="2" period="4" looping="false" file="background.png">319</animation>		
+		<animation name="idle-up" dx="1" dy="2" period="4" looping="false" file="background.png">319</animation>		
+		<animation name="idle-down" dx="1" dy="2" period="4" looping="false" file="background.png">318</animation>		
 		<eventRule event="interact">
 			<rotateRight/>
 		</eventRule>

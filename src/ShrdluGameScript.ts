@@ -23,14 +23,12 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		/*
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			this.skip_to_act_2();
 		}
-		*/
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -141,9 +139,11 @@ class ShrdluGameScript {
 		this.skip_to_end_of_act_1();
 		this.act = "2";
 		// West cave:
-		// this.game.currentPlayer.warp(4*8, 16*8, this.game.maps[5])
+		// this.game.currentPlayer.warp(4*8, 16*8, this.game.maps[5]);
 		// Science lab:
-		this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0])
+		//this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
+		// room 6:
+		this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
 	}
 
 
