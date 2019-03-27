@@ -2,6 +2,7 @@ var CUTSCENE_CORPSE:number = 1;
 var CUTSCENE_DIARY:number = 2;
 var CUTSCENE_POSTER:number = 3;
 var CUTSCENE_FUNGI:number = 4;
+var CUTSCENE_MSX:number = 5;
 
 
 class ShrdluCutScenes {
@@ -19,6 +20,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_DIARY) return this.updateCutSceneDiary();
 		if (cutScene == CUTSCENE_POSTER) return this.updateCutScenePoster();
 		if (cutScene == CUTSCENE_FUNGI) return this.updateCutSceneFungi();
+		if (cutScene == CUTSCENE_MSX) return this.updateCutSceneMSX();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -29,6 +31,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_DIARY) this.drawCutSceneDiary(screen_width, screen_height);
 		if (cutScene == CUTSCENE_POSTER) this.drawCutScenePoster(screen_width, screen_height);
 		if (cutScene == CUTSCENE_FUNGI) this.drawCutSceneFungi(screen_width, screen_height);
+		if (cutScene == CUTSCENE_MSX) this.drawCutSceneMSX(screen_width, screen_height);
 	}
 
 
@@ -382,6 +385,66 @@ class ShrdluCutScenes {
 								  "I don't think I was a biologist here, since I don't understand any of the readings though...",
 								  "But this is crazy! This is clearly not from earth origin!! Is this why we are in this planet?",
 								  "I should ask Etaoin or Shrdlu to see if they have found life in Aurora...",
+								  null,
+								  null];
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}
+
+
+	updateCutSceneMSX() : boolean
+	{
+		let stateTimes:number[] = [180, 600, 600, 600, 180, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("Look at that! Someone in this station was a retrocomputer fan!! Look at that CRT screen!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("According to the case, this is a 1983 Philips VG-8020 MSX computer!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("And it still on! How many years has this machine been on and still working?!", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneMSX(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-msx1.png", 
+								  "data/cutscene-msx1.png",
+								  "data/cutscene-msx1.png",
+								  "data/cutscene-msx1.png",
+								  "data/cutscene-msx1.png",
+								  null];
+		let stateText:string[] = [null,
+								  "Look at that! Someone in this station was a retrocomputer fan!! Look at that CRT screen!",
+								  "According to the case, this is a 1983 Philips VG-8020 MSX computer!",
+								  "And it still on! How many years has this machine been on and still working?!",
 								  null,
 								  null];
 

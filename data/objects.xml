@@ -164,7 +164,7 @@
 		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="background.png">448</animation>		
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="Look at this! This computer must be centuries old! And look at that screen! Why is it so thick?!" thought="true"/>
+        	<cutScene cutscene="5"/>
         </eventRule>
 		<onStart>
 			<addPerceptionProperty property="grey"/>
