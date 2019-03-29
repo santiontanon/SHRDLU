@@ -964,6 +964,59 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefQuery(#and(noun(X, N), determiner.other(X,N)), QUERY_V, QUERY)
 			   		 #derefFromContext(noun(X2, N2), LOCATION)"/>
 
+	<NLPattern name="perf.q.predicate-verb-uncountable-noun"
+			   head="perf.q.predicate(LISTENER, #and(#cons(VERB, SUBJECT, QUERY_V), #cons(X3, QUERY_V)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 (verb('verb.do'[symbol], N, P, [past-tense]) | verb('verb.have'[symbol], N, P, [present-tense]) )
+			   		 nounPhrase(X2, N, P, C) 
+			   		 verb(VERB, N2, P2, T2) 
+					 ['any'] noun(X3, [uncountable]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+
+	<NLPattern name="perf.q.predicate-verb-uncountable-noun-object"
+			   head="perf.q.predicate(LISTENER, #and(#cons(VERB, SUBJECT, QUERY_V, OBJECT), #cons(X3, QUERY_V)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 (verb('verb.do'[symbol], N, P, [past-tense]) | verb('verb.have'[symbol], N, P, [present-tense]) )
+			   		 nounPhrase(X2, N, P, C) 
+			   		 verb(VERB, N2, P2, T2) 
+					 ['any'] noun(X3, [uncountable]) 
+			   		 preposition(PREP)
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C4, OBJECT)"/>
+
+	<NLPattern name="perf.q.predicate-verb-uncountable-noun-we"
+			   head="perf.q.predicate(LISTENER, #and(#cons(VERB, SUBJECT_V, QUERY_V), #cons(X3, QUERY_V)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 (verb('verb.do'[symbol], N, P, [past-tense]) | verb('verb.have'[symbol], N, P, [present-tense]) )
+			   		 'we'
+			   		 verb(VERB, N2, P2, T2) 
+					 ['any'] noun(X3, [uncountable]) 
+			   		 ('!'|'?')*"/>
+
+	<NLPattern name="perf.q.predicate-verb-uncountable-noun-object-we"
+			   head="perf.q.predicate(LISTENER, #and(#cons(VERB, SUBJECT_V, QUERY_V, OBJECT), #cons(X3, QUERY_V)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 (verb('verb.do'[symbol], N, P, [past-tense]) | verb('verb.have'[symbol], N, P, [present-tense]) )
+			   		 'we'
+			   		 verb(VERB, N2, P2, T2) 
+					 ['any'] noun(X3, [uncountable]) 
+			   		 preposition(PREP)
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C4, OBJECT)"/>
+
+
 	<NLPattern name="perf.q.predicate-can-X-do-Y"
 			   head="perf.q.predicate(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

@@ -212,6 +212,13 @@ context.shortTermMemory.push(ce12);
 context.shortTermMemory.push(ce13);
 context.shortTermMemory.push(ce14);
 
+// add all the terms to short term memory of the AI
+for(let ce of context.shortTermMemory) {
+  for(let t of ce.terms) {
+    testAI.shortTermMemory.addTerm(t, PERCEPTION_PROVENANCE, 0, 0);
+  }
+}
+
 
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
@@ -278,6 +285,9 @@ let socrates_entity:NLContextEntity = new NLContextEntity(new ConstantTermAttrib
                                                           [Term.fromString("name('H1'[#id],'socrates'[symbol])",o),
                                                            Term.fromString("man('H1'[#id])",o)])
 context.shortTermMemory.push(socrates_entity);
+for(let t of socrates_entity.terms) {
+  testAI.shortTermMemory.addTerm(t, PERCEPTION_PROVENANCE, 0, 0);
+}
 
 NLParseTest("socrates was not a man", o.getSort("performative"), context, "perf.inform([any], #not(man('H1'[#id])))");
 NLParseTest("socrates was not mortal", o.getSort("performative"), context, "perf.inform([any], #not(mortal('H1'[#id])))");
@@ -864,6 +874,11 @@ NLParseTestUnifyingListener("what happened to the others?", o.getSort("performat
 NLParseTestUnifyingListener("no other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V11:human(V)))");
 NLParseTestUnifyingListener("no other humans here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), #and(space.at(V, 'room1'[#id]), V11:human(V))))"); 
 NLParseTestUnifyingListener("no other humans in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), #and(space.at(V, 'room1'[#id]), V11:human(V))))");
+
+// For ACT 2:
+NLParseTestUnifyingListener("did you find life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
+NLParseTestUnifyingListener("have you found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
+NLParseTestUnifyingListener("have we found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(Y, X, 'location-aurora-station'[#id]), living-being(X)))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

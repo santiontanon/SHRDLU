@@ -1086,6 +1086,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("laundry room", "laundry.room", o);
     this.addStandardNounPOS("leg", "leg", o);
     this.addStandardNounPOS("light", "light", o);
+    this.addStandardNounPOS("life", "life", o);
+    this.addUncountableNounPOS("life", "living-being", o);
     this.addStandardNounPOS("living being", "living-being", o);
     this.addStandardNounPOS("location", "space.location", o);
     this.addStandardNounPOS("machine", "machine", o);

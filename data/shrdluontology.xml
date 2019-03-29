@@ -247,6 +247,8 @@
     <sort name="leg" super="body-part"/> 
     <sort name="foot" super="body-part"/> 
 
+    <sort name="life" super="abstract-entity"/> 
+
     <sort name="flying-vehicle" super="vehicle"/>
     <sort name="ship" super="flying-vehicle"/>
     <sort name="land-vehicle" super="vehicle"/>

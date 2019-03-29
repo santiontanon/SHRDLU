@@ -452,11 +452,10 @@ class RuleBasedAI {
 			while(sentence_xml != null) {
 				let rule:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
 				let provenance:string = sentence_xml.getAttribute("provenance");
-				let time:number = this.time_in_seconds;
-				let timeEnd:number = this.time_in_seconds;
+				//let timeEnd:number = this.time_in_seconds;
 				hasPrevious = true;
 				if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
-				if (sentence_xml.getAttribute("timeEnd") != null) timeEnd = Number(sentence_xml.getAttribute("timeEnd"));
+				//if (sentence_xml.getAttribute("timeEnd") != null) timeEnd = Number(sentence_xml.getAttribute("timeEnd"));
 				if (provenance == BACKGROUND_PROVENANCE) {
 					// this was a sentence that already was in the BK, so no need to add it
 					sentence_xml = null;	// end of recursion

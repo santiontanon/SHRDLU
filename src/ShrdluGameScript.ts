@@ -33,7 +33,8 @@ class ShrdluGameScript {
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
 		if (this.act == "2") this.update_act_2();
-		// ...
+		
+		this.update_sideplots();
 
 		this.processQueuedThoughtBubbles();
 	}
@@ -1580,6 +1581,64 @@ class ShrdluGameScript {
 	}
 
 
+	/* --------------------------------------------------------
+		EVENTS THAT ARE NOT TIED TO ANY PARTICULAR ACT
+	   -------------------------------------------------------- */
+	update_sideplots()
+	{
+		// Finding life in Aurora subplot:
+		if (!this.finding_life_side_plot_taken_question &&
+			this.game.getStoryStateVariable("luminiscent-fungi") == "taken") {
+			// Here if the player asks about finding life in aurora, he should be reminded to analyze the fungi with a thought bubble:
+			if (this.playerAskedAboutFindingLife() != null) {
+				this.queueThoughtBubble("We have not found life yet... But what about that weird dust I found?!");
+				this.queueThoughtBubble("I need to find a way to analyze it! Could it be that this planet has developed life?!");
+				this.finding_life_side_plot_taken_question = true;
+			}
+		} else if (!this.finding_life_side_plot_analyzed_question &&
+				   this.game.getStoryStateVariable("luminiscent-fungi") == "analyzed") {
+			// Here, if the player asks about finding life in aurora, he should just be impressed by what he has found
+			if (this.playerAskedAboutFindingLife() != null) {
+				this.queueThoughtBubble("I still cannot believe that dust I found is a form of life!");
+				this.queueThoughtBubble("How I wish there was some other person to share these amazing news with!");
+				this.finding_life_side_plot_analyzed_question = true;
+			}
+		}
+	}
+
+
+	playerAskedAboutFindingLife() : Term
+	{
+		if (this.contextEtaoin == null ||
+			this.contextQwerty == null ||
+			this.contextShrdlu == null) {
+			this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
+			this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+			this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+		}
+		for(let context of [this.contextQwerty, this.contextEtaoin, this.contextShrdlu]) {
+			if (context != null) {
+				var p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+				if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
+					var perf:Term = p1.performative;
+					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate"))  &&
+						perf.attributes.length>1 &&
+						perf.attributes[1] instanceof TermTermAttribute) {
+						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						var pattern1:Term = Term.fromString("#and(verb.find(X, Y, Z), living-being(X))", this.game.ontology);
+						var b:Bindings = new Bindings();
+						if (argument.unify(pattern1, true, b)) {
+							// match!
+							return perf;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
 	questionAboutBeingAlone(perf:Term) : boolean
 	{
 		var v:TermAttribute = null;
@@ -1779,6 +1838,14 @@ class ShrdluGameScript {
         xmlString += "act_1_asked_about_corpse=\""+this.act_1_asked_about_corpse[0]+","+
         										   this.act_1_asked_about_corpse[1]+","+
         										   this.act_1_asked_about_corpse[2]+"\"\n";   
+
+        xmlString += "act_2_state=\""+this.act_2_state+"\"\n";   
+        xmlString += "act_2_state_timer=\""+this.act_2_state_timer+"\"\n";   
+        xmlString += "act_2_state_start_time=\""+this.act_2_state_start_time+"\"\n";   
+
+        xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
+        xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
+
         xmlString += "/>\n";     
         for(let tmp in this.thoughtBubbleQueue) {
         	xmlString += "<thoughtBubbleQueue value=\""+tmp+"\"/>\n";  
@@ -1822,6 +1889,13 @@ class ShrdluGameScript {
     	this.act_1_asked_about_corpse = [];
     	tmp1 = xml.getAttribute("act_1_asked_about_corpse").split(",");
     	for(let tmp2 of tmp1) this.act_1_asked_about_corpse.push(tmp2 == "true");
+
+    	this.act_2_state = Number(xml.getAttribute("act_2_state"));
+    	this.act_2_state_timer = Number(xml.getAttribute("act_2_state_timer"));
+    	this.act_2_state_start_time = Number(xml.getAttribute("act_2_state_start_time"));
+
+    	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
+    	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
 
 		this.thoughtBubbleQueue = []
     	for(let xml_tmp of getElementChildrenByTag(xml,"thoughtBubbleQueue")) {
@@ -1873,4 +1947,8 @@ class ShrdluGameScript {
 	act_2_state:number = 0;
 	act_2_state_timer:number = 0;
 	act_2_state_start_time:number = 0;
+
+
+	finding_life_side_plot_taken_question:boolean = false;
+	finding_life_side_plot_analyzed_question:boolean = false;
 }
