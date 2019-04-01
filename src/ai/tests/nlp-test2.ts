@@ -49,9 +49,10 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
         var found:boolean = false;
         console.log(sentence + "\n" + parses.length + " parses:");
         for(let p of parses) {
-          console.log("    parse: " + p.result.toString());
+          console.log("    parse: " + p.result);
         }
-        console.log("  highest priority parse: " + parse.result.toString());
+        console.log("  highest priority parse: " + parse.result);
+        console.log("  highest priority parse ruleNames: " + parse.ruleNames);
         if (parse.result.equalsConsideringAnd(expectedResult)) {
             found = true;
         }
@@ -101,11 +102,12 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
         var found:boolean = false;
         console.log(sentence + "\n" + parses.length + " parses:");
         for(let p of parses) {
-          console.log("    parse: " + p.result.toString());
+          console.log("    parse: " + p.result);
 //          console.log("        ruleNames: " + p.ruleNames);
         }
         parse.result = parser.unifyListener(parse.result, listener);
-        console.log("  highest priority parse: " + parse.result.toString());
+        console.log("  highest priority parse: " + parse.result);
+        console.log("  highest priority parse ruleNames: " + parse.ruleNames);
         if (parse.result.equalsConsideringAnd(expectedResult)) {
             found = true;
         }
@@ -879,6 +881,8 @@ NLParseTestUnifyingListener("no other humans in the kitchen?", o.getSort("perfor
 NLParseTestUnifyingListener("did you find life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("have you found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("have we found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(Y, X, 'location-aurora-station'[#id]), living-being(X)))");
+NLParseTestUnifyingListener("is there life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(space.at(X, 'location-aurora-station'[#id]), living-being(X)))");
+NLParseTestUnifyingListener("is there life in the station other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(space.at(X, 'location-aurora-station'[#id]), living-being(X))))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

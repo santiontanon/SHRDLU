@@ -2364,6 +2364,7 @@ class A4Game {
                 e.key == '\'' ||
                 e.key == '?' ||
                 e.key == '!' ||
+                e.key == '-' ||
                 // just for entering logic:
                 e.key == '#' ||
                 e.key == ':' ||

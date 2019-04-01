@@ -596,6 +596,9 @@ class NLPattern {
 			}
 		}
 
+		// console.log("#derefQuery.otherRelations: " + otherRelations);
+		// console.log("#derefQuery.otherTerms: " + otherTerms);
+
 		var potentialQueryFunctor:TermAttribute = null;
 		var queryFunctor:TermAttribute = null;
 		var queryFunctorSort:Sort = null;

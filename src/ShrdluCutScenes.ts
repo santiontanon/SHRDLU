@@ -349,6 +349,24 @@ class ShrdluCutScenes {
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
+
+			// add the knowledge of this event to Etaoin (and Qwerty and Shrdlu if they are in the station):
+			let terms:Term[] = [];
+			for(let item of this.game.currentPlayer.inventory) {
+				if (item.is_a_string("luminiscent-dust")) {
+					terms.push(Term.fromString("verb.find('david'[#id], '"+item.ID+"'[#id], 'location-west-cave'[#id])", this.game.ontology));
+					terms.push(Term.fromString("fungi('"+item.ID+"'[#id])", this.game.ontology));
+				}
+			}
+			for(let t of terms) {
+				this.game.etaoinAI.addLongTermTerm(t, PERCEPTION_PROVENANCE);
+				this.game.qwertyAI.addLongTermTerm(t, PERCEPTION_PROVENANCE);
+				if (this.game.shrdluAI.robot.map.name == "Aurora Station" ||
+					this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+					this.game.shrdluAI.addLongTermTerm(t, PERCEPTION_PROVENANCE);
+				}
+			}
+
 			return true;
 		}
 

@@ -626,6 +626,30 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 					 #derefQuery(C, V, PREDICATE)"
 			   priority="150"/>			   		 
+	<NLPattern name="predicate-is-there-uncountable-prep"
+			   head="perf.q.predicate(LISTENER, #and(#cons(PREPOSITION, V, O2), PREDICATE))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 verb('verb.be'[symbol], [singular], P, T) ['there'] nounPhrase(X, [uncountable], P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, O2) 
+					 #derefQuery(C, V, PREDICATE)"
+			   priority="250"/>			   		 
+	<NLPattern name="predicate-is-there-uncountable-prep-prep"
+			   head="perf.q.predicate(LISTENER, #and(#cons(PREPOSITION, V, O2), #and(#cons(PREPOSITION2, V, O3), PREDICATE)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 verb('verb.be'[symbol], [singular], P, T) ['there'] nounPhrase(X, [uncountable], P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
+			   		 preposition(PREPOSITION2) nounPhrase(X3, [singular], P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, O2) 
+			   		 #derefFromContext(C3, O3) 
+					 #derefQuery(C, V, PREDICATE)"
+			   priority="300"/>			   		 
 	<NLPattern name="predicate-is-there-uncountable"
 			   head="perf.q.predicate(LISTENER, PREDICATE)"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -633,7 +657,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
 			   		 verb('verb.be'[symbol], [singular], P, T) ['there'] nounPhrase(X, [uncountable], P, C)  
 			   		 ('!'|'?')*
-					 #derefQuery(C, V, PREDICATE)"/>			   		 
+					 #derefQuery(C, V, PREDICATE)"
+			   priority="200"/>
 	<NLPattern name="predicate-is-there-prep"
 			   head="perf.q.predicate(LISTENER, #and(PREDICATE, #cons(PREPOSITION, V, OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -1015,7 +1040,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X4, N4, P4, C4)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C4, OBJECT)"/>
-
 
 	<NLPattern name="perf.q.predicate-can-X-do-Y"
 			   head="perf.q.predicate(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"

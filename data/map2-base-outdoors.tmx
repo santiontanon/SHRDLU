@@ -239,64 +239,64 @@
     <property name="targetY" value="24"/>
    </properties>
   </object>
-  <object id="600" type="window" x="456" y="400" width="16" height="16"/>
-  <object id="601" type="window" x="376" y="400" width="16" height="16"/>
-  <object id="602" type="window" x="344" y="400" width="16" height="16"/>
-  <object id="603" type="window" x="312" y="400" width="16" height="16"/>
-  <object id="604" type="window" x="280" y="400" width="16" height="16"/>
-  <object id="605" type="window" x="168" y="400" width="16" height="16"/>
-  <object id="606" type="window" x="136" y="400" width="16" height="16"/>
-  <object id="607" type="window" x="56" y="400" width="16" height="16"/>
-  <object id="623" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="624" y="216" width="16" height="64"/>
-  <object id="628" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="8" width="104" height="24"/>
-  <object id="629" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="8" y="192" width="16" height="32"/>
-  <object id="630" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="440" width="40" height="32"/>
-  <object id="624" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="640" y="8" width="8" height="464"/>
-  <object id="625" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="0" width="648" height="8"/>
-  <object id="626" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="8" height="456"/>
-  <object id="627" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="472" width="648" height="8"/>
-  <object id="631" type="communication.tower" x="44" y="136" width="24" height="48"/>
-  <object id="633" type="paper.recycling.facility" x="240" y="128" width="8" height="24"/>
-  <object id="634" type="paper.recycling.facility" x="248" y="128" width="8" height="24"/>
-  <object id="635" type="plastic.recycling.facility" x="256" y="128" width="8" height="24"/>
-  <object id="636" type="plastic.recycling.facility" x="264" y="128" width="8" height="24"/>
-  <object id="637" type="glass.recycling.facility" x="272" y="128" width="8" height="24"/>
-  <object id="638" type="waste.recycling.facility" x="280" y="128" width="8" height="24"/>
-  <object id="639" type="tank.facility" x="240" y="88" width="16" height="24"/>
-  <object id="641" type="tank.facility" x="256" y="88" width="16" height="24"/>
-  <object id="642" type="tank.facility" x="272" y="88" width="16" height="24"/>
-  <object id="643" type="oxygentank.facility" x="320" y="112" width="48" height="40"/>
-  <object id="644" type="waterfiltering.facility" x="424" y="112" width="32" height="32"/>
-  <object id="645" type="tank.facility" x="480" y="96" width="16" height="24"/>
-  <object id="646" type="tank.facility" x="480" y="120" width="16" height="24"/>
-  <object id="647" type="tank.facility" x="504" y="96" width="16" height="24"/>
-  <object id="648" type="tank.facility" x="504" y="120" width="16" height="24"/>
-  <object id="649" type="solarpanel.facility" x="552" y="352" width="16" height="16"/>
-  <object id="650" type="solarpanel.facility" x="576" y="352" width="16" height="16"/>
-  <object id="651" type="solarpanel.facility" x="552" y="376" width="16" height="16"/>
-  <object id="652" type="solarpanel.facility" x="552" y="400" width="16" height="16"/>
-  <object id="653" type="solarpanel.facility" x="576" y="376" width="16" height="16"/>
-  <object id="654" type="solarpanel.facility" x="576" y="400" width="16" height="16"/>
-  <object id="655" type="solarpanel.facility" x="624" y="400" width="16" height="16"/>
-  <object id="656" type="solarpanel.facility" x="624" y="376" width="16" height="16"/>
-  <object id="657" type="solarpanel.facility" x="624" y="352" width="16" height="16"/>
-  <object id="658" type="solarpanel.facility" x="600" y="352" width="16" height="16"/>
-  <object id="659" type="solarpanel.facility" x="600" y="376" width="16" height="16"/>
-  <object id="660" type="solarpanel.facility" x="600" y="400" width="16" height="16"/>
-  <object id="661" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
-  <object id="662" type="greenhouse.facility" x="320" y="24" width="64" height="32"/>
-  <object id="663" type="greenhouse.facility" x="408" y="24" width="64" height="32"/>
-  <object id="664" type="greenhouse.facility" x="320" y="64" width="64" height="32"/>
-  <object id="665" type="greenhouse.facility" x="408" y="64" width="64" height="32"/>
-  <object id="666" type="small-boulder" x="72" y="16" width="8" height="8"/>
-  <object id="667" type="small-boulder" x="56" y="80" width="8" height="8"/>
-  <object id="668" type="small-boulder" x="152" y="144" width="8" height="8"/>
-  <object id="669" type="small-boulder" x="184" y="160" width="8" height="8"/>
-  <object id="670" type="small-boulder" x="496" y="32" width="8" height="8"/>
-  <object id="671" type="small-boulder" x="576" y="16" width="8" height="8"/>
-  <object id="672" type="small-boulder" x="592" y="64" width="8" height="8"/>
-  <object id="673" type="small-boulder" x="624" y="296" width="8" height="8"/>
-  <object id="674" type="small-boulder" x="512" y="344" width="8" height="8"/>
-  <object id="675" type="small-boulder" x="344" y="440" width="8" height="8"/>  
+  <object id="700" type="window" x="456" y="400" width="16" height="16"/>
+  <object id="701" type="window" x="376" y="400" width="16" height="16"/>
+  <object id="702" type="window" x="344" y="400" width="16" height="16"/>
+  <object id="703" type="window" x="312" y="400" width="16" height="16"/>
+  <object id="704" type="window" x="280" y="400" width="16" height="16"/>
+  <object id="705" type="window" x="168" y="400" width="16" height="16"/>
+  <object id="706" type="window" x="136" y="400" width="16" height="16"/>
+  <object id="707" type="window" x="56" y="400" width="16" height="16"/>
+  <object id="723" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="624" y="216" width="16" height="64"/>
+  <object id="728" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="8" width="104" height="24"/>
+  <object id="729" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="8" y="192" width="16" height="32"/>
+  <object id="730" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="440" width="40" height="32"/>
+  <object id="724" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="640" y="8" width="8" height="464"/>
+  <object id="725" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="0" width="648" height="8"/>
+  <object id="726" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="8" height="456"/>
+  <object id="727" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="472" width="648" height="8"/>
+  <object id="731" type="communication.tower" x="44" y="136" width="24" height="48"/>
+  <object id="733" type="paper.recycling.facility" x="240" y="128" width="8" height="24"/>
+  <object id="734" type="paper.recycling.facility" x="248" y="128" width="8" height="24"/>
+  <object id="735" type="plastic.recycling.facility" x="256" y="128" width="8" height="24"/>
+  <object id="736" type="plastic.recycling.facility" x="264" y="128" width="8" height="24"/>
+  <object id="737" type="glass.recycling.facility" x="272" y="128" width="8" height="24"/>
+  <object id="738" type="waste.recycling.facility" x="280" y="128" width="8" height="24"/>
+  <object id="739" type="tank.facility" x="240" y="88" width="16" height="24"/>
+  <object id="741" type="tank.facility" x="256" y="88" width="16" height="24"/>
+  <object id="742" type="tank.facility" x="272" y="88" width="16" height="24"/>
+  <object id="743" type="oxygentank.facility" x="320" y="112" width="48" height="40"/>
+  <object id="744" type="waterfiltering.facility" x="424" y="112" width="32" height="32"/>
+  <object id="745" type="tank.facility" x="480" y="96" width="16" height="24"/>
+  <object id="746" type="tank.facility" x="480" y="120" width="16" height="24"/>
+  <object id="747" type="tank.facility" x="504" y="96" width="16" height="24"/>
+  <object id="748" type="tank.facility" x="504" y="120" width="16" height="24"/>
+  <object id="749" type="solarpanel.facility" x="552" y="352" width="16" height="16"/>
+  <object id="750" type="solarpanel.facility" x="576" y="352" width="16" height="16"/>
+  <object id="751" type="solarpanel.facility" x="552" y="376" width="16" height="16"/>
+  <object id="752" type="solarpanel.facility" x="552" y="400" width="16" height="16"/>
+  <object id="753" type="solarpanel.facility" x="576" y="376" width="16" height="16"/>
+  <object id="754" type="solarpanel.facility" x="576" y="400" width="16" height="16"/>
+  <object id="755" type="solarpanel.facility" x="624" y="400" width="16" height="16"/>
+  <object id="756" type="solarpanel.facility" x="624" y="376" width="16" height="16"/>
+  <object id="757" type="solarpanel.facility" x="624" y="352" width="16" height="16"/>
+  <object id="758" type="solarpanel.facility" x="600" y="352" width="16" height="16"/>
+  <object id="759" type="solarpanel.facility" x="600" y="376" width="16" height="16"/>
+  <object id="760" type="solarpanel.facility" x="600" y="400" width="16" height="16"/>
+  <object id="761" type="batteryrecharge.facility" x="520" y="368" width="16" height="16"/>
+  <object id="762" type="greenhouse.facility" x="320" y="24" width="64" height="32"/>
+  <object id="763" type="greenhouse.facility" x="408" y="24" width="64" height="32"/>
+  <object id="764" type="greenhouse.facility" x="320" y="64" width="64" height="32"/>
+  <object id="765" type="greenhouse.facility" x="408" y="64" width="64" height="32"/>
+  <object id="766" type="small-boulder" x="72" y="16" width="8" height="8"/>
+  <object id="767" type="small-boulder" x="56" y="80" width="8" height="8"/>
+  <object id="768" type="small-boulder" x="152" y="144" width="8" height="8"/>
+  <object id="769" type="small-boulder" x="184" y="160" width="8" height="8"/>
+  <object id="770" type="small-boulder" x="496" y="32" width="8" height="8"/>
+  <object id="771" type="small-boulder" x="576" y="16" width="8" height="8"/>
+  <object id="772" type="small-boulder" x="592" y="64" width="8" height="8"/>
+  <object id="773" type="small-boulder" x="624" y="296" width="8" height="8"/>
+  <object id="774" type="small-boulder" x="512" y="344" width="8" height="8"/>
+  <object id="775" type="small-boulder" x="344" y="440" width="8" height="8"/>  
  </objectgroup>
 </map>

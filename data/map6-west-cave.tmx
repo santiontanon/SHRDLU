@@ -124,15 +124,15 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="598" name="WEST-CAVE" type="Bridge" x="232" y="88" width="16" height="8"/>
-  <object id="607" name="WEST-CAVE" type="BridgeDestination" x="232" y="64" width="16" height="24"/>
-  <object id="601" type="large-boulder" x="64" y="168" width="16" height="16"/>
-  <object id="603" type="large-boulder" x="184" y="48" width="16" height="16"/>
-  <object id="608" type="large-boulder" x="72" y="152" width="16" height="16"/>
-  <object id="609" type="large-boulder" x="88" y="144" width="16" height="16"/>
-  <object id="610" type="luminiscent-fungi" x="32" y="72" width="8" height="8"/>
-  <object id="613" type="luminiscent-fungi" x="40" y="72" width="8" height="8"/>
-  <object id="614" type="luminiscent-fungi" x="48" y="72" width="8" height="8"/>
-  <object id="615" type="luminiscent-fungi" x="40" y="80" width="8" height="8"/>
+  <object id="1100" name="WEST-CAVE" type="Bridge" x="232" y="88" width="16" height="8"/>
+  <object id="1101" name="WEST-CAVE" type="BridgeDestination" x="232" y="64" width="16" height="24"/>
+  <object id="1102" type="large-boulder" x="64" y="168" width="16" height="16"/>
+  <object id="1103" type="large-boulder" x="184" y="48" width="16" height="16"/>
+  <object id="1108" type="large-boulder" x="72" y="152" width="16" height="16"/>
+  <object id="1109" type="large-boulder" x="88" y="144" width="16" height="16"/>
+  <object id="1110" type="luminiscent-dust" x="32" y="72" width="8" height="8"/>
+  <object id="1111" type="luminiscent-dust" x="40" y="72" width="8" height="8"/>
+  <object id="1112" type="luminiscent-dust" x="48" y="72" width="8" height="8"/>
+  <object id="1113" type="luminiscent-dust" x="40" y="80" width="8" height="8"/>
  </objectgroup>
 </map>

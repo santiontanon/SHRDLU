@@ -379,7 +379,10 @@ class POSParser {
 
       "arthur c. clarke",
       "arthur c clarke",
-      "sir isaac newton"
+      "sir isaac newton",
+
+      "msx computer",
+      "vg 8020"
     ];
 
     // punctuation:
@@ -1025,6 +1028,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("door", "door", o);
     this.addStandardNounPOS("dumbbell", "dumbbell", o);
     this.addStandardNounPOS("dumbell", "dumbbell", o);
+    this.addTokenPOS(new PartOfSpeech("dust", "dust", Term.fromString("noun('dust'[dust], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("dust", "dust", Term.fromString("noun('dust'[dust], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("dust", "dust", Term.fromString("noun('dust'[dust], [uncountable])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("east", "east", Term.fromString("noun('east'[east], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("emergency", "emergency", Term.fromString("noun('emergency'[emergency], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("emergencies", "emergency", Term.fromString("noun('emergency'[emergency], [plural])", o), 1.0));
@@ -1103,6 +1109,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("metal 3d printer", "metal-3dprinter", o);
     this.addStandardNounPOS("meter", "meter", o);
     this.addStandardNounPOS("mess hall", "mess.hall", o);
+    this.addStandardNounPOS("microscope", "microscope", o);
     this.addUncountableNounPOS("milk", "milk", o);
     this.addStandardNounPOS("milk bottle", "milk-bottle", o);
     this.addTokenPOS(new PartOfSpeech("millenium", "time.millenium", Term.fromString("noun('time.millenium'[time.millenium], [singular])", o), 1.0));
@@ -1111,6 +1118,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("minute", "time.minute", o);
     this.addStandardNounPOS("moment", "time.location", o);
     this.addStandardNounPOS("month", "time.month", o);
+    this.addTokenPOS(new PartOfSpeech("msx", "msx.computer", Term.fromString("noun('msx.computer'[msx.computer], [singular])", o), 1.0));
+    this.addStandardNounPOS("msx computer", "msx.computer", o);
+    this.addStandardNounPOS("vg-8020", "vg8020.computer", o);
+    this.addStandardNounPOS("vg 8020", "vg8020.computer", o);
+    this.addStandardNounPOS("vg8020", "vg8020.computer", o);
     this.addTokenPOS(new PartOfSpeech("name", "name", Term.fromString("noun('name'[name], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("north", "north", Term.fromString("noun('north'[north], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("northeast", "northeast", Term.fromString("noun('northeast'[northeast], [singular])", o), 1.0));

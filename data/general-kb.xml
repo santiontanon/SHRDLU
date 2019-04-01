@@ -408,5 +408,8 @@
 	<sentence provenance="background" sentence="gravity(Y, G); ~space.at(Y, X); ~gravity(X, G)"/>	
 	<sentence provenance="background" sentence="temperature(X, T); ~space.at(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	
 
+	<sentence provenance="background" sentence="verb.find(X, Y); ~verb.find(X, Y, Z)"/>	
+	<sentence provenance="background" sentence="verb.find(X, Y, Z1); ~verb.find(X, Y, Z2); ~space.at(Z2, Z1)"/>	
+
 
 </knowledgeBase>

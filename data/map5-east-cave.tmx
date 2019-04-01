@@ -76,15 +76,15 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="600" type="shrdlu" x="224" y="40" width="16" height="24"/>
-  <object id="598" name="EAST-CAVE" type="Bridge" x="32" y="120" width="16" height="8"/>
-  <object id="607" name="EAST-CAVE" type="BridgeDestination" x="32" y="96" width="16" height="24"/>
-  <object id="601" type="large-boulder" x="128" y="80" width="16" height="16"/>
-  <object id="602" type="large-boulder" x="144" y="88" width="16" height="16"/>
-  <object id="603" type="large-boulder" x="144" y="32" width="16" height="16"/>
-  <object id="604" type="large-boulder" x="176" y="72" width="16" height="16"/>
-  <object id="605" type="large-boulder" x="160" y="104" width="16" height="16"/>
-  <object id="606" type="large-boulder" x="216" y="88" width="16" height="16"/>
-  <object id="607" type="large-boulder" x="200" y="40" width="16" height="16"/>
+  <object id="1000" type="shrdlu" x="224" y="40" width="16" height="24"/>
+  <object id="1001" name="EAST-CAVE" type="Bridge" x="32" y="120" width="16" height="8"/>
+  <object id="1002" name="EAST-CAVE" type="BridgeDestination" x="32" y="96" width="16" height="24"/>
+  <object id="1003" type="large-boulder" x="128" y="80" width="16" height="16"/>
+  <object id="1004" type="large-boulder" x="144" y="88" width="16" height="16"/>
+  <object id="1005" type="large-boulder" x="144" y="32" width="16" height="16"/>
+  <object id="1006" type="large-boulder" x="176" y="72" width="16" height="16"/>
+  <object id="1007" type="large-boulder" x="160" y="104" width="16" height="16"/>
+  <object id="1008" type="large-boulder" x="216" y="88" width="16" height="16"/>
+  <object id="1009" type="large-boulder" x="200" y="40" width="16" height="16"/>
  </objectgroup>
 </map>

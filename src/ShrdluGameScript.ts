@@ -130,7 +130,7 @@ class ShrdluGameScript {
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
 		this.game.setStoryStateVariable("rover", "working");
-		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-fungi", this.game, false, false));
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
 		this.game.setStoryStateVariable("luminiscent-fungi", "taken");
 	}
 
@@ -142,9 +142,9 @@ class ShrdluGameScript {
 		// West cave:
 		// this.game.currentPlayer.warp(4*8, 16*8, this.game.maps[5]);
 		// Science lab:
-		//this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
+		this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
 		// room 6:
-		this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
+		// this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
 	}
 
 
@@ -1618,19 +1618,22 @@ class ShrdluGameScript {
 		}
 		for(let context of [this.contextQwerty, this.contextEtaoin, this.contextShrdlu]) {
 			if (context != null) {
-				var p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
-				if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
-					var perf:Term = p1.performative;
+				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+				let p2:NLContextPerformative = context.lastPerformativeBy(context.ai.selfID);
+				if (p1 != null && p2 != null && p2.timeStamp == this.game.in_game_seconds - 1) {	
+					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate"))  &&
 						perf.attributes.length>1 &&
 						perf.attributes[1] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						var pattern1:Term = Term.fromString("#and(verb.find(X, Y, Z), living-being(X))", this.game.ontology);
-						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b)) {
-							// match!
-							return perf;
-						}
+						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						let pattern1:Term = Term.fromString("#and(verb.find(X, Y, Z), living-being(X))", this.game.ontology);
+						let pattern2:Term = Term.fromString("#and(verb.find(X, Y), living-being(X))", this.game.ontology);
+						let pattern3a:Term = Term.fromString("#and(#not(=(X,'1'[#id])), #and(space.at(X, 'aurora'[#id]), living-being(X)))", this.game.ontology);
+						let pattern3b:Term = Term.fromString("#and(space.at(X, 'aurora'[#id]), animal(X))", this.game.ontology);
+						if (argument.unify(pattern1, true, new Bindings())) return perf;
+						if (argument.unify(pattern2, true, new Bindings())) return perf;
+						if (pattern3a.subsumes(argument, true, new Bindings()) &&
+							!pattern3b.subsumes(argument, true, new Bindings())) return perf;
 					}
 				}
 			}

@@ -22,9 +22,12 @@
     <sort name="#cons" super="any"/>
     <sort name="#list" super="any"/>
     <sort name="#query" super="any"/>
-    <sort name="~=" super="any"/>
 
     <sort name="#stateSort" super="any"/>   <!-- sorts inheriting from this one are considered as if they can change over time -->
+
+    <sort name="property" super="any"/>
+    <sort name="relation" super="any"/>
+    <sort name="~=" super="relation"/>
 
     <sort name="etcetera" super="any"/>
 
@@ -161,11 +164,9 @@
                                                         just so that we can match with a constant in a variable -->
 
     <!-- Regular concepts -->
-    <sort name="property" super="any"/>
     <sort name="property-with-value" super="property"/>
     <sort name="haveable-property" super="property"/>
     <sort name="haveable-property-with-value" super="haveable-property,property-with-value"/>
-    <sort name="relation" super="any"/>
     <sort name="relation-with-value" super="relation"/>
     <sort name="symmetric-relation" super="relation"/>
 
@@ -260,7 +261,7 @@
     <sort name="disembodied-ai" super="ai,character"/>
     <sort name="robot" super="ai,character"/>
 
-    <sort name="living-being" super="any"/>
+    <sort name="living-being" super="object"/>
 
     <sort name="animal" super="character,living-being"/>
     <sort name="human" super="animal,property"/>
@@ -268,6 +269,7 @@
     <sort name="woman" super="human,gender-femenine"/>
     <sort name="fungi" super="living-being"/>
 
+    <sort name="dust" super="item"/>
     <sort name="mineral" super="item"/>
     <sort name="bottle" super="item"/>
     <sort name="card" super="item"/>
@@ -367,6 +369,9 @@
     <sort name="plastic-3dprinter" super="3dprinter"/>
     <sort name="washing-machine" super="equipment,machine"/>
     <sort name="treadmill" super="furniture,machine"/>
+    <sort name="microscope" super="equipment"/>
+    <sort name="msx.computer" super="computer"/>
+    <sort name="vg8020.computer" super="msx.computer"/>
 
     <sort name="coordination" super="abstract-entity"/>
     <sort name="route" super="abstract-entity"/>
@@ -442,7 +447,9 @@
     <sort name="permission-to-access" super="abstract-entity,haveable-property-with-value"/>
 
     <sort name="relation-verb" super="verb,relation"/>
-    <sort name="movementverb" super="verb"/>    
+    <sort name="movementverb" super="verb"/>  
+
+    <sort name="verb-with-optional-location-3rd-argument" super="verb"/>    
 
     <sort name="verb.be" super="verb"/>
     <sort name="verb.do" super="verb,#stateSort"/>
@@ -454,7 +461,7 @@
     <sort name="verb.call" super="verb"/>
     <sort name="verb.disambiguate" super="verb"/>
     <sort name="verb.get" super="verb"/>
-    <sort name="verb.gather" super="verb.get"/>
+    <sort name="verb.gather" super="verb.get,verb-with-optional-location-3rd-argument"/>
     <sort name="verb.go" super="verb"/>
     <sort name="verb.go-to" super="verb.go"/>
     <sort name="verb.take-to" super="verb"/>
@@ -471,7 +478,7 @@
     <sort name="verb.arrive-to" super="verb.arrive"/>
     <sort name="verb.define" super="verb"/>
     <sort name="verb.feel" super="verb"/>
-    <sort name="verb.find" super="verb"/>
+    <sort name="verb.find" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.fill" super="verb"/>
     <sort name="verb.follow" super="verb"/>
     <sort name="verb.happen" super="verb,#stateSort"/>
@@ -507,7 +514,7 @@
     <sort name="verb.walk" super="movementverb"/>
     <sort name="verb.want" super="verb"/>
     <sort name="verb.allow" super="verb"/>
-    <sort name="verb.build" super="verb"/>
+    <sort name="verb.build" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.switch" super="verb"/>
     <sort name="verb.switch-on" super="verb.switch"/>
     <sort name="verb.switch-off" super="verb.switch"/>
@@ -520,6 +527,9 @@
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
+    <sort name="verb.speak" super="action.talk"/>
+    <sort name="verb.tell" super="action.talk"/>
+    <sort name="verb.ask" super="action.talk"/>
     <sort name="action.take" super="actionverb"/>
     <sort name="action.give" super="actionverb"/>
     <sort name="action.drop" super="actionverb"/>
@@ -548,10 +558,6 @@
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
     
-    <sort name="verb.speak" super="action.talk"/>
-    <sort name="verb.tell" super="action.talk"/>
-    <sort name="verb.ask" super="action.talk"/>
-
     <sort name="=" super="symmetric-relation"/>
 
     <sort name="goal" super="property-with-value,#stateSort"/>
