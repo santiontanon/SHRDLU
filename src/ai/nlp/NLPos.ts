@@ -1311,6 +1311,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.allow", "allow","allows","allowed","allowed","allowing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.analyze", "analyze","analyzes","analyzed","analyzed","analyzing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.arrive", "arrive","arrives","arrived","arrived","arriving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.arrive-to", "arrive to","arrives to","arrived to","arrived to","arriving to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.ask", "ask","asks","asked","asked","asking", false, multitokens_raw, o);
@@ -1331,6 +1332,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.do", "do","does","did","done","doing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "enumerate","enumerates","enumerated","enumerated","enumerating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.examine", "examine","examines","examined","examined","examining", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);

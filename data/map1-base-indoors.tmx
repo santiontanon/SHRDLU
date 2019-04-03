@@ -1165,7 +1165,11 @@
   <object id="519" type="crate" x="112" y="144" width="8" height="16"/>
   <object id="520" type="crate" x="112" y="160" width="8" height="16"/>
   <object id="521" type="microscope-table" x="24" y="312" width="16" height="24"/>
-  <object id="522" type="microscope-table" x="24" y="344" width="16" height="24"/>
+  <object id="522" type="computer-table" x="24" y="336" width="8" height="32">
+   <properties>
+    <property name="direction" type="int" value="2"/>
+   </properties>
+  </object>
   <object id="524" type="chair" x="40" y="320" width="8" height="16">
    <properties>
     <property name="direction" type="int" value="0"/>

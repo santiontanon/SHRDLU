@@ -501,6 +501,8 @@
     <sort name="verb.repair" super="verb"/>
     <sort name="verb.see" super="verb"/>
     <sort name="verb.look-at" super="verb.see"/>
+    <sort name="verb.analyze" super="verb"/>
+    <sort name="verb.examine" super="verb.look-at,verb.analyze"/>
     <sort name="verb.run" super="movementverb"/>
     <sort name="verb.send" super="verb"/>
     <sort name="verb.show" super="verb"/>

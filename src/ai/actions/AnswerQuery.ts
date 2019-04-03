@@ -98,6 +98,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			let predicate:Term = (<TermTermAttribute>nlcp.performative.attributes[1]).term;
 			let predicateTerms:Term[] = NLParser.termsInList(predicate, "#and");
 
+			let objectTerms:Term[] = []
 			for(let t of predicateTerms) {
 				if (t.functor.is_a(sortToLookFor) &&
 					t.attributes.length == 1) {
@@ -113,6 +114,24 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 					console.log("convertPerformativeToQueryfollowupQuestionAnswerIntention, newIntention: " + intention);
 					return intention;
 				}
+				if (t.functor.is_a(ai.o.getSort("object")) && t.attributes.length == 1) {
+					objectTerms.push(t);
+				}
+			}
+			if (objectTerms.length == 1) {
+				// If we have not found the desired term, but there is at least an "object", default to that:
+				let t:Term = objectTerms[0];
+				let queryVariable:TermAttribute = t.attributes[0];
+				let newPerformative:Term = new Term(ai.o.getSort("perf.q.query"),
+										  	        [nlcp.performative.attributes[0],
+										       		 queryVariable,
+										       		 nlcp.performative.attributes[1]]);
+				let intention:Term = new Term(ai.o.getSort("action.answer.query"),
+											  [new ConstantTermAttribute(ai.selfID, ai.cache_sort_id),
+											   new ConstantTermAttribute(nlcp.speaker, ai.cache_sort_id),
+											   new TermTermAttribute(newPerformative)]);
+				console.log("convertPerformativeToQueryfollowupQuestionAnswerIntention, newIntention: " + intention);
+				return intention;
 			}
 
 		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.query")) &&

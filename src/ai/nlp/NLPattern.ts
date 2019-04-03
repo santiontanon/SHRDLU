@@ -533,6 +533,7 @@ class NLPattern {
 			return null;
 		}
 		NLParser.resolveCons((<TermTermAttribute>clause).term, o);
+		clause.sort = (<TermTermAttribute>clause).term.functor;
 //		console.log("specialfunction_derefQuery: clause = " + clause);
 //		console.log("specialfunction_derefQuery: queryVariable = " + queryVariable);
 //		console.log("specialfunction_derefQuery: query = " + query);

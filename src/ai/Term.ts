@@ -389,8 +389,40 @@ class Term {
     }
 
 
-
     subsumes(t:Term, occursCheck:boolean, bindings:Bindings) : boolean
+    {
+        let tl1:TermAttribute[] = [new TermTermAttribute(this)];
+        let tl2:TermAttribute[] = [new TermTermAttribute(t)];
+
+        if (this.functor.name == "#and") tl1 = Term.elementsInAndList(this);
+        if (t.functor.name == "#and") tl2 = Term.elementsInAndList(t);
+
+        for(let t1 of tl1) {
+            let found:boolean = false;
+            for(let t2 of tl2) {
+                let bl:number = bindings.l.length;
+                if ((t1 instanceof TermTermAttribute) &&
+                    (t2 instanceof TermTermAttribute)) {
+                    if ((<TermTermAttribute>t1).term.subsumesInternal((<TermTermAttribute>t2).term, occursCheck, bindings)) {
+                        found = true;
+                        break;
+                    }
+                } else {
+                    if (Term.subsumesAttribute(t1, t2, occursCheck, bindings)) {
+                        found = true;
+                        break;
+                    }
+                }
+                bindings.l.length = bl;    // remove all the bindings that were created in the failed subsumption attempt
+            }
+            if (!found) return false;
+        }
+
+        return true;
+    }
+
+
+    subsumesInternal(t:Term, occursCheck:boolean, bindings:Bindings) : boolean
     {
         // if they have a different number of attribetus -> return false
         if (this.attributes.length != t.attributes.length) return false;
@@ -408,7 +440,6 @@ class Term {
 
         return true;
     }
-
 
 
     static subsumesAttribute(att1:TermAttribute, att2:TermAttribute, occursCheck:boolean, bindings:Bindings) : boolean
@@ -524,10 +555,12 @@ class Term {
             for(let t1 of tl1) {
                 var found:TermAttribute = null;
                 for(let t2 of tl2) {
+                    let bl:number = bindings.l.length;
                     if (Term.equalsAttributeConsideringAnd(t1,t2,bindings)) {
                         found = t2;
                         break;
                     }
+                    bindings.l.length = bl;    // remove all the bindings that were created 
                 }
                 if (found == null) return false;
                 tl2.splice(tl2.indexOf(found),1);
@@ -726,12 +759,13 @@ class Term {
             if (v1 == this) return v2;
         }
         var t:Term = new Term(this.functor, []);
-        var t_a:TermAttribute = new TermTermAttribute(t);
+        var t_a:TermTermAttribute = new TermTermAttribute(t);
         map.push([this, t_a]);
         for(let att of this.attributes) {
             var att2:TermAttribute = att.applyBindings_internal(bindings, map);
             t.attributes.push(att2);
         }
+        t_a.sort = t_a.term.functor;
 
         return t_a;
     }

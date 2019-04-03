@@ -977,8 +977,10 @@ class NLContext {
 //							console.log("the determiner with entities_mpl: " + entities_mpl + "\nResult: " + entities);
 						} else if (this_determiner) {
 							// remove the speaker, and the content of the inventory from the list of candidates:
-							// since it's very weird to use "this" to refer to the inventory...
+							// since it's very weird to use "this" to refer to the inventory... (but
+							// we save it in ``toConsiderIfNoneLeft" just in case...)
 							let toDelete:NLContextEntity[] = []
+							let toConsiderIfNoneLeft:NLContextEntity[] = []
 							for(let idx:number = 0;idx<entities_mpl[1].length;idx++) {
 								if (entities_mpl[1][idx].objectID.value == this.speaker) {
 									toDelete.push(entities_mpl[1][idx]);
@@ -986,6 +988,7 @@ class NLContext {
 										   entities_mpl[1][idx].relationMatch(new Term(o.getSort("verb.have"),[new ConstantTermAttribute(this.speaker, o.getSort("#id")),
 										   																	  entities_mpl[1][idx].objectID]), o, pos)) {
 									toDelete.push(entities_mpl[1][idx]);
+									toConsiderIfNoneLeft.push(entities_mpl[1][idx])
 								} else {
 									// see if the object is contained in any other object we can see, and also remove:
 									for(let t of entities_mpl[1][idx].terms) {
@@ -1031,6 +1034,11 @@ class NLContext {
 								} else {
 									entities = [];
 								}
+							}
+							// If we cannot find the entity we are looking for but one entity in the inventory matches, then maybe
+							// the speaker refers to that one:
+							if (entities.length == 0 && toConsiderIfNoneLeft.length == 1) {
+								entities = toConsiderIfNoneLeft;
 							}
 //							console.log("\"this\" determiner with entities_mpl: " + entities_mpl + "\nResult: " + entities);
 						} else if (that_determiner) {

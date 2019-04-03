@@ -311,6 +311,7 @@ class NLParser {
 		for(let i:number = 0;i<parse.attributes.length;i++) {
 			if (parse.attributes[i] instanceof TermTermAttribute) {
 				NLParser.resolveCons((<TermTermAttribute>parse.attributes[i]).term, o);
+				parse.attributes[i].sort = (<TermTermAttribute>parse.attributes[i]).term.functor;
 			}
 		}
 	}

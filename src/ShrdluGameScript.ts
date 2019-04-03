@@ -1628,7 +1628,7 @@ class ShrdluGameScript {
 						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
 						let pattern1:Term = Term.fromString("#and(verb.find(X, Y, Z), living-being(X))", this.game.ontology);
 						let pattern2:Term = Term.fromString("#and(verb.find(X, Y), living-being(X))", this.game.ontology);
-						let pattern3a:Term = Term.fromString("#and(#not(=(X,'1'[#id])), #and(space.at(X, 'aurora'[#id]), living-being(X)))", this.game.ontology);
+						let pattern3a:Term = Term.fromString("#and(#not(=(X,'david'[#id])), #and(space.at(X, 'aurora'[#id]), living-being(X)))", this.game.ontology);
 						let pattern3b:Term = Term.fromString("#and(space.at(X, 'aurora'[#id]), animal(X))", this.game.ontology);
 						if (argument.unify(pattern1, true, new Bindings())) return perf;
 						if (argument.unify(pattern2, true, new Bindings())) return perf;

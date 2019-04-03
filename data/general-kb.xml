@@ -174,9 +174,11 @@
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
 	<sentence provenance="background" sentence="space.at(X,'location-as25'[#id]) ; ~spacesuit(Y) ; ~verb.can(X, verb.repair(X,Y))"/>
 	<sentence provenance="background" sentence="space.at(X,L) ; ~verb.can(X, verb.find(X,Z)) ; ~space.at(Z,L)"/>
+	<sentence provenance="background" sentence="space.at(X,'location-as27'[#id]) ; ~object(Y) ; ~verb.can(X, verb.analyze(X,Y))"/>
 
 	<!-- where can things be found -->
 	<sentence provenance="background" sentence="space.at(X,'location-as23'[#id]) ; ~verb.can(X, verb.find(X,'food'[food]))"/>
+	<sentence provenance="background" sentence="space.at(X,'location-as27'[#id]) ; ~verb.can(X, verb.find(X,'microscope'[microscope]))"/>
 
 	<!-- how to do things -->
 	<sentence provenance="background" sentence="relation.howto(verb.repair(X, SS:[spacesuit]), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
@@ -190,6 +192,7 @@
 	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-off(X, Y), verb.can(E:'etaoin'[#id], verb.switch-off(E, Y)))"/>
 	<sentence provenance="background" sentence="permitted-in(X, Y) ; relation.howto(verb.access(X, Y), verb.need(X, permission-to-access(X, Y)))"/>
 	<sentence provenance="background" sentence="~permitted-in(X, Y) ; ~relation.opens(KEY, Y) ; relation.howto(verb.access(X, Y), verb.need(X, KEY))"/>
+	<sentence provenance="background" sentence="~object(Y) ; relation.howto(verb.analyze(X, Y), verb.go-to(X, 'location-as27'[#id]))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>
