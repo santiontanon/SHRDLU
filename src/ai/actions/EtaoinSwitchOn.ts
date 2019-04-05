@@ -20,6 +20,10 @@ class EtaoinSwitchOn_IntentionAction extends IntentionAction {
 			if (ai.game.turnLightOn(room.id)) {
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				// add a causation record:
+				let causetext:string = "relation.cause(powered.state('"+targetID+"'[#id], 'powered.on'[powered.off]), verb.switch-on('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))";
+				let causeTerm:Term = Term.fromString(causetext, ai.o);
+				ai.addLongTermTerm(causeTerm, PERCEPTION_PROVENANCE);
 			} else {
 				if (requester != null) {
 					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);

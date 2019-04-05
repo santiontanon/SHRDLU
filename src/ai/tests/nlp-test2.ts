@@ -828,6 +828,7 @@ NLParseTestUnifyingListener("Why can't you repair the crate??", o.getSort("perfo
 NLParseTestUnifyingListener("there is a corpse here", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))");
 NLParseTestUnifyingListener("there is a crate in the kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(crate(X), space.at(X,'room1'[#id])))");
 
+
 // Notice that the "is there a corpse?" is asked twice, this is because the second was earlier parsed as "is the bedroom a corpse?"
 testAI.time_in_seconds++;
 NLParseTestUnifyingListener("is there a corpse?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], corpse(X))"); 
@@ -883,6 +884,13 @@ NLParseTestUnifyingListener("have you found life in the station?", o.getSort("pe
 NLParseTestUnifyingListener("have we found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(Y, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("is there life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(space.at(X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("is there life in the station other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(space.at(X, 'location-aurora-station'[#id]), living-being(X))))");
+NLParseTestUnifyingListener("do you know what is this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.whatis.noname('etaoin'[#id], 'room1'[#id])");
+NLParseTestUnifyingListener("do you know what is etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.whatis.name('etaoin'[#id], 'etaoin'[#id])");
+NLParseTestUnifyingListener("do you know who are you?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'etaoin'[#id])");
+NLParseTestUnifyingListener("do you know who is etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.name('etaoin'[#id], 'etaoin'[#id])");
+
+NLParseTestUnifyingListener("does this mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("so, does that mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

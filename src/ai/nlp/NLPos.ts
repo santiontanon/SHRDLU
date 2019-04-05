@@ -988,6 +988,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("boulder", "rock", o);
     this.addTokenPOS(new PartOfSpeech("box", "box", Term.fromString("noun('box'[box], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("boxes", "box", Term.fromString("noun('box'[box], [plural])", o), 1.0));
+    this.addStandardNounPOS("brightness", "brightness", o);
     this.addStandardNounPOS("cable", "cable", o);
     this.addStandardNounPOS("can", "can", o);
     this.addStandardNounPOS("canyon", "canyon", o);
@@ -1366,6 +1367,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.seem", "look","looks","looked","looked","looking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.look-at", "look at","looks at","looked at","looked at","looking at", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.malfunction", "malfunction","malfunctions","malfunctioned","malfunctioned","malfunctioning", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.mean", "mean","means","meant","meant","meaning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.move", "move","moves","moved","moved","moving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.need", "need","needs","needed","needed","needing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "obtain","obtains","obtained","obtained","obtaining", false, multitokens_raw, o);
@@ -1394,8 +1396,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.stop", "stop","stops","stopped","stopped","stopping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.supervise", "supervise","supervises","supervised","supervised","supervising", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.switch", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
-//    this.addStandardVerbPOS("verb.switch-on", "switch on","switches on","switched on","switched on","switching on", false, multitokens_raw, o);
-//    this.addStandardVerbPOS("verb.switch-off", "switch off","switches off","switched off","switched off","switching off", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.take", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.talk", "talk","talks","talked","talked","talking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.tell", "tell","tells","told","told","telling", false, multitokens_raw, o);
@@ -1405,8 +1405,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.try", "try","tries","tried","tried","trying", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.speak", "speak","speaks","spoke","spoke","speaking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.switch", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
-//    this.addStandardVerbPOS("verb.switch-on", "turn on","turns on","turned on","turned on","turning on", false, multitokens_raw, o);
-//    this.addStandardVerbPOS("verb.switch-off", "turn off","turns off","turned off","turned off","turning off", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.understand", "understand","understands","understood","understood","understanding", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.use", "use","uses","used","used","using", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.walk", "walk","walks","walked","walked","walking", false, multitokens_raw, o);
@@ -1437,9 +1435,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("blue", "blue", Term.fromString("adjective('blue'[blue])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("bored", "bored", Term.fromString("adjective('bored'[bored])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("born", "property.born", Term.fromString("adjective('property.born'[property.born])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("bright", "bright", Term.fromString("adjective('bright'[bright])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("broken", "property.broken", Term.fromString("adjective('property.broken'[property.broken])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("charged", "full", Term.fromString("adjective('full'[full])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("cold", "cold", Term.fromString("adjective('cold'[cold])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("dead", "dead", Term.fromString("adjective('dead'[dead])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("depleted", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("east", "east", Term.fromString("adjective('east'[east])", o), 1.0));
@@ -2165,9 +2165,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
                     token[1] =='o' &&
                     token[2] ==' ') continue;
                 if (POS.term.functor.name == "phrasal-verb") {
-                  token += " " + (<ConstantTermAttribute>POS.term.attributes[4]).value;
+                  tmp[idx] = token + " " + (<ConstantTermAttribute>POS.term.attributes[4]).value;
+                } else {
+                  tmp[idx] = token;
                 }
-                tmp[idx] = token;
               }
 //              console.log(POS.sortName + " =(verb)= " + token + " [" + idxs + "]");
             } else {

@@ -169,6 +169,8 @@
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.go(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], action.take(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.remember(E:'david'[#id], 'pronoun.anything'[pronoun.anything])), #and(V:in-stasis('david'[#id]), time.past(V)))"/>
+	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~dark(X) ; relation.cause(dark(X), powered.state(Y, 'powered.off'[powered.off]))"/>
+	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~bright(X) ; relation.cause(bright(X), powered.state(Y, 'powered.on'[powered.on]))"/>
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
@@ -192,7 +194,7 @@
 	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-off(X, Y), verb.can(E:'etaoin'[#id], verb.switch-off(E, Y)))"/>
 	<sentence provenance="background" sentence="permitted-in(X, Y) ; relation.howto(verb.access(X, Y), verb.need(X, permission-to-access(X, Y)))"/>
 	<sentence provenance="background" sentence="~permitted-in(X, Y) ; ~relation.opens(KEY, Y) ; relation.howto(verb.access(X, Y), verb.need(X, KEY))"/>
-	<sentence provenance="background" sentence="~object(Y) ; relation.howto(verb.analyze(X, Y), verb.go-to(X, 'location-as27'[#id]))"/>
+	<sentence provenance="background" sentence="~object(Y) ; relation.howto(verb.analyze(X, Y), action.use(X, [microscope]))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>
@@ -375,6 +377,8 @@
 
 	<!-- common sense inference rules -->
 	<sentence provenance="background" sentence="~long(X:[#id]); ~short(X)"/>
+	<sentence provenance="background" sentence="~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])"/>
+	<sentence provenance="background" sentence="~bright(X:[#id]); ~dark(X)"/>
 	<sentence provenance="background" sentence="~character(X:[#id]); ~furniture(X)"/>
 	<sentence provenance="background" sentence="~character(X:[#id]); ~door(X)"/>
 	<sentence provenance="background" sentence="~character(X:[#id]); ~item(X)"/>

@@ -130,8 +130,8 @@ class ShrdluGameScript {
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
 		this.game.setStoryStateVariable("rover", "working");
-		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
-		this.game.setStoryStateVariable("luminiscent-fungi", "taken");
+		//this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
+		//this.game.setStoryStateVariable("luminiscent-fungi", "taken");
 	}
 
 
@@ -142,7 +142,7 @@ class ShrdluGameScript {
 		// West cave:
 		// this.game.currentPlayer.warp(4*8, 16*8, this.game.maps[5]);
 		// Science lab:
-		this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
+		// this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
 		// room 6:
 		// this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
 	}
@@ -1604,6 +1604,14 @@ class ShrdluGameScript {
 				this.finding_life_side_plot_analyzed_question = true;
 			}
 		}
+		if (!this.what_is_dist_side_plot_taken_question &&
+			this.game.getStoryStateVariable("luminiscent-fungi") == "taken") {
+			if (this.playerAskedAboutWhatIsTheDust()) {
+				this.queueThoughtBubble("So, we don't know what is this dust...");
+				this.queueThoughtBubble("I need to find a way to analyze it!!");
+				this.what_is_dist_side_plot_taken_question = true;
+			}			
+		}
 	}
 
 
@@ -1639,6 +1647,40 @@ class ShrdluGameScript {
 			}
 		}
 		return null;
+	}
+
+
+	playerAskedAboutWhatIsTheDust() : boolean
+	{
+		if (this.contextEtaoin == null ||
+			this.contextQwerty == null ||
+			this.contextShrdlu == null) {
+			this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
+			this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+			this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+		}
+		for(let context of [this.contextQwerty, this.contextEtaoin, this.contextShrdlu]) {
+			if (context != null) {
+				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+				let p2:NLContextPerformative = context.lastPerformativeBy(context.ai.selfID);
+				if (p1 != null && p2 != null && p2.timeStamp == this.game.in_game_seconds - 1) {	
+					let perf:Term = p1.performative;
+					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whatis.noname"))  &&
+						perf.attributes.length>1 &&
+						perf.attributes[1] instanceof ConstantTermAttribute) {
+						let v:any = (<ConstantTermAttribute>(perf.attributes[1])).value;
+						// These are the IDs of the luminiscent dust in West Cave
+						if (v == "1110" ||
+							v == "1111" ||
+							v == "1111" ||
+							v == "1113") {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;		
 	}
 
 
@@ -1849,6 +1891,8 @@ class ShrdluGameScript {
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
 
+        xmlString += "what_is_dist_side_plot_taken_question=\""+this.what_is_dist_side_plot_taken_question+"\"\n";
+
         xmlString += "/>\n";     
         for(let tmp in this.thoughtBubbleQueue) {
         	xmlString += "<thoughtBubbleQueue value=\""+tmp+"\"/>\n";  
@@ -1899,6 +1943,7 @@ class ShrdluGameScript {
 
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
+    	this.what_is_dist_side_plot_taken_question = xml.getAttribute("what_is_dist_side_plot_taken_question") == "true";
 
 		this.thoughtBubbleQueue = []
     	for(let xml_tmp of getElementChildrenByTag(xml,"thoughtBubbleQueue")) {
@@ -1954,4 +1999,5 @@ class ShrdluGameScript {
 
 	finding_life_side_plot_taken_question:boolean = false;
 	finding_life_side_plot_analyzed_question:boolean = false;
+	what_is_dist_side_plot_taken_question:boolean = false;
 }

@@ -2109,7 +2109,7 @@ class NLGenerator {
 					preoutput = defaultDeterminer + " " + preoutput.trim();
 				}
 
-				console.log("termToEnglish_Entity, entity: " + entity + ", preoutput: " + preoutput + ", typeString: " + typeString + ", postoutput: " + postoutput);				
+				// console.log("termToEnglish_Entity, entity: " + entity + ", preoutput: " + preoutput + ", typeString: " + typeString + ", postoutput: " + postoutput);				
 
 				return [preoutput.trim() + " " + typeString + postoutput, 2, undefined, 0]
 			}

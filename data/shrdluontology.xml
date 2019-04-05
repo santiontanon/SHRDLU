@@ -483,6 +483,7 @@
     <sort name="verb.follow" super="verb"/>
     <sort name="verb.happen" super="verb,#stateSort"/>
     <sort name="verb.know" super="verb"/>
+    <sort name="verb.mean" super="verb"/>
     <sort name="verb.remember" super="verb.know"/>
     <sort name="verb.try" super="verb"/>
     <sort name="verb.thank" super="verb"/>
@@ -725,6 +726,10 @@
     <sort name="temperature.unit.celsius" super="measuring-unit,temperature"/>
     <sort name="cold" super="temperature"/>
     <sort name="hot" super="temperature"/>
+
+    <sort name="brightness" super="property,#stateSort,abstract-entity"/>
+    <sort name="bright" super="brightness"/>
+    <sort name="dark" super="brightness"/>
 
     <sort name="height" super="property-with-value,abstract-entity"/>
     <sort name="weight" super="property-with-value,abstract-entity"/>

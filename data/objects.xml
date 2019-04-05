@@ -815,7 +815,7 @@
 	</ObjectClass>		
 
 	<ObjectClass class="samples-table" super="table" name="samples table">
-		<attribute name="tallness" value="8"/>
+		<attribute name="tallness" value="16"/>
 		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">366</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">

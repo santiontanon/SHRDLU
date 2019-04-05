@@ -53,6 +53,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.doorsPlayerIsNotPermittedToOpen.push("MAINTENANCE");
 		this.doorsPlayerIsNotPermittedToOpen.push("GARAGE");
 		this.doorsPlayerIsNotPermittedToOpen.push("COMMAND");
+
+		this.cache_sort_bright = this.o.getSort("bright");
+		this.cache_sort_dark = this.o.getSort("dark");
 	}
 
 
@@ -148,6 +151,16 @@ class A4RuleBasedAI extends RuleBasedAI {
 //		console.log("location: " + location.name + " l.length = " + l.length + " l.sort = " + location.sort);
 
 		this.addTermToPerception(new Term(location.sort, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+		// perceive the light status:
+		if (this.game.rooms_with_lights.indexOf(location.id) != -1) {
+			if (this.game.rooms_with_lights_on.indexOf(location.id) != -1) {
+				// lights on! room is bright:
+				this.addTermToPerception(new Term(this.cache_sort_bright, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+			} else {
+				// lights off! room is dark:
+				this.addTermToPerception(new Term(this.cache_sort_dark, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+			}
+		}
 
 		for(let o of l) {
 			var tile_ox:number = Math.floor(o.x/map.tileWidth);
@@ -1116,4 +1129,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	// variables so that the game script can control the AI:
 	respondToPerformatives:boolean = false;	
+
+	cache_sort_bright:Sort = null;
+	cache_sort_dark:Sort = null;
 }
