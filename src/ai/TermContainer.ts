@@ -64,6 +64,12 @@ class TermContainer {
 				previous_t.activation = activation;
 				previous_t.time = time;
 				return true;
+			} else {
+				if (previous_t.activation < activation) {
+					previous_t.activation = activation;
+					previous_t.provenance = provenance;
+					// time is not updated
+				}				
 			}
 		}
 		return false;
@@ -210,10 +216,10 @@ class TermContainer {
 
 	activationUpdate()
 	{
-		var toDelete:TermEntry[] = [];
+		let toDelete:TermEntry[] = [];
 		for(let te of this.plainTermList) {
 			te.activation--;
-			if (te.activation<=0) {
+			if (te.activation <= 0) {
 				toDelete.push(te);
 			}
 		}

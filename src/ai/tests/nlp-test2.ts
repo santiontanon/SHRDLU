@@ -892,6 +892,15 @@ NLParseTestUnifyingListener("do you know who is etaoin?", o.getSort("performativ
 NLParseTestUnifyingListener("does this mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
 NLParseTestUnifyingListener("so, does that mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
 
+NLParseTestUnifyingListener("why is it dark in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is it so dark in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is it so dark here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is it so dark in here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is it dark?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is this room dark?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is there no light in here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+NLParseTestUnifyingListener("why is there no light in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
+
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 
 

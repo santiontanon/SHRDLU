@@ -3063,7 +3063,58 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(noun(L3, N3), LOCATION)"/>
 
-	<!-- whowe rules -->
+	<NLPattern name="why-is-it-adj-in-X"
+			   head="perf.q.why(LISTENER, #cons(ADJ, OBJ))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'why'
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'it'
+			   		 ['so']
+			   		 adjective(ADJ)
+			   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X2, N2, P2, C2) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJ)"/>
+	<NLPattern name="why-is-it-adj-in-here"
+			   head="perf.q.why(LISTENER, #cons(ADJ, LOCATION))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'why'
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'it'
+			   		 ['so']
+			   		 adjective(ADJ)
+			   		 [preposition('space.at'[space.at])]
+			   		 'here'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+	<NLPattern name="why-no-light-special-case"
+			   head="perf.q.why(LISTENER, dark(OBJ))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'why'
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'there'
+			   		 'no' 'light'
+			   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X2, N2, P2, C2) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJ)"/>
+	<NLPattern name="why-no-light-special-case-here"
+			   head="perf.q.why(LISTENER, dark(LOCATION))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great') [',']]
+			   		 'why'
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'there'
+			   		 'no' 'light'
+			   		 [preposition('space.at'[space.at])]
+			   		 'here'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+
+	<!-- whose rules -->
     <NLPattern name="whose-noun-is-this"
     		   head="perf.q.query(LISTENER, QUERY_V, relation.owns(QUERY_V, OBJECT))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

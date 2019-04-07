@@ -145,6 +145,8 @@ class ShrdluGameScript {
 		// this.game.currentPlayer.warp(13*8, 42*8, this.game.maps[0]);
 		// room 6:
 		// this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
+		// Infirmary:
+		this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
 	}
 
 
