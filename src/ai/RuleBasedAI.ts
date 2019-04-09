@@ -1582,7 +1582,20 @@ class RuleBasedAI {
 
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
-		return [];
+		// just return what we know (this function will never be used in SHRDLU anyway, it's only for testing)::
+		let relations:Sort[] = [];
+		let sr_sort:Sort = this.o.getSort("spatial-relation");
+		for(let te of this.shortTermMemory.plainTermList) {
+			let t:Term = te.term;
+			if (t.functor.is_a(sr_sort) && t.attributes.length == 2 &&
+				(t.attributes[0] instanceof ConstantTermAttribute) &&
+				(t.attributes[1] instanceof ConstantTermAttribute) &&
+				(<ConstantTermAttribute>t.attributes[0]).value == o1ID &&
+				(<ConstantTermAttribute>t.attributes[1]).value == o2ID) {
+				relations.push(t.functor);
+			}
+		}
+		return relations;
 	}
 
 

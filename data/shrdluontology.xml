@@ -489,7 +489,6 @@
     <sort name="verb.thank" super="verb"/>
     <sort name="verb.think" super="verb"/>
     <sort name="verb.have" super="relation-verb"/>
-    <sort name="relation.contains" super="verb.have"/>    
     <sort name="verb.heal" super="verb"/>
     <sort name="verb.hear" super="verb"/>
     <sort name="verb.help" super="verb"/>
@@ -633,6 +632,7 @@
     <sort name="space.end" super="space.location,end"/>
     <sort name="space.exit" super="space.location"/>
     <sort name="distance" super="space,relation-with-value,#stateSort,abstract-entity"/>
+    <sort name="relation.contains" super="verb.have,space.inside.of"/>
 
     <sort name="celestial-entity" super="object,space.location"/>
     <sort name="outer-space" super="space,celestial-entity"/>

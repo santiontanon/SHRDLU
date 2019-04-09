@@ -454,16 +454,28 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (relation.is_a(this.cache_sort_space_at) ||
 			relation.name == "space.outside.of") {
 			var loc2:AILocation = this.game.getAILocationByID(o2ID);	// see if o2 is a location
-			if (loc2 == null) return null;
+			if (loc2 == null) {
+				// if o2ID is not a location, maybe it's a container or a character:
+				if (relation.is_a(this.cache_sort_space_at)) {
+					var o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
+					if (o1l == null) return null;
+					for(let o2 of o1l) {
+						if (o2.ID == o2ID) return true;
+					}
+					return false;
+				} else {
+					return null;
+				}
+			}
 			var o1:A4Object = this.game.findObjectByIDJustObject(o1ID);	// see if o1 is an object
 			var loc1:AILocation = null;
 			if (o1 == null) {
 				loc1 = this.game.getAILocationByID(o1ID);	// if it's not an object, maybe it's a location
-				if (loc1 == null) return null;
+				if (loc1 == null) return false;
 			} else {
 				loc1 = this.game.getAILocation(o1);
 			}
-			if (loc1 == null) return null;
+			if (loc1 == null) return false;
 			if (loc1 == loc2) {
 				if (relation.is_a(this.cache_sort_space_at)) return true;
 				return false;
@@ -699,6 +711,13 @@ class A4RuleBasedAI extends RuleBasedAI {
 		var o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
 		var o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
 		if (o1 == null || o2 == null) return relations;
+
+		if (o2 instanceof A4Container) {
+			if ((<A4Container>o2).content.indexOf(o1) != -1) relations.push(this.o.getSort("space.inside.of"));
+		} else if (o1 instanceof A4Character) {
+			if ((<A4Character>o2).inventory.indexOf(o1) != -1) relations.push(this.o.getSort("verb.have"));
+		}
+
 		if (o1.map != o2.map) return relations;
 		var x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
 		var y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);

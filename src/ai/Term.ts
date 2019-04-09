@@ -746,6 +746,78 @@ class Term {
     }    
 
 
+
+    /*
+    1: equals
+    0: cannot decide
+    -1: different
+    */
+    subsumesNoBindings(t:Term) : number
+    {
+        // if they have a different number of attribetus -> return false
+        if (this.attributes.length != t.attributes.length) return -1;
+
+        // if functors do not match -> return false
+        if (!this.functor.subsumes(t.functor)) return -1;
+
+        // for each attribute:
+        var result:number = 1;
+        for(let i:number = 0;i<this.attributes.length;i++) {
+            var att1:TermAttribute = this.attributes[i];
+            var att2:TermAttribute = t.attributes[i];
+
+            var tmp:number = Term.subsumesNoBindingsAttribute(att1, att2);
+            if (tmp==-1) return -1;
+            if (tmp==0 && result==1) result = 0;
+        }
+
+        return result;
+    }
+
+
+    // return values:
+    // 1: true
+    // -1: false
+    // 0: could unify, but they are not identical
+    static subsumesNoBindingsAttribute(att1:TermAttribute, att2:TermAttribute) : number
+    {
+        if (att1 instanceof ConstantTermAttribute) {
+            if (att2 instanceof ConstantTermAttribute) {
+                if ((<ConstantTermAttribute>att1).value != (<ConstantTermAttribute>att2).value) return -1;
+                if (att1.sort != att2.sort) return -1;
+                return 1;
+            } else if (att2 instanceof TermTermAttribute) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } 
+
+        if (att1 instanceof TermTermAttribute) {
+            if (att2 instanceof TermTermAttribute) {
+                return att1.term.subsumesNoBindings(att2.term);
+            } else if (att2 instanceof ConstantTermAttribute) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+
+        if (att1 instanceof VariableTermAttribute) {
+            if (att2 instanceof VariableTermAttribute) {
+                if (att1 == att2) return 1;
+                if (att1.sort == att2.sort) return 1;
+                return 0;
+            } else {
+                return 0;
+            }
+        }
+
+        // we should never reach here anyway
+        return -1;
+    }   
+
+
     applyBindings(bindings:Bindings) : Term
     {
         if (bindings.l.length == 0) return this;

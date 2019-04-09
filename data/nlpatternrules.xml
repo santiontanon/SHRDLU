@@ -2537,6 +2537,34 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] 'please']
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(C_L2, LISTENER)] '!'*"
     		         priority="300"/>
+    <!-- Special case for take X from Y -->
+    <NLPattern head="perf.request.action(LISTENER, action.take(LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('action.take'[symbol], N2, [second-person], T2)
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         'from'
+    		         nounPhrase(X3, [singular], P3, C3)
+    		         [[','] 'please']
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(C_L2, LISTENER)] '!'*
+    		         #derefFromContext(C3, OBJECT3)
+    		         #derefFromContext(#and(space.at(X2, OBJECT3), C2), OBJECT)"/>
+    <NLPattern head="perf.q.action(LISTENER, action.take(LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         verb('action.take'[symbol], N2, [second-person], T2)
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         'from'
+    		         nounPhrase(X3, [singular], P3, C3)
+    		         [[','] 'please']
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(C_L2, LISTENER)] ('!'|'?')* 
+    		         #derefFromContext(C3, OBJECT3)
+    		         #derefFromContext(#and(space.at(X2, OBJECT3), C2), OBJECT)"/>
 
     <!-- help! -->
     <NLPattern head="perf.request.action(LISTENER, verb.help(LISTENER, SPEAKER))"

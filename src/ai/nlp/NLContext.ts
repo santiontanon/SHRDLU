@@ -64,9 +64,12 @@ class NLContextEntity {
 	{
 		for(let term of this.terms) {
 //			console.log("checking term: " + term + " for relation " + relation);
-			if (term.equalsNoBindings(relation) == 1) {
-//				console.log("match!");
+//			if (term.equalsNoBindings(relation) == 1) {
+			if (relation.subsumesNoBindings(term) == 1) {
+				// console.log("match! " + relation  + "   subsumes   " + term);
 				return true;
+//			} else {
+				// console.log("no match! " + relation  + "   does not subsume   " + term);				
 			}
 		}		
 
@@ -75,7 +78,8 @@ class NLContextEntity {
 			let inverseRelation:Sort = o.getSort(pos.reverseRelations[relation.functor.name]);
 			let relation_reverse:Term = new Term(inverseRelation, [relation.attributes[1], relation.attributes[0]]);
 			for(let term of this.terms) {
-				if (term.equalsNoBindings(relation_reverse) == 1) {
+//				if (term.equalsNoBindings(relation_reverse) == 1) {
+				if (relation_reverse.subsumesNoBindings(term) == 1) {
 					return true;
 				}
 			}		
@@ -894,9 +898,15 @@ class NLContext {
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
 //											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
-											if (spatialRelations.indexOf(relationTerm.functor) != -1) {
-												results.push(entity);
+											for(let sr of spatialRelations) {
+												if (relationTerm.functor.subsumes(sr)) {
+													results.push(entity);
+													break;
+												}
 											}
+											//if (spatialRelations.indexOf(relationTerm.functor) != -1) {
+											//	results.push(entity);
+											//}
 										}
 										results_mpl.push(results);
 									}

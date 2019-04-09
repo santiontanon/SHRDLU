@@ -27,6 +27,8 @@ var A4_SCRIPT_DISEMBARK:number = 42;
 var A4_SCRIPT_BUY:number = 45;
 var A4_SCRIPT_CHOP:number = 46;
 var A4_SCRIPT_SLEEPOTHER:number = 51;
+var A4_SCRIPT_TAKE_FROM_CONTAINER:number = 64;
+var A4_SCRIPT_PUT_IN_CONTAINER:number = 65;
 
 var A4_SCRIPT_EATIFHUNGRY:number = 58;
 var A4_SCRIPT_DRINKIFTHIRSTY:number = 59;
@@ -64,7 +66,7 @@ var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 
-var A4_N_SCRIPTS:number = 64;
+var A4_N_SCRIPTS:number = 66;
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -99,6 +101,8 @@ scriptNames[A4_SCRIPT_DISEMBARK] = "disembark";
 scriptNames[A4_SCRIPT_BUY] = "buy";
 scriptNames[A4_SCRIPT_CHOP] = "chop";
 scriptNames[A4_SCRIPT_SLEEPOTHER] = "sleepOther";
+scriptNames[A4_SCRIPT_TAKE_FROM_CONTAINER] = "takeFromContainer";
+scriptNames[A4_SCRIPT_PUT_IN_CONTAINER] = "putInContainer";
 scriptNames[A4_SCRIPT_EATIFHUNGRY] = "eatIfHungry";
 scriptNames[A4_SCRIPT_DRINKIFTHIRSTY] = "drinkIfThirsty";
 
@@ -712,7 +716,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
         var wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
         
         if (wme==null) {
-            if (script.wait) return SCRIPT_FAILED;   // when we don't see the target anymore, we are done
+            if (script.wait) return SCRIPT_FAILED;   // if we don't see the target anymore, we are done
             return SCRIPT_FAILED;
         } else {
             ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
@@ -928,6 +932,63 @@ scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_SLEEPOTHER] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     otherCharacter.getInBed(o, game);
+    return SCRIPT_FINISHED;
+}
+
+
+scriptFunctions[A4_SCRIPT_TAKE_FROM_CONTAINER] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (!o.isAICharacter()) return SCRIPT_FAILED;
+    let ret:number = scriptFunctions[A4_SCRIPT_GOTO_CHARACTER](script, o, map, game, otherCharacter);
+    if (ret == SCRIPT_FAILED ||
+        ret == SCRIPT_NOT_FINISHED) return ret;
+
+    var target:A4Object = game.findObjectByIDJustObject(script.ID);
+    if (target == null) return SCRIPT_FAILED;
+    if (!(target instanceof A4ObstacleContainer)) return SCRIPT_FAILED;
+    var containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
+
+    // take the object:
+    for(let i:number = 0;i<containerObject.content.length;i++) {
+        let item:A4Object = containerObject.content[i];
+        if (item.ID == script.ID2) {
+            // found it!
+            containerObject.content.splice(i, 1);
+            (<A4Character>o).inventory.push(item);
+            game.playSound("data/sfx/itemPickup.wav");
+            return SCRIPT_FINISHED;
+        }
+    }
+
+    return SCRIPT_FAILED;
+}
+
+
+scriptFunctions[A4_SCRIPT_PUT_IN_CONTAINER] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (!o.isAICharacter()) return SCRIPT_FAILED;
+    let ret:number = scriptFunctions[A4_SCRIPT_GOTO_CHARACTER](script, o, map, game, otherCharacter);
+    if (ret == SCRIPT_FAILED ||
+        ret == SCRIPT_NOT_FINISHED) return ret;
+
+    var target:A4Object = game.findObjectByIDJustObject(script.ID);
+    if (target == null) return SCRIPT_FAILED;
+    if (!(target instanceof A4ObstacleContainer)) return SCRIPT_FAILED;
+    var containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
+
+    // put the object:
+    let character:A4Character = <A4Character>o;
+    for(let i:number = 0;i<character.inventory.length;i++) {
+        let item:A4Object = character.inventory[i];
+        if (item.ID == script.ID2) {
+            // found it!
+            character.inventory.splice(i, 1);
+            containerObject.content.push(item);
+            game.playSound("data/sfx/itemPickup.wav");
+            return SCRIPT_FINISHED;
+        }
+    }
+
     return SCRIPT_FINISHED;
 }
 
@@ -1290,6 +1351,7 @@ class A4Script {
     static fromA4Script(s: A4Script) : A4Script
     {
         var s2:A4Script = new A4Script(s.type, s.ID, null, 0, false, false);
+        s2.ID2 = s.ID2;
         s2.value = s.value;
         s2.x = s.x;
         s2.y = s.y;
@@ -1353,6 +1415,12 @@ class A4Script {
                     case A4_SCRIPT_SLEEPOTHER:
                         break;
 
+                    case A4_SCRIPT_TAKE_FROM_CONTAINER:
+                    case A4_SCRIPT_PUT_IN_CONTAINER:
+                        s.ID = xml.getAttribute("containerid");
+                        s.ID2 = xml.getAttribute("itemid");
+                        break;
+
                     case A4_SCRIPT_EATIFHUNGRY:
                         s.value = Number(xml.getAttribute("timer"));
                         break;
@@ -1402,53 +1470,7 @@ class A4Script {
                         s.wait = false;
                         if (xml.getAttribute("wait") == "true") s.wait = true;
                         break;
- 
-/*
-                    case A4_SCRIPT_PENDINGTALK:
-                        s.ID = xml.getAttribute("character");
-                        s.text = xml.getAttribute("text");
-                        // subscripts:
-                        for(let i:number = 0;i<xml.children.length;i++) {
-                            var subscript:A4Script = A4Script.fromXML(xml.children[i]);
-                            s.subScripts.push(subscript);
-                        }
-                        break;
-
-                    case A4_SCRIPT_ADDTOPIC:
-                        s.ID = xml.getAttribute("topic");
-                        s.text = xml.getAttribute("text");
-                        break;
-*.
-/*
-                    case A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION:
-                        s.value = CGT_ACTOR_OTHER;
-                        if (xml.getAttribute("actor") == "self") s.value = CGT_ACTOR_SELF;
-                        s.x = A4_TALK_PERFORMATIVE_NONE;
-                        if (xml.getAttribute("performative") == "hi") s.x = A4_TALK_PERFORMATIVE_HI;
-                        if (xml.getAttribute("performative") == "bye") s.x = A4_TALK_PERFORMATIVE_BYE;
-                        if (xml.getAttribute("performative") == "ask") s.x = A4_TALK_PERFORMATIVE_ASK;
-                        if (xml.getAttribute("performative") == "inform") s.x = A4_TALK_PERFORMATIVE_INFORM;
-                        if (xml.getAttribute("performative") == "trade") s.x = A4_TALK_PERFORMATIVE_TRADE;
-                        if (xml.getAttribute("performative") == "endtrade") s.x = A4_TALK_PERFORMATIVE_END_TRADE;
-                        // both "topic" or "keyword" are the same:
-                        if (xml.getAttribute("keyword")!=null) {
-                            s.ID = xml.getAttribute("keyword");
-                        } else if (xml.getAttribute("topic")!=null) {
-                            s.ID = xml.getAttribute("topic");
-                        }
-                        if (xml.getAttribute("state")!=null) {
-                            s.text = xml.getAttribute("state");
-                        }
-                        s.consume = true;
-                        if (xml.getAttribute("consume") == "false") s.consume = false;
-                        s.text2 = xml.getAttribute("from");
-
-                        for(let i:number = 0;i<xml.children.length;i++) {
-                            var subscript:A4Script = A4Script.fromXML(xml.children[i]);
-                            s.subScripts.push(subscript);
-                        }
-                        break;
-*/                    
+              
                     case A4_SCRIPT_STORYSTATE:
                     case A4_SCRIPT_STORYSTATECHECK:
                         if (xml.getAttribute("scope") == "game") s.value = A4_STORYSTATE_GAME;
@@ -1674,6 +1696,13 @@ class A4Script {
             case A4_SCRIPT_ROTATE_LEFT:
             case A4_SCRIPT_SLEEPOTHER:
                 break;
+
+            case A4_SCRIPT_TAKE_FROM_CONTAINER:
+            case A4_SCRIPT_PUT_IN_CONTAINER:
+                xmlString += " containerid=\"" + this.ID + "\"";
+                xmlString += " itemid=\"" + this.ID2 + "\"";
+                break;
+
             case A4_SCRIPT_EATIFHUNGRY:
             case A4_SCRIPT_DRINKIFTHIRSTY:
                 xmlString += " timer=\"" + this.value + "\"";
@@ -1706,42 +1735,7 @@ class A4Script {
                 if (this.wait) xmlString += " wait=\"true\"";
                 break;
             }
-            /*
-            case A4_SCRIPT_PENDINGTALK:
-            {
-                xmlString += " character=\"" + this.ID + "\"";
-                xmlString += " text=\"" + stringToHTMLString(this.text) + "\"";
-                xmlString +=">\n";
-                tagClosed = true;
-                // subscripts:
-                for(let s of this.subScripts) {
-                    xmlString += s.saveToXML() + "\n";
-                }
-                break;
-            }
-            case A4_SCRIPT_ADDTOPIC:
-            {
-                xmlString += " topic=\"" + this.ID + "\"";
-                xmlString += " text=\"" + stringToHTMLString(this.text) + "\"";
-                break;
-            }
-            case A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION:
-            {
-                var actorNames:string[] = ["self","other"];
-                xmlString += " actor=\"" + actorNames[this.value] + "\"";
-                if (this.x!=-1) xmlString += " performative=\"" + talkPerformativeNames[this.x] + "\"";
-                if (this.ID!=null) xmlString += " keyword=\"" + this.ID + "\"";
-                if (this.text!=null) xmlString += " state=\"" + this.text + "\"";
-                xmlString += " consume=\"" + this.consume + "\"";
-                if (this.text2!=null) xmlString += " from=\"" + this.text2 + "\"";
-                xmlString +=">\n";
-                tagClosed = true;
-                for(let s of this.subScripts) {
-                    xmlString += s.saveToXML() + "\n";
-                }
-                break;
-            }
-            */
+            
             case A4_SCRIPT_STORYSTATE:
             case A4_SCRIPT_STORYSTATECHECK:
             {
@@ -1997,6 +1991,7 @@ class A4Script {
     x:number;
     y:number;
 	ID:string;
+    ID2:string;
     text:string = null;
     text2:string = null;
     thought:boolean = false;

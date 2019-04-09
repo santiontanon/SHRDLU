@@ -901,6 +901,11 @@ NLParseTestUnifyingListener("why is this room dark?", o.getSort("performative"),
 NLParseTestUnifyingListener("why is there no light in here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
 NLParseTestUnifyingListener("why is there no light in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
 
+NLParseTestUnifyingListener("take the light", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'l1'[#id]))");
+NLParseTestUnifyingListener("take the light in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'l1'[#id]))");
+NLParseTestUnifyingListener("take the light from the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'l1'[#id]))");
+NLParseTestUnifyingListener("could you please take the light from the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'l1'[#id]))");
+
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 
 
