@@ -47,16 +47,14 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
 //        if (parses.length > 1) console.warn("Multiple parses for sentence '" + sentence + "'");
         var expectedResult:Term = Term.fromString(expectedResultStr, o);
         var found:boolean = false;
-        console.log(sentence + "\n" + parses.length + " parses:");
-        for(let p of parses) {
-          console.log("    parse: " + p.result);
-        }
-        console.log("  highest priority parse: " + parse.result);
-        console.log("  highest priority parse ruleNames: " + parse.ruleNames);
-        if (parse.result.equalsConsideringAnd(expectedResult)) {
-            found = true;
-        }
+        if (parse.result.equalsConsideringAnd(expectedResult)) found = true;
         if (!found) {
+            console.log(sentence + "\n" + parses.length + " parses:");
+            for(let p of parses) {
+              console.log("    parse ("+p.priorities+"): " + p.result);
+            }
+            console.log("  highest priority parse: " + parse.result);
+            console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
         } else {
             if (context != null && s.name == "performative") {
@@ -100,18 +98,16 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
 //        if (parses.length > 1) console.warn("Multiple parses for sentence '" + sentence + "'");
         var expectedResult:Term = Term.fromString(expectedResultStr, o);
         var found:boolean = false;
-        console.log(sentence + "\n" + parses.length + " parses:");
-        for(let p of parses) {
-          console.log("    parse: " + p.result);
-//          console.log("        ruleNames: " + p.ruleNames);
-        }
         parse.result = parser.unifyListener(parse.result, listener);
-        console.log("  highest priority parse: " + parse.result);
-        console.log("  highest priority parse ruleNames: " + parse.ruleNames);
-        if (parse.result.equalsConsideringAnd(expectedResult)) {
-            found = true;
-        }
+        if (parse.result.equalsConsideringAnd(expectedResult)) found = true;
         if (!found) {
+            console.log(sentence + "\n" + parses.length + " parses:");
+            for(let p of parses) {
+              console.log("    parse ("+p.priorities+ " // " +p.ruleNames+ "):\n     " + p.result);
+    //          console.log("        ruleNames: " + p.ruleNames);
+            }
+            console.log("  highest priority parse: " + parse.result);
+            console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
         } else {
             if (context != null) {

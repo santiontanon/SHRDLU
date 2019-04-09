@@ -590,11 +590,7 @@ NLPAddTokenPOS("during", PartOfSpeech.generatePreposition("during", POS_TYPE_PPR
 */
 this.addTokenPOS(new PartOfSpeech("except", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
-/*
-NLPAddTokenPOS("from", PartOfSpeech.generatePreposition("from", POS_TYPE_PPREPOSITION_PLACE));
-NLPAddTokenPOS("from", PartOfSpeech.generatePreposition("from", POS_TYPE_PPREPOSITION_TIME));
-NLPAddTokenPOS("from", PartOfSpeech.generatePreposition("from", POS_TYPE_PPREPOSITION_ORIGIN));
-*/
+this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("in", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 /*
