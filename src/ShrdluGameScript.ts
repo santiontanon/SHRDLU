@@ -27,7 +27,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
-			this.skip_to_act_2();
+			//this.skip_to_act_2();
 		}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -147,6 +147,8 @@ class ShrdluGameScript {
 		// this.game.currentPlayer.warp(608, 216, this.game.maps[0]);
 		// Infirmary:
 		// this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
+		// East cave:
+		// this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
 	}
 
 
