@@ -2398,6 +2398,32 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 nounPhrase(X3, N3, P3, CO)
     		         [[','] 'please'] ('!'|'?')*
     		         #derefFromContext(CO, TARGET)"/>
+    <NLPattern name="perf.request.action-phrasal-2args"
+    		   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJ3, OBJ4))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 phrasal-verb(VERB, N, [second-person], T, PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 #token(PREP)
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		         [[','] 'please'] ('!'|'?')*
+    		         #derefFromContext(C3, OBJ3)
+    		         #derefFromContext(C4, OBJ4)"/>
+    <NLPattern name="perf.q.action-phrasal-2args"
+    		   head="perf.q.action(LISTENER, #cons(VERB, LISTENER, OBJ3, OBJ4))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 #token(PREP)
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		         [[','] 'please'] ('!'|'?')*
+    		         #derefFromContext(C3, OBJ3)
+    		         #derefFromContext(C4, OBJ4)"/>
 
     <!-- special case of the verb send, which means "tell to go" -->
     <NLPattern name="perf.request.action-send"

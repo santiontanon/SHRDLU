@@ -1191,4 +1191,15 @@
 		</eventRule>
 	</ObjectClass>	
 
+	<ObjectClass class="shuttle-piece" super="equipment" name="piece">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">613</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This seems like a piece that fell off a vehicle!" thought="true"/>
+        	<talkOther text="It is the same color as that shuttle I saw in the garage..." thought="true"/>
+        	<talkOther text="What is it doing here?!" thought="true"/>
+        </eventRule>		
+	</ObjectClass>	
+
 </Objects>

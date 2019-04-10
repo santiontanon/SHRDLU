@@ -1,3 +1,7 @@
+/*
+- This action is for when a robot as taking another character somewhere, like "take me to the kitchen"
+*/
+
 class RobotTakeTo_IntentionAction extends IntentionAction {
 
 	constructor()

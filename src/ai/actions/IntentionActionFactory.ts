@@ -28,6 +28,7 @@ class IntentionActionFactory {
 		if (xml.getAttribute("type") == "RobotStop_IntentionAction") return RobotStop_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotTake_IntentionAction") return RobotTake_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotTakeTo_IntentionAction") return RobotTakeTo_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotPutIn_IntentionAction") return RobotPutIn_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotTalk_IntentionAction") return RobotTalk_IntentionAction.loadFromXML(xml, ai);
 
 		return null;

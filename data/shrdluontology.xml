@@ -534,6 +534,7 @@
     <sort name="verb.ask" super="action.talk"/>
     <sort name="action.take" super="actionverb"/>
     <sort name="action.give" super="actionverb"/>
+    <sort name="action.put-in" super="actionverb,verb.put"/>
     <sort name="action.drop" super="actionverb"/>
     <sort name="action.push" super="actionverb"/>
     <sort name="action.pull" super="actionverb"/>
