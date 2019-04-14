@@ -64,13 +64,13 @@ class InferenceRecord {
 	{
 		let variables:TermAttribute[] = [];
 		let variableNames:string[] = [];
-		var p:number = Number(xml.getAttribute("priority"));
-		var a:number = Number(xml.getAttribute("anxiety"));
-		var findAllAnswers:boolean = xml.getAttribute("findAllAnswers") == "true";
-		var e:InferenceEffect = null;
-		var tt:Term = null;
-		var tb:Term = null;
-		var tbs:string = null;
+		let p:number = Number(xml.getAttribute("priority"));
+		let a:number = Number(xml.getAttribute("anxiety"));
+		let findAllAnswers:boolean = xml.getAttribute("findAllAnswers") == "true";
+		let e:InferenceEffect = null;
+		let tt:Term = null;
+		let tb:Term = null;
+		let tbs:string = null;
 		if (xml.getAttribute("timeTerm") != null) tt = Term.fromStringInternal(xml.getAttribute("timeTerm"), o, variableNames, variables).term;
 		if (xml.getAttribute("triggeredBy") != null) tb = Term.fromStringInternal(xml.getAttribute("triggeredBy"), o, variableNames, variables).term;
 		if (xml.getAttribute("triggeredBySpeaker") != null) tbs = xml.getAttribute("triggeredBySpeaker");
@@ -78,19 +78,19 @@ class InferenceRecord {
 		let effect_xml:Element = getFirstElementChildByTag(xml ,"InferenceEffect");
 		if (effect_xml != null) e = InferenceEffectFactory.loadFromXML(effect_xml, ai, o, variables, variableNames);
 
-		var additionalSentences:Sentence[] = [];
-		var additionalSentences_xml:Element = getFirstElementChildByTag(xml ,"additionalSentences");
+		let additionalSentences:Sentence[] = [];
+		let additionalSentences_xml:Element = getFirstElementChildByTag(xml ,"additionalSentences");
 		if (additionalSentences_xml != null) {
 			for(let s_xml of getElementChildrenByTag(additionalSentences_xml, "sentence")) {
-				var s:Sentence = Sentence.fromStringInternal(s_xml.firstChild.nodeValue, o, variableNames, variables);
+				let s:Sentence = Sentence.fromStringInternal(s_xml.firstChild.nodeValue, o, variableNames, variables);
 				if (s!=null) additionalSentences.push(s);
 			}
 		}
-		var targets:Sentence[][] = [];
+		let targets:Sentence[][] = [];
 		for(let s_l_xml of getElementChildrenByTag(xml, "target")) {
-			var t:Sentence[] = [];
+			let t:Sentence[] = [];
 			for(let s_xml of getElementChildrenByTag(s_l_xml, "sentence")) {
-				var s:Sentence = Sentence.fromStringInternal(s_xml.firstChild.nodeValue, o, variableNames, variables);
+				let s:Sentence = Sentence.fromStringInternal(s_xml.firstChild.nodeValue, o, variableNames, variables);
 				if (s!=null) t.push(s);
 			}
 			targets.push(t);
@@ -450,7 +450,7 @@ class RuleBasedAI {
 			let hasPrevious:boolean = false;
 			sentence_xml = getFirstElementChildByTag(sentence_xml,"previousSentence");
 			while(sentence_xml != null) {
-				let rule:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
+				let rule2:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
 				let provenance:string = sentence_xml.getAttribute("provenance");
 				//let timeEnd:number = this.time_in_seconds;
 				hasPrevious = true;
@@ -460,7 +460,7 @@ class RuleBasedAI {
 					// this was a sentence that already was in the BK, so no need to add it
 					sentence_xml = null;	// end of recursion
 				} else {
-					history.push(rule)
+					history.push(rule2)
 					sentence_xml = getFirstElementChildByTag(sentence_xml,"previousSentence");
 				}
 			}

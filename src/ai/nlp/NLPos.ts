@@ -237,6 +237,8 @@ class POSParser {
       "tau ceti e",
 
       // other nouns:
+      "communicator range",
+      "communication range",
       "outer space",
       "tardis 8",
       "key card",
@@ -663,8 +665,8 @@ NLPAddTokenPOS("via", PartOfSpeech.generatePreposition("via", POS_TYPE_PPREPOSIT
 */
 this.addTokenPOS(new PartOfSpeech("with", "relation.contains", Term.fromString("preposition('relation.contains'[relation.contains])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("with", "relation.tool", Term.fromString("preposition('relation.tool'[relation.tool])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("within", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 /*
-  ["within",  "PREP"],
   ["without",  "PREP"],
   ["worth",  "PREP"],
 */
@@ -959,6 +961,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("animal", "animal", o);
     this.addTokenPOS(new PartOfSpeech("anomaly", "anomaly", Term.fromString("noun('anomaly'[anomaly], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anomalies", "anomaly", Term.fromString("noun('anomaly'[anomaly], [plural])", o), 1.0));
+    this.addStandardNounPOS("area", "space.area", o);
     this.addStandardNounPOS("arm", "arm", o);
     this.addStandardNounPOS("artificial intelligence", "ai", o);
     this.addTokenPOS(new PartOfSpeech("aside", "space.away", Term.fromString("noun('space.away'[space.away], [singular])", o), 1.0));
@@ -1351,6 +1354,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.go-to", "go to","goes to","went to","gone to","going to", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.take", "grab","grabs","grabbed","grabbed","grabbing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.take-to", "guide","guides","guided","guided","guiding", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.guide", "guide","guides","guided","guided","guiding", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.happen", "happen","happens","happened","happened","happening", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.have", "have","has","had","had","having", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.heal", "heal","heals","healed","healed","healing", false, multitokens_raw, o);

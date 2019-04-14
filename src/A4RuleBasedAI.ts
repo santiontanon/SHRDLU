@@ -65,16 +65,19 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 
 		for(let location of game.locations) {
-			var str:string = location.sort.name + "('"+location.id+"'[#id])";
-			var term:Term = Term.fromString(str, o);
+			let str:string = location.sort.name + "('"+location.id+"'[#id])";
+			let term:Term = Term.fromString(str, o);
 			//console.log(term.toString());
 			this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
 
 			if (location.name != null) {
-				var str:string =  "name('"+location.id+"'[#id], '"+location.name+"'[symbol])";
-				var term:Term = Term.fromString(str, o);
+				let str:string =  "name('"+location.id+"'[#id], '"+location.name+"'[symbol])";
+				let term:Term = Term.fromString(str, o);
 				//console.log(term.toString());
-				this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+				//this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+				// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
+				// names we might have added!
+				this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 
 				if (location.name.indexOf(' ') != -1) {
 					// it's a multitoken! we should add it:
@@ -90,12 +93,12 @@ class A4RuleBasedAI extends RuleBasedAI {
 		// let debug_text:string = "";
 
 		for(let idx_l1:number = 0;idx_l1<game.locations.length;idx_l1++) {
-			var l1:AILocation = game.locations[idx_l1];
+			let l1:AILocation = game.locations[idx_l1];
 			for(let idx_l2:number = 0;idx_l2<game.locations.length;idx_l2++) {
-				var l2:AILocation = game.locations[idx_l2];
+				let l2:AILocation = game.locations[idx_l2];
 				if (l1 == l2) continue;
 				if (game.location_in[idx_l1][idx_l2]) {
-					var somethingInBetween:boolean = false;
+					let somethingInBetween:boolean = false;
 					for(let idx_l3:number = 0;idx_l3<game.locations.length;idx_l3++) {
 						if (idx_l3 != idx_l1 && idx_l3 != idx_l2 &&
 							game.location_in[idx_l1][idx_l3] &&
@@ -105,14 +108,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 					if (!somethingInBetween) {
-						var term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+						let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						//console.log(term.toString());
-						this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+						// this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+						// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
+						// names we might have added!
+						this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 						n_space_at++;
 						// debug_text += term + "\n";
 					}
 				} else {
-					var s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+					let s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 					//console.log(term.toString());
 					this.addLongTermRuleNow(s, BACKGROUND_PROVENANCE);
 					n_not_space_at++;
@@ -123,15 +129,15 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		for(let idx_l1:number = 0;idx_l1<game.locations.length;idx_l1++) {
 //			console.log("idx: " + idx_l1);
-			var l1:AILocation = game.locations[idx_l1];
+			let l1:AILocation = game.locations[idx_l1];
 			for(let idx_l2:number = 0;idx_l2<game.locations.length;idx_l2++) {
-				var l2:AILocation = game.locations[idx_l2];
+				let l2:AILocation = game.locations[idx_l2];
 				if (l1 == l2) continue;
 				if (game.location_in[idx_l1][idx_l2] ||
 					game.location_in[idx_l2][idx_l1]) continue;
 				if (game.location_connects[idx_l1][idx_l2]) {
-					var str:string = "space.connects('"+l1.id+"'["+l1.sort.name+"], '"+l2.id+"'["+l2.sort.name+"])";
-					var term:Term = Term.fromString(str, o);
+					let str:string = "space.connects('"+l1.id+"'["+l1.sort.name+"], '"+l2.id+"'["+l2.sort.name+"])";
+					let term:Term = Term.fromString(str, o);
 					//console.log(term.toString());
 					this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
 					n_space_connects++;
@@ -462,20 +468,20 @@ class A4RuleBasedAI extends RuleBasedAI {
 					for(let o2 of o1l) {
 						if (o2.ID == o2ID) return true;
 					}
-					return false;
+					return null;
 				} else {
 					return null;
 				}
 			}
-			var o1:A4Object = this.game.findObjectByIDJustObject(o1ID);	// see if o1 is an object
+			var o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
 			var loc1:AILocation = null;
-			if (o1 == null) {
+			if (o1l == null) {
 				loc1 = this.game.getAILocationByID(o1ID);	// if it's not an object, maybe it's a location
-				if (loc1 == null) return false;
+				if (loc1 == null) return null;	// we don't know!
 			} else {
-				loc1 = this.game.getAILocation(o1);
+				loc1 = this.game.getAILocation(o1l[0]);
 			}
-			if (loc1 == null) return false;
+			if (loc1 == null) return null;
 			if (loc1 == loc2) {
 				if (relation.is_a(this.cache_sort_space_at)) return true;
 				return false;

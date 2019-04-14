@@ -147,7 +147,6 @@ class AILocation {
 				var l2:AILocation = game.locations[idx_l2];
 				if (l1 == l2) continue;
 
-				// automatically generate the "space.at" terms
 				game.location_in[idx_l1][idx_l2] = true;
 				for(let mapIdx1:number = 0;mapIdx1<l1.maps.length;mapIdx1++) {
 					var map:A4Map = l1.maps[mapIdx1];

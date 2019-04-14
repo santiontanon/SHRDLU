@@ -620,6 +620,7 @@ class NLGenerator {
 				   !t.functor.is_a(this.nlg_cache_sort_verb)) {			
 //			console.log("termToEnglish_Inform: relation " + t.functor.name);
 			var subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
+			let time:Sort = this.nlg_cache_sort_present;
 			if (subjectStr != null) {
 				var relationsAggregateStr:string = "";
 				for(let tmp_t2 of tl) {
@@ -630,6 +631,14 @@ class NLGenerator {
 						t2.attributes[0] instanceof TermTermAttribute) {
 						negated_t2 = true;
 						t2 = (<TermTermAttribute>t2.attributes[0]).term;
+					}
+
+					if (t2.attributes.length == 1 &&
+						(t2.attributes[0] instanceof TermTermAttribute) &&
+						(<TermTermAttribute>(t2.attributes[0])).term == t) {
+						// find if there is any term that determines tense, otherwise, assume present:
+						if (t2.functor.is_a(this.nlg_cache_sort_past)) time = t2.functor;
+						if (t2.functor.is_a(this.nlg_cache_sort_future)) time = t2.functor;
 					}
 
 					if (t2.functor.is_a(this.nlg_cache_sort_relation) &&
@@ -671,7 +680,7 @@ class NLGenerator {
 					// special case:
 					return subjectStr[0] + " " + relationsAggregateStr;
 				} else {
-					var verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], 3);
+					let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 					if (verbStr != null && relationsAggregateStr != "") 
 						return subjectStr[0] + " " + verbStr + " " + relationsAggregateStr;
 				}
@@ -817,6 +826,7 @@ class NLGenerator {
 				   	t.functor.name == "action.talk" ||
 				   	t.functor.name == "action.give" ||
 				   	t.functor.name == "verb.go" ||
+				   	t.functor.name == "verb.guide" ||
 				   	t.functor.name == "verb.take-to")) {
 			var subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			var object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
@@ -836,7 +846,7 @@ class NLGenerator {
 				   	t.functor.name == "action.talk") { 
 					return subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements;
 				} else if (t.functor.name == "verb.take-to") {
-					// special case:
+					// special case (phrasal verb):
 					verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
 					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
 				} else {

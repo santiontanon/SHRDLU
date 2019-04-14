@@ -385,7 +385,6 @@ resolutionQueryTest(
     ["~character(X);~space.at(X,WHERE)"],
     o);
 
-*/
 
 resolutionQueryTest(
     ["~spacesuit(SS) ; relation.howto(verb.repair(X,SS),verb.tell(X,verb.repair(Q:'qwerty'[#id],SS),Q))",
@@ -393,6 +392,15 @@ resolutionQueryTest(
     ["~relation.howto(verb.repair('david'[#id],'ss'[#id]),X)"],
     1,
     o);
+*/
 
-
-
+resolutionTest(
+    ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
+     "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
+     "space.at('david'[#id], 'location-garage'[#id])",
+     "space.at('location-garage'[#id], 'aurora-station'[#id])",
+     "space.at('aurora-station'[#id], 'communicator-range'[#id])",
+     ],
+    ["~space.at('david'[#id], 'communicator-range'[#id])"],
+    true,    // contradicts
+    o);

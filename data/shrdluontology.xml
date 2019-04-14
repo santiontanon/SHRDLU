@@ -464,7 +464,8 @@
     <sort name="verb.gather" super="verb.get,verb-with-optional-location-3rd-argument"/>
     <sort name="verb.go" super="verb"/>
     <sort name="verb.go-to" super="verb.go"/>
-    <sort name="verb.take-to" super="verb"/>
+    <sort name="verb.guide" super="verb"/>
+    <sort name="verb.take-to" super="verb.guide"/>
     <sort name="verb.come" super="verb.go"/>
     <sort name="verb.come-back" super="verb.come"/>
     <sort name="verb.come-to" super="verb.come"/>
@@ -605,6 +606,7 @@
     <sort name="space" super="any"/>
     <sort name="space.location" super="space"/>
     <sort name="space.position" super="space.location"/>
+    <sort name="space.area" super="space.location"/>
     <sort name="spatial-relation" super="space,relation,#stateSort"/>
     <sort name="space.at" super="spatial-relation,#stateSort"/>
     <sort name="space.inside.of" super="space.at"/>
@@ -633,7 +635,7 @@
     <sort name="space.end" super="space.location,end"/>
     <sort name="space.exit" super="space.location"/>
     <sort name="distance" super="space,relation-with-value,#stateSort,abstract-entity"/>
-    <sort name="relation.contains" super="verb.have,space.inside.of"/>
+    <sort name="relation.contains" super="spatial-relation"/>
 
     <sort name="celestial-entity" super="object,space.location"/>
     <sort name="outer-space" super="space,celestial-entity"/>

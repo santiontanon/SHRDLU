@@ -301,22 +301,22 @@ class SentenceContainer {
 
 	allPotentialMatchesWithSentenceForResolution(s:Sentence, o:Ontology) : Sentence[]
 	{
-		var potentialMatches:Sentence[] = [];
+		let potentialMatches:Sentence[] = [];
 		for(let i:number = 0;i<s.terms.length;i++) {
-			var query:Term = s.terms[i];
-			var sign:boolean = !s.sign[i];
+			let query:Term = s.terms[i];
+			let sign:boolean = !s.sign[i];
 //			console.log("query " + query + " (" + (i+1) + " / " + s.terms.length + ")");
 			for(let sortName in this.sentenceHash) {
-				var s2:Sort = o.getSort(sortName);
+				let s2:Sort = o.getSort(sortName);
 				if (s2.is_a(query.functor) || query.functor.is_a(s2)) {
-					var l:SentenceEntry[] = this.sentenceHash[sortName];
+					let l:SentenceEntry[] = this.sentenceHash[sortName];
 //					console.log(l.length + " sentences for " + sortName);
 					for(let se of l) {
 //						console.log("allPotentialMatchesWithSentenceForResolution, considering (for "+i+"/"+s.terms.length+"): " + se.sentence);
 						if (se.allPotentialMatchesWithSentenceForResolution_counter == this.allPotentialMatchesWithSentenceForResolution_counter) continue;
-						var matches:boolean = false;
+						let matches:boolean = false;
 						for(let j:number = 0;j<se.sentence.terms.length;j++) {
-							var t:Term = se.sentence.terms[j];
+							let t:Term = se.sentence.terms[j];
 //							console.log(t.functor.name + "/" + t.attributes.length + " vs " + query.functor.name + "/" + query.attributes.length)
 							if (t.functor == s2 && 
 								t.attributes.length == query.attributes.length && 

@@ -111,6 +111,14 @@
 	<sentence provenance="background" sentence="~space.at('solar-system'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('tau-ceti-system'[#id],'solar-system'[#id])"/>
 
+	<sentence provenance="background" sentence="space.area('communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="name('communicator-range'[#id],'communicator range'[symbol])"/>
+	<sentence provenance="background" sentence="name('communicator-range'[#id],'communication range'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('spacer-valley-south'[#id],'communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="~space.at('spacer-valley-north'[#id],'communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="~space.at('location-east-cave'[#id],'communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="~space.at('location-west-cave'[#id],'communicator-range'[#id])"/>
+
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="disembodied-ai('etaoin'[#id])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'etaoin'[symbol])"/>

@@ -299,7 +299,7 @@ class InterruptibleResolution
 							return null;
 						}
 					}
-//					console.log("    Resolution between " + s1 + "   and   " + s2);
+					if (DEBUG_resolution) console.log("    Resolution (relevantSentences) between " + s1 + "   and   " + s2);
 					let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, new Bindings(), occursCheck);
 					resolutions++;
 					this.total_resolutions++;
@@ -352,6 +352,7 @@ class InterruptibleResolution
 						return null;
 					}
 				}
+				// if (DEBUG_resolution) console.log("    Resolution (sentences) between " + s1 + "   and   " + s2);
 				let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, b2, occursCheck);
 				resolutions++;
 				this.total_resolutions++;
@@ -385,6 +386,7 @@ class InterruptibleResolution
 
 			for(let [s2,b2] of targetWithBindings) {
 				if (s1 == s2) continue;
+				//if (DEBUG_resolution) console.log("    Resolution (target with bindings) between " + s1 + "   and   " + s2);
 				let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, b2, occursCheck);
 				resolutions++;
 				this.total_resolutions++;
@@ -476,8 +478,10 @@ class InterruptibleResolution
 															(<ConstantTermAttribute>s.terms[i].attributes[0]).value,
 															(<ConstantTermAttribute>s.terms[i].attributes[1]).value,
 															ai.selfID);
+				//console.log("checkSpatialRelation: " + s.terms[i] + " -> " + truth );
 				if (truth != null &&
 					truth != s.sign[i]) {
+					//console.log("    removing it from sentence");
 					toDelete.push(s.terms[i]);
 				}
 			}
@@ -584,7 +588,7 @@ class InterruptibleResolution
 				}
 
 				resolvents.push(r);
-				if (DEBUG_resolution_detailed) {
+				if (DEBUG_resolution) {
 					console.log("resolutionBetweenSentencesWithBindings_internal: new resolvent");
 					console.log("    s1: " + s1);
 					console.log("    s2: " + s2);

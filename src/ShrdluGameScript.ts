@@ -26,7 +26,7 @@ class ShrdluGameScript {
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			//this.skip_to_end_of_act_1();
+			this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 		}
 
@@ -1573,6 +1573,18 @@ class ShrdluGameScript {
 				this.act_2_state = 1;
 			}
 			break;
+
+		case 1:
+			if (this.thoughtBubbleQueue.length == 0 &&
+				this.game.currentPlayer.isIdle()) {
+				this.etaoinSays("perf.greet('david'[#id])");
+				this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:verb.guide('etaoin'[#id], 'david'[#id], 'location-east-cave'[#id]), time.future(V)))");
+				this.etaoinSays("perf.inform(V0:'david'[#id], time.subsequently(verb.go(V0,'north'[north],'spacer-valley-north'[#id]), verb.go(V0,'east'[east],'location-east-cave'[#id])))");
+				this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:space.outside.of('david'[#id], 'communicator-range'[#id]), time.future(V)))");
+				// ....
+				this.act_2_state = 2;
+				break;			
+			}
 		}
 
 		if (previous_state == this.act_intro_state) {

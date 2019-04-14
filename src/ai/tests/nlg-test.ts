@@ -277,5 +277,6 @@ testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#id], 'powered.off'[powered.off]), verb.switch-off('etaoin'[#id], 's1'[#id])))", "etaoin", "my ship's state is off because I turn off my ship");
 
-
+testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom"); 
+testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen"); 
 
