@@ -827,15 +827,16 @@ class NLGenerator {
 				   	t.functor.name == "action.give" ||
 				   	t.functor.name == "verb.go" ||
 				   	t.functor.name == "verb.guide" ||
-				   	t.functor.name == "verb.take-to")) {
-			var subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
-			var object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
+				   	t.functor.name == "verb.take-to"||
+				   	t.functor.name == "verb.bring")) {
+			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
+			let object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
 												 											  ((t.attributes[0] instanceof ConstantTermAttribute) ? 
 																						      (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
-			var object2Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false,
+			let object2Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false,
 												 											  ((t.attributes[0] instanceof ConstantTermAttribute) ? 
 																						      (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
-			var verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], time, negated_t);
+			let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], time, negated_t);
 			if (subjectStr != null && object1Str != null && object2Str != null) {
 				if (dropSubject) {
 					subjectStr[0] = "";
@@ -845,9 +846,10 @@ class NLGenerator {
 				if (t.functor.name == "verb.tell" ||
 				   	t.functor.name == "action.talk") { 
 					return subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements;
-				} else if (t.functor.name == "verb.take-to") {
-					// special case (phrasal verb):
-					verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
+				} else if (t.functor.name == "verb.take-to"||
+				   		   t.functor.name == "verb.bring") {
+					// verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
+					verbStr = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], time, negated_t);
 					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
 				} else {
 					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
@@ -1106,7 +1108,9 @@ class NLGenerator {
 					   (t.functor.name == "verb.tell" ||
 					   	t.functor.name == "action.talk" ||
 					   	t.functor.name == "action.give" ||
-					   	t.functor.name == "verb.go")) {
+					   	t.functor.name == "verb.go" ||
+					   	t.functor.name == "verb.take-to" ||
+					   	t.functor.name == "verb.bring")) {
 				var verbStr:string = this.pos.getVerbString(t.functor, 0, 0, 0);
 				var object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false, listenerID, true);
 				var object2Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, listenerID, true);
@@ -1124,7 +1128,7 @@ class NLGenerator {
 							actionString = "to " + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
 						}
 					}
-				}
+				}			
 			} else {
 				// ...
 			}

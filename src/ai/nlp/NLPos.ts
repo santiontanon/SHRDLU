@@ -593,7 +593,6 @@ NLPAddTokenPOS("during", PartOfSpeech.generatePreposition("during", POS_TYPE_PPR
 this.addTokenPOS(new PartOfSpeech("except", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("in", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 /*
   ["into",  "PREP"],
@@ -791,8 +790,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   this.addTokenPOS(new PartOfSpeech("larger", "relation.larger", Term.fromString("preposition('relation.larger'[relation.larger])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("smaller", "relation.smaller", Term.fromString("preposition('relation.smaller'[relation.smaller])", o), 1.0));
 
-  // this one is here at the end, to overwrite "because of":
+  // these one are here at the end, to overwrite "because of" and "within":
   this.addTokenPOS(new PartOfSpeech("because", "relation.cause", Term.fromString("preposition('relation.cause'[relation.cause])", o), 1.0));  
+  this.addTokenPOS(new PartOfSpeech("in", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 
 
 
@@ -1315,6 +1315,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.arrive", "arrive","arrives","arrived","arrived","arriving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.arrive-to", "arrive to","arrives to","arrived to","arrived to","arriving to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.ask", "ask","asks","asked","asked","asking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.bring", "bring","brings","brought","brought","bringing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.build", "build","builds","built","built","building", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.call", "call","calls","called","called","calling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.can", "can","can","could",null,null, true, multitokens_raw, o);
@@ -1344,7 +1345,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.get", "get","gets","got","gotten","getting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "get to","gets to","got to","gotten to","getting to", false, multitokens_raw, o);
-    this.addStandardVerbPOS("action.give", "give","gives","gave","given","ggiving", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.give", "give","gives","gave","given","giving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go", "go","goes","went","gone","going", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-out", "go out of","goes out of","went out of","gone out of","going out of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-out", "get out of","gets out of","got out of","gotten out of","getting out of", false, multitokens_raw, o);
@@ -2255,6 +2256,16 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
         }
       }
     }
+  }
+
+
+  isPhrasalVerb(s:Sort) : PartOfSpeech
+  {
+    var l:PartOfSpeech[] = this.POSbySort[s.name];
+    for(let pos of l) {
+      if (pos.term.functor.name == "phrasal-verb") return pos;
+    }
+    return null;
   }
 
 

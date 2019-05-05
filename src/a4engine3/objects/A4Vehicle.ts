@@ -174,7 +174,9 @@ class A4Vehicle extends A4WalkingObject {
                              (this.direction == A4_DIRECTION_UP && this.y == 54*this.map.tileHeight &&
                               this.x >= 29*this.map.tileWidth && this.x <= 37*this.map.tileWidth)
                             )) {
-                            game.putRoverBackInGarage(this);
+                            if (!game.putRoverBackInGarage(this)) {
+                                game.addMessage("There is something in the garage blocking the parking spot!");
+                            }
                         }
                         break;
                     }

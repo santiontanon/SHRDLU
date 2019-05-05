@@ -903,6 +903,7 @@ NLParseTestUnifyingListener("take the light from the kitchen", o.getSort("perfor
 NLParseTestUnifyingListener("could you please take the light from the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'l1'[#id]))");
 
 NLParseTestUnifyingListener("put the white key in the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
+NLParseTestUnifyingListener("bring me to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.bring('etaoin'[#id], '1'[#id], 'room1'[#id]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

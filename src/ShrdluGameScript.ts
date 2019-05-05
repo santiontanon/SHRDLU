@@ -1575,17 +1575,120 @@ class ShrdluGameScript {
 			break;
 
 		case 1:
-			if (this.thoughtBubbleQueue.length == 0 &&
-				this.game.currentPlayer.isIdle()) {
-				this.etaoinSays("perf.greet('david'[#id])");
-				this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:verb.guide('etaoin'[#id], 'david'[#id], 'location-east-cave'[#id]), time.future(V)))");
-				this.etaoinSays("perf.inform(V0:'david'[#id], time.subsequently(verb.go(V0,'north'[north],'spacer-valley-north'[#id]), verb.go(V0,'east'[east],'location-east-cave'[#id])))");
-				this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:space.outside.of('david'[#id], 'communicator-range'[#id]), time.future(V)))");
-				// ....
-				this.act_2_state = 2;
-				break;			
+			if (this.playerHasItemP("communicator")) {
+				if (this.thoughtBubbleQueue.length == 0 &&
+					this.game.currentPlayer.isIdle()) {
+					this.etaoinSays("perf.greet('david'[#id])");
+					this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:verb.guide('etaoin'[#id], 'david'[#id], 'location-east-cave'[#id]), time.future(V)))");
+					this.etaoinSays("perf.inform(V0:'david'[#id], time.subsequently(verb.go(V0,'north'[north],'spacer-valley-north'[#id]), verb.go(V0,'east'[east],'location-east-cave'[#id])))");
+					this.etaoinSays("perf.inform(V0:'david'[#id], #and(V:space.outside.of('david'[#id], 'communicator-range'[#id]), time.future(V)))");
+					this.etaoinSays("perf.request.action(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
+					this.act_2_state = 2;
+				}
+			} else {
+				// if the player does not have the communicator, but has made it to the north, just move the state up
+				if (this.game.currentPlayer.map.name == "Spacer Valley North") this.act_2_state = 2;
 			}
+			break;			
+
+
+		case 2:
+			if (this.playerHasItemP("communicator")) {
+				if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Spacer Valley North") {
+					this.queueThoughtBubble("The communicator has gone dead. I guess I'm now out of communicator range with Etaoin...");
+					this.queueThoughtBubble("Etaoin said to to East after reaching this part of Spacer Valley, let's see where is that cave...");
+					this.act_2_state = 3;
+				}
+			} else {
+				if (this.game.currentPlayer.map.name == "Spacer Valley North" &&
+					this.game.currentPlayer.x >= 64*8) {
+					this.act_2_state = 3;
+				}
+			}
+			break;			
+
+		case 3:
+			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Spacer Valley North" &&
+				this.game.currentPlayer.x >= 64*8) {
+				this.queueThoughtBubble("I am picking up a distress signal that seems to come from that cave entrance to the east!");
+				this.queueThoughtBubble("That's probably Shrdlu, I should go investigate!");
+				this.act_2_state = 4;
+			}
+			break;			
+
+		case 4:
+			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "East Cave") {
+				this.queueThoughtBubble("It seems there was a cave-in here, maybe Shrdlu got trapped behind those rocks?");
+				this.act_2_state = 5;
+			}
+			break;			
+
+		case 5:
+			// Player has found Shrdlu, but not started talking to it yet
+			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Aurora Station") {
+				this.etaoinSays("perf.greet('david'[#id])");
+				this.etaoinSays("perf.q.predicate(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
+				this.act_2_state = 6;
+			}
+			break;
+
+		case 6:
+			// waiting for an answer from the player to "do you find shrdlu?"
+			if (this.game.currentPlayer.map.name != "Aurora Station") {
+				this.act_2_state = 5;	
+			} else {
+				let p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+				if (p!=null) {
+					if (p.timeStamp == this.game.in_game_seconds - 1) {
+						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
+							this.game.etaoinAI.intentions.length == 0 &&
+							this.game.etaoinAI.queuedIntentions.length == 0 &&
+							this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0) {
+							var answer:TermAttribute = p.performative.attributes[1];
+							if (answer instanceof ConstantTermAttribute) {
+								if ((<ConstantTermAttribute>answer).value == "no" ||
+									(<ConstantTermAttribute>answer).value == "unknown") {
+									this.act_2_state = 7;
+								} else if ((<ConstantTermAttribute>answer).value == "yes") {
+									this.act_2_state = 9;
+								} else {
+									console.error("update_act_2, state 5: unexpected answer " + p.performative);
+								}	
+							} else {
+								// this can only mean the player answered with a name
+								console.error("update_act_2, state 5: unexpected answer " + p.performative);
+							}
+						} else if (p.performative.functor.is_a(this.game.ontology.getSort("perf.ack.ok"))) {
+							console.error("update_act_2, state 5: unexpected answer " + p.performative);
+						}						
+					}
+				}
+			}
+			break;
+
+		case 7:
+			// player said "no" to having found Shrdlu
+			if (this.game.currentPlayer.isIdle()) {
+				this.etaoinSays("perf.request.action(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
+				this.act_2_state = 8;
+			}
+			break;
+
+		case 8:
+			if (this.game.currentPlayer.map.name != "Aurora Station") this.act_2_state = 5;	
+			break;
+
+		case 9:
+			// player said "yes" to having found Shrdlu
+			if (this.game.currentPlayer.isIdle()) {
+				this.etaoinSays("perf.request.action(V0:'david'[#id], verb.bring('david'[#id], 'shrdlu'[#id], 'aurora-station'[#id]))");
+				this.act_2_state = 8;
+			}
+			break;
+
 		}
+
+
 
 		if (previous_state == this.act_intro_state) {
 			this.act_2_state_timer++;
@@ -1792,6 +1895,14 @@ class ShrdluGameScript {
 		return false;
 	} 
 
+
+	playerHasItemP(itemId:string) : boolean
+	{
+		for(let item of this.game.currentPlayer.inventory) {
+			if (item.ID == itemId) return true;
+		}
+		return false;
+	}
 
 
 	qwertyIntention(pattern:string)

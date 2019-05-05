@@ -274,13 +274,13 @@
   <object id="800" name="SPACER-VALLEY-NORTH" type="Bridge" x="32" y="0" width="272" height="16"/>
   <object id="801" name="SPACER-VALLEY-NORTH" type="BridgeDestination" x="32" y="8" width="272" height="40"/>
   <object id="802" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="304" y="408" width="16" height="32"/>
-  <object id="803" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="312" y="408" width="16" height="32"/>
+  <object id="803" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="312" y="392" width="16" height="64"/>
   <object id="804" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="248" y="408" width="16" height="32"/>
-  <object id="805" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="240" y="408" width="16" height="32"/>
+  <object id="805" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="240" y="392" width="16" height="64"/>
   <object id="806" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="264" y="400" width="40" height="8"/>
-  <object id="807" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="264" y="376" width="40" height="24"/>
+  <object id="807" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="248" y="376" width="72" height="24"/>
   <object id="808" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="264" y="440" width="40" height="16"/>
-  <object id="809" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="264" y="448" width="40" height="24"/>
+  <object id="809" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="248" y="448" width="72" height="24"/>
   <object id="810" type="small-boulder" x="416" y="488" width="8" height="8"/>
   <object id="811" type="small-boulder" x="504" y="544" width="8" height="8"/>
   <object id="812" type="small-boulder" x="544" y="480" width="8" height="8"/>

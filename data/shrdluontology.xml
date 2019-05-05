@@ -562,6 +562,8 @@
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
     
+    <sort name="verb.bring" super="verb.take-to,action.give"/>
+    
     <sort name="=" super="symmetric-relation"/>
 
     <sort name="goal" super="property-with-value,#stateSort"/>

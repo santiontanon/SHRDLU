@@ -2283,6 +2283,7 @@ class A4Game {
 
         // 3) teleport the player, and embark
         this.currentPlayer.warp(848+8, 112-16, map);
+        return true;
     }
 
 

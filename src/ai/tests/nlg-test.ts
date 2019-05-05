@@ -256,7 +256,7 @@ testNLG("perf.request.action(V0:'1'[#id], time.subsequently(verb.go(V0,'northeas
 testNLG("perf.inform(V0:'1'[#id], time.subsequently(verb.go(V0,'northeast'[northeast],'room1'[#id]), verb.go(V0,'south'[south],'room2'[#id])))", "etaoin", "go northeast to the kitchen, then go south to the bedroom");
 testNLG("perf.inform(V0:'1'[#id], verb.find(X, 'qwerty'[#id]))", "etaoin", "find qwerty");
 testNLG("perf.inform(V0:'1'[#id], verb.go-to(X, 'verb.sleep'[verb.sleep]))", "etaoin", "go to sleep");
-testNLG("perf.inform(V0:'1'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))", "etaoin", "I take you to the kitchen");
+testNLG("perf.inform(V0:'1'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))", "etaoin", "I guide you to the kitchen");
 testNLG("perf.q.how('1'[#id], verb.help('etaoin'[#id],'1'[#id]))", "etaoin", "How can I help you?");
 testNLG("perf.inform('1'[#id], #and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), time.now(X)))", "etaoin", "you can talk to qwerty now");
 testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with your key card now");
@@ -279,4 +279,6 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#i
 
 testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom"); 
 testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen"); 
+
+testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom"); 
 
