@@ -1625,17 +1625,30 @@ class ShrdluGameScript {
 
 		case 5:
 			// Player has found Shrdlu, but not started talking to it yet
-			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Aurora Station") {
-				this.etaoinSays("perf.greet('david'[#id])");
-				this.etaoinSays("perf.q.predicate(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
+			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Spacer Valley North") {
+				this.queueThoughtBubble("I did not see Shrdlu, but the signal came from this cave. Maybe if I talk Shrdlu can hear me?");
 				this.act_2_state = 6;
 			}
+			// ...
 			break;
 
 		case 6:
+			// Player has found Shrdlu, but not started talking to it yet
+			if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Aurora Station") {
+				// First delete any knowledge Etaoin had on whether you have found SHRDLU or not (otherwise, you can create a contradiction):
+				let term:Term = Term.fromString("verb.find('david'[#id], 'shrdlu'[#id])", this.game.ontology);
+				let s:Sentence = new Sentence([term],[false]);
+				this.game.etaoinAI.removeLongTermRule(s)
+				this.etaoinSays("perf.greet('david'[#id])");
+				this.etaoinSays("perf.q.predicate(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
+				this.act_2_state = 7;
+			}
+			break;
+
+		case 7:
 			// waiting for an answer from the player to "do you find shrdlu?"
 			if (this.game.currentPlayer.map.name != "Aurora Station") {
-				this.act_2_state = 5;	
+				this.act_2_state = 6;
 			} else {
 				let p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 				if (p!=null) {
@@ -1648,9 +1661,9 @@ class ShrdluGameScript {
 							if (answer instanceof ConstantTermAttribute) {
 								if ((<ConstantTermAttribute>answer).value == "no" ||
 									(<ConstantTermAttribute>answer).value == "unknown") {
-									this.act_2_state = 7;
+									this.act_2_state = 8;
 								} else if ((<ConstantTermAttribute>answer).value == "yes") {
-									this.act_2_state = 9;
+									this.act_2_state = 10;
 								} else {
 									console.error("update_act_2, state 5: unexpected answer " + p.performative);
 								}	
@@ -1666,24 +1679,29 @@ class ShrdluGameScript {
 			}
 			break;
 
-		case 7:
+		case 8:
 			// player said "no" to having found Shrdlu
 			if (this.game.currentPlayer.isIdle()) {
 				this.etaoinSays("perf.request.action(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
-				this.act_2_state = 8;
+				this.act_2_state = 9;
 			}
-			break;
-
-		case 8:
-			if (this.game.currentPlayer.map.name != "Aurora Station") this.act_2_state = 5;	
 			break;
 
 		case 9:
+			if (this.game.currentPlayer.map.name != "Aurora Station") this.act_2_state = 6;	
+			break;
+
+		case 10:
 			// player said "yes" to having found Shrdlu
 			if (this.game.currentPlayer.isIdle()) {
-				this.etaoinSays("perf.request.action(V0:'david'[#id], verb.bring('david'[#id], 'shrdlu'[#id], 'aurora-station'[#id]))");
-				this.act_2_state = 8;
+				this.etaoinSays("perf.request.action(V0:'david'[#id], verb.bring('david'[#id], 'shrdlu'[#id], 'location-aurora-station'[#id]))");
+				this.act_2_state = 11;
 			}
+			break;
+
+		case 11:
+			// player has told Etaoin that he has found Shrdlu
+			// ...
 			break;
 
 		}

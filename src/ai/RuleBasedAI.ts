@@ -439,6 +439,12 @@ class RuleBasedAI {
 	}
 
 
+	removeLongTermRule(s:Sentence)
+	{
+		this.longTermMemory.removeSentence(s);
+	}
+
+
 	loadLongTermRulesFromXML(xml:Element)
 	{
 		for(let sentence_xml of getElementChildrenByTag(xml,"sentence")) {
