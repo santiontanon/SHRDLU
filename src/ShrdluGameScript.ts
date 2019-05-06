@@ -1629,7 +1629,11 @@ class ShrdluGameScript {
 				this.queueThoughtBubble("I did not see Shrdlu, but the signal came from this cave. Maybe if I talk Shrdlu can hear me?");
 				this.act_2_state = 6;
 			}
-			// ...
+			if (this.contextShrdlu == null) {
+				this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+			} else if (this.contextShrdlu.lastPerformativeBy("shrdlu")!=null) {
+				this.act_2_state = 100;
+			}
 			break;
 
 		case 6:
@@ -1642,6 +1646,11 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.greet('david'[#id])");
 				this.etaoinSays("perf.q.predicate(V0:'david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
 				this.act_2_state = 7;
+			}
+			if (this.contextShrdlu == null) {
+				this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+			} else if (this.contextShrdlu.lastPerformativeBy("shrdlu")!=null) {
+				this.act_2_state = 100;
 			}
 			break;
 
@@ -1701,9 +1710,24 @@ class ShrdluGameScript {
 
 		case 11:
 			// player has told Etaoin that he has found Shrdlu
-			// ...
+			if (this.contextShrdlu == null) {
+				this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+			} else if (this.contextShrdlu.lastPerformativeBy("shrdlu")!=null) {
+				this.act_2_state = 100;
+			}
 			break;
 
+		case 100:
+			// Conversation with Shrdlu has started!
+			this.shrdluSays("perf.request.action(V0:'david'[#id], verb.help('david'[#id], 'shrdlu'[#id]))");			
+			this.shrdluSays("perf.inform('david'[#id], #and(V:verb.damage('east-cave-cave-in'[#id], 'shrdlu-perception'[#id]), time.past(V)))");
+			this.shrdluSays("perf.inform(V0:'david'[#id], property.blind('shrdlu'[#id]))");
+			this.act_2_state = 101;
+			break;
+
+		case 101:
+			// ...
+			break;
 		}
 
 
@@ -1970,6 +1994,23 @@ class ShrdluGameScript {
 									 [new ConstantTermAttribute(this.playerID, this.game.ontology.getSort("#id")), 
 									  new TermTermAttribute(term)]);
 			this.game.etaoinAI.queueIntention(term2, null, null);
+		}
+	}
+
+
+	shrdluSays(pattern:string)
+	{
+		pattern = pattern.split("$QWERTY").join("'"+this.qwertyID+"'[#id]");
+		pattern = pattern.split("$ETAOIN").join("'"+this.etaoinID+"'[#id]");
+		pattern = pattern.split("$PLAYER").join("'"+this.playerID+"'[#id]");
+		var term:Term = Term.fromString(pattern, this.game.ontology);
+		if (term == null) {
+			console.error("etaoinSays: cannot parse pattern " + pattern);
+		} else {
+			var term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
+									 [new ConstantTermAttribute(this.playerID, this.game.ontology.getSort("#id")), 
+									  new TermTermAttribute(term)]);
+			this.game.shrdluAI.queueIntention(term2, null, null);
 		}
 	}
 

@@ -357,6 +357,7 @@
     <sort name="can" super="item"/>
     <sort name="system" super="object"/>
     <sort name="memory-bank" super="object"/>
+    <sort name="perception-system" super="object"/>
 
     <sort name="machine" super="object"/>
     <sort name="panel" super="object,shape.flat"/>
@@ -527,6 +528,8 @@
     <sort name="verb.colonize" super="verb.occupy"/>
     <sort name="verb.connect" super="verb"/>
     <sort name="verb.connect-to" super="verb.connect"/>
+    <sort name="verb.damage" super="verb"/>
+    <sort name="verb.injure" super="verb.damage"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
@@ -563,7 +566,7 @@
     <sort name="action.answer.how" super="actionverb"/>
     
     <sort name="verb.bring" super="verb.take-to,action.give"/>
-    
+
     <sort name="=" super="symmetric-relation"/>
 
     <sort name="goal" super="property-with-value,#stateSort"/>
@@ -784,6 +787,7 @@
     <sort name="thirsty" super="property"/>
     <sort name="bored" super="property"/>
     <sort name="property.old" super="property"/>
+    <sort name="property.blind" super="property"/>
 
     <sort name="alive" super="property,#stateSort"/>
     <sort name="dead" super="property"/>

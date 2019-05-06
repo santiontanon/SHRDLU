@@ -1,5 +1,7 @@
 <knowledgeBase>
 	<!-- story knowledge -->	
+	<sentence provenance="background" sentence="cave-in('east-cave-cave-in'[#id])"/>
+	<sentence provenance="background" sentence="space.at('east-cave-cave-in'[#id],'east-cave'[#id])"/>
 
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->
 	<sentence provenance="background" sentence="verb.know('shrdlu'[#id], name(X, Y)); ~name(X, Y)"/>

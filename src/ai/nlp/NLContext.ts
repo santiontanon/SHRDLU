@@ -247,11 +247,18 @@ class NLContext {
 		}
 
 		// find everything we can about it:
-		var oSort:Sort = o.getSort("object");
-		var slSort:Sort = o.getSort("space.location");
+		let typeSorts:Sort[] = []
+		let typeSortsWithArity:[Sort,number][] = []
 		var pSort:Sort = o.getSort("property");
 		var pwvSort:Sort = o.getSort("property-with-value");
-		var rSort:Sort = o.getSort("relation");
+		var rSort:Sort = o.getSort("relation"); 
+		for(let s of POSParser.sortsToConsiderForTypes) {
+			typeSorts.push(o.getSort(s));
+			typeSortsWithArity.push([o.getSort(s), 1]);
+		}
+		typeSortsWithArity.push([pSort,1]);
+		typeSortsWithArity.push([pwvSort,2]);
+		typeSortsWithArity.push([rSort,2]);
 		/*
 		for(let t of this.ai.perceptionBuffer) {
 			if (t.functor.is_a(oSort) ||
@@ -265,8 +272,7 @@ class NLContext {
 		}
 		*/
 		for(let te of this.ai.shortTermMemory.plainTermList) {
-			if (te.term.functor.is_a(oSort) ||
-				te.term.functor.is_a(slSort) ||
+			if (POSParser.sortIsConsideredForTypes(te.term.functor, o) || 
 				te.term.functor.is_a(pSort) ||
 				te.term.functor.is_a(pwvSort) ||
 				te.term.functor.is_a(rSort)) {
@@ -279,7 +285,7 @@ class NLContext {
 				}
 			}
 		}
-		for(let tmp of [[oSort,1], [slSort, 1], [pSort,1], [pwvSort,2], [rSort,2]]) {
+		for(let tmp of typeSortsWithArity) {
 			for(let s of this.ai.longTermMemory.allMatches(<Sort>(tmp[0]), <number>(tmp[1]), o)) {
 				if (s.terms.length>1 || !s.sign[0]) continue;
 //				console.log("NLContext: considering sentence " + s);

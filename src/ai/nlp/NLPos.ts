@@ -227,6 +227,8 @@ class POSParser {
       "the milky way",
       "memory bank",
       "memory banks",
+      "perception system",
+      "perception systems",
       "milky way",
       "tau ceti",
       "the tau ceti system",
@@ -1142,6 +1144,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("password", "password", o);
     this.addStandardNounPOS("computer password", "password", o);
     this.addTokenPOS(new PartOfSpeech("people", "human", Term.fromString("noun('human'[human], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("perception", "perception-system", Term.fromString("noun('perception-system'[perception-system], [singular])", o), 1.0));
+    this.addStandardNounPOS("perception system", "perception-system", o);
     this.addStandardNounPOS("performative", "performative", o);
     this.addUncountableNounPOS("permission", "permission-to-access", o);
     this.addUncountableNounPOS("access", "permission-to-access", o);
@@ -1327,6 +1331,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.come", "come","comes","came","come","coming", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-back", "come back","comes back","came back","come back","coming back", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-to", "come to","comes to","came to","come to","coming to", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.damage", "damage","damages","damaged","damaged","damaging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.define", "define","defines","defined","defined","defining", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.disambiguate", "disambiguate","disambiguates","disambiguated","disambiguated","disambiguating", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.disembark", "disembark","disembarks","disembarked","disembarked","disembarking", false, multitokens_raw, o);
@@ -1361,6 +1366,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.heal", "heal","heals","healed","healed","healing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.hear", "hear","hears","heard","heared","hearing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.help", "help","helps","helped","helped","helping", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.injure", "injure","injures","injured","injured","injuring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.embark", "embark","embarks","embarked","embarked","embarking", false, multitokens_raw, o);
@@ -1436,6 +1442,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("awake", "awake", Term.fromString("adjective('awake'[awake])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("big", "big", Term.fromString("adjective('big'[big])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("black", "black", Term.fromString("adjective('black'[black])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("blind", "property.blind", Term.fromString("adjective('property.blind'[property.blind])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("blue", "blue", Term.fromString("adjective('blue'[blue])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("bored", "bored", Term.fromString("adjective('bored'[bored])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("born", "property.born", Term.fromString("adjective('property.born'[property.born])", o), 1.0));
@@ -2393,7 +2400,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
                                              "time.location",
                                              "space.location", 
                                              "abstract-entity", 
-                                             "role"];
+                                             "role",
+                                             "event"];
 
 }
 

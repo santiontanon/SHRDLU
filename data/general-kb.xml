@@ -129,6 +129,8 @@
 	<sentence provenance="background" sentence="space.at('etaoin'[#id],'location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="memory-bank('etaoin-memory'[#id])"/>
 	<sentence provenance="background" sentence="relation.owns('etaoin'[#id],'etaoin-memory'[#id])"/>
+	<sentence provenance="background" sentence="perception-system('etaoin-perception'[#id])"/>
+	<sentence provenance="background" sentence="relation.owns('etaoin'[#id],'etaoin-perception'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'qwerty'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'jcuken'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'shrdlu'[#id])"/>
@@ -140,6 +142,8 @@
 	<sentence provenance="background" sentence="role('qwerty'[#id],'location-aurora-station'[#id],'medic'[medic])"/>
 	<sentence provenance="background" sentence="memory-bank('qwerty-memory'[#id])"/>
 	<sentence provenance="background" sentence="relation.owns('qwerty'[#id],'qwerty-memory'[#id])"/>
+	<sentence provenance="background" sentence="perception-system('qwerty-perception'[#id])"/>
+	<sentence provenance="background" sentence="relation.owns('qwerty'[#id],'qwerty-perception'[#id])"/>
 	<sentence provenance="background" sentence="weight('qwerty'[#id],'120'[kilogram])"/>
 	<sentence provenance="background" sentence="height('qwerty'[#id],'1.5'[meter])"/>
 	<sentence provenance="background" sentence="verb.do('qwerty'[#id],'nothing'[nothing])"/>
@@ -149,6 +153,8 @@
 	<sentence provenance="background" sentence="role('shrdlu'[#id],'location-aurora-station'[#id],'maintenance-robot'[maintenance-robot])"/>
 	<sentence provenance="background" sentence="memory-bank('shrdlu-memory'[#id])"/>
 	<sentence provenance="background" sentence="relation.owns('shrdlu'[#id],'shrdlu-memory'[#id])"/>
+	<sentence provenance="background" sentence="perception-system('shrdlu-perception'[#id])"/>
+	<sentence provenance="background" sentence="relation.owns('shrdlu'[#id],'shrdlu-perception'[#id])"/>
 	<sentence provenance="background" sentence="weight('shrdlu'[#id],'250'[kilogram])"/>
 	<sentence provenance="background" sentence="height('shrdlu'[#id],'1.75'[meter])"/>
 	<sentence provenance="background" sentence="verb.do('shrdlu'[#id],'nothing'[nothing])"/>
@@ -158,6 +164,8 @@
 	<sentence provenance="background" sentence="role('jcuken'[#id],'location-aurora-station'[#id],'rover-driver'[rover-driver])"/>
 	<sentence provenance="background" sentence="memory-bank('jcuken-memory'[#id])"/>
 	<sentence provenance="background" sentence="relation.owns('jcuken'[#id],'jcuken-memory'[#id])"/>
+	<sentence provenance="background" sentence="perception-system('jcuken-perception'[#id])"/>
+	<sentence provenance="background" sentence="relation.owns('jcuken'[#id],'jcuken-perception'[#id])"/>
 	<sentence provenance="background" sentence="verb.do('etaoin'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="~robot(X);verb.have(X,[body])"/>
 

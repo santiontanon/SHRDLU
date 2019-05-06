@@ -101,7 +101,12 @@ var ceg14:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('ch2',
                                               [Term.fromString("chair('ch2'[#id])",g_o),
                                                Term.fromString("space.at('ch2'[#id],'room2'[#id])",g_o)]);
 
-var ceg_l:NLContextEntity[] = [ceg1, ceg2, ceg3, ceg4, ceg5, ceg6, ceg7, ceg8, ceg9, ceg10, ceg11, ceg12, ceg13, ceg14];
+var ceg15:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('cave-in', g_o.getSort("#id")),
+                                              null, 50, 
+                                              [Term.fromString("cave-in('cave-in'[#id])",g_o),
+                                               Term.fromString("space.at('cave-in'[#id],'room2'[#id])",g_o)]);
+
+var ceg_l:NLContextEntity[] = [ceg1, ceg2, ceg3, ceg4, ceg5, ceg6, ceg7, ceg8, ceg9, ceg10, ceg11, ceg12, ceg13, ceg14, ceg15];
 for(let ceg of ceg_l) {
 	g_context.shortTermMemory.push(ceg);
 	for(let t of ceg.terms) {
@@ -281,4 +286,7 @@ testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'ro
 testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen"); 
 
 testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom"); 
+testNLG("perf.request.action(V0:'1'[#id], verb.help('1'[#id], 'etaoin'[#id]))", "etaoin", "please, help me"); 
+
+testNLG("perf.inform('david'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id]), time.past(V)))" ,"etaoin", "the cave in damaged me");
 

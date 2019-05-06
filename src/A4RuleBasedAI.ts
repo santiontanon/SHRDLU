@@ -152,7 +152,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	perception(x0:number, y0:number, x1:number, y1:number, location:AILocation, map:A4Map, visibilityRegion:number, occupancyMap:boolean[])
 	{
-		var l:A4Object[] = map.getAllObjects(x0, y0, (x1-x0), (y1-y0));
+		let l:A4Object[] = map.getAllObjects(x0, y0, (x1-x0), (y1-y0));
 
 //		console.log("location: " + location.name + " l.length = " + l.length + " l.sort = " + location.sort);
 
@@ -169,22 +169,25 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		for(let o of l) {
-			var tile_ox:number = Math.floor(o.x/map.tileWidth);
-			var tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
-			var offset:number = tile_ox + tile_oy*map.width;
-			// Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
+			let tile_ox:number = Math.floor(o.x/map.tileWidth);
+			let tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
+			let offset:number = tile_ox + tile_oy*map.width;
+			// - Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
+			// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
+			//   Shrdlu should be able to hear the player from a different visibilityRegion
 			if (map.visibilityRegions[offset] == visibilityRegion ||
-				o instanceof A4Door) {
-				var locationID:string = location.id;
+				o instanceof A4Door ||
+			    map.name == "East Cave") {
+				let locationID:string = location.id;
 				if (!occupancyMap[offset]) {
 					// it's not in "location":
-					var l2:AILocation = this.game.getAILocation(o);
+					let l2:AILocation = this.game.getAILocation(o);
 					if (l2!=null) locationID = l2.id;
 				}
 
 				// perceived an object!
-				var term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
-				var term2:Term = new Term(this.cache_sort_space_at, 
+				let term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
+				let term2:Term = new Term(this.cache_sort_space_at, 
 										  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
 										   new ConstantTermAttribute(locationID, this.cache_sort_id)
 //										   new ConstantTermAttribute(tile_ox, this.cache_sort_number),
@@ -202,8 +205,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 				if (o instanceof A4Character) {
 					for(let o2 of (<A4Character>o).inventory) {
-						var term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						var term4:Term = new Term(this.cache_sort_space_at, 
+						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
+						let term4:Term = new Term(this.cache_sort_space_at, 
 												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
 												   new ConstantTermAttribute(locationID, this.cache_sort_id)
 												   ]);
@@ -219,8 +222,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 					}
 				} else if (o instanceof A4Container) {
 					for(let o2 of (<A4Container>o).content) {
-						var term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						var term4:Term = new Term(this.cache_sort_space_at, 
+						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
+						let term4:Term = new Term(this.cache_sort_space_at, 
 												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
 												   new ConstantTermAttribute(locationID, this.cache_sort_id)
 												   ]);
@@ -242,11 +245,12 @@ class A4RuleBasedAI extends RuleBasedAI {
         for(let pbr of map.perceptionBuffer) {
             if (pbr.x0<x1 && pbr.x1>x0 &&
                 pbr.y0<y1 && pbr.y1>y0) {
-				var tile_ox:number = Math.floor(pbr.x0/map.tileWidth);
-				var tile_oy:number = Math.floor(pbr.y0/map.tileHeight);
-				var offset:number = tile_ox + tile_oy*map.width;
+				let tile_ox:number = Math.floor(pbr.x0/map.tileWidth);
+				let tile_oy:number = Math.floor(pbr.y0/map.tileHeight);
+				let offset:number = tile_ox + tile_oy*map.width;
 
-				if (map.visibilityRegions[offset] == visibilityRegion &&
+				if ((map.visibilityRegions[offset] == visibilityRegion ||
+			    	 map.name == "East Cave") &&
 					this.alreadyProcessedPBRs.indexOf(pbr)==-1) {
 
 					this.perceivePBR(pbr);
@@ -267,7 +271,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		// internal clock:
-		var timeTerm:Term = new Term(this.cache_sort_time_current,
+		let timeTerm:Term = new Term(this.cache_sort_time_current,
 									 [new ConstantTermAttribute(this.time_in_seconds, this.o.getSort("number"))]);
 		this.addTermToPerception(timeTerm);
 	}
@@ -279,7 +283,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.alreadyProcessedPBRs.push(pbr);
 
         // perceived an action!
-    	var actionTerms:Term[] = [Term.fromString("action."+pbr.action + "("+
+    	let actionTerms:Term[] = [Term.fromString("action."+pbr.action + "("+
     										      "'"+pbr.time+"'[number],"+
     											  "'"+pbr.subjectID+"'[#id])", this.o)];
     	if (pbr.directObjectID != null) {
@@ -289,7 +293,7 @@ class A4RuleBasedAI extends RuleBasedAI {
     	} else if (pbr.directObjectSymbol != null &&
     		       pbr.subjectID != this.selfID) {
     		// assume that this is a "talk" action:
-    		var context:NLContext = null;
+    		let context:NLContext = null;
     		for(let actionTerm of actionTerms) {
     			actionTerm.addAttribute(new ConstantTermAttribute(pbr.directObjectSymbol, this.o.getSort("#id")));
     			// update context perception:
@@ -297,16 +301,16 @@ class A4RuleBasedAI extends RuleBasedAI {
     		}
 
 			// parse the text:
-		    var parses:NLParseRecord[] = this.naturalLanguageParser.parse(pbr.directObjectSymbol, this.cache_sort_performative, context, this);
+		    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(pbr.directObjectSymbol, this.cache_sort_performative, context, this);
 		    if (parses != null && parses.length > 0) {
-		    	var HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
+		    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
 		    	console.log("AIRuleBasedAI("+this.selfID+"): parsed sentence '" + pbr.directObjectSymbol + "'\n  " + HPparse.result);
 		    	// the parse might contain several performatives combined with a "#list" construct
-				var parsePerformatives:TermAttribute[] = NLParser.elementsInList(HPparse.result, "#list");
-				var actionTerms2:Term[] = [];
+				let parsePerformatives:TermAttribute[] = NLParser.elementsInList(HPparse.result, "#list");
+				let actionTerms2:Term[] = [];
         		for(let actionTerm of actionTerms) {
 	        		for(let parsePerformative of parsePerformatives) {
-	        			var tmp:Term = actionTerm.clone([]);
+	        			let tmp:Term = actionTerm.clone([]);
 				    	tmp.addAttribute(parsePerformative);
 				    	actionTerms2.push(tmp);
 	        		}
@@ -335,14 +339,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	updateContext(speaker:string) : NLContext
 	{
-		var context:NLContext = this.contextForSpeaker(speaker);
-		var speakerObject:A4Object = this.game.findObjectByIDJustObject(speaker);
+		let context:NLContext = this.contextForSpeaker(speaker);
+		let speakerObject:A4Object = this.game.findObjectByIDJustObject(speaker);
 		context.shortTermMemory = [];
 
 //		console.log("updateContext: speaker: " + speakerObject)
 		// add from perception:
 		for(let te of this.shortTermMemory.plainTermList) {
-			var t:Term = te.term;
+			let t:Term = te.term;
 			if (t.functor.is_a(this.cache_sort_object) ||
 				t.functor.is_a(this.cache_sort_space_location) ||
 				t.functor.is_a(this.cache_sort_property) ||
@@ -351,9 +355,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 //				console.log("updateContext: t: " + t)
 
 				if (t.attributes[0] instanceof ConstantTermAttribute) {
-					var id:string = (<ConstantTermAttribute>t.attributes[0]).value;
+					let id:string = (<ConstantTermAttribute>t.attributes[0]).value;
 					// calculate the distance tot he speaker:
-					var distanceFromSpeaker:number = null;
+					let distanceFromSpeaker:number = null;
 					if (speakerObject!=null) {
 						if ((t.functor.is_a(this.cache_sort_object) &&
 							 te.provenance == PERCEPTION_PROVENANCE) ||
@@ -366,18 +370,18 @@ class A4RuleBasedAI extends RuleBasedAI {
 	//						console.log("updateContext: object: " + object)
 							if (object != null) {
 								if (object.map == speakerObject.map) {
-									var x1:number = object.x + object.getPixelWidth()/2;
-									var y1:number = object.y + object.tallness + (object.getPixelHeight()-object.tallness)/2;
-									var x2:number = speakerObject.x + speakerObject.getPixelWidth()/2;
-									var y2:number = speakerObject.y + speakerObject.tallness + (speakerObject.getPixelHeight()-speakerObject.tallness)/2;
+									let x1:number = object.x + object.getPixelWidth()/2;
+									let y1:number = object.y + object.tallness + (object.getPixelHeight()-object.tallness)/2;
+									let x2:number = speakerObject.x + speakerObject.getPixelWidth()/2;
+									let y2:number = speakerObject.y + speakerObject.tallness + (speakerObject.getPixelHeight()-speakerObject.tallness)/2;
 									distanceFromSpeaker = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 	//								console.log(speakerObject.name + " from " + object.name + ": " + distanceFromSpeaker);
 								}
 							}
 						} else if (t.functor.is_a(this.cache_sort_space_location)) {
-							var location:AILocation = this.game.getAILocationByID(id)
+							let location:AILocation = this.game.getAILocationByID(id)
 							if (location != null) {
-								var mapIdx:number = location.maps.indexOf(speakerObject.map);
+								let mapIdx:number = location.maps.indexOf(speakerObject.map);
 //								console.log("updateContext of a location: " + location.name + " (" + location.id + ", " + mapIdx + ")");
 								if (mapIdx != -1) {
 									distanceFromSpeaker = location.distanceFromObject(speakerObject, mapIdx);
@@ -387,7 +391,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 
-					var e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
+					let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
 					if (context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 				}
 			}			
@@ -401,15 +405,15 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	resolveThere(otherCharacterID:string, otherCharacterLocation:AILocation) : AILocation
 	{
-		var context:NLContext = this.contextForSpeaker(otherCharacterID);
+		let context:NLContext = this.contextForSpeaker(otherCharacterID);
 		if (context == null) return null;
 
 		// We need to see what "there" refers to:
 		// 1) if there is a place mentioned in the previous performative, then that's it
-//		var perf:NLContextPerformative = context.lastPerformativeBy(otherCharacterID);
-		var perf:NLContextPerformative = context.lastPerformativeBy(this.selfID);
+//		let perf:NLContextPerformative = context.lastPerformativeBy(otherCharacterID);
+		let perf:NLContextPerformative = context.lastPerformativeBy(this.selfID);
 		if (perf != null) {
-			var IDs:ConstantTermAttribute[] = [];
+			let IDs:ConstantTermAttribute[] = [];
 			for(let i:number = 0;i<perf.performative.attributes.length;i++) {
 				if (perf.performative.attributes[i] instanceof ConstantTermAttribute) {
 					IDs.push(<ConstantTermAttribute>(perf.performative.attributes[0]));
@@ -417,18 +421,18 @@ class A4RuleBasedAI extends RuleBasedAI {
 					context.searchForIDsInClause((<TermTermAttribute>perf.performative.attributes[i]).term, IDs, context.ai.o);
 				}
 			}
-			var locations:AILocation[] = [];
+			let locations:AILocation[] = [];
 			for(let ID of IDs) {
-				var loc:AILocation = this.game.getAILocationByID((<ConstantTermAttribute>ID).value);
+				let loc:AILocation = this.game.getAILocationByID((<ConstantTermAttribute>ID).value);
 				if (loc != null) locations.push(loc);
 			}
 			if (locations.length == 1) return locations[0];
 		}
 
 		// 2) otherwise, it refers to the location of the listener, unless it's the same as that of the speaker
-		var me:A4Object = this.game.findObjectByIDJustObject(this.selfID);
+		let me:A4Object = this.game.findObjectByIDJustObject(this.selfID);
 		if (me != null) {
-			var myLoc:AILocation = this.game.getAILocation(me);
+			let myLoc:AILocation = this.game.getAILocation(me);
 			if (myLoc != otherCharacterLocation) return myLoc;
 		}
 
@@ -439,9 +443,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 	canSee(characterID:string)
 	{
 		// if the character is in the perception buffer:
-		var objectSort:Sort = this.o.getSort("object");
+		let objectSort:Sort = this.o.getSort("object");
 		for(let tc of this.shortTermMemory.plainTermList) {
-			var t:Term = tc.term;
+			let t:Term = tc.term;
 //		for(let t of this.perceptionBuffer) {
 			if (t.functor.is_a(objectSort) && t.attributes.length == 1 &&
 				t.attributes[0] instanceof ConstantTermAttribute &&
@@ -459,11 +463,11 @@ class A4RuleBasedAI extends RuleBasedAI {
 	{
 		if (relation.is_a(this.cache_sort_space_at) ||
 			relation.name == "space.outside.of") {
-			var loc2:AILocation = this.game.getAILocationByID(o2ID);	// see if o2 is a location
+			let loc2:AILocation = this.game.getAILocationByID(o2ID);	// see if o2 is a location
 			if (loc2 == null) {
 				// if o2ID is not a location, maybe it's a container or a character:
 				if (relation.is_a(this.cache_sort_space_at)) {
-					var o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
+					let o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
 					if (o1l == null) return null;
 					for(let o2 of o1l) {
 						if (o2.ID == o2ID) return true;
@@ -473,8 +477,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 					return null;
 				}
 			}
-			var o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
-			var loc1:AILocation = null;
+			let o1l:A4Object[] = this.game.findObjectByID(o1ID);	// see if o1 is an object
+			let loc1:AILocation = null;
 			if (o1l == null) {
 				loc1 = this.game.getAILocationByID(o1ID);	// if it's not an object, maybe it's a location
 				if (loc1 == null) return null;	// we don't know!
@@ -504,17 +508,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 			relation.name == "space.southwest.of" ||
 			relation.name == "space.in.front.of" ||
 			relation.name == "space.behind") {
-			var o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
-			var o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
-			var inFrontDirection:number = A4_DIRECTION_NONE;
+			let o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
+			let o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
+			let inFrontDirection:number = A4_DIRECTION_NONE;
 			if (o1 != null && o2 != null) {
 				if (o1.map != o2.map) return null;
-				var x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-				var y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
-				var x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-				var y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
-				var dx:number = x1-x2;
-				var dy:number = y1-y2;
+				let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
+				let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+				let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
+				let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+				let dx:number = x1-x2;
+				let dy:number = y1-y2;
 				if (o2.x >= o1.x && o2.x + o2.getPixelWidth() <= o1.x+o1.getPixelWidth()) dx = 0;
 				if (o2.y + o2.tallness >= o1.y + o1.tallness && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
 				
@@ -530,7 +534,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 					if (or.map == o2.map) {
 						let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2;
 						let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - y2;
-						var angle:number = Math.atan2(o_dy,o_dx);
+						let angle:number = Math.atan2(o_dy,o_dx);
 						if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 							inFrontDirection = A4_DIRECTION_UP;
 						} else if (angle>-(2*Math.PI/8) && angle<=(2*Math.PI/8)) {
@@ -546,16 +550,16 @@ class A4RuleBasedAI extends RuleBasedAI {
 			} else {
 				if (o1 == null) {
 					if (o2 == null) {
-						var loc1:AILocation = this.game.getAILocationByID(o1ID);
-						var loc2:AILocation = this.game.getAILocationByID(o2ID);
+						let loc1:AILocation = this.game.getAILocationByID(o1ID);
+						let loc2:AILocation = this.game.getAILocationByID(o2ID);
 						if (loc1 == null || loc2 == null) return null;
 						// relation between two locations:
 						if (this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)] ||
 							this.game.location_in[this.game.locations.indexOf(loc2)][this.game.locations.indexOf(loc1)]) return false;
 						for(let map of loc1.maps) {
 							if (loc2.maps.indexOf(map) != -1) {
-								var x1_y1:number[] = loc1.centerCoordinatesInMap(map);
-								var x2_y2:number[] = loc2.centerCoordinatesInMap(map);
+								let x1_y1:number[] = loc1.centerCoordinatesInMap(map);
+								let x2_y2:number[] = loc2.centerCoordinatesInMap(map);
 								if (x1_y1 != null && x2_y2 != null) {
 
 									// find the reference direction:
@@ -567,7 +571,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 									if (or.map == map) {
 										let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2_y2[0];
 										let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - x2_y2[0];
-										var angle:number = Math.atan2(o_dy,o_dx);
+										let angle:number = Math.atan2(o_dy,o_dx);
 										if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 											inFrontDirection = A4_DIRECTION_UP;
 										} else if (angle>-(2*Math.PI/8) && angle<=(2*Math.PI/8)) {
@@ -583,17 +587,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 							}
 						}
 					} else {
-						var loc1:AILocation = this.game.getAILocationByID(o1ID);
+						let loc1:AILocation = this.game.getAILocationByID(o1ID);
 						if (loc1 != null) {
-							var loc2:AILocation = this.game.getAILocation(o2);
+							let loc2:AILocation = this.game.getAILocation(o2);
 							if (loc2 != null) {
 								if (loc2 == loc1) return false;
 								if (this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)] ||
 									this.game.location_in[this.game.locations.indexOf(loc2)][this.game.locations.indexOf(loc1)]) return false;
-								var x1_y1:number[] = loc1.centerCoordinatesInMap(o2.map);
+								let x1_y1:number[] = loc1.centerCoordinatesInMap(o2.map);
 								if (x1_y1 == null) return;
-								var x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-								var y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+								let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
+								let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
 
 								// find the reference direction:
 								if (o2 instanceof A4Character) {
@@ -607,7 +611,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 									if (or.map == o2.map) {
 										let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2;
 										let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - y2;
-										var angle:number = Math.atan2(o_dy,o_dx);
+										let angle:number = Math.atan2(o_dy,o_dx);
 										if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 											inFrontDirection = A4_DIRECTION_UP;
 										} else if (angle>-(2*Math.PI/8) && angle<=(2*Math.PI/8)) {
@@ -624,17 +628,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 				} else {
-					var loc2:AILocation = this.game.getAILocationByID(o2ID);
+					let loc2:AILocation = this.game.getAILocationByID(o2ID);
 					if (loc2 != null) {
-						var loc1:AILocation = this.game.getAILocation(o1);
+						let loc1:AILocation = this.game.getAILocation(o1);
 						if (loc1 != null) {
 							if (loc2 == loc1) return false;
 							if (this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)] ||
 								this.game.location_in[this.game.locations.indexOf(loc2)][this.game.locations.indexOf(loc1)]) return false;
-							var x2_y2:number[] = loc2.centerCoordinatesInMap(o1.map);
+							let x2_y2:number[] = loc2.centerCoordinatesInMap(o1.map);
 							if (x2_y2 == null) return;
-							var x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-							var y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+							let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
+							let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
 
 							// find the reference direction:
 							let or:A4Object = this.game.findObjectByIDJustObject(referenceObject);
@@ -645,7 +649,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 							if (or.map == o1.map) {
 								let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2_y2[0];
 								let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - x2_y2[0];
-								var angle:number = Math.atan2(o_dy,o_dx);
+								let angle:number = Math.atan2(o_dy,o_dx);
 								if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 									inFrontDirection = A4_DIRECTION_UP;
 								} else if (angle>-(2*Math.PI/8) && angle<=(2*Math.PI/8)) {
@@ -670,7 +674,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	checkSpatialRelationBetweenCoordinates(relation:Sort, dx:number, dy:number, frontDirection:number) : boolean
 	{
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-			var angle:number = Math.atan2(dy,dx);
+			let angle:number = Math.atan2(dy,dx);
 
 			if (relation.name == "space.north.of") {
 				return angle>-(7*Math.PI/8) && angle<=-(1*Math.PI/8);
@@ -713,9 +717,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 	*/
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
-		var relations:Sort[] = super.spatialRelations(o1ID, o2ID);
-		var o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
-		var o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
+		let relations:Sort[] = super.spatialRelations(o1ID, o2ID);
+		let o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
+		let o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
 		if (o1 == null || o2 == null) return relations;
 
 		if (o2 instanceof A4Container) {
@@ -725,19 +729,19 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		if (o1.map != o2.map) return relations;
-		var x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-		var y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
-		var x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-		var y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
-		var dx:number = x1-x2;
-		var dy:number = y1-y2;
+		let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
+		let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+		let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
+		let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+		let dx:number = x1-x2;
+		let dy:number = y1-y2;
 
 		if (o2.x >= o1.x && o2.x + o2.getPixelWidth() <= o1.x+o1.getPixelWidth()) dx = 0;
 		if (o2.y + o2.tallness >= o1.y + o1.tallness && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
 
 //		console.log("dx: " + dx + ", dy: " + dy);
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-			var angle:number = Math.atan2(dy,dx);
+			let angle:number = Math.atan2(dy,dx);
 //			console.log("angle: " + angle + ", dx: " + dx + ", dy: " + dy);
 
 			if (angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8)) {
@@ -773,20 +777,20 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	spatialRelationsFromLocation(l1:AILocation, o2:A4Object) : Sort[]
 	{
-		var relations:Sort[] = [];
+		let relations:Sort[] = [];
 
-		var tmp:[number,number] = l1.centerCoordinatesInMap(o2.map);
+		let tmp:[number,number] = l1.centerCoordinatesInMap(o2.map);
 		if (tmp == null) return relations;
-		var x1:number = tmp[0];
-		var y1:number = tmp[1];
+		let x1:number = tmp[0];
+		let y1:number = tmp[1];
 
-		var x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-		var y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
-		var dx:number = x1-x2;
-		var dy:number = y1-y2;
+		let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
+		let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+		let dx:number = x1-x2;
+		let dy:number = y1-y2;
 
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-			var angle:number = Math.atan2(dy,dx);
+			let angle:number = Math.atan2(dy,dx);
 	//		console.log("angle: " + angle + ", dx: " + dx + ", dy: " + dy);
 
 			if (angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8)) {
@@ -814,13 +818,13 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	spatialRelationsLocationsAsNouns(l1:AILocation, l2:AILocation) : Sort[]
 	{
-		var relations:Sort[] = [];
+		let relations:Sort[] = [];
 
 		if (this.game.location_in[this.game.locations.indexOf(l1)]
 							     [this.game.locations.indexOf(l2)]) return relations;
 		if (this.game.location_in[this.game.locations.indexOf(l2)]
 							     [this.game.locations.indexOf(l1)]) return relations;
-		var map:A4Map = null;
+		let map:A4Map = null;
 		for(let map2 of l1.maps) {
 			if (l2.maps.indexOf(map2) != -1) {
 				map = map2;
@@ -830,21 +834,21 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (map == null) return relations;
 
 
-		var tmp:[number,number] = l1.centerCoordinatesInMap(map);
+		let tmp:[number,number] = l1.centerCoordinatesInMap(map);
 		if (tmp == null) return relations;
-		var x1:number = tmp[0];
-		var y1:number = tmp[1];
+		let x1:number = tmp[0];
+		let y1:number = tmp[1];
 
-		var tmp2:[number,number] = l2.centerCoordinatesInMap(map);
+		let tmp2:[number,number] = l2.centerCoordinatesInMap(map);
 		if (tmp2 == null) return relations;
-		var x2:number = tmp2[0];
-		var y2:number = tmp2[1];
+		let x2:number = tmp2[0];
+		let y2:number = tmp2[1];
 
-		var dx:number = x1-x2;
-		var dy:number = y1-y2;
+		let dx:number = x1-x2;
+		let dy:number = y1-y2;
 
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-			var angle:number = Math.atan2(dy,dx);
+			let angle:number = Math.atan2(dy,dx);
 	//		console.log("angle: " + angle + ", dx: " + dx + ", dy: " + dy);
 
 			if (angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8)) {
@@ -874,10 +878,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 	   can then be used to reason about them: */
 	getBaseObjectProperties(obj:A4Object) : Term[]
 	{
-		var properties:Term[] = [];
+		let properties:Term[] = [];
 
 		for(let p of obj.perceptionProperties) {
-			var s:Sort = this.o.getSort(p);
+			let s:Sort = this.o.getSort(p);
 			if (s.is_a(this.cache_sort_property_with_value)) {
 				properties.push(new Term(s, [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
 											 new ConstantTermAttribute(s.name, s)]));
@@ -927,9 +931,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 			if (term.attributes.length == 1) {
 				term.functor = this.o.getSort("verb.go-to");
 				// add destination:
-				var speakerObject:A4Object = this.game.findObjectByIDJustObject(originalSpeaker);
+				let speakerObject:A4Object = this.game.findObjectByIDJustObject(originalSpeaker);
 				if (speakerObject != null) {
-					var location:AILocation = this.game.getAILocation(speakerObject);
+					let location:AILocation = this.game.getAILocation(speakerObject);
 					if (location != null) {
 						term.attributes.push(new ConstantTermAttribute(location.id, this.cache_sort_id));
 					}
@@ -948,9 +952,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 			this.replaceSpatialAdverbsInReferenceToAnotherSpeaker((<TermTermAttribute>ta).term, originalSpeaker);
 		} else if (ta instanceof VariableTermAttribute) {
 			if (ta.sort.is_a(this.o.getSort("space.here"))) {
-				var speakerObject:A4Object = this.game.findObjectByIDJustObject(originalSpeaker);
+				let speakerObject:A4Object = this.game.findObjectByIDJustObject(originalSpeaker);
 				if (speakerObject != null) {
-					var location:AILocation = this.game.getAILocation(speakerObject);
+					let location:AILocation = this.game.getAILocation(speakerObject);
 					if (location != null) {
 						return new ConstantTermAttribute(location.id, this.cache_sort_id);
 					}
@@ -970,7 +974,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	allowPlayerInto(location:string, door:string)
 	{
-		var idx:number = this.locationsWherePlayerIsNotPermitted.indexOf(location);
+		let idx:number = this.locationsWherePlayerIsNotPermitted.indexOf(location);
 		if (idx != -1) {
 			this.locationsWherePlayerIsNotPermitted.splice(idx,1);
 
@@ -985,21 +989,21 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	pathBetweenLocations(loc1:AILocation, loc2:AILocation) : AILocation[]
 	{
-		var open:number[] = [];
-		var open_parents:number[] = [];
-		var closed:number[] = [];
-		var closed_parents:number[] = [];
-		var loc1_idx:number = this.game.locations.indexOf(loc1);
+		let open:number[] = [];
+		let open_parents:number[] = [];
+		let closed:number[] = [];
+		let closed_parents:number[] = [];
+		let loc1_idx:number = this.game.locations.indexOf(loc1);
 		console.log("pathBetweenLocations: loc1_idx = " + loc1_idx);
 		if (loc1_idx == -1) return null;
-		var loc2_idx:number = this.game.locations.indexOf(loc2);
+		let loc2_idx:number = this.game.locations.indexOf(loc2);
 		console.log("pathBetweenLocations: loc2_idx = " + loc2_idx);
 		if (loc2_idx == -1) return null;
 		open.push(loc1_idx);
 		open_parents.push(-1);
 		while(open.length > 0) {
-			var current:number = open[0];
-			var parent:number = open_parents[0];
+			let current:number = open[0];
+			let parent:number = open_parents[0];
 			open.splice(0,1);
 			open_parents.splice(0,1);
 			closed.push(current);
@@ -1009,7 +1013,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 			if (current == loc2_idx || this.game.location_in[current][loc2_idx]) {
 				// we found the goal!
-				var path:AILocation[] = [];
+				let path:AILocation[] = [];
 				while(current != -1) {
 					path.unshift(this.game.locations[current]);
 					if (parent == -1) break;
@@ -1036,21 +1040,21 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	pathToGetOutOf(loc1:AILocation, loc2:AILocation, outside_flag:boolean) : AILocation[]
 	{
-		var open:number[] = [];
-		var open_parents:number[] = [];
-		var closed:number[] = [];
-		var closed_parents:number[] = [];
-		var loc1_idx:number = this.game.locations.indexOf(loc1);
+		let open:number[] = [];
+		let open_parents:number[] = [];
+		let closed:number[] = [];
+		let closed_parents:number[] = [];
+		let loc1_idx:number = this.game.locations.indexOf(loc1);
 		console.log("pathToGetOutOf: loc1_idx = " + loc1_idx);
 		if (loc1_idx == -1) return null;
-		var loc2_idx:number = this.game.locations.indexOf(loc2);
+		let loc2_idx:number = this.game.locations.indexOf(loc2);
 		console.log("pathToGetOutOf: loc2_idx = " + loc2_idx);
 		if (loc2_idx == -1) return null;
 		open.push(loc1_idx);
 		open_parents.push(-1);
 		while(open.length > 0) {
-			var current:number = open[0];
-			var parent:number = open_parents[0];
+			let current:number = open[0];
+			let parent:number = open_parents[0];
 			open.splice(0,1);
 			open_parents.splice(0,1);
 			closed.push(current);
@@ -1062,7 +1066,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				((outside_flag && this.game.location_in[loc2_idx][current]) ||
 				 (!outside_flag && !this.game.location_in[current][loc2_idx]))) {
 				// we found the goal!
-				var path:AILocation[] = [];
+				let path:AILocation[] = [];
 				while(current != -1) {
 					path.unshift(this.game.locations[current]);
 					if (parent == -1) break;
@@ -1120,7 +1124,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	generateAILocationDOTGraph() : string
 	{
-		var str:string = "digraph locations {\n";
+		let str:string = "digraph locations {\n";
 		str+="graph[rankdir=LR];\n";
 
 		for(let i:number = 0;i<this.game.locations.length;i++) {

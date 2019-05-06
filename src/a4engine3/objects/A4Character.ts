@@ -1177,6 +1177,7 @@ class A4Character extends A4WalkingObject {
             this.x = best_x;
             this.y = best_y;
             this.state = A4CHARACTER_STATE_IDLE;
+            this.stateCycle = 0;
             this.vehicle = null;
             return true;
         }

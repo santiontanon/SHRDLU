@@ -2130,6 +2130,7 @@ class NLGenerator {
 		}
 
 		console.error("termToEnglish_Entity: could not render " + entity + " (" + nameTerms.length + " nameTerms, " + typeTerms.length + " typeTerms)");
+		console.error("termToEnglish_Entity: terms: " + ce.terms);
 		return [entityID, 2, undefined, 0];
 	}
 
