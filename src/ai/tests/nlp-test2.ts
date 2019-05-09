@@ -98,7 +98,9 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
 //        if (parses.length > 1) console.warn("Multiple parses for sentence '" + sentence + "'");
         var expectedResult:Term = Term.fromString(expectedResultStr, o);
         var found:boolean = false;
+        //console.log("result BEFORE unifyListener: " + parse.result);
         parse.result = parser.unifyListener(parse.result, listener);
+        //console.log("result AFTER unifyListener: " + parse.result);
         if (parse.result.equalsConsideringAnd(expectedResult)) found = true;
         if (!found) {
             console.log(sentence + "\n" + parses.length + " parses:");
@@ -904,6 +906,10 @@ NLParseTestUnifyingListener("could you please take the light from the kitchen?",
 
 NLParseTestUnifyingListener("put the white key in the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
 NLParseTestUnifyingListener("bring me to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.bring('etaoin'[#id], '1'[#id], 'room1'[#id]))");
+
+NLParseTestUnifyingListener("can you open keys?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.can('etaoin'[#id], action.open('etaoin'[#id], X)), key(X)))");
+
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

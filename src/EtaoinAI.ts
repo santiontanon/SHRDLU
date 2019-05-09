@@ -213,7 +213,8 @@ class EtaoinAI extends A4RuleBasedAI {
 	reactToPerformative(perf2:Term, speaker:TermAttribute, context:NLContext) : Term[]
 	{
 		// if the player is talking to us, then we close communicator connections to other characters:
-		if ((speaker instanceof ConstantTermAttribute) &&
+		if (this.game.communicatorConnectedTo != null && 
+			(speaker instanceof ConstantTermAttribute) &&
 			(<ConstantTermAttribute>speaker).value == "david") {
 			this.game.communicatorConnectedTo = null;
 			this.game.communicatorConnectionTime = 0;

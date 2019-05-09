@@ -2488,7 +2488,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   priority="200"/>
 
   	<!-- Patterns for performative "perf.request.action" and "perf.q.action" (they are the same except the later is a question) -->
-    <NLPattern head="perf.q.action(LISTENER, #cons(V2, LISTENER, OBJECT))"
+    <NLPattern name="perf.q.action-verb-object"
+    		   head="perf.q.action(LISTENER, #cons(V2, LISTENER, OBJECT))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 ['please' [',']] 
@@ -2499,6 +2500,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
     		   		 #derefFromContext(CO, OBJECT)"
     		   		 priority="200"/>
+    <NLPattern name="perf.q.predicate-verb-generic-object"
+    		   head="perf.q.predicate(LISTENER, #and(verb.can(LISTENER, #cons(V2, LISTENER, QUERY_VARIABLE)), #cons(OBJECTNOUN, QUERY_VARIABLE)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		         verb(V2, N2, [no-person], [infinitive-tense])
+    		         noun(OBJECTNOUN, [plural]) ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)"
+    		   		 priority="250"/>
     <NLPattern name="perf.request.action-verb-np"
     		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, OBJECT))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

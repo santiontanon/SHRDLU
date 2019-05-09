@@ -1028,7 +1028,7 @@ class A4Game {
         }
 
         if (this.communicatorConnectedTo != null) {
-            if ((this.cycle - this.communicatorConnectionTime) > COMMUNICATOR_CONNECTION_TIMEOUT) {
+            if ((this.etaoinAI.time_in_seconds - this.communicatorConnectionTime) > COMMUNICATOR_CONNECTION_TIMEOUT) {
                 this.communicatorConnectedTo = null;
                 this.communicatorConnectionTime = 0;
             }

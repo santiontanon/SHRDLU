@@ -20,10 +20,10 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		if (intention.attributes[1] instanceof TermTermAttribute) {
 			let canTalk:boolean = ai.canHear((<ConstantTermAttribute>performative.attributes[0]).value);
 			if (ai.game.communicatorConnectedTo == ai.selfID) {
-				if (canTalk) {
+				// if (canTalk) {
 					// we can see the player, cut the connection:
-					ai.game.communicatorConnectedTo = null;
-				}
+					// ai.game.communicatorConnectedTo = null;
+				// }
 				canTalk = true;
 			}
 			if ((performative.attributes[0] instanceof ConstantTermAttribute) && canTalk) {

@@ -86,18 +86,35 @@ class NLParser {
 			var results2:NLParseRecord[] = compiled.parse(tokens2, true, context, this, AI);
 			if (results2 != null && results2.length > 0) {
 				for(let r of results2) {
+					//console.log("(1) result before resolving the lists:" + r.result);
 					r.result = this.resolveLists(r.result);
+					//console.log("(2) result after resolving the lists:" + r.result);
 //					console.log("result! (" + r.priorities[0] + "): " + r.result);
 					if (this.semanticallyCorrect(r.result, context)) {
 						// properly resolve the "listener" variable:
 						if (s.name == "performative" && r.result.attributes.length>0) {
-							if (compiled.listenerVariable != r.result.attributes[0]) {
-								var b2:Bindings = new Bindings();
-								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
-								r.result = r.result.applyBindings(b2);
+							let performativeHead:Term = r.result;
+							while(performativeHead.functor.name == "#list" ||
+								  performativeHead.functor.name == "#and") {
+								if (performativeHead.attributes.length>0 &&
+									performativeHead.attributes[0] instanceof TermTermAttribute) {
+									performativeHead = (<TermTermAttribute>performativeHead.attributes[0]).term;
+								} else {
+									break;
+								}
+							}
+
+							// performative
+							if (performativeHead.functor.is_a_string("performative")) {
+								if (compiled.listenerVariable != performativeHead.attributes[0]) {
+									var b2:Bindings = new Bindings();
+									b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
+									r.result = r.result.applyBindings(b2);
+								}
 							}
 						}
 						results.push(r);
+						//console.log("(3) result after applying bindings:" + r.result);
 						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 					} else {
 						semanticalErrors = true;
@@ -199,13 +216,13 @@ class NLParser {
 	{
 		if (parse.functor.is_a(this.o.getSort("performative"))) {
 			// create a pattern for unification:
-			var pattern:Term = new Term(parse.functor, []);
+			let pattern:Term = new Term(parse.functor, []);
 			pattern.addAttribute(new ConstantTermAttribute(listener, this.o.getSort("#id")));
 			for(let i:number = 1;i<parse.attributes.length;i++) {
 				pattern.addAttribute(new VariableTermAttribute(this.o.getSort("any"), null));
 			}
 
-			var bindings:Bindings = new Bindings();
+			let bindings:Bindings = new Bindings();
 			if (parse.unify(pattern, true, bindings)) {
 				return parse.applyBindings(bindings);
 			} else {
@@ -213,10 +230,10 @@ class NLParser {
 				return parse;
 			}
 		} else if (parse.functor.name == "#list") {
-			var result:Term = null;
+			let result:Term = null;
 			for(let perf of NLParser.elementsInList(parse, "#list")) {
 				if (!(perf instanceof TermTermAttribute)) return null;
-				var perf2:Term = this.unifyListener((<TermTermAttribute>perf).term, listener);
+				let perf2:Term = this.unifyListener((<TermTermAttribute>perf).term, listener);
 				if (result == null) {
 					result = perf2;
 				} else {

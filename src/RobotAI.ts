@@ -207,9 +207,15 @@ class RobotAI extends A4RuleBasedAI {
 
 	canHear(objectID:string)
 	{
+		// etaoin exception:
 		if (objectID == "etaoin") {
 			if (this.robot.map.name == "Aurora Station" ||
 				this.robot.map.name == "Aurora Station Outdoors") return true;
+		}
+
+		// exception of the player through the communicator:
+		if (objectID == "communicator" || objectID == "david") {
+			if (this.game.communicatorConnectedTo == this.selfID) return true;
 		}
 
 		let o:A4Object = this.game.findObjectByIDJustObject(objectID);

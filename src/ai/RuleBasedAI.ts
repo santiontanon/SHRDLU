@@ -1311,6 +1311,8 @@ class RuleBasedAI {
 					targetList.term.attributes[0] instanceof ConstantTermAttribute) {
 					targetIDList.push((<ConstantTermAttribute>targetList.term.attributes[0]).value);
 					targetList = targetList.term.attributes[1];
+				} else {
+					break;
 				}
 			}
 			if (targetList instanceof ConstantTermAttribute) targetIDList.push((<ConstantTermAttribute>targetList).value);
