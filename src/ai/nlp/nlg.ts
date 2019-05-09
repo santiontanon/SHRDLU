@@ -1230,9 +1230,23 @@ class NLGenerator {
 			if (objectStr != null) {
 				return "would you please " + verbStr + " " + objectStr[0] + verbComplements + "?";
 			}
-		} else {
-			// ...
-
+		} else if (t.attributes.length == 3) {
+			var verbStr:string = this.pos.getVerbString(t.functor, 0, 0, 0);
+			if (t.functor.name == "verb.help" && 
+				(t.attributes[1] instanceof ConstantTermAttribute)) {
+				// help special case (we assume the second argument is the subject of the 3rd, which is a verb):
+				var objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false, listenerID, true);
+				var objectStr2:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, (<ConstantTermAttribute>t.attributes[1]).value, true);
+				if (objectStr != null && objectStr2 != null) {
+					return "would you please " + verbStr + " " + objectStr[0] + " " + objectStr2[0] + verbComplements + "?";
+				}
+			} else {
+				var objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false, listenerID, true);
+				var objectStr2:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, listenerID, true);
+				if (objectStr != null && objectStr2 != null) {
+					return "would you please " + verbStr + " " + objectStr[0] + " " + objectStr2[0] + verbComplements + "?";
+				}
+			}
 		}
 
 		console.error("termToEnglish_QuestionAction: could not render " + pt);
@@ -2465,7 +2479,7 @@ class NLGenerator {
 			var subjectStr:[string, number, string, number];
 			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
 				(<ConstantTermAttribute>(t.attributes[0])).value == mainVerbSubjectID) {
-				// when the subject in a nested verb is the same as the parnet ver, it should not be rendered:
+				// when the subject in a nested verb is the same as the parent verb, it should not be rendered:
 				subjectStr = ["", 0, undefined, 0];
 			} else {
 				subjectStr = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, mainVerbSubjectID, true);

@@ -1013,7 +1013,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("coordination", "coordination", Term.fromString("noun('coordination'[coordination], [singular])", o), 1.0));
     this.addStandardNounPOS("corpse", "corpse", o);    
     this.addStandardNounPOS("corridor", "corridor", o);
-    this.addStandardNounPOS("course", "route", o);
+    this.addStandardNounPOS("course", "path", o);
     this.addStandardNounPOS("crate", "crate", o);
     this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("data", "data", Term.fromString("noun('data'[data], [grammatical-number])", o), 1.0));
@@ -1076,6 +1076,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("infirmary", "infirmary", o);
     this.addStandardNounPOS("infirmary bed", "infirmary-bed", o);
     this.addStandardNounPOS("instant", "time.location", o);
+    this.addStandardNounPOS("instruction", "instruction", o);
     this.addStandardNounPOS("item", "item", o);
     this.addStandardNounPOS("jumpsuit", "jumpsuit", o);
     this.addStandardNounPOS("jump suit", "jumpsuit", o);
@@ -1493,6 +1494,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("red", "red", Term.fromString("adjective('red'[red])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("short", "short", Term.fromString("adjective('short'[short])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("south", "south", Term.fromString("adjective('south'[south])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("strange", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));

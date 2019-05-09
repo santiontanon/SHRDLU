@@ -6,6 +6,7 @@ class ShrdluAI extends RobotAI {
 		console.log("ShrdluAI.constructor end...");
 		this.robot.ID = "shrdlu";
 		this.selfID = "shrdlu";
+		this.visionActive = false;
 
 		this.addLongTermTerm(Term.fromString("name('"+this.robot.ID+"'[#id],'shrdlu'[symbol])", this.o), BACKGROUND_PROVENANCE);
 		console.log("ShrdluAI.constructor end...");

@@ -206,6 +206,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		this.addTermToPerception(Term.fromString("temperature('location-aurora-station'[#id],'"+this.game.aurora_station_temperature_sensor_indoors+"'[temperature.unit.celsius])", this.o));
 		this.addTermToPerception(Term.fromString("temperature('location-aurora-settlement'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
 		this.addTermToPerception(Term.fromString("temperature('spacer-valley'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
+		this.addTermToPerception(Term.fromString("property.sighted('"+this.selfID+"'[#id])", this.o));
 	}
 
 
@@ -248,6 +249,13 @@ class EtaoinAI extends A4RuleBasedAI {
 		}
 
 		return false;
+	}
+
+
+	// For ETAOIN seeing/hearing is the same:
+	canHear(objectID:string)
+	{
+		return this.canSee(objectID);
 	}
 
 

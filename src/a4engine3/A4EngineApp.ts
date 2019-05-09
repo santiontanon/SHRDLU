@@ -934,6 +934,8 @@ class A4EngineApp {
                         this.SHRDLU_AI_debugger.AI = this.game.etaoinAI;
                     } else if (this.SHRDLU_AI_debugger.AI == this.game.etaoinAI) {
                         this.SHRDLU_AI_debugger.AI = this.game.qwertyAI;
+                    } else if (this.SHRDLU_AI_debugger.AI == this.game.qwertyAI) {
+                        this.SHRDLU_AI_debugger.AI = this.game.shrdluAI;
                     } else {
                         this.SHRDLU_AI_debugger.AI = null;
                     }

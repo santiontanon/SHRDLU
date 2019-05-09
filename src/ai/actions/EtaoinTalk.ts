@@ -18,7 +18,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 		if (intention.attributes[1] instanceof TermTermAttribute) {
 			performative = (<TermTermAttribute>(intention.attributes[1])).term;
 			if ((performative.attributes[0] instanceof ConstantTermAttribute) &&
-				ai.canSee((<ConstantTermAttribute>performative.attributes[0]).value)) {
+				ai.canHear((<ConstantTermAttribute>performative.attributes[0]).value)) {
 				// if we are already talking, just wait:
 				if (ai.player_object.map.textBubbles.length > 0) return null;
 				let targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;

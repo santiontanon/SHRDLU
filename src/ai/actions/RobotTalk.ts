@@ -18,7 +18,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		let context:NLContext = null;
 
 		if (intention.attributes[1] instanceof TermTermAttribute) {
-			let canTalk:boolean = ai.canSee((<ConstantTermAttribute>performative.attributes[0]).value);
+			let canTalk:boolean = ai.canHear((<ConstantTermAttribute>performative.attributes[0]).value);
 			if (ai.game.communicatorConnectedTo == ai.selfID) {
 				if (canTalk) {
 					// we can see the player, cut the connection:

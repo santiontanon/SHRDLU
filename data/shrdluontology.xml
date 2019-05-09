@@ -375,7 +375,6 @@
     <sort name="vg8020.computer" super="msx.computer"/>
 
     <sort name="coordination" super="abstract-entity"/>
-    <sort name="route" super="abstract-entity"/>
     <sort name="strength" super="abstract-entity,property"/>
     <sort name="process" super="abstract-entity"/>
     <sort name="sentence" super="abstract-entity"/>
@@ -386,6 +385,7 @@
     <sort name="communication" super="abstract-entity"/>
     <sort name="transmission" super="abstract-entity"/>
     <sort name="data" super="abstract-entity"/>
+    <sort name="instruction" super="abstract-entity"/>
 
     <sort name="situation" super="abstract-entity"/>
     <sort name="emergency" super="situation"/>
@@ -787,7 +787,8 @@
     <sort name="thirsty" super="property"/>
     <sort name="bored" super="property"/>
     <sort name="property.old" super="property"/>
-    <sort name="property.blind" super="property"/>
+    <sort name="property.blind" super="property,#stateSort"/>
+    <sort name="property.sighted" super="property,#stateSort"/>
 
     <sort name="alive" super="property,#stateSort"/>
     <sort name="dead" super="property"/>

@@ -156,85 +156,96 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 //		console.log("location: " + location.name + " l.length = " + l.length + " l.sort = " + location.sort);
 
+		if (this.visionActive) {
+			this.addTermToPerception(Term.fromString("property.sighted('"+this.selfID+"'[#id])", this.o));
+		} else {
+			this.addTermToPerception(Term.fromString("property.blind('"+this.selfID+"'[#id])", this.o));
+		}
+
+
 		this.addTermToPerception(new Term(location.sort, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
 		// perceive the light status:
-		if (this.game.rooms_with_lights.indexOf(location.id) != -1) {
-			if (this.game.rooms_with_lights_on.indexOf(location.id) != -1) {
-				// lights on! room is bright:
-				this.addTermToPerception(new Term(this.cache_sort_bright, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
-			} else {
-				// lights off! room is dark:
-				this.addTermToPerception(new Term(this.cache_sort_dark, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+		if (this.visionActive) {
+			if (this.game.rooms_with_lights.indexOf(location.id) != -1) {
+				if (this.game.rooms_with_lights_on.indexOf(location.id) != -1) {
+					// lights on! room is bright:
+					this.addTermToPerception(new Term(this.cache_sort_bright, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+				} else {
+					// lights off! room is dark:
+					this.addTermToPerception(new Term(this.cache_sort_dark, [new ConstantTermAttribute(location.id, this.cache_sort_id)]));
+				}
 			}
 		}
 
-		for(let o of l) {
-			let tile_ox:number = Math.floor(o.x/map.tileWidth);
-			let tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
-			let offset:number = tile_ox + tile_oy*map.width;
-			// - Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
-			// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
-			//   Shrdlu should be able to hear the player from a different visibilityRegion
-			if (map.visibilityRegions[offset] == visibilityRegion ||
-				o instanceof A4Door ||
-			    map.name == "East Cave") {
-				let locationID:string = location.id;
-				if (!occupancyMap[offset]) {
-					// it's not in "location":
-					let l2:AILocation = this.game.getAILocation(o);
-					if (l2!=null) locationID = l2.id;
-				}
-
-				// perceived an object!
-				let term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
-				let term2:Term = new Term(this.cache_sort_space_at, 
-										  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
-										   new ConstantTermAttribute(locationID, this.cache_sort_id)
-//										   new ConstantTermAttribute(tile_ox, this.cache_sort_number),
-//										   new ConstantTermAttribute(tile_oy, this.cache_sort_number),
-//										   new ConstantTermAttribute(map.name, this.cache_sort_symbol)
-										   ]);
-//				console.log(term1.toString());
-//				console.log(term2.toString());
-				this.addTermToPerception(term1);
-				this.addTermToPerception(term2);
-
-				for(let property of this.getBaseObjectProperties(o)) {
-					this.addTermToPerception(property);
-				}
-
-				if (o instanceof A4Character) {
-					for(let o2 of (<A4Character>o).inventory) {
-						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						let term4:Term = new Term(this.cache_sort_space_at, 
-												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
-												   new ConstantTermAttribute(locationID, this.cache_sort_id)
-												   ]);
-						this.addTermToPerception(term3);
-						this.addTermToPerception(term4);
-						this.addTermToPerception(new Term(this.cache_sort_verb_have, 
-														  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
-														   new ConstantTermAttribute(o2.ID, this.cache_sort_id)]
-								  						  ));
-						for(let property of this.getBaseObjectProperties(o2)) {
-							this.addTermToPerception(property);
-						}
+		if (this.visionActive) {
+			for(let o of l) {
+				let tile_ox:number = Math.floor(o.x/map.tileWidth);
+				let tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
+				let offset:number = tile_ox + tile_oy*map.width;
+				// - Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
+				// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
+				//   Shrdlu should be able to hear the player from a different visibilityRegion
+				if (map.visibilityRegions[offset] == visibilityRegion ||
+					o instanceof A4Door ||
+				    map.name == "East Cave") {
+					let locationID:string = location.id;
+					if (!occupancyMap[offset]) {
+						// it's not in "location":
+						let l2:AILocation = this.game.getAILocation(o);
+						if (l2!=null) locationID = l2.id;
 					}
-				} else if (o instanceof A4Container) {
-					for(let o2 of (<A4Container>o).content) {
-						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						let term4:Term = new Term(this.cache_sort_space_at, 
-												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
-												   new ConstantTermAttribute(locationID, this.cache_sort_id)
-												   ]);
-						this.addTermToPerception(term3);
-						this.addTermToPerception(term4);
-						this.addTermToPerception(new Term(this.cache_sort_verb_contains, 
-														  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
-														   new ConstantTermAttribute(o2.ID, this.cache_sort_id)]
-								  						  ));
-						for(let property of this.getBaseObjectProperties(o2)) {
-							this.addTermToPerception(property);
+
+					// perceived an object!
+					let term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
+					let term2:Term = new Term(this.cache_sort_space_at, 
+											  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
+											   new ConstantTermAttribute(locationID, this.cache_sort_id)
+	//										   new ConstantTermAttribute(tile_ox, this.cache_sort_number),
+	//										   new ConstantTermAttribute(tile_oy, this.cache_sort_number),
+	//										   new ConstantTermAttribute(map.name, this.cache_sort_symbol)
+											   ]);
+	//				console.log(term1.toString());
+	//				console.log(term2.toString());
+					this.addTermToPerception(term1);
+					this.addTermToPerception(term2);
+
+					for(let property of this.getBaseObjectProperties(o)) {
+						this.addTermToPerception(property);
+					}
+
+					if (o instanceof A4Character) {
+						for(let o2 of (<A4Character>o).inventory) {
+							let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
+							let term4:Term = new Term(this.cache_sort_space_at, 
+													  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
+													   new ConstantTermAttribute(locationID, this.cache_sort_id)
+													   ]);
+							this.addTermToPerception(term3);
+							this.addTermToPerception(term4);
+							this.addTermToPerception(new Term(this.cache_sort_verb_have, 
+															  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
+															   new ConstantTermAttribute(o2.ID, this.cache_sort_id)]
+									  						  ));
+							for(let property of this.getBaseObjectProperties(o2)) {
+								this.addTermToPerception(property);
+							}
+						}
+					} else if (o instanceof A4Container) {
+						for(let o2 of (<A4Container>o).content) {
+							let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
+							let term4:Term = new Term(this.cache_sort_space_at, 
+													  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
+													   new ConstantTermAttribute(locationID, this.cache_sort_id)
+													   ]);
+							this.addTermToPerception(term3);
+							this.addTermToPerception(term4);
+							this.addTermToPerception(new Term(this.cache_sort_verb_contains, 
+															  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
+															   new ConstantTermAttribute(o2.ID, this.cache_sort_id)]
+									  						  ));
+							for(let property of this.getBaseObjectProperties(o2)) {
+								this.addTermToPerception(property);
+							}
 						}
 					}
 				}
@@ -253,7 +264,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 			    	 map.name == "East Cave") &&
 					this.alreadyProcessedPBRs.indexOf(pbr)==-1) {
 
-					this.perceivePBR(pbr);
+					// we always perceive "talk", but the rest only if the AI can see:
+					if (pbr.action == "talk" || this.visionActive) {
+						this.perceivePBR(pbr);
+					}
     	        }
             }
         }
@@ -442,11 +456,11 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	canSee(characterID:string)
 	{
+		if (!this.visionActive) return false;
 		// if the character is in the perception buffer:
 		let objectSort:Sort = this.o.getSort("object");
 		for(let tc of this.shortTermMemory.plainTermList) {
 			let t:Term = tc.term;
-//		for(let t of this.perceptionBuffer) {
 			if (t.functor.is_a(objectSort) && t.attributes.length == 1 &&
 				t.attributes[0] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>t.attributes[0]).value == "" + characterID) {
@@ -455,6 +469,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		return false;
+	}
+
+
+	canHear(objectID:string)
+	{
+		let o:A4Object = this.game.findObjectByIDJustObject(objectID);
+		if (o == null) return false;
+		return true;
 	}
 
 
@@ -1107,6 +1129,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (xml_tmp != null) {
 			this.doorsPlayerIsNotPermittedToOpen = xml_tmp.getAttribute("value").split(",");
 		}
+	    this.visionActive = true;
+	    xml_tmp = getFirstElementChildByTag(xml, "visionActive");
+	    if (xml_tmp != null && xml_tmp.getAttribute("value") == "false") this.visionActive = false;
 	}
 
 
@@ -1117,6 +1142,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		str += "<respondToPerformatives value=\""+this.respondToPerformatives+"\"/>\n";
 		str += "<locationsWherePlayerIsNotPermitted value=\""+this.locationsWherePlayerIsNotPermitted+"\"/>\n";
 		str += "<doorsPlayerIsNotPermittedToOpen value=\""+this.doorsPlayerIsNotPermittedToOpen+"\"/>";
+		str += "<visionActive value=\""+this.visionActive+"\"/>\n";
 
 		return str;
 	}
@@ -1158,6 +1184,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	// variables so that the game script can control the AI:
 	respondToPerformatives:boolean = false;	
+
+	visionActive:boolean = true;	// if this is "false", the robot is blind
 
 	cache_sort_bright:Sort = null;
 	cache_sort_dark:Sort = null;

@@ -1719,20 +1719,64 @@ class ShrdluGameScript {
 
 		case 100:
 			// Conversation with Shrdlu has started!
-			this.shrdluSays("perf.request.action(V0:'david'[#id], verb.help('david'[#id], 'shrdlu'[#id]))");			
-			this.shrdluSays("perf.inform('david'[#id], #and(V:verb.damage('east-cave-cave-in'[#id], 'shrdlu-perception'[#id]), time.past(V)))");
-			this.shrdluSays("perf.inform(V0:'david'[#id], property.blind('shrdlu'[#id]))");
-			this.act_2_state = 101;
+			if (this.game.currentPlayer.map.name == "East Cave") {
+				this.shrdluSays("perf.request.action(V0:'david'[#id], verb.help('david'[#id], 'shrdlu'[#id]))");			
+				this.shrdluSays("perf.inform('david'[#id], #and(V:verb.damage('east-cave-cave-in'[#id], 'shrdlu-perception'[#id]), time.past(V)))");
+				this.shrdluSays("perf.inform(V0:'david'[#id], property.blind('shrdlu'[#id]))");
+				this.shrdluSays("perf.q.action('david'[#id], verb.help('david'[#id], 'shrdlu'[#id], verb.go-to('shrdlu'[#id], 'location-aurora-station'[#id])))");
+				this.act_2_state = 101;
+			}
 			break;
 
 		case 101:
+			if (this.game.shrdluAI.intentions.length == 0 && 
+				this.game.shrdluAI.queuedIntentions.length == 0 &&
+				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+				// the question has been answered:
+				var lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
+				if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
+					var answer:TermAttribute = lastPerformative.performative.attributes[1];
+					if (answer instanceof ConstantTermAttribute) {
+						if ((<ConstantTermAttribute>answer).value == "no" ||
+							(<ConstantTermAttribute>answer).value == "unknown") {
+							this.act_2_state = 102;
+						} else if ((<ConstantTermAttribute>answer).value == "yes") {
+							this.act_2_state = 103;
+						} else {
+							console.error("update_act_2, state 101: unexpected answer " + lastPerformative.performative);
+							this.act_2_state = 102;
+						}	
+					} else {
+						this.act_2_state = 102;
+					}
+				} else if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.ack.ok"))) {
+					this.act_2_state = 103;
+				} else {
+					this.act_2_state = 102;
+				}
+			}
+			break;
+
+		case 102:
+			if (this.act_2_state_timer >= 30*60) {
+				this.act_2_state = 100;
+			}
+			break;
+
+		case 103:
+			this.shrdluSays("perf.thankyou('david'[#id])");
+			this.shrdluSays("perf.request.action(V0:'david'[#id], action.give('david'[#id], #and(V:[instruction], plural(V)), 'shrdlu'[#id]))");
+			this.act_2_state = 104;
+			break;
+
+		case 104:
 			// ...
 			break;
+
 		}
 
 
-
-		if (previous_state == this.act_intro_state) {
+		if (previous_state == this.act_2_state) {
 			this.act_2_state_timer++;
 		} else {
 			this.act_2_state_timer = 0;

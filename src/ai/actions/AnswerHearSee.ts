@@ -20,13 +20,27 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 
 			if (intention.attributes[1] instanceof ConstantTermAttribute) {
 				// Case where the target is a constant:
-				if (ai.canSee((<ConstantTermAttribute>(intention.attributes[1])).value)) {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				if (intention.functor.is_a(ai.o.getSort("verb.see"))) {
+					if (ai.canSee((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					} else {
+						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					}				
+				} else if (intention.functor.is_a(ai.o.getSort("verb.hear"))) {
+					if (ai.canHear((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					} else {
+						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					}				
 				} else {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+					// we should never get here...
+					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
-				}				
+				}
 			} else {
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));

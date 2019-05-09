@@ -288,5 +288,8 @@ testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]
 testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom"); 
 testNLG("perf.request.action(V0:'1'[#id], verb.help('1'[#id], 'etaoin'[#id]))", "etaoin", "please, help me"); 
 
-testNLG("perf.inform('david'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id]), time.past(V)))" ,"etaoin", "the cave in damaged me");
+testNLG("perf.inform('1'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id]), time.past(V)))" ,"etaoin", "the cave in damaged me");
+testNLG("perf.q.action('1'[#id], verb.help('1'[#id], 'etaoin'[#id], verb.go-to('etaoin'[#id], 'room1'[#id])))", "etaoin", "would you please help me to go to the kitchen?");
+testNLG("perf.request.action(V0:'1'[#id], action.give('1'[#id], #and(V:[instruction], plural(V)), 'etaoin'[#id]))", "etaoin", "please, give instructions to me");
+
 

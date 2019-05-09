@@ -393,6 +393,7 @@
 
 	<!-- common sense inference rules -->
 	<sentence provenance="background" sentence="~long(X:[#id]); ~short(X)"/>
+	<sentence provenance="background" sentence="~property.sighted(X:[#id]); ~property.blind(X)"/>
 	<sentence provenance="background" sentence="~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])"/>
 	<sentence provenance="background" sentence="~bright(X:[#id]); ~dark(X)"/>
 	<sentence provenance="background" sentence="~character(X:[#id]); ~furniture(X)"/>
