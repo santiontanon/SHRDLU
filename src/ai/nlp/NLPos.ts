@@ -1024,6 +1024,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("C", "temperature.unit.celsius", Term.fromString("noun('temperature.unit.celsius'[temperature.unit.celsius], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("diary", "diary", Term.fromString("noun('diary'[diary], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("diaries", "diary", Term.fromString("noun('diary'[diary], [plural])", o), 1.0));
+    this.addStandardNounPOS("direction", "facing-direction", o);
+    this.addStandardNounPOS("direction", "cardinal-direction", o);
     this.addStandardNounPOS("display", "screen", o);
     this.addStandardNounPOS("distance", "distance", o);
     this.addStandardNounPOS("drink", "drink", o);
@@ -1340,6 +1342,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.enumerate", "enumerate","enumerates","enumerated","enumerated","enumerating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.examine", "examine","examines","examined","examined","examining", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);

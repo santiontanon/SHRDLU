@@ -909,6 +909,19 @@ NLParseTestUnifyingListener("bring me to the kitchen", o.getSort("performative")
 
 NLParseTestUnifyingListener("can you open keys?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.can('etaoin'[#id], action.open('etaoin'[#id], X)), key(X)))");
 
+NLParseTestUnifyingListener("my direction is north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("your direction is north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('etaoin'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I am facing north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I face north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I am looking to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I look to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+
+NLParseTestUnifyingListener("which direction am I facing?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
+NLParseTestUnifyingListener("which direction am I looking at?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
+NLParseTestUnifyingListener("what is my direction?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
+NLParseTestUnifyingListener("am I facing north?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("is my direction north?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
+
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

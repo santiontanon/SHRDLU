@@ -441,5 +441,8 @@
 	<sentence provenance="background" sentence="verb.find(X, Y); ~verb.find(X, Y, Z)"/>	
 	<sentence provenance="background" sentence="verb.find(X, Y, Z1); ~verb.find(X, Y, Z2); ~space.at(Z2, Z1)"/>	
 
+	<sentence provenance="background" sentence="~verb.face(X:[#id], D:[cardinal-direction]); facing-direction(X, D)"/>
+	<sentence provenance="background" sentence="verb.face(X:[#id], D:[cardinal-direction]); ~facing-direction(X, D)"/>
+	<sentence provenance="background" sentence="~facing-direction(X, V1); ~facing-direction(X, V2); =(V1,V2)"/>
 
 </knowledgeBase>

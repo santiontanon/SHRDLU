@@ -56,6 +56,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		this.cache_sort_bright = this.o.getSort("bright");
 		this.cache_sort_dark = this.o.getSort("dark");
+		this.cache_sort_west = this.o.getSort("west");
+		this.cache_sort_north = this.o.getSort("north");
+		this.cache_sort_east = this.o.getSort("east");
+		this.cache_sort_south = this.o.getSort("south");
 	}
 
 
@@ -211,6 +215,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 					for(let property of this.getBaseObjectProperties(o)) {
 						this.addTermToPerception(property);
+
 					}
 
 					if (o instanceof A4Character) {
@@ -935,6 +940,28 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 		}
 
+		// object types that can potentially have a direction:
+		if ((obj instanceof A4Character) ||
+			(obj instanceof A4Vehicle) ||
+			(obj instanceof A4Door) ||
+			(obj instanceof A4Obstacle) ||
+			(obj instanceof A4ObstacleContainer)) {
+			let direction:number = obj.direction;
+			if (direction == A4_DIRECTION_LEFT) {
+				properties.push(new Term(this.o.getSort("facing-direction"), [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+																			  new ConstantTermAttribute(this.cache_sort_west.name, this.cache_sort_west)]));
+			} else if (direction == A4_DIRECTION_UP) {
+				properties.push(new Term(this.o.getSort("facing-direction"), [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+																			  new ConstantTermAttribute(this.cache_sort_north.name, this.cache_sort_north)]));
+			} else if (direction == A4_DIRECTION_RIGHT) {
+				properties.push(new Term(this.o.getSort("facing-direction"), [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+																			  new ConstantTermAttribute(this.cache_sort_east.name, this.cache_sort_east)]));
+			} else if (direction == A4_DIRECTION_DOWN) {
+				properties.push(new Term(this.o.getSort("facing-direction"), [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+																			  new ConstantTermAttribute(this.cache_sort_south.name, this.cache_sort_south)]));
+			}
+		}
+
 		/*
 		// the name is not directly visible, so, they should not know!
 		if (obj instanceof A4Character) {
@@ -1189,4 +1216,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	cache_sort_bright:Sort = null;
 	cache_sort_dark:Sort = null;
+	cache_sort_west:Sort = null;
+	cache_sort_north:Sort = null;
+	cache_sort_east:Sort = null;
+	cache_sort_south:Sort = null;
+
 }

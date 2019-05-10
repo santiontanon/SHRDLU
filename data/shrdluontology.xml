@@ -479,6 +479,7 @@
     <sort name="verb.arrive" super="verb"/>
     <sort name="verb.arrive-to" super="verb.arrive"/>
     <sort name="verb.define" super="verb"/>
+    <sort name="verb.face" super="verb"/>
     <sort name="verb.feel" super="verb"/>
     <sort name="verb.find" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.fill" super="verb"/>
@@ -759,7 +760,8 @@
     <sort name="grey" super="color"/>
     <sort name="black" super="color"/>
 
-    <sort name="cardinal-direction" super="property"/>
+    <sort name="facing-direction" super="property-with-value,#stateSort"/> <!-- which cardinal direction is a character or obejct facing -->
+    <sort name="cardinal-direction" super="property,abstract-entity"/>
     <sort name="east" super="cardinal-direction"/>
     <sort name="north" super="cardinal-direction"/>
     <sort name="south" super="cardinal-direction"/>
