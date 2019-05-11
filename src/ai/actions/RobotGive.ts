@@ -2,7 +2,8 @@ class RobotGive_IntentionAction extends IntentionAction {
 
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
-		if (intention.functor.is_a(ai.o.getSort("action.give"))) return true;
+		if (intention.functor.is_a(ai.o.getSort("action.give")) &&
+			intention.attributes.length>=2) return true;
 		return false;
 	}
 
@@ -13,7 +14,17 @@ class RobotGive_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
-		var targetID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
+		var targetID:string = null;
+		if (intention.attributes.length>=3) {
+			targetID = (<ConstantTermAttribute>(intention.attributes[2])).value
+		} else if (requester != null && (requester instanceof ConstantTermAttribute)) {
+			targetID = (<ConstantTermAttribute>requester).value;
+		} else {
+			// state that it cannot give this item:
+			var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+targetID+"'[#id]))";
+			var term:Term = Term.fromString(tmp, ai.o);
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));			
+		}
 		var itemToGive:TermAttribute = intention.attributes[1];
 
 		if (itemToGive instanceof ConstantTermAttribute) {

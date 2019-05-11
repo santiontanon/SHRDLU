@@ -2005,6 +2005,11 @@ class NLGenerator {
 		var nameTerms:Term[] = [];
 		var typeTerms:Term[] = [];
 		var PRTerms:Term[] = [];
+		if (ce == null) {
+			console.error("termToEnglish_Entity: could not render " + entity + " (" + nameTerms.length + " nameTerms, " + typeTerms.length + " typeTerms)");
+			console.error("termToEnglish_Entity: ce is null!");
+			return [entityID, 2, undefined, 0];
+		}
 		for(let t of ce.terms) {
 //			console.log("for " + entity + ": " + t);
 			if (t.functor.is_a(this.nlg_cache_sort_name)) nameTerms.push(t);

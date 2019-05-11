@@ -523,9 +523,7 @@ class RuleBasedAI {
 		*/
 
 		// only filter time:
-		if (term.functor == this.cache_sort_time_current) {
-			return false;
-		}
+		if (term.functor == this.cache_sort_time_current) return false;
 		this.addShortTermTerm(term, PERCEPTION_PROVENANCE);
 		return true;
 	}
@@ -537,6 +535,16 @@ class RuleBasedAI {
 			this.cache_sort_space_at.subsumes(term.functor)) {
 			this.addLongTermTerm(term, provenance);
 			return true;
+		} else if (term.functor.is_a(this.cache_sort_stateSort)) {
+			let s:Sentence = this.longTermMemory.previousStateSentenceToReplace(term, true);
+			if (s != null) {
+				if (term.equalsNoBindings(s.terms[0]) != 1) {
+					// only if the new term is different from the previous one, we need to do any update:
+					this.addLongTermTerm(term, provenance);
+					//console.log("state short term replaces long term: " + term);
+				}
+				return true;
+			}
 		}
 
 		return false;

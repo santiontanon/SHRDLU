@@ -411,7 +411,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 					}
 
 					let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
-					if (context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
+					if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 				}
 			}			
 		}

@@ -16,37 +16,51 @@ class Memorize_InferenceEffect extends InferenceEffect {
 			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var memorize:boolean = false;
+		let targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let memorize:boolean = false;
 
 		if (this.negated) {
 			// this was the complex case:
 			if (inf.inferences[0].endResults.length == 0) {
 				// there was no contradiction...
 				// We are not sure..., let's not memorize, just in case...
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.unsure('"+targetCharacterID+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.unsure('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
 				// we already knew, just say ok:
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
 				// there was no contradiction... we can add the sentence safely
 				// we already knew, just say ok:
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				memorize = true;
 			} else {
 				// contradiction:
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
+				// Check for the special case, where the player is just correcting a wrong statement she stated in the past:
+				let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
+				if (s_l.length == 1 && s_l[0].terms.length == 1) {
+					let negatedToMemorize:Sentence = new Sentence(s_l[0].terms, [!s_l[0].sign[0]]);
+					let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(negatedToMemorize)
+					if (se != null && se.provenance == MEMORIZE_PROVENANCE) {
+						console.log("Correcting a wrong statement she stated in the past!");
+						ai.longTermMemory.removeSentence(negatedToMemorize);
+						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						return;
+					}
+				}
+
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		}
 
 		if (memorize) {
-			var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
+			let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
 			for(let s of s_l) {
 				if (s.terms.length == 1 && s.sign[0] == true) {
 					ai.addLongTermTerm(s.terms[0], MEMORIZE_PROVENANCE);

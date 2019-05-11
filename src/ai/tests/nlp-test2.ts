@@ -911,17 +911,25 @@ NLParseTestUnifyingListener("can you open keys?", o.getSort("performative"),  co
 
 NLParseTestUnifyingListener("my direction is north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
 NLParseTestUnifyingListener("your direction is north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('etaoin'[#id], 'north'[north]))");
-NLParseTestUnifyingListener("I am facing north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
-NLParseTestUnifyingListener("I face north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
-NLParseTestUnifyingListener("I am looking to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
-NLParseTestUnifyingListener("I look to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I am facing north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I face north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I am looking to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("I look to the north", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
 
 NLParseTestUnifyingListener("which direction am I facing?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
 NLParseTestUnifyingListener("which direction am I looking at?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
 NLParseTestUnifyingListener("what is my direction?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, facing-direction('1'[#id], X))");
-NLParseTestUnifyingListener("am I facing north?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.face('1'[#id], 'north'[north]))");
+NLParseTestUnifyingListener("am I facing north?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
 NLParseTestUnifyingListener("is my direction north?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], facing-direction('1'[#id], 'north'[north]))");
 
+NLParseTestUnifyingListener("I am in the kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], space.at('1'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("I am in a kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(space.at('1'[#id], X), kitchen(X)))");
+NLParseTestUnifyingListener("am I in the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], space.at('1'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("am I in a kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(space.at('1'[#id], X), kitchen(X)))");
+
+NLParseTestUnifyingListener("can you help me go to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], verb.help('etaoin'[#id], X:'1'[#id], verb.go-to(X, 'room1'[#id])))");
+NLParseTestUnifyingListener("help me go to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.help('etaoin'[#id], X:'1'[#id], verb.go-to(X, 'room1'[#id])))");
+NLParseTestUnifyingListener("help me open the crate", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.help('etaoin'[#id], X:'1'[#id], action.open(X, '5'[#id])))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

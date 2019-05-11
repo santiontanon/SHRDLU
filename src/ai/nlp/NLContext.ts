@@ -230,8 +230,9 @@ class NLContext {
 	{
 //		console.log("newContextEntity: " + idAtt);
 
-		var ID:string = idAtt.value;
-		var e:NLContextEntity = this.findByID(ID);
+		let ID:string = idAtt.value;
+		let e:NLContextEntity = this.findByID(ID);
+		let itsAnExistingOne:boolean = false;
 		if (e != null) {
 			if (time != null) {
 				if (e.mentionTime==null || e.mentionTime < time) e.mentionTime = time;
@@ -241,6 +242,7 @@ class NLContext {
 			}
 			// return e;
 			e.terms = [];		// entities need to be updated every time, otherwise, info is outdated!
+			itsAnExistingOne = true;
 		} else {
 //		console.log("newContextEntity: creating " + ID + " from scratch...");
 			e = new NLContextEntity(idAtt, time, distance, []);
@@ -249,9 +251,9 @@ class NLContext {
 		// find everything we can about it:
 		let typeSorts:Sort[] = []
 		let typeSortsWithArity:[Sort,number][] = []
-		var pSort:Sort = o.getSort("property");
-		var pwvSort:Sort = o.getSort("property-with-value");
-		var rSort:Sort = o.getSort("relation"); 
+		let pSort:Sort = o.getSort("property");
+		let pwvSort:Sort = o.getSort("property-with-value");
+		let rSort:Sort = o.getSort("relation"); 
 		for(let s of POSParser.sortsToConsiderForTypes) {
 			typeSorts.push(o.getSort(s));
 			typeSortsWithArity.push([o.getSort(s), 1]);
@@ -298,7 +300,20 @@ class NLContext {
 				}
 			}
 		}
+		if (e.terms.length == 0) {
+			if (itsAnExistingOne) this.deleteContextEntity(e);
+			return null;
+		}
 		return e;
+	}
+
+
+	deleteContextEntity(e:NLContextEntity) 
+	{
+		let idx:number = this.shortTermMemory.indexOf(e);
+		if (idx >= 0) this.shortTermMemory.splice(idx, 1);
+		idx = this.mentions.indexOf(e);
+		if (idx >= 0) this.mentions.splice(idx, 1);
 	}
 
 
@@ -433,9 +448,11 @@ class NLContext {
 
 		for(let id of IDs) {
 			let ce:NLContextEntity = this.newContextEntity(id, this.ai.time_in_seconds, null, o);			
-			let idx:number = this.mentions.indexOf(ce);
-			if (idx != -1) this.mentions.splice(idx,1);
-			this.mentions.unshift(ce);
+			if (ce != null) {
+				let idx:number = this.mentions.indexOf(ce);
+				if (idx != -1) this.mentions.splice(idx,1);
+				this.mentions.unshift(ce);
+			}
 		}
 
 		// add the clause:
@@ -1263,7 +1280,7 @@ class NLContext {
 				s.terms[0].attributes[1] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
 				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
-				return e;
+				if (e != null) return e;
 			}
 		}
 		return null;
@@ -1305,7 +1322,7 @@ class NLContext {
 				s.terms[0].functor.is_a(sort) &&
 				s.terms[0].attributes[0] instanceof ConstantTermAttribute) {
 				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
-				results.push(e);
+				if (e != null) results.push(e);
 			}
 		}
 		results_mpl.push(results);

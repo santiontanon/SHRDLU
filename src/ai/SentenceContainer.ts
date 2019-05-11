@@ -1,4 +1,5 @@
-var MAXIMUM_MEMORY_OF_PREVIOUS_STATES:number = 5000;
+var MAXIMUM_MEMORY_OF_PREVIOUS_STATES:number = 4096;
+var MAXIMUM_MEMORY_OF_PREVIOUS_STATES_PER_TERM:number = 16;
 
 class SentenceEntry {
 	constructor(s:Sentence, p:string, a:number, time:number)
@@ -29,10 +30,10 @@ class SentenceContainer {
 	
 	addSentence(s:Sentence, provenance:string, activation:number, time:number) : SentenceEntry
 	{
-		var se:SentenceEntry = new SentenceEntry(s, provenance, activation, time);
+		let se:SentenceEntry = new SentenceEntry(s, provenance, activation, time);
 		this.plainSentenceList.push(se);
 		for(let t of s.terms) {
-			var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+			let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 			if (l == null) {
 				l = [];
 				this.sentenceHash[t.functor.name] = l;
@@ -46,7 +47,7 @@ class SentenceContainer {
 	addPreviousSentence(s:Sentence, provenance:string, activation:number, time:number, timeEnd:number,
 						current:SentenceEntry) : SentenceEntry
 	{
-		var se:SentenceEntry = new SentenceEntry(s, provenance, activation, time);
+		let se:SentenceEntry = new SentenceEntry(s, provenance, activation, time);
 		se.timeEnd = timeEnd;
 		if (current == null) {
 			this.previousSentencesWithNoCurrentSentence.push(se);		
@@ -58,6 +59,24 @@ class SentenceContainer {
 	}
 
 
+	previousStateSentenceToReplace(t:Term, sign:boolean) : Sentence
+	{
+		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+		if (l != null) {
+			for(let se2 of l) {
+				if (se2.sentence.terms.length == 1 &&
+					((se2.sentence.sign[0] && 
+					  TermContainer.termReplacesPreviousStateTerm(t, se2.sentence.terms[0])) ||
+					 (se2.sentence.sign[0] != sign &&
+					  t.equalsNoBindings(se2.sentence.terms[0]) == 1))) {
+					return se2.sentence;
+				}
+			}
+		}		
+		return null;
+	}
+
+
 	addStateSentenceIfNew(s:Sentence, provenance:string, activation:number, time:number) : boolean
 	{
 		if (s.terms.length != 1) {
@@ -66,9 +85,9 @@ class SentenceContainer {
 			return true;
 		}
 		// check if we need to replace some sentence:
-		var t:Term = s.terms[0];
-		var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
-		var previous_s:SentenceEntry = null;
+		let t:Term = s.terms[0];
+		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+		let previous_s:SentenceEntry = null;
 		if (l != null) {
 			for(let se2 of l) {
 				if (se2.sentence.terms.length == 1 &&
@@ -102,6 +121,26 @@ class SentenceContainer {
 				previous_s.activation = activation;
 				previous_s.time = time;
 				previous_s.previousInTime = new_s;
+				// Cut chains that are too long:
+				let chainLength:number = 1;
+				let se:SentenceEntry = previous_s;
+				while(se != null) {
+					if (se.previousInTime != null) {
+						chainLength++;
+						if (chainLength >= MAXIMUM_MEMORY_OF_PREVIOUS_STATES_PER_TERM) {
+							let idx:number = this.plainPreviousSentenceList.indexOf(se.previousInTime);
+							if (idx >= 0) {
+								this.plainPreviousSentenceList.splice(idx, 1);
+								console.log("SPLICED!!! " + idx);
+							}
+							se.previousInTime = null;
+							console.log("CUT!!!");
+							console.log("plainPreviousSentenceList:" + this.plainPreviousSentenceList.length);
+						}
+					}
+					se = se.previousInTime;
+				}
+				console.log("chainLength: " + chainLength)
 				return true;
 			}
 		}
@@ -112,13 +151,13 @@ class SentenceContainer {
 	removeSentence(s:Sentence)
 	{
 //		console.log("removeSentence " + s.toString());
-		var found:SentenceEntry = null;
+		let found:SentenceEntry = null;
 		for(let t of s.terms) {
-			var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+			let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 			if (l != null) {
 				if (found == null) {
 					for(let idx:number = 0;idx<l.length;idx++) {
-						var se2:SentenceEntry = l[idx];
+						let se2:SentenceEntry = l[idx];
 						if (s.equalsNoBindings(se2.sentence)) {
 							l.splice(idx,1);
 							found = se2;
@@ -127,13 +166,13 @@ class SentenceContainer {
 						}
 					}
 				} else {
-					var se2Idx:number = l.indexOf(found);
+					let se2Idx:number = l.indexOf(found);
 					l.splice(se2Idx,1);
 				}
 			}
 		}
 		if (found!=null) {
-			var se2Idx:number = this.plainSentenceList.indexOf(found);
+			let se2Idx:number = this.plainSentenceList.indexOf(found);
 			this.plainSentenceList.splice(se2Idx,1);
 		}
 	}
@@ -142,13 +181,13 @@ class SentenceContainer {
 	removeInternal(found:SentenceEntry)
 	{
 		for(let t of found.sentence.terms) {
-			var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+			let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 			if (l != null) {
-				var se2Idx:number = l.indexOf(found);
+				let se2Idx:number = l.indexOf(found);
 				l.splice(se2Idx,1);
 			}
 		}
-		var se2Idx:number = this.plainSentenceList.indexOf(found);
+		let se2Idx:number = this.plainSentenceList.indexOf(found);
 		this.plainSentenceList.splice(se2Idx,1);
 	}
 
@@ -156,7 +195,7 @@ class SentenceContainer {
 /*
 	containsTerm(t:Term) : SentenceEntry
 	{
-		var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 		if (l != null) {
 			for(let se of l) {
 				if (se.sentence.terms.length == 1 &&
@@ -170,12 +209,12 @@ class SentenceContainer {
 
 	containsUnifyingTerm(t:Term) : SentenceEntry
 	{
-		var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 		if (l != null) {
 			for(let se of l) {
 				if (se.sentence.terms.length == 1 &&
 					se.sentence.sign[0]) {
-					var bindings:Bindings = new Bindings();
+					let bindings:Bindings = new Bindings();
 					if (t.unify(se.sentence.terms[0], true, bindings)) return se;
 				}
 			}
@@ -184,17 +223,24 @@ class SentenceContainer {
 	}
 
 
-	contains(s:Sentence) : boolean
+	findSentenceEntry(s:Sentence) : SentenceEntry
 	{
-		if (s.terms.length == 0) return false;
-		var t:Term = s.terms[0];
-		var l:SentenceEntry[] = this.sentenceHash[t.functor.name];
+		if (s.terms.length == 0) return null;
+		let t:Term = s.terms[0];
+		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 		if (l != null) {
 			for(let se2 of l) {
-				if (s.equalsNoBindings(se2.sentence)) return true;
+				if (s.equalsNoBindings(se2.sentence)) return se2;
 			}
 		}
-		return false;
+		return null;
+	}
+
+
+	contains(s:Sentence) : boolean
+	{
+		if (this.findSentenceEntry(s) == null) return false;
+		return true;
 	}
 
 
@@ -211,11 +257,11 @@ class SentenceContainer {
 	{
 		this.match_cache_l = [];
 		for(let sortName in this.sentenceHash) {
-			var s2:Sort = o.getSort(sortName);
+			let s2:Sort = o.getSort(sortName);
 			if (s2.is_a(s) || s.is_a(s2)) {
-				var l:SentenceEntry[] = this.sentenceHash[sortName];
+				let l:SentenceEntry[] = this.sentenceHash[sortName];
 				for(let se of l) {
-					var matchesArity:boolean = false;
+					let matchesArity:boolean = false;
 					for(let t of se.sentence.terms) {
 						if (t.functor == s2 && t.attributes.length == arity) {
 							matchesArity = true;
@@ -237,7 +283,7 @@ class SentenceContainer {
 	{
 		if (this.match_cache_l==null) return null;
 		while(this.match_cache_idx<this.match_cache_l.length) {
-			var se2:SentenceEntry = this.match_cache_l[this.match_cache_idx];
+			let se2:SentenceEntry = this.match_cache_l[this.match_cache_idx];
 			this.match_cache_idx++;
 			return se2.sentence;
 		}
@@ -249,8 +295,8 @@ class SentenceContainer {
 
 	allMatches(s:Sort, arity:number, o:Ontology) : Sentence[]
 	{
-		var l:Sentence[] = [];
-		var match:Sentence = this.firstMatch(s, arity, o);
+		let l:Sentence[] = [];
+		let match:Sentence = this.firstMatch(s, arity, o);
 		if (match == null) return l;
 		while(match!=null) {
 			l.push(match);
@@ -265,14 +311,14 @@ class SentenceContainer {
 	{
 		this.match_cache_l = [];
 		for(let sortName in this.sentenceHash) {
-			var s2:Sort = o.getSort(sortName);
+			let s2:Sort = o.getSort(sortName);
 			if (s2.is_a(query.functor) || query.functor.is_a(s2)) {
-				var l:SentenceEntry[] = this.sentenceHash[sortName];
+				let l:SentenceEntry[] = this.sentenceHash[sortName];
 				for(let se of l) {
 					if (se.allPotentialMatchesWithSentenceForResolution_counter == this.allPotentialMatchesWithSentenceForResolution_counter) continue;
-					var matches:boolean = false;
+					let matches:boolean = false;
 					for(let i:number = 0;i<se.sentence.terms.length;i++) {
-						var t:Term = se.sentence.terms[i];
+						let t:Term = se.sentence.terms[i];
 						if (t.functor == s2 && 
 							t.attributes.length == query.attributes.length && 
 							se.sentence.sign[i] == sign) {
@@ -354,7 +400,7 @@ class SentenceContainer {
 
 	activationUpdate()
 	{
-		var toDelete:SentenceEntry[] = [];
+		let toDelete:SentenceEntry[] = [];
 		for(let idx:number = 0;idx<this.plainSentenceList.length;idx++) {
 			this.plainSentenceList[idx].activation--;
 			if (this.plainSentenceList[idx].activation<=0) {

@@ -11,6 +11,8 @@ class QwertyAI extends RobotAI {
 
 		this.objectsNotAllowedToGive.push("garage-key");
 		this.objectsNotAllowedToGive.push("master-key");
+		this.objectsNotAllowedToGive.push("science-key");
+		this.objectsNotAllowedToGive.push("command-key");
 
 		console.log("QwertyAI.constructor end...");
 	}
