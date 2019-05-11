@@ -228,6 +228,7 @@
 
 	<!-- alternative names for some rooms -->
 	<sentence provenance="background" sentence="name('location-maintenance'[#id],'maintenance room'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis chamber'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis room'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as29'[#id],'command room'[symbol])"/>
