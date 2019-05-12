@@ -131,16 +131,16 @@ class SentenceContainer {
 							let idx:number = this.plainPreviousSentenceList.indexOf(se.previousInTime);
 							if (idx >= 0) {
 								this.plainPreviousSentenceList.splice(idx, 1);
-								console.log("SPLICED!!! " + idx);
+								//console.log("SPLICED!!! " + idx);
 							}
 							se.previousInTime = null;
-							console.log("CUT!!!");
-							console.log("plainPreviousSentenceList:" + this.plainPreviousSentenceList.length);
+							//console.log("CUT!!!");
+							//console.log("plainPreviousSentenceList:" + this.plainPreviousSentenceList.length);
 						}
 					}
 					se = se.previousInTime;
 				}
-				console.log("chainLength: " + chainLength)
+				//console.log("chainLength: " + chainLength)
 				return true;
 			}
 		}

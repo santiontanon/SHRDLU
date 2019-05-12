@@ -1023,7 +1023,7 @@
       <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">474</animation>
       <attribute name="useable" value="true"/>
       <eventRule event="use">
-      	<talkOther text="This spacesuit is broken. It has a tear. I cannot use it like this! Maybe Etaoin knows where to fix it?" thought="true"/>
+      	<talkOther text="This spacesuit is broken. It has a tear. I cannot use it like this! Maybe Etaoin knows how to fix it?" thought="true"/>
       </eventRule>
     </ObjectClass>
 

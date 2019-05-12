@@ -6,7 +6,6 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.game = game;
 
 		this.intentionHandlers.push(new Call_IntentionAction());
-		this.intentionHandlers.push(new Help_IntentionAction());
     	this.intentionHandlers.push(new Memorize_IntentionAction());
 	    this.intentionHandlers.push(new AnswerPredicate_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhere_IntentionAction());

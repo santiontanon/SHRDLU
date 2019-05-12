@@ -13,7 +13,7 @@ class IntentionActionFactory {
 		if (xml.getAttribute("type") == "AnswerWhoIs_IntentionAction") return AnswerWhoIs_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "AnswerWhy_IntentionAction") return AnswerWhy_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "Call_IntentionAction") return Call_IntentionAction.loadFromXML(xml, ai);
-		if (xml.getAttribute("type") == "Help_IntentionAction") return Help_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "EtaoinHelp_IntentionAction") return EtaoinHelp_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinClose_IntentionAction") return EtaoinClose_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinOpen_IntentionAction") return EtaoinOpen_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinSwitchOff_IntentionAction") return EtaoinSwitchOff_IntentionAction.loadFromXML(xml, ai);
@@ -30,6 +30,7 @@ class IntentionActionFactory {
 		if (xml.getAttribute("type") == "RobotTakeTo_IntentionAction") return RobotTakeTo_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotPutIn_IntentionAction") return RobotPutIn_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotTalk_IntentionAction") return RobotTalk_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotHelp_IntentionAction") return RobotHelp_IntentionAction.loadFromXML(xml, ai);
 
 		return null;
 	}

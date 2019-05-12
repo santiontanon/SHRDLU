@@ -931,6 +931,13 @@ NLParseTestUnifyingListener("can you help me go to the kitchen?", o.getSort("per
 NLParseTestUnifyingListener("help me go to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.help('etaoin'[#id], X:'1'[#id], verb.go-to(X, 'room1'[#id])))");
 NLParseTestUnifyingListener("help me open the crate", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.help('etaoin'[#id], X:'1'[#id], action.open(X, '5'[#id])))");
 
+NLParseTestUnifyingListener("may I have the white key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");  
+NLParseTestUnifyingListener("do you have any keys?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.have('etaoin'[#id],X),key(X) ))");
+NLParseTestUnifyingListener("what keys do you have?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(S:'etaoin'[#id], X, #and(key(X), verb.have('etaoin'[#id],X)))");
+NLParseTestUnifyingListener("which keys does etaoin have?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(S:'etaoin'[#id], X, #and(key(X), verb.have('etaoin'[#id],X)))");
+NLParseTestUnifyingListener("do you know where is the bedroom?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'room2'[#id])");
+NLParseTestUnifyingListener("do you know where the bedroom is?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'room2'[#id])");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 
