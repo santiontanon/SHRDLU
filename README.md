@@ -1,6 +1,6 @@
 # SHRDLU
 
-Playable demo v2.1! https://www.cs.drexel.edu/~santi/games/SHRDLU-demo21/shrdlu.html
+Playable demo v2.3! https://www.cs.drexel.edu/~santi/games/SHRDLU-demo23/shrdlu.html
 
 <img src="https://github.com/santiontanon/SHRDLU/blob/master/misc/SHRDLU-ss1.png?raw=true" alt="title" width="512"/> 
 
@@ -8,7 +8,7 @@ Playable demo v2.1! https://www.cs.drexel.edu/~santi/games/SHRDLU-demo21/shrdlu.
 
 SHRDLU is an adventure game based around natural language parsing (inspired by Winograd's <a href="https://en.wikipedia.org/wiki/SHRDLU">SHRDLU</a>). It is an experiment, so, I am not expecting the resulting game to be an amazing game, but just an exploration of the posibilities of this type of AI system in a game.
 
-You can play an early demo here (only Act 1 of the game is activated in this demo, I'm still working on Acts 2 and 3, I'll update the demo once Act 2 is fully playable): https://www.cs.drexel.edu/~santi/games/SHRDLU-demo21/shrdlu.html
+You can play an early demo here (only Act 1 of the game is activated in this demo, I'm still working on Acts 2 and 3, I'll activate them in this demo once they are fully playable): https://www.cs.drexel.edu/~santi/games/SHRDLU-demo23/shrdlu.html
 
 Alternatively, you can view a demo video here (of version v1.1): https://youtu.be/8FNBTs2yv4s
 
