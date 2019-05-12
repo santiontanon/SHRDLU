@@ -659,6 +659,7 @@ class NLContext {
 
 		// we should really only have one determiner other than "all" or "other":
 		if (determinerTerms.length>1) {
+			console.warn("NLContext.derefInternal: too many determiners other than all/other" + determinerTerms);
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
 			return null;
 		}
@@ -812,6 +813,7 @@ class NLContext {
 //						let a_determiner:boolean = false;
 						let this_determiner:boolean = false;
 						let that_determiner:boolean = false;
+
 						for(let determinerTerm of determinerTerms) {
 							let determinerNumberSort:Sort = determinerTerm.attributes[1].sort;
 							if (determinerTerm.functor.name == "the") {
@@ -865,7 +867,8 @@ class NLContext {
 							}
 						}
 
-//						console.log("nameSort: '" + nameSort + "'");
+						//console.log("nameSort: '" + nameSort + "'");
+						//console.log("relationTerms: '" + relationTerms + "'");
 						let entities_mpl:NLContextEntity[][] = this.findEntitiesOfSort(nameSort, o);
 						if (entities_mpl == null) {
 							console.log("No entities match name constraint '" + nameSort + "'");
@@ -885,7 +888,7 @@ class NLContext {
 							entities_mpl[0] = [];
 							entities_mpl[1] = [];
 						}
-
+						//console.log("entities_mpl: " + entities_mpl);
 						// adjectives:
 						for(let adjectiveTerm of adjectiveTerms) {
 							if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
@@ -904,6 +907,7 @@ class NLContext {
 //									console.log("  discarded... (didn't match noun)");
 							}
 						}	
+						//console.log("entities_mpl (after adjectives): " + entities_mpl);
 
 						// apply relations:
 						for(let relationTermL of relationTerms) {
@@ -970,6 +974,7 @@ class NLContext {
 								}
 							}
 						}	
+						//console.log("entities_mpl (after relations): " + entities_mpl);
 
 						if (entities_mpl[0].length == 0 &&
 							entities_mpl[1].length == 0 &&
@@ -1102,7 +1107,6 @@ class NLContext {
 							entities = entities_mpl[0].concat(entities_mpl[1]).concat(entities_mpl[2]);
 						}
 						entities = removeListDuplicates(entities);
-
 						// consider grammatical number:
 						if (entities.length == 1) {
 							output.push(entities[0].objectID);

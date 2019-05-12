@@ -115,7 +115,13 @@
 
     <sort name="pronoun.everybody" super="indefinite-pronoun"/>    
     <sort name="pronoun.anyone" super="indefinite-pronoun"/>    
-
+    <sort name="pronoun.everybody.else" super="indefinite-pronoun"/>
+    <sort name="pronoun.anyone.else" super="indefinite-pronoun"/>    
+    <sort name="pronoun.noone" super="indefinite-pronoun"/>   
+    <sort name="pronoun.someone" super="indefinite-pronoun"/>   
+    <sort name="pronoun.all" super="indefinite-pronoun"/>   
+    <sort name="pronoun.some" super="indefinite-pronoun"/>   
+        
     <sort name="pronoun.something" super="indefinite-pronoun"/>    
     <sort name="pronoun.anything" super="indefinite-pronoun"/>    
 
@@ -458,7 +464,7 @@
     <sort name="verb.may" super="modal-verb"/>
     <sort name="verb.can" super="modal-verb"/>
     <sort name="verb.shall" super="modal-verb"/>
-    <sort name="verb.caused" super="relation-verb,relation.cause"/>
+    <sort name="verb.cause" super="relation-verb,relation.cause"/>
     <sort name="verb.call" super="verb"/>
     <sort name="verb.disambiguate" super="verb"/>
     <sort name="verb.get" super="verb"/>

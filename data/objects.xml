@@ -391,7 +391,7 @@
 		</onStart>
 	</ObjectClass>	
 
-	<ObjectClass class="blue-key" super="key-card" name="science key">
+	<ObjectClass class="blue-key" super="key-card" name="lab key">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">359</animation>		
 		<attribute name="keyID" value="SCIENCE"/>

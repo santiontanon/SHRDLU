@@ -823,7 +823,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("space", "outer-space", Term.fromString("proper-noun('space'[symbol], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("ai", "ai", Term.fromString("proper-noun('ai'[symbol], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("station ai", "station ai", Term.fromString("proper-noun('station ai'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("artificial intelligence", "artificial intelligence", Term.fromString("proper-noun('artificial intelligence'[symbol], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("artificial intelligence", "ai", Term.fromString("proper-noun('artificial intelligence'[symbol], [singular])", o), 1.0));
 
     var proper_nouns:string[] = [/*
                                  "james", "john", "robert", "michael", "william",
@@ -949,7 +949,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
                                  "etaoin", "shrdlu", "qwerty", "jcuken", "david",
                                  "aurora station"];
     for(let proper_noun of proper_nouns) {
-      this.addTokenPOS(new PartOfSpeech(proper_noun, proper_noun, Term.fromString("proper-noun('"+proper_noun+"'[symbol], [singular])", o), 1.0));
+      this.addTokenPOS(new PartOfSpeech(proper_noun, "symbol", Term.fromString("proper-noun('"+proper_noun+"'[symbol], [singular])", o), 1.0));
     }
 
     // synonyms (those that I don't want the AI to use):
@@ -961,7 +961,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("ai", "ai", o);
     this.addStandardNounPOS("airlock", "airlock", o);
     this.addTokenPOS(new PartOfSpeech("analysis", "analysis", Term.fromString("noun('analysis'[analysis], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("analyses", "analyses", Term.fromString("noun('analysis'[analysis], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("analyses", "analysis", Term.fromString("noun('analysis'[analysis], [plural])", o), 1.0));
     this.addStandardNounPOS("animal", "animal", o);
     this.addTokenPOS(new PartOfSpeech("anomaly", "anomaly", Term.fromString("noun('anomaly'[anomaly], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anomalies", "anomaly", Term.fromString("noun('anomaly'[anomaly], [plural])", o), 1.0));
@@ -1204,8 +1204,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("sentence", "sentence", o);
     this.addStandardNounPOS("settlement", "settlement", o);
     this.addStandardNounPOS("shape", "shape", o);
-    this.addTokenPOS(new PartOfSpeech("shelf", "shelf", Term.fromString("noun('shelves'[shelves], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("shelves", "shelf", Term.fromString("noun('shelves'[shelves], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("shelf", "shelves", Term.fromString("noun('shelves'[shelves], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("shelves", "shelves", Term.fromString("noun('shelves'[shelves], [plural])", o), 1.0));
     this.addStandardNounPOS("ship", "ship", o);
     this.addStandardNounPOS("shovel", "spade", o);
     this.addStandardNounPOS("shower", "shower", o);
@@ -1593,6 +1593,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
   addTokenPOS(pos:PartOfSpeech)
   {
+    // o.getSort(pos.sortName);  // this is just to check that we have all the sorts!
     var pos_l:PartOfSpeech[] = this.POS[pos.token];
     if (pos_l == null) pos_l = [];
     pos_l.push(pos);

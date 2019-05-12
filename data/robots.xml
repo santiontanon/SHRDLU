@@ -24,7 +24,7 @@
 
 		<items>
 			<object id="communicator" class="communicator" width="8" height="8"/>
-			<object is="science-key" class="blue-key" width="8" height="8"/>
+			<object id="science-key" class="blue-key" width="8" height="8"/>
 			<object id="maintenance-key" class="maintenanceyellow-key" name="maintenance key" width="8" height="8"/>
 			<object id="command-key" class="red-key" width="8" height="8"/>
 			<object id="stasis-key" class="green-key" width="8" height="8"/>

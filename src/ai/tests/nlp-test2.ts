@@ -219,7 +219,6 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -881,6 +880,8 @@ NLParseTestUnifyingListener("do you know where the bedroom is?", o.getSort("perf
 
 // For version 2.4:
 NLParseTestUnifyingListener("hand over the white key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("please give me your ships", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '2'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("please give me all your ships", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '2'[#id], '1'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

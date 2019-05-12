@@ -3662,6 +3662,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="nounphrase-all-the"
 			   head="nounPhrase(X, [plural], P, #and(the(X, [plural]), C))"
 			   body="definite-article('all'[symbol], [plural]) 'the' nounPhraseNoDeterminer(X, [plural], P, C)"/>
+	<NLPattern name="nounphrase-all-posessive"
+			   head="nounPhrase(X, [plural], P, #and(#cons(POSSESSIVE, X, [plural]), C))"
+			   body="definite-article('all'[symbol], [plural]) 
+			   	     possessive-determiner(POSSESSIVE, N) nounPhraseNoDeterminer(X, [plural], P, C)"/>
 	<NLPattern name="nounphrase-the other"
 			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(determiner.other(X, N), C)))"
 			   body="determiner(ART, N) 'other' nounPhraseNoDeterminer(X, N, P, C)"/>
