@@ -882,7 +882,10 @@ NLParseTestUnifyingListener("do you know where the bedroom is?", o.getSort("perf
 NLParseTestUnifyingListener("hand over the white key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("please give me your ships", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '2'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("please give me all your ships", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '2'[#id], '1'[#id]))");
-
+NLParseTestUnifyingListener("please give me all your ships", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '2'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("who was the artificial intelligence?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'etaoin'[#id])");
+NLParseTestUnifyingListener("how do I move?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.move('1'[#id]))");
+NLParseTestUnifyingListener("where is this?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, space.at('1'[#id], X))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

@@ -1307,6 +1307,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] ['do' 'you' 'know']
 			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefQuery(C, SUBJECT, QUERY)"/>
+    <NLPattern name="where-is-this"
+    		   head="perf.q.whereis(LISTENER, LOCATION, LOCATION2, space.at(SPEAKER, LOCATION))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] ['do' 'you' 'know']
+			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) 'this' ('!'|'?')*"/>
 
     <NLPattern head="perf.q.whereis(LISTENER, SUBJECT)"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -1646,6 +1652,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'who' verb(VERB, N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+    		   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(VERB, V, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'who' verb(VERB, N, P, [past-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefFromContext(C, OBJECT)"/>
     <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #cons(VERB, OBJECT, V)))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2049,7 +2061,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] ['do' 'you' 'know']
-			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'who' (verb('verb.be'[symbol], N, P, [present-tense]) | verb('verb.be'[symbol], N, P, [past-tense])) 
     		   		 personal-pronoun(X, N, G, P) ('!'|'?')* 
     		   		 #derefFromContext(personal-pronoun(X, N, G, P), SUBJECT)"
     		   priority="200"/>
@@ -2057,7 +2069,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] ['do' 'you' 'know']
-			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'who' (verb('verb.be'[symbol], N, P, [present-tense]) | verb('verb.be'[symbol], N, P, [past-tense])) 
     		   		 definite-article('the'[symbol], N)
     		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
     		   		 #derefFromContext(#and(#cons('the'[symbol], X, [plural]), C), SUBJECT)"
@@ -2066,7 +2078,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] ['do' 'you' 'know']
-			   		 'who' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'who' (verb('verb.be'[symbol], N, P, [present-tense]) | verb('verb.be'[symbol], N, P, [past-tense])) 
     		   		 demonstrative-determiner(DET, N)
     		   		 nounPhraseNoDeterminer(X, N, P, C) ('!'|'?')* 
     		   		 #derefFromContext(#and(#cons(DET, X, N), C), SUBJECT)"
@@ -3515,7 +3527,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C3, SUBJECT2)"/>
 
 	<!-- perf.q.how patterns --> 
-    <NLPattern name="perf.q.how-object"
+    <NLPattern name="perf.q.how-verb"
+    		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
+		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
+		           	 		 verb('verb.shall'[symbol], N, P, T))]
+		           	 nounPhrase(X2, N2, P2, C2)
+		           	 verb(VERB, N3, P3, [infinitive-tense]) ('!'|'?')*
+					 #derefFromContext(C2, SUBJECT)"/>
+    <NLPattern name="perf.q.how-verb-object"
     		   head="perf.q.how(LISTENER, #cons(VERB,SUBJECT,OBJECT))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
