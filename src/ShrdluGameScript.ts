@@ -23,12 +23,12 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			//this.skip_to_act_1();
+			this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-		//}
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -218,18 +218,21 @@ class ShrdluGameScript {
 				this.game.qwertyAI.respondToPerformatives = true;	// start responding to random questions from the player
 				this.game.shrdluAI.respondToPerformatives = true;	// start responding to random questions from the player
 				// move to a computer:
+				this.game.qwertyAI.clearCurrentAction();
 				this.qwertyMoves(9*8, 25*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 320) {
 				// main character though:
 				this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
 															   "What is this place? and what am I doing here?", A4_DIRECTION_NONE, this.game);
 			} else if (this.act_intro_state_timer == 560) {
+				this.game.qwertyAI.clearCurrentAction();
 				this.qwertyMoves(9*8, 27*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 640) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, healthy($PLAYER)))");
 				var term:Term = Term.fromString("healthy('david'[#id])", this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 				// go back to player:
+				this.game.qwertyAI.clearCurrentAction();
 				this.qwertyMoves(6*8, 27*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 800) this.act_intro_state = 6;
 			break;
@@ -438,6 +441,7 @@ class ShrdluGameScript {
 		   -------------------------------------------------------- */
 		case  98:
 			if (this.act_intro_state_timer == 0) {
+				this.game.qwertyAI.clearCurrentAction();
 				this.qwertyMoves(11*8, 30*8, this.game.qwertyAI.robot.map);	// move qwerty near the chair
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
 			} else if (this.game.qwertyAI.robot.x == 11*8 &&
@@ -492,6 +496,7 @@ class ShrdluGameScript {
 				if (this.game.currentPlayer.isIdle()) {
 					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
 																   "I don't know what this is all about, but let's just play along for now...", A4_DIRECTION_NONE, this.game);
+					this.game.qwertyAI.clearCurrentAction();
         	        this.qwertyMoves(104, 216, this.game.qwertyAI.robot.map);
         	    } else {
         	    	this.act_intro_state_timer--;
@@ -512,6 +517,7 @@ class ShrdluGameScript {
             	var d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 103;
+					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 216, this.game.qwertyAI.robot.map);
             	}
 			}
@@ -525,6 +531,7 @@ class ShrdluGameScript {
             	var d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 104;
+					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 272, this.game.qwertyAI.robot.map);
             	}
 			}
@@ -538,6 +545,7 @@ class ShrdluGameScript {
             	var d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 105;
+					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(256, 272, this.game.qwertyAI.robot.map);
             	}
 			}
@@ -551,6 +559,7 @@ class ShrdluGameScript {
             	var d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 106;
+					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(544, 272, this.game.qwertyAI.robot.map);
             	}
 			}

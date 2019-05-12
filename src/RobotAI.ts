@@ -155,6 +155,16 @@ class RobotAI extends A4RuleBasedAI {
 		return false;
 	}
 
+
+	clearCurrentAction()
+	{
+		this.currentAction = null;
+		this.currentAction_requester = null;
+		this.currentAction_scriptQueue = null;
+		this.currentActionHandler = null;		
+	}
+	
+
     executeScriptQueues()
     {
 

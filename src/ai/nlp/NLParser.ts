@@ -298,6 +298,15 @@ class NLParser {
 			return false;
 		}
 
+		if (parse.functor.is_a(this.o.getSort("perf.callattention"))) {
+			if (parse.attributes.length>=1 &&
+				(parse.attributes[0] instanceof ConstantTermAttribute)) {
+				let target:string = (<ConstantTermAttribute>parse.attributes[0]).value;
+				// call attention cannot be to oneself!
+				if (target == context.speaker) return false;
+			}
+		}
+
 		return true;
 	}
 

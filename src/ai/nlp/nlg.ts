@@ -241,12 +241,13 @@ class NLGenerator {
 			var o:Ontology = context.ai.o;
 			var t_l:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>(t.attributes[1])).term, "#and");
 			let timeTerm:TermAttribute = null;
+			// console.log("t_l: " + t_l);
 			// this "list" rendering format is only for when we want to generate text for lists of answers:
-			for(let t of t_l) {
-				if ((t instanceof TermTermAttribute) &&
-					((<TermTermAttribute>t).term.functor.is_a(o.getSort("time.past")) ||
-					 (<TermTermAttribute>t).term.functor.is_a(o.getSort("time.future")))) {
-					timeTerm = t;
+			for(let t2 of t_l) {
+				if ((t2 instanceof TermTermAttribute) &&
+					((<TermTermAttribute>t2).term.functor.is_a(o.getSort("time.past")) ||
+					 (<TermTermAttribute>t2).term.functor.is_a(o.getSort("time.future")))) {
+					timeTerm = t2;
 					break;
 				}
 			}
@@ -293,7 +294,7 @@ class NLGenerator {
 								answers_l.push(answer);
 							}
 						} else {
-							let t2:Term = new Term(o.getSort("perf.inform.answer"), [(<TermTermAttribute>(t.attributes[1])).term.attributes[0],ta2]);
+							let t2:Term = new Term(o.getSort("perf.inform.answer"), [t.attributes[0],ta2]);
 							let answer:string = this.termToEnglish_Inform_Answer(t2, speakerID, context);
 							if (answer == null) return null;
 							answers_l.push(answer);
@@ -451,6 +452,10 @@ class NLGenerator {
 				if (relationsAggregateStr != "") return relationsAggregateStr;
 			}
 			return this.termToEnglish_Inform(t, speakerID, context);
+		} else if (t.attributes[1] instanceof VariableTermAttribute) {
+			let tmp:[string, number, string, number] = this.termToEnglish_ConceptEntity(t.attributes[1], speakerID, context);
+			if (tmp != null) return tmp[0];
+			return null;
 		} else {
 			return this.termToEnglish_Inform(t, speakerID, context);
 		}

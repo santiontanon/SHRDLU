@@ -292,5 +292,5 @@ testNLG("perf.inform('1'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id])
 testNLG("perf.q.action('1'[#id], verb.help('1'[#id], 'etaoin'[#id], verb.go-to('etaoin'[#id], 'room1'[#id])))", "etaoin", "would you please help me to go to the kitchen?");
 testNLG("perf.request.action(V0:'1'[#id], action.give('1'[#id], #and(V:[instruction], plural(V)), 'etaoin'[#id]))", "etaoin", "please, give instructions to me");
 
-
+testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V0_0:[body], V3:'k1'[#id]))", "etaoin", "a body and your key card");
 

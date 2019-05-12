@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "Demo v2.3"
+var SHRDLU_VERSION:string = "Demo v2.4"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1
@@ -1108,8 +1108,8 @@ class A4EngineApp {
                     this.introact_state_timer = 0;
                     if (act >= 2) this.game.gameScript.act = "" + act;
 
-                    if (act == 2) {
-                    //if (act == 3) {
+                    //if (act == 2) {
+                    if (act == 3) {
                         this.introact_state = 2;
                         var menuItems:string[] = [];
                         var menuCallbacks:((any, number) => void)[] = [];
