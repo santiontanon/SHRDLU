@@ -226,6 +226,26 @@ class NLContext {
 	}
 
 
+	endConversation()
+	{
+		this.inConversation = false;
+		this.lastPerformativeInvolvingThisCharacterWasToUs = false;
+		this.expectingYes = false;
+		this.expectingThankYou = false;
+		this.expectingYouAreWelcome = false;
+		this.expectingGreet = false;
+		this.expectingFarewell = false;
+		this.expectingNicetomeetyoutoo = false;
+		this.expectingAnswerToQuestion_stack = [];
+		this.expectingAnswerToQuestionTimeStamp_stack = [];
+		this.expectingConfirmationToRequest_stack = [];
+		this.expectingConfirmationToRequestTimeStamp_stack = [];
+		this.lastEnumeratedQuestion_answered = null;
+		this.lastEnumeratedQuestion_answers = null;
+		this.lastEnumeratedQuestion_next_answer_index = 0;
+	}
+
+
 	newContextEntity(idAtt:ConstantTermAttribute, time:number, distance:number, o:Ontology) : NLContextEntity
 	{
 //		console.log("newContextEntity: " + idAtt);
@@ -380,6 +400,8 @@ class NLContext {
 		var IDs:ConstantTermAttribute[] = [];
 		if (perf.functor.is_a(o.getSort("perf.callattention")) ||
 			perf.functor.is_a(o.getSort("perf.greet")) ||
+			perf.functor.is_a(o.getSort("perf.nicetomeetyou")) ||
+			perf.functor.is_a(o.getSort("perf.nicetomeetyoutoo")) ||
 			perf.functor.is_a(o.getSort("perf.farewell")) ||
 			perf.functor.is_a(o.getSort("perf.ack.ok")) ||
 			perf.functor.is_a(o.getSort("perf.ack.unsure")) ||
@@ -480,11 +502,14 @@ class NLContext {
 
 			this.expectingGreet = false;
 			this.expectingFarewell = false;
+			this.expectingNicetomeetyoutoo = false;
 			if (perf.functor.name == "perf.greet") {
 				this.expectingGreet = true;
 			} else if (perf.functor.name == "perf.farewell") {
 				this.expectingFarewell = true;
 				this.inConversation = false;
+			} else if (perf.functor.name == "perf.nicetomeetyou") {
+				this.expectingNicetomeetyoutoo = true;
 			}
 
 			if (perf.functor.is_a(this.ai.o.getSort("perf.question"))) {
@@ -1578,6 +1603,9 @@ class NLContext {
 		tmp_xml = getFirstElementChildByTag(xml, "expectingFarewell");
 		if (tmp_xml != null) c.expectingFarewell = tmp_xml.getAttribute("value") == "true";
 
+		tmp_xml = getFirstElementChildByTag(xml, "expectingNicetomeetyoutoo");
+		if (tmp_xml != null) c.expectingNicetomeetyoutoo = tmp_xml.getAttribute("value") == "true";
+
 		for(let tmp_xml2 of getElementChildrenByTag(xml, "expectingAnswerToQuestion_stack")) {
 			c.expectingAnswerToQuestion_stack.push(c.performatives[Number(tmp_xml2.getAttribute("value"))]);
 			c.expectingAnswerToQuestionTimeStamp_stack.push(Number(tmp_xml2.getAttribute("time")));
@@ -1632,6 +1660,7 @@ class NLContext {
 		str += "<expectingYouAreWelcome value=\""+this.expectingYouAreWelcome+"\"/>\n";
 		str += "<expectingGreet value=\""+this.expectingGreet+"\"/>\n";
 		str += "<expectingFarewell value=\""+this.expectingFarewell+"\"/>\n";
+		str += "<expectingNicetomeetyoutoo value=\""+this.expectingNicetomeetyoutoo+"\"/>\n";
 		for(let i:number = 0;i<this.expectingAnswerToQuestion_stack.length;i++) {
 			str += "<expectingAnswerToQuestion_stack value=\""+this.performatives.indexOf(this.expectingAnswerToQuestion_stack[i])+"\" time=\""+this.expectingAnswerToQuestionTimeStamp_stack[i]+"\"/>\n";
 		}
@@ -1673,6 +1702,7 @@ class NLContext {
 	expectingYouAreWelcome:boolean = false;
 	expectingGreet:boolean = false;
 	expectingFarewell:boolean = false;
+	expectingNicetomeetyoutoo:boolean = false;
 	expectingAnswerToQuestion_stack:NLContextPerformative[] = [];
 	expectingAnswerToQuestionTimeStamp_stack:number[] = [];
 

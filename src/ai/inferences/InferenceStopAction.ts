@@ -15,7 +15,7 @@ class StopAction_InferenceEffect extends InferenceEffect {
 			let context:NLContext = ai.contextForSpeaker(speaker);
 			let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
 			this.action = this.action.applyBindings(inf.inferences[0].endResults[0]);
-			if (ai.stopAction(this.action)) {
+			if (ai.stopAction(this.action, speaker)) {
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {

@@ -69,6 +69,8 @@ class NLGenerator {
 		if (t.functor.is_a(o.getSort("perf.farewell"))) return this.termToEnglish_Farewell(t, context);
 		if (t.functor.is_a(o.getSort("perf.thankyou"))) return "Thank you";
 		if (t.functor.is_a(o.getSort("perf.youarewelcome"))) return "You are welcome";
+		if (t.functor.is_a(o.getSort("perf.nicetomeetyou"))) return "Nice to meet you!";
+		if (t.functor.is_a(o.getSort("perf.nicetomeetyoutoo"))) return "Nice to meet you too!";
 		if (t.functor.is_a(o.getSort("perf.ack.ok"))) return this.termToEnglish_Ack_Ok(t);
 		if (t.functor.is_a(o.getSort("perf.ack.unsure"))) return this.termToEnglish_Ack_Unsure(t);
 		if (t.functor.is_a(o.getSort("perf.ack.contradict"))) return this.termToEnglish_Ack_Contradict(t);

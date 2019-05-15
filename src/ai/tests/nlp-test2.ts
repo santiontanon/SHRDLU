@@ -886,6 +886,11 @@ NLParseTestUnifyingListener("please give me all your ships", o.getSort("performa
 NLParseTestUnifyingListener("who was the artificial intelligence?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'etaoin'[#id])");
 NLParseTestUnifyingListener("how do I move?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.move('1'[#id]))");
 NLParseTestUnifyingListener("where is this?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, space.at('1'[#id], X))");
+NLParseTestUnifyingListener("stop talking to me", o.getSort("performative"), context, 'etaoin', "perf.request.stopaction(V0:'etaoin'[#id], action.talk('etaoin'[#id], X, '1'[#id]))");
+NLParseTestUnifyingListener("nice to meet you!", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("nice to meet you, etaoin!", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("it is a pleasure to make your acquaintance", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("glad to meet you too", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyoutoo(V0:'etaoin'[#id])");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

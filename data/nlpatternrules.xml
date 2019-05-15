@@ -86,6 +86,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		  'how' verb('verb.be'[symbol], [singular], [third-person], T) 'it' 'going')
 			   		 ('!'|'?')*"/>
 
+	<!-- Patterns for performative "perf.nicetomeetyou" -->
+	<NLPattern name="nicetomeetyou-1"
+			   head="perf.nicetomeetyou(LISTENER)"
+			   body="(['it' 'is' 'very'] 'nice'|'pleased'|'delighted'|'lovely'|'great'|'glad'|
+			          ['it' 'is' 'a'] 'pleasure') 
+			   		 'to'
+			   		 ('meet' 'you'|'make' 'your' 'acquaintance') 
+			   		 [[','] nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L) #derefFromContext(C_L, LISTENER)]
+			   		 '!'*"/>
+
+	<NLPattern name="nicetomeetyoutoo-1"
+			   head="perf.nicetomeetyoutoo(LISTENER)"
+			   body="perf.nicetomeetyou(LISTENER) ('too'|'as' 'well') '!'*"/>
+
 	<!-- Patterns for performative "perf.sentiment" -->
 	<NLPattern name="sentiment-good"
 			   head="perf.sentiment.good(LISTENER)"
@@ -3039,6 +3053,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 ['please' [',']] verb('verb.stop'[symbol], N, P, [present-tense]) 
 			   		 verb(VERB, N2, P2, [gerund-tense]) 
+			   		 nounPhrase(X, N3, P3, C) '!'*
+			   		 #derefFromContext(C, OBJECT)"/>
+    <NLPattern name="stopaction-talking-to-obj"
+    		   head="perf.request.stopaction(LISTENER,action.talk(LISTENER,EMPTY,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['please' [',']] verb('verb.stop'[symbol], N, P, [present-tense]) 
+			   		 verb('action.talk'[symbol], N2, P2, [gerund-tense]) 
+			   		 'to'
 			   		 nounPhrase(X, N3, P3, C) '!'*
 			   		 #derefFromContext(C, OBJECT)"/>
     <NLPattern name="stopaction-donot"

@@ -182,6 +182,8 @@
     <sort name="performative" super="abstract-entity"/>
     <sort name="perf.callattention" super="performative"/>  <!-- This is when you just say "Etaoin!" -->
     <sort name="perf.greet" super="performative"/>
+    <sort name="perf.nicetomeetyou" super="performative"/>
+    <sort name="perf.nicetomeetyoutoo" super="performative"/>
     <sort name="perf.farewell" super="performative"/>
     <sort name="perf.thankyou" super="performative"/>
     <sort name="perf.youarewelcome" super="performative"/>

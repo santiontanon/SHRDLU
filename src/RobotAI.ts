@@ -139,9 +139,9 @@ class RobotAI extends A4RuleBasedAI {
 	}
 
 
-	stopAction(actionRequest:Term) : boolean
+	stopAction(actionRequest:Term, requester:string) : boolean
 	{
-		if (super.stopAction(actionRequest)) return true;
+		if (super.stopAction(actionRequest, requester)) return true;
 
 		if (this.currentAction != null && 
 			this.currentAction.equalsNoBindings(actionRequest) == 1) {

@@ -570,8 +570,8 @@ class RuleBasedAI {
 
 				if (this.talkingToUs(context, speaker, performative)) {
 	    			// Since now we know they are talking to us, we can unify the LISTENER with ourselves:
+	    			this.terminateConversationAfterThisPerformative = false;
 					let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
-
 					let nIntentions:number = this.intentions.length;
 					let tmp:Term[] = this.reactToPerformative(perf2, t.attributes[1], context);
 					if (tmp!=null) toAdd = toAdd.concat(tmp);
@@ -584,6 +584,7 @@ class RuleBasedAI {
 							}
 						}
 					}
+					if (this.terminateConversationAfterThisPerformative) context.endConversation();
 				}
 			}
 		}
@@ -751,6 +752,10 @@ class RuleBasedAI {
 					this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.farewell('"+context.speaker+"'[#id]))", this.o), speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 				}
 				context.inConversation = false;
+			} else if (perf2.functor.name == "perf.nicetomeetyou") {
+				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.nicetomeetyoutoo('"+context.speaker+"'[#id]))", this.o), speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+			} else if (perf2.functor.name == "perf.nicetomeetyoutoo") {
+				// just ignore ...
 			} else if (perf2.functor.name == "perf.thankyou") {
 				// If the "thank you" was necessary, then respond with a "you are welcome":
 				if (context.expectingThankYou) {
@@ -913,9 +918,12 @@ class RuleBasedAI {
 						ir.triggeredBySpeaker = context.speaker;
 						this.inferenceProcesses.push(ir);
 					} else {
-						if (this.stopAction(action)) {
-							let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
-							this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+						if (this.stopAction(action, context.speaker)) {
+							// account for the fact that maybe the request was to stop talking
+							if (!this.terminateConversationAfterThisPerformative) {
+								let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
+								this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+							}
 						} else {
 							let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
 							let term:Term = Term.fromString(tmp, this.o);
@@ -999,8 +1007,22 @@ class RuleBasedAI {
 	}
 
 
-	stopAction(actionRequest:Term) : boolean
+	stopAction(actionRequest:Term, requester:string) : boolean
 	{
+		if (actionRequest.functor.is_a(this.cache_sort_action_talk)) {
+			if (actionRequest.attributes.length == 3 &&
+				(actionRequest.attributes[1] instanceof VariableTermAttribute) &&
+				(actionRequest.attributes[2] instanceof ConstantTermAttribute)) {
+				let target:string = (<ConstantTermAttribute>actionRequest.attributes[2]).value;
+				let context:NLContext = this.contextForSpeaker(target);
+				if (context != null) this.terminateConversationAfterThisPerformative = true;
+				return true;
+			} else if (actionRequest.attributes.length == 1) {
+				let context:NLContext = this.contextForSpeaker(requester);
+				if (context != null) this.terminateConversationAfterThisPerformative = true;
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1927,6 +1949,7 @@ class RuleBasedAI {
 
 
 	contexts:NLContext[] = [];	// contexts for natural language processing (one per entity we speak to)
+	terminateConversationAfterThisPerformative:boolean = false;
 
 	// Sort cache for perception:
 	cache_sort_name:Sort = null;
