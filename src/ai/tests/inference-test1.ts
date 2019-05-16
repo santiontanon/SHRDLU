@@ -393,7 +393,7 @@ resolutionQueryTest(
     1,
     o);
 */
-
+/*
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
@@ -403,4 +403,14 @@ resolutionTest(
      ],
     ["~space.at('david'[#id], 'communicator-range'[#id])"],
     true,    // contradicts
+    o);
+*/
+
+// EXAMPLE OF NOT SOUND INFERENCE!
+// - The problem is that I am unifying the functors, when I should not be doing that...
+resolutionTest(
+    ["~space.inside.of(X:[#id], 'earth'[#id]); rock(X)",
+     "space.at('david'[#id], 'earth'[#id])"],
+    ["~rock('david'[#id])"],
+    false,    // should not contradict
     o);
