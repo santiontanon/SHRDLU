@@ -378,26 +378,11 @@ class NLContext {
 		}
 	}
 
-	
-	newPerformative(speakerID:string, perfText:string, perf:Term, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
+
+	// find all the entities mentioned in the clause:
+	IDsInPerformative(perf:Term, o:Ontology)
 	{
-		let newPerformatives:NLContextPerformative[] = [];
-		if (perf.functor.name=="#list") {
-			let parsePerformatives:TermAttribute[] = NLParser.elementsInList(perf, "#list");
-			for(let parsePerformative of parsePerformatives) {
-				if (parsePerformative instanceof TermTermAttribute) {
-					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, cause, o, timeStamp));
-				}
-			}
-			return newPerformatives;
-		}
-
-//		console.log("NLContext.newPerformative: " + perf);
-
-		var cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, timeStamp);
-
-		// find all the entities mentioned in the clause:
-		var IDs:ConstantTermAttribute[] = [];
+		let IDs:ConstantTermAttribute[] = [];
 		if (perf.functor.is_a(o.getSort("perf.callattention")) ||
 			perf.functor.is_a(o.getSort("perf.greet")) ||
 			perf.functor.is_a(o.getSort("perf.nicetomeetyou")) ||
@@ -408,6 +393,7 @@ class NLContext {
 			perf.functor.is_a(o.getSort("perf.ack.contradict")) ||
 			perf.functor.is_a(o.getSort("perf.ack.invalidanswer")) ||
 			perf.functor.is_a(o.getSort("perf.ack.denyrequest")) ||
+			perf.functor.is_a(o.getSort("perf.ackresponse")) ||
 			perf.functor.is_a(o.getSort("perf.thankyou")) ||
 			perf.functor.is_a(o.getSort("perf.youarewelcome")) ||
 			perf.functor.is_a(o.getSort("perf.sentiment.good")) ||
@@ -465,7 +451,27 @@ class NLContext {
 		} else {
 			console.error("NLContext.newPerformative: unsupported performative " + perf.functor.name);
 		}
+		return IDs;
+	}	
 
+	
+	newPerformative(speakerID:string, perfText:string, perf:Term, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
+	{
+		let newPerformatives:NLContextPerformative[] = [];
+		if (perf.functor.name=="#list") {
+			let parsePerformatives:TermAttribute[] = NLParser.elementsInList(perf, "#list");
+			for(let parsePerformative of parsePerformatives) {
+				if (parsePerformative instanceof TermTermAttribute) {
+					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, cause, o, timeStamp));
+				}
+			}
+			return newPerformatives;
+		}
+
+//		console.log("NLContext.newPerformative: " + perf);
+
+		var cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, timeStamp);
+		let IDs:ConstantTermAttribute[] = this.IDsInPerformative(perf, o);
 //		console.log("NLContext.newPerformative IDs found: " + IDs);
 
 		for(let id of IDs) {
@@ -1467,7 +1473,9 @@ class NLContext {
 
 		let verbSort:Sort = verb.functor;
 		let firstAttribute:TermAttribute = verb.attributes[0];
+		let nAttributes:number = verb.attributes.length;
 		if (verbSort.name == "#cons") {
+			nAttributes = verb.attributes.length-1;
 			if (verb.attributes.length>=2 &&
 				verb.attributes[0] instanceof ConstantTermAttribute) {
 				verbSort = o.getSort((<ConstantTermAttribute>verb.attributes[0]).value);
@@ -1504,11 +1512,6 @@ class NLContext {
 				for(let perf of performativesToConsider) {
 					if (perf.performative.functor.name == "perf.q.query" &&
 						perf.performative.attributes.length == 3) {
-//						let attribute:Term = new Term(o.getSort("#query"), 
-//									 				  [perf.performative.attributes[1], 
-//													   perf.performative.attributes[2]]);
-//						let output:Term = new Term(verbSort, [firstAttribute, 
-//															  new TermTermAttribute(attribute)]);
 						let output:Term = new Term(verbSort, [firstAttribute, 
 															  perf.performative.attributes[2]]);
 						possibleOutputs.push(new TermTermAttribute(output))
@@ -1531,6 +1534,21 @@ class NLContext {
 					    <sort name="perf.q.why" super="perf.question"/>
 					    <sort name="perf.q.how" super="perf.question"/>
 */
+					}
+				}
+			} else if (verbSort.is_a(o.getSort("verb.go"))) {
+				if (nAttributes == 1) {
+					// we are missing the destination, see if in the last performative, we mentioned a location:
+					for(let perf of performativesToConsider) {
+						let IDs:ConstantTermAttribute[] = this.IDsInPerformative(perf.performative, o);
+						for(let ID of IDs) {
+							let e:NLContextEntity = this.findByID(ID.value);
+							if (e != null && e.sortMatch(o.getSort("space.location"))) {
+								let output:Term = new Term(verbSort, [firstAttribute, 
+																	  ID]);
+								possibleOutputs.push(new TermTermAttribute(output))
+							}
+						}
 					}
 				}
 			}

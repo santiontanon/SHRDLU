@@ -1818,12 +1818,12 @@ class ShrdluGameScript {
 				this.finding_life_side_plot_analyzed_question = true;
 			}
 		}
-		if (!this.what_is_dist_side_plot_taken_question &&
+		if (!this.what_is_dust_side_plot_taken_question &&
 			this.game.getStoryStateVariable("luminiscent-fungi") == "taken") {
 			if (this.playerAskedAboutWhatIsTheDust()) {
 				this.queueThoughtBubble("So, we don't know what is this dust...");
 				this.queueThoughtBubble("I need to find a way to analyze it!!");
-				this.what_is_dist_side_plot_taken_question = true;
+				this.what_is_dust_side_plot_taken_question = true;
 			}			
 		}
 	}
@@ -2130,7 +2130,7 @@ class ShrdluGameScript {
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
 
-        xmlString += "what_is_dist_side_plot_taken_question=\""+this.what_is_dist_side_plot_taken_question+"\"\n";
+        xmlString += "what_is_dust_side_plot_taken_question=\""+this.what_is_dust_side_plot_taken_question+"\"\n";
 
         xmlString += "/>\n";     
         for(let tmp in this.thoughtBubbleQueue) {
@@ -2182,7 +2182,7 @@ class ShrdluGameScript {
 
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
-    	this.what_is_dist_side_plot_taken_question = xml.getAttribute("what_is_dist_side_plot_taken_question") == "true";
+    	this.what_is_dust_side_plot_taken_question = xml.getAttribute("what_is_dust_side_plot_taken_question") == "true";
 
 		this.thoughtBubbleQueue = []
     	for(let xml_tmp of getElementChildrenByTag(xml,"thoughtBubbleQueue")) {
@@ -2238,5 +2238,5 @@ class ShrdluGameScript {
 
 	finding_life_side_plot_taken_question:boolean = false;
 	finding_life_side_plot_analyzed_question:boolean = false;
-	what_is_dist_side_plot_taken_question:boolean = false;
+	what_is_dust_side_plot_taken_question:boolean = false;
 }

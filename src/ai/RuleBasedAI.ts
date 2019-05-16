@@ -768,6 +768,8 @@ class RuleBasedAI {
 				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],'fine'[symbol]))", this.o), speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.ack.ok") {
 				// Do nothing
+			} else if (perf2.functor.name == "perf.ackresponse") {
+				// Do nothing
 			} else if (perf2.functor.name == "perf.ack.contradict") {
 				console.error("RuleBasedAI.reactToPerformative: not sure how to react to " + perf2);
 			} else if (perf2.functor.name == "perf.inform") {

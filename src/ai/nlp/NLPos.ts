@@ -262,6 +262,7 @@ class POSParser {
       "garage key",
       "bedroom key",
       "lab key",
+      "laboratory key",
       "command key",
       "maintenance room",
       "laundry room",
@@ -1354,7 +1355,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.follow", "follow","follows","followed","followed","following", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.gather", "gather","gathers","gathered","gathered","gathering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.get", "get","gets","got","gotten","getting", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.go-to", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get in","gets in","got in","gotten in","getting in", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "get to","gets to","got to","gotten to","getting to", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.give", "give","gives","gave","given","giving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go", "go","goes","went","gone","going", false, multitokens_raw, o);

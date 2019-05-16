@@ -75,6 +75,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 '!'*"
 			   priority="200"/>
 
+	<!-- Patterns for performative "perf.ackresponse" -->
+	<!-- every "ok" is also an "ackresponse" -->
+	<NLPattern name="perf.ackresponse1"
+			   head="perf.ackresponse(LISTENER)"
+			   body="('ok'|'okay'|'got' 'it'|'i' 'see'|'obviously'|'cool'|'coolio'|'fine')
+			   		 [[','] nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LISTENER)]
+			   		 '!'*"/>
+	<NLPattern name="perf.ackresponse2"
+			   head="perf.ackresponse(LISTENER)"
+			   body="[('yes'|'yep'|'yeah') [',']] ('same' ['here'] | 'me' ('too'|'neither')) '!'*"/>
+
 	<!-- Patterns for performative "perf.q.howareyou" -->
 	<NLPattern name="howareyou-1"
 			   head="perf.q.howareyou(LISTENER)"
@@ -2019,7 +2030,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		   verb(VERB, N4, P4, [present-tense]) )
 			   		  ('!'|'?')* 
     		   		 #completeVerbArgumentsFromContext(#cons(VERB, QUERY_V), COMPLETED_VERB)"/>
-
+    <NLPattern name="perf.q.how-verb-missing-argument1"
+    		   head="perf.q.how(LISTENER, COMPLETED_VERB)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'how' 
+			   		 (verb('verb.may'[symbol], N1, P1, T1) | verb('verb.do'[symbol], N1, P1, T1))
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb(VERB:[symbol], N3, P3, [infinitive-tense])
+			   		 ('!'|'?')* 
+			   		 #derefFromContext(C2, SUBJECT)
+    		   		 #completeVerbArgumentsFromContext(#cons(VERB, SUBJECT), COMPLETED_VERB)"/>
+    		   		 
 	<NLPattern name="perf.q.query-know2"
 			   head="perf.q.query(LISTENER, WHO, #and(character(WHO), verb.know(WHO, QUERY)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

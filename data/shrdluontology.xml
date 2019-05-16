@@ -196,6 +196,7 @@
     <sort name="perf.ack.contradict" super="perf.acknowledge"/>
     <sort name="perf.ack.invalidanswer" super="perf.acknowledge"/>
     <sort name="perf.ack.denyrequest" super="perf.acknowledge"/>
+    <sort name="perf.ackresponse" super="perf.acknowledge"/>    <!-- acknowledging a response, like "me too" -->
     <sort name="perf.sentiment" super="performative"/>
     <sort name="perf.sentiment.good" super="perf.sentiment"/>
     <sort name="perf.sentiment.bad" super="perf.sentiment"/>

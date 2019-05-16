@@ -31,7 +31,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.locationsWherePlayerIsNotPermitted.push("location-as14");	// bedroom 11
 		this.locationsWherePlayerIsNotPermitted.push("location-as15");	// bedroom 12
 		this.locationsWherePlayerIsNotPermitted.push("location-as26");
-		this.locationsWherePlayerIsNotPermitted.push("location-as27");
+		// this.locationsWherePlayerIsNotPermitted.push("location-as27");
 		this.locationsWherePlayerIsNotPermitted.push("location-maintenance");
 		this.locationsWherePlayerIsNotPermitted.push("location-as29");
 		this.locationsWherePlayerIsNotPermitted.push("location-garage");
@@ -48,7 +48,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM10");
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM11");
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM12");
-		this.doorsPlayerIsNotPermittedToOpen.push("SCIENCE");
+		// this.doorsPlayerIsNotPermittedToOpen.push("SCIENCE");
 		this.doorsPlayerIsNotPermittedToOpen.push("MAINTENANCE");
 		this.doorsPlayerIsNotPermittedToOpen.push("GARAGE");
 		this.doorsPlayerIsNotPermittedToOpen.push("COMMAND");

@@ -580,7 +580,7 @@ NLParseTestUnifyingListener("How can I go outside?", o.getSort("performative"), 
 NLParseTestUnifyingListener("How can I go outside of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.go-out('1'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("How do I get out of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.go-out('1'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("How do I fix a battery?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.repair('1'[#id],[battery]))");
-NLParseTestUnifyingListener("how do i get into the kitchen??", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.go-to('1'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("how do i get into the kitchen??", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("how do i open the kitchen??", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], action.open('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("how do i open kitchen??", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], action.open('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("how i open kitchen??", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], action.open('1'[#id],'room1'[#id]))");
@@ -891,6 +891,9 @@ NLParseTestUnifyingListener("nice to meet you!", o.getSort("performative"),  con
 NLParseTestUnifyingListener("nice to meet you, etaoin!", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("it is a pleasure to make your acquaintance", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("glad to meet you too", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyoutoo(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("how do I get in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("how do I get in?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("yep, same here!", o.getSort("performative"),  context, 'etaoin', "perf.ackresponse('etaoin'[#id])");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

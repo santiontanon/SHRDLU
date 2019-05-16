@@ -288,6 +288,7 @@
 	<!-- keys -->
 	<sentence provenance="background" sentence="blue-key('science-key'[#id])"/>
 	<sentence provenance="background" sentence="name('science-key'[#id],'lab key'[symbol])"/>
+	<sentence provenance="background" sentence="name('science-key'[#id],'laboratory key'[symbol])"/>
 	<sentence provenance="background" sentence="maintenanceyellow-key('maintenance-key'[#id])"/>
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance key'[symbol])"/>
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance room key'[symbol])"/>
@@ -341,7 +342,7 @@
 	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as24'[#id])"/>
 	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as25'[#id])"/>
 	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as26'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as27'[#id])"/>
+	<!--sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as27'[#id])"/-->
 	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-maintenance'[#id])"/>
 	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as29'[#id])"/>
 	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-garage'[#id])"/>

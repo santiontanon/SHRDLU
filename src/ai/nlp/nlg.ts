@@ -76,6 +76,7 @@ class NLGenerator {
 		if (t.functor.is_a(o.getSort("perf.ack.contradict"))) return this.termToEnglish_Ack_Contradict(t);
 		if (t.functor.is_a(o.getSort("perf.ack.invalidanswer"))) return this.termToEnglish_Ack_InvalidAnswer(t);
 		if (t.functor.is_a(o.getSort("perf.ack.denyrequest"))) return this.termToEnglish_Ack_DenyRequest(t, context);
+		if (t.functor.is_a(o.getSort("perf.ackresponse"))) return "Ok";
 		if (t.functor.is_a(o.getSort("perf.inform.answer"))) return this.termToEnglish_Inform_Answer(t, speakerID, context);
 		if (t.functor.is_a(o.getSort("perf.inform"))) return this.termToEnglish_Inform(t, speakerID, context);
 		if (t.functor.is_a(o.getSort("perf.sentiment.good")))  return this.termToEnglish_Sentiment_Good(t);
