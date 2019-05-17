@@ -447,4 +447,9 @@
 	<sentence provenance="background" sentence="verb.face(X:[#id], D:[cardinal-direction]); ~facing-direction(X, D)"/>
 	<sentence provenance="background" sentence="~facing-direction(X, V1); ~facing-direction(X, V2); =(V1,V2)"/>
 
+	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); ~space.far(X, Y)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id], Y:[#id]); space.near(X, Y)"/>
+	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); space.near(Y, X)"/>
+	<sentence provenance="background" sentence="~space.far(X:[#id], Y:[#id]); space.far(Y, X)"/>
+
 </knowledgeBase>

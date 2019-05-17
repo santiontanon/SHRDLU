@@ -355,6 +355,62 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
+	distanceBetweenIds(source:string, target:string)
+	{
+		// We assume that unless the AI is seeing an object, it does not know where it is:
+		let sourceObject:A4Object = null;
+		let targetObject:A4Object = null;
+		// We assume that the AIs know all the locations:
+		let sourceLocation:AILocation = this.game.getAILocationByID(source);
+		let targetLocation:AILocation = this.game.getAILocationByID(target);
+		for(let te of this.shortTermMemory.plainTermList) {
+			let t:Term = te.term;
+			if (te.provenance == PERCEPTION_PROVENANCE &&
+				t.functor.is_a(this.cache_sort_object) &&
+				t.attributes.length == 1) {
+				if ((<ConstantTermAttribute>t.attributes[0]).value == source) {
+					sourceObject = this.game.findObjectByIDJustObject(source);
+				} else if ((<ConstantTermAttribute>t.attributes[0]).value == target) {
+					targetObject = this.game.findObjectByIDJustObject(target);
+				}
+			}/* else if (te.provenance == PERCEPTION_PROVENANCE &&
+				t.functor.is_a(this.cache_sort_space_location) &&
+				t.attributes.length == 1) {
+				if ((<ConstantTermAttribute>t.attributes[0]).value == source) {
+					sourceLocation = this.game.getAILocationByID(source);
+				} else if ((<ConstantTermAttribute>t.attributes[0]).value == target) {
+					targetLocation = this.game.getAILocationByID(target);
+				}
+			}*/
+		}
+		if (sourceObject != null && targetObject != null) {
+			if (targetObject.map == sourceObject.map) {
+				let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
+				let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
+				let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
+				let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
+				return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+			}
+		}
+		if (sourceObject != null && targetLocation != null) {
+			let mapIdx:number = targetLocation.maps.indexOf(sourceObject.map);
+			if (mapIdx != -1) {
+				return targetLocation.distanceFromObject(sourceObject, mapIdx);
+			}
+		}
+		if (sourceLocation != null && targetObject != null) {
+			let mapIdx:number = sourceLocation.maps.indexOf(targetObject.map);
+			if (mapIdx != -1) {
+				return sourceLocation.distanceFromObject(targetObject, mapIdx);
+			}
+		}
+		if (sourceLocation != null && targetLocation != null) {
+			return sourceLocation.distanceFromLocation(targetLocation);
+		}
+		return null;
+	}
+
+
 	updateContext(speaker:string) : NLContext
 	{
 		let context:NLContext = this.contextForSpeaker(speaker);
@@ -375,7 +431,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 				if (t.attributes[0] instanceof ConstantTermAttribute) {
 					let id:string = (<ConstantTermAttribute>t.attributes[0]).value;
 					// calculate the distance tot he speaker:
-					let distanceFromSpeaker:number = null;
+					let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
+					/*
 					if (speakerObject!=null) {
 						if ((t.functor.is_a(this.cache_sort_object) &&
 							 te.provenance == PERCEPTION_PROVENANCE) ||
@@ -408,6 +465,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 							}
 						}
 					}
+					*/
 
 					let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
 					if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
@@ -522,9 +580,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 				return !this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)] &&
 					   !this.game.location_in[this.game.locations.indexOf(loc1)][this.game.locations.indexOf(loc2)];
 			}
-		}
-
-		if (relation.name == "space.north.of" ||
+		} else if (relation.name == "space.near") {
+			let distance:number = this.distanceBetweenIds(o1ID, o2ID);
+			if (distance == null) return null;
+			if (distance < SPACE_NEAR_FAR_THRESHOLD) return true;
+			return false;
+		} else if (relation.name == "space.far") {
+			let distance:number = this.distanceBetweenIds(o1ID, o2ID);
+			if (distance == null) return null;
+			if (distance >= SPACE_NEAR_FAR_THRESHOLD) return true;
+			return false;
+		} else if (relation.name == "space.north.of" ||
 			relation.name == "space.east.of" ||
 			relation.name == "space.west.of" ||
 			relation.name == "space.south.of" ||
@@ -761,6 +827,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
 		let dx:number = x1-x2;
 		let dy:number = y1-y2;
+		let distance:number = Math.sqrt(dx*dx + dy*dy);
+		if (distance < SPACE_NEAR_FAR_THRESHOLD) relations.push(this.o.getSort("space.near"));
+		if (distance >= SPACE_NEAR_FAR_THRESHOLD) relations.push(this.o.getSort("space.far"));
 
 		if (o2.x >= o1.x && o2.x + o2.getPixelWidth() <= o1.x+o1.getPixelWidth()) dx = 0;
 		if (o2.y + o2.tallness >= o1.y + o1.tallness && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;

@@ -20,12 +20,29 @@ class AILocation {
 				if (this.mapOccupancyMaps[mapIdx][i]) {
 					var x:number = i%map.width;
 					var y:number = Math.floor(i/map.width);
-					var d:number = Math.sqrt((tile_x-x)*(tile_x-x) + (tile_y-y)*(tile_y-y));
+					var d:number = Math.sqrt((tile_x-x)*(tile_x-x) + (tile_y-y)*(tile_y-y)) * SHRDLU_TILE_SIZE;
 					if (closestDistance == null || d<closestDistance) closestDistance = d;
 				}
 			}
 			return closestDistance;
 		}
+	}
+
+
+	distanceFromLocation(l2:AILocation) : number
+	{
+		for(let map of this.maps) {
+			for(let map2 of l2.maps) {
+				if (map == map2) {
+					let c1:[number,number] = this.centerCoordinatesInMap(map);
+					let c2:[number,number] = l2.centerCoordinatesInMap(map);
+					if (c1 != null && c2 != null) {
+						return Math.sqrt((c1[0]-c2[0])*(c1[0]-c2[0]) + (c1[1]-c2[1])*(c1[1]-c2[1]));
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 

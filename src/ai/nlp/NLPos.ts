@@ -604,7 +604,9 @@ this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("
   ["less",  "PREP"],
   ["like",  "PREP"],
   ["minus",  "PREP"],
-  ["near",  "PREP"],
+*/
+this.addTokenPOS(new PartOfSpeech("near", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
+/*
   ["nearer",  "PREP"],
   ["nearest",  "PREP"],
   ["notwithstanding",  "PREP"],
@@ -706,15 +708,13 @@ NLPAddTokenPOS("close to", PartOfSpeech.generatePreposition("close to", POS_TYPE
 NLPAddTokenPOS("due to", PartOfSpeech.generatePreposition("close to", POS_TYPE_PPREPOSITION_CAUSE));
   */
 this.addTokenPOS(new PartOfSpeech("except for", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
-  /*
-  "far from",
-  */
+this.addTokenPOS(new PartOfSpeech("far from", "space.far", Term.fromString("preposition('space.far'[space.far])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
   /*
   "instead of",
   "left of",
-  "near to",
   */
+this.addTokenPOS(new PartOfSpeech("near to", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("not including", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
   /*
 NLPAddTokenPOS("next to", PartOfSpeech.generatePreposition("next to", POS_TYPE_PPREPOSITION_PLACE));

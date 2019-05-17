@@ -1382,8 +1382,8 @@ class A4Map {
     name:string = null;
     width:number;
     height:number;
-    tileWidth:number = 16;
-    tileHeight:number = 16;
+    tileWidth:number = 8;
+    tileHeight:number = 8;
 
     layers:A4MapLayer[] = [];
     bridges:A4MapBridge[] = [];

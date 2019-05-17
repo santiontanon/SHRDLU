@@ -8,6 +8,10 @@ var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 2*50*60;    // 2 minutes of game time
 var COMMUNICATOR_CONNECTION_TIMEOUT:number = 50*60;    // 1 minute of game time
 
 var SHRDLU_START_DATE:number = 45186163200;    // Thursday, October 21st, 2432
+var SHRDLU_TILE_SIZE:number = 8;
+
+var SPACE_NEAR_FAR_THRESHOLD:number = 12*SHRDLU_TILE_SIZE;
+
 
 var A4_HASH_SIZE:number = 1000;
 
