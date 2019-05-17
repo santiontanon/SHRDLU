@@ -106,9 +106,9 @@ function keyboardInputUp(event: KeyboardEvent) {
 
 function mouseInput(event: MouseEvent) 
 {
-    var rect:ClientRect = canvas.getBoundingClientRect();
-    var x:number = Math.floor((event.x-rect.left) / (rect.right-rect.left)*canvas.width);
-    var y:number = Math.floor((event.y-rect.top)  / (rect.bottom-rect.top)*canvas.height);    
+    let rect:ClientRect = canvas.getBoundingClientRect();
+    let x:number = Math.floor((event.x-rect.left) / (rect.right-rect.left)*canvas.width);
+    let y:number = Math.floor((event.y-rect.top)  / (rect.bottom-rect.top)*canvas.height);    
     app.mouseClick(x, y, event.button, event);
     BInterface.mouseClick(x, y, event.button, app);
 }
@@ -116,7 +116,7 @@ function mouseInput(event: MouseEvent)
 
 function mouseMove(event: MouseEvent)
 {
-    var rect:ClientRect = canvas.getBoundingClientRect();
+    let rect:ClientRect = canvas.getBoundingClientRect();
     global_mouse_x = Math.floor((event.clientX-rect.left) / (rect.right-rect.left)*canvas.width);
     global_mouse_y = Math.floor((event.clientY-rect.top)  / (rect.bottom-rect.top)*canvas.height);    
     BInterface.mouseMove(global_mouse_x, global_mouse_y);

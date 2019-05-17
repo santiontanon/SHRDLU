@@ -72,7 +72,7 @@ class ShrdluGameScript {
 		this.game.qwertyAI.robot.inventory.splice(6,1);
 		this.game.currentPlayer.inventory.push(this.game.qwertyAI.robot.inventory[5]);	// garage key
 		this.game.qwertyAI.robot.inventory.splice(5,1);
-		var idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
+		let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
 		this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
 
 		this.game.qwertyAI.allowPlayerInto("location-garage", "GARAGE");
@@ -96,7 +96,7 @@ class ShrdluGameScript {
 //		this.act_1_state = 15;	// etaoin will ask to go find Shrdlu
 		this.act_1_state = 19;
 
-		var term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
+		let term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
 		this.game.currentPlayer.inventory.push(this.game.qwertyAI.robot.inventory[1]);	// maintenance key
@@ -105,19 +105,19 @@ class ShrdluGameScript {
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("full-battery", this.game, false, false));
 		this.game.setStoryStateVariable("act1-corpse", "discovered");
 
-		var term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
+		let term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);
 		this.game.qwertyAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);
-		var term2:Term = Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
+		let term2:Term = Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term2, PERCEPTION_PROVENANCE);
 		this.game.qwertyAI.addLongTermTerm(term2, PERCEPTION_PROVENANCE);
-		var term3:Term = Term.fromString("property.strange(erased('etaoin-memory'[#id]))", this.game.ontology);
+		let term3:Term = Term.fromString("property.strange(erased('etaoin-memory'[#id]))", this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 		this.game.qwertyAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 
 		// start in spacer valley
 		//this.game.requestWarp(this.game.currentPlayer, this.game.maps[2], 40*8, 51*8);
-		var suit_l:A4Object[] = this.game.findObjectByID("broken-ss");
+		let suit_l:A4Object[] = this.game.findObjectByID("broken-ss");
 		(<A4Container>(suit_l[0])).content.splice((<A4Container>(suit_l[0])).content.indexOf(suit_l[1]), 1);
 		this.game.currentPlayer.inventory.push(suit_l[1]);		
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("helmet", this.game, false, false));
@@ -154,7 +154,7 @@ class ShrdluGameScript {
 
 	update_act_intro() 
 	{
-		var previous_state:number = this.act_intro_state;
+		let previous_state:number = this.act_intro_state;
 
 		if (this.act_intro_state >= 1 && this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
 
@@ -229,7 +229,7 @@ class ShrdluGameScript {
 				this.qwertyMoves(9*8, 27*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 640) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, healthy($PLAYER)))");
-				var term:Term = Term.fromString("healthy('david'[#id])", this.game.ontology);
+				let term:Term = Term.fromString("healthy('david'[#id])", this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 				// go back to player:
 				this.game.qwertyAI.clearCurrentAction();
@@ -246,9 +246,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.queuedIntentions.length == 0 &&
 					this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
 					// the question has been answered:
-					var lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
-						var answer:TermAttribute = lastPerformative.performative.attributes[1];
+						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof ConstantTermAttribute) {
 							if ((<ConstantTermAttribute>answer).value == "no" ||
 								(<ConstantTermAttribute>answer).value == "unknown") {
@@ -269,7 +269,7 @@ class ShrdluGameScript {
 //				} else {
 //					// still waiting for an answer, check for a timeout:
 //					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						var idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
+//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
 //						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 6;
 //					}
 				}
@@ -290,9 +290,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.queuedIntentions.length == 0 &&
 					this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
 					// the question has been answered:
-					var lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
-						var answer:TermAttribute = lastPerformative.performative.attributes[1];
+						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof VariableTermAttribute) {
 							if (answer.sort.name == "unknown") {
 								this.act_intro_state = 7;
@@ -311,7 +311,7 @@ class ShrdluGameScript {
 //				} else {
 //					// still waiting for an answer, check for a timeout:
 //					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						var idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
+//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
 //						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 6;
 //					}
 				}
@@ -342,9 +342,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.queuedIntentions.length == 0 &&
 					this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack.length == 0) {
 					// the question has been answered:
-					var lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
-						var answer:TermAttribute = lastPerformative.performative.attributes[1];
+						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof ConstantTermAttribute) {
 							if ((<ConstantTermAttribute>answer).value == "no" ||
 								(<ConstantTermAttribute>answer).value == "unknown") {
@@ -366,7 +366,7 @@ class ShrdluGameScript {
 //				} else {
 //					// still waiting for an answer, check for a timeout:
 //					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						var idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
+//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
 //						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 11;
 //					}
 				}
@@ -450,10 +450,10 @@ class ShrdluGameScript {
 				// 512 is the ID of the chair in the infirmary
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.push($PLAYER, '512'[#id])))");
 
-				var term:Term = Term.fromString("goal(D:'david'[#id],action.push(X, '512'[#id]))",this.game.ontology);
+				let term:Term = Term.fromString("goal(D:'david'[#id],action.push(X, '512'[#id]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
-				var chair:A4Object = this.game.findObjectByIDJustObject("512");
+				let chair:A4Object = this.game.findObjectByIDJustObject("512");
 				this.act_intro_chair_x = chair.x;
 				this.act_intro_chair_y = chair.y;
 				this.act_intro_state = 99;
@@ -476,7 +476,7 @@ class ShrdluGameScript {
 			break;
 
 		case 100:
-			var chair:A4Object = this.game.findObjectByIDJustObject("512");
+			let chair:A4Object = this.game.findObjectByIDJustObject("512");
 			if (chair.x != this.act_intro_chair_x ||
 				chair.y != this.act_intro_chair_y) {
 				this.act_intro_state = 101;
@@ -490,7 +490,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, verb.follow($PLAYER, $QWERTY)))");
 
-				var term:Term = Term.fromString("goal(D:'david'[#id],verb.follow(X, 'qwerty'[#id]))",this.game.ontology);
+				let term:Term = Term.fromString("goal(D:'david'[#id],verb.follow(X, 'qwerty'[#id]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 			} else if (this.act_intro_state_timer == 180) {
 				if (this.game.currentPlayer.isIdle()) {
@@ -512,9 +512,9 @@ class ShrdluGameScript {
 		case 102:
             if (this.game.qwertyAI.robot.x == 104 &&
             	this.game.qwertyAI.robot.y == 216) {
-            	var dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	var dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	var d2:number = (dx*dx)+(dy*dy);
+            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
+            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
+            	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 103;
 					this.game.qwertyAI.clearCurrentAction();
@@ -526,9 +526,9 @@ class ShrdluGameScript {
 		case 103:
             if (this.game.qwertyAI.robot.x == 136 &&
             	this.game.qwertyAI.robot.y == 216) {
-            	var dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	var dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	var d2:number = (dx*dx)+(dy*dy);
+            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
+            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
+            	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 104;
 					this.game.qwertyAI.clearCurrentAction();
@@ -540,9 +540,9 @@ class ShrdluGameScript {
 		case 104:
             if (this.game.qwertyAI.robot.x == 136 &&
             	this.game.qwertyAI.robot.y == 272) {
-            	var dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	var dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	var d2:number = (dx*dx)+(dy*dy);
+            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
+            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
+            	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 105;
 					this.game.qwertyAI.clearCurrentAction();
@@ -554,9 +554,9 @@ class ShrdluGameScript {
 		case 105:
             if (this.game.qwertyAI.robot.x == 256 &&
             	this.game.qwertyAI.robot.y == 272) {
-            	var dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	var dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	var d2:number = (dx*dx)+(dy*dy);
+            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
+            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
+            	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 106;
 					this.game.qwertyAI.clearCurrentAction();
@@ -568,9 +568,9 @@ class ShrdluGameScript {
 		case 106:
             if (this.game.qwertyAI.robot.x == 544 &&
             	this.game.qwertyAI.robot.y == 272) {
-            	var dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	var dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	var d2:number = (dx*dx)+(dy*dy);
+            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
+            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
+            	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 107;
             	}
@@ -590,7 +590,7 @@ class ShrdluGameScript {
 		case 108:
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.take($PLAYER, 'communicator'[#id])))");
-				var term:Term = Term.fromString("goal(D:'david'[#id],action.take(X, 'communicator'[#id]))",this.game.ontology);
+				let term:Term = Term.fromString("goal(D:'david'[#id],action.take(X, 'communicator'[#id]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 			} else if (!this.game.qwertyAI.robot.isTalking()) {
 //			} else if (this.act_intro_state_timer == 180) {
@@ -619,7 +619,7 @@ class ShrdluGameScript {
 				this.qwertyDropsObject("bedroom5-key");
         		this.qwertyMoves(560, 272, this.game.qwertyAI.robot.map);
 
-				var term:Term = Term.fromString("goal(D:'david'[#id],verb.go-to(X, 'verb.sleep'[verb.sleep]))",this.game.ontology);
+				let term:Term = Term.fromString("goal(D:'david'[#id],verb.go-to(X, 'verb.sleep'[verb.sleep]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
 			} else if (!this.game.qwertyAI.robot.isTalking()) {
@@ -726,7 +726,7 @@ class ShrdluGameScript {
 	   -------------------------------------------------------- */
 	update_act_1() 
 	{
-		var previous_state:number = this.act_1_state;
+		let previous_state:number = this.act_1_state;
 
 		if (this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
 		if (this.act_1_state >= 6 && this.contextEtaoin == null) this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
@@ -734,11 +734,11 @@ class ShrdluGameScript {
 		// check to see if the knowledge state needs to advance based on what the AI or the player say:
 		if (this.act_1_state >= 6) {
 			if (!this.act_1_know_etaoin_is_an_AI) {
-				var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
-				var p2:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.game.qwertyAI.selfID);
+				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
+				let p2:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.game.qwertyAI.selfID);
 				if (p1!=null && 
 					p1.timeStamp == this.game.in_game_seconds - 1) {
-					var pattern:Term = Term.fromString("perf.inform.answer('david'[#id], ai('etaoin'[#id]))", this.game.ontology);
+					let pattern:Term = Term.fromString("perf.inform.answer('david'[#id], ai('etaoin'[#id]))", this.game.ontology);
 					if (p1.performative.equals(pattern)) {
 						this.act_1_know_etaoin_is_an_AI = true;
 						console.log("this.act_1_know_etaoin_is_an_AI = true");
@@ -746,7 +746,7 @@ class ShrdluGameScript {
 				}
 				if (p2!=null &&
 					p2.timeStamp == this.game.in_game_seconds - 1) {
-					var pattern:Term = Term.fromString("perf.inform.answer('david'[#id], ai('etaoin'[#id]))", this.game.ontology);
+					let pattern:Term = Term.fromString("perf.inform.answer('david'[#id], ai('etaoin'[#id]))", this.game.ontology);
 					if (p2.performative.equals(pattern)) {
 						this.act_1_know_etaoin_is_an_AI = true;
 						console.log("this.act_1_know_etaoin_is_an_AI = true");
@@ -756,10 +756,10 @@ class ShrdluGameScript {
 		}
 
 		if (!this.act_1_asked_about_being_alone_to_etaoin && this.contextEtaoin != null) {
-			var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				var perf:Term = p1.performative;
+				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
 					this.act_1_asked_about_being_alone_to_etaoin = true;
 					console.log("this.act_1_asked_about_being_alone_to_etaoin = true");
@@ -768,10 +768,10 @@ class ShrdluGameScript {
 		}
 
 		if (!this.act_1_asked_about_being_alone_to_qwerty && this.contextQwerty != null) {
-			var p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				var perf:Term = p1.performative;
+				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
 					this.act_1_asked_about_being_alone_to_qwerty = true;
 					console.log("this.act_1_asked_about_being_alone_to_qwerty = true");
@@ -780,16 +780,16 @@ class ShrdluGameScript {
 		}		
 
 		if (!this.act_1_asked_about_being_alone_to_etaoin && this.contextEtaoin != null) {
-			var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				var perf:Term = p1.performative;
-				var v:TermAttribute = null;
-				var queryTerms:TermAttribute[] = null;
+				let perf:Term = p1.performative;
+				let v:TermAttribute = null;
+				let queryTerms:TermAttribute[] = null;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
-					var patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
+					let patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
 					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
 						this.act_1_asked_about_being_alone_to_etaoin = true;
 						console.log("this.act_1_asked_about_being_alone_to_etaoin = true");
@@ -798,16 +798,16 @@ class ShrdluGameScript {
 			}
 		}
 		if (!this.act_1_asked_about_being_alone_to_qwerty && this.contextEtaoin != null) {
-			var p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				var perf:Term = p1.performative;
-				var v:TermAttribute = null;
-				var queryTerms:TermAttribute[] = null;
+				let perf:Term = p1.performative;
+				let v:TermAttribute = null;
+				let queryTerms:TermAttribute[] = null;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
-					var patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
+					let patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
 					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
 						this.act_1_asked_about_being_alone_to_qwerty = true;
 						console.log("this.act_1_asked_about_being_alone_to_qwerty = true");
@@ -816,15 +816,15 @@ class ShrdluGameScript {
 			}
 		}
 
-		var act_1_asked_about_bruce_alper_to_anyone:boolean = false;
-		var act_1_asked_about_corpse_to_anyone:boolean = false;
+		let act_1_asked_about_bruce_alper_to_anyone:boolean = false;
+		let act_1_asked_about_corpse_to_anyone:boolean = false;
 		for(let i:number = 0;i<3;i++) {
 			if (this.act_1_asked_about_bruce_alper[i]) act_1_asked_about_bruce_alper_to_anyone = true;
 			if (this.act_1_asked_about_corpse[i]) act_1_asked_about_corpse_to_anyone = true;
 		}
 		for(let i:number = 0;i<3;i++) {
-			var name:string = "Etaoin";
-			var ctx:NLContext = this.contextEtaoin;
+			let name:string = "Etaoin";
+			let ctx:NLContext = this.contextEtaoin;
 			if (i == 1) {
 				ctx = this.contextQwerty;
 				name = "Qwerty";
@@ -834,16 +834,16 @@ class ShrdluGameScript {
 				name = "Shrdlu";
 			}
 			if (ctx != null) {
-				var p1:NLContextPerformative = ctx.lastPerformativeBy(this.playerID);
-				var p2:NLContextPerformative = ctx.lastPerformativeBy(ctx.ai.selfID);
+				let p1:NLContextPerformative = ctx.lastPerformativeBy(this.playerID);
+				let p2:NLContextPerformative = ctx.lastPerformativeBy(ctx.ai.selfID);
 				if (p2 != null && 
 					p2.timeStamp == this.game.in_game_seconds - 1 &&
 					p1 != null) {
 					if (!this.act_1_asked_about_bruce_alper[i]) {
-						var patternq:Term = Term.fromString("perf.q.whois.name(X:[any], Y:[any], name(Y, 'bruce alper'[symbol]))", this.game.ontology);
-						var patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
-						var perfq:Term = p1.performative;
-						var perfa:Term = p2.performative;
+						let patternq:Term = Term.fromString("perf.q.whois.name(X:[any], Y:[any], name(Y, 'bruce alper'[symbol]))", this.game.ontology);
+						let patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
+						let perfq:Term = p1.performative;
+						let perfa:Term = p2.performative;
 						if (patternq.subsumes(perfq, true, new Bindings()) &&
 							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
@@ -856,10 +856,10 @@ class ShrdluGameScript {
 						}
 					}
 					if (!this.act_1_asked_about_corpse[i]) {
-						var patternq:Term = Term.fromString("perf.q.whois.noname(X:[any], 'corpse'[#id])", this.game.ontology);
-						var patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
-						var perfq:Term = p1.performative;
-						var perfa:Term = p2.performative;
+						let patternq:Term = Term.fromString("perf.q.whois.noname(X:[any], 'corpse'[#id])", this.game.ontology);
+						let patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
+						let perfq:Term = p1.performative;
+						let perfa:Term = p2.performative;
 						if (patternq.subsumes(perfq, true, new Bindings()) &&
 							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
@@ -948,8 +948,8 @@ class ShrdluGameScript {
 
 		case 6:
 			// counting useless answers by etaoin or player getting tired:
-			var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
-			var p2:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
+			let p2:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 			if (p1!=null) {
 				if (p1.timeStamp == this.game.in_game_seconds - 1) {
 					// it just happened:
@@ -995,16 +995,16 @@ class ShrdluGameScript {
 
 		case 9:
 			if (this.game.currentPlayer.isIdle()) {
-				var currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
+				let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
 				if (currentRoom != null) {
-					var name:string = currentRoom.name;
+					let name:string = currentRoom.name;
 					if (name == null) name = currentRoom.sort.name;
 					if (name.indexOf("corridor") == -1 &&
 						name != "infirmary" &&
 						name != "bedroom 5" &&
 						name != "aurora station") {
 						if (this.act_1_explored_rooms.indexOf(name) == -1) {
-							var messages:string[] = ["There is no one here...",
+							let messages:string[] = ["There is no one here...",
 													 "No one here either...",
 													 "no one here, let's keep looking...",
 													 "Empty as well?! Ok, let's check one more room..."];
@@ -1082,18 +1082,18 @@ class ShrdluGameScript {
 		
 		case 14:
 			if (this.act_1_state_timer == 0) {
-				var term:Term = Term.fromString("erased('etaoin-memory'[#id])", this.game.ontology);
+				let term:Term = Term.fromString("erased('etaoin-memory'[#id])", this.game.ontology);
 				this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 				this.etaoinSays("perf.inform('david'[#id], #and(V:verb.find(E:'etaoin'[#id], #and(P1:erased(M:'etaoin-memory'[#id]), time.past(P1))), time.past(V)))");
 				this.etaoinSays("perf.inform('david'[#id], verb.need('etaoin'[#id], verb.look-at('shrdlu'[#id],'etaoin-memory'[#id])))");
 
-				var term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
+				let term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 				this.game.etaoinAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);
 				this.game.qwertyAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);
-				var term2:Term = Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
+				let term2:Term = Term.fromString("property.problem('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 				this.game.etaoinAI.addLongTermTerm(term2, PERCEPTION_PROVENANCE);
 				this.game.qwertyAI.addLongTermTerm(term2, PERCEPTION_PROVENANCE);
-				var term3:Term = Term.fromString("property.strange(erased('etaoin-memory'[#id]))", this.game.ontology);
+				let term3:Term = Term.fromString("property.strange(erased('etaoin-memory'[#id]))", this.game.ontology);
 				this.game.etaoinAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 				this.game.qwertyAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 			} else {
@@ -1110,14 +1110,14 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.q.action('david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
 			} else {
 				// waiting for an answer from the player to "would you please find shrdlu?"
-				var p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+				let p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 				if (p!=null) {
 					if (p.timeStamp == this.game.in_game_seconds - 1) {
 						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
 							this.game.etaoinAI.intentions.length == 0 &&
 							this.game.etaoinAI.queuedIntentions.length == 0 &&
 							this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0) {
-							var answer:TermAttribute = p.performative.attributes[1];
+							let answer:TermAttribute = p.performative.attributes[1];
 							if (answer instanceof ConstantTermAttribute) {
 								if ((<ConstantTermAttribute>answer).value == "no" ||
 									(<ConstantTermAttribute>answer).value == "unknown") {
@@ -1161,11 +1161,11 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'garage-key'[#id]))");
 
 				// the player now has the goal to find shrdlue:
-				var term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
+				let term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
 				this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
 				// tell qwerty it can give the key to the player:
-				var idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
+				let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
 				this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
 				this.game.qwertyAI.allowPlayerInto("location-garage", "GARAGE");
 				this.game.etaoinAI.allowPlayerInto("location-garage", "GARAGE");
@@ -1176,23 +1176,23 @@ class ShrdluGameScript {
 		case 19:
 			// detect when player asks about where are the tools:
 			if (!this.act_1_asked_about_tools && this.contextEtaoin != null) {
-				var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 				if (p1 != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
-					var perf:Term = p1.performative;
-					var v:TermAttribute = null;
-					var queryTerms:TermAttribute[] = null;
+					let perf:Term = p1.performative;
+					let v:TermAttribute = null;
+					let queryTerms:TermAttribute[] = null;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis"))) {
 						v = perf.attributes[1];
 						if (v instanceof ConstantTermAttribute) {
 							queryTerms = [v];
 						} else if (v instanceof TermTermAttribute) {
-							var query:Term = (<TermTermAttribute>v).term;
+							let query:Term = (<TermTermAttribute>v).term;
 							queryTerms = NLParser.elementsInList(query, "#and");							
 						}
 					}
 					if (queryTerms != null) {
-						var toolsFound:boolean = false;
+						let toolsFound:boolean = false;
 						for(let ta of queryTerms) {
 							if ((ta instanceof ConstantTermAttribute) &&
 								(<ConstantTermAttribute>ta).value == "wrench") toolsFound = true;
@@ -1205,7 +1205,7 @@ class ShrdluGameScript {
 							this.act_1_asked_about_tools = true;
 //							console.log("this.act_1_asked_about_tools = true");
 							this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'maintenance-key'[#id]))");
-							var idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
+							let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
 							this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
 							this.game.qwertyAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 							this.game.etaoinAI.allowPlayerInto("location-maintenance","MAINTENANCE");
@@ -1215,16 +1215,16 @@ class ShrdluGameScript {
 			}
 
 			if (!this.act_1_asked_about_battery && this.contextEtaoin != null) {
-				var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 				if (p1 != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
-					var perf:Term = p1.performative;
+					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
 						perf.attributes.length>1 &&
 						perf.attributes[1] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						var pattern1:Term = Term.fromString("empty('empty-battery'[#id])", this.game.ontology);
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						let pattern1:Term = Term.fromString("empty('empty-battery'[#id])", this.game.ontology);
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
 							console.log("update_act_1, state 19: detected battery is empty 1");
@@ -1233,10 +1233,10 @@ class ShrdluGameScript {
 					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate")) &&
 							   perf.attributes.length>1 &&
 							   perf.attributes[1] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						var pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
-						var pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						let pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
+						let pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
@@ -1247,10 +1247,10 @@ class ShrdluGameScript {
 							   perf.attributes.length == 3 &&
 							   (perf.attributes[1] instanceof VariableTermAttribute) &&
 							   perf.attributes[2] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[2])).term;
-						var pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
-						var pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[2])).term;
+						let pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
+						let pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
@@ -1263,17 +1263,17 @@ class ShrdluGameScript {
 
 			// detect when player mentions the spacesuit is broken:
 			if (!this.act_1_stated_spacesuit_is_broken && this.contextEtaoin != null) {
-				var p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
+				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
 				if (p1 != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
-					var perf:Term = p1.performative;
+					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
 						perf.attributes.length>1 &&
 						perf.attributes[1] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						var pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
-						var pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						let pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
+						let pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
@@ -1284,9 +1284,9 @@ class ShrdluGameScript {
 						 	    perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))) &&
 							   perf.attributes.length>1 &&
 		  					   perf.attributes[1] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						var pattern1:Term = Term.fromString("verb.repair('etaoin'[#id],'broken-ss'[#id])", this.game.ontology);
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+						let pattern1:Term = Term.fromString("verb.repair('etaoin'[#id],'broken-ss'[#id])", this.game.ontology);
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
@@ -1296,10 +1296,10 @@ class ShrdluGameScript {
 							   perf.attributes.length == 3 &&
 							   (perf.attributes[1] instanceof ConstantTermAttribute) &&
 							   perf.attributes[2] instanceof TermTermAttribute) {
-						var argument:Term = (<TermTermAttribute>(perf.attributes[2])).term;
-						var pattern1:Term = Term.fromString("V2:#and(V3:verb.can(V1, V4:verb.repair(V1, V5:'hypothetical-object'[#id])), V6:spacesuit(V5))", this.game.ontology);
-						var pattern2:Term = Term.fromString("V2:verb.can(V1, V3:verb.repair(V1, V4:'broken-ss'[#id]))", this.game.ontology);
-						var b:Bindings = new Bindings();
+						let argument:Term = (<TermTermAttribute>(perf.attributes[2])).term;
+						let pattern1:Term = Term.fromString("V2:#and(V3:verb.can(V1, V4:verb.repair(V1, V5:'hypothetical-object'[#id])), V6:spacesuit(V5))", this.game.ontology);
+						let pattern2:Term = Term.fromString("V2:verb.can(V1, V3:verb.repair(V1, V4:'broken-ss'[#id]))", this.game.ontology);
+						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
@@ -1359,7 +1359,7 @@ class ShrdluGameScript {
 				    this.game.qwertyAI.currentAction_scriptQueue = null;
 				    this.game.qwertyAI.currentActionHandler = null;
 
-					var currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
+					let currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
 					if (currentRoom.id != "location-as25") {
 						// if we are not in the infirmary, qwerty asks the player to follow it:
 						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
@@ -1376,16 +1376,16 @@ class ShrdluGameScript {
 
 			// go towards david to take the suit:
 			case 2:
-				var target_l:A4Object[] = this.game.findObjectByID("broken-ss");
+				let target_l:A4Object[] = this.game.findObjectByID("broken-ss");
 				if (target_l == null) {
 					this.act_1_stasis_thread_state = 0;
 					this.game.qwertyAI.respondToPerformatives = true;
 				} else {
-					var x1:number = this.game.qwertyAI.robot.x;
-					var y1:number = this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness;
-					var x2:number = target_l[0].x;
-					var y2:number = target_l[0].y+target_l[0].tallness;
-					var d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+					let x1:number = this.game.qwertyAI.robot.x;
+					let y1:number = this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness;
+					let x2:number = target_l[0].x;
+					let y2:number = target_l[0].y+target_l[0].tallness;
+					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
 						if (d>0) {
@@ -1426,7 +1426,7 @@ class ShrdluGameScript {
 					if (this.game.qwertyAI.robot.x == 5*8 &&
 						this.game.qwertyAI.robot.y == 24*8) {
 						// wait for the player:
-						var currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
+						let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
 						if (currentRoom.id == "location-as25") {
 							this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.wait(V0, [space.here])))");
 							this.act_1_stasis_thread_state = 4;
@@ -1465,16 +1465,16 @@ class ShrdluGameScript {
 
 			case 7:
 				// give the suit back to the player
-				var x1:number = this.game.qwertyAI.robot.x;
-				var y1:number = this.game.qwertyAI.robot.y;
-				var x2:number = this.game.currentPlayer.x;
-				var y2:number = this.game.currentPlayer.y;
-				var d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+				let x1:number = this.game.qwertyAI.robot.x;
+				let y1:number = this.game.qwertyAI.robot.y;
+				let x2:number = this.game.currentPlayer.x;
+				let y2:number = this.game.currentPlayer.y;
+				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 				if (d>16) {
 					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer);
 				} else {
 					// give the space suit:
-					var idx:number = 0;
+					let idx:number = 0;
 					for(let i:number = 0;i<this.game.qwertyAI.robot.inventory.length;i++) {
 						if (this.game.qwertyAI.robot.inventory[i].ID == "broken-ss") {
 							idx = i;
@@ -1482,7 +1482,7 @@ class ShrdluGameScript {
 						}
 					}
 					this.game.qwertyAI.robot.inventory.splice(idx,1);
-					var fixedSuit:A4Object = this.game.objectFactory.createObject("workingspacesuit", this.game, false, false);
+					let fixedSuit:A4Object = this.game.objectFactory.createObject("workingspacesuit", this.game, false, false);
 					fixedSuit.ID = "fixed-ss";
 					this.game.currentPlayer.addObjectToInventory(fixedSuit, this.game);
 			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
@@ -1520,7 +1520,7 @@ class ShrdluGameScript {
 			case 10:
 				// waiting for player to go to stasis room:
 				if (this.game.currentPlayer.isIdle()) {
-					var currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
+					let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
 					// "location-as26" is the stasis pod room
 					if (currentRoom != null && currentRoom.id=="location-as26") {
 						this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
@@ -1535,7 +1535,7 @@ class ShrdluGameScript {
 
 			case 11:
 				// waiting for player to interact with the pod with the corpse:
-				var corpsePod:A4Object = this.game.findObjectByIDJustObject("broken-stasis-pod");
+				let corpsePod:A4Object = this.game.findObjectByIDJustObject("broken-stasis-pod");
 				if (!(<A4ObstacleContainer>corpsePod).closed) {
 					this.game.cutSceneActivated = CUTSCENE_CORPSE;
 					this.act_1_stasis_thread_state = 12;
@@ -1572,7 +1572,7 @@ class ShrdluGameScript {
 	   -------------------------------------------------------- */
 	update_act_2() 
 	{
-		var previous_state:number = this.act_2_state;
+		let previous_state:number = this.act_2_state;
 
 		switch(this.act_2_state) {
 		case 0:
@@ -1675,7 +1675,7 @@ class ShrdluGameScript {
 							this.game.etaoinAI.intentions.length == 0 &&
 							this.game.etaoinAI.queuedIntentions.length == 0 &&
 							this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0) {
-							var answer:TermAttribute = p.performative.attributes[1];
+							let answer:TermAttribute = p.performative.attributes[1];
 							if (answer instanceof ConstantTermAttribute) {
 								if ((<ConstantTermAttribute>answer).value == "no" ||
 									(<ConstantTermAttribute>answer).value == "unknown") {
@@ -1742,9 +1742,9 @@ class ShrdluGameScript {
 				this.game.shrdluAI.queuedIntentions.length == 0 &&
 				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
 				// the question has been answered:
-				var lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
+				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
 				if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
-					var answer:TermAttribute = lastPerformative.performative.attributes[1];
+					let answer:TermAttribute = lastPerformative.performative.attributes[1];
 					if (answer instanceof ConstantTermAttribute) {
 						if ((<ConstantTermAttribute>answer).value == "no" ||
 							(<ConstantTermAttribute>answer).value == "unknown") {
@@ -1900,23 +1900,23 @@ class ShrdluGameScript {
 
 	questionAboutBeingAlone(perf:Term) : boolean
 	{
-		var v:TermAttribute = null;
-		var queryTerms:TermAttribute[] = null;
+		let v:TermAttribute = null;
+		let queryTerms:TermAttribute[] = null;
 		if (perf.functor.is_a(this.game.ontology.getSort("perf.q.query")) && perf.attributes.length == 3) {
 			v = perf.attributes[1];
-			var query:Term = (<TermTermAttribute>perf.attributes[2]).term;
+			let query:Term = (<TermTermAttribute>perf.attributes[2]).term;
 			queryTerms = NLParser.elementsInList(query, "#and");
 		} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate")) ||
 				   perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate-negated"))) {
-			var query:Term = (<TermTermAttribute>perf.attributes[1]).term;
+			let query:Term = (<TermTermAttribute>perf.attributes[1]).term;
 			queryTerms = NLParser.elementsInList(query, "#and");
 		}
 		if (queryTerms != null) {
-			var humanFound:boolean = false;
-			var differentThanDavidFound:boolean = false;
+			let humanFound:boolean = false;
+			let differentThanDavidFound:boolean = false;
 			for(let ta of queryTerms) {
 				if (!(ta instanceof TermTermAttribute)) continue;
-				var t:Term = (<TermTermAttribute>ta).term;
+				let t:Term = (<TermTermAttribute>ta).term;
 				if ((t.functor.name == "human" || t.functor.name == "character") &&
 					t.attributes.length == 1 &&
 					t.attributes[0] instanceof VariableTermAttribute) {
@@ -1933,7 +1933,7 @@ class ShrdluGameScript {
 					return true;
 				}
 				if (t.functor.name == "#not") {
-					var t2:Term = (<TermTermAttribute>t.attributes[0]).term;
+					let t2:Term = (<TermTermAttribute>t.attributes[0]).term;
 				 	if (t2.functor.name=="=" &&
 						t2.attributes.length == 2 &&
 						(t2.attributes[0] instanceof VariableTermAttribute) &&
@@ -1950,9 +1950,9 @@ class ShrdluGameScript {
 					}
 				}
 			}
+			if (humanFound && differentThanDavidFound) return true;
 		}
 
-		if (humanFound && differentThanDavidFound) return true;
 		return false;
 	}
 
@@ -1960,17 +1960,17 @@ class ShrdluGameScript {
 	playerAsksQwertyToFixSpacesuit() 
 	{
 		if (this.contextQwerty != null) {
-			var p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
+			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				var perf:Term = p1.performative;
+				let perf:Term = p1.performative;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
 					perf.attributes.length>1 &&
 					perf.attributes[1] instanceof TermTermAttribute) {
-					var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-					var pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
-					var pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
-					var b:Bindings = new Bindings();
+					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+					let pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
+					let pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
+					let b:Bindings = new Bindings();
 					if (pattern1.subsumes(argument, true, b) ||
 						pattern2.subsumes(argument, true, b)) {
 						return true;
@@ -1979,9 +1979,9 @@ class ShrdluGameScript {
 				} else if (perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))  &&
 					perf.attributes.length>1 &&
 					perf.attributes[1] instanceof TermTermAttribute) {
-					var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-					var pattern3:Term = Term.fromString("verb.repair('qwerty'[#id], 'broken-ss'[#id])", this.game.ontology);
-					var b:Bindings = new Bindings();
+					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+					let pattern3:Term = Term.fromString("verb.repair('qwerty'[#id], 'broken-ss'[#id])", this.game.ontology);
+					let b:Bindings = new Bindings();
 					if (pattern3.subsumes(argument, true, b)) return true;
 				}
 
@@ -2005,7 +2005,7 @@ class ShrdluGameScript {
 		pattern = pattern.split("$QWERTY").join("'"+this.qwertyID+"'[#id]");
 		pattern = pattern.split("$ETAOIN").join("'"+this.etaoinID+"'[#id]");
 		pattern = pattern.split("$PLAYER").join("'"+this.playerID+"'[#id]");
-		var term:Term = Term.fromString(pattern, this.game.ontology);
+		let term:Term = Term.fromString(pattern, this.game.ontology);
 		if (term == null) {
 			console.error("qwertyIntention: cannot parse pattern " + pattern);
 		} else {
@@ -2016,8 +2016,8 @@ class ShrdluGameScript {
 
 	qwertyMoves(x:number, y:number, map:A4Map)
 	{
-        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
-        var s:A4Script = new A4Script(A4_SCRIPT_GOTO, map.name, null, 0, false, false);
+        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, map.name, null, 0, false, false);
         s.x = x;
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
@@ -2027,8 +2027,8 @@ class ShrdluGameScript {
 
 	qwertyDropsObject(objectID:string)
 	{
-        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
-        var s:A4Script = new A4Script(A4_SCRIPT_DROP, objectID, null, 0, false, false);
+        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
+        let s:A4Script = new A4Script(A4_SCRIPT_DROP, objectID, null, 0, false, false);
         q.scripts.push(s);
 		this.game.qwertyAI.robot.addScriptQueue(q);
 	}
@@ -2039,11 +2039,11 @@ class ShrdluGameScript {
 		pattern = pattern.split("$QWERTY").join("'"+this.qwertyID+"'[#id]");
 		pattern = pattern.split("$ETAOIN").join("'"+this.etaoinID+"'[#id]");
 		pattern = pattern.split("$PLAYER").join("'"+this.playerID+"'[#id]");
-		var term:Term = Term.fromString(pattern, this.game.ontology);
+		let term:Term = Term.fromString(pattern, this.game.ontology);
 		if (term == null) {
 			console.error("etaoinSays: cannot parse pattern " + pattern);
 		} else {
-			var term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
+			let term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
 									 [new ConstantTermAttribute(this.playerID, this.game.ontology.getSort("#id")), 
 									  new TermTermAttribute(term)]);
 			this.game.etaoinAI.queueIntention(term2, null, null);
@@ -2056,11 +2056,11 @@ class ShrdluGameScript {
 		pattern = pattern.split("$QWERTY").join("'"+this.qwertyID+"'[#id]");
 		pattern = pattern.split("$ETAOIN").join("'"+this.etaoinID+"'[#id]");
 		pattern = pattern.split("$PLAYER").join("'"+this.playerID+"'[#id]");
-		var term:Term = Term.fromString(pattern, this.game.ontology);
+		let term:Term = Term.fromString(pattern, this.game.ontology);
 		if (term == null) {
 			console.error("etaoinSays: cannot parse pattern " + pattern);
 		} else {
-			var term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
+			let term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
 									 [new ConstantTermAttribute(this.playerID, this.game.ontology.getSort("#id")), 
 									  new TermTermAttribute(term)]);
 			this.game.shrdluAI.queueIntention(term2, null, null);
@@ -2090,7 +2090,7 @@ class ShrdluGameScript {
 
     saveToXML() : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         xmlString += "<ShrdluGameScript\n";
 
         // Intro:

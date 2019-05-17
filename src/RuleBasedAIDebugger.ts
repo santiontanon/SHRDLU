@@ -68,15 +68,15 @@ class RuleBasedAIDebugger {
 
 	drawShortTermMemoryTab(x0:number, y0:number, x1:number, y1:number)
 	{		
-		var fontWidth:number = 6;
-		var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
+		let fontWidth:number = 6;
+		let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 		fillTextTopLeft("Short-term Memory", x0+4, y0+4, fontFamily16px, "white");
 		
-		var y:number = y0+4+16+4;
+		let y:number = y0+4+16+4;
 		for(let te of this.AI.shortTermMemory.plainTermList) {
-			var str:string = te.activation + " - " + te.term.toString();
+			let str:string = te.activation + " - " + te.term.toString();
 			while(str.length > maxTextLength) {
-				var tmp:string = str.substring(0,maxTextLength);
+				let tmp:string = str.substring(0,maxTextLength);
 				fillTextTopLeft(tmp, x0+4, y, fontFamily8px, "white");
 				str = "  " + str.substring(maxTextLength);
 				y+=8;
@@ -89,15 +89,15 @@ class RuleBasedAIDebugger {
 
 	drawTermListTab(name:string, l:Term[], x0:number, y0:number, x1:number, y1:number)
 	{
-		var fontWidth:number = 6;
-		var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
+		let fontWidth:number = 6;
+		let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 		fillTextTopLeft(name, x0+4, y0+4, fontFamily16px, "white");
 		
-		var y:number = y0+4+16+4;
+		let y:number = y0+4+16+4;
 		for(let t of l) {
-			var str:string = "- " + t.toString();
+			let str:string = "- " + t.toString();
 			while(str.length > maxTextLength) {
-				var tmp:string = str.substring(0,maxTextLength);
+				let tmp:string = str.substring(0,maxTextLength);
 				fillTextTopLeft(tmp, x0+4, y, fontFamily8px, "white");
 				str = "  " + str.substring(maxTextLength);
 				y+=8;
@@ -110,8 +110,8 @@ class RuleBasedAIDebugger {
 
 	drawLongTermMemoryTab(x0:number, y0:number, x1:number, y1:number, scroll:number)
 	{
-		var fontWidth:number = 6;
-		var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
+		let fontWidth:number = 6;
+		let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 		fillTextTopLeft("Long-term Memory:", x0+4, y0+4, fontFamily16px, "white");
 		
 		let y:number = y0+4+16+4;
@@ -121,10 +121,10 @@ class RuleBasedAIDebugger {
 				scroll_skip++;
 				continue;
 			}
-			var r:Sentence = se.sentence;
-			var str:string = "- ["+se.provenance+"] " + r.toString();
+			let r:Sentence = se.sentence;
+			let str:string = "- ["+se.provenance+"] " + r.toString();
 			while(str.length > maxTextLength) {
-				var tmp:string = str.substring(0,maxTextLength);
+				let tmp:string = str.substring(0,maxTextLength);
 				fillTextTopLeft(tmp, x0+4, y, fontFamily8px, "white");
 				str = "  " + str.substring(maxTextLength);
 				y+=8;
@@ -137,7 +137,7 @@ class RuleBasedAIDebugger {
 
 	drawIntentionsTab(x0:number, y0:number, x1:number, y1:number)
 	{
-		var intentions_l:Term[] = [];
+		let intentions_l:Term[] = [];
 		for(let tmp of this.AI.intentions) {
 			intentions_l.push(tmp[0]);
 		}
@@ -147,19 +147,19 @@ class RuleBasedAIDebugger {
 
 	drawOntologyTab(x0:number, y0:number, x1:number, y1:number)
 	{
-		var fontWidth:number = 6;
-		var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
+		let fontWidth:number = 6;
+		let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 		fillTextTopLeft("Ontology:", x0+4, y0+4, fontFamily16px, "white");
 		
-		var y:number = y0+4+16+4;
-		var x:number = x0+4;
+		let y:number = y0+4+16+4;
+		let x:number = x0+4;
 		for(let s of this.AI.o.getAllSorts()) {
-            var str:string = "- " + s.name + ": [ ";
+            let str:string = "- " + s.name + ": [ ";
             for(let s2 of s.parents) str += s2.name + " ";
             str += "]";
 
 			while(str.length > maxTextLength) {
-				var tmp:string = str.substring(0,maxTextLength);
+				let tmp:string = str.substring(0,maxTextLength);
 				fillTextTopLeft(tmp, x, y, fontFamily8px, "white");
 				str = "  " + str.substring(maxTextLength);
 				y+=8;
@@ -176,18 +176,18 @@ class RuleBasedAIDebugger {
 
 	drawContextTab(x0:number, y0:number, x1:number, y1:number)
 	{
-		var y:number = y0+4;
+		let y:number = y0+4;
 
 		for(let context of this.AI.contexts) {
-			var fontWidth:number = 6;
-			var maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
+			let fontWidth:number = 6;
+			let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 			fillTextTopLeft("Natural Language Context ("+context.ai.selfID + " -> " + context.speaker+"):", x0+4, y, fontFamily16px, "white");
 			y+= 20;
 
 			fillTextTopLeft("Short Term Memory Entities:", x0+4, y, fontFamily8px, "white");
 			y+=8;
 			for(let pe of context.shortTermMemory) {
-				var str:string = "- " + pe.objectID + ": [ ";
+				let str:string = "- " + pe.objectID + ": [ ";
 				for(let t of pe.terms) str += t + " ";
 				str += "]";
 				fillTextTopLeft(str, x0+4, y, fontFamily8px, "white");
@@ -198,7 +198,7 @@ class RuleBasedAIDebugger {
 			fillTextTopLeft("Mentioned Entities:", x0+4, y, fontFamily8px, "white");
 			y+=8;
 			for(let pe of context.mentions) {
-				var str:string = "- " + pe.objectID + " : [ ";
+				let str:string = "- " + pe.objectID + " : [ ";
 				for(let t of pe.terms) str += t + " ";
 				str += "]";
 				fillTextTopLeft(str, x0+4, y, fontFamily8px, "white");
@@ -209,10 +209,10 @@ class RuleBasedAIDebugger {
 			fillTextTopLeft("Performatives:", x0+4, y, fontFamily8px, "white");
 			y+=8;
 			for(let pe of context.performatives) {
-				var str:string = "- '" + pe.text + "'";
+				let str:string = "- '" + pe.text + "'";
 				fillTextTopLeft(str, x0+4, y, fontFamily8px, "white");
 				y+=8;
-				var str:string = "  " + pe.performative;
+				str = "  " + pe.performative;
 				fillTextTopLeft(str, x0+4, y, fontFamily8px, "white");
 				y+=8;
 			}

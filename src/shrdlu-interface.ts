@@ -15,7 +15,7 @@ class BShrdluFrame extends BInterfaceElement {
     drawAlpha(alpha:number)
     {
         // background:
-        var color:string = generateRGBColor(40, 40, 40);
+        let color:string = generateRGBColor(40, 40, 40);
         ctx.fillStyle = color;
         ctx.fillRect(this.x+PIXEL_SIZE*4, this.y+PIXEL_SIZE*4, 
                      this.width-PIXEL_SIZE*8, this.height-PIXEL_SIZE*8);
@@ -75,8 +75,8 @@ class BShrdluTextFrame extends BShrdluFrame {
     {
         super.drawAlpha(alpha);
 
-        var x:number = this.x + 8*PIXEL_SIZE;
-        var y:number = this.y + 8*PIXEL_SIZE + this.fontHeight;
+        let x:number = this.x + 8*PIXEL_SIZE;
+        let y:number = this.y + 8*PIXEL_SIZE + this.fontHeight;
         if (this.centered) {
             x = this.x + this.width/2;
             ctx.textAlign = "center";
@@ -136,7 +136,7 @@ function createShrdluMenu(lines:string[], callbacks:((any, number) => void)[],
                 GLTM:GLTManager)
 {
     BInterface.addElement(new BShrdluFrame(x,y,width,height, GLTM));
-    var by:number = y + 8*PIXEL_SIZE;
+    let by:number = y + 8*PIXEL_SIZE;
     for(let i = 0;i<lines.length;i++) {
         BInterface.addElement(new BShrdluButton(lines[i], font, x, by, width, font_heigth, starting_ID, "white", callbacks[i]));
         starting_ID++;
@@ -147,7 +147,7 @@ function createShrdluMenu(lines:string[], callbacks:((any, number) => void)[],
 
 function getShrdluInstructionsString() : string[]
 {
-    var instructions:string[] = [];
+    let instructions:string[] = [];
     instructions.push("");
     instructions.push(" Controls:");
     instructions.push(" - Move with ARROW KEYS");
@@ -183,8 +183,8 @@ function getShrdluInstructionsString() : string[]
 
 function drawFadeInOverlay(f:number)
 {
-    var offset:number = 8 - Math.floor(8*f);
-    var squareSize:number = 16 - offset*2;
+    let offset:number = 8 - Math.floor(8*f);
+    let squareSize:number = 16 - offset*2;
     ctx.fillStyle = "black";
     for(let y:number = 0;y<192;y+=16) {
         for(let x:number = 0;x<256;x+=16) {
@@ -197,10 +197,10 @@ function drawFadeInOverlay(f:number)
 
 function generateDebugLogForDownload(app:A4EngineApp)
 {
-   //var newline:string = "%0a";    // we need this, if we append the text to the page at the end
-   var newline:string = "\n";
-   var tab:string = "\t";
-   var mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
+   //let newline:string = "%0a";    // we need this, if we append the text to the page at the end
+   let newline:string = "\n";
+   let tab:string = "\t";
+   let mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
    mailContent += "Please email this file to santi.ontanon@gmail.com to help improve this game!" + newline + newline;
    for(let m of app.game.messages) {
        mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
@@ -216,8 +216,8 @@ function generateDebugLogForDownload(app:A4EngineApp)
    
    /*
    // method 1: mailto
-   var mail = "mailto:santi.ontanon@gmail.com?subject=SHRDLU DEMO 1 log&body=" + mailContent + "";
-   var win = window.open(mail, 'emailWindow');
+   let mail = "mailto:santi.ontanon@gmail.com?subject=SHRDLU DEMO 1 log&body=" + mailContent + "";
+   let win = window.open(mail, 'emailWindow');
    if (win && win.open && !win.closed) win.close();
 
    // method 2: append to the page
@@ -231,11 +231,11 @@ function generateDebugLogForDownload(app:A4EngineApp)
 
 function downloadStringAsFile(s:string, fileName:string) 
 {
-   var blob:Blob = new Blob([s], {type: 'text/csv'});
+   let blob:Blob = new Blob([s], {type: 'text/csv'});
    if (window.navigator.msSaveOrOpenBlob) {
        window.navigator.msSaveOrOpenBlob(blob, fileName);
    } else {
-       var elem = window.document.createElement('a');
+       let elem = window.document.createElement('a');
        elem.href = window.URL.createObjectURL(blob);
        elem.download = fileName;
        document.body.appendChild(elem);

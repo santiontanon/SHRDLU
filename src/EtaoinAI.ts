@@ -32,7 +32,7 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
-			var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+			let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
 			xmlhttp.overrideMimeType("text/xml");
 			xmlhttp.open("GET", rulesFileName, false); 
 			xmlhttp.send();
@@ -42,17 +42,17 @@ class EtaoinAI extends A4RuleBasedAI {
 		this.precalculateLocationKnowledge(game, o);
 
 		// get objects the AI cares about:
-		var tmp:A4Object[] = game.findObjectByID("david");
+		let tmp:A4Object[] = game.findObjectByID("david");
 		if (tmp!=null) this.player_object = tmp[tmp.length-1];
 		tmp = game.findObjectByName("communicator");
 		if (tmp!=null) this.communicator_object = tmp[tmp.length-1];
 
-		var attention_IDs:string[] = ["david","communicator","shrdlu","qwerty"];
-		var attention_priorities:number[] = [5,1,1,1];
+		let attention_IDs:string[] = ["david","communicator","shrdlu","qwerty"];
+		let attention_priorities:number[] = [5,1,1,1];
 		for(let i:number = 0;i<attention_IDs.length;i++) {
-			var obj_l:A4Object[] = game.findObjectByID(attention_IDs[i]);
+			let obj_l:A4Object[] = game.findObjectByID(attention_IDs[i]);
 			if (obj_l!=null) {
-				var obj:A4Object = obj_l[obj_l.length-1];
+				let obj:A4Object = obj_l[obj_l.length-1];
 				this.attention.push(new AttentionRecord(obj, attention_priorities[i], 0));
 			}
 		}
@@ -72,7 +72,7 @@ class EtaoinAI extends A4RuleBasedAI {
 			if (this.queuedIntentions.length == 0 &&
 				this.withinEtaoinViewRange(this.game.currentPlayer)) {				
 
-				var term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
+				let term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
 										 [new ConstantTermAttribute("david", this.game.ontology.getSort("#id")), 
 										  new TermTermAttribute(Term.fromString("perf.inform(V0:'david'[#id], oxygen-level('david'[#id],'low'[low]))", this.game.ontology))]);
 				this.queueIntention(term2, null, null);
@@ -97,7 +97,7 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		// attention selection:
 		// pick the object that generates the maximum anxiety:
-		var max_anxiety_object:AttentionRecord = null;
+		let max_anxiety_object:AttentionRecord = null;
 		for(let i:number = 0;i<this.attention.length;i++) {
 			// increment anxiety of objects:
 			this.attention[i].anxiety += this.attention[i].priority;
@@ -109,11 +109,11 @@ class EtaoinAI extends A4RuleBasedAI {
 			}
 		}
 
-		var attention_object:A4Object = null;
-		var attention_object_l:A4Object[] = null;
-		var attention_map:A4Map = null;
-		var attention_x:number = 0;
-		var attention_y:number = 0;
+		let attention_object:A4Object = null;
+		let attention_object_l:A4Object[] = null;
+		let attention_map:A4Map = null;
+		let attention_x:number = 0;
+		let attention_y:number = 0;
 		if (max_anxiety_object != null) {
 			max_anxiety_object.anxiety = 0;
 			attention_object = max_anxiety_object.object;
@@ -134,14 +134,14 @@ class EtaoinAI extends A4RuleBasedAI {
 		}
 
 		// find the AILocation:
-		var location:AILocation = null;
-		var location_idx:number = -1;
-		var occupancyMap:boolean[] = null;
-		var tile_x:number = Math.floor(attention_x/attention_map.tileWidth);
-		var tile_y:number = Math.floor(attention_y/attention_map.tileHeight);
-		var offset:number = tile_x + tile_y*attention_map.width;
+		let location:AILocation = null;
+		let location_idx:number = -1;
+		let occupancyMap:boolean[] = null;
+		let tile_x:number = Math.floor(attention_x/attention_map.tileWidth);
+		let tile_y:number = Math.floor(attention_y/attention_map.tileHeight);
+		let offset:number = tile_x + tile_y*attention_map.width;
 		for(let location_idx2:number = 0;location_idx2<this.game.locations.length;location_idx2++) {
-			var l:AILocation = this.game.locations[location_idx2];
+			let l:AILocation = this.game.locations[location_idx2];
 			for(let i:number = 0;i<l.maps.length;i++) {
 				if (l.maps[i] == attention_map) {
 					if (l.mapOccupancyMaps[i][offset]) {
@@ -163,8 +163,8 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		// perception:
 		if (location != null) {
-			var visibilityRegion:number = attention_map.visibilityRegion(tile_x,tile_y);
-			var perceptionRadius = 10;
+			let visibilityRegion:number = attention_map.visibilityRegion(tile_x,tile_y);
+			let perceptionRadius = 10;
 			this.perception((tile_x-perceptionRadius)*attention_map.tileWidth, 
 							(tile_y-perceptionRadius)*attention_map.tileHeight, 
 							(tile_x+perceptionRadius)*attention_map.tileWidth, 
@@ -175,12 +175,12 @@ class EtaoinAI extends A4RuleBasedAI {
 				max_anxiety_object.object != attention_object &&
 				attention_object_l.length>1) {
 				// the communicator is in the pocket of someone, or in some container:
-				var container:A4Object = attention_object_l[attention_object_l.length-2];
-				var o:A4Object = attention_object_l[attention_object_l.length-1];
+				let container:A4Object = attention_object_l[attention_object_l.length-2];
+				let o:A4Object = attention_object_l[attention_object_l.length-1];
 	//			console.log("comm: " + o.ID + ", container: " + container.ID);
 
-				var term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
-				var term2:Term = new Term(this.cache_sort_verb_have, 
+				let term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
+				let term2:Term = new Term(this.cache_sort_verb_have, 
 										  [new ConstantTermAttribute(container.ID, this.cache_sort_id),
 										   new ConstantTermAttribute(o.ID, this.cache_sort_id)
 	//									   new ConstantTermAttribute(tile_ox, this.cache_sort_number),
@@ -232,7 +232,7 @@ class EtaoinAI extends A4RuleBasedAI {
 			this.baseoutdoors_location = this.game.getAILocationByID("location-aurora-settlement");
 			this.spacervalleysouth_location = this.game.getAILocationByID("spacer-valley-south");
 		}
-		var l:AILocation = this.game.getAILocation(o);
+		let l:AILocation = this.game.getAILocation(o);
 		if (l == null) return false;
 
 		// if the player is inside the station:
