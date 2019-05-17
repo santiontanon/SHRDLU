@@ -329,6 +329,25 @@ class Term {
     }
 
 
+    unifySameFunctor(t:Term, occursCheck:boolean, bindings:Bindings) : boolean
+    {
+        // if they have a different number of attribetus -> return false
+        if (this.attributes.length != t.attributes.length) return false;
+
+        if (this.functor != t.functor) return false;
+
+        // for each attribute:
+        for(let i:number = 0;i<this.attributes.length;i++) {
+            var att1:TermAttribute = this.attributes[i];
+            var att2:TermAttribute = t.attributes[i];
+
+            if (!Term.unifyAttributeSameFunctor(att1, att2, occursCheck, bindings)) return false;
+        }
+
+        return true;
+    }
+
+
     static unifyAttribute(att1:TermAttribute, att2:TermAttribute, occursCheck:boolean, bindings:Bindings) : boolean
     {
         if (att1 == att2) return true;
@@ -363,6 +382,66 @@ class Term {
         if (att1 instanceof TermTermAttribute) {
             if (att2 instanceof TermTermAttribute) {
                 if (!att1.term.unify(att2.term, occursCheck, bindings)) return false;
+            } else if (att2 instanceof ConstantTermAttribute) {
+                return false;
+            }
+        }
+
+        // - if one of them is a variable of a more general or equal sort than the other and that 
+        //   does not occur inside the other (occurs check) -> add binding
+        if ((att1 instanceof VariableTermAttribute) ||
+            (att2 instanceof VariableTermAttribute)) {
+            if ((att1 instanceof VariableTermAttribute) && att1.sort.subsumes(att2.sort)) {
+                if (occursCheck && att2.occursCheck(att1, bindings)) return false;
+                bindings.l.push([<VariableTermAttribute>att1, att2]);
+                return true;
+            }
+            if ((att2 instanceof VariableTermAttribute) && att2.sort.subsumes(att1.sort)) {
+                if (occursCheck && att1.occursCheck(att2, bindings)) return false;
+                bindings.l.push([<VariableTermAttribute>att2, att1]);
+                return true;
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+
+    static unifyAttributeSameFunctor(att1:TermAttribute, att2:TermAttribute, occursCheck:boolean, bindings:Bindings) : boolean
+    {
+        if (att1 == att2) return true;
+
+        // - first of all, apply bindings (in order) if any is a variable to construct temporary terms
+        if (att1 instanceof VariableTermAttribute) {
+            for(let pair of bindings.l) {
+                if (pair[0] == att1) {
+                    return Term.unifyAttributeSameFunctor(pair[1], att2, occursCheck, bindings);
+                }
+            }
+        }
+        if (att2 instanceof VariableTermAttribute) {
+            for(let pair of bindings.l) {
+                if (pair[0] == att2) {
+                    return this.unifyAttributeSameFunctor(att1, pair[1], occursCheck, bindings);
+                }
+            }
+        }
+
+        // - if they are both constants, and are different -> return false
+        if (att1 instanceof ConstantTermAttribute) {
+            if (att2 instanceof ConstantTermAttribute) {
+                if ((<ConstantTermAttribute>att1).value != (<ConstantTermAttribute>att2).value) return false;
+                if (!att1.sort.is_a(att2.sort) && !att2.sort.is_a(att1.sort)) return false;
+            } else if (att2 instanceof TermTermAttribute) {
+                return false;
+            }
+        }
+
+        // - if they are both terms -> recursive call
+        if (att1 instanceof TermTermAttribute) {
+            if (att2 instanceof TermTermAttribute) {
+                if (!att1.term.unifySameFunctor(att2.term, occursCheck, bindings)) return false;
             } else if (att2 instanceof ConstantTermAttribute) {
                 return false;
             }

@@ -790,7 +790,7 @@ class ShrdluGameScript {
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
 					var patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
-					if (patterna.unify((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
+					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
 						this.act_1_asked_about_being_alone_to_etaoin = true;
 						console.log("this.act_1_asked_about_being_alone_to_etaoin = true");
 					}
@@ -808,7 +808,7 @@ class ShrdluGameScript {
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
 					var patterna:Term = Term.fromString("alone('david'[#id])", this.game.ontology);
-					if (patterna.unify((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
+					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
 						this.act_1_asked_about_being_alone_to_qwerty = true;
 						console.log("this.act_1_asked_about_being_alone_to_qwerty = true");
 					}
@@ -844,8 +844,8 @@ class ShrdluGameScript {
 						var patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
 						var perfq:Term = p1.performative;
 						var perfa:Term = p2.performative;
-						if (patternq.unify(perfq, true, new Bindings()) &&
-							patterna.unify(perfa, true, new Bindings())) {
+						if (patternq.subsumes(perfq, true, new Bindings()) &&
+							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
 							this.act_1_asked_about_bruce_alper[i] = true;
 							if (act_1_asked_about_bruce_alper_to_anyone) {
@@ -860,8 +860,8 @@ class ShrdluGameScript {
 						var patterna:Term = Term.fromString("perf.inform.answer('david'[#id], 'unknown'[symbol])", this.game.ontology);
 						var perfq:Term = p1.performative;
 						var perfa:Term = p2.performative;
-						if (patternq.unify(perfq, true, new Bindings()) &&
-							patterna.unify(perfa, true, new Bindings())) {
+						if (patternq.subsumes(perfq, true, new Bindings()) &&
+							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
 							this.act_1_asked_about_corpse[i] = true;
 							if (act_1_asked_about_corpse_to_anyone) {
@@ -1225,9 +1225,9 @@ class ShrdluGameScript {
 						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
 						var pattern1:Term = Term.fromString("empty('empty-battery'[#id])", this.game.ontology);
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b)) {
+						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
-//							console.log("update_act_1, state 19: detected batter is empty");
+							console.log("update_act_1, state 19: detected battery is empty 1");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('david'[#id], #and(F:verb.fill('david'[#id], 'empty-battery'[#id]), space.at(F,'location-powerplant'[#id]) )))");
 						}						
 					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate")) &&
@@ -1237,10 +1237,10 @@ class ShrdluGameScript {
 						var pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
 						var pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b) ||
-							argument.unify(pattern2, true, b)) {
+						if (pattern1.subsumes(argument, true, b) ||
+							pattern2.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
-//							console.log("update_act_1, state 19: detected batter is empty");
+							console.log("update_act_1, state 19: detected battery is empty 2");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('david'[#id], #and(F:verb.fill('david'[#id], #and(BATTERY:[battery], plural(BATTERY))), space.at(F,'location-powerplant'[#id]) )))");
 						}						
 					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis")) &&
@@ -1251,10 +1251,10 @@ class ShrdluGameScript {
 						var pattern1:Term = Term.fromString("battery(V)", this.game.ontology);
 						var pattern2:Term = Term.fromString("#and(full(V:[any]), V4:battery(V))", this.game.ontology);
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b) ||
-							argument.unify(pattern2, true, b)) {
+						if (pattern1.subsumes(argument, true, b) ||
+							pattern2.subsumes(argument, true, b)) {
 							this.act_1_asked_about_battery = true;
-//							console.log("update_act_1, state 19: detected batter is empty");
+							console.log("update_act_1, state 19: detected battery is empty 3");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('david'[#id], #and(F:verb.fill('david'[#id], #and(BATTERY:[battery], plural(BATTERY))), space.at(F,'location-powerplant'[#id]) )))");
 						}						
 					}
@@ -1274,8 +1274,8 @@ class ShrdluGameScript {
 						var pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
 						var pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b) ||
-							argument.unify(pattern2, true, b)) {
+						if (pattern1.subsumes(argument, true, b) ||
+							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
@@ -1287,7 +1287,7 @@ class ShrdluGameScript {
 						var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
 						var pattern1:Term = Term.fromString("verb.repair('etaoin'[#id],'broken-ss'[#id])", this.game.ontology);
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b)) {
+						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
@@ -1300,8 +1300,8 @@ class ShrdluGameScript {
 						var pattern1:Term = Term.fromString("V2:#and(V3:verb.can(V1, V4:verb.repair(V1, V5:'hypothetical-object'[#id])), V6:spacesuit(V5))", this.game.ontology);
 						var pattern2:Term = Term.fromString("V2:verb.can(V1, V3:verb.repair(V1, V4:'broken-ss'[#id]))", this.game.ontology);
 						var b:Bindings = new Bindings();
-						if (argument.unify(pattern1, true, b) ||
-							argument.unify(pattern2, true, b)) {
+						if (pattern1.subsumes(argument, true, b) ||
+							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
@@ -1852,8 +1852,8 @@ class ShrdluGameScript {
 						let pattern2:Term = Term.fromString("#and(verb.find(X, Y), living-being(X))", this.game.ontology);
 						let pattern3a:Term = Term.fromString("#and(#not(=(X,'david'[#id])), #and(space.at(X, 'aurora'[#id]), living-being(X)))", this.game.ontology);
 						let pattern3b:Term = Term.fromString("#and(space.at(X, 'aurora'[#id]), animal(X))", this.game.ontology);
-						if (argument.unify(pattern1, true, new Bindings())) return perf;
-						if (argument.unify(pattern2, true, new Bindings())) return perf;
+						if (pattern1.subsumes(argument, true, new Bindings())) return perf;
+						if (pattern2.subsumes(argument, true, new Bindings())) return perf;
 						if (pattern3a.subsumes(argument, true, new Bindings()) &&
 							!pattern3b.subsumes(argument, true, new Bindings())) return perf;
 					}
@@ -1971,8 +1971,8 @@ class ShrdluGameScript {
 					var pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
 					var pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
 					var b:Bindings = new Bindings();
-					if (argument.unify(pattern1, true, b) ||
-						argument.unify(pattern2, true, b)) {
+					if (pattern1.subsumes(argument, true, b) ||
+						pattern2.subsumes(argument, true, b)) {
 						return true;
 					}	
 
@@ -1982,7 +1982,7 @@ class ShrdluGameScript {
 					var argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
 					var pattern3:Term = Term.fromString("verb.repair('qwerty'[#id], 'broken-ss'[#id])", this.game.ontology);
 					var b:Bindings = new Bindings();
-					if (argument.unify(pattern3, true, b)) return true;
+					if (pattern3.subsumes(argument, true, b)) return true;
 				}
 
 			}

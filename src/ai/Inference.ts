@@ -78,7 +78,7 @@ class InterruptibleResolution
 	step() : boolean
 	{
 		if (DEBUG_resolution) console.log("resolution step:");
-//		var newResolventsWithBindings:[Sentence,Bindings][] = 
+//		let newResolventsWithBindings:[Sentence,Bindings][] = 
 		this.step_internal(this.additionalSentences, this.targetWithBindings, this.occursCheck, true);
 		if (this.internal_step_state == 0) return false;
 		if (this.internal_step_state == 2) return true;	// computation limit reached
@@ -90,19 +90,19 @@ class InterruptibleResolution
 
 		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.targetWithBindings);
 
-		var anyNewResolvent:boolean = false;
+		let anyNewResolvent:boolean = false;
 		this.targetWithBindings = [];
 		for(let [r,b] of this.newResolventsWithBindings) {
 			if (r.terms.length == 0) {
 				// we have found a contradiction!
 				if (DEBUG_resolution) console.log("  - contradiction! (CLOSED: " + this.closed.length + ")");
 				// get the bindings in the variables from the target:
-				var variables:VariableTermAttribute[] = [];
+				let variables:VariableTermAttribute[] = [];
 				for(let ts of this.originalTarget) {
 					variables = variables.concat(ts.getAllVariables());
 				}
 //				console.log("Variables: " + variables);
-				var endResult:Bindings = new Bindings();
+				let endResult:Bindings = new Bindings();
 				for(let [v,t] of b.l) {
 					if (variables.indexOf(v)>=0) {
 						t = t.applyBindings(b);
@@ -112,7 +112,7 @@ class InterruptibleResolution
 				this.endResults.push(endResult);
 				return true;
 			} else {
-				var found:boolean = false;
+				let found:boolean = false;
 				// make sure we are not inferring something we already knew:
 				for(let s of this.closed) {
 					if (s.subsetNoBindings(r)) {
@@ -168,7 +168,7 @@ class InterruptibleResolution
 	stepAccumulatingResults() : boolean
 	{
 		if (DEBUG_resolution) console.log("resolution stepAccumulatingResults:");
-//		var newResolventsWithBindings:[Sentence,Bindings][] = 
+//		let newResolventsWithBindings:[Sentence,Bindings][] = 
 		this.step_internal(this.additionalSentences, this.targetWithBindings, this.occursCheck, false);
 		if (this.internal_step_state == 0) return false;
 		if (this.internal_step_state == 2) return true;	// computation limit reached
@@ -183,28 +183,28 @@ class InterruptibleResolution
 
 		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.targetWithBindings);
 
-		var anyNewResolvent:boolean = false;
+		let anyNewResolvent:boolean = false;
 		this.targetWithBindings = [];
 		for(let [r,b] of this.newResolventsWithBindings) {
 			if (r.terms.length == 0) {
 				// we have found a contradiction!
 				if (DEBUG_resolution) console.log("  - contradiction! (CLOSED: " + this.closed.length + ")");
 				// get the bindings in the variables from the target:
-				var variables:VariableTermAttribute[] = [];
+				let variables:VariableTermAttribute[] = [];
 				for(let ts of this.originalTarget) {
 					variables = variables.concat(ts.getAllVariables());
 				}
 //				console.log("Variables: " + variables);
-				var endResult:Bindings = new Bindings();
+				let endResult:Bindings = new Bindings();
 				for(let [v,t] of b.l) {
 					if (variables.indexOf(v)>=0) {
-						var t2:TermAttribute = t.applyBindings(b);
+						let t2:TermAttribute = t.applyBindings(b);
 						endResult.l.push([v,t2]);
 					}
 				}
 				this.endResults.push(endResult);
 			} else {
-				var found:boolean = false;
+				let found:boolean = false;
 				// make sure we are not inferring something we already knew:
 				for(let s of this.closed) {
 					if (s.subsetNoBindings(r)) {
@@ -259,7 +259,7 @@ class InterruptibleResolution
 	   		      occursCheck:boolean,
 	   		      stopOnFirstContradiction:boolean) : [Sentence,Bindings][]
 	{
-		var resolutions:number = 0;
+		let resolutions:number = 0;
 		if (DEBUG_resolution) console.log("InterruptibleResolution.step_internal with sentences.length = " + sentences.length + ", targetWithBindings.length = " + targetWithBindings.length);		
 		if (this.firstStep) {
 			for(let i:number = 0;i<targetWithBindings.length;i++) {
@@ -277,11 +277,11 @@ class InterruptibleResolution
 			this.internal_step_state_index = 0;
 		}
 		for(;this.internal_step_state_index<targetWithBindings.length;this.internal_step_state_index++) {
-			var s1:Sentence = targetWithBindings[this.internal_step_state_index][0];
-			var b1:Bindings = targetWithBindings[this.internal_step_state_index][1];
+			let s1:Sentence = targetWithBindings[this.internal_step_state_index][0];
+			let b1:Bindings = targetWithBindings[this.internal_step_state_index][1];
 			//for(let [s1,b1] of targetWithBindings) {
 			if (this.KB != null) {
-				var relevantSentences:Sentence[] = this.KB.allPotentialMatchesWithSentenceForResolution(s1, this.ai.o);
+				let relevantSentences:Sentence[] = this.KB.allPotentialMatchesWithSentenceForResolution(s1, this.ai.o);
 				if (DEBUG_resolution) {
 					console.log("    sentences relevant for " + s1.toString() + ": " + relevantSentences.length);
 					if (DEBUG_resolution_detailed) {
@@ -308,7 +308,7 @@ class InterruptibleResolution
 						r[0] = this.resolutionEqualityCheck(r[0]);
 						if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
 						if (r[0] == null) continue;
-						var found:boolean = false;
+						let found:boolean = false;
 						for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
 							if (this.newResolventsWithBindings[i][0].terms.length > 0 &&
 								this.newResolventsWithBindings[i][0].subsetNoBindings(r[0])/* &&
@@ -361,7 +361,7 @@ class InterruptibleResolution
 					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
 					if (r[0] == null) continue;
 
-					var found:boolean = false;
+					let found:boolean = false;
 //					for(let [s,b] of resolventsWithBindings) {
 //						if (r[0].equalsNoBindings(s)) {
 					for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
@@ -395,7 +395,7 @@ class InterruptibleResolution
 					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
 					if (r[0] == null) continue;
 
-					var found:boolean = false;
+					let found:boolean = false;
 //					for(let [s,b] of resolventsWithBindings) {
 //						if (r[0].equalsNoBindings(s)) {
 					for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
@@ -440,11 +440,11 @@ class InterruptibleResolution
 	// Or if there are any terms of the from x = x (which are then removed)
 	resolutionEqualityCheck(s:Sentence) : Sentence
 	{
-		var toDelete:Term[] = [];
+		let toDelete:Term[] = [];
 		for(let i:number = 0;i<s.terms.length;i++) {
 			if (s.terms[i].functor.name == "=" &&
 				s.terms[i].attributes.length == 2) {
-				var equals:number = Term.equalsNoBindingsAttribute(s.terms[i].attributes[0], 
+				let equals:number = Term.equalsNoBindingsAttribute(s.terms[i].attributes[0], 
 							   								       s.terms[i].attributes[1]);
 				if (equals == 0) continue;
 				if ((s.sign[i] && equals==1) ||
@@ -457,7 +457,7 @@ class InterruptibleResolution
 		}
 
 		for(let t of toDelete) {
-			var idx:number = s.terms.indexOf(t);
+			let idx:number = s.terms.indexOf(t);
 			s.terms.splice(idx,1);
 			s.sign.splice(idx,1);
 		}
@@ -467,14 +467,14 @@ class InterruptibleResolution
 
 	resolutionSpatialPredicatesCheck(s:Sentence, ai:RuleBasedAI) : Sentence
 	{
-		var toDelete:Term[] = [];
+		let toDelete:Term[] = [];
 		for(let i:number = 0;i<s.terms.length;i++) {
 			if (s.terms[i].functor.is_a(this.sort_cache_spatial_relation) &&
 				s.terms[i].attributes.length == 2 &&
 				s.terms[i].attributes[0] instanceof ConstantTermAttribute &&
 				s.terms[i].attributes[1] instanceof ConstantTermAttribute) {
 				// check if it's true or false, and see if it has to be eliminated from the sentence:
-				var truth:boolean = ai.checkSpatialRelation(s.terms[i].functor,
+				let truth:boolean = ai.checkSpatialRelation(s.terms[i].functor,
 															(<ConstantTermAttribute>s.terms[i].attributes[0]).value,
 															(<ConstantTermAttribute>s.terms[i].attributes[1]).value,
 															ai.selfID);
@@ -488,7 +488,7 @@ class InterruptibleResolution
 		}
 
 		for(let t of toDelete) {
-			var idx:number = s.terms.indexOf(t);
+			let idx:number = s.terms.indexOf(t);
 			s.terms.splice(idx,1);
 			s.sign.splice(idx,1);
 		}
@@ -522,7 +522,7 @@ class InterruptibleResolution
 										   occursCheck:boolean) : [Sentence,Bindings][]
 	{
 //		console.log("resolutionBetweenSentencesWithBindings: " + s1 + " with " + s2);
-		var resolvents:[Sentence,Bindings][] = [];
+		let resolvents:[Sentence,Bindings][] = [];
 //		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, [], [], new Bindings(), resolvents, occursCheck);
 		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, new Bindings(), resolvents, occursCheck);
 		for(let r of resolvents) {
@@ -542,17 +542,18 @@ class InterruptibleResolution
 			for(let j:number = 0;j<s2.terms.length;j++) {
 				if (s1.sign[i] == s2.sign[j]) continue;
 				
-				var p:Term = s1.terms[i].applyBindings(bindings);
-				var q:Term = s2.terms[j].applyBindings(bindings);
+				let p:Term = s1.terms[i].applyBindings(bindings);
+				let q:Term = s2.terms[j].applyBindings(bindings);
 //				console.log("p: " + p);
 //				console.log("q: " + q);
-				var bindings2:Bindings = new Bindings();
+				let bindings2:Bindings = new Bindings();
 				bindings2 = bindings2.concat(bindings);
-				if (!p.unify(q, occursCheck, bindings2)) continue;
+				// if (!p.unify(q, occursCheck, bindings2)) continue;
+				if (!p.unifySameFunctor(q, occursCheck, bindings2)) continue;
 
 				// only allow steps that replace variables by constants:
 				if (!INFERENCE_allow_variable_to_variable_substitutions) {
-					var anyNonVariable:boolean = false;
+					let anyNonVariable:boolean = false;
 					for(let k:number = bindings.l.length;k<bindings2.l.length;k++) {
 						if (!(bindings2.l[k][1] instanceof VariableTermAttribute)) anyNonVariable = true;
 					}
@@ -560,7 +561,7 @@ class InterruptibleResolution
 				}
 
 				// generate one resolvent:
-				var r:[Sentence,Bindings] = [new Sentence([],[]), bindings2];
+				let r:[Sentence,Bindings] = [new Sentence([],[]), bindings2];
 				for(let i2:number = 0;i2<s1.terms.length;i2++) {
 					if (i == i2) continue;
 					r[0].terms.push(s1.terms[i2].applyBindings(bindings2));
@@ -603,7 +604,7 @@ class InterruptibleResolution
 
 	saveToXML() : string
 	{
-		var str:string = "<InterruptibleResolution>\n";
+		let str:string = "<InterruptibleResolution>\n";
 
 		// ...
 

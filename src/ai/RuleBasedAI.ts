@@ -329,6 +329,12 @@ class RuleBasedAI {
 		this.cache_sort_stateSort = this.o.getSort("#stateSort");
 		this.cache_sort_action_talk = this.o.getSort("action.talk");
 		this.cache_sort_action_follow = this.o.getSort("verb.follow");
+
+		let ontologySentences:Sentence[] = RuleBasedAI.translateOntologyToSentences(o);
+		console.log("Ontology converted to " + ontologySentences.length + " sentences:");
+		for(let s of ontologySentences) {
+			this.longTermMemory.addSentence(s, BACKGROUND_PROVENANCE, 1, 0);
+		}
 	}
 
 
@@ -1923,6 +1929,24 @@ class RuleBasedAI {
 	savePropertiesToXML() : string
 	{
 		return "";
+	}
+
+
+	static translateOntologyToSentences(o:Ontology) : Sentence[]
+	{
+		let sentences:Sentence[] = []
+
+		for(let s of o.getAllSorts()) {
+			if (s.name[0] == "#" || s.name[0] == "~" || s.name[0] == "=") continue;
+			if (s.is_a_string("grammar-concept")) continue;
+			if (s.is_a_string("performative")) continue;
+			for(let parent of s.parents) {
+				let sentence:Sentence = Sentence.fromString("~" + s + "(X:[#id]);"+parent+"(X)", o);
+				sentences.push(sentence);
+			}
+		}
+
+		return sentences;
 	}
 
 

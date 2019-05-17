@@ -16,7 +16,6 @@ var posParser:POSParser = parser.posParser;
 var testAI:RuleBasedAI = new RuleBasedAI(o, parser, 12, 0, DEFAULT_QUESTION_PATIENCE_TIMER); 
 
 var term_unification_l:[string,string,boolean][] = [
-/*
                                         ["actionverb([character])",
                                          "actionverb([character])", 
                                          true],
@@ -71,7 +70,6 @@ var term_unification_l:[string,string,boolean][] = [
                                         ["action.talk(T:[number], X:[character], perf.greet('self'[character]))",
                                          "action.talk('615'[number], 'David'[character], perf.greet('chair'[object]))",
                                          false],
-                                         */
 //                                        ["action.talk(T:[number])",
 //                                         "action.talk('615'[any])",
 //                                         true]        // This test does not work, but I'm unsure if should!
@@ -118,7 +116,7 @@ console.log("-------------------------");
 // inference test, it checks whether the query_str contradicts KB_str
 function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:boolean, o:Ontology)
 {
-    DEBUG_resolution = true;
+    DEBUG_resolution = false;
     DEBUG_resolution_detailed = false;
 
     var KB:SentenceContainer = new SentenceContainer();
@@ -173,7 +171,7 @@ function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpe
     }
 }
 
-/*
+
 resolutionTest(
     ["~space.at(X:[object],Y:[space.location]); ~space.at(X,Y2:[space.location]); =(Y,Y2)",
      "space.at(X:'18':[character], Y:'bedroom'[bedroom])"],
@@ -265,7 +263,7 @@ resolutionTest(
 
 
 // scalability test:
-var experimentSize:number = 10;
+var experimentSize:number = 50;
 var experimentSentences:string[] = ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
                                     "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
                                     "space.at('c1'[#id],'room1'[#id])"];
@@ -278,6 +276,7 @@ for(let i:number = 0;i<experimentSize;i++) {
     }
 }
 
+console.log("scalability test:");
 resolutionTest(experimentSentences, ["space.at('c1'[#id],'room2'[#id])"], true, o);
 resolutionTest(experimentSentences, ["~space.at('c1'[#id],'room2'[#id])"], false, o);
 
@@ -342,8 +341,8 @@ resolutionQueryTest(
     ["~character(X);~space.at(X,'station1'[#id])"],
     2,
     o);
-*/
-/*
+
+
 resolutionQueryTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
@@ -357,6 +356,7 @@ resolutionQueryTest(
      "key('k4'[#id])", "space.at('k4'[#id],'room2'[#id])",
      ],
     ["~key(X);~space.at(X,'station1'[#id])"],
+    4,
     o);
 
 resolutionQueryTest(
@@ -364,11 +364,13 @@ resolutionQueryTest(
      "verb.can('hypothetical-character'[#id], V2:verb.fill('hypothetical-character'[#id], 'h-b':[#id]))",
      "battery('h-b':[#id])"],
     ["~space.at('hypothetical-character'[#id], WHERE:[#id])"],
+    1,
     o);
 
 resolutionQueryTest(
     ["lever(X:'o1'[symbol])"],
     ["~lever(X:[symbol])"],
+    1,
     o);        
 
 resolutionQueryTest(
@@ -383,6 +385,7 @@ resolutionQueryTest(
      "~space.at('room2'[#id],'room1'[#id])",
      "~space.at('room1'[#id],'room2'[#id])"],
     ["~character(X);~space.at(X,WHERE)"],
+    2,
     o);
 
 
@@ -392,8 +395,8 @@ resolutionQueryTest(
     ["~relation.howto(verb.repair('david'[#id],'ss'[#id]),X)"],
     1,
     o);
-*/
-/*
+
+
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
@@ -404,7 +407,6 @@ resolutionTest(
     ["~space.at('david'[#id], 'communicator-range'[#id])"],
     true,    // contradicts
     o);
-*/
 
 // EXAMPLE OF NOT SOUND INFERENCE!
 // - The problem is that I am unifying the functors, when I should not be doing that...
