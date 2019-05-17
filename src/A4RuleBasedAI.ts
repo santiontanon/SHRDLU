@@ -405,7 +405,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 		}
 		if (sourceLocation != null && targetLocation != null) {
-			return sourceLocation.distanceFromLocation(targetLocation);
+			return sourceLocation.distanceFromLocation(targetLocation, this.game);
 		}
 		return null;
 	}

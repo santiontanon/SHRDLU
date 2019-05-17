@@ -145,6 +145,7 @@ function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:bo
 }
 
 
+
 function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpectedResults:number, o:Ontology)
 {
 //    DEBUG_resolution = true;
@@ -408,11 +409,35 @@ resolutionTest(
     true,    // contradicts
     o);
 
-// EXAMPLE OF NOT SOUND INFERENCE!
-// - The problem is that I am unifying the functors, when I should not be doing that...
+
 resolutionTest(
-    ["~space.inside.of(X:[#id], 'earth'[#id]); rock(X)",
-     "space.at('david'[#id], 'earth'[#id])"],
+    ["~space.inside.of(X, Y); space.at(X, Y)",
+     "~space.at(X:[#id], 'earth'[#id]); rock(X)",
+     "space.inside.of('david'[#id], 'earth'[#id])"],
     ["~rock('david'[#id])"],
-    false,    // should not contradict
+    true,    // should contradict
     o);
+
+
+resolutionTest(
+    ["~space.at(X:[#id], 'earth'[#id]); rock(X)",
+     "space.inside.of('david'[#id], 'earth'[#id])"],
+    ["~rock('david'[#id])"],
+    true,    // should contradict
+    o);
+
+resolutionQueryTest(
+    ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
+     "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
+     "human('c1'[#id])",
+     "space.at('c1'[#id],'room1'[#id])",
+     "key('k1'[#id])",
+     "space.at('k1'[#id],'room2'[#id])",
+     "space.at('room1'[#id],'station1'[#id])",
+     "space.at('room2'[#id],'station1'[#id])",
+     "~space.at('room2'[#id],'room1'[#id])",
+     "~space.at('room1'[#id],'room2'[#id])"],
+    ["~character(X);~space.at(X,WHERE)"],
+    2,
+    o);
+

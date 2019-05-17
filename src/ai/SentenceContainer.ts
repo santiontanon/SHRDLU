@@ -355,6 +355,7 @@ class SentenceContainer {
 			for(let sortName in this.sentenceHash) {
 				let s2:Sort = o.getSort(sortName);
 				if (s2.is_a(query.functor) || query.functor.is_a(s2)) {
+//				if (s2 == query.functor) {
 					let l:SentenceEntry[] = this.sentenceHash[sortName];
 //					console.log(l.length + " sentences for " + sortName);
 					for(let se of l) {

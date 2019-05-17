@@ -13,6 +13,7 @@ Note (santi):
 
 var MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY:number = 3;
 
+var ONTOLOGY_PROVENANCE:string = "ontology";
 var BACKGROUND_PROVENANCE:string = "background";
 var PERCEPTION_PROVENANCE:string = "perception";
 var REACTION_PROVENANCE:string = "reaction";
@@ -333,7 +334,7 @@ class RuleBasedAI {
 		let ontologySentences:Sentence[] = RuleBasedAI.translateOntologyToSentences(o);
 		console.log("Ontology converted to " + ontologySentences.length + " sentences:");
 		for(let s of ontologySentences) {
-			this.longTermMemory.addSentence(s, BACKGROUND_PROVENANCE, 1, 0);
+			this.longTermMemory.addSentence(s, ONTOLOGY_PROVENANCE, 1, 0);
 		}
 	}
 
@@ -468,7 +469,8 @@ class RuleBasedAI {
 				hasPrevious = true;
 				if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
 				//if (sentence_xml.getAttribute("timeEnd") != null) timeEnd = Number(sentence_xml.getAttribute("timeEnd"));
-				if (provenance == BACKGROUND_PROVENANCE) {
+				if (provenance == BACKGROUND_PROVENANCE ||
+					provenance == ONTOLOGY_PROVENANCE) {
 					// this was a sentence that already was in the BK, so no need to add it
 					sentence_xml = null;	// end of recursion
 				} else {
@@ -1842,18 +1844,10 @@ class RuleBasedAI {
 		str += "</shortTermMemory>\n";
 
 		str += "<longTermMemory>\n";
-		/*
-		for(let se of this.longTermMemory.plainPreviousSentenceList) {
-			if (se.provenance != BACKGROUND_PROVENANCE) {
-				str += "<previousSentence activation=\""+se.activation+"\" " +
-					   "provenance=\""+se.provenance+"\" " +
-					   "sentence=\""+se.sentence.toStringXML()+"\" "+
-					   "time=\""+se.time+"\"/>\n";
-			}
-		}
-		*/
+
 		for(let se of this.longTermMemory.previousSentencesWithNoCurrentSentence) {
-			if (se.provenance != BACKGROUND_PROVENANCE) {
+			if (se.provenance != BACKGROUND_PROVENANCE &&
+				se.provenance != ONTOLOGY_PROVENANCE) {
 				str += "<previousSentence activation=\""+se.activation+"\" " +
 					   "provenance=\""+se.provenance+"\" " +
 					   "sentence=\""+se.sentence.toStringXML()+"\" "+
@@ -1862,7 +1856,8 @@ class RuleBasedAI {
 			}
 		}
 		for(let se of this.longTermMemory.plainSentenceList) {
-			if (se.provenance != BACKGROUND_PROVENANCE) {
+			if (se.provenance != BACKGROUND_PROVENANCE &&
+				se.provenance != ONTOLOGY_PROVENANCE) {
 				str += this.saveSentenceEntryToXML(se, false);
 			}
 		}
@@ -1936,15 +1931,26 @@ class RuleBasedAI {
 	{
 		let sentences:Sentence[] = []
 
+		// In principle, these are needed for having a complete infernece process, but they make things very slow.
+		// So, instead, I have a special case where I use functor subsumption instead of equality in case one of the two
+		// sentences in resolution just has one term...
+		/*
 		for(let s of o.getAllSorts()) {
 			if (s.name[0] == "#" || s.name[0] == "~" || s.name[0] == "=") continue;
 			if (s.is_a_string("grammar-concept")) continue;
 			if (s.is_a_string("performative")) continue;
 			for(let parent of s.parents) {
-				let sentence:Sentence = Sentence.fromString("~" + s + "(X:[#id]);"+parent+"(X)", o);
-				sentences.push(sentence);
+				if (parent.name == "any") continue;	// no need to go all the way there :)
+				if (s.is_a_string("relation")) {
+					let sentence:Sentence = Sentence.fromString("~" + s + "(X, Y);"+parent+"(X, Y)", o);
+					sentences.push(sentence);
+				} else {
+					let sentence:Sentence = Sentence.fromString("~" + s + "(X);"+parent+"(X)", o);
+					sentences.push(sentence);
+				}
 			}
 		}
+		*/
 
 		return sentences;
 	}

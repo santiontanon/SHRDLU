@@ -348,6 +348,23 @@ class Term {
     }
 
 
+    unifyIgnoringFirstfunctor(t:Term, occursCheck:boolean, bindings:Bindings) : boolean
+    {
+        // if they have a different number of attribetus -> return false
+        if (this.attributes.length != t.attributes.length) return false;
+
+        // for each attribute:
+        for(let i:number = 0;i<this.attributes.length;i++) {
+            var att1:TermAttribute = this.attributes[i];
+            var att2:TermAttribute = t.attributes[i];
+
+            if (!Term.unifyAttributeSameFunctor(att1, att2, occursCheck, bindings)) return false;
+        }
+
+        return true;
+    }
+    
+
     static unifyAttribute(att1:TermAttribute, att2:TermAttribute, occursCheck:boolean, bindings:Bindings) : boolean
     {
         if (att1 == att2) return true;

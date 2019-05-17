@@ -29,8 +29,13 @@ class AILocation {
 	}
 
 
-	distanceFromLocation(l2:AILocation) : number
+	distanceFromLocation(l2:AILocation, game:A4Game) : number
 	{
+		var l1_idx:number = game.locations.indexOf(this);
+		var l2_idx:number = game.locations.indexOf(l2);
+		if (l1_idx >= 0 && l2_idx >= 0 && 
+			(game.location_in[l1_idx][l2_idx] || game.location_in[l2_idx][l1_idx])) return 0;
+
 		for(let map of this.maps) {
 			for(let map2 of l2.maps) {
 				if (map == map2) {

@@ -549,7 +549,22 @@ class InterruptibleResolution
 				let bindings2:Bindings = new Bindings();
 				bindings2 = bindings2.concat(bindings);
 				// if (!p.unify(q, occursCheck, bindings2)) continue;
-				if (!p.unifySameFunctor(q, occursCheck, bindings2)) continue;
+				// special cases, where I can use functor sort subsumption and inference is still sound:
+				// this is so that I don't need all those ontology rules that make everything very slow!
+				if (s1.terms.length == 1) {
+					if (s2.terms.length == 1) {
+						if (!p.functor.is_a(q.functor) && !q.functor.is_a(p.functor)) continue;
+						if (!p.unifyIgnoringFirstfunctor(q, occursCheck, bindings2)) continue;
+					} else {
+						if (!p.functor.is_a(q.functor)) continue;
+						if (!p.unifyIgnoringFirstfunctor(q, occursCheck, bindings2)) continue;
+					}
+				} else if (s2.terms.length == 1) {
+					if (!q.functor.is_a(p.functor)) continue;
+					if (!p.unifyIgnoringFirstfunctor(q, occursCheck, bindings2)) continue;
+				} else {
+					if (!p.unifySameFunctor(q, occursCheck, bindings2)) continue;
+				}
 
 				// only allow steps that replace variables by constants:
 				if (!INFERENCE_allow_variable_to_variable_substitutions) {
