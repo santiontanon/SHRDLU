@@ -89,6 +89,10 @@ class ShrdluGameScript {
 		this.game.shrdluAI.respondToPerformatives = true;	// start responding to random questions from the player
 		this.act = "1";
 
+		// start in the infirmary:
+		this.game.currentPlayer.x = 12*8;
+		this.game.currentPlayer.y = 28*8;
+
 		// start in the garage:
 		//this.game.currentPlayer.x = 864;
 		//this.game.currentPlayer.y = 40;
@@ -127,8 +131,12 @@ class ShrdluGameScript {
 	skip_to_end_of_act_1()
 	{
 		this.skip_to_act_1();
+		// garage
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
+		// infirmary
+		//this.game.currentPlayer.x = 12*8;
+		//this.game.currentPlayer.y = 28*8;
 		this.game.setStoryStateVariable("rover", "working");
 		//this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false));
 		//this.game.setStoryStateVariable("luminiscent-fungi", "taken");

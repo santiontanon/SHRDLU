@@ -489,6 +489,23 @@ class NLGenerator {
 			t = (<TermTermAttribute>t.attributes[0]).term;
 		}
 
+		// Look for the special case of "these is a X in Y", which is of the form #and(type(X), space.at(X, Y))
+		if (tl.length == 2 &&
+			(tl[0] instanceof TermTermAttribute) &&
+			(tl[1] instanceof TermTermAttribute)) {
+			let term1:Term = (<TermTermAttribute>tl[0]).term;
+			let term2:Term = (<TermTermAttribute>tl[1]).term;
+			if (term1.attributes.length == 1 &&
+				term2.attributes.length == 2 &&
+				term2.functor.name == "space.at" &&
+				(term1.attributes[0] instanceof VariableTermAttribute) &&
+				term1.attributes[0] == term2.attributes[0]) {
+				// it's a "there is"!
+				return this.termToEnglish_Inform_ThereIs(term1.functor, term2.attributes[1], speakerID, context);
+			}
+		}
+
+
 //		console.log("termToEnglish_Inform: " + t);
 
 		if (POSParser.sortIsConsideredForTypes(t.functor, this.o) &&
@@ -703,6 +720,24 @@ class NLGenerator {
 		}
 
 		console.error("termToEnglish_Inform: could not render " + pt);
+		return null;
+	}
+
+
+	termToEnglish_Inform_ThereIs(sort:Sort, location:TermAttribute, speakerID:string, context:NLContext) : string
+	{
+		let entityStr:[string, number, string, number] = this.termToEnglish_ConceptEntity(new VariableTermAttribute(sort, null), speakerID, context);
+		if (location instanceof ConstantTermAttribute) {
+			let locationStr:[string, number, string, number] = this.termToEnglish_Entity(location, speakerID, true, context, false, false);
+			if (entityStr != null && locationStr != null) {
+				return "there is "+entityStr[0]+" in "+locationStr[0];
+			}
+		} else if (location instanceof VariableTermAttribute) {
+			var locationStr:string = this.pos.getAdverbString(location.sort);
+			if (entityStr != null && locationStr != null) {
+				return "there is "+entityStr[0]+" " + locationStr;
+			}
+		}
 		return null;
 	}
 

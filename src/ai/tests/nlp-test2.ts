@@ -56,6 +56,7 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
             console.log("  highest priority parse: " + parse.result);
             console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
+            return false;
         } else {
             if (context != null && s.name == "performative") {
                 var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
@@ -111,6 +112,7 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             console.log("  highest priority parse: " + parse.result);
             console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
+            return false;
         } else {
             if (context != null) {
                 var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
@@ -894,6 +896,19 @@ NLParseTestUnifyingListener("glad to meet you too", o.getSort("performative"),  
 NLParseTestUnifyingListener("how do I get in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("how do I get in?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("yep, same here!", o.getSort("performative"),  context, 'etaoin', "perf.ackresponse('etaoin'[#id])");
+NLParseTestUnifyingListener("go forward", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [forward]))");
+NLParseTestUnifyingListener("move backwards", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move(V0, [backward]))");
+NLParseTestUnifyingListener("go north", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [north]))");
+NLParseTestUnifyingListener("go to the left", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go-to(V0, [direction.left]))");
+NLParseTestUnifyingListener("move to the south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move(V0, [south]))");
+NLParseTestUnifyingListener("go to the east a bit", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go-to(V0, [east], [small-amount]))");
+NLParseTestUnifyingListener("head straight", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [forward]))");
+NLParseTestUnifyingListener("turn left", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.rotate(V0, [direction.left]))");
+NLParseTestUnifyingListener("rotate right", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.rotate(V0, [direction.right]))");
+NLParseTestUnifyingListener("push forward", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, [forward]))");
+NLParseTestUnifyingListener("push the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id]))");
+NLParseTestUnifyingListener("push the crate forward", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], [forward]))");
+NLParseTestUnifyingListener("pull from the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.pull(V0, '5'[#id]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

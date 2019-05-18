@@ -540,6 +540,7 @@
     <sort name="verb.connect-to" super="verb.connect"/>
     <sort name="verb.damage" super="verb"/>
     <sort name="verb.injure" super="verb.damage"/>
+    <sort name="verb.rotate" super="verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
@@ -727,6 +728,10 @@
 
     <sort name="name" super="property-with-value,abstract-entity"/>
 
+    <sort name="amount" super="any"/>
+    <sort name="small-amount" super="amount"/>
+    <sort name="large-amount" super="amount"/>
+
     <sort name="size" super="property"/>
     <sort name="big" super="size"/>
     <sort name="great" super="big"/>
@@ -771,8 +776,9 @@
     <sort name="grey" super="color"/>
     <sort name="black" super="color"/>
 
-    <sort name="facing-direction" super="property-with-value,#stateSort"/> <!-- which cardinal direction is a character or obejct facing -->
-    <sort name="cardinal-direction" super="property,abstract-entity"/>
+    <sort name="direction" super="abstract-entity"/>
+    <sort name="facing-direction" super="direction,property-with-value,#stateSort"/> <!-- which cardinal direction is a character or obejct facing -->
+    <sort name="cardinal-direction" super="property,direction"/>
     <sort name="east" super="cardinal-direction"/>
     <sort name="north" super="cardinal-direction"/>
     <sort name="south" super="cardinal-direction"/>
@@ -781,6 +787,11 @@
     <sort name="northwest" super="cardinal-direction,north,west"/>
     <sort name="southeast" super="cardinal-direction,south,east"/>
     <sort name="southwest" super="cardinal-direction,south,west"/>
+
+    <sort name="forward" super="direction,space.location"/>
+    <sort name="backward" super="direction,space.location"/>
+    <sort name="direction.left" super="direction,space.location"/>
+    <sort name="direction.right" super="direction,space.location"/>
 
     <sort name="property.opened" super="property,#stateSort"/>
     <sort name="property.closed" super="property,#stateSort"/>

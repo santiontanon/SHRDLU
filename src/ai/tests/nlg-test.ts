@@ -278,9 +278,9 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remem
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to-access(V2, V4:'room1'[#id])))", "etaoin", "you need to have permission to enter the kitchen");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");
 
-testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can turn on qwerty"); 
+testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can switch on qwerty"); 
 
-testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#id], 'powered.off'[powered.off]), verb.switch-off('etaoin'[#id], 's1'[#id])))", "etaoin", "my ship's state is off because I turn off my ship");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#id], 'powered.off'[powered.off]), verb.switch-off('etaoin'[#id], 's1'[#id])))", "etaoin", "my ship's state is off because I switch off my ship");
 
 testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom"); 
 testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen"); 
@@ -294,3 +294,5 @@ testNLG("perf.request.action(V0:'1'[#id], action.give('1'[#id], #and(V:[instruct
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V0_0:[body], V3:'k1'[#id]))", "etaoin", "a body and your key card");
 
+testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))", "etaoin", "there is a corpse in the kitchen");
+testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,[space.here])))", "etaoin", "there is a corpse here");
