@@ -25,8 +25,8 @@ class ShrdluGameScript {
 	{
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			this.skip_to_act_1();
-			//this.skip_to_end_of_act_1();
+			//this.skip_to_act_1();
+			this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 		}
 
@@ -134,6 +134,8 @@ class ShrdluGameScript {
 		// garage
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
+		this.game.qwertyAI.robot.x = 832;
+		this.game.qwertyAI.robot.y = 40;
 		// infirmary
 		//this.game.currentPlayer.x = 12*8;
 		//this.game.currentPlayer.y = 28*8;
@@ -156,7 +158,7 @@ class ShrdluGameScript {
 		// Infirmary:
 		// this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
 		// East cave:
-		// this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
+		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
 	}
 
 
@@ -1787,6 +1789,39 @@ class ShrdluGameScript {
 			break;
 
 		case 104:
+			// player is interacting with SHRDLU, as long as the player keeps doing things, we are fine, when she stops
+			// asking shrdlu to do things, we give a clue
+			if (this.game.shrdluAI.intentions.length == 0 && 
+				this.game.shrdluAI.queuedIntentions.length == 0 &&
+				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+				// the question has been answered:
+				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
+				if (lastPerformative.performative.functor.is_a_string("perf.request.action") ||
+					lastPerformative.performative.functor.is_a_string("perf.q.action")) {
+					this.act_2_state_timer = 0;
+				}
+			}
+			if (this.act_2_state_timer >= 30*60) {
+				// give a hint:
+				this.queueThoughtBubble("Shrdlu sounded from the northeast. If I can ask him to move in my direction, maybe he's strong enough to push these boulders...");
+				this.act_2_state = 105;
+			}
+			if (this.game.shrdluAI.robot.x < 128) {
+				// SHRDLU is free!
+				this.act_2_state = 106;
+			}
+			break;
+
+		case 105:
+			// same as 104, but we have already given the hint
+			if (this.game.shrdluAI.robot.x < 128) {
+				// SHRDLU is free!
+				this.act_2_state = 106;
+			}
+			break;
+
+		case 106:
+			// SHRDLU is free!!
 			// ...
 			break;
 

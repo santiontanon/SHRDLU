@@ -46,7 +46,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 				var targetLocation:AILocation = ai.game.getAILocationByID(destination.value);
 				if (sourceLocation != null && targetLocation != null) {
 //						console.log(ai.generateAILocationDOTGraph());
-					if (action.functor.is_a(ai.o.getSort("verb.go-out"))) {
+					if (action.functor.is_a(ai.o.getSort("verb.leave"))) {
 						path = ai.pathToGetOutOf(sourceLocation,targetLocation, false);
 					} else {
 						path = ai.pathBetweenLocations(sourceLocation,targetLocation);
@@ -60,7 +60,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 					var targetLocation:AILocation = ai.resolveThere(speakerCharacterID, sourceLocation);
 					if (sourceLocation != null && targetLocation != null) {
 	//						console.log(ai.generateAILocationDOTGraph());
-						if (action.functor.is_a(ai.o.getSort("verb.go-out"))) {
+						if (action.functor.is_a(ai.o.getSort("verb.leave"))) {
 							path = ai.pathToGetOutOf(sourceLocation,targetLocation, false);
 						} else {
 							path = ai.pathBetweenLocations(sourceLocation,targetLocation);
@@ -82,7 +82,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 																 new VariableTermAttribute(ai.o.getSort("any"), "HOW")])],[false])];
 				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention), ai.o));
 			} else if (path.length == 1) {
-				if (action.functor.is_a(ai.o.getSort("verb.go-out"))) {
+				if (action.functor.is_a(ai.o.getSort("verb.leave"))) {
 					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],#not(space.at("+action.attributes[0]+","+action.attributes[1]+"))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				} else {

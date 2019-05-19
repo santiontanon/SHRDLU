@@ -13,6 +13,13 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
+		if (ai.robot.isInVehicle()) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}			
 
 		if (intention.attributes.length!=3 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute) ||

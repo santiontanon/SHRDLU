@@ -106,7 +106,7 @@ class A4AICharacter extends A4Character {
     update(game:A4Game) : boolean
     {
         if (!super.update(game)) return false;
-        this.AI.update(game);
+        if (this.map != null) this.AI.update(game);
 
         return true;
     }

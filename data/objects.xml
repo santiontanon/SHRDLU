@@ -851,7 +851,7 @@
 	</ObjectClass>		
 
 
-	<ObjectClass class="garage-rover" super="obstacle,*rover" name="rover">
+	<ObjectClass class="garage-rover" super="vehicle,*rover" name="rover">
 		<attribute name="tallness" value="16"/>
 		<animation name="idle-right" dx="5" dy="5" period="4" looping="false" file="vehicles.png">0</animation>
 		<animation name="idle-left" dx="5" dy="5" period="4" looping="false" file="vehicles.png">10</animation>

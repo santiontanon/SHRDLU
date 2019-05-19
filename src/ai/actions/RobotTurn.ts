@@ -14,7 +14,8 @@ class RobotTurn_IntentionAction extends IntentionAction {
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
-		if (intention.attributes.length==0 ||
+		if (ai.robot.isInVehicle() || 
+			intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {
 			// we should never get here:
 			if (requester != null) {

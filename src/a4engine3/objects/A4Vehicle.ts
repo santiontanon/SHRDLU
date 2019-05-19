@@ -75,6 +75,12 @@ class A4Vehicle extends A4WalkingObject {
     update(game:A4Game) : boolean
     {
         let ret:boolean = super.update(game);
+        // update the positions/maps of the load:
+        for(let o of this.load) {
+            o.x = this.x;
+            o.y = this.y;
+            o.map = this.map;
+        }
 
         let max_movement_pixels_requested:number = 0;
         

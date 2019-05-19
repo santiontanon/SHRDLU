@@ -16,6 +16,11 @@
 		<attribute name="canSwim" value="false"/>
 		<attribute name="walk_speed" value="16"/>
 		<attribute name="tallness" value="16"/>
+		<attribute name="sprite_offs_x" value="4"/>
+		<attribute name="sprite_offs_y" value="0"/>
+		<attribute name="pixel_width" value="8"/>
+		<attribute name="pixel_height" value="24"/>
+		<attribute name="tallness" value="16"/>
 		<attribute name="direction" value="3"/>
 		<attribute name="strength" value="2"/>
 

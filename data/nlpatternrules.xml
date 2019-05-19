@@ -2828,6 +2828,42 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
     		         [[','] 'please'] '!'*"/>
 
+    <NLPattern name="perf.q.action-go-direction"
+    		   head="perf.q.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         verb(V2, N2, [second-person], T2)
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) [[','] 'please'] ('!'|'?')* 
+    		         #symbolToSort(LSYMBOL,LSORT)"/>
+    <NLPattern name="perf.q.action-go-direction-amount"
+    		   head="perf.q.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], ASORT:[amount]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         verb(V2, N2, [second-person], T2)
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
+    		         adverb(ASYMBOL) #symbolToSort(ASYMBOL,ASORT)
+    		         [[','] 'please'] ('!'|'?')*"/>
+    <NLPattern name="perf.q.action-go-amount-direction"
+    		   head="perf.q.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], ASORT:[amount]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         verb(V2, N2, [second-person], T2)
+    		         adverb(ASYMBOL) #symbolToSort(ASYMBOL,ASORT)
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
+    		         [[','] 'please'] ('!'|'?')*"/>
+
     <!-- get out of here / get out, etc. rule -->
     <NLPattern head="perf.request.action(LISTENER, verb.go(LISTENER, [space.away]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

@@ -20,6 +20,15 @@ class RobotHelp_IntentionAction extends IntentionAction {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.q.how("+requester+", verb.help('"+ai.selfID+"'[#id],"+intention.attributes[1]+")))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		} else if (intention.attributes.length == 3 && (intention.attributes[2] instanceof TermTermAttribute)) {
+
+			if ((<RobotAI>ai).robot.isInVehicle()) {
+				if (requester != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				}
+				return true;
+			}			
+			
 			let nestedIntention:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			if (nestedIntention.attributes.length > 0 &&
 				(nestedIntention.attributes[0] instanceof ConstantTermAttribute)) {

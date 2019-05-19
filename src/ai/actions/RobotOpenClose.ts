@@ -16,6 +16,15 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		var targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 		var door:A4Object = ai.game.findObjectByIDJustObject(targetID);
 		var open:boolean = true;
+
+		if (ai.robot.isInVehicle()) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}			
+
 		if (intention.functor.is_a(ai.o.getSort("action.close"))) {
 			open = false;
 		}

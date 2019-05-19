@@ -15,7 +15,6 @@ var A4CHARACTER_STATE_DYING:number = 12;
 var A4CHARACTER_STATE_IN_VEHICLE_TALKING:number = 13;
 var A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE:number = 14;
 
-
 var A4CHARACTER_COMMAND_IDLE:number = 0;
 var A4CHARACTER_COMMAND_WALK:number = 1;
 // note: "TAKE" turns into "USE" when there is no takeable object, but there is an "useable" object
@@ -1154,8 +1153,16 @@ class A4Character extends A4WalkingObject {
     {
         this.vehicle = v;
         this.vehicle.embark(this);
-        this.state = A4CHARACTER_STATE_IN_VEHICLE;
-        this.stateCycle = 0;
+        if (this.state == A4CHARACTER_STATE_TALKING) {
+            this.state = A4CHARACTER_STATE_IN_VEHICLE_TALKING;
+        } else if (this.state == A4CHARACTER_STATE_THOUGHT_BUBBLE) {
+            this.state = A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE;
+        } else {
+            this.talkingText = null;
+            this.talkingBubble = null;
+            this.state = A4CHARACTER_STATE_IN_VEHICLE;
+            this.stateCycle = 0;
+        }
     }
 
 
@@ -1181,11 +1188,19 @@ class A4Character extends A4WalkingObject {
             }
         }
         if (best_d != null) {
-            this.vehicle.disembark(this);
+            if (this.vehicle != null) this.vehicle.disembark(this);
             this.x = best_x;
             this.y = best_y;
-            this.state = A4CHARACTER_STATE_IDLE;
-            this.stateCycle = 0;
+            if (this.state == A4CHARACTER_STATE_IN_VEHICLE_TALKING) {
+                this.state = A4CHARACTER_STATE_TALKING;
+            } else if (this.state == A4CHARACTER_STATE_IN_VEHICLE_THOUGHT_BUBBLE) {
+                this.state = A4CHARACTER_STATE_THOUGHT_BUBBLE;
+            } else {
+                this.talkingText = null;
+                this.talkingBubble = null;
+                this.state = A4CHARACTER_STATE_IDLE;
+                this.stateCycle = 0;
+            }
             this.vehicle = null;
             return true;
         }
@@ -1213,7 +1228,8 @@ class A4Character extends A4WalkingObject {
 
     isInVehicle() : boolean 
     {
-        return this.vehicle != null;
+        if (this.vehicle != null) return true;
+        return false;
     }
     
 

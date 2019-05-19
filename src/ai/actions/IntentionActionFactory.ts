@@ -31,6 +31,9 @@ class IntentionActionFactory {
 		if (xml.getAttribute("type") == "RobotPutIn_IntentionAction") return RobotPutIn_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotTalk_IntentionAction") return RobotTalk_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotHelp_IntentionAction") return RobotHelp_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotPushPull_IntentionAction") return RobotPushPull_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotEnter_IntentionAction") return RobotEnter_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotExit_IntentionAction") return RobotExit_IntentionAction.loadFromXML(xml, ai);
 
 		return null;
 	}

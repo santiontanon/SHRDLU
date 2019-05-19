@@ -149,7 +149,11 @@ class A4AI {
     navigationCycle(game:A4Game) : A4CharacterCommand
     {
         var subject:A4WalkingObject = this.character;
-        if (this.character.isInVehicle()) subject = this.character.vehicle;
+        if (this.character.isInVehicle()) {
+            return;    // in shrdlu, we don't want the robots to drive vehicles
+            // subject = this.character.vehicle;
+        }
+        if (subject == null) return;
         var command:A4CharacterCommand = null;
         var highest_priority_target:number = -1;
         var highest_priority:number = 0;
@@ -174,7 +178,7 @@ class A4AI {
             this.pathfinding_result_x = -1;
             this.pathfinding_result_y = -1;
             this.pathfinding_result_priority = 0;
-            if (this.navigationBuffer_lastUpdated < this.cycle) this.updateNavigationPerceptionBuffer(true);
+            if (this.navigationBuffer_lastUpdated < this.cycle) this.updateNavigationPerceptionBuffer(game, true);
             this.pathFinding(subject);
         }
 
@@ -531,11 +535,15 @@ class A4AI {
     }
 
 
-    updateNavigationPerceptionBuffer(force:boolean)
+    updateNavigationPerceptionBuffer(game:A4Game, force:boolean)
     {
         var subject:A4Object = this.character;
-        if (this.character.isInVehicle()) subject = this.character.vehicle;
-        
+        if (this.character.isInVehicle()) {
+            return;    // in shrdlu, we don't want the robots to drive vehicles
+            // subject = this.character.vehicle;
+        }
+        if (subject == null) return;
+
         if (!force && this.navigationBuffer!=null && this.navigationBuffer_lastUpdated > this.cycle-this.period) return;
 
         if (this.navigationBuffer == null) {
@@ -706,7 +714,7 @@ class A4AI {
         if (w.parameterTypes[5] == WME_PARAMETER_SYMBOL) {
             if (this.navigationBuffer_lastUpdated == -1 ||
                 this.navigationBuffer_lastUpdated <= this.cycle-this.period) {
-                this.updateNavigationPerceptionBuffer(false);
+                this.updateNavigationPerceptionBuffer(a_game, false);
             }
             var target:A4Object = w.sourceObject;
             if (target!=null && !this.navigationBuffer_map.contains(target)) target = null;

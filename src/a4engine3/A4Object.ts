@@ -165,6 +165,18 @@ class A4Object {
         } else if (name == "tallness") {
             this.tallness = Number(attribute_xml.getAttribute("value"));
             return true;
+        } else if (name == "sprite_offs_x") {
+            this.sprite_offs_x = Number(attribute_xml.getAttribute("value"));
+            return true;
+        } else if (name == "sprite_offs_y") {
+            this.sprite_offs_y = Number(attribute_xml.getAttribute("value"));
+            return true;
+        } else if (name == "pixel_width") {
+            this.pixel_width = Number(attribute_xml.getAttribute("value"));
+            return true;
+        } else if (name == "pixel_height") {
+            this.pixel_height = Number(attribute_xml.getAttribute("value"));
+            return true;
         } else if (name == "drawDarkIfNoLight") {
             this.drawDarkIfNoLight = false;
             if (attribute_xml.getAttribute("value") == "true") this.drawDarkIfNoLight = true;
@@ -261,7 +273,11 @@ class A4Object {
         xmlString += this.saveObjectAttributeToXML("interacteable",this.interacteable) + "\n";
         xmlString += this.saveObjectAttributeToXML("burrowed",this.burrowed) + "\n";
         xmlString += this.saveObjectAttributeToXML("direction",this.direction) + "\n";
-        xmlString += this.saveObjectAttributeToXML("tallness",this.tallness) + "\n";
+        if (this.tallness != 0) xmlString += this.saveObjectAttributeToXML("tallness",this.tallness) + "\n";
+        if (this.sprite_offs_x != 0) xmlString += this.saveObjectAttributeToXML("sprite_offs_x",this.sprite_offs_x) + "\n";
+        if (this.sprite_offs_y != 0) xmlString += this.saveObjectAttributeToXML("sprite_offs_y",this.sprite_offs_y) + "\n";
+        if (this.pixel_width != 0) xmlString += this.saveObjectAttributeToXML("pixel_width",this.pixel_width) + "\n";
+        if (this.pixel_height != 0) xmlString += this.saveObjectAttributeToXML("pixel_height",this.pixel_height) + "\n";
         if (!this.drawDarkIfNoLight) xmlString += this.saveObjectAttributeToXML("drawDarkIfNoLight",this.drawDarkIfNoLight) + "\n";
 
         var onStarttagOpen:boolean = false;
@@ -375,7 +391,8 @@ class A4Object {
     draw(offsetx:number, offsety:number, game:A4Game)
     {
         if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
-            this.animations[this.currentAnimation].draw((this.x + offsetx), (this.y + offsety));
+            this.animations[this.currentAnimation].draw((this.x + offsetx) - this.sprite_offs_x, (this.y + offsety) - this.sprite_offs_y);
+//            this.animations[this.currentAnimation].draw((this.x + offsetx), (this.y + offsety));
         }
     }
 
@@ -384,7 +401,8 @@ class A4Object {
     {
         if (this.drawDarkIfNoLight) {
             if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
-                this.animations[this.currentAnimation].drawDark((this.x + offsetx), (this.y + offsety));
+                this.animations[this.currentAnimation].drawDark((this.x + offsetx) - this.sprite_offs_x, (this.y + offsety) - this.sprite_offs_y);
+//                this.animations[this.currentAnimation].drawDark((this.x + offsetx), (this.y + offsety));
             }
         } else {
             this.draw(offsetx, offsety, game);
@@ -511,6 +529,7 @@ class A4Object {
 
     getPixelWidth():number
     {
+        if (this.pixel_width != 0) return this.pixel_width;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_width_cache;
         if (this.currentAnimation<0) return 0;
         var a:A4Animation = this.animations[this.currentAnimation];
@@ -524,6 +543,7 @@ class A4Object {
 
     getPixelHeight():number
     {
+        if (this.pixel_height != 0) return this.pixel_height;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_height_cache;
         if (this.currentAnimation<0) return 0;
         var a:A4Animation = this.animations[this.currentAnimation];
@@ -743,6 +763,14 @@ class A4Object {
     sort:Sort;
     x:number;
     y:number;
+
+    // modifiers to the shape:
+    sprite_offs_x:number = 0;
+    sprite_offs_y:number = 0;
+    pixel_width:number = 0;    // if these are != 0 they are used, otherwise, widht/height are calculated from the current Animation
+    pixel_height:number = 0;
+    tallness:number = 0;
+
     //layer:number;
     map:A4Map = null;
     animations:A4Animation[] = null;
@@ -770,7 +798,6 @@ class A4Object {
 
     direction:number = A4_DIRECTION_NONE;
 
-    tallness:number = 0;
 
     // scripts:
     eventScripts:A4EventRule[][] = new Array(A4_NEVENTS);

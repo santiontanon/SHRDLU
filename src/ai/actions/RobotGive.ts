@@ -14,6 +14,14 @@ class RobotGive_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+		if (ai.robot.isInVehicle()) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}			
+
 		var targetID:string = null;
 		if (intention.attributes.length>=3) {
 			targetID = (<ConstantTermAttribute>(intention.attributes[2])).value

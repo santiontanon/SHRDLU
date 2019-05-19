@@ -9,8 +9,8 @@ var A4_SCRIPT_IF:number = 26;
 
 // character scripts:
 var A4_SCRIPT_TELEPORT:number = 3;
-var A4_SCRIPT_GOTO:number = 4;
-var A4_SCRIPT_GOTO_CHARACTER:number = 57;
+var A4_SCRIPT_GOTO:number = 4;            // go to some coordinates
+var A4_SCRIPT_GOTO_CHARACTER:number = 57; // go to some target object ("character" is a legacy name)
 var A4_SCRIPT_USE:number = 6;
 var A4_SCRIPT_OPENDOORS:number = 7;
 var A4_SCRIPT_TALK:number = 9;
@@ -271,6 +271,10 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
         if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
             return SCRIPT_FINISHED;
         } else {
+            if (o.map != map && script.stopAfterGoingThroughABridge) {
+                // we went through a bridge, stop!
+                return SCRIPT_FINISHED;
+            }
             let wme:WME = new WME("object",0);
             wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
             wme.addParameter(script.x, WME_PARAMETER_INTEGER);
@@ -1449,10 +1453,15 @@ class A4Script {
                         break;
 
                     case A4_SCRIPT_TELEPORT:
+                        s.x = Number(xml.getAttribute("x"));
+                        s.y = Number(xml.getAttribute("y"));
+                        s.ID = xml.getAttribute("map");
+                        break;
                     case A4_SCRIPT_GOTO:
                         s.x = Number(xml.getAttribute("x"));
                         s.y = Number(xml.getAttribute("y"));
                         s.ID = xml.getAttribute("map");
+                        if (xml.getAttribute("stopAfterGoingThroughABridge") == "true") s.stopAfterGoingThroughABridge = true;
                         //console.log("goto XML: " + xml);
                         //console.log("goto XML.ID: " + s.ID);
                         break;
@@ -1738,11 +1747,18 @@ class A4Script {
                 break;
             }
             case A4_SCRIPT_TELEPORT:
+            {
+                xmlString += " x=\"" + this.x + "\"";
+                xmlString += " y=\"" + this.y + "\"";
+                if (this.ID!=null) xmlString += " map=\"" + this.ID + "\"";
+                break;                
+            }
             case A4_SCRIPT_GOTO:
             {
                 xmlString += " x=\"" + this.x + "\"";
                 xmlString += " y=\"" + this.y + "\"";
                 if (this.ID!=null) xmlString += " map=\"" + this.ID + "\"";
+                if (this.stopAfterGoingThroughABridge) xmlString += " stopAfterGoingThroughABridge=\"" + this.stopAfterGoingThroughABridge + "\"";
                 break;
             }
             case A4_SCRIPT_GOTO_CHARACTER:
@@ -2065,6 +2081,7 @@ class A4Script {
     thought:boolean = false;
     wait:boolean = false;
     consume:boolean = false;
+    stopAfterGoingThroughABridge:boolean = false;    // used in the GOTO script
 
     state:number = 0;
     if_state:number = 0;

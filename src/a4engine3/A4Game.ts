@@ -4,7 +4,7 @@ var SHRDLU_HUD_STATE_MESSAGES_INPUT:number = 1;
 var SHRDLU_HUD_STATE_INVENTORY:number = 2;
 var SHRDLU_HUD_STATE_SPLIT_INVENTORY:number = 3;
 
-var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 2*50*60;    // 2 minutes of game time
+var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 4*50*60;    // 4 minutes of game time
 var COMMUNICATOR_CONNECTION_TIMEOUT:number = 50*60;    // 1 minute of game time
 
 var SHRDLU_START_DATE:number = 45186163200;    // Thursday, October 21st, 2432
@@ -930,16 +930,9 @@ class A4Game {
             var m:A4Map = wr.map;
             var createRecord:boolean = wr.o.isCharacter() || wr.o.isVehicle();
             var acceptWarp:boolean = true;
-            /*
-            if (wr.o.isCharacter() && (<A4Character>(wr.o)).vehicle!=null &&
-                (<A4Character>(wr.o)).vehicle.map==wr.map) {
-                acceptWarp = true;
-            } else {
-            */
             if (createRecord &&
                 m!=null &&
                 !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
-            //}
             
             if (acceptWarp) {
                 var isCurrentPlayer:boolean = (wr.o == this.currentPlayer);
@@ -2260,9 +2253,19 @@ class A4Game {
         rover.map.removeObject(rover);
         this.requestDeletion(rover);
 
-        // 3) teleport the player, and embark
+        // 3) teleport the player, and any other robots that were inside, and embark
         player.warp(336, 408, map);
         player.embark(newRover);
+        if (this.qwertyAI.robot.vehicle == rover) {
+            this.qwertyAI.robot.disembark();
+            this.qwertyAI.robot.warp(336, 408, map);
+            this.qwertyAI.robot.embark(newRover);
+        }
+        if (this.shrdluAI.robot.vehicle == rover) {
+            this.shrdluAI.robot.disembark();
+            this.shrdluAI.robot.warp(336, 408, map);
+            this.shrdluAI.robot.embark(newRover);
+        }
     }
 
 
@@ -2275,7 +2278,6 @@ class A4Game {
         let map:A4Map = this.getMap("Aurora Station")
         if (map == null) return false;
         if (!map.walkable(848, 72, 40, 40, newRover)) return false;
-        if (!map.walkable(848, 112, 16, 16, newRover)) return false;
         newRover.warp(848, 72, map);
 
         // 2) remove rover from the outside
@@ -2285,8 +2287,22 @@ class A4Game {
         rover.map.removeObject(rover);
         this.requestDeletion(rover);
 
-        // 3) teleport the player, and embark
-        this.currentPlayer.warp(848+8, 112-16, map);
+        // 3) teleport the player, and any robots in the vehicle, and disembark
+        this.currentPlayer.warp(848, 72, map);
+        this.currentPlayer.embark(newRover);
+        this.currentPlayer.disembark();
+
+        if (this.qwertyAI.robot.vehicle == rover) {
+            this.qwertyAI.robot.warp(848, 72, map);
+            this.qwertyAI.robot.embark(newRover);
+            this.qwertyAI.robot.disembark();
+        }
+        if (this.shrdluAI.robot.vehicle == rover) {
+            this.shrdluAI.robot.warp(848, 72, map);
+            this.shrdluAI.robot.embark(newRover);
+            this.shrdluAI.robot.disembark();
+        }
+
         return true;
     }
 

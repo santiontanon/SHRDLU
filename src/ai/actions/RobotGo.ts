@@ -14,6 +14,14 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
+		if (ai.robot.isInVehicle()) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}			
+
 		if (intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {
 			// we should never get here:
@@ -29,6 +37,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let destinationX:number = 0;
 		let destinationY:number = 0;
 		let hasPermission:boolean = true;
+		let stopAfterGoingThroughABridge:boolean = false;
 
 		// find the target destination:
 		if (intention.functor.name == "verb.come-back" ||
@@ -39,19 +48,29 @@ class RobotGo_IntentionAction extends IntentionAction {
 			 intention.attributes[1].sort.is_a(ai.o.getSort("space.here"))) &&
 			requester != null &&
 			requester instanceof ConstantTermAttribute) {
-			// destination is the position of the speaker:
-			let requesterID:string = (<ConstantTermAttribute>requester).value;
-			let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);
-			if (targetObject != null) {
-				destinationMap = targetObject.map;
-				destinationX = targetObject.x;
-				destinationY = targetObject.y;
-			}
-			if (targetObject == null) {
-				// we should never get here:
+			if (ai.visionActive) {
+				// destination is the position of the speaker:
+				let requesterID:string = (<ConstantTermAttribute>requester).value;
+				let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);
+				if (targetObject != null) {
+					destinationMap = targetObject.map;
+					destinationX = targetObject.x;
+					destinationY = targetObject.y+targetObject.tallness;
+				}
+				if (targetObject == null) {
+					// we should never get here:
+					if (requester != null) {
+						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+						let term:Term = Term.fromString(tmp, ai.o);
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					}
+					return true;
+				}
+			} else {
 				if (requester != null) {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-					let term:Term = Term.fromString(tmp, ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.see('"+ai.selfID+"'[#id], "+requester+")))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				}
 				return true;
@@ -203,6 +222,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 						destinationMap = ai.robot.map;
 						destinationX = x;
 						destinationY = y+ai.robot.tallness;
+						stopAfterGoingThroughABridge = true;
 			        } else {
 			        	// obstacle!
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #and(obstacle(X), space.at(X, [space.here]))))";					
@@ -238,7 +258,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (destinationMap == null) {
 					cause = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 				} else {
-					cause = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
+					if (ai.selfID == "qwerty") {
+						cause = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
+					}
 				}
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
@@ -256,6 +278,7 @@ class RobotGo_IntentionAction extends IntentionAction {
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
         s.x = destinationX;
         s.y = destinationY;
+        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
         q.scripts.push(s);
 		ai.currentAction_scriptQueue = q;
 		ai.currentActionHandler = null;

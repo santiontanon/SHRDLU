@@ -169,7 +169,7 @@ class EtaoinAI extends A4RuleBasedAI {
 							(tile_y-perceptionRadius)*attention_map.tileHeight, 
 							(tile_x+perceptionRadius)*attention_map.tileWidth, 
 							(tile_y+perceptionRadius)*attention_map.tileHeight, 
-						    location, attention_map, visibilityRegion, occupancyMap);
+						    location, attention_map, visibilityRegion, occupancyMap, null);
 
 			if (max_anxiety_object.object.name == "communicator" &&
 				max_anxiety_object.object != attention_object &&

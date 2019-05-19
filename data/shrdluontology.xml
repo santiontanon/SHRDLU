@@ -482,10 +482,10 @@
     <sort name="verb.come-to" super="verb.come"/>
     <sort name="verb.access" super="verb"/>
     <sort name="verb.enter" super="verb.go,verb.access"/>
+    <sort name="verb.board" super="verb.enter"/>
     <sort name="verb.reach" super="verb.go-to"/>
-    <sort name="verb.go-out" super="verb.go"/>
+    <sort name="verb.leave" super="verb.go"/>
     <sort name="verb.enumerate" super="verb"/>
-    <sort name="verb.leave" super="verb"/>
     <sort name="verb.arrive" super="verb"/>
     <sort name="verb.arrive-to" super="verb.arrive"/>
     <sort name="verb.define" super="verb"/>

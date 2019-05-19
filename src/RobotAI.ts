@@ -10,6 +10,8 @@ class RobotAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new RobotFollow_IntentionAction());
 
 		this.intentionHandlers.push(new RobotTalk_IntentionAction());
+		this.intentionHandlers.push(new RobotEnter_IntentionAction());
+		this.intentionHandlers.push(new RobotExit_IntentionAction());
 		this.intentionHandlers.push(new RobotGo_IntentionAction());
 		this.intentionHandlers.push(new RobotTakeTo_IntentionAction());
 		this.intentionHandlers.push(new RobotStop_IntentionAction());
@@ -124,7 +126,7 @@ class RobotAI extends A4RuleBasedAI {
 		}
 		//console.log("RobotAI: attention = " + attention_object.name + " at " + attention_map.name + ", " + location.name);
 
-		let visibilityRegion:number = this.robot.map.visibilityRegion(tile_x,tile_y);
+		let visibilityRegion:number = attention_map.visibilityRegion(tile_x,tile_y);
 
 		// perception:
 		for(let o of this.robot.inventory) {
@@ -145,11 +147,23 @@ class RobotAI extends A4RuleBasedAI {
 			}
 		}
 
-		this.perception((tile_x-this.perceptionRadius)*attention_map.tileWidth, 
-						(tile_y-this.perceptionRadius)*attention_map.tileHeight, 
-						(tile_x+this.perceptionRadius)*attention_map.tileWidth, 
-						(tile_y+this.perceptionRadius)*attention_map.tileHeight, 
-					    location, attention_map, visibilityRegion, occupancyMap);
+		if (this.visionActive) {
+			this.perception((tile_x-this.perceptionRadius)*attention_map.tileWidth, 
+							(tile_y-this.perceptionRadius)*attention_map.tileHeight, 
+							(tile_x+this.perceptionRadius)*attention_map.tileWidth, 
+							(tile_y+this.perceptionRadius)*attention_map.tileHeight, 
+						    location, attention_map, visibilityRegion, occupancyMap, null);
+		} else {
+			this.perception((tile_x-this.perceptionRadius)*attention_map.tileWidth, 
+							(tile_y-this.perceptionRadius)*attention_map.tileHeight, 
+							(tile_x+this.perceptionRadius)*attention_map.tileWidth, 
+							(tile_y+this.perceptionRadius)*attention_map.tileHeight, 
+						    location, attention_map, visibilityRegion, occupancyMap, 
+						    [(tile_x-2)*attention_map.tileWidth, 
+							 (tile_y-2)*attention_map.tileHeight, 
+							 (tile_x+2)*attention_map.tileWidth, 
+							 (tile_y+2)*attention_map.tileHeight]);
+		}
 
 		if (this.canSee("etaoin")) {
 			if (this.etaoin_perception_term == null) {
@@ -159,7 +173,7 @@ class RobotAI extends A4RuleBasedAI {
 		}
 
 		if (location != null) {
-			if (this.robot.map.name == "Aurora Station") {
+			if (attention_map.name == "Aurora Station") {
 				this.addTermToPerception(Term.fromString("temperature('"+location.id+"'[#id],'"+this.game.aurora_station_temperature_sensor_indoors+"'[temperature.unit.celsius])", this.o));				
 			} else {
 				this.addTermToPerception(Term.fromString("temperature('"+location.id+"'[#id],'"+this.game.aurora_station_temperature_sensor_outdoors+"'[temperature.unit.celsius])", this.o));
@@ -247,10 +261,11 @@ class RobotAI extends A4RuleBasedAI {
 
 	canHear(objectID:string)
 	{
+		let map:A4Map = this.robot.map;
 		// etaoin exception:
 		if (objectID == "etaoin") {
-			if (this.robot.map.name == "Aurora Station" ||
-				this.robot.map.name == "Aurora Station Outdoors") return true;
+			if (map.name == "Aurora Station" ||
+				map.name == "Aurora Station Outdoors") return true;
 		}
 
 		// exception of the player through the communicator:
@@ -260,7 +275,6 @@ class RobotAI extends A4RuleBasedAI {
 
 		let o:A4Object = this.game.findObjectByIDJustObject(objectID);
 		if (o == null) return false;
-		let map:A4Map = this.robot.map;
 		if (map != o.map) return false;
 		let dx:number = this.robot.x - o.x;
 		let dy:number = this.robot.y - o.y;
