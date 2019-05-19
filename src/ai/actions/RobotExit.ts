@@ -38,7 +38,7 @@ class RobotExit_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				term = Term.fromString("perf.request.action('david'[#id], verb.bring('david'[#id], 'shrdlu'[#id], 'location-aurora-station'[#id]))", ai.o);
+				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.request.action('david'[#id], verb.bring('david'[#id], 'shrdlu'[#id], 'location-aurora-station'[#id])))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;

@@ -216,7 +216,9 @@
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>
 	<sentence provenance="background" sentence="~character(X:[#id]); ~alive(X); verb.can(X, action.talk(X))"/>
 	<sentence provenance="background" sentence="~robot(X:[#id]); verb.can(X, verb.walk(X))"/>
+	<sentence provenance="background" sentence="~robot(X:[#id]); verb.can(X, verb.move(X))"/>
 	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.walk(X))"/>
+	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.move(X))"/>
 	<sentence provenance="background" sentence="verb.can(Q:'qwerty'[#id], verb.heal(Q))"/>
 	<sentence provenance="background" sentence="~clothing(X:[#id]); verb.can(Q:'qwerty'[#id], verb.repair(Q, X))"/>
 	<sentence provenance="background" sentence="verb.can(etaoin:[#id], action.open(etaoin:[#id], X)); ~door(X)"/>
