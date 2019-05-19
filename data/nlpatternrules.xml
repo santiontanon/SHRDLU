@@ -94,6 +94,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 ('how' verb('verb.be'[symbol], N, [second-person], T) 'you' ['doing']|
 			   		  'how' 'do' 'you' 'do'|
+			   		  'are' 'you' 'ok'|
 			   		  'how' verb('verb.be'[symbol], [singular], [third-person], T) 'it' 'going')
 			   		 ('!'|'?')*"/>
 

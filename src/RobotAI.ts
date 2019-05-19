@@ -226,7 +226,7 @@ class RobotAI extends A4RuleBasedAI {
                     this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
                 }
             } else if (retval == SCRIPT_NOT_FINISHED) {
-            	// see if we are stuck in front of a door (and we will not accidentally let th eplayer into a forbidden area):
+            	// see if we are stuck in front of a door (and we will not accidentally let the player into a forbidden area):
                 let collisions:A4Object[] = this.robot.map.getAllObjectCollisionsWithOffset(this.robot, direction_x_inc[this.robot.direction], direction_y_inc[this.robot.direction]);
                 for(let o of collisions) {
                     if ((o instanceof A4Door) &&
@@ -244,7 +244,7 @@ class RobotAI extends A4RuleBasedAI {
                 this.currentAction_requester = null;
                 this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
             }
-        }
+        }        
     }
 
 

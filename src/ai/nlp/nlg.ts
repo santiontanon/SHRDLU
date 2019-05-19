@@ -871,7 +871,8 @@ class NLGenerator {
 				   	t.functor.name == "verb.go" ||
 				   	t.functor.name == "verb.guide" ||
 				   	t.functor.name == "verb.take-to"||
-				   	t.functor.name == "verb.bring")) {
+				   	t.functor.name == "verb.bring"||
+				   	t.functor.name == "verb.help")) {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
 												 											  ((t.attributes[0] instanceof ConstantTermAttribute) ? 
@@ -886,7 +887,18 @@ class NLGenerator {
 				} else {
 					subjectStr[0] += " ";
 				}
-				if (t.functor.name == "verb.tell" ||
+				if (t.functor.name == "verb.help" &&
+					(t.attributes[1] instanceof ConstantTermAttribute) &&
+					(t.attributes[2] instanceof TermTermAttribute) &&
+					(<TermTermAttribute>t.attributes[2]).term.attributes.length >= 1 &&
+					((<TermTermAttribute>t.attributes[2]).term.attributes[0] instanceof ConstantTermAttribute)) {
+					let obj1:string = (<ConstantTermAttribute>t.attributes[1]).value;
+					let obj2:string = (<ConstantTermAttribute>(<TermTermAttribute>t.attributes[2]).term.attributes[0]).value;
+					if (obj1 == obj2) {
+						object2Str = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, obj1, true);						
+					}
+					return subjectStr[0] + verbStr + " " + object1Str[0] + " " + object2Str[0] + verbComplements;
+				} else if (t.functor.name == "verb.tell" ||
 				   	t.functor.name == "action.talk") { 
 					return subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements;
 				} else if (t.functor.name == "verb.take-to"||

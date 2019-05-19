@@ -10,7 +10,7 @@ class QwertyAI extends RobotAI {
 		this.addLongTermTerm(Term.fromString("name('"+this.robot.ID+"'[#id],'qwerty'[symbol])", this.o), BACKGROUND_PROVENANCE);
 
 		this.objectsNotAllowedToGive.push("garage-key");
-		this.objectsNotAllowedToGive.push("master-key");
+		this.objectsNotAllowedToGive.push("master-key1");
 		// this.objectsNotAllowedToGive.push("science-key");
 		this.objectsNotAllowedToGive.push("command-key");
 		this.objectsNotAllowedToGive.push("stasis-key");

@@ -264,6 +264,7 @@ class POSParser {
       "lab key",
       "laboratory key",
       "command key",
+      "master key",
       "maintenance room",
       "laundry room",
       "mess hall",

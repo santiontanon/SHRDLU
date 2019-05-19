@@ -11,6 +11,7 @@ var A4_SCRIPT_IF:number = 26;
 var A4_SCRIPT_TELEPORT:number = 3;
 var A4_SCRIPT_GOTO:number = 4;            // go to some coordinates
 var A4_SCRIPT_GOTO_CHARACTER:number = 57; // go to some target object ("character" is a legacy name)
+var A4_SCRIPT_GOTO_OPENING_DOORS:number = 68;
 var A4_SCRIPT_USE:number = 6;
 var A4_SCRIPT_OPENDOORS:number = 7;
 var A4_SCRIPT_TALK:number = 9;
@@ -68,7 +69,7 @@ var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 
-var A4_N_SCRIPTS:number = 68;
+var A4_N_SCRIPTS:number = 69;
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -87,6 +88,7 @@ scriptNames[A4_SCRIPT_IF] = "if";
 scriptNames[A4_SCRIPT_TELEPORT] = "teleport";
 scriptNames[A4_SCRIPT_GOTO] = "goto";
 scriptNames[A4_SCRIPT_GOTO_CHARACTER] = "gotoCharacter";
+scriptNames[A4_SCRIPT_GOTO_OPENING_DOORS] = "gotoOpeningDoors";
 scriptNames[A4_SCRIPT_USE] = "use";
 scriptNames[A4_SCRIPT_OPENDOORS] = "openDoors";
 scriptNames[A4_SCRIPT_TALK] = "talk";
@@ -283,6 +285,48 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
             wme.addParameter(script.y, WME_PARAMETER_INTEGER);
             wme.addParameter(map.name, WME_PARAMETER_SYMBOL);
             ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            return SCRIPT_NOT_FINISHED;
+        }
+    } else {
+        return SCRIPT_FAILED;
+    }
+}
+
+scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (o.isAICharacter()) {
+        let priority:number = 10;
+        let aic:A4AICharacter = <A4AICharacter>o;
+        let ai:A4AI = aic.AI;
+        if (script.ID!=null) {
+            map = game.getMap(script.ID);
+        }
+        if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
+            return SCRIPT_FINISHED;
+        } else {
+            if (o.map != map && script.stopAfterGoingThroughABridge) {
+                // we went through a bridge, stop!
+                return SCRIPT_FINISHED;
+            }
+            let wme:WME = new WME("object",0);
+            wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
+            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
+            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
+            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
+            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
+            wme.addParameter(map.name, WME_PARAMETER_SYMBOL);
+            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+
+            let collisions:A4Object[] = o.map.getAllObjectCollisionsWithOffset(o, direction_x_inc[o.direction], direction_y_inc[o.direction]);
+            for(let o2 of collisions) {
+                if ((o2 instanceof A4Door) &&
+                    (<A4Door>o2).closed) {
+                    // try to open it!
+                    let cmd:A4CharacterCommand = new A4CharacterCommand(A4CHARACTER_COMMAND_INTERACT, 0, o.direction, null, null, 10);
+                    (<A4Character>o).issueCommand(cmd, game);
+                }
+            }
+
             return SCRIPT_NOT_FINISHED;
         }
     } else {
@@ -1458,6 +1502,7 @@ class A4Script {
                         s.ID = xml.getAttribute("map");
                         break;
                     case A4_SCRIPT_GOTO:
+                    case A4_SCRIPT_GOTO_OPENING_DOORS:
                         s.x = Number(xml.getAttribute("x"));
                         s.y = Number(xml.getAttribute("y"));
                         s.ID = xml.getAttribute("map");
@@ -1611,14 +1656,18 @@ class A4Script {
                         let if_then_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "then");
                         let if_else_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "else");
 
-                        for(let i:number = 0;i<if_condition_node.children.length;i++) {
-                            let subscript:A4Script = A4Script.fromXML(if_condition_node.children[i]);
-                            s.subScripts.push(subscript);
+                        if (if_condition_node != null) {
+                            for(let i:number = 0;i<if_condition_node.children.length;i++) {
+                                let subscript:A4Script = A4Script.fromXML(if_condition_node.children[i]);
+                                s.subScripts.push(subscript);
+                            }
                         }
 
-                        for(let i:number = 0;i<if_then_node.children.length;i++) {
-                            let subscript:A4Script = A4Script.fromXML(if_then_node.children[i]);
-                            s.thenSubScripts.push(subscript);
+                        if (if_then_node != null) {
+                            for(let i:number = 0;i<if_then_node.children.length;i++) {
+                                let subscript:A4Script = A4Script.fromXML(if_then_node.children[i]);
+                                s.thenSubScripts.push(subscript);
+                            }
                         }
 
                         if (if_else_node != null) {
@@ -1754,6 +1803,7 @@ class A4Script {
                 break;                
             }
             case A4_SCRIPT_GOTO:
+            case A4_SCRIPT_GOTO_OPENING_DOORS:
             {
                 xmlString += " x=\"" + this.x + "\"";
                 xmlString += " y=\"" + this.y + "\"";

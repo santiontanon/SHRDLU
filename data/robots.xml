@@ -30,7 +30,7 @@
 			<object id="stasis-key" class="green-key" width="8" height="8"/>
 			<object id="garage-key" class="garagepurple-key" width="8" height="8"/>
 			<object id="bedroom5-key" class="white-key" width="8" height="8"/>
-			<object id="master-key" class="master-key" width="8" height="8"/>
+			<object id="master-key1" class="master-key" width="8" height="8"/>
 		</items>
 		<onStart>
 			<addPerceptionProperty property="white"/>
@@ -59,6 +59,9 @@
 		<attribute name="direction" value="3"/>
 		<attribute name="strength" value="4"/>
 
+		<items>
+			<object id="master-key2" class="master-key" width="8" height="8"/>
+		</items>
 		<onStart>
 			<addPerceptionProperty property="red"/>
 		</onStart>

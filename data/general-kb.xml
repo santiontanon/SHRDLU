@@ -302,6 +302,11 @@
 	<sentence provenance="background" sentence="name('garage-key'[#id],'garage key'[symbol])"/>
 	<sentence provenance="background" sentence="white-key('bedroom5-key'[#id])"/>
 	<sentence provenance="background" sentence="name('bedroom5-key'[#id],'bedroom key'[symbol])"/>
+	<sentence provenance="background" sentence="master-key('master-key1'[#id])"/>
+	<sentence provenance="background" sentence="name('master-key1'[#id],'master key'[symbol])"/>
+	<sentence provenance="background" sentence="master-key('master-key2'[#id])"/>
+	<sentence provenance="background" sentence="name('master-key2'[#id],'master key'[symbol])"/>
+	
 
 	<sentence provenance="background" sentence="relation.opens('science-key'[#id], 'science-door'[#id])"/>
 	<sentence provenance="background" sentence="relation.opens('science-key'[#id], 'location-as27'[#id])"/>

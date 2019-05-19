@@ -23,12 +23,13 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		// if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			this.skip_to_end_of_act_1();
+			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-		}
+			//this.skip_to_act_2_shrdluback();
+		// }
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -75,8 +76,10 @@ class ShrdluGameScript {
 		let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
 		this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
 
+		this.game.shrdluAI.allowPlayerInto("location-garage", "GARAGE");
 		this.game.qwertyAI.allowPlayerInto("location-garage", "GARAGE");
 		this.game.etaoinAI.allowPlayerInto("location-garage", "GARAGE");
+		this.game.shrdluAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 		this.game.qwertyAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 		this.game.etaoinAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 
@@ -134,8 +137,8 @@ class ShrdluGameScript {
 		// garage
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.y = 40;
-		this.game.qwertyAI.robot.x = 832;
-		this.game.qwertyAI.robot.y = 40;
+		//this.game.qwertyAI.robot.x = 832;
+		//this.game.qwertyAI.robot.y = 40;
 		// infirmary
 		//this.game.currentPlayer.x = 12*8;
 		//this.game.currentPlayer.y = 28*8;
@@ -159,6 +162,17 @@ class ShrdluGameScript {
 		// this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
 		// East cave:
 		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
+
+		this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+	}
+
+
+	skip_to_act_2_shrdluback()
+	{
+		this.skip_to_act_2();
+		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);
+		this.game.shrdluAI.robot.warp(864, 48, this.game.maps[0]);
+		this.act_2_state = 106;
 	}
 
 
@@ -1177,6 +1191,7 @@ class ShrdluGameScript {
 				// tell qwerty it can give the key to the player:
 				let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("garage-key");
 				this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
+				this.game.shrdluAI.allowPlayerInto("location-garage", "GARAGE");
 				this.game.qwertyAI.allowPlayerInto("location-garage", "GARAGE");
 				this.game.etaoinAI.allowPlayerInto("location-garage", "GARAGE");
 				this.act_1_state = 19;
@@ -1217,6 +1232,7 @@ class ShrdluGameScript {
 							this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'maintenance-key'[#id]))");
 							let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
 							this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
+							this.game.shrdluAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 							this.game.qwertyAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 							this.game.etaoinAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 						}
@@ -1615,7 +1631,7 @@ class ShrdluGameScript {
 			if (this.playerHasItemP("communicator")) {
 				if (this.game.currentPlayer.isIdle() && this.game.currentPlayer.map.name == "Spacer Valley North") {
 					this.queueThoughtBubble("The communicator has gone dead. I guess I'm now out of communicator range with Etaoin...");
-					this.queueThoughtBubble("Etaoin said to to East after reaching this part of Spacer Valley, let's see where is that cave...");
+					this.queueThoughtBubble("Etaoin said to go East after reaching this part of Spacer Valley, let's see where is that cave...");
 					this.act_2_state = 3;
 				}
 			} else {
@@ -1822,9 +1838,72 @@ class ShrdluGameScript {
 
 		case 106:
 			// SHRDLU is free!!
-			// ...
+			if (this.game.shrdluAI.robot.map.name == "Aurora Station") {
+				this.act_2_state = 107;
+			}
 			break;
 
+		case 107:
+			// SHRDLU is back!!
+			this.shrdluSays("perf.thankyou('david'[#id])");
+			this.shrdluSays("perf.inform('david'[#id], #and(X:verb.help('etaoin'[#id], 'shrdlu'[#id], verb.see('shrdlu'[#id])), time.now(X)))");
+			this.shrdluSays("perf.inform('david'[#id], verb.need('shrdlu'[#id], verb.repair('shrdlu'[#id], 'shrdlu'[#id])))");
+			this.act_2_state = 108;
+			this.game.shrdluAI.respondToPerformatives = false;
+			break;
+
+		case 108:
+			if (this.game.shrdluAI.intentions.length == 0 && 
+				this.game.shrdluAI.queuedIntentions.length == 0 &&
+				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+				this.game.shrdluAI.clearCurrentAction();
+				this.shrdluMoves(98*8, 7*8, this.game.qwertyAI.robot.map);
+				this.act_2_state = 109;
+			}
+			break;
+
+		case 109:
+			if (this.game.shrdluAI.intentions.length == 0 && 
+				this.game.shrdluAI.queuedIntentions.length == 0 &&
+				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+				this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+				this.act_2_state = 110;
+			}
+			break;
+
+		case 110:
+			if (this.act_2_state_timer >= 50*2 &&
+				this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.thankyou('david'[#id])")
+				this.act_2_state = 111;
+			}
+			break;
+
+		case 111:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.future(X)))")
+				this.act_2_state = 112;
+			}
+			break;
+
+		case 112:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.queueThoughtBubble("Ok, it seems Shrdlu needs to fix itself first. So, repairs might take a while...");
+				this.queueThoughtBubble("I could go explore outside a bit more, now that I have the rover... or maybe I could just have a nap...");
+				this.act_2_state = 113;
+			}
+			break;
+
+		case 113:
+			// waiting for Shrdlu to repair itself
+			// ...
+			break;
 		}
 
 
@@ -2065,6 +2144,17 @@ class ShrdluGameScript {
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
 		this.game.qwertyAI.robot.addScriptQueue(q);
+	}
+
+
+	shrdluMoves(x:number, y:number, map:A4Map)
+	{
+        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.shrdluAI.robot, this.game.shrdluAI.robot.map, this.game, null);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
+        s.x = x;
+        s.y = y+this.game.shrdluAI.robot.tallness;
+        q.scripts.push(s);
+		this.game.shrdluAI.robot.addScriptQueue(q);
 	}
 
 

@@ -9,6 +9,9 @@ class ShrdluAI extends RobotAI {
 		this.visionActive = false;
 
 		this.addLongTermTerm(Term.fromString("name('"+this.robot.ID+"'[#id],'shrdlu'[symbol])", this.o), BACKGROUND_PROVENANCE);
+		
+		this.objectsNotAllowedToGive.push("master-key2");
+
 		console.log("ShrdluAI.constructor end...");
 	}
 }

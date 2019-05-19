@@ -211,6 +211,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 				let x:number = Math.floor(ai.robot.x/8)*8;
 				let y:number = Math.floor(ai.robot.y/8)*8;
+				targetx = Math.floor(targetx/8)*8;
+				targety = Math.floor(targety/8)*8;
 				while(x != targetx || y != targety) {
 					if (x<targetx) x += 8;
 					if (x>targetx) x -= 8;

@@ -35,7 +35,7 @@ class NLParser {
 			console.log("compiled parse graph for " +sortName+ " has " + nstates + " nodes");
 
 //			console.log(compiled.root.convertToDOTString());
-//			To generate the pdf type: dot -Tpdf grammar-1.9.dot -o grammar-1.9.pdf
+//			To generate the pdf type: dot -Tpdf grammar-2.4.dot -o grammar-2.4.pdf
 			parser.compiledRules[sortName] = compiled;
 		}
 
