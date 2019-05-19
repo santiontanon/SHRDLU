@@ -400,7 +400,8 @@ class NLContext {
 			perf.functor.is_a(o.getSort("perf.sentiment.bad")) ||
 			perf.functor.is_a(o.getSort("perf.sentiment.surprise")) ||
 			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
-			perf.functor.is_a(o.getSort("perf.moreresults"))) {
+			perf.functor.is_a(o.getSort("perf.moreresults")) ||
+			perf.functor.is_a(o.getSort("perf.request.repeataction"))) {
 			if (perf.attributes[0] instanceof ConstantTermAttribute) {
 				IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
 			}

@@ -204,6 +204,7 @@
     <sort name="perf.request" super="performative"/>
     <sort name="perf.request.action" super="perf.request"/>
     <sort name="perf.request.stopaction" super="perf.request"/>
+    <sort name="perf.request.repeataction" super="perf.request"/>
     <sort name="perf.question" super="perf.request"/>
     <sort name="perf.q.predicate" super="perf.question"/>
     <sort name="perf.q.predicate-negated" super="perf.question"/>

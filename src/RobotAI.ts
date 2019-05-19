@@ -19,6 +19,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new RobotOpenClose_IntentionAction());
 		this.intentionHandlers.push(new RobotHelp_IntentionAction());
 		this.intentionHandlers.push(new RobotTurn_IntentionAction());
+		this.intentionHandlers.push(new RobotPushPull_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
@@ -56,6 +57,33 @@ class RobotAI extends A4RuleBasedAI {
 
 		this.executeScriptQueues();
 	}
+
+
+	reactToRepeatActionPerformative(perf:Term, speaker:TermAttribute, context:NLContext) : boolean
+	{
+		if (super.reactToRepeatActionPerformative(perf, speaker, context)) return true;
+		if (!(speaker instanceof ConstantTermAttribute)) return false;
+		let speakerID:string = (<ConstantTermAttribute>speaker).value;
+
+		// find what was the last action that was requested:
+		for(let i:number = 0;i<context.performatives.length;i++) {
+			if (context.performatives[i].speaker == speakerID) {
+				let request:Term = context.performatives[i].performative;
+				if (request.functor.is_a_string("perf.request.action") ||
+					request.functor.is_a_string("perf.q.action")) {
+					//  we have the action request!
+					this.reactToRequestActionPerformative(request, speaker, context);
+					return true;
+				} else if (request.functor.is_a_string("perf.request.repeataction")) {
+					// see if there was an action request before this
+				} else {
+					return false;
+				}
+			}
+		}
+
+		return false;
+	}	
 
 
 	attentionAndPerception()

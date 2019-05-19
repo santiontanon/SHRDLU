@@ -930,23 +930,7 @@ class A4Character extends A4WalkingObject {
                     for(let o of collisions) {
 //                        console.log("checking object " + o.name);
                         if (o.isPushable()) {
-                            if (this.strength >= (<A4PushableWall>o).weight) {
-    //                            console.log("object " + o.name + " is pushable");
-                                this.direction = argument;
-                                this.state = A4CHARACTER_STATE_WALKING;
-                                this.stateCycle = 0;
-                                this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("push", this.ID, this.sort, 
-                                                                                              o.ID, o.sort, null,
-                                                                                              null, null,
-                                                                                              this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                                o.event(A4_EVENT_PUSH,this,this.map,game);
-                                this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
-                                game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
-                            } else {
-                                if (this == <A4Character>game.currentPlayer) {
-                                    this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, "too heavy!!", A4_DIRECTION_NONE, game);
-                                }
-                            }
+                            this.pushAction(o, argument, game);
                             break;
                         }
                     }
@@ -1081,6 +1065,30 @@ class A4Character extends A4WalkingObject {
                 }
                 break;
     */
+        }
+    }
+
+
+    pushAction(o:A4Object, direction:number, game:A4Game): boolean
+    {
+        if (this.strength >= (<A4PushableWall>o).weight) {
+//                            console.log("object " + o.name + " is pushable");
+            this.direction = direction;
+            this.state = A4CHARACTER_STATE_WALKING;
+            this.stateCycle = 0;
+            this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("push", this.ID, this.sort, 
+                                                                          o.ID, o.sort, null,
+                                                                          null, null,
+                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+            o.event(A4_EVENT_PUSH,this,this.map,game);
+            this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
+            game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+            return true;
+        } else {
+            if (this == <A4Character>game.currentPlayer) {
+                this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, "too heavy!!", A4_DIRECTION_NONE, game);
+            }
+            return false;
         }
     }
 

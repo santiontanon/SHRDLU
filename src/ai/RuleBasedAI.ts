@@ -862,45 +862,7 @@ class RuleBasedAI {
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.request.action" || 
 					   perf2.functor.name == "perf.q.action") {
-				if (perf2.attributes[1] instanceof TermTermAttribute) {
-					let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
-					if (perf2.attributes.length>=3 &&
-						perf2.attributes[2] instanceof TermTermAttribute) {
-						// this means that the action request has a variable and we need to start an inference process:
-						let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
-						let target1Terms:Term[] = [];
-						let target1Signs:boolean[] = [];
-						for(let i:number = 0;i<intention_l.length;i++) {
-							if (intention_l[i].functor.name == "#not") {
-								target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
-								target1Signs.push(true);
-							} else {
-								target1Terms.push(intention_l[i]);
-								target1Signs.push(false);
-							}
-						}
-
-						// 2) start the inference process:
-						let target1:Sentence[] = [];
-						target1.push(new Sentence(target1Terms, target1Signs));
-						let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
-						ir.triggeredBy = perf2;
-						ir.triggeredBySpeaker = context.speaker;
-						this.inferenceProcesses.push(ir);
-					} else {
-						if (this.canSatisfyActionRequest(action)) {
-							this.intentions.push(new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-						} else {
-							let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
-							let term:Term = Term.fromString(tmp, this.o);
-							this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-						}
-					}
-				} else {
-					let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
-					let term:Term = Term.fromString(tmp, this.o);
-					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-				}
+				this.reactToRequestActionPerformative(perf2, speaker, context);
 			} else if (perf2.functor.name == "perf.request.stopaction") {
 				if (perf2.attributes[1] instanceof TermTermAttribute) {
 					let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
@@ -948,39 +910,24 @@ class RuleBasedAI {
 				}
 			} else if (perf2.functor.name == "perf.moreresults") {
 				if (context.lastEnumeratedQuestion_answered != null) {
-					if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
-						let resultsTA:TermAttribute = null;
-						if (context.lastEnumeratedQuestion_answers.length > 
-							context.lastEnumeratedQuestion_next_answer_index + MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY) {
-							resultsTA = new ConstantTermAttribute("etcetera",this.o.getSort("etcetera"));
-							for(let i:number = 0;i<MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY;i++) {
-								resultsTA = new TermTermAttribute(new Term(this.o.getSort("#and"),[context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index], resultsTA]));
-								context.lastEnumeratedQuestion_next_answer_index++;
-							}
-						} else {
-							for(;context.lastEnumeratedQuestion_next_answer_index<context.lastEnumeratedQuestion_answers.length ; context.lastEnumeratedQuestion_next_answer_index++) {
-								if (resultsTA == null) {
-									resultsTA = context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index];
-								} else {
-									resultsTA = new TermTermAttribute(new Term(this.o.getSort("#and"),[context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index], resultsTA]));
-								}
-							}
-						}
-						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],"+resultsTA+"))", this.o);
-						// give more answers:
-						this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-//						context.lastEnumeratedQuestion_next_answer_index++;
-						newExpectingThankyou = true;
-					} else {
-						// no more answers to be given:
-						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],'no-matches-found'[symbol]))", this.o);
-						this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-						newExpectingThankyou = true;
-					}
+					this.reactToMoreResultsPerformative(perf2, speaker, context);
+					newExpectingThankyou = true;
 				} else {
 					// we don't understand this question:
 					let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id],#not(verb.understand('"+this.selfID+"'[#id]))))", this.o);
 					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				}
+
+			} else if (perf2.functor.name == "perf.request.repeataction") {
+				if (context.lastEnumeratedQuestion_answered != null) {
+					this.reactToMoreResultsPerformative(perf2, speaker, context);
+					newExpectingThankyou = true;
+				} else {
+					if (!this.reactToRepeatActionPerformative(perf2, speaker, context)) {
+						let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+						let term:Term = Term.fromString(tmp, this.o);
+						this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+					}
 				}
 
 			} else if (perf2.functor.name == "perf.ack.denyrequest") {
@@ -1001,6 +948,88 @@ class RuleBasedAI {
 		return reaction;
 	}
 
+
+	reactToRequestActionPerformative(perf2:Term, speaker:TermAttribute, context:NLContext) 
+	{
+		if (perf2.attributes[1] instanceof TermTermAttribute) {
+			let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
+			if (perf2.attributes.length>=3 &&
+				perf2.attributes[2] instanceof TermTermAttribute) {
+				// this means that the action request has a variable and we need to start an inference process:
+				let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
+				let target1Terms:Term[] = [];
+				let target1Signs:boolean[] = [];
+				for(let i:number = 0;i<intention_l.length;i++) {
+					if (intention_l[i].functor.name == "#not") {
+						target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
+						target1Signs.push(true);
+					} else {
+						target1Terms.push(intention_l[i]);
+						target1Signs.push(false);
+					}
+				}
+
+				// 2) start the inference process:
+				let target1:Sentence[] = [];
+				target1.push(new Sentence(target1Terms, target1Signs));
+				let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
+				ir.triggeredBy = perf2;
+				ir.triggeredBySpeaker = context.speaker;
+				this.inferenceProcesses.push(ir);
+			} else {
+				if (this.canSatisfyActionRequest(action)) {
+					this.intentions.push(new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				} else {
+					let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+					let term:Term = Term.fromString(tmp, this.o);
+					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				}
+			}
+		} else {
+			let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+			let term:Term = Term.fromString(tmp, this.o);
+			this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+		}
+	}
+
+
+	reactToRepeatActionPerformative(perf:Term, speaker:TermAttribute, context:NLContext) : boolean
+	{
+		// to be handled by the classes that inherit from this one
+		return false;
+	}
+
+
+	reactToMoreResultsPerformative(perf:Term, speaker:TermAttribute, context:NLContext)
+	{
+		if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
+			let resultsTA:TermAttribute = null;
+			if (context.lastEnumeratedQuestion_answers.length > 
+				context.lastEnumeratedQuestion_next_answer_index + MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY) {
+				resultsTA = new ConstantTermAttribute("etcetera",this.o.getSort("etcetera"));
+				for(let i:number = 0;i<MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY;i++) {
+					resultsTA = new TermTermAttribute(new Term(this.o.getSort("#and"),[context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index], resultsTA]));
+					context.lastEnumeratedQuestion_next_answer_index++;
+				}
+			} else {
+				for(;context.lastEnumeratedQuestion_next_answer_index<context.lastEnumeratedQuestion_answers.length ; context.lastEnumeratedQuestion_next_answer_index++) {
+					if (resultsTA == null) {
+						resultsTA = context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index];
+					} else {
+						resultsTA = new TermTermAttribute(new Term(this.o.getSort("#and"),[context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index], resultsTA]));
+					}
+				}
+			}
+			let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],"+resultsTA+"))", this.o);
+			// give more answers:
+			this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf), null, this.time_in_seconds));
+//						context.lastEnumeratedQuestion_next_answer_index++;
+		} else {
+			// no more answers to be given:
+			let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],'no-matches-found'[symbol]))", this.o);
+			this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf), null, this.time_in_seconds));
+		}
+	}
 
 	canSatisfyActionRequest(actionRequest:Term) : boolean
 	{

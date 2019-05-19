@@ -2718,6 +2718,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         verb(V2, N2, [second-person], T2)
     		         nounPhrase(X3, N3, P3, CO) [[','] 'please'] '!'* 
     		         #derefFromContext(CO, OBJECT)"/>
+    <NLPattern name="perf.request.action-verb-np-direction"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, OBJECT, DIRECTION_SORT:[direction]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2)
+    		         nounPhrase(X3, N3, P3, CO) 
+    		         noun(DIRECTION, [singular]) #symbolToSort(DIRECTION, DIRECTION_SORT)
+    		         [[','] 'please'] '!'* 
+    		         #derefFromContext(CO, OBJECT)"/>
     <NLPattern name="perf.request.action-pull-from-np"
     		   head="perf.request.action(LISTENER, action.pull(LISTENER, OBJECT))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2777,19 +2787,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 ['please' [',']] 
     		         verb(V2, N2, [second-person], T2) [[','] 'please'] '!'*"/>
-    <NLPattern head="perf.moreresults(LISTENER)"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		   		 ['please' [',']] 
-    		   		 ('who'|'what'|'where') 'else'
-    		          [[','] 'please'] ('?'|'!')*"/>
-    <NLPattern head="perf.moreresults(LISTENER)"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		   		 ['please' [',']] 
-    		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
-    		          [[','] 'please'] ('?'|'!')*"
-    		   priority="200"/>
 
     <NLPattern head="perf.q.action(LISTENER, verb.follow(LISTENER, OBJECT))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2820,6 +2817,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         verb(V2, N2, [second-person], T2)
     		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
     		         adverb(ASYMBOL) #symbolToSort(ASYMBOL,ASORT)
+    		         [[','] 'please'] '!'*"/>
+    <NLPattern name="perf.request.action-go-amount-direction"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], ASORT:[amount]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, [second-person], T2)
+    		         adverb(ASYMBOL) #symbolToSort(ASYMBOL,ASORT)
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
     		         [[','] 'please'] '!'*"/>
 
     <!-- get out of here / get out, etc. rule -->
@@ -2901,6 +2907,39 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] 'please'] '!'*
     		         #derefFromContext(C2, SUBJECT)
     		         #derefFromContext(C4, OBJECT)"/>
+
+     <!-- perf.moreresults -->
+    <NLPattern head="perf.moreresults(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 ('who'|'what'|'where') 'else'
+    		          [[','] 'please'] ('?'|'!')*"/>
+    <NLPattern head="perf.moreresults(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
+    		          [[','] 'please'] ('?'|'!')*"
+    		   priority="200"/>
+
+     <!-- perf.request.repeataction -->
+    <NLPattern head="perf.request.repeataction(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 ('again' |
+    		   		  adverb('small-amount'[small-amount]) 'more' |
+    		   		  'one' 'more' 'time')
+	 		         [[','] 'please'] '!'*"/>
+    <NLPattern head="perf.request.repeataction(LISTENER, VERBSORT)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 verb('verb.keep'[symbol], N2, P2, [present-tense]) verb(VERB, N3, P3, [gerund-tense]) 
+    		   		 #symbolToSort(VERB, VERBSORT)
+	 		         [[','] 'please'] '!'*"/>
+
 
     <!-- perf.q.howmany patterns -->
     <NLPattern name="perf.q.howmany-X-are-there"

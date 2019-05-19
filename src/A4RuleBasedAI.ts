@@ -1086,7 +1086,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	{
 		if (this.respondToPerformatives) return super.reactToPerformative(perf2, speaker, context);
 		return [];
-	}	
+	}
 
 
 	allowPlayerInto(location:string, door:string)

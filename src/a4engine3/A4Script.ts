@@ -29,6 +29,8 @@ var A4_SCRIPT_CHOP:number = 46;
 var A4_SCRIPT_SLEEPOTHER:number = 51;
 var A4_SCRIPT_TAKE_FROM_CONTAINER:number = 64;
 var A4_SCRIPT_PUT_IN_CONTAINER:number = 65;
+var A4_SCRIPT_PUSH:number = 66;
+var A4_SCRIPT_PULL:number = 67;
 
 var A4_SCRIPT_EATIFHUNGRY:number = 58;
 var A4_SCRIPT_DRINKIFTHIRSTY:number = 59;
@@ -66,7 +68,7 @@ var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 
-var A4_N_SCRIPTS:number = 66;
+var A4_N_SCRIPTS:number = 68;
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -105,6 +107,8 @@ scriptNames[A4_SCRIPT_TAKE_FROM_CONTAINER] = "takeFromContainer";
 scriptNames[A4_SCRIPT_PUT_IN_CONTAINER] = "putInContainer";
 scriptNames[A4_SCRIPT_EATIFHUNGRY] = "eatIfHungry";
 scriptNames[A4_SCRIPT_DRINKIFTHIRSTY] = "drinkIfThirsty";
+scriptNames[A4_SCRIPT_PUSH] = "push";
+scriptNames[A4_SCRIPT_PULL] = "pull";
 
 scriptNames[A4_SCRIPT_DIE] = "die";
 scriptNames[A4_SCRIPT_PENDINGTALK] = "pendingTalk";
@@ -258,16 +262,16 @@ scriptFunctions[A4_SCRIPT_TELEPORT] = function(script:A4Script, o:A4Object, map:
 scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isAICharacter()) {
-        var priority:number = 10;
-        var aic:A4AICharacter = <A4AICharacter>o;
-        var ai:A4AI = aic.AI;
+        let priority:number = 10;
+        let aic:A4AICharacter = <A4AICharacter>o;
+        let ai:A4AI = aic.AI;
         if (script.ID!=null) {
             map = game.getMap(script.ID);
         }
         if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
             return SCRIPT_FINISHED;
         } else {
-            var wme:WME = new WME("object",0);
+            let wme:WME = new WME("object",0);
             wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
             wme.addParameter(script.x, WME_PARAMETER_INTEGER);
             wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -286,14 +290,14 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isAICharacter()) {
-        var aic:A4AICharacter = <A4AICharacter>o;
-        var ai:A4AI = aic.AI;
-        var priority:number = 10;
+        let aic:A4AICharacter = <A4AICharacter>o;
+        let ai:A4AI = aic.AI;
+        let priority:number = 10;
 
-        var targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
+        let targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
         if (targetObject == null) return SCRIPT_FAILED;
-        var distance_x:number = 0;
-        var distance_y:number = 0;
+        let distance_x:number = 0;
+        let distance_y:number = 0;
         if (o.x + o.getPixelWidth() < targetObject.x) {
             distance_x = targetObject.x - (o.x + o.getPixelWidth());
         } else if (o.x > targetObject.x + targetObject.getPixelWidth()) {
@@ -304,10 +308,10 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
         } else if (targetObject.y + targetObject.getPixelHeight() < o.y + o.tallness) {
             distance_y = (o.y + o.tallness) - (targetObject.y + targetObject.getPixelHeight());
         }
-        var distance:number = distance_x + distance_y;
+        let distance:number = distance_x + distance_y;
         if (distance <= 0) return SCRIPT_FINISHED;
         
-        var pattern:WME = new WME("object",0);
+        let pattern:WME = new WME("object",0);
         pattern.addParameter(script.ID, WME_PARAMETER_SYMBOL);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
@@ -315,7 +319,7 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         
-        var wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
+        let wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
         
         if (wme==null) {
             if (script.wait) return SCRIPT_FAILED;   // when we don't see the target anymore, we are done
@@ -334,8 +338,8 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
 scriptFunctions[A4_SCRIPT_USE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
-        var priority:number = 10;
+        let c:A4Character = <A4Character>o;
+        let priority:number = 10;
         
         if (script.x==-1 && script.y==-1 && script.ID==null) {
             // use an object in the current position:
@@ -349,8 +353,8 @@ scriptFunctions[A4_SCRIPT_USE] = function(script:A4Script, o:A4Object, map:A4Map
         } else if (script.x>=0 && script.y>=0) {
             // x,y,map version:
             if (o.isAICharacter()) {
-                var aic:A4AICharacter = <A4AICharacter>o;
-                var ai:A4AI = aic.AI;
+                let aic:A4AICharacter = <A4AICharacter>o;
+                let ai:A4AI = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     if (aic.isIdle()) {
@@ -361,7 +365,7 @@ scriptFunctions[A4_SCRIPT_USE] = function(script:A4Script, o:A4Object, map:A4Map
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    var wme:WME = new WME("object", 0);
+                    let wme:WME = new WME("object", 0);
                     wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
                     wme.addParameter(script.x, WME_PARAMETER_INTEGER);
                     wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -472,7 +476,7 @@ scriptFunctions[A4_SCRIPT_STEAL] = function(script:A4Script, o:A4Object, map:A4M
 scriptFunctions[A4_SCRIPT_GIVE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (otherCharacter==null) return SCRIPT_FAILED;
-    var item:A4Object = null;
+    let item:A4Object = null;
     if (script.ID!=null) {
         // it's from the inventory:
         for(let o2 of (<A4Character>o).inventory) {
@@ -509,7 +513,7 @@ scriptFunctions[A4_SCRIPT_GIVE] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_SELL] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (otherCharacter==null) return SCRIPT_FAILED;
-    var item:A4Object = null;
+    let item:A4Object = null;
     if (script.ID!=null) {
         // it's from the inventory:
         for(let o2 of (<A4Character>o).inventory) {
@@ -544,7 +548,7 @@ scriptFunctions[A4_SCRIPT_SELL] = function(script:A4Script, o:A4Object, map:A4Ma
 
 scriptFunctions[A4_SCRIPT_DROP] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var item:A4Object = null;
+    let item:A4Object = null;
     if (script.ID!=null) {
         // it's from the inventory:
         for(let o2 of (<A4Character>o).inventory) {
@@ -574,9 +578,9 @@ scriptFunctions[A4_SCRIPT_DROP] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_TAKE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isAICharacter()) {
-        var priority:number = 10;
-        var aic:A4AICharacter = <A4AICharacter>o;
-        var ai:A4AI = aic.AI;
+        let priority:number = 10;
+        let aic:A4AICharacter = <A4AICharacter>o;
+        let ai:A4AI = aic.AI;
         if (script.ID!=null) map = game.getMap(script.ID);
         if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
             if (aic.isIdle()) {
@@ -587,7 +591,7 @@ scriptFunctions[A4_SCRIPT_TAKE] = function(script:A4Script, o:A4Object, map:A4Ma
                 return SCRIPT_NOT_FINISHED;
             }
         } else {
-            var wme:WME = new WME("object",0);
+            let wme:WME = new WME("object",0);
             wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
             wme.addParameter(script.x, WME_PARAMETER_INTEGER);
             wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -606,8 +610,8 @@ scriptFunctions[A4_SCRIPT_TAKE] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
-        var priority:number = 10;
+        let c:A4Character = <A4Character>o;
+        let priority:number = 10;
         
         if (script.x==-1 && script.y==-1 && script.ID==null) {
             // you need to specify a target position to interact, since interacting requires a direction
@@ -615,11 +619,11 @@ scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:
         } else if (script.x>=0 && script.y>=0) {
             // x,y,map version:
             if (o.isAICharacter()) {
-                var aic:A4AICharacter = <A4AICharacter>o;
-                var ai:A4AI = aic.AI;
+                let aic:A4AICharacter = <A4AICharacter>o;
+                let ai:A4AI = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 
-                var interactDirection:number = A4_DIRECTION_NONE;
+                let interactDirection:number = A4_DIRECTION_NONE;
                 if (o.map==map) {
                     if (o.x+o.getPixelWidth() == script.x && o.y == script.y) interactDirection = A4_DIRECTION_RIGHT;
                     if (o.x-o.getPixelWidth() == script.x && o.y == script.y) interactDirection = A4_DIRECTION_LEFT;
@@ -636,7 +640,7 @@ scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    var wme:WME = new WME("object",0);
+                    let wme:WME = new WME("object",0);
                     wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
                     wme.addParameter(script.x, WME_PARAMETER_INTEGER);
                     wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -660,15 +664,15 @@ scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:
 scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isAICharacter()) {
-        var aic:A4AICharacter = <A4AICharacter>o;
-        var ai:A4AI = aic.AI;
-        var priority:number = 10;
+        let aic:A4AICharacter = <A4AICharacter>o;
+        let ai:A4AI = aic.AI;
+        let priority:number = 10;
 
-        var targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
+        let targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
         if (targetObject == null) return SCRIPT_FAILED;
-        var distance_x:number = 0;
-        var distance_y:number = 0;
-        var interactDirection:number = A4_DIRECTION_NONE;
+        let distance_x:number = 0;
+        let distance_y:number = 0;
+        let interactDirection:number = A4_DIRECTION_NONE;
         if (o.x + o.getPixelWidth() <= targetObject.x) {
             distance_x = targetObject.x - (o.x + o.getPixelWidth());
             interactDirection = A4_DIRECTION_RIGHT;
@@ -683,7 +687,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             distance_y = (o.y + o.tallness) - (targetObject.y + targetObject.getPixelHeight());
             interactDirection = A4_DIRECTION_UP;
         }
-        var distance:number = distance_x + distance_y;
+        let distance:number = distance_x + distance_y;
         // special case of the corners:
         if (o.x + o.getPixelWidth() == targetObject.x && o.y + o.getPixelHeight() == targetObject.y + targetObject.tallness) distance = 1;
         if (o.x + o.getPixelWidth() == targetObject.x && targetObject.y + targetObject.getPixelHeight() == o.y + o.tallness) distance = 1;
@@ -705,7 +709,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             }
         }
         
-        var pattern:WME = new WME("object",0);
+        let pattern:WME = new WME("object",0);
         pattern.addParameter(script.ID, WME_PARAMETER_SYMBOL);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
@@ -713,7 +717,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         pattern.addParameter(0, WME_PARAMETER_WILDCARD);
         
-        var wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
+        let wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
         
         if (wme==null) {
             if (script.wait) return SCRIPT_FAILED;   // if we don't see the target anymore, we are done
@@ -731,12 +735,12 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
 scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
-        var priority:number = 10;
+        let c:A4Character = <A4Character>o;
+        let priority:number = 10;
         
         if (script.x==-1 && script.y==-1 && script.ID==null) {
             // embark on the transport in the current position
-            var v:A4Object = c.map.getVehicleObject(c.x + Math.floor(c.getPixelWidth()/2) - 1, c.y + Math.floor(c.getPixelHeight()/2)- 1, 2, 2);
+            let v:A4Object = c.map.getVehicleObject(c.x + Math.floor(c.getPixelWidth()/2) - 1, c.y + Math.floor(c.getPixelHeight()/2)- 1, 2, 2);
             if (v!=null) {
                 c.embark(<A4Vehicle>v);
                 c.map.addPerceptionBufferRecord(new PerceptionBufferRecord("embark", c.ID, c.sort, 
@@ -749,13 +753,13 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
         } else if (script.x>=0 && script.y>=0) {
             // x,y,map version:
             if (o.isAICharacter()) {
-                var aic:A4AICharacter = <A4AICharacter>o;
-                var ai:A4AI = aic.AI;
+                let aic:A4AICharacter = <A4AICharacter>o;
+                let ai:A4AI = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     if (aic.isIdle()) {
                         // character is on position:
-                        var v:A4Object = c.map.getVehicleObject(c.x + Math.floor(c.getPixelWidth()/2) - 1, c.y + Math.floor(c.getPixelHeight()/2) - 1, 2, 2);
+                        let v:A4Object = c.map.getVehicleObject(c.x + Math.floor(c.getPixelWidth()/2) - 1, c.y + Math.floor(c.getPixelHeight()/2) - 1, 2, 2);
                         if (v!=null) {
                             c.embark(<A4Vehicle>v);
                             c.map.addPerceptionBufferRecord(new PerceptionBufferRecord("embark", c.ID, c.sort, 
@@ -769,7 +773,7 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    var wme:WME = new WME("object",0);
+                    let wme:WME = new WME("object",0);
                     wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
                     wme.addParameter(script.x, WME_PARAMETER_INTEGER);
                     wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -801,8 +805,8 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
 scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
-        var priority:number = 10;
+        let c:A4Character = <A4Character>o;
+        let priority:number = 10;
         
         if (!c.isInVehicle()) return SCRIPT_FAILED;
         
@@ -817,8 +821,8 @@ scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map
         } else if (script.x>=0 && script.y>=0) {
             // x,y,map version:
             if (o.isAICharacter()) {
-                var aic:A4AICharacter = <A4AICharacter>o;
-                var ai:A4AI = aic.AI;
+                let aic:A4AICharacter = <A4AICharacter>o;
+                let ai:A4AI = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     // character is on position:
@@ -829,7 +833,7 @@ scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map
                     c.disembark();
                     return SCRIPT_FINISHED;
                 } else {
-                    var wme:WME = new WME("object",0);
+                    let wme:WME = new WME("object",0);
                     wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
                     wme.addParameter(script.x, WME_PARAMETER_INTEGER);
                     wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -853,7 +857,7 @@ scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map
 scriptFunctions[A4_SCRIPT_BUY] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
+        let c:A4Character = <A4Character>o;
         if (script.ID!=null && otherCharacter!=null) {
             for(let o2 of otherCharacter.inventory) {
                 if (o2.name == script.ID) {
@@ -878,8 +882,8 @@ scriptFunctions[A4_SCRIPT_BUY] = function(script:A4Script, o:A4Object, map:A4Map
 scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
-        var c:A4Character = <A4Character>o;
-        var priority:number = 10;
+        let c:A4Character = <A4Character>o;
+        let priority:number = 10;
         
         if (script.x==-1 && script.y==-1 && script.ID==null) {
             // you need to specify a target position to interact, since interacting requires a direction
@@ -887,11 +891,11 @@ scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Ma
         } else if (script.x>=0 && script.y>=0) {
             // x,y,map version:
             if (o.isAICharacter()) {
-                var aic:A4AICharacter = <A4AICharacter>o;
-                var ai:A4AI = aic.AI;
+                let aic:A4AICharacter = <A4AICharacter>o;
+                let ai:A4AI = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 
-                var interactDirection:number = A4_DIRECTION_NONE;
+                let interactDirection:number = A4_DIRECTION_NONE;
                 if (o.map==map) {
                     if (o.x+o.getPixelWidth() == script.x && o.y == script.y) interactDirection = A4_DIRECTION_RIGHT;
                     if (o.x-o.getPixelWidth() == script.x && o.y == script.y) interactDirection = A4_DIRECTION_LEFT;
@@ -908,7 +912,7 @@ scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Ma
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    var wme:WME = new WME("object",0);
+                    let wme:WME = new WME("object",0);
                     wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
                     wme.addParameter(script.x, WME_PARAMETER_INTEGER);
                     wme.addParameter(script.y, WME_PARAMETER_INTEGER);
@@ -943,10 +947,10 @@ scriptFunctions[A4_SCRIPT_TAKE_FROM_CONTAINER] = function(script:A4Script, o:A4O
     if (ret == SCRIPT_FAILED ||
         ret == SCRIPT_NOT_FINISHED) return ret;
 
-    var target:A4Object = game.findObjectByIDJustObject(script.ID);
+    let target:A4Object = game.findObjectByIDJustObject(script.ID);
     if (target == null) return SCRIPT_FAILED;
     if (!(target instanceof A4ObstacleContainer)) return SCRIPT_FAILED;
-    var containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
+    let containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
 
     // take the object:
     for(let i:number = 0;i<containerObject.content.length;i++) {
@@ -971,10 +975,10 @@ scriptFunctions[A4_SCRIPT_PUT_IN_CONTAINER] = function(script:A4Script, o:A4Obje
     if (ret == SCRIPT_FAILED ||
         ret == SCRIPT_NOT_FINISHED) return ret;
 
-    var target:A4Object = game.findObjectByIDJustObject(script.ID);
+    let target:A4Object = game.findObjectByIDJustObject(script.ID);
     if (target == null) return SCRIPT_FAILED;
     if (!(target instanceof A4ObstacleContainer)) return SCRIPT_FAILED;
-    var containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
+    let containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
 
     // put the object:
     let character:A4Character = <A4Character>o;
@@ -990,6 +994,56 @@ scriptFunctions[A4_SCRIPT_PUT_IN_CONTAINER] = function(script:A4Script, o:A4Obje
     }
 
     return SCRIPT_FINISHED;
+}
+
+
+scriptFunctions[A4_SCRIPT_PUSH] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (!o.isAICharacter()) return SCRIPT_FAILED;
+    let ret:number = scriptFunctions[A4_SCRIPT_GOTO_CHARACTER](script, o, map, game, otherCharacter);
+    if (ret == SCRIPT_FAILED ||
+        ret == SCRIPT_NOT_FINISHED) return ret;
+
+    // Push the target!
+    if ((<A4Character>o).isIdle()) {
+        let target:A4Object = game.findObjectByIDJustObject(script.ID);
+        let direction:number = script.value;
+        if (direction == -1) direction = o.direction;
+        if (target == null) return SCRIPT_FAILED;
+        if (!target.isPushable()) return SCRIPT_FAILED;
+        if ((<A4Character>o).pushAction(target, direction, game)) {
+            return SCRIPT_FINISHED;
+        } else {
+            return SCRIPT_FAILED;
+        }    
+    } else {
+        return SCRIPT_NOT_FINISHED;
+    }
+}
+
+
+scriptFunctions[A4_SCRIPT_PULL] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (!o.isAICharacter()) return SCRIPT_FAILED;
+    let ret:number = scriptFunctions[A4_SCRIPT_GOTO_CHARACTER](script, o, map, game, otherCharacter);
+    if (ret == SCRIPT_FAILED ||
+        ret == SCRIPT_NOT_FINISHED) return ret;
+
+    // Pull the target!
+    if ((<A4Character>o).isIdle()) {
+        let target:A4Object = game.findObjectByIDJustObject(script.ID);
+        let direction:number = script.value;
+        if (direction == -1) direction = (o.direction+2)%A4_NDIRECTIONS;
+        if (target == null) return SCRIPT_FAILED;
+        if (!target.isPushable()) return SCRIPT_FAILED;
+        if ((<A4Character>o).pushAction(target, direction, game)) {
+            return SCRIPT_FINISHED;
+        } else {
+            return SCRIPT_FAILED;
+        }    
+    } else {
+        return SCRIPT_NOT_FINISHED;
+    }
 }
 
 
@@ -1066,9 +1120,9 @@ scriptFunctions[A4_SCRIPT_STORYSTATECHECK] = function(script:A4Script, o:A4Objec
 
 scriptFunctions[A4_SCRIPT_ADDWME] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var exp:Expression = Expression.fromString(script.text);
+    let exp:Expression = Expression.fromString(script.text);
     if (exp==null) return SCRIPT_FINISHED;
-    var wme:WME = WME.fromExpression(exp, game.ontology, script.value);
+    let wme:WME = WME.fromExpression(exp, game.ontology, script.value);
     (<A4AICharacter>o).AI.memory.addShortTermWME(wme);
     return SCRIPT_FINISHED;
 }
@@ -1076,15 +1130,15 @@ scriptFunctions[A4_SCRIPT_ADDWME] = function(script:A4Script, o:A4Object, map:A4
 
 scriptFunctions[A4_SCRIPT_ADDWMETOOTHERS] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var exp:Expression = Expression.fromString(script.text);
+    let exp:Expression = Expression.fromString(script.text);
     if (exp==null) return SCRIPT_FINISHED;
     
-    var ai:A4AI = (<A4AICharacter>o).AI;
-    var sort:Sort = game.ontology.getSort(script.ID);
+    let ai:A4AI = (<A4AICharacter>o).AI;
+    let sort:Sort = game.ontology.getSort(script.ID);
     
     for(let o2 of ai.getObjectPerceptionCache()) {
         if (o2.is_a(sort)) {
-            var wme:WME = WME.fromExpression(exp, game.ontology, script.value);
+            let wme:WME = WME.fromExpression(exp, game.ontology, script.value);
             (<A4AICharacter>o2).AI.memory.addShortTermWME(wme);
             if (script.x!=0) { // if "select = first":
                 return SCRIPT_FINISHED;
@@ -1097,7 +1151,7 @@ scriptFunctions[A4_SCRIPT_ADDWMETOOTHERS] = function(script:A4Script, o:A4Object
 
 scriptFunctions[A4_SCRIPT_ADDCURRENTPOSITIONWME] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var wme:WME = new WME("location", script.value);
+    let wme:WME = new WME("location", script.value);
     wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
     wme.addParameter(o.x, WME_PARAMETER_INTEGER);
     wme.addParameter(o.y, WME_PARAMETER_INTEGER);
@@ -1112,8 +1166,8 @@ scriptFunctions[A4_SCRIPT_ADDCURRENTPOSITIONWME] = function(script:A4Script, o:A
 scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (!o.isAICharacter()) return SCRIPT_FAILED;
-    var m:AIMemory = (<A4AICharacter>o).AI.memory;
-    var map_tf:A4Map = game.getMap(script.ID);
+    let m:AIMemory = (<A4AICharacter>o).AI.memory;
+    let map_tf:A4Map = game.getMap(script.ID);
     
     if (map_tf==null) {
         return SCRIPT_FAILED;
@@ -1121,7 +1175,7 @@ scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Objec
         for(let b of map_tf.bridges) {
             // perceived a bridge:
             if (b.linkedTo != null) {
-                var wme:WME = new WME("bridge", m.freezeThreshold);
+                let wme:WME = new WME("bridge", m.freezeThreshold);
                 wme.addParameter(b.linkedTo.map.name, WME_PARAMETER_SYMBOL);
                 wme.addParameter(b.x, WME_PARAMETER_INTEGER);
                 wme.addParameter(b.y, WME_PARAMETER_INTEGER);
@@ -1166,7 +1220,7 @@ scriptFunctions[A4_SCRIPT_LOSEITEM] = function(script:A4Script, o:A4Object, map:
 
 scriptFunctions[A4_SCRIPT_GAINITEM] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var o2:A4Object = game.objectFactory.createObject(script.objectDefinition.getAttribute("class"), game, false, false);
+    let o2:A4Object = game.objectFactory.createObject(script.objectDefinition.getAttribute("class"), game, false, false);
     o2.loadObjectAdditionalContent(script.objectDefinition, game, game.objectFactory, null, null);
     
     if (o2==null) console.error("Cannot generate object '"+script.objectDefinition.getAttribute("class")+"' in execute_gainItem");
@@ -1242,7 +1296,7 @@ scriptFunctions[A4_SCRIPT_ROTATE_LEFT] = function(script:A4Script, o:A4Object, m
 
 scriptFunctions[A4_SCRIPT_ANIMATION] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
-    var a:A4Animation = A4Animation.fromXML(script.objectDefinition, game);
+    let a:A4Animation = A4Animation.fromXML(script.objectDefinition, game);
     for(let idx:number = 0;idx<A4_N_ANIMATIONS;idx++) {
         if (animationNames[idx] == script.objectDefinition.getAttribute("name")) {
             o.setAnimation(idx, a);
@@ -1300,7 +1354,7 @@ scriptFunctions[A4_SCRIPT_ADDPERCEPTIONPROPERTY] = function(script:A4Script, o:A
 scriptFunctions[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (script.ID != null) {
-        var idx:number = o.perceptionProperties.indexOf(script.ID);
+        let idx:number = o.perceptionProperties.indexOf(script.ID);
         if (idx >= 0) {
             o.perceptionProperties.splice(idx, 1);
         }
@@ -1350,7 +1404,7 @@ class A4Script {
 
     static fromA4Script(s: A4Script) : A4Script
     {
-        var s2:A4Script = new A4Script(s.type, s.ID, null, 0, false, false);
+        let s2:A4Script = new A4Script(s.type, s.ID, null, 0, false, false);
         s2.ID2 = s.ID2;
         s2.value = s.value;
         s2.x = s.x;
@@ -1384,7 +1438,7 @@ class A4Script {
 
     static fromXML(xml:Element) : A4Script
     {
-        var s:A4Script = new A4Script(0, null, null, 0, false, false);
+        let s:A4Script = new A4Script(0, null, null, 0, false, false);
 
         for(let i:number = 0;scriptNames.length;i++) {
             if (xml.tagName == scriptNames[i]) {
@@ -1407,6 +1461,12 @@ class A4Script {
                         s.ID = xml.getAttribute("id");
                         //console.log("goto XML: " + xml);
                         //console.log("goto XML.ID: " + s.ID);
+                        break;
+
+                    case A4_SCRIPT_PUSH:
+                    case A4_SCRIPT_PULL:
+                        s.ID = xml.getAttribute("id");
+                        s.value = Number(xml.getAttribute("direction"));
                         break;
 
                     case A4_SCRIPT_DIE:
@@ -1538,23 +1598,23 @@ class A4Script {
                         break;
 
                     case A4_SCRIPT_IF:
-                        var if_condition_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "condition");
-                        var if_then_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "then");
-                        var if_else_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "else");
+                        let if_condition_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "condition");
+                        let if_then_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "then");
+                        let if_else_node:Element = s.objectDefinition = getFirstElementChildByTag(xml, "else");
 
                         for(let i:number = 0;i<if_condition_node.children.length;i++) {
-                            var subscript:A4Script = A4Script.fromXML(if_condition_node.children[i]);
+                            let subscript:A4Script = A4Script.fromXML(if_condition_node.children[i]);
                             s.subScripts.push(subscript);
                         }
 
                         for(let i:number = 0;i<if_then_node.children.length;i++) {
-                            var subscript:A4Script = A4Script.fromXML(if_then_node.children[i]);
+                            let subscript:A4Script = A4Script.fromXML(if_then_node.children[i]);
                             s.thenSubScripts.push(subscript);
                         }
 
                         if (if_else_node != null) {
                             for(let i:number = 0;i<if_else_node.children.length;i++) {
-                                var subscript:A4Script = A4Script.fromXML(if_else_node.children[i]);
+                                let subscript:A4Script = A4Script.fromXML(if_else_node.children[i]);
                                 s.elseSubScripts.push(subscript);
                             }
                         }
@@ -1667,8 +1727,8 @@ class A4Script {
 
     saveToXML() : string
     {
-        var xmlString:string = "";
-        var tagClosed:boolean = false;
+        let xmlString:string = "";
+        let tagClosed:boolean = false;
         xmlString+= "<" + scriptNames[this.type];
 
         switch(this.type) {
@@ -1691,6 +1751,14 @@ class A4Script {
                 xmlString += " id=\"" + this.ID + "\"";
                 break;
             }
+            case A4_SCRIPT_PUSH:
+            case A4_SCRIPT_PULL:
+            {
+                xmlString += " id=\"" + this.ID + "\"";
+                xmlString += " direction=\"" + this.value + "\"";
+                break;
+            }
+
             case A4_SCRIPT_DIE:
             case A4_SCRIPT_ROTATE_RIGHT:
             case A4_SCRIPT_ROTATE_LEFT:

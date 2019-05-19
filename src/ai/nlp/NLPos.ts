@@ -371,6 +371,8 @@ class POSParser {
 
       // adverbs:
       "a bit",
+      "a little bit",
+      "a tiny bit",
 
       // random other words:
       "artificial intelligence",
@@ -1382,6 +1384,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.hear", "hear","hears","heard","heared","hearing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.help", "help","helps","helped","helped","helping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.injure", "injure","injures","injured","injured","injuring", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.keep", "keep","keeps","kept","kept","keeping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.embark", "embark","embarks","embarked","embarked","embarking", false, multitokens_raw, o);
@@ -1555,6 +1558,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("then", "time.subsequently", Term.fromString("adverb('time.subsequently'[time.subsequently])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("after that", "time.subsequently", Term.fromString("adverb('time.subsequently'[time.subsequently])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("a bit", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("a little bit", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("a tiny bit", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("slightly", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
     
 
