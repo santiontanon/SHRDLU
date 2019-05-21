@@ -1,6 +1,9 @@
-# SHRDLU
+# Playable demo v2.4! 
 
-Playable demo v2.4! https://www.cs.drexel.edu/~santi/games/SHRDLU-demo24/shrdlu.html
+https://www.cs.drexel.edu/~santi/games/SHRDLU-demo24/shrdlu.html
+
+
+# SHRDLU
 
 <img src="https://github.com/santiontanon/SHRDLU/blob/master/misc/SHRDLU-ss1.png?raw=true" alt="title" width="512"/> 
 
