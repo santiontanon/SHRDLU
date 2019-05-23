@@ -23,13 +23,13 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		// if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
-			//this.skip_to_act_2();
+			this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-		// }
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();

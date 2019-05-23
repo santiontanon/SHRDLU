@@ -22,11 +22,21 @@ class RobotFollow_IntentionAction extends IntentionAction {
 
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				let term:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
+				var cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 			}
 			return true;
-		}			
+		}		
+
+		if (!ai.visionActive) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				var cause:Term = Term.fromString("property.blind('"+ai.selfID+"'[#id])", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+			}
+			return true;
+		}
 
 		if (intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {

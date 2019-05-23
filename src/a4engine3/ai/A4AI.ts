@@ -827,7 +827,7 @@ class A4AI {
             }
 
             // neighbors:
-            if (this.navigationBuffer[current]!=NAVIGATION_BUFFER_BRIDGE) {
+            if (this.navigationBuffer[current]!=NAVIGATION_BUFFER_BRIDGE || current == start) {
                 // LEFT:
                 if (currentx > this.navigationBuffer_x) {
                     next = current-1;
