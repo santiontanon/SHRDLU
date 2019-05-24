@@ -2645,7 +2645,10 @@ class NLGenerator {
 				if (PRTerm.attributes.length == 1) {
 					var msl_included:NLContextEntity[][] = context.filterByAdjective(PRTerm.functor, msl, o);
 					var n:number = msl_included[0].length + msl_included[1].length + msl_included[2].length;
-					if (n<best_n) {
+					if ((msl_included[0].indexOf(target) >= 0 ||
+						 msl_included[1].indexOf(target) >= 0 ||
+						 msl_included[2].indexOf(target) >= 0) &&
+						n<best_n) {
 						best_n = n;
 						best_term = PRTerm;
 					}
@@ -2656,7 +2659,10 @@ class NLGenerator {
 					(<ConstantTermAttribute>PRTerm.attributes[0]).value == target.objectID.value) {
 					var msl_included:NLContextEntity[][] = context.filterByAdjective(PRTerm.attributes[1].sort, msl, o);
 					var n:number = msl_included[0].length + msl_included[1].length + msl_included[2].length;
-					if (n<best_n) {
+					if ((msl_included[0].indexOf(target) >= 0 ||
+						 msl_included[1].indexOf(target) >= 0 ||
+						 msl_included[2].indexOf(target) >= 0) &&
+						n<best_n) {
 						best_n = n;
 						best_term = PRTerm;
 					}
@@ -2666,7 +2672,10 @@ class NLGenerator {
 						   (<ConstantTermAttribute>PRTerm.attributes[0]).value == target.objectID.value) {
 					var msl_included:NLContextEntity[][] = context.filterByRelation1(PRTerm, msl, o, null);
 					var n:number = msl_included[0].length + msl_included[1].length + msl_included[2].length;
-					if (n<best_n) {
+					if ((msl_included[0].indexOf(target) >= 0 ||
+						 msl_included[1].indexOf(target) >= 0 ||
+						 msl_included[2].indexOf(target) >= 0) &&
+						n<best_n) {
 						best_n = n;
 						best_term = PRTerm;
 					}
@@ -2682,7 +2691,10 @@ class NLGenerator {
 						var msl_included:NLContextEntity[][] = context.filterByRelation2(PRTerm, msl, o, null);
 						var n:number = msl_included[0].length + msl_included[1].length + msl_included[2].length;
 //						console.log("evaluating(2) " + PRTerm + " -> " + n);
-						if (n<best_n) {
+						if ((msl_included[0].indexOf(target) >= 0 ||
+							 msl_included[1].indexOf(target) >= 0 ||
+							 msl_included[2].indexOf(target) >= 0) &&
+							n<best_n) {
 							best_n = n;
 							best_term = PRTerm;
 						}

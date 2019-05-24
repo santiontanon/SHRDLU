@@ -1740,4 +1740,6 @@ class NLContext {
 	nextHypotheticalID:number = 0;
 
 	lastDerefErrorType:number = 0;	
+
+	lastTimeUpdated:number = -1;
 }

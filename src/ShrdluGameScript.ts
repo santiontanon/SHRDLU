@@ -25,9 +25,9 @@ class ShrdluGameScript {
 	{
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			//this.skip_to_act_1();
+			this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
-			this.skip_to_act_2();
+			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 		}
 
@@ -93,12 +93,12 @@ class ShrdluGameScript {
 		this.act = "1";
 
 		// start in the infirmary:
-		this.game.currentPlayer.x = 12*8;
-		this.game.currentPlayer.y = 28*8;
+		//this.game.currentPlayer.x = 12*8;
+		//this.game.currentPlayer.y = 28*8;
 
 		// start in the garage:
-		//this.game.currentPlayer.x = 864;
-		//this.game.currentPlayer.y = 40;
+		this.game.currentPlayer.x = 864;
+		this.game.currentPlayer.y = 40;
 //		this.act_1_state = 11;	// waiting for player to ask about other humans
 //		this.act_1_state = 15;	// etaoin will ask to go find Shrdlu
 		this.act_1_state = 19;

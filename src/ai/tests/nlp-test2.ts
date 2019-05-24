@@ -679,6 +679,7 @@ NLParseTestUnifyingListener("take the crate to the kitchen", o.getSort("performa
 NLParseTestUnifyingListener("can you take me to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("can you show me to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("guide me to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("please, guide me to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("show me the way to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))");
 
 // clear the mentions to restart

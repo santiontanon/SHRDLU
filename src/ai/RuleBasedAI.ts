@@ -618,28 +618,28 @@ class RuleBasedAI {
 	    			let tokensLeftToParse:number = null;
 	    			for(let e of this.naturalLanguageParser.error_deref) {
 		    			if (e.derefFromContextErrors.length>0) {
-		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
+		    				if (tokensLeftToParse == null || e.tokensLeftToParse > tokensLeftToParse) {
 		    					tmp = e.derefFromContextErrors[0];
 		    					errorType = e.derefErrorType;
 		    					tokensLeftToParse = e.tokensLeftToParse;
 			    				console.log("reporting derefFromContextErrors:"  + tmp);
 			    			}
 		    			} else if (e.derefUniversalErrors.length>0) {
-		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
+		    				if (tokensLeftToParse == null || e.tokensLeftToParse > tokensLeftToParse) {
 		    					tmp = e.derefUniversalErrors[0];
 		    					errorType = e.derefErrorType;
 		    					tokensLeftToParse = e.tokensLeftToParse;
 			    				console.log("reporting derefUniversalErrors: " + tmp);
 			    			}
 		    			} else if (e.derefHypotheticalErrors.length>0) {
-		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
+		    				if (tokensLeftToParse == null || e.tokensLeftToParse > tokensLeftToParse) {
 			    				tmp = e.derefHypotheticalErrors[0];
 			    				errorType = e.derefErrorType;
 			    				tokensLeftToParse = e.tokensLeftToParse;
 				    			console.log("reporting derefHypotheticalErrors: " + tmp);
 				    		}
 		    			} else if (e.derefQueryErrors.length>0) {
-		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
+		    				if (tokensLeftToParse == null || e.tokensLeftToParse > tokensLeftToParse) {
 			    				tmp = e.derefQueryErrors[0];
 			    				errorType = e.derefErrorType;
 				    			console.log("reporting derefQueryErrors: " + tmp);

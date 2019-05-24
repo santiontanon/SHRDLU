@@ -2367,7 +2367,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb(VERB, N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 nounPhrase(X3, N3, P3, C3)
@@ -2377,7 +2377,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb(VERB, N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 'to'
@@ -2388,7 +2388,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, NOUN))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb(VERB, N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 properNounCompound(NOUN, N3)
@@ -2398,7 +2398,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #not(#cons(VERB, LISTENER, OBJECT2, OBJECT3)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
 			   		 'not'
 			   		 verb(VERB, N, P, [present-tense])
@@ -2410,7 +2410,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #not(#cons(VERB:'verb.call'[symbol], LISTENER, OBJECT2, NOUN)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
 			   		 'not'
 			   		 verb(VERB, N, P, [present-tense])
@@ -2422,7 +2422,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, #not(#cons(VERB, LISTENER, OBJECT2, NOUN)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense])
 			   		 'not'
 			   		 verb(VERB, N, P, [present-tense])
@@ -2434,7 +2434,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, verb.take-to(LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 (verb('action.take'[symbol], N, P, [present-tense]) | verb('verb.show'[symbol], N, P, [present-tense]))
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 'to'
@@ -2446,7 +2446,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, verb.take-to(LISTENER, SPEAKER, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.show'[symbol], N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 'the' ('way'|'path') 'to'
@@ -2458,7 +2458,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.connect'[symbol], N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 ('to'|'with')
@@ -2470,7 +2470,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 verb('verb.put'[symbol], N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 'through' 'to'
@@ -2482,7 +2482,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action(LISTENER, verb.connect-to(LISTENER, SPEAKER, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
 			   		 'i'
 			   		 verb('verb.want'[symbol], N, P, [present-tense])
 			   		 'to'

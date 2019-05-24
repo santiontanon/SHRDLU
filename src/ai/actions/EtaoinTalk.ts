@@ -22,7 +22,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 				// if we are already talking, just wait:
 				if (ai.player_object.map.textBubbles.length > 0) return null;
 				let targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;
-				let context:NLContext = ai.contextForSpeaker(targetID);
+				let context:NLContext = ai.updateContext(targetID);
 				let txt:string = null;
 
 				if (!context.inConversation &&

@@ -438,61 +438,29 @@ class A4RuleBasedAI extends RuleBasedAI {
 	updateContext(speaker:string) : NLContext
 	{
 		let context:NLContext = this.contextForSpeaker(speaker);
+		if (context.lastTimeUpdated >= this.time_in_seconds) return context;
+		context.lastTimeUpdated = this.time_in_seconds;
 		let speakerObject:A4Object = this.game.findObjectByIDJustObject(speaker);
 		context.shortTermMemory = [];
 
 //		console.log("updateContext: speaker: " + speakerObject)
 		// add from perception:
+		let alreadyUpdatedEntities:string[] = [];
 		for(let te of this.shortTermMemory.plainTermList) {
 			let t:Term = te.term;
-			if (t.functor.is_a(this.cache_sort_object) ||
-				t.functor.is_a(this.cache_sort_space_location) ||
-				t.functor.is_a(this.cache_sort_property) ||
-				t.functor.is_a(this.cache_sort_relation)) {
-
-//				console.log("updateContext: t: " + t)
+			if ((t.functor.is_a(this.cache_sort_object) ||
+				 t.functor.is_a(this.cache_sort_space_location) ||
+				 t.functor.is_a(this.cache_sort_property) ||
+				 t.functor.is_a(this.cache_sort_relation))) {
 
 				if (t.attributes[0] instanceof ConstantTermAttribute) {
 					let id:string = (<ConstantTermAttribute>t.attributes[0]).value;
-					// calculate the distance tot he speaker:
-					let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
-					/*
-					if (speakerObject!=null) {
-						if ((t.functor.is_a(this.cache_sort_object) &&
-							 te.provenance == PERCEPTION_PROVENANCE) ||
-							t.functor.name == "space.at") {
-							let objects:A4Object[] = this.game.findObjectByID(id);
-							let object:A4Object = null;
-							if (objects != null && objects.length>0) {
-								object = objects[0];	// we get the top-most container object to calculate the distance
-							}
-	//						console.log("updateContext: object: " + object)
-							if (object != null) {
-								if (object.map == speakerObject.map) {
-									let x1:number = object.x + object.getPixelWidth()/2;
-									let y1:number = object.y + object.tallness + (object.getPixelHeight()-object.tallness)/2;
-									let x2:number = speakerObject.x + speakerObject.getPixelWidth()/2;
-									let y2:number = speakerObject.y + speakerObject.tallness + (speakerObject.getPixelHeight()-speakerObject.tallness)/2;
-									distanceFromSpeaker = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-	//								console.log(speakerObject.name + " from " + object.name + ": " + distanceFromSpeaker);
-								}
-							}
-						} else if (t.functor.is_a(this.cache_sort_space_location)) {
-							let location:AILocation = this.game.getAILocationByID(id)
-							if (location != null) {
-								let mapIdx:number = location.maps.indexOf(speakerObject.map);
-//								console.log("updateContext of a location: " + location.name + " (" + location.id + ", " + mapIdx + ")");
-								if (mapIdx != -1) {
-									distanceFromSpeaker = location.distanceFromObject(speakerObject, mapIdx);
-								}
-//								console.log("updateContext of a location: distanceFromSpeaker = " + distanceFromSpeaker);
-							}
-						}
+					if (alreadyUpdatedEntities.indexOf(id) == -1) {
+						alreadyUpdatedEntities.push(id);
+						let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
+						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
+						if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 					}
-					*/
-
-					let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
-					if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 				}
 			}			
 		}

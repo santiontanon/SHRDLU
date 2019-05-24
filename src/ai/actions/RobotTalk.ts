@@ -28,7 +28,8 @@ class RobotTalk_IntentionAction extends IntentionAction {
 			}
 			if ((performative.attributes[0] instanceof ConstantTermAttribute) && canTalk) {
 				let targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;
-				context = ai.contextForSpeaker(targetID);
+				// context = ai.contextForSpeaker(targetID);
+				context = ai.updateContext(targetID);
 
 				if (!context.inConversation &&
 					performative.functor.name != "perf.callattention" &&
