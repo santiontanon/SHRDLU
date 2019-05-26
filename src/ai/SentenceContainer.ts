@@ -383,7 +383,7 @@ class SentenceContainer {
 										}
 									}
 								}
-								break;
+								if (matches) break;
 							}
 						}
 						if (matches) {

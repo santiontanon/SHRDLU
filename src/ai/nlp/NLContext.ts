@@ -956,16 +956,13 @@ class NLContext {
 										let results:NLContextEntity[] = [];
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
-//											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
+	//											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
 											for(let sr of spatialRelations) {
 												if (relationTerm.functor.subsumes(sr)) {
 													results.push(entity);
 													break;
 												}
 											}
-											//if (spatialRelations.indexOf(relationTerm.functor) != -1) {
-											//	results.push(entity);
-											//}
 										}
 										results_mpl.push(results);
 									}

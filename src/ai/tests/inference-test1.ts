@@ -74,21 +74,7 @@ var term_unification_l:[string,string,boolean][] = [
 //                                         "action.talk('615'[any])",
 //                                         true]        // This test does not work, but I'm unsure if should!
                                     ];
-for(let pair of term_unification_l) {
-    var term1:Term = Term.fromString(pair[0], o);
-    var term2:Term = Term.fromString(pair[1], o);
-    console.log("-------------------------");
-    console.log("Term 1: " + term1);
-    console.log("Term 2: " + term2);
-    var bindings:Bindings = new Bindings();
-    var result:boolean = term1.unify(term2, true, bindings);
-    if (result) {
-        console.log("They unify, bindings: " + bindings);
-    } else {
-        console.log("They do not unify");
-    }
-    if (result != pair[2]) console.error("Unification result incorrect!!");
-}
+
 
 
 /*
@@ -170,6 +156,23 @@ function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpe
     } else {
         console.error("resolutionQueryTest (expected " + numberOfExpectedResults + ", but got "+r.endResults.length+"): " + r.endResults);
     }
+}
+
+
+for(let pair of term_unification_l) {
+    var term1:Term = Term.fromString(pair[0], o);
+    var term2:Term = Term.fromString(pair[1], o);
+    console.log("-------------------------");
+    console.log("Term 1: " + term1);
+    console.log("Term 2: " + term2);
+    var bindings:Bindings = new Bindings();
+    var result:boolean = term1.unify(term2, true, bindings);
+    if (result) {
+        console.log("They unify, bindings: " + bindings);
+    } else {
+        console.log("They do not unify");
+    }
+    if (result != pair[2]) console.error("Unification result incorrect!!");
 }
 
 
@@ -439,5 +442,21 @@ resolutionQueryTest(
      "~space.at('room1'[#id],'room2'[#id])"],
     ["~character(X);~space.at(X,WHERE)"],
     2,
+    o);
+ 
+
+resolutionTest(
+    ["~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])",
+     "cold('david'[#id],'cold'[cold])"],
+    ["hot('david'[#id], 'hot'[hot])"],
+    true,    // should contradict
+    o);
+
+
+resolutionTest(
+    ["~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])",
+     "temperature('david'[#id],'cold'[cold])"],
+    ["temperature('david'[#id], 'hot'[hot])"],
+    true,    // should contradict
     o);
 

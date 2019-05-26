@@ -59,6 +59,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.cache_sort_north = this.o.getSort("north");
 		this.cache_sort_east = this.o.getSort("east");
 		this.cache_sort_south = this.o.getSort("south");
+		this.cache_sort_powered_state = this.o.getSort("powered.state");
+		this.cache_sort_powered_on = this.o.getSort("powered.on");
+		this.cache_sort_powered_off = this.o.getSort("powered.off");
+
 	}
 
 
@@ -274,6 +278,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 								  						  ));
 						for(let property of this.getBaseObjectProperties(o2)) {
 							this.addTermToPerception(property);
+						}
+					}
+				} else if (o.sort.is_a_string("light")) {
+					if (this.game.rooms_with_lights.indexOf(location.id) != -1) {
+						if (this.game.rooms_with_lights_on.indexOf(location.id) != -1) {
+							this.addTermToPerception(new Term(this.cache_sort_powered_state, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new ConstantTermAttribute(this.cache_sort_powered_on.name, this.cache_sort_powered_on)]));
+						} else {
+							this.addTermToPerception(new Term(this.cache_sort_powered_state, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new ConstantTermAttribute(this.cache_sort_powered_off.name, this.cache_sort_powered_off)]));
 						}
 					}
 				}
@@ -805,6 +817,15 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let relations:Sort[] = super.spatialRelations(o1ID, o2ID);
 		let o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
 		let o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
+		if (o1 != null && o2 == null) {
+			// try to see if o2ID is a location:
+			let loc1:AILocation = this.game.getAILocation(o1);
+			let loc2:AILocation = this.game.getAILocationByID(o2ID);	// see if o2 is a location
+			if (loc1 != null && loc1 == loc2) {
+				relations.push(this.cache_sort_space_at);
+			}
+		}
+
 		if (o1 == null || o2 == null) return relations;
 
 		if (o2 instanceof A4Container) {
@@ -1281,5 +1302,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	cache_sort_north:Sort = null;
 	cache_sort_east:Sort = null;
 	cache_sort_south:Sort = null;
-
+	cache_sort_powered_state:Sort = null;
+	cache_sort_powered_on:Sort = null;
+	cache_sort_powered_off:Sort = null;
 }

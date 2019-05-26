@@ -165,6 +165,7 @@
     <sort name="#symbolToSort" super="parser-function"/>
     <sort name="#concatenateSymbols" super="parser-function"/>
     <sort name="#subsumes" super="parser-function"/>
+    <sort name="#sortParent" super="parser-function"/>
     <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
     <sort name="#token" super="parser-function"/>  <!-- #token('hello') is equivalent to 'hello', 
                                                         just so that we can match with a constant in a variable -->

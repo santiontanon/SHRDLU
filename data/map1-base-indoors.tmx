@@ -1272,7 +1272,7 @@
     <property name="direction" type="int" value="2"/>
    </properties>
   </object>
-  <object id="560" type="broken-rover" x="848" y="120" width="40" height="32">
+  <object id="broken-rover" type="broken-rover" x="848" y="120" width="40" height="32">
    <properties>
     <property name="direction" type="int" value="2"/>
    </properties>

@@ -362,8 +362,8 @@
 	<sentence provenance="background" sentence="stasis-pod('david-stasis-pod'[#id])"/>
 	<sentence provenance="background" sentence="relation.belongs('david-stasis-pod'[#id], 'david'[#id])"/>
 	<sentence provenance="background" sentence="relation.belongs('location-as8'[#id], 'david'[#id])"/>
-	<sentence provenance="background" sentence="rover('559'[#id])"/>
-	<sentence provenance="background" sentence="rover('560'[#id])"/>
+	<sentence provenance="background" sentence="rover('garage-rover'[#id])"/>
+	<sentence provenance="background" sentence="rover('broken-rover'[#id])"/>
 	<sentence provenance="background" sentence="wrench('wrench'[#id])"/>
 	<sentence provenance="background" sentence="screwdriver('screwdriver'[#id])"/>
 	<sentence provenance="background" sentence="pliers('pliers'[#id])"/>
@@ -430,6 +430,8 @@
 	<sentence provenance="background" sentence="~full(X:[#id]); ~empty(X)"/>
 	<sentence provenance="background" sentence="~role(X:[#id],Y:[#id],Z); role(X,Z)"/>
 	<sentence provenance="background" sentence="~goal(X,Y); ~goal(X,Z); =(Y,Z)"/>
+	<sentence provenance="background" sentence="powered.state(X:[#id], 'powered.on'[powered.on]); powered.state(X, 'powered.off'[powered.off])"/>
+	<sentence provenance="background" sentence="~powered.state(X:[#id], 'powered.on'[powered.on]); ~powered.state(X, 'powered.off'[powered.off])"/>
 
 	<sentence provenance="background" sentence="~relation.owns(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
 	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); relation.owns(Y,X)"/>

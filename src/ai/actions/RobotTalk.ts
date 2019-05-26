@@ -26,6 +26,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				// }
 				canTalk = true;
 			}
+			if (ai.robot.isTalking()) return null;
 			if ((performative.attributes[0] instanceof ConstantTermAttribute) && canTalk) {
 				let targetID:string = (<ConstantTermAttribute>performative.attributes[0]).value;
 				// context = ai.contextForSpeaker(targetID);
