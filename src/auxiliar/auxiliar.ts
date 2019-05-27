@@ -22,13 +22,14 @@ function getFirstElementChildByTag(xml:Element, tag:string) : Element
 // source: https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
 function stringHashFunction(name:string) : number
 {
-    var hash:number = 0;
+    let hash:number = 0;
+    var chr:number;
     if (name.length === 0) return hash;
     for (var i:number = 0; i < name.length; i++) {
-        var chr:number = name.charCodeAt(i);
+        chr = name.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
     }
+    hash |= 0; // Convert to 32bit integer
     if (hash<0) return -hash;
     return hash;
 }

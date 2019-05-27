@@ -921,7 +921,12 @@ NLParseTestUnifyingListener("could you go forward?", o.getSort("performative"), 
 NLParseTestUnifyingListener("could you move a bit to the left?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.move(V0, [direction.left], [small-amount]))");
 NLParseTestUnifyingListener("enter the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 NLParseTestUnifyingListener("exit the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.leave(V0, '2'[#id]))");
+
+// For version 2.5:
 NLParseTestUnifyingListener("etaoin thank you", o.getSort("performative"),  context, 'etaoin', "perf.thankyou('etaoin'[#id])"); 
+NLParseTestUnifyingListener("same here!", o.getSort("performative"),  context, 'etaoin', "perf.ackresponse('etaoin'[#id])");
+NLParseTestUnifyingListener("why did you turn on the light?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],verb.switch-on(S,'l1'[#id]))");
+NLParseTestUnifyingListener("why did you turn the lights on?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],verb.switch-on(S,'l1'[#id]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

@@ -23,13 +23,13 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-			//this.skip_to_act_2_shrdluback();
-		//}
+			this.skip_to_act_2_shrdluback();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -1845,67 +1845,53 @@ class ShrdluGameScript {
 
 		case 107:
 			// SHRDLU is back!!
+			this.contextShrdlu.inConversation = true;	// this is a hack, to prevent it having to say "hello human", etc.
 			this.shrdluSays("perf.thankyou('david'[#id])");
 			this.shrdluSays("perf.inform('david'[#id], #and(X:verb.help('etaoin'[#id], 'shrdlu'[#id], verb.see('shrdlu'[#id])), time.now(X)))");
 			this.shrdluSays("perf.inform('david'[#id], verb.need('shrdlu'[#id], verb.repair('shrdlu'[#id], 'shrdlu'[#id])))");
 			this.act_2_state = 108;
 			this.game.shrdluAI.respondToPerformatives = false;
+			this.act_2_shrdlu_agenda_state = 1;	// SHRDLU starts its agenda
 			break;
 
 		case 108:
-			if (this.game.shrdluAI.intentions.length == 0 && 
-				this.game.shrdluAI.queuedIntentions.length == 0 &&
-				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
-				this.game.shrdluAI.clearCurrentAction();
-				this.shrdluMoves(98*8, 7*8, this.game.qwertyAI.robot.map);
+			if (this.act_2_state_timer >= 50*2 &&
+				this.act_2_shrdlu_agenda_state >= 4 &&
+				this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.thankyou('david'[#id])")
 				this.act_2_state = 109;
 			}
 			break;
 
 		case 109:
-			if (this.game.shrdluAI.intentions.length == 0 && 
-				this.game.shrdluAI.queuedIntentions.length == 0 &&
-				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
-				this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.future(X)))")
 				this.act_2_state = 110;
 			}
 			break;
 
 		case 110:
-			if (this.act_2_state_timer >= 50*2 &&
-				this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
-				this.etaoinSays("perf.thankyou('david'[#id])")
-				this.act_2_state = 111;
-			}
-			break;
-
-		case 111:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
-				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.future(X)))")
-				this.act_2_state = 112;
-			}
-			break;
-
-		case 112:
 			if (this.game.etaoinAI.intentions.length == 0 &&
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
 				this.queueThoughtBubble("Ok, it seems Shrdlu needs to fix itself first. So, repairs might take a while...");
 				this.queueThoughtBubble("I could go explore outside a bit more, now that I have the rover... or maybe I could just have a nap...");
-				this.act_2_state = 113;
+				this.act_2_state = 111;
 			}
 			break;
 
-		case 113:
-			// waiting for Shrdlu to repair itself
+		case 111:
+			// waiting for Shrdlu to repair Etaoin's memory
 			// ...
+			
 			break;
 		}
 
+		this.shrdluAct2AgendaUpdate()
 
 		if (previous_state == this.act_2_state) {
 			this.act_2_state_timer++;
@@ -2113,6 +2099,96 @@ class ShrdluGameScript {
 	} 
 
 
+	// Controls the behavior of SHRDLU during act 2 (when does it go repair the different parts of the station, etc.)
+	shrdluAct2AgendaUpdate()
+	{
+		let previous_state:number = this.act_2_shrdlu_agenda_state;
+
+		switch(this.act_2_shrdlu_agenda_state) {
+			case 0: // agenda has not started yet
+					break;
+
+			case 1:
+					// shrdlu going to the self-repair spot:
+					if (this.game.shrdluAI.intentions.length == 0 && 
+						this.game.shrdluAI.queuedIntentions.length == 0 &&
+						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+						this.game.shrdluAI.clearCurrentAction();
+						this.shrdluMoves(98*8, 7*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 2;
+					}
+					break;
+
+			case 2:
+					if (this.game.shrdluAI.intentions.length == 0 && 
+						this.game.shrdluAI.queuedIntentions.length == 0 &&
+						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 3;
+					}
+					break;
+			case 3: 	
+					// waiting to arrive to the actual repair spot:
+					if (this.game.shrdluAI.robot.x == 81*8 &&
+						this.game.shrdluAI.robot.y == 5*8) {
+						this.act_2_shrdlu_agenda_state = 10;
+					}
+					break;
+			case 10: 
+					if (this.act_2_shrdlu_agenda_state_timer >= 8*60*60) {
+					//if (this.act_2_shrdlu_agenda_state_timer >= 8*60) {
+						// SHRDLU is self-repaired!
+						this.act_2_shrdlu_agenda_state = 11;
+						this.game.shrdluAI.respondToPerformatives = true;
+						this.game.shrdluAI.visionActive = true;	
+					}
+					break;
+			case 11:
+					// going to repair the stasis chamber:
+					if (this.game.shrdluAI.intentions.length == 0 && 
+						this.game.shrdluAI.queuedIntentions.length == 0 &&
+						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+						this.shrdluMoves(5*8, 24*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 12;
+					}
+					break;
+			case 12: 	
+					// waiting to arrive to the actual spot:
+					if (this.game.shrdluAI.robot.x == 5*8 &&
+						this.game.shrdluAI.robot.y == 24*8) {
+						this.shrdluMoves(7*8, 7*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 13;
+					}
+					break;
+			case 13: 	
+					// waiting to arrive to the actual spot:
+					if (this.game.shrdluAI.robot.x == 7*8 &&
+						this.game.shrdluAI.robot.y == 7*8) {
+						this.shrdluMoves(7*8, 6*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 20;
+					}
+					break;
+			case 20: 
+					// repairing the stasis pod:
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					//if (this.act_2_shrdlu_agenda_state_timer >= 1*60) {
+						// SHRDLU is self-repaired!
+						this.act_2_shrdlu_agenda_state = 21;
+					}
+					break;
+
+			// ...
+		}
+
+		// udpate timers:
+		if (previous_state == this.act_2_shrdlu_agenda_state) {
+			this.act_2_shrdlu_agenda_state_timer++;
+		} else {
+			this.act_2_shrdlu_agenda_state_timer = 0;
+		}
+	}
+
+
 	playerHasItemP(itemId:string) : boolean
 	{
 		for(let item of this.game.currentPlayer.inventory) {
@@ -2259,6 +2335,8 @@ class ShrdluGameScript {
         xmlString += "act_2_state=\""+this.act_2_state+"\"\n";   
         xmlString += "act_2_state_timer=\""+this.act_2_state_timer+"\"\n";   
         xmlString += "act_2_state_start_time=\""+this.act_2_state_start_time+"\"\n";   
+        xmlString += "act_2_shrdlu_agenda_state=\""+this.act_2_shrdlu_agenda_state+"\"\n";   
+        xmlString += "act_2_shrdlu_agenda_state_timer=\""+this.act_2_shrdlu_agenda_state_timer+"\"\n";   
 
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
@@ -2312,6 +2390,8 @@ class ShrdluGameScript {
     	this.act_2_state = Number(xml.getAttribute("act_2_state"));
     	this.act_2_state_timer = Number(xml.getAttribute("act_2_state_timer"));
     	this.act_2_state_start_time = Number(xml.getAttribute("act_2_state_start_time"));
+    	this.act_2_shrdlu_agenda_state = Number(xml.getAttribute("act_2_shrdlu_agenda_state"));
+    	this.act_2_shrdlu_agenda_state_timer = Number(xml.getAttribute("act_2_shrdlu_agenda_state_timer"));
 
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
@@ -2368,6 +2448,8 @@ class ShrdluGameScript {
 	act_2_state_timer:number = 0;
 	act_2_state_start_time:number = 0;
 
+	act_2_shrdlu_agenda_state:number = 0;
+	act_2_shrdlu_agenda_state_timer:number = 0;
 
 	finding_life_side_plot_taken_question:boolean = false;
 	finding_life_side_plot_analyzed_question:boolean = false;

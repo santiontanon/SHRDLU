@@ -1,4 +1,4 @@
-var SORT_HASH_SIZE:number = 1024;
+var SORT_HASH_SIZE:number = 2048;
 
 class Ontology {
     loadSortsFromXML(xml:Element)

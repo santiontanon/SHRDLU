@@ -22,6 +22,7 @@ class SentenceEntry {
 	timeEnd:number;	// this is just for the sentences that go to the previous sentence list
 	previousInTime:SentenceEntry;	// if this sentence has been overwritten by another one, this points to the previous one
 
+	firstMatch_counter:number = -1;	// used to prevent linear search, by marking which sentences have already been retrieved in this cycle
 	allPotentialMatchesWithSentenceForResolution_counter:number = -1;	// used to prevent linear search, by marking which sentences have already been retrieved in this cycle
 }
 
@@ -268,12 +269,15 @@ class SentenceContainer {
 							break;
 						}
 					}
-					if (matchesArity && this.match_cache_l.indexOf(se)==-1) {
+					//if (matchesArity && this.match_cache_l.indexOf(se)==-1) {
+					if (matchesArity && se.firstMatch_counter < this.firstMatch_counter) {
+						se.firstMatch_counter = this.firstMatch_counter;
 						this.match_cache_l.push(se);
 					}
 				}
 			}
 		}
+		this.firstMatch_counter++;
 		this.match_cache_idx = 0;
 		return this.nextMatch();
 	}
@@ -422,5 +426,6 @@ class SentenceContainer {
 	match_cache_l:SentenceEntry[] = null;
 	match_cache_idx:number = -1;
 
+	firstMatch_counter:number = 0;
 	allPotentialMatchesWithSentenceForResolution_counter:number = 0;	// used to prevent linear search, by marking which sentences have already been retrieved in this cycle
 }
