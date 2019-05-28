@@ -114,6 +114,7 @@ for(let ceg of ceg_l) {
 	}
 }
 
+
 // simple performatives
 testNLG("perf.greet('1'[#id])", "etaoin", "Hello david!");
 testNLG("perf.greet(X:[#id])", "etaoin", "Hello!");
@@ -162,7 +163,6 @@ testNLG("perf.q.predicate('1'[#id],#and(X:verb.remember('1'[#id],'s1'[#id]), tim
 testNLG("perf.q.query('1'[#id], Y, name('1'[#id],Y))", "etaoin", "what is your name?");
 testNLG("perf.q.query('1'[#id], Y, space.at('1'[#id],Y))", "etaoin", "what are you in?");
 testNLG("perf.q.predicate('1'[#id],#and(X:verb.remember('1'[#id],#and(#query(Y), name('1'[#id],Y))), time.present(X)))", "etaoin", "do you remember what is your name?");
-
 testNLG("perf.q.whereis('1'[#id], 'etaoin'[#id])", "etaoin", "where am I?");
 testNLG("perf.q.whereis('1'[#id], '1'[#id])", "etaoin", "where are you?");
 testNLG("perf.q.whereis('1'[#id], 'qwerty'[#id])", "etaoin", "where is qwerty?");
@@ -296,5 +296,4 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V0_0:[body], V3:'k1'[#id]))", "
 testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))", "etaoin", "there is a corpse in the kitchen");
 testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,[space.here])))", "etaoin", "there is a corpse here");
 testNLG("perf.inform('etaoin'[#id], #and(X:verb.help('qwerty'[#id], 'etaoin'[#id], verb.see('etaoin'[#id])), time.now(X)))", "etaoin", "qwerty helps me to see now");
-
 
