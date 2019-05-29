@@ -917,8 +917,10 @@ class A4Game {
         // figure out which maps to update:
         var maps_to_update:A4Map[] = [];
         for(let m of this.currentPlayer.map.getNeighborMaps()) {
-            maps_to_update.push(m);
+            if (maps_to_update.indexOf(m) == -1) maps_to_update.push(m);
         }
+        if (maps_to_update.indexOf(this.shrdluAI.robot.map) == -1) maps_to_update.push(this.shrdluAI.robot.map);
+       
         for(let player of this.players) {
             if (maps_to_update.indexOf(player.map)==-1) maps_to_update.push(player.map);
         }

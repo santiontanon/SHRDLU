@@ -23,13 +23,14 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-			this.skip_to_act_2_shrdluback();
-		}
+			//this.skip_to_act_2_shrdluback();
+		//	this.skip_to_act_2_shrdluback_repair_outside();
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -173,6 +174,15 @@ class ShrdluGameScript {
 		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);
 		this.game.shrdluAI.robot.warp(864, 48, this.game.maps[0]);
 		this.act_2_state = 106;
+	}
+
+
+	skip_to_act_2_shrdluback_repair_outside()
+	{
+		this.skip_to_act_2_shrdluback();
+		this.act_2_state = 111;
+		this.act_2_shrdlu_agenda_state = 30;
+		this.game.shrdluAI.visionActive = true;	
 	}
 
 
@@ -2141,6 +2151,7 @@ class ShrdluGameScript {
 						this.act_2_shrdlu_agenda_state = 11;
 						this.game.shrdluAI.respondToPerformatives = true;
 						this.game.shrdluAI.visionActive = true;	
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
 			case 11:
@@ -2171,9 +2182,172 @@ class ShrdluGameScript {
 			case 20: 
 					// repairing the stasis pod:
 					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
-					//if (this.act_2_shrdlu_agenda_state_timer >= 1*60) {
-						// SHRDLU is self-repaired!
+						// stasis pod repaired
 						this.act_2_shrdlu_agenda_state = 21;
+						this.shrdluMoves(87*8, 33*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+			case 21:
+					// waiting to arrive to the actual spot:
+					if (this.game.shrdluAI.robot.x == 87*8 &&
+						this.game.shrdluAI.robot.y == 33*8) {
+						this.shrdluMoves(91*8, 20*8, this.game.qwertyAI.robot.map);
+						this.act_2_shrdlu_agenda_state = 22;
+					}
+					break;
+			case 22: 
+					// repairing etaoin:
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						// etaoin repaired
+						this.act_2_shrdlu_agenda_state = 30;
+					}
+					break;
+			case 30: 
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'comm-tower'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.shrdluMoves(6*8, 21*8, this.game.getMap("Aurora Station Outdoors"));
+					this.act_2_shrdlu_agenda_state = 31;
+					break;
+			case 31: 
+					if (this.game.shrdluAI.robot.x == 6*8 &&
+						this.game.shrdluAI.robot.y == 21*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 32;
+					}
+					break;
+			case 32: 
+					// repairing the stasis pod:
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						// comm tower repaired
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+
+			// Random repairs loop:
+			case 40: 
+					if (this.game.shrdluAI.robot.x == 81*8 &&
+						this.game.shrdluAI.robot.y == 5*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station") {
+						let nextStates:number[] = [50, 60, 70, 80, 90];
+						let choice:number =  Math.floor(Math.random() * nextStates.length);
+						this.act_2_shrdlu_agenda_state = nextStates[choice];
+					}
+					break;
+
+			case 50: 
+					// power plant
+					this.shrdluMoves(72*8, 44*8, this.game.getMap("Aurora Station Outdoors"));
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.act_2_shrdlu_agenda_state = 51;
+					break;
+			case 51: 
+					// power plant
+					if (this.game.shrdluAI.robot.x == 72*8 &&
+						this.game.shrdluAI.robot.y == 44*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 52;
+					}
+					break;
+			case 52: 
+					// power plant
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+
+			case 60: 
+					// green houses
+					this.shrdluMoves(41*8, 17*8, this.game.getMap("Aurora Station Outdoors"));
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.act_2_shrdlu_agenda_state = 61;
+					break;
+			case 61: 
+					// green houses
+					if (this.game.shrdluAI.robot.x == 41*8 &&
+						this.game.shrdluAI.robot.y == 17*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 62;
+					}
+					break;
+			case 62: 
+					// green houses
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+
+			case 70: 
+					// recycling
+					this.shrdluMoves(32*8, 17*8, this.game.getMap("Aurora Station Outdoors"));
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.act_2_shrdlu_agenda_state = 71;
+					break;
+			case 71: 
+					// recycling
+					if (this.game.shrdluAI.robot.x == 32*8 &&
+						this.game.shrdluAI.robot.y == 17*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 72;
+					}
+					break;
+			case 72: 
+					// recycling
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+
+			case 80: 
+					// recycling
+					this.shrdluMoves(54*8, 16*8, this.game.getMap("Aurora Station Outdoors"));
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.act_2_shrdlu_agenda_state = 81;
+					break;
+			case 81: 
+					// recycling
+					if (this.game.shrdluAI.robot.x == 54*8 &&
+						this.game.shrdluAI.robot.y == 16*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 82;
+					}
+					break;
+			case 82: 
+					// recycling
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+
+			case 90: 
+					// oxygen
+					this.shrdluMoves(54*8, 16*8, this.game.getMap("Aurora Station Outdoors"));
+					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					this.act_2_shrdlu_agenda_state = 91;
+					break;
+			case 91: 
+					// oxygen
+					if (this.game.shrdluAI.robot.x == 54*8 &&
+						this.game.shrdluAI.robot.y == 16*8 &&
+						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
+						this.act_2_shrdlu_agenda_state = 92;
+					}
+					break;
+			case 92: 
+					// oxygen
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+						this.act_2_shrdlu_agenda_state = 40;
+						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
 

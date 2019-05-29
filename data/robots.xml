@@ -34,6 +34,7 @@
 		</items>
 		<onStart>
 			<addPerceptionProperty property="white"/>
+			<familiarWithMap map="Aurora Station"/>
 		</onStart>
 	</CharacterClass>
 
@@ -64,6 +65,8 @@
 		</items>
 		<onStart>
 			<addPerceptionProperty property="red"/>
+			<familiarWithMap map="Aurora Station"/>
+			<familiarWithMap map="Aurora Station Outdoors"/>
 		</onStart>
 	</CharacterClass>
 </Characters>

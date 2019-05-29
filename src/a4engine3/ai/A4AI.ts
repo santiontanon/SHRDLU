@@ -139,10 +139,13 @@ class A4AI {
         }
         
         // 2) fact checking:
+        // commented out, as this is not needed in SHRDLU:
+        /*
         // pick a wme at random from the long term memory, and see if it contradicts perceptions:
         var wme:WME = this.memory.getRandomLongTermWME();
         if (wme!=null && wme.functor == "object") this.factCheckObject(wme, map, perception_x0, perception_y0, perception_x1, perception_y1);
         if (wme!=null && wme.functor == "inventory") this.factCheckInventory(wme);
+        */
     }
 
 
@@ -746,6 +749,20 @@ class A4AI {
                                          wme.parameters[2],
                                          wme.parameters[3],
                                          wme.parameters[4],
+                                         A4CHARACTER_COMMAND_IDLE, priority, flee, null);
+                    }
+                }
+                var l:WME[] = this.memory.retrieveByFunctor("airlock-outside-door");
+                for(let wme of l) {
+                    if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
+                        wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
+                        wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
+                        wme.parameters[5] == this.navigationBuffer_map.name &&
+                        wme.parameters[0] == w.parameters[5]) {
+                        this.addPFTarget(wme.parameters[1],
+                                         wme.parameters[2]+8,    // +8 to compensate for the tallness of the airlock door
+                                         wme.parameters[3],
+                                         wme.parameters[4]+8,
                                          A4CHARACTER_COMMAND_IDLE, priority, flee, null);
                     }
                 }

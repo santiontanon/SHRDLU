@@ -324,6 +324,19 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                     // try to open it!
                     let cmd:A4CharacterCommand = new A4CharacterCommand(A4CHARACTER_COMMAND_INTERACT, 0, o.direction, null, null, 10);
                     (<A4Character>o).issueCommand(cmd, game);
+                } else if ((o2 instanceof ShrdluAirlockDoor)) {
+                    if (o2.targetMap == script.ID) {
+                        // if we are going outside, then use it:
+                        let door:ShrdluAirlockDoor = <ShrdluAirlockDoor>o2;
+                        // close the corresponding airlock door if it is not closed:
+                        let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
+                        if (otherdoor == null || otherdoor.closed) {
+                            // if it is closed, then teleport outside:
+                            game.requestWarp(o, map, door.targetX, door.targetY);
+                        } else {
+                            otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
+                        }
+                    }
                 }
             }
 
@@ -1234,6 +1247,22 @@ scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Objec
                 m.addLongTermWME(wme);
             }
         }
+        for(let o of map_tf.objects) {
+            // perceived a bridge:
+            if (o instanceof ShrdluAirlockDoor) {
+                let d:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
+                let wme:WME = new WME(d.sort.name, m.freezeThreshold);
+                wme.addParameter(d.targetMap, WME_PARAMETER_SYMBOL);
+                wme.addParameter(d.x, WME_PARAMETER_INTEGER);
+                wme.addParameter(d.y, WME_PARAMETER_INTEGER);
+                wme.addParameter(d.x+d.getPixelWidth(), WME_PARAMETER_INTEGER);
+                wme.addParameter(d.y+d.getPixelHeight(), WME_PARAMETER_INTEGER);
+                wme.addParameter(map_tf.name, WME_PARAMETER_SYMBOL);
+                wme.sourceObject = d;
+                m.addLongTermWME(wme);
+            }
+        }
+
         return SCRIPT_FINISHED;
     }    
 };

@@ -255,7 +255,7 @@
   <object id="725" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="0" width="648" height="8"/>
   <object id="726" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="8" height="456"/>
   <object id="727" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="472" width="648" height="8"/>
-  <object id="731" type="communication.tower" x="44" y="136" width="24" height="48"/>
+  <object id="comm-tower" type="communication.tower" x="44" y="136" width="24" height="48"/>
   <object id="733" type="paper.recycling.facility" x="240" y="128" width="8" height="24"/>
   <object id="734" type="paper.recycling.facility" x="248" y="128" width="8" height="24"/>
   <object id="735" type="plastic.recycling.facility" x="256" y="128" width="8" height="24"/>
