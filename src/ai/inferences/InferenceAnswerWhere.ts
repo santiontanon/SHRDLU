@@ -93,7 +93,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						var targetObject:A4Object = targetObject_l[0];
 						var relations:Sort[] = ai.spatialRelations(targetID, speakerCharacterID);
 						if (relations != null && relations.length>0) {
-							var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[0].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
+							var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[relations.length-1].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
 							var term:Term = Term.fromString(tmp, ai.o);
 							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 							return;
@@ -130,7 +130,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						// if the object we are asking about is a location, and we are NOT in that location, then report directions:
 						var relations:Sort[] = ai.spatialRelationsFromLocation(targetIfItsALocation, speakerObject);
 						if (relations != null && relations.length>0) {
-							var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[0].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
+							var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[relations.length-1].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
 							var term:Term = Term.fromString(tmp, ai.o);
 							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 							return;

@@ -332,12 +332,37 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                         let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                         if (otherdoor == null || otherdoor.closed) {
                             // if it is closed, then teleport outside:
-                            game.requestWarp(o, map, door.targetX, door.targetY);
+                            game.requestWarp(o, map, door.targetX, door.targetY-o.tallness);
                         } else {
                             otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
                         }
                     }
                 }
+            }
+
+            // if we are going to a different map, check for potential airlocks left/right:
+            if (script.ID != o.map.name) {
+                collisions = o.map.getAllObjectCollisionsWithOffset(o, direction_x_inc[(o.direction+1)%A4_NDIRECTIONS], direction_y_inc[(o.direction+1)%A4_NDIRECTIONS]);
+                collisions = collisions.concat(o.map.getAllObjectCollisionsWithOffset(o, direction_x_inc[(o.direction+3)%A4_NDIRECTIONS], direction_y_inc[(o.direction+3)%A4_NDIRECTIONS]));
+                for(let o2 of collisions) {
+                    if ((o2 instanceof ShrdluAirlockDoor)) {
+                        if (o2.targetMap == script.ID) {
+                            // if we are going outside, then use it:
+                            let door:ShrdluAirlockDoor = <ShrdluAirlockDoor>o2;
+                            // close the corresponding airlock door if it is not closed:
+                            let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
+                            if (otherdoor == null || otherdoor.closed) {
+                                // if it is closed, then teleport outside:
+                                game.requestWarp(o, map, door.targetX, door.targetY-o.tallness);
+                            } else {
+                                otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
+                            }
+                        }
+                    }
+                }
+
+                // ....
+
             }
 
             return SCRIPT_NOT_FINISHED;
