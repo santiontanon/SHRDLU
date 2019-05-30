@@ -2752,7 +2752,7 @@ class NLGenerator {
 				if (best_n == 1) return [selected, best_n];
 			}
 
-			msl = best_msl;
+			if (best_msl != null) msl = best_msl;
 			remaining.splice(remaining.indexOf(best_term),1);
 		}
 
