@@ -2167,7 +2167,13 @@ class A4Game {
     getAILocation(o:A4Object) : AILocation
     {
         var map:A4Map = o.map;
-        if (map==null) return null;
+        if (map==null) {
+            let tmp:A4Object[] = this.findObjectByID(o.ID);
+            if (tmp == null || tmp.length == 0) return null;
+            if (tmp[0].map == null) return null;
+            map = tmp[0].map;
+            o = tmp[0];
+        }
         var tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
         var tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
         return this.getAILocationTileCoordinate(map, tile_x, tile_y);

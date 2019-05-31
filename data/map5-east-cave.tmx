@@ -79,7 +79,7 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="1000" type="shrdlu" x="224" y="40" width="16" height="24"/>
+  <object id="shrdlu" type="shrdlu" x="224" y="40" width="16" height="24"/>
   <object id="1001" name="EAST-CAVE" type="Bridge" x="32" y="120" width="16" height="8"/>
   <object id="1002" name="EAST-CAVE" type="BridgeDestination" x="32" y="96" width="16" height="24"/>
   <object id="1003" type="large-boulder" x="128" y="72" width="16" height="16"/>

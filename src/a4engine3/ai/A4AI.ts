@@ -760,9 +760,9 @@ class A4AI {
                         wme.parameters[5] == this.navigationBuffer_map.name &&
                         wme.parameters[0] == w.parameters[5]) {
                         this.addPFTarget(wme.parameters[1],
-                                         wme.parameters[2]+8,    // +8 to compensate for the tallness of the airlock door
+                                         wme.parameters[2],
                                          wme.parameters[3],
-                                         wme.parameters[4]+8,
+                                         wme.parameters[4],
                                          A4CHARACTER_COMMAND_IDLE, priority, flee, null);
                     }
                 }

@@ -247,7 +247,9 @@ class POSParser {
       "access key",
       "aurora station",
       "comm tower",
+      "comm towers",
       "communication tower",
+      "communication towers",
       "recycling facility",
       "oxygen level",
       "oxygen tank",
@@ -357,8 +359,11 @@ class POSParser {
       "plastic 3d printer",
       "infirmary bed",
       "computer table",
+      "computer tables",
       "computer tower",
+      "computer towers",
       "gym bench",
+      "gym benches",
       "powder milk",
       "scifi writer",
       "science fiction writer",
@@ -1075,6 +1080,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("greenhouse", "greenhouse.facility", o);
     this.addStandardNounPOS("gym", "gym.room", o);
     this.addStandardNounPOS("gym bench", "gym-bench", o);
+    this.addTokenPOS(new PartOfSpeech("gym bench", "gym-bench", Term.fromString("noun('gym-bench'[gym-bench], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("gym benches", "gym-bench", Term.fromString("noun('gym-bench'[gym-bench], [plural])", o), 1.0));
     this.addStandardNounPOS("gymnasium", "gym.room", o);
     this.addStandardNounPOS("hand", "hand", o);
     this.addTokenPOS(new PartOfSpeech("hardware", "hardware", Term.fromString("noun('hardware'[hardware], [grammatical-number])", o), 1.0));

@@ -235,19 +235,17 @@ class EtaoinAI extends A4RuleBasedAI {
 		let l:AILocation = this.game.getAILocation(o);
 		if (l == null) return false;
 
-		// if the player is inside the station:
+		// if the object is in the station (settlement):
 		if (l == this.baseindoors_location) return true;
-		if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.baseindoors_location)]) return true;
+		if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.baseoutdoors_location)]) return true;
 
-		// if the player has the communicator:
-		if (o instanceof A4Character) {
-			if ((<A4Character>(o)).inventory.indexOf(this.communicator_object) >= 0) {
-				// communicator works only in the base (indoor or outdoor):
-				if (l == this.baseindoors_location) return true;
-				if (l == this.baseoutdoors_location) return true;
-				if (l == this.spacervalleysouth_location) return true;
-				if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.baseoutdoors_location)]) return true;
-			}
+		// if it is the comunicator:
+		if (o == this.communicator_object) {
+			// communicator works only in spacer valley south:
+			if (l == this.baseindoors_location) return true;
+			if (l == this.baseoutdoors_location) return true;
+			if (l == this.spacervalleysouth_location) return true;
+			if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.spacervalleysouth_location)]) return true;
 		}
 
 		return false;

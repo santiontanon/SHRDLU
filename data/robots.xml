@@ -44,6 +44,11 @@
 		<animation name="idle-right" dx="3" dy="3" period="4" looping="false" file="robots.png">102</animation>
 		<animation name="idle-left" dx="3" dy="3" period="4" looping="false" file="robots.png">105</animation>
 
+		<animation name="moving-down" dx="3" dy="3" period="4" looping="false" file="robots.png">96,144</animation>
+		<animation name="moving-up" dx="3" dy="3" period="4" looping="false" file="robots.png">99,147</animation>
+		<animation name="moving-right" dx="3" dy="3" period="4" looping="false" file="robots.png">102,150</animation>
+		<animation name="moving-left" dx="3" dy="3" period="4" looping="false" file="robots.png">105,153</animation>
+
 		<animation name="talking-down" dx="3" dy="3" period="6" looping="true" file="robots.png">96,192</animation>
 		<animation name="talking-up" dx="3" dy="3" period="6" looping="true" file="robots.png">99,195</animation>
 		<animation name="talking-right" dx="3" dy="3" period="6" looping="true" file="robots.png">102,198</animation>

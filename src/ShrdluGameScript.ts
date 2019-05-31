@@ -29,7 +29,7 @@ class ShrdluGameScript {
 			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-			//this.skip_to_act_2_shrdluback_repair_outside();
+		//	this.skip_to_act_2_shrdluback_repair_outside();
 		//}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -2230,6 +2230,11 @@ class ShrdluGameScript {
 					if (this.game.shrdluAI.robot.x == 81*8 &&
 						this.game.shrdluAI.robot.y == 5*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station") {
+						this.act_2_shrdlu_agenda_state = 41;
+					}
+					break;
+			case 41: 
+					if (this.act_2_shrdlu_agenda_state_timer >= 10*60) {
 						let nextStates:number[] = [50, 60, 70, 80, 90];
 						let choice:number =  Math.floor(Math.random() * nextStates.length);
 						this.act_2_shrdlu_agenda_state = nextStates[choice];

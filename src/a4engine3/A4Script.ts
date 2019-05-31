@@ -1279,7 +1279,7 @@ scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Objec
                 let wme:WME = new WME(d.sort.name, m.freezeThreshold);
                 wme.addParameter(d.targetMap, WME_PARAMETER_SYMBOL);
                 wme.addParameter(d.x, WME_PARAMETER_INTEGER);
-                wme.addParameter(d.y, WME_PARAMETER_INTEGER);
+                wme.addParameter(d.y+d.tallness, WME_PARAMETER_INTEGER);
                 wme.addParameter(d.x+d.getPixelWidth(), WME_PARAMETER_INTEGER);
                 wme.addParameter(d.y+d.getPixelHeight(), WME_PARAMETER_INTEGER);
                 wme.addParameter(map_tf.name, WME_PARAMETER_SYMBOL);
