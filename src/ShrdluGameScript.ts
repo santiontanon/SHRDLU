@@ -24,11 +24,11 @@ class ShrdluGameScript {
 	update() 
 	{
 		if (this.act == "intro") {
-			this.skip_to_act_end_of_intro();
+			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-			//this.skip_to_act_2_shrdluback();
+			this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
 		}
 
@@ -1901,8 +1901,54 @@ class ShrdluGameScript {
 
 		case 111:
 			// waiting for Shrdlu to repair Etaoin's memory
+			if (this.game.currentPlayer.sleepingInBed != null && this.act_2_shrdlu_agenda_state < 22) {
+				this.act_2_state = 120;
+			}			
+			break;
+
+		case 120:
+			if (this.act_2_state_timer == 0) {
+				this.game.eyesClosedState = 3;
+				this.game.eyesClosedTimer = 0;
+				this.game.textInputAllowed = false;
+			} else if (this.act_2_state_timer >= EYESOPEN_SPEED + 60) {
+				// fast forward the state:
+				this.game.shrdluAI.respondToPerformatives = true;
+				this.game.shrdluAI.visionActive = true;	
+				this.act_2_shrdlu_agenda_state = 22;
+				this.act_2_shrdlu_agenda_state_timer = 30*60;
+				this.game.shrdluAI.clearCurrentAction();
+				this.game.shrdluAI.robot.scriptQueues = [];
+				this.game.requestWarp(this.game.shrdluAI.robot, this.game.qwertyAI.robot.map, 91*8, 20*8);
+				this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+				this.act_2_state = 121;
+			}
+			break;
+
+		case 121:
+			if (this.act_2_state_timer == 0) {
+				this.game.in_game_seconds += 3600*8;	// sleeping for 8 hours
+				this.game.narrationMessages.push("Several hours later...");
+				this.game.currentPlayer.x = 560;
+				this.game.currentPlayer.y = 200;
+				this.game.currentPlayer.direction = A4_DIRECTION_DOWN;
+			} else if (this.act_2_state_timer == 120) {
+				this.game.narrationMessages = [];
+			} else if (this.act_2_state_timer == 180) {
+				this.game.eyesClosedState = 1;
+				this.game.eyesClosedTimer = 0;
+				this.game.textInputAllowed = false;
+			} else if (this.act_2_state_timer == 180 + EYESOPEN_SPEED) {
+				this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED;
+				this.game.textInputAllowed = true;
+				this.act_2_state = 200;
+			}
+			break;
+		
+
+		case 200:
+			// waiting for Shrdlu to repair Etaoin's memory, but player has already slept:
 			// ...
-			
 			break;
 		}
 

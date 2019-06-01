@@ -882,45 +882,47 @@ class A4EngineApp {
                 if (k.key_press(this.key_messageconsole_up)) this.game.messageConsoleUp();
                 if (k.key_press(this.key_messageconsole_down)) this.game.messageConsoleDown();
 
-                // issuing player commands:
-                if (k.keyboard[this.key_take]) {
-                    //if (this.game.currentPlayer.isIdle()) {
-                        if (k.key_press(this.key_left)) {
-                            this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_LEFT,this.game.currentPlayer.direction);
-                            this.take_press_used_for_push = true;
+                // issuing player commands (only if not sleeping):
+                if (this.game.eyesClosedState == 2) {
+                    if (k.keyboard[this.key_take]) {
+                        //if (this.game.currentPlayer.isIdle()) {
+                            if (k.key_press(this.key_left)) {
+                                this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_LEFT,this.game.currentPlayer.direction);
+                                this.take_press_used_for_push = true;
+                            }
+                            if (k.key_press(this.key_up)) {
+                                this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_UP,this.game.currentPlayer.direction);
+                                this.take_press_used_for_push = true;
+                            }
+                            if (k.key_press(this.key_right)) {
+                                this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_RIGHT,this.game.currentPlayer.direction);
+                                this.take_press_used_for_push = true;
+                            }
+                            if (k.key_press(this.key_down)) {
+                                this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_DOWN,this.game.currentPlayer.direction);
+                                this.take_press_used_for_push = true;
+                            }
+                        //}
+                    } else {
+                        var command:number = -1;
+                        var direction:number = A4_DIRECTION_NONE;
+                        if (k.keyboard[this.key_left]) direction = A4_DIRECTION_LEFT;
+                        if (k.keyboard[this.key_up]) direction = A4_DIRECTION_UP;
+                        if (k.keyboard[this.key_right]) direction = A4_DIRECTION_RIGHT;
+                        if (k.keyboard[this.key_down]) direction = A4_DIRECTION_DOWN;
+                        if (direction != A4_DIRECTION_NONE) {
+                            if (k.keyboard[this.key_fast_time]) fast_time = true;
+                            command = this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,direction);
                         }
-                        if (k.key_press(this.key_up)) {
-                            this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_UP,this.game.currentPlayer.direction);
-                            this.take_press_used_for_push = true;
-                        }
-                        if (k.key_press(this.key_right)) {
-                            this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_RIGHT,this.game.currentPlayer.direction);
-                            this.take_press_used_for_push = true;
-                        }
-                        if (k.key_press(this.key_down)) {
-                            this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_PUSH,A4_DIRECTION_DOWN,this.game.currentPlayer.direction);
-                            this.take_press_used_for_push = true;
-                        }
-                    //}
-                } else {
-                    var command:number = -1;
-                    var direction:number = A4_DIRECTION_NONE;
-                    if (k.keyboard[this.key_left]) direction = A4_DIRECTION_LEFT;
-                    if (k.keyboard[this.key_up]) direction = A4_DIRECTION_UP;
-                    if (k.keyboard[this.key_right]) direction = A4_DIRECTION_RIGHT;
-                    if (k.keyboard[this.key_down]) direction = A4_DIRECTION_DOWN;
-                    if (direction != A4_DIRECTION_NONE) {
-                        if (k.keyboard[this.key_fast_time]) fast_time = true;
-                        command = this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,direction);
                     }
-                }
                 
-//                if (k.key_press(this.key_take)) this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_TAKE,0,A4_DIRECTION_NONE);
-                if (k.key_first_press(this.key_take)) {
-                    this.take_press_used_for_push = false;
-                }
-                if (k.key_release(this.key_take) && !this.take_press_used_for_push) {
-                    this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_TAKE,A4_DIRECTION_NONE,this.game.currentPlayer.direction);
+//                    if (k.key_press(this.key_take)) this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_TAKE,0,A4_DIRECTION_NONE);
+                    if (k.key_first_press(this.key_take)) {
+                        this.take_press_used_for_push = false;
+                    }
+                    if (k.key_release(this.key_take) && !this.take_press_used_for_push) {
+                        this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_TAKE,A4_DIRECTION_NONE,this.game.currentPlayer.direction);
+                    }
                 }
 
                 if (this.game.currentPlayer.inventory[this.game.currentPlayer.selectedItem] == null) {
