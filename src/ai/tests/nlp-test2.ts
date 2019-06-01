@@ -928,6 +928,7 @@ NLParseTestUnifyingListener("same here!", o.getSort("performative"),  context, '
 NLParseTestUnifyingListener("why did you turn on the light?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],verb.switch-on(S,'l1'[#id]))");
 NLParseTestUnifyingListener("why did you turn the lights on?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],verb.switch-on(S,'l1'[#id]))");
 NLParseTestUnifyingListener("how many keys do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, key(X))");  
+NLParseTestUnifyingListener("where did you go?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis(V:'etaoin'[#id], V)"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 
