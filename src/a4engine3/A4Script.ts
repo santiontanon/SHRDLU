@@ -75,6 +75,8 @@ var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
 var SCRIPT_FAILED:number = 2;
 
+var SOUND_DISTANCE_THRESHOLD:number = 256;
+
 
 var scriptNames:string[] = new Array(A4_N_SCRIPTS);
 
@@ -174,7 +176,14 @@ scriptFunctions[A4_SCRIPT_DELAY] = function(script:A4Script, o:A4Object, map:A4M
 scriptFunctions[A4_SCRIPT_PLAYSOUND] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     // only play if it's in the same map as the current player:
-    if (map==game.currentPlayer.map) game.playSound(script.ID);
+    if (map==game.currentPlayer.map) {
+        if (o != null && game != null) {
+            if (o.pixelDistance(game.currentPlayer) < SOUND_DISTANCE_THRESHOLD)
+            game.playSound(script.ID);
+        } else {
+            game.playSound(script.ID);
+        }
+    }
     return SCRIPT_FINISHED;
 }
 

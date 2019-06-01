@@ -10,6 +10,10 @@ Note (santi):
 
 */
 
+
+var QWERTY_AGENDA_DELAY:number = 30*60;	// 30 seconds
+// var QWERTY_AGENDA_DELAY:number = 5*60;	// 5 seconds
+
 class ShrdluGameScript {
 	constructor(game:A4Game, app:A4EngineApp)
 	{
@@ -1355,6 +1359,8 @@ class ShrdluGameScript {
 			break;
 		}
 
+		this.qwertyAgendaUpdate();
+
 		if (previous_state == this.act_1_state) {
 			this.act_1_state_timer++;
 		} else {
@@ -1957,7 +1963,8 @@ class ShrdluGameScript {
 			break;
 		}
 
-		this.shrdluAct2AgendaUpdate()
+		this.shrdluAct2AgendaUpdate();
+		this.qwertyAgendaUpdate();
 
 		if (previous_state == this.act_2_state) {
 			this.act_2_state_timer++;
@@ -1978,6 +1985,8 @@ class ShrdluGameScript {
 
 		//switch(this.act_3_state) {
 		//}
+
+		this.qwertyAgendaUpdate();
 
 		if (previous_state == this.act_3_state) {
 			this.act_3_state_timer++;
@@ -2220,8 +2229,8 @@ class ShrdluGameScript {
 					}
 					break;
 			case 10: 
-					//if (this.act_2_shrdlu_agenda_state_timer >= 8*60*60) {
-					if (this.act_2_shrdlu_agenda_state_timer >= 8*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 8*60*60) {
+					// if (this.act_2_shrdlu_agenda_state_timer >= 8*60) {
 						// SHRDLU is self-repaired!
 						this.act_2_shrdlu_agenda_state = 11;
 						this.game.shrdluAI.respondToPerformatives = true;
@@ -2272,7 +2281,9 @@ class ShrdluGameScript {
 					break;
 			case 20: 
 					// repairing the stasis pod:
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						// stasis pod repaired
 						this.act_2_shrdlu_agenda_state = 21;
 						this.shrdluMovesOverrideable(87*8, 33*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
@@ -2308,7 +2319,9 @@ class ShrdluGameScript {
 					break;
 			case 22: 
 					// repairing etaoin:
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						// etaoin repaired
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'comm-tower'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 						this.shrdluMovesOverrideable(6*8, 21*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
@@ -2337,7 +2350,9 @@ class ShrdluGameScript {
 					break;
 			case 31: 
 					// repairing the stasis pod:
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						// comm tower repaired
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
@@ -2368,9 +2383,14 @@ class ShrdluGameScript {
 					break;
 			case 41: 
 					if (this.act_2_shrdlu_agenda_state_timer >= 10*60) {
-						let nextStates:number[] = [50, 60, 70, 80, 90];
-						let choice:number =  Math.floor(Math.random() * nextStates.length);
-						this.act_2_shrdlu_agenda_state = nextStates[choice];
+						if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+							!this.contextShrdlu.inConversation) {
+							let nextStates:number[] = [50, 60, 70, 80, 90];
+							let choice:number =  Math.floor(Math.random() * nextStates.length);
+							this.act_2_shrdlu_agenda_state = nextStates[choice];
+						} else {
+							this.act_2_shrdlu_agenda_state_timer = 0;
+						}
 					}
 					// resume:
 					if (this.game.shrdluAI.robot.x != 81*8 ||
@@ -2391,9 +2411,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.robot.y == 44*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 52;
-					}
-					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
@@ -2402,7 +2420,9 @@ class ShrdluGameScript {
 					break;
 			case 52: 
 					// power plant
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2426,9 +2446,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.robot.y == 17*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 62;
-					}
-					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
@@ -2437,7 +2455,9 @@ class ShrdluGameScript {
 					break;
 			case 62: 
 					// green houses
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2461,9 +2481,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.robot.y == 17*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 72;
-					}
-					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
@@ -2472,7 +2490,9 @@ class ShrdluGameScript {
 					break;
 			case 72: 
 					// recycling
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2496,9 +2516,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.robot.y == 16*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 82;
-					}
-					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
@@ -2507,7 +2525,9 @@ class ShrdluGameScript {
 					break;
 			case 82: 
 					// recycling
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2531,9 +2551,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.robot.y == 16*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 92;
-					}
-					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
@@ -2542,7 +2560,9 @@ class ShrdluGameScript {
 					break;
 			case 92: 
 					// oxygen
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60) {
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+						this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
 						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2560,6 +2580,161 @@ class ShrdluGameScript {
 			this.act_2_shrdlu_agenda_state_timer++;
 		} else {
 			this.act_2_shrdlu_agenda_state_timer = 0;
+		}
+	}
+
+
+	// Controls the behavior of SHRDLU during act 2 (when does it go repair the different parts of the station, etc.)
+	qwertyAgendaUpdate()
+	{
+		let previous_state:number = this.qwerty_agenda_state;
+
+		switch(this.qwerty_agenda_state) {
+			// Random destinations loop:
+			case 0: 
+					if (this.game.qwertyAI.robot.x == 8*8 &&
+						this.game.qwertyAI.robot.y == 27*8 &&
+						this.game.qwertyAI.robot.map.name == "Aurora Station") {
+						this.qwerty_agenda_state = 1;
+					}
+					// resume:
+					if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+					}
+					break;
+			case 1: 
+					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY) {
+						if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+							!this.contextQwerty.inConversation) {
+							let nextStates:number[] = [10, 20, 30, 40];
+							let choice:number =  Math.floor(Math.random() * nextStates.length);
+							this.qwerty_agenda_state = nextStates[choice];
+						} else {
+							this.qwerty_agenda_state_timer = 0;
+						}
+					}
+					// resume:
+					if (this.game.qwertyAI.robot.x != 8*8 ||
+						this.game.qwertyAI.robot.y != 27*8) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+
+			case 10: 
+					this.qwertyMovesOverrideable(9*8, 25*8, this.game.qwertyAI.robot.map, null);
+					this.qwerty_agenda_state = 11;
+					break;
+			case 11: 
+					if (this.game.qwertyAI.robot.x == 9*8 &&
+						this.game.qwertyAI.robot.y == 25*8) {
+						this.qwerty_agenda_state = 12;
+					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+			case 12: 
+					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
+						this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+					}
+					// resume:
+					if (this.game.qwertyAI.robot.x != 9*8 ||
+						this.game.qwertyAI.robot.y != 25*8) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+		
+			case 20: 
+					this.qwertyMovesOverrideable(3*8, 25*8, this.game.qwertyAI.robot.map, null);
+					this.qwerty_agenda_state = 21;
+					break;
+			case 21: 
+					if (this.game.qwertyAI.robot.x == 3*8 &&
+						this.game.qwertyAI.robot.y == 25*8) {
+						this.qwerty_agenda_state = 22;
+					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+			case 22: 
+					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
+						this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+					}
+					// resume:
+					if (this.game.qwertyAI.robot.x != 3*8 ||
+						this.game.qwertyAI.robot.y != 25*8) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;	
+
+			case 30: 
+					this.qwertyMovesOverrideable(10*8, 16*8, this.game.qwertyAI.robot.map, null);
+					this.qwerty_agenda_state = 31;
+					break;
+			case 31: 
+					if (this.game.qwertyAI.robot.x == 10*8 &&
+						this.game.qwertyAI.robot.y == 16*8) {
+						this.qwerty_agenda_state = 32;
+					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+			case 32: 
+					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
+						this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+					}
+					// resume:
+					if (this.game.qwertyAI.robot.x != 10*8 ||
+						this.game.qwertyAI.robot.y != 16*8) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;	
+
+			case 40: 
+					this.qwertyMovesOverrideable(34*8, 12*8, this.game.qwertyAI.robot.map, null);
+					this.qwerty_agenda_state = 41;
+					break;
+			case 41: 
+					if (this.game.qwertyAI.robot.x == 34*8 &&
+						this.game.qwertyAI.robot.y == 12*8) {
+						this.qwerty_agenda_state = 42;
+					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;
+			case 42: 
+					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
+						this.game.qwertyAI.currentAction_scriptQueue == null &&
+						!this.contextQwerty.inConversation) {
+						this.qwerty_agenda_state = 0;
+						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+					}
+					// resume:
+					if (this.game.qwertyAI.robot.x != 34*8 ||
+						this.game.qwertyAI.robot.y != 12*8) {
+						this.qwerty_agenda_state = 0;
+					}
+					break;											
+		}
+
+		// udpate timers:
+		if (previous_state == this.qwerty_agenda_state) {
+			this.qwerty_agenda_state_timer++;
+		} else {
+			this.qwerty_agenda_state_timer = 0;
 		}
 	}
 
@@ -2595,6 +2770,19 @@ class ShrdluGameScript {
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
 		this.game.qwertyAI.robot.addScriptQueue(q);
+	}
+
+
+	qwertyMovesOverrideable(x:number, y:number, map:A4Map, action:Term)
+	{
+        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, map.name, null, 0, false, false);
+        s.x = x;
+        s.y = y+this.game.qwertyAI.robot.tallness;
+        q.scripts.push(s);
+        this.game.qwertyAI.clearCurrentAction();
+        this.game.qwertyAI.currentAction = action;
+		this.game.qwertyAI.currentAction_scriptQueue = q;
 	}
 
 
@@ -2730,6 +2918,9 @@ class ShrdluGameScript {
         xmlString += "act_3_state_timer=\""+this.act_3_state_timer+"\"\n";   
         xmlString += "act_3_state_start_time=\""+this.act_3_state_start_time+"\"\n";   
 
+        xmlString += "qwerty_agenda_state=\""+this.qwerty_agenda_state+"\"\n";   
+        xmlString += "qwerty_agenda_state_timer=\""+this.qwerty_agenda_state_timer+"\"\n";   
+
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
 
@@ -2789,6 +2980,9 @@ class ShrdluGameScript {
     	this.act_3_state_timer = Number(xml.getAttribute("act_3_state_timer"));
     	this.act_3_state_start_time = Number(xml.getAttribute("act_3_state_start_time"));
 
+    	this.qwerty_agenda_state = Number(xml.getAttribute("qwerty_agenda_state"));
+    	this.qwerty_agenda_state_timer = Number(xml.getAttribute("qwerty_agenda_state_timer"));
+
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
     	this.what_is_dust_side_plot_taken_question = xml.getAttribute("what_is_dust_side_plot_taken_question") == "true";
@@ -2847,6 +3041,8 @@ class ShrdluGameScript {
 	act_2_shrdlu_agenda_state:number = 0;
 	act_2_shrdlu_agenda_state_timer:number = 0;
 
+	qwerty_agenda_state:number = 0;
+	qwerty_agenda_state_timer:number = 0;
 
 	act_3_state:number = 0;
 	act_3_state_timer:number = 0;
