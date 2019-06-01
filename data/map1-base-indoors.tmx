@@ -1335,7 +1335,7 @@
   <object id="598" type="crate" x="888" y="24" width="8" height="16">
   	<items>
   		<!--object type="helmet"/-->
-  		<object id="broken-ss" type="brokenspacesuit"/>
+  		<object id="spacesuit" type="brokenspacesuit"/>
   	</items>
   </object>
   <object id="toolbox" type="toolbox" x="720" y="72" width="8" height="16">

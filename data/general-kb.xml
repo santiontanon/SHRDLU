@@ -375,8 +375,8 @@
 	<sentence provenance="background" sentence="space.at('wrench'[#id], 'location-maintenance'[#id])"/>
 	<sentence provenance="background" sentence="space.at('screwdriver'[#id], 'location-maintenance'[#id])"/>
 	<sentence provenance="background" sentence="space.at('pliers'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="brokenspacesuit('broken-ss'[#id])"/>
-	<sentence provenance="background" sentence="space.at('broken-ss'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="brokenspacesuit('spacesuit'[#id])"/>
+	<sentence provenance="background" sentence="space.at('spacesuit'[#id], 'location-garage'[#id])"/>
 	<sentence provenance="background" sentence="toolbox('toolbox'[#id])"/>
 	<sentence provenance="background" sentence="space.at('toolbox'[#id], 'location-maintenance'[#id])"/>
 

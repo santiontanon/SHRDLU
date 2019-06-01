@@ -22,13 +22,16 @@ class QwertyAI extends RobotAI {
 	canSatisfyActionRequest(actionRequest:Term) : boolean
 	{
 		let repairSort:Sort = this.o.getSort("verb.repair");
-		if (actionRequest.functor.is_a(repairSort)) {
+		if (actionRequest.functor.is_a(repairSort) && actionRequest.attributes.length>=2) {
 			let thingToRepair:TermAttribute = actionRequest.attributes[1];
 			if (thingToRepair instanceof ConstantTermAttribute) {
 				let thingToRepair_id:string = (<ConstantTermAttribute>thingToRepair).value;
-				if (thingToRepair_id == "broken-ss") {
-					// broken space suit:
-					return true;
+				if (thingToRepair_id == "spacesuit") {
+					let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject(thingToRepair_id);
+					if (thingToRepairObject.sort.name == "brokenspacesuit") {
+						// broken space suit:
+						return true;
+					}
 				}
 			} else {
 				return false;

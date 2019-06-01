@@ -23,14 +23,14 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
-			//this.skip_to_act_end_of_intro();
+		if (this.act == "intro") {
+			this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-		//	this.skip_to_act_2_shrdluback_repair_outside();
-		//}
+			//this.skip_to_act_2_shrdluback_repair_outside();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -45,6 +45,7 @@ class ShrdluGameScript {
 	// This is a debug function, remove once the game is complete!
 	skip_to_act_end_of_intro()
 	{
+		if (this.act_intro_state>=101) return;
 		this.game.currentPlayer.getOutOfBed(this.game);
 		// bedroom:
 		this.game.currentPlayer.x = 560;
@@ -125,9 +126,8 @@ class ShrdluGameScript {
 
 		// start in spacer valley
 		//this.game.requestWarp(this.game.currentPlayer, this.game.maps[2], 40*8, 51*8);
-		let suit_l:A4Object[] = this.game.findObjectByID("broken-ss");
+		let suit_l:A4Object[] = this.game.findObjectByID("spacesuit");
 		(<A4Container>(suit_l[0])).content.splice((<A4Container>(suit_l[0])).content.indexOf(suit_l[1]), 1);
-		this.game.currentPlayer.inventory.push(suit_l[1]);		
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("helmet", this.game, false, false));
 	}
 
@@ -1307,26 +1307,26 @@ class ShrdluGameScript {
 						perf.attributes.length>1 &&
 						perf.attributes[1] instanceof TermTermAttribute) {
 						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						let pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
-						let pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
+						let pattern1:Term = Term.fromString("property.broken('spacesuit'[#id])", this.game.ontology);
+						let pattern2:Term = Term.fromString("#and(verb.have(V1:'spacesuit'[#id], T:[#id]), tear(T))", this.game.ontology)
 						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
-							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
+							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}						
 					} else if ((perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||
 						 	    perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))) &&
 							   perf.attributes.length>1 &&
 		  					   perf.attributes[1] instanceof TermTermAttribute) {
 						let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-						let pattern1:Term = Term.fromString("verb.repair('etaoin'[#id],'broken-ss'[#id])", this.game.ontology);
+						let pattern1:Term = Term.fromString("verb.repair('etaoin'[#id],'spacesuit'[#id])", this.game.ontology);
 						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
-							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
+							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}						
 					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis")) &&
 							   perf.attributes.length == 3 &&
@@ -1334,13 +1334,13 @@ class ShrdluGameScript {
 							   perf.attributes[2] instanceof TermTermAttribute) {
 						let argument:Term = (<TermTermAttribute>(perf.attributes[2])).term;
 						let pattern1:Term = Term.fromString("V2:#and(V3:verb.can(V1, V4:verb.repair(V1, V5:'hypothetical-object'[#id])), V6:spacesuit(V5))", this.game.ontology);
-						let pattern2:Term = Term.fromString("V2:verb.can(V1, V3:verb.repair(V1, V4:'broken-ss'[#id]))", this.game.ontology);
+						let pattern2:Term = Term.fromString("V2:verb.can(V1, V3:verb.repair(V1, V4:'spacesuit'[#id]))", this.game.ontology);
 						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
 //							console.log("update_act_1, state 19: detected spacesuit is broken");
-							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'broken-ss'[#id])))");
+							this.etaoinSays("perf.inform('david'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}
 					}
 				}
@@ -1366,10 +1366,10 @@ class ShrdluGameScript {
 			case 0: // no progress in this thread yet
 				// detect when the player has asked qwerty to fix the broken space suit:
 				if (this.playerAsksQwertyToFixSpacesuit()) {
-					let target_l:A4Object[] = this.game.findObjectByID("broken-ss");
+					let target_l:A4Object[] = this.game.findObjectByID("spacesuit");
 					let weCanGetIt:boolean = false;
 					if (target_l != null && target_l.length == 1 &&
-						this.game.qwertyAI.canSee("broken-ss")) weCanGetIt = true;
+						this.game.qwertyAI.canSee("spacesuit")) weCanGetIt = true;
 					if (target_l != null && target_l.length == 2 && 
 						(target_l[0] == this.game.qwertyAI.robot ||
 						 target_l[0] == this.game.currentPlayer)) weCanGetIt = true;
@@ -1379,7 +1379,7 @@ class ShrdluGameScript {
 						this.act_1_stasis_thread_state = 0;
 						this.game.qwertyAI.respondToPerformatives = true;
 						// I do not see the spacvesuit:
-						this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #not(verb.see($QWERTY, 'broken-ss'[#id]))))");
+						this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #not(verb.see($QWERTY, 'spacesuit'[#id]))))");
 					}
 				}
 				break;
@@ -1388,7 +1388,7 @@ class ShrdluGameScript {
 			case 1:
 				if (this.act_1_stasis_thread_state_timer == 0) {
 					this.game.qwertyAI.respondToPerformatives = false;	// to prevent the player messing up with the sequence
-					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'broken-ss'[#id]), time.future(V)) ))");
+					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'spacesuit'[#id]), time.future(V)) ))");
 					// clear whatever qwerty is doing now:
 				    this.game.qwertyAI.currentAction = null;
 				    this.game.qwertyAI.currentAction_requester = null;
@@ -1412,7 +1412,7 @@ class ShrdluGameScript {
 
 			// go towards david to take the suit:
 			case 2:
-				let target_l:A4Object[] = this.game.findObjectByID("broken-ss");
+				let target_l:A4Object[] = this.game.findObjectByID("spacesuit");
 				if (target_l == null) {
 					this.act_1_stasis_thread_state = 0;
 					this.game.qwertyAI.respondToPerformatives = true;
@@ -1512,15 +1512,20 @@ class ShrdluGameScript {
 					// give the space suit:
 					let idx:number = 0;
 					for(let i:number = 0;i<this.game.qwertyAI.robot.inventory.length;i++) {
-						if (this.game.qwertyAI.robot.inventory[i].ID == "broken-ss") {
+						if (this.game.qwertyAI.robot.inventory[i].ID == "spacesuit") {
 							idx = i;
 							break;
 						}
 					}
 					this.game.qwertyAI.robot.inventory.splice(idx,1);
 					let fixedSuit:A4Object = this.game.objectFactory.createObject("workingspacesuit", this.game, false, false);
-					fixedSuit.ID = "fixed-ss";
+					fixedSuit.ID = "spacesuit";
 					this.game.currentPlayer.addObjectToInventory(fixedSuit, this.game);
+					// replace the background knowledge:
+					for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
+						let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("brokenspacesuit('spacesuit'[#id])", this.game.ontology));
+						se.sentence.terms[0].functor = this.game.ontology.getSort("workingspacesuit");
+					}
 			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
 			                this.game.currentPlayer.ID, this.game.currentPlayer.sort, null,
 			                fixedSuit.ID, fixedSuit.sort,
@@ -1565,7 +1570,7 @@ class ShrdluGameScript {
 					}
 				}
 				if (this.playerAsksQwertyToFixSpacesuit()) {
-					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('fixed-ss'[#id]))))");
+					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('spacesuit'[#id]))))");
 				}
 				break;
 
@@ -1578,13 +1583,13 @@ class ShrdluGameScript {
 					this.game.setStoryStateVariable("act1-corpse", "discovered");
 				}
 				if (this.playerAsksQwertyToFixSpacesuit()) {
-					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('fixed-ss'[#id]))))");
+					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('spacesuit'[#id]))))");
 				}
 				break;
 
 			case 12:
 				if (this.playerAsksQwertyToFixSpacesuit()) {
-					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('fixed-ss'[#id]))))");
+					this.qwertyIntention("action.talk($QWERTY, perf.inform(V0:$PLAYER, #not(property.broken('spacesuit'[#id]))))");
 				}	
 				break;			
 		}
@@ -2086,8 +2091,8 @@ class ShrdluGameScript {
 					perf.attributes.length>1 &&
 					perf.attributes[1] instanceof TermTermAttribute) {
 					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-					let pattern1:Term = Term.fromString("property.broken('broken-ss'[#id])", this.game.ontology);
-					let pattern2:Term = Term.fromString("#and(verb.have(V1:'broken-ss'[#id], T:[#id]), tear(T))", this.game.ontology)
+					let pattern1:Term = Term.fromString("property.broken('spacesuit'[#id])", this.game.ontology);
+					let pattern2:Term = Term.fromString("#and(verb.have(V1:'spacesuit'[#id], T:[#id]), tear(T))", this.game.ontology)
 					let b:Bindings = new Bindings();
 					if (pattern1.subsumes(argument, true, b) ||
 						pattern2.subsumes(argument, true, b)) {
@@ -2098,7 +2103,7 @@ class ShrdluGameScript {
 					perf.attributes.length>1 &&
 					perf.attributes[1] instanceof TermTermAttribute) {
 					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-					let pattern3:Term = Term.fromString("verb.repair('qwerty'[#id], 'broken-ss'[#id])", this.game.ontology);
+					let pattern3:Term = Term.fromString("verb.repair('qwerty'[#id], 'spacesuit'[#id])", this.game.ontology);
 					let b:Bindings = new Bindings();
 					if (pattern3.subsumes(argument, true, b)) return true;
 				}
