@@ -952,7 +952,7 @@
   	</ObjectClass>		
 
 	<ObjectClass class="garage-shuttle" super="obstacle,*shuttle" name="shuttle">
-		<attribute name="tallness" value="8"/>
+		<attribute name="tallness" value="16"/>
 		<animation name="idle-right" dx="5" dy="3" period="4" looping="false" file="vehicles.png">280</animation>
 		<animation name="idle-left" dx="5" dy="3" period="4" looping="false" file="vehicles.png">285</animation>
 		<animation name="idle-up" dx="4" dy="5" period="4" looping="false" file="vehicles.png">290</animation>
@@ -964,7 +964,7 @@
 	</ObjectClass>
 
 	<ObjectClass class="brokenshuttle" super="obstacle,*shuttle" name="shuttle">
-		<attribute name="tallness" value="8"/>
+		<attribute name="tallness" value="16"/>
 		<animation name="idle-right" dx="5" dy="3" period="4" looping="false" file="vehicles.png">280</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">

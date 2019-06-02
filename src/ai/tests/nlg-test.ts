@@ -297,3 +297,12 @@ testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))",
 testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,[space.here])))", "etaoin", "there is a corpse here");
 testNLG("perf.inform('etaoin'[#id], #and(X:verb.help('qwerty'[#id], 'etaoin'[#id], verb.see('etaoin'[#id])), time.now(X)))", "etaoin", "qwerty helps me to see now");
 
+testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2, time.date('0'[number], [time.day]))))", "etaoin", "my ship malfunctioned on Monday, January 1st, year 1000");
+testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:erased(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship was erased");
+testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:erased(V3:'s1'[#id]), V4:time.past(V2, time.date('0'[number], [time.day]))))", "etaoin", "my ship was erased on Monday, January 1st, year 1000");
+testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.subsequently(V2)))", "etaoin", "my ship will malfunction after that");
+
+testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], V:[distress-signal]))", "etaoin", "I detect a distress signal");
+testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))", "etaoin", "I detect distress signals");
+
+

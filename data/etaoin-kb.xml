@@ -1,5 +1,5 @@
 <knowledgeBase>
-	<!-- ETAOIN SHOULD NOT KNOW THIS AFTER SHRDLU FIXES IT -->
+	<!-- ETAOIN SHOULD KNOW THIS AFTER SHRDLU FIXES IT -->
 	<!--
 	<sentence provenance="background" sentence="ship('tardis8'[#id])"/>
 	<sentence provenance="background" sentence="name('tardis8'[#id],'tardis 8'[symbol])"/>

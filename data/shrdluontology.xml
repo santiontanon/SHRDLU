@@ -406,6 +406,9 @@
     <sort name="sound" super="abstract-entity"/>
     <sort name="voice" super="sound"/>
 
+    <sort name="signal" super="abstract-entity"/>
+    <sort name="distress-signal" super="signal"/>
+
     <sort name="feeling" super="abstract-entity"/>
 
     <sort name="state" super="abstract-entity"/>
@@ -513,7 +516,8 @@
     <sort name="verb.parse" super="verb"/>
     <sort name="verb.put" super="verb"/>
     <sort name="verb.repair" super="verb"/>
-    <sort name="verb.see" super="verb"/>
+    <sort name="verb.detect" super="verb"/>
+    <sort name="verb.see" super="verb.detect"/>
     <sort name="verb.look-at" super="verb.see"/>
     <sort name="verb.analyze" super="verb"/>
     <sort name="verb.examine" super="verb.look-at,verb.analyze"/>
@@ -527,6 +531,7 @@
     <sort name="verb.seem" super="verb"/>
     <sort name="verb.stop" super="verb"/>
     <sort name="verb.wait" super="verb.stop"/>
+    <sort name="verb.wait-for" super="verb.wait"/>
     <sort name="verb.walk" super="movementverb"/>
     <sort name="verb.want" super="verb"/>
     <sort name="verb.allow" super="verb"/>
@@ -543,6 +548,7 @@
     <sort name="verb.damage" super="verb"/>
     <sort name="verb.injure" super="verb.damage"/>
     <sort name="verb.rotate" super="verb"/>
+    <sort name="verb.investigate" super="verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>

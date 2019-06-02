@@ -532,12 +532,48 @@ class NLGenerator {
 
 		} else if (t.functor.is_a(this.nlg_cache_sort_property) && t.attributes.length == 1) {
 //			console.log("termToEnglish_Inform property");
+			let complements:string = "";
+			let time:Sort = this.nlg_cache_sort_present;
+	
+			for(let tmp_t2 of tl) {
+				let t2:Term = (<TermTermAttribute>tmp_t2).term;
+				if (t2 == t) continue;
+				if (t2.functor.is_a(this.nlg_cache_sort_past) ||
+					t2.functor.is_a(this.nlg_cache_sort_present) ||
+					t2.functor.is_a(this.nlg_cache_sort_future)) {
+					if (t2.functor.is_a(this.nlg_cache_sort_past)) {
+						time = t2.functor;
+					}
+					if (t2.functor.is_a(this.nlg_cache_sort_present)) {
+						time = t2.functor;
+					}
+					if (t2.functor.is_a(this.nlg_cache_sort_future)) {
+						time = t2.functor;
+					}
+
+					// find if there is any other verb complement
+					if (t2.functor.name == "time.later") complements += " later";
+					if (t2.functor.name == "time.first") complements += " first";
+					if (t2.functor.name == "time.now") complements += " now";
+					if (t2.functor.name == "time.subsequently") complements += " after that";
+
+					if (t2.attributes.length == 2 &&
+						(t2.attributes[1] instanceof TermTermAttribute) &&
+						t2.attributes[1].sort.is_a_string("time.date")) {
+						let dateTerm:Term = (<TermTermAttribute>t2.attributes[1]).term;
+						if (dateTerm.attributes.length >= 2) {
+							let time_date:string = this.termToEnglish_Date(dateTerm.attributes[0], dateTerm.attributes[1].sort)
+							if (time_date != null) complements += " on " + time_date;
+						}
+					}
+				}
+			}
 
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
-			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], 3);
+			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
 			if (verbStr != null && propertyStr != null) 
-				return subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr;
+				return subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr + complements;
 
 		} else if (t.functor.is_a(this.nlg_cache_sort_haveablepropertywithvalue) && t.attributes.length == 2) {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
@@ -557,7 +593,7 @@ class NLGenerator {
 		} else if (t.functor.is_a(this.nlg_cache_sort_role)) {		
 			let determiner:string = "a";	
 			let preComplementsStr:string = "";
-			let time:Sort = this.nlg_cache_sort_present;	
+			let time:Sort = this.nlg_cache_sort_present;
 			let complementsStr:string = "";
 			let typeFunctor:Sort = null;
 			if (t.attributes.length == 3) {
@@ -649,6 +685,7 @@ class NLGenerator {
 			let time:Sort = this.nlg_cache_sort_present;
 			if (subjectStr != null) {
 				let relationsAggregateStr:string = "";
+				let complementsStr:string = "";
 				for(let tmp_t2 of tl) {
 					let t2:Term = (<TermTermAttribute>tmp_t2).term;
 
@@ -663,15 +700,18 @@ class NLGenerator {
 						(t2.attributes[0] instanceof TermTermAttribute) &&
 						(<TermTermAttribute>(t2.attributes[0])).term == t) {
 						// find if there is any term that determines tense, otherwise, assume present:
-						if (t2.functor.is_a(this.nlg_cache_sort_past)) time = t2.functor;
-						if (t2.functor.is_a(this.nlg_cache_sort_future)) time = t2.functor;
+						if (t2.functor.is_a(this.nlg_cache_sort_past)) {
+							time = t2.functor;
+						}
+						if (t2.functor.is_a(this.nlg_cache_sort_future)) {
+							time = t2.functor;
+						}
 					}
 
 					if (t2.functor.is_a(this.nlg_cache_sort_relation) &&
 				   		!t2.functor.is_a(this.nlg_cache_sort_verb)) {
 
 						let typeFunctor:Sort = t2.functor;
-						let complementsStr:string = "";
 						let relationStr:string = this.pos.getRelationString(typeFunctor);
 						let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, false, 
 																									   	    ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
@@ -752,14 +792,38 @@ class NLGenerator {
 		for(let tmp_t2 of tl) {
 			let t2:Term = (<TermTermAttribute>tmp_t2).term;
 			if (t2 == t) continue;
-			if (t2.attributes.length == 1 &&
+			if (t2.functor.is_a(this.nlg_cache_sort_past) ||
+				t2.functor.is_a(this.nlg_cache_sort_present) ||
+				t2.functor.is_a(this.nlg_cache_sort_future)) {
+				if (t2.functor.is_a(this.nlg_cache_sort_past)) {
+					time = t2.functor;
+				}
+				if (t2.functor.is_a(this.nlg_cache_sort_present)) {
+					time = t2.functor;
+				}
+				if (t2.functor.is_a(this.nlg_cache_sort_future)) {
+					time = t2.functor;
+				}
+
+				// find if there is any other verb complement
+				if (t2.functor.name == "time.later") verbComplements += " later";
+				if (t2.functor.name == "time.first") verbComplements += " first";
+				if (t2.functor.name == "time.now") verbComplements += " now";
+				if (t2.functor.name == "time.subsequently") verbComplements += " after that";
+				if (t2.functor.name == "conjunction-contrast") verbPreComplements += "however, ";
+
+				if (t2.attributes.length == 2 &&
+					(t2.attributes[1] instanceof TermTermAttribute) &&
+					t2.attributes[1].sort.is_a_string("time.date")) {
+					let dateTerm:Term = (<TermTermAttribute>t2.attributes[1]).term;
+					if (dateTerm.attributes.length >= 2) {
+						let time_date:string = this.termToEnglish_Date(dateTerm.attributes[0], dateTerm.attributes[1].sort)
+						if (time_date != null) verbComplements += " on " + time_date;
+					}
+				}
+			} else if (t2.attributes.length == 1 &&
 				(t2.attributes[0] instanceof TermTermAttribute) &&
 				(<TermTermAttribute>(t2.attributes[0])).term == t) {
-
-				// find if there is any term that determines tense, otherwise, assume present:
-				if (t2.functor.is_a(this.nlg_cache_sort_past)) time = t2.functor;
-				if (t2.functor.is_a(this.nlg_cache_sort_present)) time = t2.functor;
-				if (t2.functor.is_a(this.nlg_cache_sort_future)) time = t2.functor;
 
 				// find if there is any other verb complement
 				if (t2.functor.name == "time.later") verbComplements += " later";
@@ -1063,6 +1127,7 @@ class NLGenerator {
 					if (t2.functor.name == "time.later") verbComplements += " later";
 					if (t2.functor.name == "time.first") verbComplements += " first";
 					if (t2.functor.name == "time.now") verbComplements += " now";
+					if (t2.functor.name == "time.subsequently") verbComplements += " after that";
 				} else if (t2.attributes.length == 2 &&
 					t2.functor.is_a(this.nlg_cache_sort_relation) &&
 					(t2.attributes[0] instanceof TermTermAttribute) &&
@@ -1262,6 +1327,7 @@ class NLGenerator {
 				if (t2.functor.name == "time.later") verbComplements += " later";
 				if (t2.functor.name == "time.first") verbComplements += " first";
 				if (t2.functor.name == "time.now") verbComplements += " now";
+				if (t2.functor.name == "time.subsequently") verbComplements += " after that";
 			} else if (t2.attributes.length == 2 &&
 				t2.functor.is_a(this.nlg_cache_sort_relation) &&
 				(t2.attributes[0] instanceof TermTermAttribute) &&
@@ -2520,6 +2586,7 @@ class NLGenerator {
 				if (t2.functor.name == "time.later") verbComplements += " later";
 				if (t2.functor.name == "time.first") verbComplements += " first";
 				if (t2.functor.name == "time.now") verbComplements += " now";
+				if (t2.functor.name == "time.subsequently") verbComplements += " after that";
 			} else if (t2.attributes.length == 2 &&
 				t2.functor.is_a(this.nlg_cache_sort_relation) &&
 				(t2.attributes[0] instanceof TermTermAttribute) &&

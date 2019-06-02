@@ -27,14 +27,14 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			this.skip_to_act_1();
-			// this.skip_to_end_of_act_1();
+			//this.skip_to_act_1();
+			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
-			// this.skip_to_act_2_shrdluback();
+			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
-		}
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -110,7 +110,7 @@ class ShrdluGameScript {
 //		this.act_1_state = 15;	// etaoin will ask to go find Shrdlu
 		this.act_1_state = 19;
 
-		let term:Term = Term.fromString("goal(D:'david'[#id],verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
+		let term:Term = Term.fromString("goal(D:'david'[#id], verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
 		this.game.currentPlayer.inventory.push(this.game.qwertyAI.robot.inventory[1]);	// maintenance key
@@ -185,9 +185,13 @@ class ShrdluGameScript {
 	skip_to_act_2_shrdluback_repair_outside()
 	{
 		this.skip_to_act_2_shrdluback();
+
+		let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))",this.game.ontology);
+		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
+
 		this.act_2_state = 111;
 		this.act_2_shrdlu_agenda_state = 30;
-		this.game.shrdluAI.visionActive = true;	
+		this.game.shrdluAI.visionActive = true;			
 	}
 
 
@@ -1867,6 +1871,10 @@ class ShrdluGameScript {
 
 		case 107:
 			// SHRDLU is back!!
+			let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))",this.game.ontology);
+			this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
+
+
 			this.contextShrdlu.inConversation = true;	// this is a hack, to prevent it having to say "hello human", etc.
 			this.shrdluSays("perf.thankyou('david'[#id])");
 			this.shrdluSays("perf.inform('david'[#id], #and(X:verb.help('etaoin'[#id], 'shrdlu'[#id], verb.see('shrdlu'[#id])), time.now(X)))");
@@ -1908,9 +1916,10 @@ class ShrdluGameScript {
 
 		case 111:
 			// waiting for Shrdlu to repair Etaoin's memory
+			if (this.act_2_shrdlu_agenda_state >= 30) this.act_2_state = 201;
 			if (this.game.currentPlayer.sleepingInBed != null && this.act_2_shrdlu_agenda_state < 22) {
 				this.act_2_state = 120;
-			}			
+			}
 			break;
 
 		case 120:
@@ -1922,11 +1931,14 @@ class ShrdluGameScript {
 				// fast forward the state:
 				this.game.shrdluAI.respondToPerformatives = true;
 				this.game.shrdluAI.visionActive = true;	
-				this.act_2_shrdlu_agenda_state = 22;
-				this.act_2_shrdlu_agenda_state_timer = 30*60;
+				this.act_2_shrdlu_agenda_state = 23;
+				this.act_2_shrdlu_agenda_state_timer = 20*60;
 				this.game.shrdluAI.clearCurrentAction();
 				this.game.shrdluAI.robot.scriptQueues = [];
+				this.contextShrdlu.inConversation = false;
 				this.game.requestWarp(this.game.shrdluAI.robot, this.game.qwertyAI.robot.map, 91*8, 20*8);
+				this.game.shrdluAI.robot.x = 91*8;	// we force anyway, since, otehrwise, the agenda doesn't work
+				this.game.shrdluAI.robot.y = 20*8;
 				this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 				for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
 					let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("property.broken('broken-stasis-pod'[#id])", this.game.ontology));
@@ -1959,8 +1971,78 @@ class ShrdluGameScript {
 
 		case 200:
 			// waiting for Shrdlu to repair Etaoin's memory, but player has already slept:
-			// ...
+			if (this.act_2_shrdlu_agenda_state >= 30) this.act_2_state = 201;
 			break;
+
+		case 201:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.past(X)))");
+				this.act_2_state = 202;
+			}
+			break;
+
+		case 202:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:erased('etaoin-memory'[#id]), time.past(X, time.date('42956019000'[number], [time.day]))))");
+				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'location-aurora-station'[#id]), time.subsequently(X)))");
+				this.act_2_state = 210;
+			}
+			break;
+
+		case 210:
+			// waiting for Shrdlu to repait the comm tower:
+			if (this.act_2_shrdlu_agenda_state >= 40) this.act_2_state = 211;
+			break;
+
+		case 211:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'comm-tower'[#id]), time.past(X)))");
+				this.act_2_state = 212;
+			}
+			break;
+		case 212:
+			if (this.game.etaoinAI.intentions.length == 0 &&
+				this.game.etaoinAI.queuedIntentions.length == 0 &&
+				this.game.currentPlayer.map.textBubbles.length == 0) {
+		
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				// this.game.etaoinAI.addLongTermTerm(Term.fromString("space-at('distress-signal1'[#id],'north-terrace'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				// this.game.etaoinAI.addLongTermTerm(Term.fromString("space-at('distress-signal2'[#id],'????'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
+
+				this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
+				this.etaoinSays("perf.request.action('david'[#id], #and(V1:verb.go-to('david'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('david'[#id]))))");
+				this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
+
+				let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("command-key");
+				this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
+				this.game.shrdluAI.allowPlayerInto("location-as29", "COMMAND");
+				this.game.qwertyAI.allowPlayerInto("location-as29", "COMMAND");
+				this.game.etaoinAI.allowPlayerInto("location-as29", "COMMAND");
+				this.act_2_state = 220;
+			}
+			break;
+
+		case 220:
+			// waiting for David to enter the command center:
+				if (this.game.currentPlayer.isIdle()) {
+				let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
+				// "location-as29" is the command center
+				if (currentRoom != null && currentRoom.id=="location-as29") {
+					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
+																   "wow, this is the command center of the whole station. It even has a map of the whole area!", A4_DIRECTION_NONE, this.game);
+					this.act_2_state = 221;
+				}
+			}
+			break;
+
 		}
 
 		this.shrdluAct2AgendaUpdate();
@@ -2317,9 +2399,24 @@ class ShrdluGameScript {
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
-			case 22: 
+			case 22:
+					// waiting to arrive to the actual spot:
+					if (this.game.shrdluAI.robot.x == 91*8 &&
+						this.game.shrdluAI.robot.y == 20*8) {
+						this.act_2_shrdlu_agenda_state = 23;
+					}
+					// resume:
+					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
+						!this.contextShrdlu.inConversation &&
+						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
+						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
+						this.shrdluMovesOverrideable(91*8, 20*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+					}
+					break;
+			case 23: 
 					// repairing etaoin:
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*30*60 &&
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						// etaoin repaired
@@ -2327,9 +2424,9 @@ class ShrdluGameScript {
 						this.shrdluMovesOverrideable(6*8, 21*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 30;
 					}
-					// resume:
-					if (this.game.shrdluAI.robot.x != 87*8 ||
-						this.game.shrdluAI.robot.y != 33*8) {
+					if ((this.game.shrdluAI.robot.x != 91*8 ||
+						 this.game.shrdluAI.robot.y != 20*8)) {
+						this.shrdluMovesOverrideable(87*8, 33*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 21;
 					}
 					break;
@@ -2349,8 +2446,8 @@ class ShrdluGameScript {
 					}
 					break;
 			case 31: 
-					// repairing the stasis pod:
-					if (this.act_2_shrdlu_agenda_state_timer >= 1*60*60 &&
+					// repairing the comm tower:
+					if (this.act_2_shrdlu_agenda_state_timer >= 1*30*60 &&
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						// comm tower repaired
@@ -2588,6 +2685,8 @@ class ShrdluGameScript {
 	qwertyAgendaUpdate()
 	{
 		let previous_state:number = this.qwerty_agenda_state;
+
+		if (this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
 
 		switch(this.qwerty_agenda_state) {
 			// Random destinations loop:

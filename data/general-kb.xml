@@ -299,6 +299,7 @@
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance room key'[symbol])"/>
 	<sentence provenance="background" sentence="red-key('command-key'[#id])"/>
 	<sentence provenance="background" sentence="name('command-key'[#id],'command key'[symbol])"/>
+	<sentence provenance="background" sentence="name('command-key'[#id],'command center key'[symbol])"/>
 	<sentence provenance="background" sentence="green-key('stasis-key'[#id])"/>
 	<sentence provenance="background" sentence="name('stasis-key'[#id],'stasis key'[symbol])"/>
 	<sentence provenance="background" sentence="garagepurple-key('garage-key'[#id])"/>

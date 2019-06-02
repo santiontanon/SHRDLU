@@ -111,6 +111,7 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             }
             console.log("  highest priority parse: " + parse.result);
             console.log("  highest priority parse ruleNames: " + parse.ruleNames);
+            console.log("  highest priority parse bindings: " + parse.bindings);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
             return false;
         } else {
@@ -220,6 +221,7 @@ for(let ce of context.shortTermMemory) {
     testAI.shortTermMemory.addTerm(t, PERCEPTION_PROVENANCE, 0, 0);
   }
 }
+
 
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
@@ -929,6 +931,9 @@ NLParseTestUnifyingListener("why did you turn on the light?", o.getSort("perform
 NLParseTestUnifyingListener("why did you turn the lights on?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],verb.switch-on(S,'l1'[#id]))");
 NLParseTestUnifyingListener("how many keys do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, key(X))");  
 NLParseTestUnifyingListener("where did you go?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis(V:'etaoin'[#id], V)"); 
+NLParseTestUnifyingListener("etaoin fix the ship", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("etaoin repaired the ship", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("what do I do?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, goal('1'[#id],X))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

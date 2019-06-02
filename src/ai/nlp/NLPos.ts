@@ -266,6 +266,7 @@ class POSParser {
       "lab key",
       "laboratory key",
       "command key",
+      "command center key",
       "master key",
       "maintenance room",
       "laundry room",
@@ -371,6 +372,8 @@ class POSParser {
       "computer password",
       "fixing tool",
       "fixing tools",
+      "distress signal",
+      "distress signals",
 
       // adjectives:
       "in stasis",
@@ -1042,6 +1045,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("direction", "cardinal-direction", o);
     this.addStandardNounPOS("display", "screen", o);
     this.addStandardNounPOS("distance", "distance", o);
+    this.addStandardNounPOS("distress signal", "distress-signal", o);
     this.addStandardNounPOS("drink", "drink", o);
     this.addStandardNounPOS("door", "door", o);
     this.addStandardNounPOS("dumbbell", "dumbbell", o);
@@ -1227,6 +1231,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("shovel", "spade", o);
     this.addStandardNounPOS("shower", "shower", o);
     this.addStandardNounPOS("shuttle", "shuttle", o);
+    this.addStandardNounPOS("signal", "signal", o);
     this.addStandardNounPOS("sink", "sink", o);
     this.addStandardNounPOS("situation", "situation", o);
     this.addStandardNounPOS("soda", "soda", o);
@@ -1355,6 +1360,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.come-to", "come to","comes to","came to","come to","coming to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.damage", "damage","damages","damaged","damaged","damaging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.define", "define","defines","defined","defined","defining", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.detect", "detect","detects","detected","detected","detecting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.disambiguate", "disambiguate","disambiguates","disambiguated","disambiguated","disambiguating", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.disembark", "disembark","disembarks","disembarked","disembarked","disembarking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.do", "do","does","did","done","doing", false, multitokens_raw, o);
@@ -1394,6 +1400,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.hear", "hear","hears","heard","heared","hearing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.help", "help","helps","helped","helped","helping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.injure", "injure","injures","injured","injured","injuring", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.investigate", "investigate","investigates","investigated","investigated","investigating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.keep", "keep","keeps","kept","kept","keeping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
@@ -1452,6 +1459,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.will", "'ll","'ll","'d",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.may", "may","may","might",null,null, true, multitokens_raw, o);
 
+    this.addPhrasalVerbPOS("verb.wait-for","for", "wait","waits","waited","waited","waiting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-on","on", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);

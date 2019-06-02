@@ -112,6 +112,10 @@ abstract class TermAttribute {
     
 
     sort:Sort = null;
+
+    // for debugging purposes, remove after I'm done:
+    ID:number = TermAttribute.next_ID++;
+    static next_ID:number = 0;
 }
 
 
