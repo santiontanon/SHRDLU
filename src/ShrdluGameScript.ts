@@ -27,14 +27,14 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-			//this.skip_to_act_2_shrdluback_repair_outside();
-		//}
+			this.skip_to_act_2_shrdluback_repair_outside();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -2026,6 +2026,7 @@ class ShrdluGameScript {
 				this.game.shrdluAI.allowPlayerInto("location-as29", "COMMAND");
 				this.game.qwertyAI.allowPlayerInto("location-as29", "COMMAND");
 				this.game.etaoinAI.allowPlayerInto("location-as29", "COMMAND");
+				this.game.comm_tower_repaired = true;
 				this.act_2_state = 220;
 			}
 			break;

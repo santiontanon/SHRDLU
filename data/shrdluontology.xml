@@ -485,6 +485,7 @@
     <sort name="verb.come-back" super="verb.come"/>
     <sort name="verb.come-to" super="verb.come"/>
     <sort name="verb.access" super="verb"/>
+    <sort name="verb.erase" super="actionverb"/>
     <sort name="verb.enter" super="verb.go,verb.access"/>
     <sort name="verb.board" super="verb.enter"/>
     <sort name="verb.reach" super="verb.go-to"/>

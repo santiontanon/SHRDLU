@@ -573,6 +573,7 @@ class A4Game {
             if (vname == "gameover_request") this.gameover_request = Number(variable_xml.getAttribute("value"));
             if (vname == "in_game_seconds") this.in_game_seconds = Number(variable_xml.getAttribute("value"));
             if (vname == "suit_oxygen") this.suit_oxygen = Number(variable_xml.getAttribute("value"));
+            if (vname == "comm_tower_repaired") this.comm_tower_repaired = variable_xml.getAttribute("value") == "true";
             if (vname == "narrationMessages") {
                 for(let tmp_xml of getElementChildrenByTag(variable_xml, "message")) {
                     this.narrationMessages.push(tmp_xml.firstChild.nodeValue);
@@ -823,6 +824,7 @@ class A4Game {
         xmlString += "<variable name=\"gameover_request\" value=\""+this.gameover_request+"\"/>\n";
         xmlString += "<variable name=\"in_game_seconds\" value=\""+this.in_game_seconds+"\"/>\n";
         xmlString += "<variable name=\"suit_oxygen\" value=\""+this.suit_oxygen+"\"/>\n";
+        xmlString += "<variable name=\"comm_tower_repaired\" value=\""+this.comm_tower_repaired+"\"/>\n";
         xmlString += "<variable name=\"narrationMessages\">\n";
         for(let nm of this.narrationMessages) {
             xmlString += "<message>" + nm + "</message>\n";
@@ -2583,6 +2585,7 @@ class A4Game {
 
     in_game_seconds:number = SHRDLU_START_DATE;
     suit_oxygen:number = SHRDLU_MAX_SPACESUIT_OXYGEN;
+    comm_tower_repaired:boolean = false;
     rooms_with_lights:string[] = [];
     rooms_with_lights_on:string[] = [];
 

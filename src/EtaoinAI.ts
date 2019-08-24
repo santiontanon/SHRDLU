@@ -241,6 +241,9 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		// if it is the comunicator:
 		if (o == this.communicator_object) {
+			// once the comm tower is repaired, the communicator can be reached anywhere
+			if (this.game.comm_tower_repaired) return true;
+
 			// communicator works only in spacer valley south:
 			if (l == this.baseindoors_location) return true;
 			if (l == this.baseoutdoors_location) return true;
