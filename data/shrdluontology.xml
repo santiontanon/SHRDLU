@@ -326,9 +326,10 @@
     <sort name="battery" super="item"/>
     <sort name="rover-battery" super="item"/>
     <sort name="tire" super="item"/>
-    <sort name="engine" super="item"/>
+
 
     <sort name="hardware" super="object"/>
+    <sort name="engine" super="hardware"/>
 
     <sort name="shower" super="object"/>
     <sort name="sink" super="object"/>

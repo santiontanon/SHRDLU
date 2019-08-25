@@ -33,7 +33,7 @@ class ShrdluGameScript {
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-			this.skip_to_act_2_shrdluback_repair_outside();
+			//this.skip_to_act_2_shrdluback_repair_outside();
 		}
 
 		if (this.act == "intro") this.update_act_intro();
