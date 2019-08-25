@@ -1978,6 +1978,7 @@ class ShrdluGameScript {
 			if (this.game.etaoinAI.intentions.length == 0 &&
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.addKnowledgeToEtaoinAfterRepair()
 				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.past(X)))");
 				this.act_2_state = 202;
 			}
@@ -2836,6 +2837,25 @@ class ShrdluGameScript {
 		} else {
 			this.qwerty_agenda_state_timer = 0;
 		}
+	}
+
+
+	addKnowledgeToEtaoinAfterRepair()
+	{
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("ship('tardis8'[#id])", this.game.ontology), BACKGROUND_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("ai('tardis8'[#id])", this.game.ontology), BACKGROUND_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("name('tardis8'[#id],'tardis 8'[symbol])", this.game.ontology), BACKGROUND_PROVENANCE);
+
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.leave('tardis8'[#id],'earth'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 41338676700);
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.arrive('tardis8'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.build('tardis8'[#id],'location-aurora-station'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('etaoin'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('qwerty'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('shrdlu'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('jcuken'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('david'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
+		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("property.born('david'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 40392525600);
 	}
 
 

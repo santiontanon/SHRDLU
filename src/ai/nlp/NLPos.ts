@@ -1367,7 +1367,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.do", "do","does","did","done","doing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "enumerate","enumerates","enumerated","enumerated","enumerating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.erase", "erase","erases","erased","erased","erasing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.erase", "erase","erases","erased","erased","erasing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.examine", "examine","examines","examined","examined","examining", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);

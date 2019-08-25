@@ -855,7 +855,7 @@
 		<animation name="idle" dx="4" dy="3" period="4" looping="false" file="background.png">376</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="Wow! This is a tactical display showing a detailed map of the surrouding area." thought="true"/>
+        	<talkOther text="This is a tactical display showing a detailed map of the surrouding area." thought="true"/>
         </eventRule>
 	</ObjectClass>		
 
@@ -1167,6 +1167,15 @@
 		<attribute name="tallness" value="0"/>
 		<attribute name="weight" value="4"/>
 		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">742</animation>		
+		<onStart>
+			<addPerceptionProperty property="big"/>
+			<addPerceptionProperty property="grey"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="huge-boulder" super="boulder" name="huge boulder">
+		<attribute name="tallness" value="0"/>
+		<attribute name="weight" value="6"/>
+		<animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">744</animation>		
 		<onStart>
 			<addPerceptionProperty property="big"/>
 			<addPerceptionProperty property="grey"/>

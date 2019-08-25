@@ -236,6 +236,7 @@ NLParseTest("all chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chai
 NLParseTest("these chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(close-demonstrative-determiner(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("all these chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(close-demonstrative-determiner(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("all of these chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(close-demonstrative-determiner(V0, V1), V4:noun(V0, V1)))");
+NLParseTest("all of these chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(close-demonstrative-determiner(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("my chair", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[singular], V2:[third-person], V3:#and(V4:determiner.my(V0, V1), V5:noun(V0, V1)))");
 NLParseTest("all white chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(all(V0, V1), #and(adjective(V0, 'white'[white]), V4:noun(V0, V1))))");
 NLParseTest("all the chairs", o.getSort("nounPhrase"), context, "nounPhrase(V0:'chair'[chair], V1:[plural], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
@@ -936,7 +937,19 @@ NLParseTestUnifyingListener("etaoin repaired the ship", o.getSort("performative"
 NLParseTestUnifyingListener("what do I do?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, goal('1'[#id],X))");
 
 // For version 2.6:
-NLParseTestUnifyingListener("who erased the ship?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, #and(character(X), verb.erase(X, '2'[#id])))");
+NLParseTestUnifyingListener("who erased the ship?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, #and(character(X), action.erase(X, '2'[#id])))");
+NLParseTestUnifyingListener("who erase the ship?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, #and(character(X), action.erase(X, '2'[#id])))");
+NLParseTestUnifyingListener("All humans speak english", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(#not(human(X:[#id])),verb.speak(X, 'english'[#id])))");
+NLParseTestUnifyingListener("the ship is either white or blue", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(color('2'[#id],'white'[white]), color('2'[#id],'blue'[blue])))");
+NLParseTestUnifyingListener("the ship is white or blue", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(color('2'[#id],'white'[white]), color('2'[#id],'blue'[blue])))");
+NLParseTestUnifyingListener("the color of the ship is either white or blue", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(color('2'[#id],'white'[white]), color('2'[#id],'blue'[blue])))");
+NLParseTestUnifyingListener("All robots are machines", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(#not(robot(X:[#id])), machine(X)))");
+NLParseTestUnifyingListener("robots are machines", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(#not(robot(X:[#id])), machine(X)))");
+NLParseTestUnifyingListener("robots are not machines", o.getSort("performative"), context, 'etaoin',  "perf.inform('etaoin'[#id], #or(#not(robot(X:[#id])), #not(machine(X))))");
+NLParseTestUnifyingListener("I do not have a key", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(verb.have('1'[#id], X)), #not(key(X))))");
+NLParseTestUnifyingListener("all of my keys are white", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], color('4'[#id],'white'[white]))");
+NLParseTestUnifyingListener("all humans who are alive are small", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(#and(human(X:[#id]), alive(X))), small(X)))");
+NLParseTestUnifyingListener("all alive humans are small", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(#and(human(X:[#id]), alive(X))), small(X)))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

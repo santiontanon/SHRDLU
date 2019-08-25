@@ -364,6 +364,12 @@ class RuleBasedAI {
 
 	addLongTermTerm(t:Term, provenance:string)
 	{
+		this.addLongTermTermWithTime(t, provenance, this.time_in_seconds)
+	}
+
+
+	addLongTermTermWithTime(t:Term, provenance:string, time:number)
+	{
 		// intentions:
 		if (t.functor == this.cache_sort_intention) {
 			this.intentions.push(new IntentionRecord(
@@ -371,12 +377,12 @@ class RuleBasedAI {
 								   	t.attributes.length > 0 ? t.attributes[1]:null,
 								   	null,
 								   	null,
-								   	this.time_in_seconds));
+								   	time));
 			return;
 		}
 
 		if (t.functor.is_a(this.cache_sort_stateSort)) {
-			if (this.longTermMemory.addStateSentenceIfNew(new Sentence([t],[true]), provenance, 1, this.time_in_seconds)) {
+			if (this.longTermMemory.addStateSentenceIfNew(new Sentence([t],[true]), provenance, 1, time)) {
 				// term added
 				for(let context of this.contexts) {
 					context.newLongTermStateTerm(t);
@@ -384,7 +390,7 @@ class RuleBasedAI {
 				this.reactiveBehaviorUpdate(t);
 			}
 		} else {		
-			if (this.longTermMemory.addSentenceIfNew(new Sentence([t],[true]), provenance, 1, this.time_in_seconds)) {
+			if (this.longTermMemory.addSentenceIfNew(new Sentence([t],[true]), provenance, 1, time)) {
 				// term added
 				for(let context of this.contexts) {
 					context.newLongTermTerm(t);

@@ -268,9 +268,10 @@
     <sort name="shuttle" super="flying-vehicle"/>
     <sort name="spaceship" super="ship"/>
 
-    <sort name="ai" super="object"/>
-    <sort name="disembodied-ai" super="ai,character"/>
-    <sort name="robot" super="ai,character"/>
+    <sort name="ai" super="character"/>
+    <sort name="disembodied-ai" super="ai"/>
+    <sort name="machine" super="object"/>
+    <sort name="robot" super="ai,character,machine"/>
 
     <sort name="living-being" super="object"/>
 
@@ -370,7 +371,6 @@
     <sort name="memory-bank" super="object"/>
     <sort name="perception-system" super="object"/>
 
-    <sort name="machine" super="object"/>
     <sort name="panel" super="object,shape.flat"/>
 
     <sort name="computer" super="equipment,machine"/>
@@ -485,7 +485,6 @@
     <sort name="verb.come-back" super="verb.come"/>
     <sort name="verb.come-to" super="verb.come"/>
     <sort name="verb.access" super="verb"/>
-    <sort name="verb.erase" super="actionverb"/>
     <sort name="verb.enter" super="verb.go,verb.access"/>
     <sort name="verb.board" super="verb.enter"/>
     <sort name="verb.reach" super="verb.go-to"/>
@@ -570,6 +569,7 @@
     <sort name="action.embark" super="actionverb,verb.enter"/>
     <sort name="action.disembark" super="actionverb,verb.leave"/>
     <sort name="action.memorize" super="actionverb"/>
+    <sort name="action.erase" super="actionverb"/>
     <sort name="action.answer.predicate" super="actionverb"/>
     <sort name="action.answer.predicate-negated" super="actionverb"/>
     <sort name="action.answer.whereis" super="actionverb"/>

@@ -448,6 +448,7 @@
 	<map file="map4-spacer-valley-north.tmx"/>
 	<map file="map5-east-cave.tmx"/>
 	<map file="map6-west-cave.tmx"/>
+	<map file="map7-flyer-crash-site.tmx"/>
 
 	<player id="david" type="david" x="32" y="224" map="0">
 		<attribute name="sleepingInBed" value="505"/>

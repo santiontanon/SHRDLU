@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="80" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="622">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="80" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="624">
  <properties>
   <property name="name" value="Spacer Valley North"/>
  </properties>
@@ -140,5 +140,7 @@
   <object id="919" name="WEST-CAVE" type="Bridge" x="32" y="184" width="16" height="8"/>
   <object id="920" name="WEST-CAVE" type="BridgeDestination" x="24" y="176" width="32" height="40"/>
   <object id="921" type="shuttle-piece" x="208" y="24" width="8" height="8"/>
+  <object id="622" name="SPACER-GORGE" type="BridgeDestination" x="512" y="8" width="64" height="40"/>
+  <object id="623" name="SPACER-GORGE" type="Bridge" x="512" y="0" width="64" height="16"/>
  </objectgroup>
 </map>
