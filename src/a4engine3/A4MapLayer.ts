@@ -201,8 +201,11 @@ class A4MapLayer {
         tile_y -= this.elevation;
         tile_y2 -= this.elevation;
         for(let i:number = tile_y;i<=tile_y2;i++) {
-            if (i<0) return false;
-            if (i>=this.height) return false;
+            //if (i<0) return false;
+            //if (i>=this.height) return false;
+            // We let objects go through the edge of maps if there is no wall:
+            if (i<0) return true;
+            if (i>=this.height) return true;
             for(let j:number = tile_x;j<=tile_x2;j++) {
                 if (j>=this.width) return false;
                 tile = this.tiles[j+i*this.width];

@@ -98,6 +98,13 @@
 	<sentence provenance="background" sentence="space.at('spacer-valley'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('spacer-valley'[#id],'space'[#id])"/>
 
+	<sentence provenance="background" sentence="space.at('spacer-gorge'[#id],'aurora'[#id])"/>
+	<sentence provenance="background" sentence="~space.at('spacer-gorge'[#id],'space'[#id])"/>
+
+	<sentence provenance="background" sentence="crater('trantor-crater'[#id])"/>
+	<sentence provenance="background" sentence="name('trantor-crater'[#id],'trantor crater'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('trantor-crater'[#id],'aurora'[#id])"/>
+
 	<sentence provenance="background" sentence="star-system('solar-system'[#id])"/>
 	<sentence provenance="background" sentence="name('solar-system'[#id],'the solar system'[symbol])"/>
 	<sentence provenance="background" sentence="name('solar-system'[#id],'solar system'[symbol])"/>

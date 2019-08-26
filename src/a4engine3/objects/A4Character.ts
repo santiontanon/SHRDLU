@@ -1085,7 +1085,9 @@ class A4Character extends A4WalkingObject {
             return true;
         } else {
             if (this == <A4Character>game.currentPlayer) {
-                this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, "too heavy!!", A4_DIRECTION_NONE, game);
+                this.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, "too heavy for me, I'd need to get a robot to move this!!", A4_DIRECTION_NONE, game);
+            } else if (this.name == "Shrdlu") {
+                this.issueCommandWithString(A4CHARACTER_COMMAND_TALK, "I do not have energy for moving the huge boulder. Please bring me to Aurora Station.", A4_DIRECTION_NONE, game);
             }
             return false;
         }

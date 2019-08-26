@@ -34,6 +34,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
+			this.skip_to_act_2_distress_signals();
 		}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -192,6 +193,14 @@ class ShrdluGameScript {
 		this.act_2_state = 111;
 		this.act_2_shrdlu_agenda_state = 30;
 		this.game.shrdluAI.visionActive = true;			
+	}
+
+	skip_to_act_2_distress_signals()
+	{
+		this.skip_to_act_2_shrdluback_repair_outside();
+
+		this.act_2_state = 211;
+		this.act_2_shrdlu_agenda_state = 40;
 	}
 
 
@@ -2014,8 +2023,10 @@ class ShrdluGameScript {
 		
 				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				// this.game.etaoinAI.addLongTermTerm(Term.fromString("space-at('distress-signal1'[#id],'north-terrace'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				// this.game.etaoinAI.addLongTermTerm(Term.fromString("space-at('distress-signal2'[#id],'????'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 				this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
 
 				this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
@@ -2033,7 +2044,7 @@ class ShrdluGameScript {
 			break;
 
 		case 220:
-			// waiting for David to enter the command center:
+				// waiting for David to enter the command center:
 				if (this.game.currentPlayer.isIdle()) {
 				let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
 				// "location-as29" is the command center
@@ -2044,6 +2055,15 @@ class ShrdluGameScript {
 				}
 			}
 			break;
+
+		case 221:
+			// waiting for David to examine the tactical map
+			if (this.game.getStoryStateVariable("distress-signals")=="seen") {
+				this.act_2_state = 222;
+			}
+			break;
+
+		// ...
 
 		}
 

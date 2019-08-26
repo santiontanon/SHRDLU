@@ -259,6 +259,8 @@ class POSParser {
       "recharging station",
       "solar panel",
       "spacer valley",
+      "spacer gorge",
+      "trantor crater",
       "maintenance key",
       "maintenance room key",
       "garage key",
@@ -1032,6 +1034,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("corridor", "corridor", o);
     this.addStandardNounPOS("course", "path", o);
     this.addStandardNounPOS("crate", "crate", o);
+    this.addStandardNounPOS("crater", "crater", o);
     this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("data", "data", Term.fromString("noun('data'[data], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("day", "time.day", o);
@@ -1080,6 +1083,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("g", "gravity.unit.g", o);
     this.addStandardNounPOS("galaxy", "galaxy", o);
     this.addStandardNounPOS("garage", "garage", o);
+    this.addStandardNounPOS("gorge", "canyon", o);
     this.addStandardNounPOS("gravity", "gravity", o);
     this.addStandardNounPOS("greenhouse", "greenhouse.facility", o);
     this.addStandardNounPOS("gym", "gym.room", o);
@@ -1359,6 +1363,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.come", "come","comes","came","come","coming", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-back", "come back","comes back","came back","come back","coming back", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-to", "come to","comes to","came to","come to","coming to", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.come-from", "come from","comes from","came from","come from","coming from", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.damage", "damage","damages","damaged","damaged","damaging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.define", "define","defines","defined","defined","defining", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.detect", "detect","detects","detected","detected","detecting", false, multitokens_raw, o);

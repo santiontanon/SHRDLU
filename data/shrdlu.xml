@@ -460,5 +460,6 @@
 		<storyState scope="game" variable="rover" value="broken"/>
 		<storyState scope="game" variable="act1-corpse" value="undiscovered"/>
 		<storyState scope="game" variable="act" value="act1"/>
+		<storyState scope="game" variable="distress-signals" value="unseen"/>
 	</onStart>
 </A4Game>

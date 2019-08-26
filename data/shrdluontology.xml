@@ -485,6 +485,7 @@
     <sort name="verb.come" super="verb.go"/>
     <sort name="verb.come-back" super="verb.come"/>
     <sort name="verb.come-to" super="verb.come"/>
+    <sort name="verb.come-from" super="verb.come"/>
     <sort name="verb.access" super="verb"/>
     <sort name="verb.enter" super="verb.go,verb.access"/>
     <sort name="verb.board" super="verb.enter"/>
@@ -733,6 +734,7 @@
     <sort name="cave" super="outdoor.location"/>
     <sort name="valley" super="outdoor.location"/>
     <sort name="canyon" super="outdoor.location"/>
+    <sort name="crater" super="outdoor.location"/>
 
     <sort name="three-laws-of-robotics" super="abstract-entity"/>
 

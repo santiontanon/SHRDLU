@@ -950,6 +950,8 @@ NLParseTestUnifyingListener("I do not have a key", o.getSort("performative"), co
 NLParseTestUnifyingListener("all of my keys are white", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], color('4'[#id],'white'[white]))");
 NLParseTestUnifyingListener("all humans who are alive are small", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(#and(human(X:[#id]), alive(X))), small(X)))");
 NLParseTestUnifyingListener("all alive humans are small", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(#and(human(X:[#id]), alive(X))), small(X)))");
+NLParseTestUnifyingListener("where do you come from?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.come-from('etaoin'[#id],X))");
+NLParseTestUnifyingListener("where are you coming from?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.come-from('etaoin'[#id],X))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
