@@ -947,9 +947,11 @@ class A4Game {
                                                                wr.o.x+wr.o.getPixelWidth(),
                                                                wr.o.y+wr.o.getPixelHeight()));
                 }
+                /*
                 if (isCurrentPlayer) {
                     if (m!=null) this.addMessage("Welcome to " + m.name);
                 }
+                */
                 wr.o.warp(wr.x,wr.y,wr.map);//,wr.layer);
             } else {
                 // can't warp, since there is a collision!
@@ -2073,8 +2075,8 @@ class A4Game {
 
     playerInput_issueCommand(cmd:number, arg:number, direction:number) : number
     {
+        /*
         if (cmd==A4CHARACTER_COMMAND_WALK) {
-            /*
             // detect whether we should change "walk" to attack or talk if we walk against an enemy or npc:
             // only change action if there is an obstacle and we cannot walk around it:
             if (!this.currentPlayer.canMove(direction, false)) {
@@ -2102,8 +2104,8 @@ class A4Game {
                     }
                 }
             }
-            */
         }
+        */
         this.currentPlayer.issueCommandWithArguments(cmd, arg, direction, null, this);
         return cmd;
     }
@@ -2253,6 +2255,7 @@ class A4Game {
         // 1) spawn a new vehicle on the outside
         let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-rover", this, true, false);
         if (newRover == null) return false;
+        newRover.ID = rover.ID;
         newRover.direction = 2;
         let map:A4Map = this.getMap("Spacer Valley South")
         if (map == null) return false;
@@ -2284,6 +2287,7 @@ class A4Game {
         // 1) spawn a new vehicle on the garage
         let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("garage-rover", this, true, false);
         if (newRover == null) return false;
+        newRover.ID = rover.ID;
         newRover.direction = 2;
         let map:A4Map = this.getMap("Aurora Station")
         if (map == null) return false;
@@ -2313,6 +2317,27 @@ class A4Game {
             this.shrdluAI.robot.disembark();
         }
 
+        return true;
+    }
+
+
+    /*
+    - Prevents the robots from accidentally going to a map that they do not have permission to
+    - This is to avoid edge cases where the player finds some unforeseen edge case to skip through important story plot points
+    */
+    checkPermissionToWarp(character:A4Character, target:A4Map) : boolean
+    {
+        if (character.ID == "qwerty") return false;
+        if (character.ID == "shrdlu") {
+            if (character.map.name == "Aurora Station" ||
+                character.map.name == "Aurora Station Outdoors") {
+                if (this.getStoryStateVariable("permission-to-take-shrdlu") == "false" &&
+                    character.map.name != "Aurora Station" &&
+                    character.map.name != "Aurora Station Outdoors") {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 

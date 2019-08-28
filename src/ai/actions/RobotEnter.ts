@@ -48,6 +48,22 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			}
 			return true;
 		}
+		if (ai.selfID === "shrdlu") {
+			// SHRDLU needs permission from etaoin to leave the station
+			if (ai.robot.map.name == "Aurora Station" ||
+				ai.robot.map.name == "Aurora Station Outdoors") {
+				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to-access], relation.origin(X, 'etaoin'[#id])))))";
+					let term:Term = Term.fromString(tmp, ai.o);
+					//let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
+					//let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+					//ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));					
+					return true;
+				}
+			}
+		}
+
 
 		if (intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {

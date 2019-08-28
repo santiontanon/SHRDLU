@@ -2,8 +2,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
-		if (intention.functor.is_a(ai.o.getSort("verb.go")) ||
-			intention.functor.is_a(ai.o.getSort("verb.move"))) return true;
+		if ((intention.functor.is_a(ai.o.getSort("verb.go")) ||
+			 intention.functor.is_a(ai.o.getSort("verb.move"))) && 
+			!intention.functor.is_a(ai.o.getSort("verb.leave"))) {
+			return true;
+		}
 		return false;
 	}
 
@@ -98,7 +101,12 @@ class RobotGo_IntentionAction extends IntentionAction {
 							if (targetLocation.maps.length > 0 && 
 								targetLocation.maps.indexOf(ai.robot.map) == -1) {
 								// we set this so that we can later give the proper reason for why we cannot go
-								destinationMap = targetLocation.maps[0];
+								let tmp3:[number,number] = targetLocation.centerWalkableCoordinatesInMap(targetLocation.maps[0], ai.robot);
+								if (tmp3 != null) {
+									destinationMap = targetLocation.maps[0];
+									destinationX = tmp3[0];
+									destinationY = tmp3[1];
+								}
 							}
 						}
 					} else {
@@ -253,31 +261,82 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		if (destinationMap == null || destinationMap != ai.robot.map) {
+		// IF the player has no permission to send a robot there:
+		if (!hasPermission) {
 			if (requester != null) {
-				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-				let cause:Term;
-				if (destinationMap == null) {
-					cause = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				} else {
-					if (ai.selfID == "qwerty") {
-						cause = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-					}
-				}
-				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-				if (!hasPermission) {
-					// say "you do not have access to that location":
-					let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-				}
+				// say "you do not have access to that location":
+				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
+				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
 			}
 			return true;
 		}
 
+		// If we do not know the destination map:
+		if (destinationMap == null) {
+			if (requester != null) {
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+				let term:Term = Term.fromString(tmp, ai.o);
+				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
+				let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+			}
+			return true;
+		}
+
+		if (ai.selfID == "qwerty") {
+			// Qwerty cannot go outside the station:
+			if (destinationMap != ai.robot.map) {
+				if (requester != null) {
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+					let term:Term = Term.fromString(tmp, ai.o);
+					let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
+					let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				}
+				return true;
+			}
+		} else if (ai.selfID == "shrdlu") {
+			// SHRDLU needs permission to exit aurora settlement
+			if (destinationMap.name != "Aurora Station" &&
+				destinationMap.name != "Aurora Station Outdoors") {
+				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to-access], relation.origin(X, 'etaoin'[#id])))))";
+					let term:Term = Term.fromString(tmp, ai.o);
+					//let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
+					//let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+					//ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					return true;
+				}
+				/*
+				if (requester != null) {
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+					let cause:Term = null;
+					if (destinationMap == null) {
+						cause = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
+					} else {
+						// ....
+					}
+					let term:Term = Term.fromString(tmp, ai.o);
+					let causeRecord:CauseRecord = null;
+					if (cause != null) {
+						causeRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+					}
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					if (!hasPermission) {
+						// say "you do not have access to that location":
+						let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
+						ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
+					}
+				}
+				return true;
+				*/
+			}
+		}		
+
 		// go to destination:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, destinationMap.name, null, 0, false, false);
         s.x = destinationX;
         s.y = destinationY;
         s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;

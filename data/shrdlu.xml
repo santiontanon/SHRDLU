@@ -461,5 +461,6 @@
 		<storyState scope="game" variable="act1-corpse" value="undiscovered"/>
 		<storyState scope="game" variable="act" value="act1"/>
 		<storyState scope="game" variable="distress-signals" value="unseen"/>
+		<storyState scope="game" variable="permission-to-take-shrdlu" value="false"/>
 	</onStart>
 </A4Game>

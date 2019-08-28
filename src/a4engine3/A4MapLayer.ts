@@ -191,7 +191,9 @@ class A4MapLayer {
 
     walkableOnlyBackground(x:number, y:number, dx:number, dy:number, subject:A4Object):boolean
     {
-        if (x<0 || y<0) return false;
+        if (x<-this.tileWidth || y<-this.tileHeight) return false;
+        if (x+dx>=(this.width+1)*this.tileWidth || 
+            y+dy>=(this.height+1)*this.tileHeight) return false;
         var tile_x:number = Math.floor(x/this.tileWidth);
         var tile_y:number = Math.floor(y/this.tileHeight);
         var tile_x2:number = Math.floor((x+dx-1)/this.tileWidth);
@@ -204,10 +206,11 @@ class A4MapLayer {
             //if (i<0) return false;
             //if (i>=this.height) return false;
             // We let objects go through the edge of maps if there is no wall:
-            if (i<0) return true;
-            if (i>=this.height) return true;
+            if (i<0) continue;
+            if (i>=this.height) continue;
             for(let j:number = tile_x;j<=tile_x2;j++) {
-                if (j>=this.width) return false;
+                //if (j>=this.width) return false;
+                if (j>=this.width) continue;
                 tile = this.tiles[j+i*this.width];
                 if (tile>=0) {
                     for(let k:number = 0;k<this.graphicFiles.length;k++) {

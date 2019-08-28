@@ -27,15 +27,15 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
-			//this.skip_to_act_2_distress_signals();
-		//}
+			this.skip_to_act_2_distress_signals();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -2497,7 +2497,7 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.getMap("Aurora Station Outdoors"), null);
+						this.shrdluMovesOverrideable(81*8, 5*8, this.game.getMap("Aurora Station"), null);
 					}
 					break;
 			case 41: 

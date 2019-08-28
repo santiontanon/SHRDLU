@@ -270,22 +270,25 @@ class A4Character extends A4WalkingObject {
 //                        this.animations[this.currentAnimation].update();
                     }
                     if ((this.x%this.map.tileWidth == 0) && (this.y%this.map.tileHeight == 0)) {
+                        let bridge:A4MapBridge = null;
                         if (!this.canMove(this.direction, false)) {
                             this.state = A4CHARACTER_STATE_IDLE;
                             this.currentAnimation = A4_ANIMATION_IDLE_LEFT+this.direction;
                             this.animations[this.currentAnimation].reset();
-
-                            // check if we are pushing against the edge of a map with a "bridge":
-                            let bridge:A4MapBridge = null;
                             bridge = this.checkIfPushingAgainstMapEdgeBridge(this.direction)
-                            if (bridge!=null) {
-                                // teleport!
-                                var target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
-                                if (target!=null) {
+                            if (bridge == null) break;
+                        }
+                        // check if we are pushing against the edge of a map with a "bridge":
+                        if (bridge == null) bridge = this.checkIfPushingAgainstMapEdgeBridge(this.direction)
+                        if (bridge != null) {
+                            // teleport!
+                            var target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
+                            if (target!=null) {
+                                if (game.checkPermissionToWarp(this, bridge.linkedTo.map)) {
                                     game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);
-                                } else {
-                                    if (this == <A4Character>game.currentPlayer) game.addMessage("Something is blocking the way!");
                                 }
+                            } else {
+                                if (this == <A4Character>game.currentPlayer) game.addMessage("Something is blocking the way!");
                             }
                             break;
                         }
@@ -344,7 +347,9 @@ class A4Character extends A4WalkingObject {
                         // teleport!
                         let target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
                         if (target!=null) {
-                            game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);//, this.layer);
+                            if (game.checkPermissionToWarp(this, bridge.linkedTo.map)) {
+                                game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);//, this.layer);
+                            }
                         } else {
                             if (this == <A4Character>game.currentPlayer) game.addMessage("Something is blocking the way!");
                         }

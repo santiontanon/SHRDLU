@@ -305,4 +305,6 @@ testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], V:[distress-signal]))", "etaoin", "I detect a distress signal");
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))", "etaoin", "I detect distress signals");
 
+testNLG("perf.inform('1'[#id], verb.need('etaoin'[#id], #and(X:[permission-to-access], relation.origin(X, 'qwerty'[#id]))))", "etaoin", "I need permission of qwerty");
+
 

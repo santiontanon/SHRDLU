@@ -261,7 +261,7 @@
 	<!-- door names -->
 	<sentence provenance="background" sentence="name('stasis-door'[#id],'stasis room door'[symbol])"/>
 	<sentence provenance="background" sentence="name('stasis-door'[#id],'stasis door'[symbol])"/>
-	<sentence provenance="background" sentence="name('stasis-door'[#id],'door to the stasis room'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('stasis-door'[#id],'door to the stasis room'[symbol])"/-->
 	<sentence provenance="background" sentence="name('bedroom1-door'[#id],'door number 1'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom1-door'[#id],'door 1'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom2-door'[#id],'door number 2'[symbol])"/>
@@ -296,6 +296,25 @@
 	<sentence provenance="background" sentence="name('garage-door-south'[#id],'garage door'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-door'[#id],'command center door'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-door'[#id],'command door'[symbol])"/>
+
+	<sentence provenance="background" sentence="relation.belongs('stasis-door'[#id],'location-as26'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom1-door'[#id],'location-as4'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom2-door'[#id],'location-as5'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom3-door'[#id],'location-as6'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom4-door'[#id],'location-as7'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom5-door'[#id],'location-as8'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom6-door'[#id],'location-as9'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom7-door'[#id],'location-as10'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom8-door'[#id],'location-as11'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom9-door'[#id],'location-as12'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom10-door'[#id],'location-as13'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom11-door'[#id],'location-as14'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('bedroom12-door'[#id],'location-as15'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('science-door'[#id],'location-as27'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('maintenance-door'[#id],'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('garage-door-north'[#id],'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('garage-door-south'[#id],'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="relation.belongs('command-door'[#id],'location-as29'[#id])"/>
 
 	<!-- keys -->
 	<sentence provenance="background" sentence="blue-key('science-key'[#id])"/>

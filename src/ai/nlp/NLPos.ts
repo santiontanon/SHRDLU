@@ -323,7 +323,7 @@ class POSParser {
       "user name",
       "stasis room door",
       "stasis door",
-      "door to the stasis room",
+      //"door to the stasis room",
       "door number 1",
       "door 1",
       "door number 2",
@@ -376,6 +376,8 @@ class POSParser {
       "fixing tools",
       "distress signal",
       "distress signals",
+      "airlock door",
+      "airlock doors",
 
       // adjectives:
       "in stasis",
@@ -614,6 +616,7 @@ NLPAddTokenPOS("during", PartOfSpeech.generatePreposition("during", POS_TYPE_PPR
 this.addTokenPOS(new PartOfSpeech("except", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("from", "relation.origin", Term.fromString("preposition('relation.origin'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 /*
   ["into",  "PREP"],
@@ -977,6 +980,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("age", "property.age", o);
     this.addStandardNounPOS("ai", "ai", o);
     this.addStandardNounPOS("airlock", "airlock", o);
+    this.addStandardNounPOS("airlock door", "airlock-door", o);
     this.addTokenPOS(new PartOfSpeech("analysis", "analysis", Term.fromString("noun('analysis'[analysis], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("analyses", "analysis", Term.fromString("noun('analysis'[analysis], [plural])", o), 1.0));
     this.addStandardNounPOS("animal", "animal", o);
@@ -1177,8 +1181,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("perception", "perception-system", Term.fromString("noun('perception-system'[perception-system], [singular])", o), 1.0));
     this.addStandardNounPOS("perception system", "perception-system", o);
     this.addStandardNounPOS("performative", "performative", o);
-    this.addUncountableNounPOS("permission", "permission-to-access", o);
     this.addUncountableNounPOS("access", "permission-to-access", o);
+    this.addUncountableNounPOS("permission", "permission-to-access", o);
     this.addStandardNounPOS("person", "human", o);
     this.addStandardNounPOS("physicist", "physicist", o);
     this.addStandardNounPOS("place", "space.location", o);
