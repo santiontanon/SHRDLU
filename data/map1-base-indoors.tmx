@@ -273,7 +273,7 @@
     <property name="closed" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="227" type="horizontal-door" x="584" y="256" width="16" height="24">
+  <object id="bedroom6-door" type="horizontal-door" x="584" y="256" width="16" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>

@@ -13,36 +13,77 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
-		var targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
-		var door:A4Object = ai.game.findObjectByIDJustObject(targetID);
-		if ((door instanceof A4Door) &&
-			(<A4Door>door).checkForBlockages(true, null, door.map, ai.game, [])) {
-            if (!(<A4Door>door).closed) {
-				// see if player has permission:
-            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf((<A4Door>door).doorID) == -1) {
-            		// close!
-            		(<A4Door>door).eventWithID(A4_EVENT_OPEN, (<A4Door>door).doorID, null, door.map, ai.game);
+		let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+		let doors:A4Door[] = [];
 
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				} else {
-					// no permission
-					var term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-				}
-            } else {
-            	// it's already open
-				if (requester != null) {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",property.closed('"+targetID+"'[#id])))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				}
-            }
-		} else {
+		// check if it's a door:
+		let door_tmp:A4Object = ai.game.findObjectByIDJustObject(targetID);
+		if (door_tmp != null && (door_tmp instanceof A4Door)) {
+			doors.push(door_tmp);
+		} else if (door_tmp == null) {
+        	// see if it's a location with a door (e.g., a bedroom):
+        	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
+        	let belong_l:Sentence[] = ai.longTermMemory.allMatches(ai.o.getSort("relation.belongs"), 2, ai.o);
+        	for(let belong of belong_l) {
+        		if (belong.terms.length == 1 && belong.sign[0] == true) {
+        			let t:Term = belong.terms[0];
+        			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
+        				(t.attributes[1] instanceof ConstantTermAttribute)) {
+        				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
+        					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
+        					if (door != null && (door instanceof A4Door)) {
+        						doors.push(door);
+        					}
+        				}
+        			}
+        		}
+        	}
+		}
+
+		if (doors.length == 0) {
+			// not a door!
 			if (requester != null) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				var cause:Term = Term.fromString("#not(door('"+targetID+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let cause:Term = Term.fromString("#not(door('"+targetID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 			}
+		} else {
+    		// we have found at least a door!
+    		let anyNotPermitted:boolean = false;
+    		let doorsToClose:A4Door[] = [];
+    		for(let door of doors) {
+	            if (!door.closed) {
+					// see if player has permission:
+	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf(door.doorID) == -1) {
+	            		doorsToClose.push(door);
+					} else {
+						anyNotPermitted = true;
+					}
+	            }
+	        }
+
+	        if (anyNotPermitted) {
+				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
+				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
+				return true;	        	
+	        }
+
+	        if (doorsToClose.length > 0) {
+	        	for(let door of doorsToClose) {
+	        		door.eventWithID(A4_EVENT_CLOSE, door.doorID, null, door.map, ai.game);
+	        	}
+	        	if (requester != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));        			        		
+	        	}
+	        } else {
+            	// it's already closed
+				if (requester != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",property.closed('"+targetID+"'[#id])))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				}
+
+	        }
 		}
 
 		return true;

@@ -162,7 +162,8 @@ class A4Door extends A4Object {
     {
         super.eventWithID(a_event,ID,character,map,game);
 
-        if (a_event == A4_EVENT_OPEN && this.doorID == ID) {
+        if ((a_event == A4_EVENT_OPEN ||
+             a_event == A4_EVENT_CLOSE) && this.doorID == ID) {
             if (this.eventScripts[a_event]!=null) {
                 for(let rule of this.eventScripts[a_event]) {
                     rule.executeEffects(this, map, game, character);

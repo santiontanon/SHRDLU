@@ -14,7 +14,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 		var targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
-		var door:A4Object = ai.game.findObjectByIDJustObject(targetID);
+		let door:A4Object = null;
 		var open:boolean = true;
 
 		if (ai.robot.isInVehicle()) {
@@ -23,12 +23,49 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;
-		}			
-
-		if (intention.functor.is_a(ai.o.getSort("action.close"))) {
-			open = false;
 		}
-		if (door instanceof A4Door) {
+
+		if (intention.functor.is_a(ai.o.getSort("action.close"))) open = false;
+
+		// check if it's a door:
+		let door_tmp:A4Object = ai.game.findObjectByIDJustObject(targetID);
+		if (door_tmp != null) {
+			door = door_tmp;
+		} else if (door_tmp == null) {
+        	// see if it's a location with a door (e.g., a bedroom):
+        	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
+			let doors:A4Object[] = [];
+        	let belong_l:Sentence[] = ai.longTermMemory.allMatches(ai.o.getSort("relation.belongs"), 2, ai.o);
+        	for(let belong of belong_l) {
+        		if (belong.terms.length == 1 && belong.sign[0] == true) {
+        			let t:Term = belong.terms[0];
+        			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
+        				(t.attributes[1] instanceof ConstantTermAttribute)) {
+        				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
+        					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
+        					if (door != null && (door instanceof A4Door)) {
+        						doors.push(door);
+        					}
+        				}
+        			}
+        		}
+        	}
+
+    		// we have found at least a door!
+    		let anyNotPermitted:boolean = false;
+    		for(let door_tmp of doors) {
+	            if ((<A4Door>door_tmp).closed == open) {
+					// see if player has permission:
+	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf((<A4Door>door_tmp).doorID) == -1) {
+	            		door = door_tmp;
+					} else {
+						anyNotPermitted = true;
+					}
+	            }
+	        }
+		}
+
+		if (door != null && (door instanceof A4Door)) {
             if ((<A4Door>door).closed == open) {
             	if ((<A4Door>door).checkForBlockages(true, null, ai.robot.map, ai.game, [])) {
 					// see if player has permission:
@@ -74,7 +111,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 				}
 				return true;
             }
-        } else if ((door instanceof A4ObstacleContainer) &&
+        } else if (door != null && (door instanceof A4ObstacleContainer) &&
         	 	   (<A4ObstacleContainer>door).closeable) {
             if ((<A4ObstacleContainer>door).closed == open) {
 				// see if player has permission:
