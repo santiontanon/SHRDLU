@@ -96,7 +96,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 				if (!hasPermission) {
 					// say "you do not have access to that location":
-					let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
+					let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
 				}
 			}

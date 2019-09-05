@@ -90,7 +90,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 						return true;
 					} else {
 						// no permission
-						var term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+ir.requester+", #not(verb.have("+ir.requester+",[permission-to-access]))))", ai.o);
+						var term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+ir.requester+", #not(verb.have("+ir.requester+",[permission-to]))))", ai.o);
 						ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
 						return true;
 					}

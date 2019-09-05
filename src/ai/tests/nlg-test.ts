@@ -219,10 +219,10 @@ testNLG("perf.inform(V0:'1'[#id], verb.be([corpse],[human]))", "etaoin", "a corp
 testNLG("perf.inform(V0:'1'[#id], verb.be([corpse],#and([human],[dead])))", "etaoin", "a corpse is a human and something that is dead");
 testNLG("perf.inform(V0:'1'[#id], verb.want(S:'etaoin'[#id], verb.test(S, #and(C:[strength], relation.belongs(C, V0)))))", "etaoin", "I want to test your strength");
 
-testNLG("perf.inform(V0:'1'[#id], V1:permission-to-access(V3:'etaoin'[#id]))", "etaoin", "I have permission to enter");
-testNLG("perf.inform(V0:'1'[#id], V1:#not(permission-to-access(V3:'etaoin'[#id])))", "etaoin", "I do not have permission to enter");
-testNLG("perf.inform(V0:'1'[#id], V1:permission-to-access(V3:'etaoin'[#id], V8:'room1'[#id]))", "etaoin", "I have permission to enter the kitchen");
-testNLG("perf.q.predicate(V0:'1'[#id], V1:permission-to-access(V3:'etaoin'[#id], V8:'room1'[#id]))", "etaoin", "do I have permission to enter the kitchen?");
+testNLG("perf.inform(V0:'1'[#id], V1:permission-to(V3:'etaoin'[#id], verb.enter(V3)))", "etaoin", "I have permission to enter");
+testNLG("perf.inform(V0:'1'[#id], V1:#not(permission-to(V3:'etaoin'[#id], verb.enter(V3))))", "etaoin", "I do not have permission to enter");
+testNLG("perf.inform(V0:'1'[#id], V1:permission-to(V3:'etaoin'[#id], verb.enter(V3, V8:'room1'[#id])))", "etaoin", "I have permission to enter the kitchen");
+testNLG("perf.q.predicate(V0:'1'[#id], V1:permission-to(V3:'etaoin'[#id], verb.enter(V3, V8:'room1'[#id])))", "etaoin", "do I have permission to enter the kitchen?");
 testNLG("perf.q.predicate('1'[#id], permitted-in('etaoin'[#id], 'room1'[#id]))", "etaoin", "am I allowed to enter the kitchen?");
 
 testNLG("perf.inform.answer(V0:'1'[#id], '100'[kilogram])", "etaoin", "100 kilograms");
@@ -274,7 +274,7 @@ testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:name(V3:'1'[#id], V4:'david'[symbol]), V5:#and(V6:name(V7:'qwerty'[#id], V8:'qwerty'[symbol]), V9:#and(V10:name(V11:'etaoin'[#id], V12:'etaoin'[symbol]), V13:'etcetera'[etcetera]))))", "etaoin", "your name is david, the robot's name is qwerty, my name is etaoin, ...");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remember(V4:'1'[#id], V5:'pronoun.anything'[pronoun.anything])), V6:#and(V7:in-stasis(V8:'1'[#id]), V9:time.past(V7))))", "etaoin", "you do not remember anything because of that you were in stasis");
 
-testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to-access(V2, V4:'room1'[#id])))", "etaoin", "you need to have permission to enter the kitchen");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to(V2, verb.enter(V2, V4:'room1'[#id]))))", "etaoin", "you need to have permission to enter the kitchen");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");
 
 testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can switch on qwerty"); 
@@ -305,6 +305,4 @@ testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], V:[distress-signal]))", "etaoin", "I detect a distress signal");
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))", "etaoin", "I detect distress signals");
 
-testNLG("perf.inform('1'[#id], verb.need('etaoin'[#id], #and(X:[permission-to-access], relation.origin(X, 'qwerty'[#id]))))", "etaoin", "I need permission of qwerty");
-
-
+testNLG("perf.inform('1'[#id], verb.need('etaoin'[#id], #and(X:[permission-to], relation.origin(X, 'qwerty'[#id]))))", "etaoin", "I need permission of qwerty");

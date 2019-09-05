@@ -234,6 +234,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -524,19 +525,18 @@ NLParseTestUnifyingListener("can you ask the crate to come here?", o.getSort("pe
 NLParseTestUnifyingListener("tell the crate to tell me to follow you", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(CRATE:'5'[#id], action.talk(CRATE, perf.request.action(ME:'1'[#id], verb.follow(ME, V0))))))"); 
 
 // permission things:
-NLParseTestUnifyingListener("I have permission to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to-access(V3:'1'[#id], V8:'room1'[#id]))"); 
-NLParseTestUnifyingListener("I have permission to go to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to-access(V3:'1'[#id], V8:'room1'[#id]))"); 
-NLParseTestUnifyingListener("I have permission to enter the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to-access(V3:'1'[#id], V8:'room1'[#id]))"); 
-NLParseTestUnifyingListener("do I have permission to go to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:permission-to-access(V3:'1'[#id], V8:'room1'[#id]))"); 
+NLParseTestUnifyingListener("I have permission to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], V8:'room1'[#id]))"); 
+NLParseTestUnifyingListener("I have permission to go to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], verb.go-to(V3, V8:'room1'[#id])))"); 
+NLParseTestUnifyingListener("I have permission to enter the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], verb.enter(V3, V8:'room1'[#id])))"); 
+NLParseTestUnifyingListener("do I have permission to go to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], verb.go-to(V3, V8:'room1'[#id])))"); 
 NLParseTestUnifyingListener("am I allowed in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], permitted-in('1'[#id],'room1'[#id]))"); 
 NLParseTestUnifyingListener("am I allowed to go to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], permitted-in('1'[#id], 'room1'[#id]))"); 
-
 NLParseTestUnifyingListener("can I go to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:verb.can(V3:'1'[#id],verb.go-to(V3:'1'[#id], V8:'room1'[#id])))"); 
 NLParseTestUnifyingListener("where can I go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:verb.can(V3:'1'[#id],verb.go(V3:'1'[#id], X)))"); 
 NLParseTestUnifyingListener("where am I allowed to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:permitted-in(V3:'1'[#id], X))"); 
 NLParseTestUnifyingListener("where am I not allowed to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:#not(permitted-in(V3:'1'[#id], X)))"); 
-NLParseTestUnifyingListener("where do I have permission to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:permission-to-access(V3:'1'[#id], X))"); 
-NLParseTestUnifyingListener("where don't I have permission to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:#not(permission-to-access(V3:'1'[#id], X)))"); 
+NLParseTestUnifyingListener("where do I have permission to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:permission-to(V3:'1'[#id], verb.go(V3, X)))");   
+NLParseTestUnifyingListener("where don't I have permission to go?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, V1:#not(permission-to(V3:'1'[#id], verb.go(V3, X))))"); 
 NLParseTestUnifyingListener("how many keys are there?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, key(X))");  
 NLParseTestUnifyingListener("how many keys do you have?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), verb.have('etaoin'[#id],X)))");  
 NLParseTestUnifyingListener("how many keys are there in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), space.at(X,'room1'[#id])))"); 
@@ -625,7 +625,7 @@ NLParseTestUnifyingListener("is there anyone other than me on the station?", o.g
 NLParseTestUnifyingListener("Is there anyone beside me in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), #not(=(X,'1'[#id]))))");
 NLParseTestUnifyingListener("Is there anyone beside me in that station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), #not(=(X,'1'[#id]))))");
 NLParseTestUnifyingListener("what is your functionality?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, role('etaoin'[#id], X))");
-NLParseTestUnifyingListener("do I have access to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:permission-to-access(V3:'1'[#id], V8:'room1'[#id]))"); 
+NLParseTestUnifyingListener("do I have access to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], V8:'room1'[#id]))"); 
 NLParseTestUnifyingListener("can I enter the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.can(V2:'1'[#id], V3:verb.enter(V2, V4:'room1'[#id])))"); 
 NLParseTestUnifyingListener("can I access the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.can(V2:'1'[#id], V3:verb.access(V2, V4:'room1'[#id])))"); 
 NLParseTestUnifyingListener("are there no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #not(=(X,'1'[#id]))))");
@@ -823,11 +823,12 @@ NLParseTestUnifyingListener("can you send the crate here?", o.getSort("performat
 NLParseTestUnifyingListener("send the crate to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
 NLParseTestUnifyingListener("turn the ship on", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.switch-on('etaoin'[#id], '2'[#id]))"); 
 NLParseTestUnifyingListener("how do I turn the ship on", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.switch-on('1'[#id], '2'[#id]))");
-NLParseTestUnifyingListener("how do I get permission to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to-access(V3:'1'[#id], V8:'room1'[#id])))");
-NLParseTestUnifyingListener("how do I get permission to enter the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to-access(V3:'1'[#id], V8:'room1'[#id])))");
-NLParseTestUnifyingListener("how do I get access to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to-access(V3:'1'[#id], V8:'room1'[#id])))");
-NLParseTestUnifyingListener("give me permission to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to-access(V3:'1'[#id], V8:'room1'[#id])))");
-NLParseTestUnifyingListener("can you give me access to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to-access(V3:'1'[#id], V8:'room1'[#id])))");
+NLParseTestUnifyingListener("how do I get permission to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to(V3:'1'[#id], V8:'room1'[#id])))");
+NLParseTestUnifyingListener("how do I get permission to enter the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to(V3:'1'[#id], verb.enter('1'[#id], V8:'room1'[#id]))))");
+NLParseTestUnifyingListener("how do I get access to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id], permission-to(V3:'1'[#id], V8:'room1'[#id])))");
+NLParseTestUnifyingListener("give me permission to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to(V3:'1'[#id], V8:'room1'[#id])))");
+NLParseTestUnifyingListener("can you give me access to the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to(V3:'1'[#id], V8:'room1'[#id])))");
+NLParseTestUnifyingListener("can you give me access to enter the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to(V3:'1'[#id], verb.enter('1'[#id], V8:'room1'[#id])) ))");
 NLParseTestUnifyingListener("I will sleep", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(V:verb.sleep('1'[#id]), time.future(V)))");
 NLParseTestUnifyingListener("I am going to sleep", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(V:verb.sleep('1'[#id]), time.future(V)))");
 NLParseTestUnifyingListener("I'm going to sleep", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(V:verb.sleep('1'[#id]), time.future(V)))");
@@ -967,10 +968,25 @@ NLParseTestUnifyingListener("open the door", o.getSort("performative"), context,
 NLParseTestUnifyingListener("open the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.open('etaoin'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("open the door of the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
 NLParseTestUnifyingListener("open the door to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
-NLParseTestUnifyingListener("close the kitchen door", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
+NLParseTestUnifyingListener("close the kitchen door", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.close('etaoin'[#id], 'door1'[#id]))"); 
 NLParseTestUnifyingListener("open the kitchen's door", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
 NLParseTestUnifyingListener("can you open the kitchen door?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
-NLParseTestUnifyingListener("can you close the kitchen's door?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.open('etaoin'[#id], 'door1'[#id]))"); 
+NLParseTestUnifyingListener("can you close the kitchen's door?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.close('etaoin'[#id], 'door1'[#id]))"); 
+NLParseTestUnifyingListener("can I take etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))"); 
+NLParseTestUnifyingListener("can I take etaoin with me?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))"); 
+NLParseTestUnifyingListener("give me permission to take etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], '1'[#id], permission-to(V3:'1'[#id], action.take('1'[#id], 'etaoin'[#id]))))");
+NLParseTestUnifyingListener("give etaoin permission to leave", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.leave('etaoin'[#id]))))");
+NLParseTestUnifyingListener("give permission to etaoin to leave", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.leave('etaoin'[#id]))))");
+NLParseTestUnifyingListener("give permission to leave to etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.leave('etaoin'[#id]))))");
+NLParseTestUnifyingListener("grant etaoin permission to leave the station", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.leave('etaoin'[#id], 'location-aurora-station'[#id]))))");
+NLParseTestUnifyingListener("grant permission to etaoin to leave the station", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.leave('etaoin'[#id], 'location-aurora-station'[#id]))))");
+NLParseTestUnifyingListener("grant etaoin permission to come with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.give('etaoin'[#id], 'etaoin'[#id], permission-to(V3:'etaoin'[#id], verb.follow('etaoin'[#id], '1'[#id]))))");
+NLParseTestUnifyingListener("I want to take etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("I want to take etaoin with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("let me take etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("let me take etaoin with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("I need to take etaoin with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("let me take etaoin to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 'room1'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

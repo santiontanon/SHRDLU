@@ -306,17 +306,17 @@ resolutionTest(
 
 resolutionTest(
     ["permitted-in('david'[#id], 'location-garage'[#id])",
-     "~permitted-in(X, Y); permission-to-access(X, Y)",
-     "permitted-in(X, Y); ~permission-to-access(X, Y)"],
-    ["~permission-to-access('david'[#id], 'location-garage'[#id])"],
+     "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
+     "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
+    ["~permission-to('david'[#id], verb.access('david'[#id], location-garage'[#id]))"],
     true,    // contradicts
     o);
 
 resolutionTest(
     ["permitted-in('david'[#id], 'location-garage'[#id])",
-     "~permitted-in(X, Y); permission-to-access(X, Y)",
-     "permitted-in(X, Y); ~permission-to-access(X, Y)"],
-    ["permission-to-access('david'[#id], 'location-garage'[#id])"],
+     "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
+     "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
+    ["permission-to('david'[#id], verb.access('david'[#id], location-garage'[#id]))"],
     false,    // contradicts
     o);
 

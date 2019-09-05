@@ -53,7 +53,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			if (ai.robot.map.name == "Aurora Station" ||
 				ai.robot.map.name == "Aurora Station Outdoors") {
 				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to-access], relation.origin(X, 'etaoin'[#id])))))";
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))))";
 					let term:Term = Term.fromString(tmp, ai.o);
 					//let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
 					//let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)

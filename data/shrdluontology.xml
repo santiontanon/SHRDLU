@@ -230,7 +230,8 @@
     <sort name="item" super="object"/>
     <sort name="key" super="item"/>
     <sort name="door" super="object"/>
-    <sort name="ShrdluAirlockDoor" super="door"/>
+    <sort name="airlock-door" super="door"/>
+    <sort name="ShrdluAirlockDoor" super="airlock-door"/>
     <sort name="food" super="item"/>
     <sort name="drink" super="food"/>
     <sort name="container" super="object"/>
@@ -460,7 +461,7 @@
     <sort name="relation.larger" super="relation"/>
 
     <sort name="permitted-in" super="relation"/>
-    <sort name="permission-to-access" super="abstract-entity,haveable-property-with-value"/>
+    <sort name="permission-to" super="abstract-entity,haveable-property-with-value"/>
 
     <sort name="relation-verb" super="verb,relation"/>
     <sort name="movementverb" super="verb"/>  
@@ -473,6 +474,7 @@
     <sort name="verb.may" super="modal-verb"/>
     <sort name="verb.can" super="modal-verb"/>
     <sort name="verb.shall" super="modal-verb"/>
+    <sort name="verb.let" super="verb"/>
     <sort name="verb.cause" super="relation-verb,relation.cause"/>
     <sort name="verb.call" super="verb"/>
     <sort name="verb.disambiguate" super="verb"/>

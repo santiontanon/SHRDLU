@@ -62,12 +62,12 @@ class NLParser {
 
 		// STEP 2: Dictionary-based multi-token word detection (merge tokens)
 		var tokens2:TokenizationElement = this.posParser.identifyMultiTokenWords(tokens);
-//		console.log("Multi-token word identification:\n" + tokens2.toString());
+		//console.log("Multi-token word identification:\n" + tokens2.toString());
 
 		// STEP 3: Part of Speech Tagging
 		this.posParser.unrecognizedTokens = [];
 		this.posParser.POSTagging(tokens2, this.o);
-//		console.log("POS Tagging:\n" + tokens2.toString());
+		//console.log("POS Tagging:\n" + tokens2.toString());
 
 		this.error_semantic = false;
 		this.error_deref = [];

@@ -983,9 +983,10 @@ class RuleBasedAI {
 				ir.triggeredBySpeaker = context.speaker;
 				this.inferenceProcesses.push(ir);
 			} else {
-				if (this.canSatisfyActionRequest(action)) {
+				let tmp:number = this.canSatisfyActionRequest(action);
+				if (tmp == 1) {
 					this.intentions.push(new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-				} else {
+				} else if (tmp == 0) {
 					let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
 					let term:Term = Term.fromString(tmp, this.o);
 					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
@@ -1037,7 +1038,14 @@ class RuleBasedAI {
 		}
 	}
 
-	canSatisfyActionRequest(actionRequest:Term) : boolean
+
+	/*
+	return values:
+	0: request cannot be satisfied
+	1: request can be satisfied
+	2: request can be satisfied, but will be handled externally, so, we do not need to do anything
+	*/
+	canSatisfyActionRequest(actionRequest:Term) : number
 	{
 		let functor:Sort = actionRequest.functor;
 		if (functor.name == "#and") {
@@ -1046,9 +1054,9 @@ class RuleBasedAI {
 		}
 
 		for(let ih of this.intentionHandlers) {
-			if (ih.canHandle(actionRequest, this)) return true;
+			if (ih.canHandle(actionRequest, this)) return 1;
 		}
-		return false;
+		return 0;
 	}
 
 

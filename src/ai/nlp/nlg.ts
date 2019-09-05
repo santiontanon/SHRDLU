@@ -577,10 +577,14 @@ class NLGenerator {
 
 		} else if (t.functor.is_a(this.nlg_cache_sort_haveablepropertywithvalue) && t.attributes.length == 2) {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
-			let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, true, null, false);
+			let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, true, (t.attributes[0] instanceof ConstantTermAttribute ? (<ConstantTermAttribute>(t.attributes[0])).value:null), false);
 			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.have"), subjectStr[3], subjectStr[1], 3);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
-			if (verbStr != null && propertyStr != null) {
+			if (verbStr != null && propertyStr != null && objectStr != null) {
+				if (propertyStr.substring(propertyStr.length-3) == " to" && 
+					objectStr[0].substring(0,3) == "to ") {
+					objectStr[0] = objectStr[0].substring(3);
+				}
 				if (negated_t) {
 					verbStr = this.pos.getVerbString(ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
 					return subjectStr[0] + " " + verbStr + " not have " + propertyStr + " " + objectStr[0];
@@ -1050,10 +1054,17 @@ class NLGenerator {
 
 		} else if (t.functor.is_a(ai.o.getSort("haveable-property-with-value")) && t.attributes.length == 2) {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
-			let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, true, null, false);
+			let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, true, (t.attributes[0] instanceof ConstantTermAttribute ? (<ConstantTermAttribute>(t.attributes[0])).value:null), false);
 			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
 			if (verbStr != null && propertyStr != null) {
+				//console.log("haveable-property-with-value:")
+				//console.log("    subjectStr: " + subjectStr[0])
+				//console.log("    objectStr: " + objectStr[0])
+				if (propertyStr.substring(propertyStr.length-3) == " to" && 
+					objectStr[0].substring(0,3) == "to ") {
+					objectStr[0] = objectStr[0].substring(3);
+				}
 				return verbStr + " " + subjectStr[0] + " have " + propertyStr + " " + objectStr[0] + "?";
 			}
 
@@ -1635,13 +1646,18 @@ class NLGenerator {
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_haveablepropertywithvalue) && entityTerm.attributes.length == 2) {
 				let infinitive:boolean = false;
 				let subjectStr:[string, number, string, number] = null;
-				if ((entityTerm.attributes[0] instanceof ConstantTermAttribute) &&
-					(<ConstantTermAttribute>entityTerm.attributes[0]).value == mainVerbSubjectID) {
-					infinitive = true;
+				let subjectId:string = null;
+				if ((entityTerm.attributes[0] instanceof ConstantTermAttribute)) {
+					subjectId = (<ConstantTermAttribute>(entityTerm.attributes[0])).value;
+					if ((<ConstantTermAttribute>entityTerm.attributes[0]).value == mainVerbSubjectID) {
+						infinitive = true;
+					} else {
+						subjectStr = this.termToEnglish_VerbArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);	
+					}
 				} else {	
 					subjectStr = this.termToEnglish_VerbArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);
 				}
-				let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(entityTerm.attributes[1], speakerID, true, context, true, null, false);
+				let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(entityTerm.attributes[1], speakerID, true, context, true, subjectId, false);
 				let verbStr:string = null;
 				if (infinitive) {
 					verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.have"), 0, 0, 0);
@@ -1650,6 +1666,10 @@ class NLGenerator {
 				}
 				let propertyStr:string = this.pos.getPropertyString(entityTerm.functor);
 				if (verbStr != null && propertyStr != null) {
+					if (propertyStr.substring(propertyStr.length-3) == " to" && 
+						objectStr[0].substring(0,3) == "to ") {
+						objectStr[0] = objectStr[0].substring(3);
+					}					
 					if (infinitive) {
 //						if (negated_t) {
 //							return ["not to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];

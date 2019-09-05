@@ -148,11 +148,11 @@ class POSParser {
       "owing to",
       "access to",
       "permission to",
-      "permission to enter",
-      "permission to access",
-      "permission to go",
-      "permission to go to",
-      "permission to go into",
+//      "permission to enter",
+//      "permission to access",
+//      "permission to go",
+//      "permission to go to",
+//      "permission to go into",
       "permitted in",
       "permitted into",
       "permitted to enter",
@@ -750,14 +750,14 @@ this.addTokenPOS(new PartOfSpeech("outside of", "space.outside.of", Term.fromStr
   /*
   "owing to",
   */
-this.addTokenPOS(new PartOfSpeech("access to", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to go", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to go to", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to go into", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to access", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permission to enter", "permission-to-access", Term.fromString("preposition('permission-to-access'[permission-to-access])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("permitted to access", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("permission to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("access to", "permitted-in", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permission to go", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permission to go to", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permission to go into", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permission to access", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permission to enter", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
+//this.addTokenPOS(new PartOfSpeech("permitted to access", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("permitted in", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("permitted into", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("permitted to go", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
@@ -1181,8 +1181,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("perception", "perception-system", Term.fromString("noun('perception-system'[perception-system], [singular])", o), 1.0));
     this.addStandardNounPOS("perception system", "perception-system", o);
     this.addStandardNounPOS("performative", "performative", o);
-    this.addUncountableNounPOS("access", "permission-to-access", o);
-    this.addUncountableNounPOS("permission", "permission-to-access", o);
+    this.addUncountableNounPOS("permission", "permission-to", o);
     this.addStandardNounPOS("person", "human", o);
     this.addStandardNounPOS("physicist", "physicist", o);
     this.addStandardNounPOS("place", "space.location", o);
@@ -1346,6 +1345,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     // these are synonims of the verbs below, but I have them earlier, so that they are overwritten by the ones below for use
     // by the natural language generator:
     this.addStandardVerbPOS("verb.colonize", "populate","populates","populated","populated","populating", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get in","gets in","got in","gotten in","getting in", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1380,6 +1383,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.examine", "examine","examines","examined","examined","examining", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.let", "let","lets","let","let","letting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "fill","fills","filled","filled","filling", false, multitokens_raw, o);
@@ -1388,11 +1392,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.follow", "follow","follows","followed","followed","following", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.gather", "gather","gathers","gathered","gathered","gathering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.get", "get","gets","got","gotten","getting", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.enter", "get in","gets in","got in","gotten in","getting in", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go-to", "get to","gets to","got to","gotten to","getting to", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.give", "grant","grants","granted","granted","granting", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.give", "give","gives","gave","given","giving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go", "head","heads","headed","headed","heading", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.go", "go","goes","went","gone","going", false, multitokens_raw, o);

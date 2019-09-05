@@ -27,15 +27,15 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
-			this.skip_to_act_2_distress_signals();
-		}
+			//this.skip_to_act_2_distress_signals();
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -1883,7 +1883,6 @@ class ShrdluGameScript {
 			let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))",this.game.ontology);
 			this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
-
 			this.contextShrdlu.inConversation = true;	// this is a hack, to prevent it having to say "hello human", etc.
 			this.shrdluSays("perf.thankyou('david'[#id])");
 			this.shrdluSays("perf.inform('david'[#id], #and(X:verb.help('etaoin'[#id], 'shrdlu'[#id], verb.see('shrdlu'[#id])), time.now(X)))");
@@ -2063,9 +2062,30 @@ class ShrdluGameScript {
 			}
 			break;
 
+		case 222:
+			// ...
+			break;
+
 		// ...
 
 		}
+
+
+		if (this.playerAskedAboutTakingShrdlu() != null) {
+			this.player_has_asked_to_take_shrdlu = true;
+			// The player has asked to take SHRDLU
+			if (this.act_2_state < 107) {
+				// we have not yet found SHRDLU:
+				this.etaoinSays("perf.inform('david'[#id], #not(space.at('shrdlu'[#id], 'location-aurora-station'[#id])))");
+			} else if (this.act_2_state < 222) {
+				// too early, Etaoin rejects:
+				this.etaoinSays("perf.inform.answer('david'[#id], 'no'[symbol])");
+			} else {
+				// We have found the distress signals, Etaoin accepts:
+				// ....
+			}
+		}
+
 
 		this.shrdluAct2AgendaUpdate();
 		this.qwertyAgendaUpdate();
@@ -2104,6 +2124,14 @@ class ShrdluGameScript {
 	/* --------------------------------------------------------
 		EVENTS THAT ARE NOT TIED TO ANY PARTICULAR ACT
 	   -------------------------------------------------------- */
+
+	actionRequestHandleByScript(action:Term) : boolean
+	{
+		if (this.actionRequestIsAboutTakingShrdlu(action)) return true;
+		return false;
+	}
+
+
 	update_sideplots()
 	{
 		// Finding life in Aurora subplot:
@@ -2295,6 +2323,47 @@ class ShrdluGameScript {
 		}			
 		return false;
 	} 
+
+
+	playerAskedAboutTakingShrdlu() : Term
+	{
+		if (this.contextEtaoin == null) {
+			this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
+		}
+		let context:NLContext = this.contextEtaoin;
+		if (context != null) {
+			let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+			if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
+				let perf:Term = p1.performative;
+				if (perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||
+					perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))) {
+					let action:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+
+					if (this.actionRequestIsAboutTakingShrdlu(action)) return perf;
+				}
+			}
+		}
+		return null;
+	}	
+
+
+	actionRequestIsAboutTakingShrdlu(action:Term) : boolean
+	{
+		let pattern1:Term = Term.fromString("action.take('david'[#id], 'shrdlu'[#id])", this.game.ontology);
+		let pattern2:Term = Term.fromString("verb.take-to('david'[#id], 'shrdlu'[#id], LOCATION:[#id])", this.game.ontology);
+		let pattern3:Term = Term.fromString("action.give('etaoin'[#id], 'david'[#id], permission-to(V3:'david'[#id], action.take('david'[#id], 'shrdlu'[#id])))", this.game.ontology);
+		let pattern4:Term = Term.fromString("action.give('etaoin'[#id], 'shrdlu'[#id], permission-to(V3:'shrdlu'[#id], verb.leave('shrdlu'[#id])))", this.game.ontology);
+		let pattern5:Term = Term.fromString("action.give('etaoin'[#id], 'shrdlu'[#id], permission-to(V3:'shrdlu'[#id], verb.leave('shrdlu'[#id], 'location-aurora-station'[#id])))", this.game.ontology);
+		let pattern6:Term = Term.fromString("action.give('etaoin'[#id], 'shrdlu'[#id], permission-to(V3:'shrdlu'[#id], verb.follow('shrdlu'[#id], 'david'[#id])))", this.game.ontology);
+
+		if (pattern1.subsumes(action, true, new Bindings())) return true;
+		if (pattern2.subsumes(action, true, new Bindings())) return true;
+		if (pattern3.subsumes(action, true, new Bindings())) return true;
+		if (pattern4.subsumes(action, true, new Bindings())) return true;
+		if (pattern5.subsumes(action, true, new Bindings())) return true;
+		if (pattern6.subsumes(action, true, new Bindings())) return true;	
+		return false;	
+	}
 
 
 	// Controls the behavior of SHRDLU during act 2 (when does it go repair the different parts of the station, etc.)
@@ -3063,8 +3132,8 @@ class ShrdluGameScript {
 
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
-
         xmlString += "what_is_dust_side_plot_taken_question=\""+this.what_is_dust_side_plot_taken_question+"\"\n";
+        xmlString += "player_has_asked_to_take_shrdlu=\""+this.player_has_asked_to_take_shrdlu+"\"\n";
 
         xmlString += "/>\n";     
         for(let tmp in this.thoughtBubbleQueue) {
@@ -3126,6 +3195,7 @@ class ShrdluGameScript {
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
     	this.what_is_dust_side_plot_taken_question = xml.getAttribute("what_is_dust_side_plot_taken_question") == "true";
+    	this.player_has_asked_to_take_shrdlu = xml.getAttribute("player_has_asked_to_take_shrdlu") == "true";
 
 		this.thoughtBubbleQueue = []
     	for(let xml_tmp of getElementChildrenByTag(xml,"thoughtBubbleQueue")) {
@@ -3192,4 +3262,5 @@ class ShrdluGameScript {
 	finding_life_side_plot_taken_question:boolean = false;
 	finding_life_side_plot_analyzed_question:boolean = false;
 	what_is_dust_side_plot_taken_question:boolean = false;
+	player_has_asked_to_take_shrdlu:boolean = false;
 }

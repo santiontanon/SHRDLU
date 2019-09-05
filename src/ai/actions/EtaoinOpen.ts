@@ -63,7 +63,7 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
 	        }
 
 	        if (anyNotPermitted) {
-				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to-access]))))", ai.o);
+				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
 				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
 				return true;	        	
 	        }

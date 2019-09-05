@@ -15,16 +15,17 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 			let context:NLContext = ai.contextForSpeaker(speaker);
 			let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
 			this.action = this.action.applyBindings(inf.inferences[0].endResults[0]);
-			if (ai.canSatisfyActionRequest(this.action)) {
+			let tmp:number = ai.canSatisfyActionRequest(this.action);
+			if (tmp == 1) {
 				ai.intentions.push(new IntentionRecord(this.action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds));
-			} else {
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
-				var term:Term = Term.fromString(tmp, ai.o);
+			} else if (tmp == 0) {
+				var tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
+				var term:Term = Term.fromString(tmp2, ai.o);
 				ai.intentions.push(new IntentionRecord(term, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds));
 			}
 		} else {
-			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
-			let term:Term = Term.fromString(tmp, ai.o);
+			let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
+			let term:Term = Term.fromString(tmp2, ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}		
 	}
