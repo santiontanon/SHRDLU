@@ -126,6 +126,9 @@ class RobotAI extends A4RuleBasedAI {
 		}
 		//console.log("RobotAI: attention = " + attention_object.name + " at " + attention_map.name + ", " + location.name);
 
+		// this is for some edge cases while transitioning map:
+		if (location == null) return;
+
 		let visibilityRegion:number = attention_map.visibilityRegion(tile_x,tile_y);
 
 		// perception:

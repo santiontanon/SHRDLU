@@ -149,7 +149,7 @@ class A4Vehicle extends A4WalkingObject {
 //                    this.animations[this.currentAnimation].update();
                 }
                 if ((this.x%this.map.tileWidth == 0) && (this.y%this.map.tileHeight == 0)) {
-                    if (!this.canMove(this.direction, false)) {
+                    if (!this.canMove(this.direction, false) || this.y<=0) {
                         this.state = A4CHARACTER_STATE_IDLE;
                         this.currentAnimation = A4_ANIMATION_IDLE_LEFT+this.direction;
                         this.animations[this.currentAnimation].reset();
@@ -304,25 +304,6 @@ class A4Vehicle extends A4WalkingObject {
                 this.continuous_direction_command_max_movement[direction] = argument;
                 break;
         }
-    }
-
-
-    checkIfPushingAgainstMapEdgeBridge(direction:number) : A4MapBridge
-    {
-        if (direction == A4_DIRECTION_LEFT && this.x == 0) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+1, this.y+this.getPixelHeight()/2);
-            return bridge;
-        } else if (direction == A4_DIRECTION_RIGHT && this.x == (this.map.width*this.map.tileWidth-this.getPixelWidth())) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()-1, this.y+this.getPixelHeight()/2);
-            return bridge;
-        } else if (direction == A4_DIRECTION_UP && this.y == 0) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+1);
-            return bridge;
-        } else if (direction == A4_DIRECTION_DOWN && this.y == (this.map.height*this.map.tileHeight-this.getPixelHeight())) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+this.getPixelHeight()-1);
-            return bridge;
-        }
-        return null;
     }
 
 

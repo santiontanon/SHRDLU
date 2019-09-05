@@ -987,6 +987,7 @@ NLParseTestUnifyingListener("let me take etaoin", o.getSort("performative"), con
 NLParseTestUnifyingListener("let me take etaoin with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
 NLParseTestUnifyingListener("I need to take etaoin with me", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], action.take('1'[#id], 'etaoin'[#id]))");
 NLParseTestUnifyingListener("let me take etaoin to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("enter into the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

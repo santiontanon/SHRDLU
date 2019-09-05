@@ -1006,7 +1006,8 @@
 		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">938</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="One of the shuttle engines, seems to be in good state, but it's too heavy for me to carry." thought="true"/>
+        	<talkOther text="One of the shuttle engines, according to this tag, it's a T-14 hyperdrive generator." thought="true"/>
+        	<talkOther text="It seems to be in good state, but it's too heavy for me to carry." thought="true"/>
         </eventRule>
 	</ObjectClass>
 

@@ -503,6 +503,7 @@
     <sort name="verb.fill" super="verb"/>
     <sort name="verb.follow" super="verb"/>
     <sort name="verb.happen" super="verb,#stateSort"/>
+    <sort name="verb.keep" super="verb"/>
     <sort name="verb.know" super="verb"/>
     <sort name="verb.mean" super="verb"/>
     <sort name="verb.remember" super="verb.know"/>
@@ -620,6 +621,7 @@
     <sort name="time.start" super="time.location,start"/>
     <sort name="time.end" super="time.location,end"/>
     <sort name="time.date" super="time"/>
+    <sort name="time.already" super="time"/>
 
     <sort name="time.unit" super="time,measuring-unit"/>
     <sort name="time.second" super="time.unit"/>

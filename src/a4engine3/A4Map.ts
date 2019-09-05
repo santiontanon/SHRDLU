@@ -715,7 +715,7 @@ class A4Map {
     }
 
 
-	removeObject(o:A4Object)
+	removeObject(o:A4Object) : boolean
     {
         /*
         if (o.layer >= 0 && o.layer < A4_N_LAYERS) {
@@ -723,7 +723,11 @@ class A4Map {
         }
         */
         var idx:number = this.objects.indexOf(o);
-        if (idx>=0) this.objects.splice(idx, 1);        
+        if (idx>=0) {
+            this.objects.splice(idx, 1);        
+            return true;
+        }
+        return false;
     }
 
 /*

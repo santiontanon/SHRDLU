@@ -2689,6 +2689,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X2, N2, P2, C2) '!'*
 			   		 properNounCompound(NOUN, N3)
 			   		 #derefFromContext(C2, OBJECT2)"/>
+	<NLPattern name="perf.request.go-in"
+			   head="perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, OBJECT2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
+			   		 verb(VERB, N, P, [present-tense])
+			   		 #symbolToSort(VERB, VERBSORT) #subsumes([verb.go], VERBSORT)
+			   		 ('in'|'into')
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C2, OBJECT2)"/>
 
 	<NLPattern name="perf.request.action-taketo"
 			   head="perf.request.action(LISTENER, verb.take-to(LISTENER, OBJECT2, OBJECT3))"

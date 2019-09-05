@@ -482,11 +482,18 @@ class NLGenerator {
 			}
 		}
 		let t:Term = (<TermTermAttribute>tl[0]).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
+		let adverb_str:string = null;
 		let negated_t:boolean = false;
 		if (t.functor.name == "#not" && t.attributes.length == 1 &&
 			t.attributes[0] instanceof TermTermAttribute) {
 			negated_t = true;
 			t = (<TermTermAttribute>t.attributes[0]).term;
+		}
+		for(let tmp_t of tl) {
+			let tmp_t2:Term = (<TermTermAttribute>tmp_t).term;
+			if (tmp_t2 != t && tmp_t2.attributes.length == 1) {
+				adverb_str = this.pos.getAdverbString(tmp_t2.functor);
+			}
 		}
 
 		// Look for the special case of "these is a X in Y", which is of the form #and(type(X), space.at(X, Y))
@@ -505,7 +512,6 @@ class NLGenerator {
 			}
 		}
 
-
 //		console.log("termToEnglish_Inform: " + t);
 
 		if (POSParser.sortIsConsideredForTypes(t.functor, this.o) &&
@@ -522,6 +528,7 @@ class NLGenerator {
 			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.have"), subjectStr[3], subjectStr[1], 3);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
 			if (verbStr != null && propertyStr != null) {
+				if (adverb_str != null) propertyStr = propertyStr + " " + adverb_str;
 				if (negated_t) {
 					verbStr = this.pos.getVerbString(ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
 					return subjectStr[0] + " " + verbStr + " not have " + propertyStr;
@@ -572,6 +579,7 @@ class NLGenerator {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
+			if (adverb_str != null) complements = complements + " " + adverb_str;
 			if (verbStr != null && propertyStr != null) 
 				return subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr + complements;
 
@@ -585,6 +593,7 @@ class NLGenerator {
 					objectStr[0].substring(0,3) == "to ") {
 					objectStr[0] = objectStr[0].substring(3);
 				}
+				if (adverb_str != null) objectStr[0] = objectStr[0] + " " + adverb_str;
 				if (negated_t) {
 					verbStr = this.pos.getVerbString(ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
 					return subjectStr[0] + " " + verbStr + " not have " + propertyStr + " " + objectStr[0];
@@ -647,6 +656,7 @@ class NLGenerator {
 				if (objectStr != null) propertyStr2 = objectStr[0];
 			}
 			if (subjectStr != null && verbStr != null && propertyStr != null && propertyStr2 != null) {
+				if (adverb_str != null) propertyStr2 = propertyStr2 + " " + adverb_str;
 				if (subjectStr[0] == "I") {
 					return "my " + propertyStr + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr2;
 				} else if (subjectStr[0] == "you") {

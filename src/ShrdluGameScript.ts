@@ -27,15 +27,15 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
-			//this.skip_to_act_2_distress_signals();
-		//}
+			this.skip_to_act_2_distress_signals();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -192,7 +192,8 @@ class ShrdluGameScript {
 
 		this.act_2_state = 111;
 		this.act_2_shrdlu_agenda_state = 30;
-		this.game.shrdluAI.visionActive = true;			
+		this.game.shrdluAI.visionActive = true;		
+		this.game.shrdluAI.robot.strength = 8;
 	}
 
 	skip_to_act_2_distress_signals()
@@ -2058,12 +2059,15 @@ class ShrdluGameScript {
 		case 221:
 			// waiting for David to examine the tactical map
 			if (this.game.getStoryStateVariable("distress-signals")=="seen") {
+				if (this.player_has_asked_to_take_shrdlu) {
+					this.queueThoughtBubble("Maybe now Etaoin will let me take Shrdlu with me to investigate...");
+				}
 				this.act_2_state = 222;
 			}
 			break;
 
 		case 222:
-			// ...
+			// ....
 			break;
 
 		// ...
@@ -2072,17 +2076,23 @@ class ShrdluGameScript {
 
 
 		if (this.playerAskedAboutTakingShrdlu() != null) {
-			this.player_has_asked_to_take_shrdlu = true;
-			// The player has asked to take SHRDLU
-			if (this.act_2_state < 107) {
-				// we have not yet found SHRDLU:
-				this.etaoinSays("perf.inform('david'[#id], #not(space.at('shrdlu'[#id], 'location-aurora-station'[#id])))");
-			} else if (this.act_2_state < 222) {
-				// too early, Etaoin rejects:
-				this.etaoinSays("perf.inform.answer('david'[#id], 'no'[symbol])");
+			if (this.player_has_asked_to_take_shrdlu) {
+				this.etaoinSays("perf.inform('david'[#id], #and(X:permission-to(V3:'david'[#id], action.take('david'[#id], 'shrdlu'[#id])), time.already(X)))");
 			} else {
-				// We have found the distress signals, Etaoin accepts:
-				// ....
+				this.player_has_asked_to_take_shrdlu = true;
+				// The player has asked to take SHRDLU
+				if (this.act_2_state < 107) {
+					// we have not yet found SHRDLU:
+					this.etaoinSays("perf.inform('david'[#id], #not(space.at('shrdlu'[#id], 'location-aurora-station'[#id])))");
+				} else if (this.act_2_state < 222) {
+					// too early, Etaoin rejects:
+					this.etaoinSays("perf.inform.answer('david'[#id], 'no'[symbol])");
+				} else {
+					// We have found the distress signals, Etaoin accepts:
+					this.etaoinSays("perf.ack.ok('david'[#id])");
+					this.game.etaoinAI.addLongTermTerm(Term.fromString("permission-to(V3:'david'[#id], action.take('david'[#id], 'shrdlu'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
+					this.game.setStoryStateVariable("permission-to-take-shrdlu", "true");
+				}
 			}
 		}
 
@@ -2409,6 +2419,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.respondToPerformatives = true;
 						this.game.shrdluAI.visionActive = true;	
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.shrdluAI.robot.strength = 8;	// increase Shrdlu's strength
 					}
 					break;
 			case 11:

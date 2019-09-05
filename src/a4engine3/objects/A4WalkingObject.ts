@@ -12,6 +12,24 @@ class A4WalkingObject extends A4Object {
     }
     
 
+    checkIfPushingAgainstMapEdgeBridge(direction:number) : A4MapBridge
+    {
+        if (direction == A4_DIRECTION_LEFT && this.x <= 0) {
+            let bridge:A4MapBridge = this.map.getBridge(1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_RIGHT && this.x >= (this.map.width*this.map.tileWidth-this.getPixelWidth())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.map.width*this.map.tileWidth-1, this.y+this.getPixelHeight()/2);
+            return bridge;
+        } else if (direction == A4_DIRECTION_UP && this.y <= 0) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, 1);
+            return bridge;
+        } else if (direction == A4_DIRECTION_DOWN && this.y >= (this.map.height*this.map.tileHeight-this.getPixelHeight())) {
+            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.map.height*this.map.tileHeight-1);
+            return bridge;
+        }
+        return null;
+    }
+
 
     loadObjectAttribute(attribute_xml:Element) : boolean
     {

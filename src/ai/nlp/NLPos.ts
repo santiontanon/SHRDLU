@@ -618,8 +618,9 @@ this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("pr
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "relation.origin", Term.fromString("preposition('relation.origin'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
+
+this.addTokenPOS(new PartOfSpeech("into", "relation.target", Term.fromString("preposition('relation.target'[relation.target])", o), 1.0));
 /*
-  ["into",  "PREP"],
   ["less",  "PREP"],
   ["like",  "PREP"],
   ["minus",  "PREP"],
@@ -1592,8 +1593,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("a little bit", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("a tiny bit", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("slightly", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("already", "time.already", Term.fromString("adverb('time.already'[time.already])", o), 1.0));
     
-
 
     this.generateMultitokenTable(multitokens_raw);
 

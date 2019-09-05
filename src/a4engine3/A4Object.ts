@@ -519,11 +519,12 @@ class A4Object {
 
     warp(x:number, y:number, map:A4Map)//, layer:number)
     {
-        if (this.map!=null) this.map.removeObject(this);
+        let reAdd:boolean = true;
+        if (this.map!=null) reAdd = this.map.removeObject(this);
         this.x = x;
         this.y = y;
         this.map = map;
-        if (this.map!=null) this.map.addObject(this);
+        if (reAdd && this.map!=null) this.map.addObject(this);
     }
     
 

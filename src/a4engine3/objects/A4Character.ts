@@ -611,25 +611,6 @@ class A4Character extends A4WalkingObject {
     }
 
 
-    checkIfPushingAgainstMapEdgeBridge(direction:number) : A4MapBridge
-    {
-        if (direction == A4_DIRECTION_LEFT && this.x == 0) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+1, this.y+this.getPixelHeight()/2);
-            return bridge;
-        } else if (direction == A4_DIRECTION_RIGHT && this.x == (this.map.width*this.map.tileWidth-this.getPixelWidth())) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()-1, this.y+this.getPixelHeight()/2);
-            return bridge;
-        } else if (direction == A4_DIRECTION_UP && this.y == 0) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+1);
-            return bridge;
-        } else if (direction == A4_DIRECTION_DOWN && this.y == (this.map.height*this.map.tileHeight-this.getPixelHeight())) {
-            let bridge:A4MapBridge = this.map.getBridge(this.x+this.getPixelWidth()/2, this.y+this.getPixelHeight()-1);
-            return bridge;
-        }
-        return null;
-    }
-
-
     draw(offsetx:number, offsety:number, game:A4Game)
     {
         // when character is sleeping, the grapic is displayed by the bed itself, so, no need to draw:
@@ -907,7 +888,8 @@ class A4Character extends A4WalkingObject {
                     for(let o of collisions) {
 //                        console.log("considering " + o.name);
                         if (o.interacteable) {
-//                            console.log(o.name + " is interacteable!");
+                            if ((o instanceof A4Character) && (<A4Character>o).isInVehicle()) continue;
+    //                            console.log(o.name + " is interacteable!");
                             // interact:
                             this.direction = direction;
                             this.state = A4CHARACTER_STATE_INTERACTING;
