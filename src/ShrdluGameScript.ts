@@ -30,11 +30,11 @@ class ShrdluGameScript {
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			//this.skip_to_end_of_act_1();
+			this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
-			this.skip_to_act_2_distress_signals();
+			//this.skip_to_act_2_crash_site();
 		}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -171,6 +171,7 @@ class ShrdluGameScript {
 		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
 
 		this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+		this.game.setStoryStateVariable("act", "act2");
 	}
 
 
@@ -196,12 +197,13 @@ class ShrdluGameScript {
 		this.game.shrdluAI.robot.strength = 8;
 	}
 
-	skip_to_act_2_distress_signals()
+	skip_to_act_2_crash_site()
 	{
 		this.skip_to_act_2_shrdluback_repair_outside();
 
-		this.act_2_state = 211;
+		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
+		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[6]);	// crash site
 	}
 
 
@@ -1953,6 +1955,7 @@ class ShrdluGameScript {
 					let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("property.broken('broken-stasis-pod'[#id])", this.game.ontology));
 					if (se != null) se.sentence.sign[0] = false;
 				}
+				this.game.shrdluAI.robot.strength = 8;	// increase Shrdlu's strength
 				this.act_2_state = 121;
 			}
 			break;
@@ -2067,7 +2070,7 @@ class ShrdluGameScript {
 			break;
 
 		case 222:
-			// ....
+			// ...
 			break;
 
 		// ...

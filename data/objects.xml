@@ -639,6 +639,16 @@
       <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
     </ObjectClass>
 
+    <ObjectClass class="shuttle-diary" super="item" name="ruined diary">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="It looks quite damaged from being exposed to the elements. Maybe there is still a way to read it though..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+
 	<ObjectClass class="crate" super="obstacle-container" name="crate">
 		<attribute name="tallness" value="8"/>
 		<attribute name="closed" value="true"/>
@@ -995,6 +1005,20 @@
 		<attribute name="tallness" value="0"/>
 		<attribute name="takeable" value="false"/>
 		<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">874</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+	      	<if>
+				<condition><storyStateCheck scope="game" variable="shuttle-corpse" value="examined"/></condition>
+				<then>
+		        	<talkOther text="These bodies have totally decomposed. Whatever happened here was a long time ago!" thought="true"/>
+        		</then>
+        		<else>
+        			<cutScene cutscene="6"/>
+        			<gainItem id="shuttle-diary"><object class="shuttle-diary"/></gainItem>
+        			<storyState scope="game" variable="shuttle-corpse" value="examined"/>
+        		</else>
+        	</if>
+        </eventRule>
 		<onStart>
 			<addPerceptionProperty property="dead"/>
 		</onStart>

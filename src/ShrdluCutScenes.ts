@@ -3,6 +3,7 @@ var CUTSCENE_DIARY:number = 2;
 var CUTSCENE_POSTER:number = 3;
 var CUTSCENE_FUNGI:number = 4;
 var CUTSCENE_MSX:number = 5;
+var CUTSCENE_CRASHED_SHUTTLE:number = 6;
 
 
 class ShrdluCutScenes {
@@ -21,6 +22,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_POSTER) return this.updateCutScenePoster();
 		if (cutScene == CUTSCENE_FUNGI) return this.updateCutSceneFungi();
 		if (cutScene == CUTSCENE_MSX) return this.updateCutSceneMSX();
+		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) return this.updateCutSceneCrashedShuttle();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -32,6 +34,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_POSTER) this.drawCutScenePoster(screen_width, screen_height);
 		if (cutScene == CUTSCENE_FUNGI) this.drawCutSceneFungi(screen_width, screen_height);
 		if (cutScene == CUTSCENE_MSX) this.drawCutSceneMSX(screen_width, screen_height);
+		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) this.drawCutSceneCrashedShuttle(screen_width, screen_height);
 	}
 
 
@@ -480,6 +483,65 @@ class ShrdluCutScenes {
 		ctx.restore();
 	}
 
+
+	updateCutSceneCrashedShuttle() : boolean
+	{
+		let stateTimes:number[] = [180, 600, 600, 600, 180, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("These bodies have totally decomposed. Whatever happened here was a long time ago!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("And why are they not wearing spacesuits?", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("Oh! There is a personal diary next to this body, maybe it can give me some clues...", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneCrashedShuttle(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-crashed-shuttle.png", 
+								  "data/cutscene-crashed-shuttle.png",
+								  "data/cutscene-crashed-shuttle.png",
+								  "data/cutscene-crashed-shuttle.png",
+								  "data/cutscene-crashed-shuttle.png",
+								  null];
+		let stateText:string[] = [null,
+								  "These bodies have totally decomposed. Whatever happened here was a long time ago!",
+								  "And why are they not wearing spacesuits?",
+								  "Oh! There is a personal diary next to this body, maybe it can give me some clues...",
+								  null,
+								  null];						  
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}
 
 	cutSceneState:number = 0;
 	cutSceneStateTimer:number = 0;

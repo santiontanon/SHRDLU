@@ -297,7 +297,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 			}
 		} else if (ai.selfID == "shrdlu") {
 			// SHRDLU needs permission to exit aurora settlement
-			if (destinationMap.name != "Aurora Station" &&
+			if ((ai.robot.map.name == "Aurora Station" || ai.robot.map.name == "Aurora Station Outdoors") &&
+				destinationMap.name != "Aurora Station" &&
 				destinationMap.name != "Aurora Station Outdoors") {
 				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))))";
