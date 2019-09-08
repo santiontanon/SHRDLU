@@ -989,6 +989,11 @@ NLParseTestUnifyingListener("I need to take etaoin with me", o.getSort("performa
 NLParseTestUnifyingListener("let me take etaoin to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("enter into the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 
+// For version 2.7:
+NLParseTestUnifyingListener("who can fix the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.can(X, verb.repair(X, '2'[#id]))))");
+NLParseTestUnifyingListener("do you know who can fix the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.can(X, verb.repair(X, '2'[#id]))))");
+NLParseTestUnifyingListener("who can repair a ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(verb.can(X, verb.repair(X, Y)), ship(Y))))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 

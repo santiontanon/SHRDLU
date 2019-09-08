@@ -308,4 +308,6 @@ testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signa
 testNLG("perf.inform('1'[#id], verb.need('etaoin'[#id], #and(X:[permission-to], relation.origin(X, 'qwerty'[#id]))))", "etaoin", "I need permission of qwerty");
 testNLG("perf.inform('1'[#id], #and(X:permission-to(V3:'1'[#id], action.take('1'[#id], 'qwerty'[#id])), time.already(X)))", "etaoin", "you have permission to take qwerty already");
 
+testNLG("perf.inform('1'[#id], too-small('c2'[#id]))", "etaoin", "the crate is too small");
+
 

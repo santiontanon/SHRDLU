@@ -378,6 +378,8 @@ class POSParser {
       "distress signals",
       "airlock door",
       "airlock doors",
+      "data pad",
+      "too small",
 
       // adjectives:
       "in stasis",
@@ -1043,10 +1045,13 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("data", "data", Term.fromString("noun('data'[data], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("day", "time.day", o);
+    this.addStandardNounPOS("datapad", "datapad", o);
+    this.addStandardNounPOS("data pad", "datapad", o);
     this.addTokenPOS(new PartOfSpeech("degree celsius", "temperature.unit.celsius", Term.fromString("noun('temperature.unit.celsius'[temperature.unit.celsius], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("degrees celsius", "temperature.unit.celsius", Term.fromString("noun('temperature.unit.celsius'[temperature.unit.celsius], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("C", "temperature.unit.celsius", Term.fromString("noun('temperature.unit.celsius'[temperature.unit.celsius], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("C", "temperature.unit.celsius", Term.fromString("noun('temperature.unit.celsius'[temperature.unit.celsius], [plural])", o), 1.0));
+    this.addStandardNounPOS("decide", "device", o);
     this.addTokenPOS(new PartOfSpeech("diary", "diary", Term.fromString("noun('diary'[diary], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("diaries", "diary", Term.fromString("noun('diary'[diary], [plural])", o), 1.0));
     this.addStandardNounPOS("direction", "facing-direction", o);
@@ -1436,6 +1441,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("action.push", "push","pushes","pushed","pushed","pushing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.put", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.reach", "reach","reaches","reached","reached","reaching", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.read", "read","reads","read","read","reading", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "recharge","recharges","recharged","recharged","recharging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.remember", "remember","remembers","remembered","remembered","remembering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "refill","refills","refilled","refilled","refilling", false, multitokens_raw, o);
@@ -1548,6 +1554,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("too small", "too-small", Term.fromString("adjective('too-small'[too-small])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("south", "south", Term.fromString("adjective('south'[south])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("strange", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));

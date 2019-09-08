@@ -634,17 +634,26 @@
 	  </eventRule>
     </ObjectClass>
 
-    <ObjectClass class="diary" super="item" name="diary">
+    <ObjectClass class="diary" super="device,item" name="diary">
   	  <attribute name="tallness" value="0"/>
       <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
     </ObjectClass>
 
-    <ObjectClass class="shuttle-diary" super="item" name="ruined diary">
+    <ObjectClass class="shuttle-datapad" super="datapad,item" name="datapad">
   	  <attribute name="tallness" value="0"/>
       <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
   	  <attribute name="useable" value="true"/>
 	  <eventRule event="use">
-		<talkOther text="It looks quite damaged from being exposed to the elements. Maybe there is still a way to read it though..." thought="true"/>
+		<talkOther text="It looks quite damaged from being exposed to the elements. Maybe there is still a way to fix it though..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="fixed-datapad" super="datapad,item" name="datapad">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<cutScene cutscene="7"/>
 	  </eventRule>
     </ObjectClass>
 
@@ -1014,7 +1023,7 @@
         		</then>
         		<else>
         			<cutScene cutscene="6"/>
-        			<gainItem id="shuttle-diary"><object class="shuttle-diary"/></gainItem>
+        			<gainItem id="shuttle-datapad"><object class="shuttle-datapad"/></gainItem>
         			<storyState scope="game" variable="shuttle-corpse" value="examined"/>
         		</else>
         	</if>

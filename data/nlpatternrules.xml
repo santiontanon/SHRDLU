@@ -2126,6 +2126,27 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, LISTENER)
 			   		 #derefQuery(C3, QUERY_V, QUERY)"/>
 
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), verb.can(V, #cons(VERB, V, OBJECT))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['do' 'you' 'know']
+			   		 'who' verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3)  ('!'|'?')* 
+    		   		 #derefFromContext(C3, OBJECT)"/>
+
+    <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), #and(verb.can(V, #cons(VERB, V, QUERY_V)), QUERY)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['do' 'you' 'know']
+			   		 'who' verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3)  ('!'|'?')* 
+    		   		 #derefQuery(C3, QUERY_V, QUERY)"/>
+
+
 	<!-- questions where verbs are missing arguments --> 
     <NLPattern name="perf.q.query-verb-missing-argument"
     		   head="perf.q.query(LISTENER, QUERY_V, #and(character(QUERY_V), COMPLETED_VERB))"

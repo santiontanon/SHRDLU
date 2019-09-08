@@ -30,11 +30,12 @@ class ShrdluGameScript {
 		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			this.skip_to_end_of_act_1();
+			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
+			this.skip_to_act_2_after_crash_site();
 		}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -201,9 +202,23 @@ class ShrdluGameScript {
 	{
 		this.skip_to_act_2_shrdluback_repair_outside();
 
+		this.game.shrdluAI.allowPlayerInto("location-as29","COMMAND");
+		this.game.qwertyAI.allowPlayerInto("location-as29","COMMAND");
+		this.game.etaoinAI.allowPlayerInto("location-as29","COMMAND");
 		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
-		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[6]);	// crash site
+		this.game.currentPlayer.warp(40*8, 12*8, this.game.maps[6]);	// crash site
+	}
+
+	skip_to_act_2_after_crash_site()
+	{
+		this.skip_to_act_2_crash_site();
+		this.game.currentPlayer.x = 864;
+		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);	// garage
+		this.act_2_state = 223;
+		let item:A4Object = this.game.objectFactory.createObject("shuttle-datapad", this.game, false, false);
+		item.ID = "shuttle-datapad";
+		this.game.currentPlayer.inventory.push(item);
 	}
 
 
@@ -1547,7 +1562,7 @@ class ShrdluGameScript {
 					// replace the background knowledge:
 					for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
 						let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("brokenspacesuit('spacesuit'[#id])", this.game.ontology));
-						se.sentence.terms[0].functor = this.game.ontology.getSort("workingspacesuit");
+						if (se != null) se.sentence.terms[0].functor = this.game.ontology.getSort("workingspacesuit");
 					}
 			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
 			                this.game.currentPlayer.ID, this.game.currentPlayer.sort, null,
@@ -2070,10 +2085,20 @@ class ShrdluGameScript {
 			break;
 
 		case 222:
-			// ...
+			// Waiting for the player to reach the crash site:
+			if (this.game.currentPlayer.map.name == "Spacer Gorge" &&
+				this.game.currentPlayer.x < 256) {
+				// reached the crash site:
+				this.queueThoughtBubble("Oh my god, this is a crash site! there are lots of bodies here!");
+				this.queueThoughtBubble("Who are these people? and what happened here?");
+				this.queueThoughtBubble("Let's look around to see if I find any clues...");
+				this.act_2_state = 223;
+			}
 			break;
 
-		// ...
+		case 223:
+			// ...
+			break;
 
 		}
 
@@ -2099,15 +2124,189 @@ class ShrdluGameScript {
 			}
 		}
 
-
 		this.shrdluAct2AgendaUpdate();
 		this.qwertyAgendaUpdate();
+		this.repairDatapadUpdate();
 
 		if (previous_state == this.act_2_state) {
 			this.act_2_state_timer++;
 		} else {
 			this.act_2_state_timer = 0;
 			this.act_2_state_start_time = this.game.in_game_seconds;
+		}
+
+	}
+
+
+	repairDatapadUpdate()
+	{
+		let request:Term = this.playerAskedToRepairTheDatapad();
+		let requestee:string = null;
+		if (request != null && (request.attributes[0] instanceof ConstantTermAttribute)) {
+			requestee = (<ConstantTermAttribute>(request.attributes[0])).value;
+
+			// if asked to Shrdlu, say it is too delicate:
+			if (requestee == "shrdlu") {
+				this.shrdluSays("perf.inform('david'[#id], too-small('shuttle-datapad'[#id]))");
+			}
+		}
+
+
+		let previous_state:number = this.act_2_datapad_state;
+		switch(this.act_2_datapad_state) {
+			case 0: // no progress in this thread yet
+				// detect when the player has asked qwerty to fix the broken space suit:
+				if (request != null && requestee == "qwerty") {
+					let target_l:A4Object[] = this.game.findObjectByID("shuttle-datapad");
+					let weCanGetIt:boolean = false;
+					if (target_l != null && target_l.length == 1 &&
+						this.game.qwertyAI.canSee("shuttle-datapad")) weCanGetIt = true;
+					if (target_l != null && target_l.length == 2 && 
+						(target_l[0] == this.game.qwertyAI.robot ||
+						 target_l[0] == this.game.currentPlayer)) weCanGetIt = true;
+					if (weCanGetIt) {
+						this.act_2_datapad_state = 1;
+					} else {
+						this.act_2_datapad_state = 0;
+						this.game.qwertyAI.respondToPerformatives = true;
+						// I do not see the datapad:
+						this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #not(verb.see($QWERTY, 'shuttle-datapad'[#id]))))");
+					}
+				}
+				break;
+
+			// qwerty has been asked to repair the datapad
+			case 1:
+				if (this.act_2_datapad_state_timer == 0) {
+					this.game.qwertyAI.respondToPerformatives = false;	// to prevent the player messing up with the sequence
+					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'shuttle-datapad'[#id]), time.future(V)) ))");
+					// clear whatever qwerty is doing now:
+				    this.game.qwertyAI.currentAction = null;
+				    this.game.qwertyAI.currentAction_requester = null;
+				    this.game.qwertyAI.currentAction_scriptQueue = null;
+				    this.game.qwertyAI.currentActionHandler = null;
+
+					let currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
+					if (currentRoom.id != "location-as29") {
+						// if we are not in the command center, qwerty asks the player to follow it:
+						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
+					}
+				} else {
+					if (this.game.qwertyAI.robot.isIdle() &&
+						this.game.qwertyAI.intentions.length == 0 && 
+						this.game.qwertyAI.queuedIntentions.length == 0 &&
+						this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
+						this.act_2_datapad_state = 2;
+					}					
+				}
+				break;
+
+			// go towards david to take the datapad:
+			case 2:
+				let target_l:A4Object[] = this.game.findObjectByID("shuttle-datapad");
+				if (target_l == null) {
+					this.act_2_datapad_state = 0;
+					this.game.qwertyAI.respondToPerformatives = true;
+				} else {
+					let x1:number = this.game.qwertyAI.robot.x;
+					let y1:number = this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness;
+					let x2:number = target_l[0].x;
+					let y2:number = target_l[0].y+target_l[0].tallness;
+					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+					if (target_l.length == 1) {
+						// the spacesuit is in the floor:
+						if (d>0) {
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+						} else {
+							if (this.game.qwertyAI.robot.takeAction(this.game)) {
+								this.act_2_datapad_state = 3;
+							} else {
+								this.act_2_datapad_state = 0;
+								this.game.qwertyAI.respondToPerformatives = true;
+							}
+						}
+					} else {
+						// someone has the spacesuit (this could be qwerty itself):
+						if (d>16) {
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+						} else {
+							if (target_l[0] instanceof A4Character) {
+								// assume datapad is target_l[1]!!!
+				                (<A4Character>(target_l[0])).removeFromInventory(target_l[1]);
+				                this.game.qwertyAI.robot.addObjectToInventory(target_l[1], this.game);
+								this.act_2_datapad_state = 3;
+								this.game.playSound("data/sfx/itemPickup.wav");
+							} else {
+								this.act_2_datapad_state = 0;
+								this.game.qwertyAI.respondToPerformatives = true;
+							}
+						}
+					}
+				}
+				break;
+
+			case 3:
+				// qwerty has the spacesuit!:
+				if (this.act_2_datapad_state_timer == 0) {
+					this.qwertyMoves(107*8, 35*8, this.game.qwertyAI.robot.map);
+				} else {
+					if (this.game.qwertyAI.robot.x == 107*8 &&
+						this.game.qwertyAI.robot.y == 35*8) {
+						this.act_2_datapad_state = 4;
+					} 
+				}
+				break;
+
+			case 4:
+				// wait a bit
+				if (this.act_2_datapad_state_timer == 180) this.act_2_datapad_state = 5;
+				break;
+
+			case 5:
+				// give the datapad back to the player
+				let x1:number = this.game.qwertyAI.robot.x;
+				let y1:number = this.game.qwertyAI.robot.y;
+				let x2:number = this.game.currentPlayer.x;
+				let y2:number = this.game.currentPlayer.y;
+				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+				if (d>16) {
+					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer);
+				} else {
+					// give the datapad:
+					let idx:number = 0;
+					for(let i:number = 0;i<this.game.qwertyAI.robot.inventory.length;i++) {
+						if (this.game.qwertyAI.robot.inventory[i].ID == "shuttle-datapad") {
+							idx = i;
+							break;
+						}
+					}
+					this.game.qwertyAI.robot.inventory.splice(idx,1);
+					let fixedDatapad:A4Object = this.game.objectFactory.createObject("fixed-datapad", this.game, false, false);
+					fixedDatapad.ID = "shuttle-datapad";
+					this.game.currentPlayer.addObjectToInventory(fixedDatapad, this.game);
+					// replace the background knowledge:
+					for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
+						let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("shuttle-datapad('shuttle-datapad'[#id])", this.game.ontology));
+						if (se != null) se.sentence.terms[0].functor = this.game.ontology.getSort("fixed-datapad");
+					}
+			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
+			                this.game.currentPlayer.ID, this.game.currentPlayer.sort, null,
+			                fixedDatapad.ID, fixedDatapad.sort,
+			                this.game.qwertyAI.robot.x, this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness, this.game.qwertyAI.robot.x+this.game.qwertyAI.robot.getPixelWidth(), this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.getPixelHeight()));
+			        this.game.currentPlayer.eventWithObject(A4_EVENT_RECEIVE, this.game.qwertyAI.robot, fixedDatapad, this.game.currentPlayer.map, this.game);
+			        this.game.qwertyAI.robot.eventWithObject(A4_EVENT_ACTION_GIVE, this.game.currentPlayer, fixedDatapad, this.game.currentPlayer.map, this.game);					
+					this.game.playSound("data/sfx/itemPickup.wav");
+					this.game.in_game_actions_for_log.push(["give("+this.game.qwertyAI.selfID+","+fixedDatapad.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
+					this.game.qwertyAI.respondToPerformatives = true;
+					this.act_2_datapad_state = 0;
+				}
+				break
+		}		
+
+		if (previous_state == this.act_2_datapad_state) {
+			this.act_2_datapad_state_timer++;
+		} else {
+			this.act_2_datapad_state_timer = 0;
 		}
 
 	}
@@ -2376,6 +2575,34 @@ class ShrdluGameScript {
 		if (pattern5.subsumes(action, true, new Bindings())) return true;
 		if (pattern6.subsumes(action, true, new Bindings())) return true;	
 		return false;	
+	}
+
+
+	playerAskedToRepairTheDatapad() : Term
+	{
+		if (this.contextEtaoin == null ||
+			this.contextQwerty == null ||
+			this.contextShrdlu == null) {
+			this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
+			this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+			this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
+		}
+		for(let context of [this.contextQwerty, this.contextEtaoin, this.contextShrdlu]) {
+			if (context != null) {
+				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+				if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
+					let pattern1:Term = Term.fromString("verb.repair(X:[#id], 'shuttle-datapad'[#id])", this.game.ontology);
+					let perf:Term = p1.performative;
+					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||
+						perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))) {
+						let action:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+
+						if (pattern1.subsumes(action, true, new Bindings())) return perf;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 
@@ -2793,6 +3020,10 @@ class ShrdluGameScript {
 
 		if (this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
 
+		// if qwerty is doing something, then stop the agenda:
+		if (this.act_1_stasis_thread_state > 0 && this.act_1_stasis_thread_state < 10) return;
+		if (this.act_2_datapad_state != 0) return;
+
 		switch(this.qwerty_agenda_state) {
 			// Random destinations loop:
 			case 0: 
@@ -2988,7 +3219,7 @@ class ShrdluGameScript {
 	qwertyMoves(x:number, y:number, map:A4Map)
 	{
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
-        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, map.name, null, 0, false, false);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
@@ -2999,7 +3230,7 @@ class ShrdluGameScript {
 	qwertyMovesOverrideable(x:number, y:number, map:A4Map, action:Term)
 	{
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
-        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, map.name, null, 0, false, false);
+        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
@@ -3136,6 +3367,8 @@ class ShrdluGameScript {
         xmlString += "act_2_state_start_time=\""+this.act_2_state_start_time+"\"\n";   
         xmlString += "act_2_shrdlu_agenda_state=\""+this.act_2_shrdlu_agenda_state+"\"\n";   
         xmlString += "act_2_shrdlu_agenda_state_timer=\""+this.act_2_shrdlu_agenda_state_timer+"\"\n";   
+        xmlString += "act_2_datapad_state=\""+this.act_2_datapad_state+"\"\n";
+        xmlString += "act_2_datapad_state_timer=\""+this.act_2_datapad_state_timer+"\"\n";
 
         xmlString += "act_3_state=\""+this.act_3_state+"\"\n";   
         xmlString += "act_3_state_timer=\""+this.act_3_state_timer+"\"\n";   
@@ -3198,6 +3431,8 @@ class ShrdluGameScript {
     	this.act_2_state_start_time = Number(xml.getAttribute("act_2_state_start_time"));
     	this.act_2_shrdlu_agenda_state = Number(xml.getAttribute("act_2_shrdlu_agenda_state"));
     	this.act_2_shrdlu_agenda_state_timer = Number(xml.getAttribute("act_2_shrdlu_agenda_state_timer"));
+    	this.act_2_datapad_state = Number(xml.getAttribute("act_2_datapad_state"));
+    	this.act_2_datapad_state_timer = Number(xml.getAttribute("act_2_datapad_state_timer"));
 
     	this.act_3_state = Number(xml.getAttribute("act_3_state"));
     	this.act_3_state_timer = Number(xml.getAttribute("act_3_state_timer"));
@@ -3264,6 +3499,9 @@ class ShrdluGameScript {
 
 	act_2_shrdlu_agenda_state:number = 0;
 	act_2_shrdlu_agenda_state_timer:number = 0;
+
+	act_2_datapad_state:number = 0;
+	act_2_datapad_state_timer:number = 0;
 
 	qwerty_agenda_state:number = 0;
 	qwerty_agenda_state_timer:number = 0;

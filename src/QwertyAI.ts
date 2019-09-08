@@ -38,6 +38,8 @@ class QwertyAI extends RobotAI {
 						// broken space suit:
 						return 1;
 					}
+				} else if (thingToRepair_id == "shuttle-datapad") {
+					return 1;
 				}
 			} else {
 				return 0;

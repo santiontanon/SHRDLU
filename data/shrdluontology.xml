@@ -322,7 +322,10 @@
 
     <sort name="key-card" super="key,card"/>
 
-    <sort name="communicator" super="item"/>
+    <sort name="device" super="item"/>
+    <sort name="communicator" super="device"/>
+    <sort name="datapad" super="device"/>
+    <sort name="diary" super="device"/>
 
     <sort name="battery" super="item"/>
     <sort name="rover-battery" super="item"/>
@@ -554,6 +557,7 @@
     <sort name="verb.injure" super="verb.damage"/>
     <sort name="verb.rotate" super="verb"/>
     <sort name="verb.investigate" super="verb"/>
+    <sort name="verb.read" super="verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
@@ -752,6 +756,7 @@
     <sort name="big" super="size"/>
     <sort name="great" super="big"/>
     <sort name="small" super="size"/>
+    <sort name="too-small" super="small"/>
     <sort name="size.medium" super="size"/>
 
     <sort name="gravity" super="property-with-value,abstract-entity"/>

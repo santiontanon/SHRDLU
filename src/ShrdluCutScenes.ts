@@ -4,6 +4,7 @@ var CUTSCENE_POSTER:number = 3;
 var CUTSCENE_FUNGI:number = 4;
 var CUTSCENE_MSX:number = 5;
 var CUTSCENE_CRASHED_SHUTTLE:number = 6;
+var CUTSCENE_DATAPAD:number = 7;
 
 
 class ShrdluCutScenes {
@@ -23,6 +24,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_FUNGI) return this.updateCutSceneFungi();
 		if (cutScene == CUTSCENE_MSX) return this.updateCutSceneMSX();
 		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) return this.updateCutSceneCrashedShuttle();
+		if (cutScene == CUTSCENE_DATAPAD) return this.updateCutSceneDatapad();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -35,6 +37,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_FUNGI) this.drawCutSceneFungi(screen_width, screen_height);
 		if (cutScene == CUTSCENE_MSX) this.drawCutSceneMSX(screen_width, screen_height);
 		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) this.drawCutSceneCrashedShuttle(screen_width, screen_height);
+		if (cutScene == CUTSCENE_DATAPAD) this.drawCutSceneDatapad(screen_width, screen_height);
 	}
 
 
@@ -542,6 +545,71 @@ class ShrdluCutScenes {
 
 		ctx.restore();
 	}
+
+
+	updateCutSceneDatapad() : boolean
+	{
+		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 600, 100, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("Ok, so, it seems the dead people I found were part of the 12 colonists that were constructing Aurora Station...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("So, am I also one of those 12? And what happened to the Tardis 8?", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneDatapad(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-cutscene-datapad1.png", 
+								  "data/cutscene-cutscene-datapad2.png",
+								  "data/cutscene-cutscene-datapad3.png",
+								  "data/cutscene-cutscene-datapad4.png",
+								  "data/cutscene-cutscene-datapad5.png",
+								  "data/cutscene-cutscene-datapad5.png",
+								  "data/cutscene-cutscene-datapad5.png",
+								  null];
+		let stateText:string[] = [null,
+								  null,
+								  null,
+								  null,
+								  null,
+								  "Ok, so, it seems the dead people I found were part of the 12 colonists that were constructing Aurora Station...",
+								  "So, am I also one of those 12? And what happened to the Tardis 8?",
+								  null];						  
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}
+
+
 
 	cutSceneState:number = 0;
 	cutSceneStateTimer:number = 0;
