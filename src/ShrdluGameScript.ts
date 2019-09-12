@@ -2005,7 +2005,10 @@ class ShrdluGameScript {
 			if (this.game.etaoinAI.intentions.length == 0 &&
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
-				this.addKnowledgeToEtaoinAfterRepair()
+				//this.addKnowledgeToEtaoinAfterRepair()
+				this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
+				this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
+				this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.etaoinSays("perf.inform('david'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.past(X)))");
 				this.act_2_state = 202;
 			}
@@ -2299,6 +2302,12 @@ class ShrdluGameScript {
 					this.game.in_game_actions_for_log.push(["give("+this.game.qwertyAI.selfID+","+fixedDatapad.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
 					this.game.qwertyAI.respondToPerformatives = true;
 					this.act_2_datapad_state = 0;
+
+					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.salvage('etaoin'[#id], #and(some(X:'entry'[symbol], [plural]), noun(X, [plural]))), time.past(V))))");
+
+					this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");
+					this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");
+					this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");
 				}
 				break
 		}		
@@ -3174,6 +3183,7 @@ class ShrdluGameScript {
 	}
 
 
+	/*
 	addKnowledgeToEtaoinAfterRepair()
 	{
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("ship('tardis8'[#id])", this.game.ontology), BACKGROUND_PROVENANCE);
@@ -3191,6 +3201,7 @@ class ShrdluGameScript {
 		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('david'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
 		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("property.born('david'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 40392525600);
 	}
+	*/
 
 
 	playerHasItemP(itemId:string) : boolean

@@ -578,13 +578,13 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		let stateImgs:string[] = ["data/cutscene-cutscene-datapad1.png", 
-								  "data/cutscene-cutscene-datapad2.png",
-								  "data/cutscene-cutscene-datapad3.png",
-								  "data/cutscene-cutscene-datapad4.png",
-								  "data/cutscene-cutscene-datapad5.png",
-								  "data/cutscene-cutscene-datapad5.png",
-								  "data/cutscene-cutscene-datapad5.png",
+		let stateImgs:string[] = ["data/cutscene-datapad1.png", 
+								  "data/cutscene-datapad2.png",
+								  "data/cutscene-datapad3.png",
+								  "data/cutscene-datapad4.png",
+								  "data/cutscene-datapad5.png",
+								  "data/cutscene-datapad5.png",
+								  "data/cutscene-datapad5.png",
 								  null];
 		let stateText:string[] = [null,
 								  null,

@@ -401,8 +401,9 @@
     <sort name="communication" super="abstract-entity"/>
     <sort name="transmission" super="abstract-entity"/>
     <sort name="data" super="abstract-entity"/>
+    <sort name="entry" super="data"/>
     <sort name="instruction" super="abstract-entity"/>
-
+    
     <sort name="situation" super="abstract-entity"/>
     <sort name="emergency" super="situation"/>
 
@@ -558,6 +559,8 @@
     <sort name="verb.rotate" super="verb"/>
     <sort name="verb.investigate" super="verb"/>
     <sort name="verb.read" super="verb"/>
+    <sort name="verb.save" super="verb"/>
+    <sort name="verb.salvage" super="verb.save"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>

@@ -458,6 +458,16 @@ class RuleBasedAI {
 	}
 
 
+	loadLongTermRulesFromFile(rulesFileName:string)
+	{
+		let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+		xmlhttp.overrideMimeType("text/xml");
+		xmlhttp.open("GET", rulesFileName, false); 
+		xmlhttp.send();
+		this.loadLongTermRulesFromXML(xmlhttp.responseXML.documentElement);
+	}
+
+
 	loadLongTermRulesFromXML(xml:Element)
 	{
 		for(let sentence_xml of getElementChildrenByTag(xml,"sentence")) {

@@ -32,11 +32,7 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
-			let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
-			xmlhttp.overrideMimeType("text/xml");
-			xmlhttp.open("GET", rulesFileName, false); 
-			xmlhttp.send();
-			this.loadLongTermRulesFromXML(xmlhttp.responseXML.documentElement);
+			this.loadLongTermRulesFromFile(rulesFileName);
 		}
 
 		this.precalculateLocationKnowledge(game, o);

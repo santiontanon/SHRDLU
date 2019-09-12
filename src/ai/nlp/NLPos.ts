@@ -1072,6 +1072,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("end", "space.end", o);
     this.addStandardNounPOS("end", "time.end", o);
     this.addStandardNounPOS("engine", "engine", o);
+    this.addTokenPOS(new PartOfSpeech("entry", "entry", Term.fromString("noun('entry'[entry], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("entries", "entry", Term.fromString("noun('entry'[entry], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("equipment", "equipment", Term.fromString("noun('equipment'[equipment], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("event", "event", o);
     this.addStandardNounPOS("exit", "space.exit", o);
@@ -1449,6 +1451,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.save", "save","saves","saved","saved","saving", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.salvage", "salvage","salvages","salvaged","salvaged","salvaging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.see", "see","sees","saw","seen","seeing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.seem", "seem","seems","seemed","seemed","seeming", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.send", "send","sends","sent","sent","sending", false, multitokens_raw, o);

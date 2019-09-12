@@ -483,6 +483,7 @@ class NLGenerator {
 		}
 		let t:Term = (<TermTermAttribute>tl[0]).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
 		let adverb_str:string = null;
+		let adverb_str_term:Term = null;
 		let negated_t:boolean = false;
 		if (t.functor.name == "#not" && t.attributes.length == 1 &&
 			t.attributes[0] instanceof TermTermAttribute) {
@@ -493,6 +494,7 @@ class NLGenerator {
 			let tmp_t2:Term = (<TermTermAttribute>tmp_t).term;
 			if (tmp_t2 != t && tmp_t2.attributes.length == 1) {
 				adverb_str = this.pos.getAdverbString(tmp_t2.functor);
+				adverb_str_term = tmp_t2;
 			}
 		}
 
@@ -541,6 +543,7 @@ class NLGenerator {
 //			console.log("termToEnglish_Inform property");
 			let complements:string = "";
 			let time:Sort = this.nlg_cache_sort_present;
+			let time_term:Term = null;
 	
 			for(let tmp_t2 of tl) {
 				let t2:Term = (<TermTermAttribute>tmp_t2).term;
@@ -550,12 +553,15 @@ class NLGenerator {
 					t2.functor.is_a(this.nlg_cache_sort_future)) {
 					if (t2.functor.is_a(this.nlg_cache_sort_past)) {
 						time = t2.functor;
+						time_term = t2;
 					}
 					if (t2.functor.is_a(this.nlg_cache_sort_present)) {
 						time = t2.functor;
+						time_term = t2;
 					}
 					if (t2.functor.is_a(this.nlg_cache_sort_future)) {
 						time = t2.functor;
+						time_term = t2;
 					}
 
 					// find if there is any other verb complement
@@ -579,7 +585,7 @@ class NLGenerator {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
-			if (adverb_str != null) complements = complements + " " + adverb_str;
+			if (adverb_str != null && adverb_str_term != time_term) complements = complements + " " + adverb_str;
 			if (verbStr != null && propertyStr != null) 
 				return subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr + complements;
 
@@ -692,6 +698,7 @@ class NLGenerator {
 
 		} else if (t.functor.is_a(context.ai.o.getSort("time.subsequently"))) {
 			return this.termToEnglish_RequestAction(pt, speakerID, context, true, false);
+
 		} else if (t.functor.is_a(this.nlg_cache_sort_relation) &&
 				   !t.functor.is_a(this.nlg_cache_sort_verb)) {			
 //			console.log("termToEnglish_Inform: relation " + t.functor.name);
@@ -877,9 +884,7 @@ class NLGenerator {
 		}
 
 		if (time == null) time = this.nlg_cache_sort_present;
-		/*if (t.functor.is_a(ai.o.getSort("verb.be")) && t.attributes.length == 2) {
-			// ...
-		} else*/ 
+
 		if (t.attributes.length == 1) {
 			if ((t.attributes[0] instanceof VariableTermAttribute) &&
 				t.attributes[0].sort.name == "any") {
