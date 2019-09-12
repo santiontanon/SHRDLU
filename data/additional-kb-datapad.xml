@@ -1,3 +1,27 @@
 <knowledgeBase>
-	
+	<!-- 12 colonists, add the names to the few you know, those who you know are dead, and their locations -->
+	<sentence provenance="background"  sentence="human('colonist1'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist2'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist3'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist4'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist5'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist6'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist7'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist8'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist9'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist10'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist11'[#id])"/>
+	<sentence provenance="background"  sentence="human('colonist12'[#id])"/>
+
+	<sentence provenance="background" sentence="name('colonist1'[#id],'bruce alper'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist1'[#id],'bruce'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist2'[#id],'zowie scott'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist2'[#id],'zowie'[symbol])"/>
+	<sentence provenance="background" sentence="dead('colonist2'[#id])"/>
+	<sentence provenance="background" sentence="space.at('colonist2'[#id], 'spacer-gorge'[#id])"/>
+
+	<sentence provenance="background" sentence="name('colonist3'[#id],'sax'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist4'[#id],'euriclea'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist5'[#id],'nestor'[symbol])"/>
+	<sentence provenance="background" sentence="name('colonist10'[#id],'francis'[symbol])"/>
 </knowledgeBase>

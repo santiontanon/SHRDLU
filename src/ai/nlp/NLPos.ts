@@ -1026,6 +1026,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("century", "time.century", o);
     this.addStandardNounPOS("chair", "chair", o);
     this.addStandardNounPOS("character", "character", o);
+    this.addStandardNounPOS("colonist", "colonist", o);    
     this.addStandardNounPOS("colour", "color", o);    // synonym, so, it's out of order
     this.addStandardNounPOS("color", "color", o);    
     this.addStandardNounPOS("communication", "communication", o);

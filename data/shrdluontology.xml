@@ -837,6 +837,7 @@
     <sort name="property.old" super="property"/>
     <sort name="property.blind" super="property,#stateSort"/>
     <sort name="property.sighted" super="property,#stateSort"/>
+    <sort name="colonist" super="property"/>
 
     <sort name="alive" super="property,#stateSort"/>
     <sort name="dead" super="property"/>
