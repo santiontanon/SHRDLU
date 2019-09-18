@@ -27,7 +27,7 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
@@ -36,7 +36,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
-		}
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -208,6 +208,7 @@ class ShrdluGameScript {
 		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
 		this.game.currentPlayer.warp(40*8, 12*8, this.game.maps[6]);	// crash site
+		this.game.shrdluAI.robot.warp(32*8, 12*8, this.game.maps[6]);	// crash site
 	}
 
 	skip_to_act_2_after_crash_site()
@@ -215,10 +216,14 @@ class ShrdluGameScript {
 		this.skip_to_act_2_crash_site();
 		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);	// garage
+		this.game.shrdluAI.robot.warp(864-16, 40, this.game.maps[0]);	// garage
 		this.act_2_state = 223;
 		let item:A4Object = this.game.objectFactory.createObject("shuttle-datapad", this.game, false, false);
 		item.ID = "shuttle-datapad";
 		this.game.currentPlayer.inventory.push(item);
+		let engine:A4Object = this.game.objectFactory.createObject("shuttle-engine", this.game, false, false);
+		engine.ID = "shuttle-engine";
+		this.game.shrdluAI.robot.inventory.push(engine);
 	}
 
 
@@ -2100,10 +2105,14 @@ class ShrdluGameScript {
 			break;
 
 		case 223:
-			// ...
+			// end of act 1!
+			if (this.game.currentPlayer.isIdle() && 
+				this.game.getStoryStateVariable("act") == "act3") {
+				this.game.introact_request = 3;
+			}
 			break;
-
 		}
+
 
 
 		if (this.playerAskedAboutTakingShrdlu() != null) {
@@ -2138,6 +2147,81 @@ class ShrdluGameScript {
 			this.act_2_state_start_time = this.game.in_game_seconds;
 		}
 
+
+		previous_state = this.act_2_repair_shuttle_state;
+		switch(this.act_2_repair_shuttle_state) {
+			case 0: if (this.playerAsksShrdluToFixShuttle()) {
+						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("garage-shuttle");
+						if (this.game.shrdluAI.canSee("garage-shuttle")) {
+							if (thingToRepairObject.sort.name == "brokenshuttle") {
+								// if shrdlu has the engine, it's all ok, otherwise, he cannot repair it:
+								let l:A4Object[] = this.game.shrdluAI.robot.findObjectByID("shuttle-engine");
+								if (l!= null && l.length == 1) {
+									// SHRDLU has the engine:
+									this.shrdluSays("perf.ack.ok('david'[#id])");
+									this.act_2_repair_shuttle_state = 1;
+								} else {
+									// SHRDLU does not have the engine, it cnanot repair:
+									this.shrdluSays("perf.ack.denyrequest('david'[#id])");
+									this.shrdluSays("perf.inform('david'[#id], #not(verb.have('shrdlu'[#id], [shuttle-engine])))");
+								}
+							} else {
+								this.shrdluSays("perf.inform('david'[#id], #not(property.broken('garage-shuttle'[#id])))");
+							}
+						} else {
+							this.shrdluSays("perf.inform('david'[#id], #not(verb.see('shrdlu'[#id], [shuttle])))");
+						}
+					}
+					break;
+
+			case 1:
+					if (this.act_2_repair_shuttle_state_timer == 0) {
+						this.shrdluMoves(106*8, 26*8, this.game.maps[0]);
+					} else {
+						if (this.game.shrdluAI.robot.x == 106*8 &&
+							this.game.shrdluAI.robot.y == 26*8) {
+							// lose the engine:
+							let l:A4Object[] = this.game.shrdluAI.robot.findObjectByID("shuttle-engine");
+							let shuttle:A4Object = this.game.findObjectByIDJustObject("garage-shuttle");
+
+							if (l!= null && l.length == 1 && shuttle != null) {
+								this.game.shrdluAI.robot.removeFromInventory(l[0]);
+								// swap the shuttle:
+						        shuttle.map.removeObject(shuttle);
+        						this.game.requestDeletion(shuttle);
+						        let newShuttle:A4Vehicle = <A4Vehicle>this.game.objectFactory.createObject("garage-shuttle", this.game, true, false);
+						        if (newShuttle == null) {
+									// something went wrong, reset!
+									this.act_2_repair_shuttle_state = 0;
+						        } else {
+							        newShuttle.ID = shuttle.ID;
+							        newShuttle.direction = 2;
+							        let map:A4Map = this.game.getMap("Aurora Station")
+							        if (map == null) return false;
+							        newShuttle.warp(shuttle.x, shuttle.y, map);
+									this.game.playSound("data/sfx/itemPickup.wav")
+									// done:
+									this.act_2_repair_shuttle_state = 2;
+
+						            this.game.shrdluAI.currentAction_scriptQueue = null;
+						            this.game.shrdluAI.currentAction = null;
+						            this.game.shrdluAI.currentAction_requester = null;
+						            this.game.shrdluAI.currentActionHandler = null;
+								}
+							} else {
+								// something went wrong, reset!
+								this.act_2_repair_shuttle_state = 0;
+							}
+						} 
+					}
+					break;
+		}
+
+		if (previous_state == this.act_2_repair_shuttle_state) {
+			this.act_2_repair_shuttle_state_timer++;
+		} else {
+			this.act_2_repair_shuttle_state_timer = 0;
+		}
 	}
 
 
@@ -2249,7 +2333,7 @@ class ShrdluGameScript {
 				break;
 
 			case 3:
-				// qwerty has the spacesuit!:
+				// qwerty has the datapad!:
 				if (this.act_2_datapad_state_timer == 0) {
 					this.qwertyMoves(107*8, 35*8, this.game.qwertyAI.robot.map);
 				} else {
@@ -2540,6 +2624,27 @@ class ShrdluGameScript {
 					if (pattern3.subsumes(argument, true, b)) return true;
 				}
 
+			}
+		}			
+		return false;
+	} 
+
+
+	playerAsksShrdluToFixShuttle() 
+	{
+		if (this.contextShrdlu != null) {
+			let p1:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
+			if (p1 != null &&
+				p1.timeStamp == this.game.in_game_seconds - 1) {	
+				let perf:Term = p1.performative;
+				if (perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))  &&
+					perf.attributes.length>1 &&
+					perf.attributes[1] instanceof TermTermAttribute) {
+					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+					let pattern3:Term = Term.fromString("verb.repair('shrdlu'[#id], 'garage-shuttle'[#id])", this.game.ontology);
+					let b:Bindings = new Bindings();
+					if (pattern3.subsumes(argument, true, b)) return true;
+				}
 			}
 		}			
 		return false;
@@ -3380,6 +3485,8 @@ class ShrdluGameScript {
         xmlString += "act_2_shrdlu_agenda_state_timer=\""+this.act_2_shrdlu_agenda_state_timer+"\"\n";   
         xmlString += "act_2_datapad_state=\""+this.act_2_datapad_state+"\"\n";
         xmlString += "act_2_datapad_state_timer=\""+this.act_2_datapad_state_timer+"\"\n";
+        xmlString += "act_2_repair_shuttle_state=\""+this.act_2_repair_shuttle_state+"\"\n";   
+        xmlString += "act_2_repair_shuttle_state_timer=\""+this.act_2_repair_shuttle_state_timer+"\"\n";   
 
         xmlString += "act_3_state=\""+this.act_3_state+"\"\n";   
         xmlString += "act_3_state_timer=\""+this.act_3_state_timer+"\"\n";   
@@ -3444,6 +3551,8 @@ class ShrdluGameScript {
     	this.act_2_shrdlu_agenda_state_timer = Number(xml.getAttribute("act_2_shrdlu_agenda_state_timer"));
     	this.act_2_datapad_state = Number(xml.getAttribute("act_2_datapad_state"));
     	this.act_2_datapad_state_timer = Number(xml.getAttribute("act_2_datapad_state_timer"));
+    	this.act_2_repair_shuttle_state = Number(xml.getAttribute("act_2_repair_shuttle_state"));
+    	this.act_2_repair_shuttle_state_timer = Number(xml.getAttribute("act_2_repair_shuttle_state_timer"));
 
     	this.act_3_state = Number(xml.getAttribute("act_3_state"));
     	this.act_3_state_timer = Number(xml.getAttribute("act_3_state_timer"));
@@ -3513,6 +3622,9 @@ class ShrdluGameScript {
 
 	act_2_datapad_state:number = 0;
 	act_2_datapad_state_timer:number = 0;
+
+	act_2_repair_shuttle_state:number = 0;
+	act_2_repair_shuttle_state_timer:number = 0;
 
 	qwerty_agenda_state:number = 0;
 	qwerty_agenda_state_timer:number = 0;

@@ -308,7 +308,7 @@ resolutionTest(
     ["permitted-in('david'[#id], 'location-garage'[#id])",
      "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
      "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
-    ["~permission-to('david'[#id], verb.access('david'[#id], location-garage'[#id]))"],
+    ["~permission-to('david'[#id], verb.access('david'[#id], 'location-garage'[#id]))"],
     true,    // contradicts
     o);
 
@@ -316,7 +316,7 @@ resolutionTest(
     ["permitted-in('david'[#id], 'location-garage'[#id])",
      "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
      "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
-    ["permission-to('david'[#id], verb.access('david'[#id], location-garage'[#id]))"],
+    ["permission-to('david'[#id], verb.access('david'[#id], 'location-garage'[#id]))"],
     false,    // contradicts
     o);
 
@@ -457,6 +457,19 @@ resolutionTest(
     ["~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])",
      "temperature('david'[#id],'cold'[cold])"],
     ["temperature('david'[#id], 'hot'[hot])"],
+    true,    // should contradict
+    o);
+
+
+resolutionTest(
+    ["~weight(X:[#id], 'heavy-weight'[heavy-weight]); heavy-weight(X)",
+     "~weight(X:[#id], 'light-weight'[light-weight]); light-weight(X)",
+     "weight(X:[#id], 'heavy-weight'[heavy-weight]); ~heavy-weight(X)",
+     "weight(X:[#id], 'light-weight'[light-weight]); ~light-weight(X)",
+     "light-weight(X:[#id]); heavy-weight(X)",
+     "~light-weight(X:[#id]); ~heavy-weight(X)",
+     "heavy-weight('engine1'[#id])"],
+    ["weight('engine1'[#id], 'light-weight'[light-weight])"],
     true,    // should contradict
     o);
 

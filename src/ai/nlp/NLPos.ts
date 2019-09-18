@@ -380,6 +380,7 @@ class POSParser {
       "airlock doors",
       "data pad",
       "too small",
+      "T-14 hyperdrive generator",
 
       // adjectives:
       "in stasis",
@@ -1110,6 +1111,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("height", "height", Term.fromString("noun('height'[height], [singular])", o), 1.0));
     this.addStandardNounPOS("helmet", "helmet", o);
     this.addTokenPOS(new PartOfSpeech("here", "space.here", Term.fromString("noun('space.here'[space.here], [singular])", o), 1.0));
+    this.addStandardNounPOS("hyperdrive generator", "hyperdrive-generator", o);
     this.addStandardNounPOS("hour", "time.hour", o);
     this.addStandardNounPOS("human", "human", o);
     this.addStandardNounPOS("infirmary", "infirmary", o);
@@ -1278,6 +1280,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("suit", "suit", o);
     this.addStandardNounPOS("supervisor", "supervisor", o);
     this.addStandardNounPOS("system", "system", o);
+    this.addStandardNounPOS("T-14 hyperdrive generator", "shuttle-engine", o);
     this.addStandardNounPOS("table", "table", o);
     this.addStandardNounPOS("tear", "tear", o);
     this.addStandardNounPOS("temperature", "temperature", o);

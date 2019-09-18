@@ -2871,7 +2871,7 @@ class NLGenerator {
 			console.error("aVSanArticle: empty word!");
 		}
 //		console.log("aVSanArticle of '"+word+"', first letter is '"+firstLetter+"'");
-		if (this.consonants.indexOf(firstLetter) != -1) {
+		if (this.consonants_for_a_vs_an.indexOf(firstLetter) != -1) {
 			return "a";
 		}
 		if (trimmedWord.length>2 &&
@@ -2911,5 +2911,6 @@ class NLGenerator {
 	nlg_cache_sort_timedate:Sort = null;
 	nlg_cache_sort_measuringunit:Sort = null;
 
-	consonants:string = "qwrtypsdfghjklzxcvbnm";
+	consonants:string = "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM";
+	consonants_for_a_vs_an:string = "qwrtpsdfgjklzxcvbnmQWRTPSDFGJKLZXCVBNM";
 }

@@ -992,8 +992,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 		for(let p of obj.perceptionProperties) {
 			let s:Sort = this.o.getSort(p);
 			if (s.is_a(this.cache_sort_property_with_value)) {
-				properties.push(new Term(s, [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
-											 new ConstantTermAttribute(s.name, s)]));
+				if (s.parents.length == 1 &&
+					s.parents[0].is_a(this.cache_sort_property_with_value)) {
+					properties.push(new Term(s.parents[0], [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+												 			new ConstantTermAttribute(s.name, s)]));
+				} else {
+					properties.push(new Term(s, [new ConstantTermAttribute(obj.ID, this.cache_sort_id),
+												 new ConstantTermAttribute(s.name, s)]));
+				}
 			} else {
 				properties.push(new Term(s, [new ConstantTermAttribute(obj.ID, this.cache_sort_id)]));
 			}

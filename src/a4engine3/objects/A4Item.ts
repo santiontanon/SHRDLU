@@ -14,13 +14,16 @@ class A4Item extends A4Object {
         
         var a_name:string = attribute_xml.getAttribute("name");
         
-    if (a_name == "useUponTake") {
+        if (a_name == "useUponTake") {
             this.useUponTake = false;
             if (attribute_xml.getAttribute("value") == "true") this.useUponTake = true;
             return true;
         } else if (a_name == "droppable") {
             this.droppable = false;
             if (attribute_xml.getAttribute("value") == "true") this.droppable = true;
+            return true;
+        } else if (a_name == "weight") {
+            this.weight = Number(attribute_xml.getAttribute("value"));
             return true;
         }
         return false;
@@ -33,6 +36,7 @@ class A4Item extends A4Object {
 
         xmlString += this.saveObjectAttributeToXML("useUponTake",this.useUponTake) + "\n";
         xmlString += this.saveObjectAttributeToXML("droppable",this.droppable) + "\n";
+        xmlString += this.saveObjectAttributeToXML("weight",this.weight) + "\n";
 
         return xmlString;
     }
@@ -40,5 +44,5 @@ class A4Item extends A4Object {
 
     useUponTake:boolean = false;
     droppable:boolean = true;
-
+    weight:number = 1;
 };

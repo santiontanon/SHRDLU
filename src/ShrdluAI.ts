@@ -14,4 +14,51 @@ class ShrdluAI extends RobotAI {
 
 		console.log("ShrdluAI.constructor end...");
 	}
+
+
+	/*
+	return values:
+	0: request cannot be satisfied
+	1: request can be satisfied
+	2: request can be satisfied, but will be handled externally, so, we do not need to do anything
+	*/
+	canSatisfyActionRequest(actionRequest:Term) : number
+	{
+		let repairSort:Sort = this.o.getSort("verb.repair");
+		if (actionRequest.functor.is_a(repairSort) && actionRequest.attributes.length>=2) {
+			let thingToRepair:TermAttribute = actionRequest.attributes[1];
+			if (thingToRepair instanceof ConstantTermAttribute) {
+				let thingToRepair_id:string = (<ConstantTermAttribute>thingToRepair).value;
+				if (thingToRepair_id == "garage-shuttle") {
+					let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject(thingToRepair_id);
+					if (thingToRepairObject.sort.name == "brokenshuttle") {
+						// broken shuttle:
+						return 1;
+					}
+				}
+			} else {
+				return 0;
+			}
+		}
+		
+		return super.canSatisfyActionRequest(actionRequest);
+	}
+
+
+	executeIntention(ir:IntentionRecord) : boolean
+	{
+		let intention:Term = ir.action;
+		let repairSort:Sort = this.o.getSort("verb.repair");
+		if (intention.functor.is_a(repairSort)) {
+			// just ignore, the story script will take charge of making shrdlu do the repair...
+            this.currentAction_scriptQueue = null;
+            this.currentAction = null;
+            this.currentAction_requester = null;
+            this.currentActionHandler = null;
+			return true;
+		}
+
+		return super.executeIntention(ir);
+	}		
+
 }

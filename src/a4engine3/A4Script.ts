@@ -591,6 +591,13 @@ scriptFunctions[A4_SCRIPT_GIVE] = function(script:A4Script, o:A4Object, map:A4Ma
     if (item==null) {
         return SCRIPT_FAILED;
     } else {
+        let weight:number = 1;
+        if (item instanceof A4Item) {
+            weight = (<A4Item>item).weight;
+        }
+        if (weight >= otherCharacter.strength) {
+            return SCRIPT_FAILED;
+        }
         (<A4Character>o).removeFromInventory(item);
         otherCharacter.addObjectToInventory(item, game);
         o.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", o.ID, o.sort,

@@ -585,6 +585,7 @@ class ShrdluCutScenes {
 								  "data/cutscene-datapad5.png",
 								  "data/cutscene-datapad5.png",
 								  "data/cutscene-datapad5.png",
+								  "data/cutscene-datapad5.png",
 								  null];
 		let stateText:string[] = [null,
 								  null,

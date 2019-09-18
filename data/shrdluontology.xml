@@ -334,6 +334,7 @@
 
     <sort name="hardware" super="object"/>
     <sort name="engine" super="hardware"/>
+    <sort name="hyperdrive-generator" super="engine"/>
 
     <sort name="shower" super="object"/>
     <sort name="sink" super="object"/>

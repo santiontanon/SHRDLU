@@ -59,6 +59,7 @@ class QwertyAI extends RobotAI {
             this.currentAction_scriptQueue = null;
             this.currentAction = null;
             this.currentAction_requester = null;
+            this.currentActionHandler = null;
 
 			return true;
 		}

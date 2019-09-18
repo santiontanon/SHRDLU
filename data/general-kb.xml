@@ -469,7 +469,10 @@
 	<sentence provenance="background" sentence="~goal(X,Y); ~goal(X,Z); =(Y,Z)"/>
 	<sentence provenance="background" sentence="powered.state(X:[#id], 'powered.on'[powered.on]); powered.state(X, 'powered.off'[powered.off])"/>
 	<sentence provenance="background" sentence="~powered.state(X:[#id], 'powered.on'[powered.on]); ~powered.state(X, 'powered.off'[powered.off])"/>
-
+	<sentence provenance="background" sentence="small(X:[#id]); big(X)"/>
+	<sentence provenance="background" sentence="~small(X:[#id]); ~big(X)"/>	
+	<sentence provenance="background" sentence="weight(X:[#id], 'light-weight'[light-weight]); weight(X, 'heavy-weight'[heavy-weight])"/>
+	<sentence provenance="background" sentence="~weight(X:[#id], 'light-weight'[light-weight]); ~weight(X, 'heavy-weight'[heavy-weight])"/>
 	<sentence provenance="background" sentence="~relation.owns(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
 	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); relation.owns(Y,X)"/>
 

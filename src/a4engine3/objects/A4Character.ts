@@ -912,7 +912,7 @@ class A4Character extends A4WalkingObject {
                 {
 //                    console.log("got the push command");
                     // get the object to interact with:
-                    var collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
+                    let collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
                     for(let o of collisions) {
 //                        console.log("checking object " + o.name);
                         if (o.isPushable()) {
@@ -925,25 +925,31 @@ class A4Character extends A4WalkingObject {
 
             case A4CHARACTER_COMMAND_GIVE:
                 {
-                    var item_to_give:A4Object = this.inventory[argument];
+                    let item_to_give:A4Object = this.inventory[argument];
+                    let item_weight:number = 1;
                     if (item_to_give==null) {
                         // error!
                         console.error("Character "+this.name+" trying to give item "+argument+", which it does not have...");
                     } else {
-                        var x2:number = target.x + target.getPixelWidth()/2;
-                        var y2:number = target.y + target.getPixelHeight()/2;
-                        var dx:number = Math.floor((this.x + this.getPixelWidth()/2) - x2);
-                        var dy:number = Math.floor((this.y + this.getPixelHeight()/2) - y2);
-                        var d:number = dx*dx + dy*dy;
-                        var maxd:number = Math.max(game.tileWidth, game.tileHeight)*5;
+                        let x2:number = target.x + target.getPixelWidth()/2;
+                        let y2:number = target.y + target.getPixelHeight()/2;
+                        let dx:number = Math.floor((this.x + this.getPixelWidth()/2) - x2);
+                        let dy:number = Math.floor((this.y + this.getPixelHeight()/2) - y2);
+                        let d:number = dx*dx + dy*dy;
+                        let maxd:number = Math.max(game.tileWidth, game.tileHeight)*5;
                         if (d>maxd*maxd) {
                             // too far!
                             console.log("Character "+this.name+" trying to give item "+argument+" to a character that is too far...");
 //                            if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "I need to get closer!");
                         } else {
-                            var target_c:A4Character = <A4Character>target;
+                            let target_c:A4Character = <A4Character>target;
+                            if (item_to_give instanceof A4Item) {
+                                item_weight = (<A4Item>item_to_give).weight;
+                            }
                             if (target_c.inventory.length>=A4_INVENTORY_SIZE) {
 //                                if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "The other's inventory is full!");
+                            } else if (item_weight > target_c.strength) {
+                                // too heavy for the receiver!
                             } else {
                                 // give!
                                 this.inventory.splice(argument,1);
@@ -1096,7 +1102,14 @@ class A4Character extends A4WalkingObject {
             }
         }
         if (item!=null) {
-            if (this.inventory.length<A4_INVENTORY_SIZE) {
+            let weight:number = 0;
+            if (item instanceof A4Item) {
+                weight = (<A4Item>item).weight;
+            }
+            if (weight > this.strength) {
+                // if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "Too heavy!");
+                return false;
+            } else if (this.inventory.length<A4_INVENTORY_SIZE) {
                 game.requestWarp(item, null, 0, 0);//, 0);
                 this.addObjectToInventory(item, game);
                 this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("take", this.ID, this.sort, 

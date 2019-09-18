@@ -822,6 +822,11 @@ class A4EngineApp {
             return A4ENGINE_STATE_ACT2INTRO;
         }
 
+        if (this.game.introact_request == 3) {
+            this.game.introact_request = 0;
+            return A4ENGINE_STATE_ACT3INTRO;
+        }
+
         if (this.game.gameover_request != 0) {
             this.gameover_type = this.game.gameover_request;
             this.game.gameover_request = 0;

@@ -1277,7 +1277,7 @@
     <property name="direction" type="int" value="2"/>
    </properties>
   </object>
-  <object id="562" type="brokenshuttle" x="848" y="192" width="40" height="24">
+  <object id="garage-shuttle" type="brokenshuttle" x="848" y="192" width="40" height="32">
    <properties>
     <property name="direction" type="int" value="2"/>
    </properties>
