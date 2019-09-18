@@ -234,7 +234,6 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -993,6 +992,8 @@ NLParseTestUnifyingListener("enter into the ship", o.getSort("performative"),  c
 NLParseTestUnifyingListener("who can fix the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.can(X, verb.repair(X, '2'[#id]))))");
 NLParseTestUnifyingListener("do you know who can fix the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.can(X, verb.repair(X, '2'[#id]))))");
 NLParseTestUnifyingListener("who can repair a ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(verb.can(X, verb.repair(X, Y)), ship(Y))))");
+NLParseTestUnifyingListener("keep going south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [south]))");
+NLParseTestUnifyingListener("keep pushing south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, [south]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

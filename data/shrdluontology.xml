@@ -811,6 +811,7 @@
     <sort name="northwest" super="cardinal-direction,north,west"/>
     <sort name="southeast" super="cardinal-direction,south,east"/>
     <sort name="southwest" super="cardinal-direction,south,west"/>
+    <sort name="previous-cardinal-direction" super="cardinal-direction"/>
 
     <sort name="forward" super="direction,space.location"/>
     <sort name="backward" super="direction,space.location"/>

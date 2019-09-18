@@ -593,7 +593,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure' | 'i' 'do') ('!'|'?')*"/>
+			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure' | 'i' 'do' | 'ok') ('!'|'?')*"/>
 	<NLPattern name="answer-yes2"
 			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -3417,7 +3417,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 verb('verb.keep'[symbol], N2, P2, [present-tense]) verb(VERB, N3, P3, [gerund-tense]) 
     		   		 #symbolToSort(VERB, VERBSORT)
 	 		         [[','] 'please'] '!'*"/>
-
+    <NLPattern head="perf.request.action(LISTENER, #cons(VERB, LISTENER, DIRECTION_SORT:[direction]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 verb('verb.keep'[symbol], N2, P2, [present-tense]) 
+    		   		 verb(VERB, N3, P3, [gerund-tense]) 
+    		   		 noun(DIRECTION, [singular]) #symbolToSort(DIRECTION, DIRECTION_SORT)
+	 		         [[','] 'please'] '!'*"/>
 
     <!-- perf.q.howmany patterns -->
     <NLPattern name="perf.q.howmany-X-are-there"
