@@ -2076,7 +2076,7 @@ class ShrdluGameScript {
 				// "location-as29" is the command center
 				if (currentRoom != null && currentRoom.id=="location-as29") {
 					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
-																   "wow, this is the command center of the whole station. It even has a map of the whole area!", A4_DIRECTION_NONE, this.game);
+																   "This is the command center of the whole station. It even has a map of the whole area!", A4_DIRECTION_NONE, this.game);
 					this.act_2_state = 221;
 				}
 			}

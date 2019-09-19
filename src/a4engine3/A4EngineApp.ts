@@ -1174,6 +1174,7 @@ class A4EngineApp {
         var img:GLTile;
         if (act == 1) img = this.game.GLTM.get("data/act1.png");
         if (act == 2) img = this.game.GLTM.get("data/act2.png");
+        if (act == 3) img = this.game.GLTM.get("data/act3.png");
         if (img != null) img.draw(0,0);
         ctx.restore();
         if (this.introact_state == 0 && this.introact_state_timer<SHRDLU_FADEIN_TIME) {
