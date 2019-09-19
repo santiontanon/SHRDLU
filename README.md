@@ -1,6 +1,6 @@
-# Playable demo v2.5! 
+# Playable demo v2.7! 
 
-https://www.cs.drexel.edu/~santi/games/SHRDLU-demo25/shrdlu.html
+https://www.cs.drexel.edu/~santi/games/SHRDLU-demo27/shrdlu.html
 
 
 # SHRDLU
@@ -13,7 +13,9 @@ SHRDLU is an adventure game based around natural language parsing (inspired by W
 
 You can play an early demo here (only Act 1 of the game is activated in this demo, I'm still working on Acts 2 and 3, I'll activate them in this demo once they are fully playable): https://www.cs.drexel.edu/~santi/games/SHRDLU-demo25/shrdlu.html
 
-Alternatively, you can view a demo video here (of version v1.1): https://youtu.be/8FNBTs2yv4s
+Alternatively, you can view demo videos here:
+- https://youtu.be/8FNBTs2yv4s (version 1.1)
+- https://www.youtube.com/watch?v=dPKfS9DsLmM (version 2.5)
 
 ## Other NLP-based games:
 
