@@ -39,32 +39,6 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			return true;
 		}			
 
-		if (ai.selfID === "qwerty") {
-			if (requester != null) {
-				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-				let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			}
-			return true;
-		}
-		if (ai.selfID === "shrdlu") {
-			// SHRDLU needs permission from etaoin to leave the station
-			if (ai.robot.map.name == "Aurora Station" ||
-				ai.robot.map.name == "Aurora Station Outdoors") {
-				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))))";
-					let term:Term = Term.fromString(tmp, ai.o);
-					//let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-					//let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-					//ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));					
-					return true;
-				}
-			}
-		}
-
-
 		if (intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {
 			// we should never get here:
@@ -85,6 +59,34 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			this.targetObject.map != ai.robot.map) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}
+
+		// Check if the robot can go:
+		let destinationMap:A4Map = this.targetObject.map;
+		let destinationLocation:AILocation = ai.game.getAILocation(this.targetObject);
+		let destinationLocationID:string = null;
+		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+		if (this.targetObject instanceof A4Vehicle) {
+			// assume we are going to go far:
+			destinationMap = ai.game.getMap("Spacer Valley South");
+			destinationLocationID = "spacer-valley-south";
+		}
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		if (cannotGoCause != null) {
+			if (requester != null) {
+				// deny request:
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+				// explain cause:
+				term = new Term(ai.o.getSort("action.talk"), 
+								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;

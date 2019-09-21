@@ -104,37 +104,43 @@ class RobotDrop_IntentionAction extends IntentionAction {
 					return true;
 				}
 			} else {
-				if (ai.locationsWherePlayerIsNotPermitted.indexOf(locationID) == -1) {
-	//						let tmp2:[number,number] = targetLocation.centerCoordinatesInMap(ai.robot.map);
-					let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
-					if (tmp2 != null) {
-						destinationMap = ai.robot.map;
-						destinationX = tmp2[0];
-						destinationY = tmp2[1];
-					} else {
-						if (targetLocation.maps.length > 0 && 
-							targetLocation.maps.indexOf(ai.robot.map) == -1) {
-							// we set this so that we can later give the proper reason for why we cannot go
-							destinationMap = targetLocation.maps[0];
-						}
-					}
+				let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+				if (tmp2 != null) {
+					destinationMap = ai.robot.map;
+					destinationX = tmp2[0];
+					destinationY = tmp2[1];
 				} else {
-					// say "you do not have access to that location":
-					let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-					return false;
+					if (targetLocation.maps.length > 0 && 
+						targetLocation.maps.indexOf(ai.robot.map) == -1) {
+						// we set this so that we can later give the proper reason for why we cannot go
+						destinationMap = targetLocation.maps[0];
+					}
 				}
 			}
 
-			if (destinationMap == null || destinationMap != ai.robot.map) {
+			// Check if the robot can go:
+			let cannotGoCause:Term = ai.canGoTo(destinationMap, locationID);
+			if (cannotGoCause != null) {
+				if (requester != null) {
+					// deny request:
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+					// explain cause:
+					term = new Term(ai.o.getSort("action.talk"), 
+									[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+									 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+									 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				}
+				return true;
+			}
+
+			if (destinationMap == null) {
 				if (requester != null) {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-					let cause:Term;
-					if (destinationMap == null) {
-						cause = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-					} else {
-						cause = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-					}
+					let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 					let term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 				}
@@ -165,72 +171,6 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			}
 
 		}
-
-
-		/*
-		let containerObjectL:A4Object[] = ai.game.findObjectByID(containerID);
-		if (containerObjectL == null) {
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+containerID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			}
-			return true;
-		}
-		if (containerObjectL.length != 1) {
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-			}
-			return true;
-		}
-
-
-		let destinationMap:A4Map = containerObjectL[0].map;
-		let destinationX:number = containerObjectL[0].x;
-		let destinationY:number = (containerObjectL[0].y+containerObjectL[0].tallness);
-		if (destinationMap == null || destinationMap != ai.robot.map) {
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			}
-			return true;
-		}
-		if (containerObjectL[0] instanceof A4ObstacleContainer) {
-			if ((<A4ObstacleContainer>containerObjectL[0]).closeable && (<A4ObstacleContainer>containerObjectL[0]).closed) {
-				if (requester != null) {
-					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					let cause:Term = Term.fromString("property.closed('"+containerObjectL[0].ID+"'[#id])", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-				}
-				return true;
-			}
-		} else {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-		}
-
-		// go to destination:
-        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-        let s:A4Script = null
-    	s = new A4Script(A4_SCRIPT_PUT_IN_CONTAINER, containerObjectL[0].ID, null, 0, false, false);
-        s.ID2 = itemID;	// the object we want to put in
-        q.scripts.push(s);
-		ai.currentAction_scriptQueue = q;
-		ai.currentActionHandler = null;
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
-		ai.addLongTermTerm(new Term(intention.functor,
-									[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
-		ai.intentionsCausedByRequest.push(ir);
-		if (requester != null) {
-			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
-			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-		}
-		*/
 
 		return true;
 	}

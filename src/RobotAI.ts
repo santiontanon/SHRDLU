@@ -289,6 +289,20 @@ class RobotAI extends A4RuleBasedAI {
 	}
 
 
+	/*
+	- If it returns "null", it means the robot can go
+	- If it returns a Term, it means the robot cannot go, and the Term is the intention the robot 
+	*/
+	canGoTo(map:A4Map, locationID:string) : Term
+	{
+		if (this.locationsWherePlayerIsNotPermitted.indexOf(locationID) >= 0) {
+			let cause:Term = Term.fromString("#not(verb.have('david'[#id],[permission-to]))", this.o);
+			return cause;
+		}
+		return null;
+	}
+
+
 	restoreFromXML(xml:Element)
 	{
 		super.restoreFromXML(xml);

@@ -121,6 +121,38 @@ class RobotTurn_IntentionAction extends IntentionAction {
 			return true;
 		}
 
+		if (destinationMap == null) {
+			if (requester != null) {
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
+				let term:Term = Term.fromString(tmp, ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+			}
+			return true;
+		}
+
+		// Check if the robot can go:
+		let destinationLocation:AILocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
+		let destinationLocationID:string = null;
+		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		if (cannotGoCause != null) {
+			if (requester != null) {
+				// deny request:
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+				// explain cause:
+				term = new Term(ai.o.getSort("action.talk"), 
+								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}		
+
 		// go to destination (this is "turn", so it should just be moving one step):
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);

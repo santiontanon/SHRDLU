@@ -87,6 +87,29 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 		let destinationMap:A4Map = targetObject.map;
 		let destinationX:number = targetObject.x;
 		let destinationY:number = (targetObject.y+targetObject.tallness);
+
+		// Check if the robot can go:
+		let destinationLocation:AILocation = ai.game.getAILocation(targetObject);
+		let destinationLocationID:string = null;
+		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		if (cannotGoCause != null) {
+			if (requester != null) {
+				// deny request:
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+				// explain cause:
+				term = new Term(ai.o.getSort("action.talk"), 
+								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}
+		
 		if (destinationMap == null || destinationMap != ai.robot.map) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);

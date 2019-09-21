@@ -48,7 +48,7 @@ class RobotGive_IntentionAction extends IntentionAction {
 			if (item != null) {
 				if (ai.objectsNotAllowedToGive.indexOf(itemToGiveID) != -1) {
 					// state that it cannot give this item:
-					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+targetID+"'[#id]))";
+					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					var term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 
@@ -64,7 +64,30 @@ class RobotGive_IntentionAction extends IntentionAction {
 						return false;
 					} else {
 						var destinationMap:A4Map = targetCharacter.map;
-						if (destinationMap == null || destinationMap != ai.robot.map) {
+
+						// Check if the robot can go:
+						let destinationLocation:AILocation = ai.game.getAILocation(targetCharacter);
+						let destinationLocationID:string = null;
+						if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+						let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+						if (cannotGoCause != null) {
+							if (requester != null) {
+								// deny request:
+								let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+								let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+								ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+								// explain cause:
+								term = new Term(ai.o.getSort("action.talk"), 
+												[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+												 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+												 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
+								ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+							}
+							return true;
+						}
+						
+						if (destinationMap == null) {
 							if (requester != null) {
 								var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 								var cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);

@@ -37,9 +37,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 		}
 
 		let destinationMap:A4Map = null;
+		let destinationLocation:AILocation = null;
+		let destinationLocationID:string = null;
 		let destinationX:number = 0;
 		let destinationY:number = 0;
-		let hasPermission:boolean = true;
 		let stopAfterGoingThroughABridge:boolean = false;
 
 		// find the target destination:
@@ -59,6 +60,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 					destinationMap = targetObject.map;
 					destinationX = targetObject.x;
 					destinationY = targetObject.y+targetObject.tallness;
+					destinationLocation = ai.game.getAILocation(targetObject);
+					if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 				}
 				if (targetObject == null) {
 					// we should never get here:
@@ -87,30 +90,28 @@ class RobotGo_IntentionAction extends IntentionAction {
 				destinationMap = targetObject.map;
 				destinationX = targetObject.x;
 				destinationY = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
+				destinationLocation = ai.game.getAILocation(targetObject);
+				if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 			} else {
-				let targetLocation:AILocation = ai.game.getAILocationByID(targetID);
-				if (targetLocation != null) {
-					if (ai.locationsWherePlayerIsNotPermitted.indexOf(targetID) == -1) {
-//						let tmp2:[number,number] = targetLocation.centerCoordinatesInMap(ai.robot.map);
-						let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
-						if (tmp2 != null) {
-							destinationMap = ai.robot.map;
-							destinationX = tmp2[0];
-							destinationY = tmp2[1];
-						} else {
-							if (targetLocation.maps.length > 0 && 
-								targetLocation.maps.indexOf(ai.robot.map) == -1) {
-								// we set this so that we can later give the proper reason for why we cannot go
-								let tmp3:[number,number] = targetLocation.centerWalkableCoordinatesInMap(targetLocation.maps[0], ai.robot);
-								if (tmp3 != null) {
-									destinationMap = targetLocation.maps[0];
-									destinationX = tmp3[0];
-									destinationY = tmp3[1];
-								}
+				let destinationLocation:AILocation = ai.game.getAILocationByID(targetID);
+				if (destinationLocation != null) {
+					destinationLocationID = destinationLocation.id;
+					let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+					if (tmp2 != null) {
+						destinationMap = ai.robot.map;
+						destinationX = tmp2[0];
+						destinationY = tmp2[1];
+					} else {
+						if (destinationLocation.maps.length > 0 && 
+							destinationLocation.maps.indexOf(ai.robot.map) == -1) {
+							// we set this so that we can later give the proper reason for why we cannot go
+							let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[0], ai.robot);
+							if (tmp3 != null) {
+								destinationMap = destinationLocation.maps[0];
+								destinationX = tmp3[0];
+								destinationY = tmp3[1];
 							}
 						}
-					} else {
-						hasPermission = false;
 					}
 				}
 			}
@@ -154,6 +155,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 					destinationMap = targetObject.map;
 					destinationX = bestX;
 					destinationY = bestY;
+					destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
+					if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 				} else {
 					targetObject = null;	// to triger the denyrequest message
 				}
@@ -241,6 +244,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 			        	break;
 			        }
 				}
+				destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
+				if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 			} else {
 				// we should never get here:
 				if (requester != null) {
@@ -261,16 +266,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		// IF the player has no permission to send a robot there:
-		if (!hasPermission) {
-			if (requester != null) {
-				// say "you do not have access to that location":
-				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-			}
-			return true;
-		}
-
 		// If we do not know the destination map:
 		if (destinationMap == null) {
 			if (requester != null) {
@@ -283,57 +278,24 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		if (ai.selfID == "qwerty") {
-			// Qwerty cannot go outside the station:
-			if (destinationMap != ai.robot.map) {
-				if (requester != null) {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-					let term:Term = Term.fromString(tmp, ai.o);
-					let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-					let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
-				}
-				return true;
+		// Check if the robot can go:
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		if (cannotGoCause != null) {
+			if (requester != null) {
+				// deny request:
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+
+				// explain cause:
+				term = new Term(ai.o.getSort("action.talk"), 
+								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
+								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
+								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
-		} else if (ai.selfID == "shrdlu") {
-			// SHRDLU needs permission to exit aurora settlement
-			if ((ai.robot.map.name == "Aurora Station" || ai.robot.map.name == "Aurora Station Outdoors") &&
-				destinationMap.name != "Aurora Station" &&
-				destinationMap.name != "Aurora Station Outdoors") {
-				if (ai.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", verb.need('"+ai.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))))";
-					let term:Term = Term.fromString(tmp, ai.o);
-					//let cause:Term = Term.fromString("#not(verb.can(ME:'"+ai.selfID+"'[#id], verb.go(ME, [space.outside])))", ai.o);
-					//let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-					//ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-					return true;
-				}
-				/*
-				if (requester != null) {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-					let cause:Term = null;
-					if (destinationMap == null) {
-						cause = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-					} else {
-						// ....
-					}
-					let term:Term = Term.fromString(tmp, ai.o);
-					let causeRecord:CauseRecord = null;
-					if (cause != null) {
-						causeRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-					}
-					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
-					if (!hasPermission) {
-						// say "you do not have access to that location":
-						let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
-						ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-					}
-				}
-				return true;
-				*/
-			}
-		}		
+			return true;
+		}
 
 		// go to destination:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
