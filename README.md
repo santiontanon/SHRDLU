@@ -1,4 +1,4 @@
-# Playable demo v2.7! 
+# Playable demo v2.7
 
 https://www.cs.drexel.edu/~santi/games/SHRDLU-demo27/shrdlu.html
 
