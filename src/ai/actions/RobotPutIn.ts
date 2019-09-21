@@ -89,7 +89,8 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			return true;
 		}
 		if (containerObjectL[0] instanceof A4ObstacleContainer) {
-			if ((<A4ObstacleContainer>containerObjectL[0]).closeable && (<A4ObstacleContainer>containerObjectL[0]).closed) {
+			if ((<A4ObstacleContainer>containerObjectL[0]).closeable && (<A4ObstacleContainer>containerObjectL[0]).closed &&
+				(<A4ObstacleContainer>containerObjectL[0]).doorID != null) {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("property.closed('"+containerObjectL[0].ID+"'[#id])", ai.o);

@@ -1083,6 +1083,15 @@ scriptFunctions[A4_SCRIPT_PUT_IN_CONTAINER] = function(script:A4Script, o:A4Obje
     if (!(target instanceof A4ObstacleContainer)) return SCRIPT_FAILED;
     let containerObject:A4ObstacleContainer = <A4ObstacleContainer>target;
 
+    // if the container is closed, open it:
+    if (containerObject.closeable && containerObject.closed) {
+        containerObject.event(A4_EVENT_INTERACT, <A4Character>o, o.map, game);
+        if (containerObject.closed) {
+            // if didn't open!
+            return SCRIPT_FAILED;
+        }
+    }
+
     // put the object:
     let character:A4Character = <A4Character>o;
     for(let i:number = 0;i<character.inventory.length;i++) {
