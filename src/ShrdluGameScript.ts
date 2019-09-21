@@ -27,16 +27,16 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-			this.skip_to_act_2_shrdluback_repair_outside();
+			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
-		}
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -2917,11 +2917,21 @@ class ShrdluGameScript {
 						this.act_2_shrdlu_agenda_state = 41;
 					}
 					// resume:
-					if (this.game.shrdluAI.currentAction_scriptQueue == null &&
-						!this.contextShrdlu.inConversation &&
+					if (!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.getMap("Aurora Station"), null);
+						if (this.game.shrdluAI.currentAction_scriptQueue == null ||
+							(this.game.shrdluAI.currentAction_scriptQueue.scripts.length == 1 &&
+							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].type == A4_SCRIPT_GOTO_OPENING_DOORS &&
+							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].x == 81*8 &&
+							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].y == 5*8 + this.game.shrdluAI.robot.tallness)) {
+							if (this.game.shrdluAI.robot.x < 20*8) {
+								// make sure it does not get stuck:
+								this.shrdluMovesOverrideable(24*8, 35*8, this.game.getMap("Aurora Station"), null);
+							} else {
+								this.shrdluMovesOverrideable(81*8, 5*8, this.game.getMap("Aurora Station"), null);
+							}
+						}
 					}
 					break;
 			case 41: 
