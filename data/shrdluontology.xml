@@ -678,6 +678,7 @@
     <sort name="relation.contains" super="spatial-relation"/>
     <sort name="space.near" super="spatial-relation"/>
     <sort name="space.far" super="spatial-relation"/>
+    <sort name="ground" super="space.location"/>
 
     <sort name="celestial-entity" super="object,space.location"/>
     <sort name="outer-space" super="space,celestial-entity"/>

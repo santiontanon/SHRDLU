@@ -978,6 +978,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
     // synonyms (those that I don't want the AI to use):
     this.addStandardNounPOS("access key", "key-card", o);
+    this.addStandardNounPOS("floor", "ground", o);
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o);
@@ -1100,6 +1101,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("gorge", "canyon", o);
     this.addStandardNounPOS("gravity", "gravity", o);
     this.addStandardNounPOS("greenhouse", "greenhouse.facility", o);
+    this.addStandardNounPOS("ground", "ground", o);
     this.addStandardNounPOS("gym", "gym.room", o);
     this.addStandardNounPOS("gym bench", "gym-bench", o);
     this.addTokenPOS(new PartOfSpeech("gym bench", "gym-bench", Term.fromString("noun('gym-bench'[gym-bench], [singular])", o), 1.0));
@@ -1389,6 +1391,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.disambiguate", "disambiguate","disambiguates","disambiguated","disambiguated","disambiguating", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.disembark", "disembark","disembarks","disembarked","disembarked","disembarking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.do", "do","does","did","done","doing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.drop", "drop","drops","dropped","dropped","dropping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "enumerate","enumerates","enumerated","enumerated","enumerating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.erase", "erase","erases","erased","erased","erasing", false, multitokens_raw, o);

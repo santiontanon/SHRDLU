@@ -234,6 +234,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -994,6 +995,13 @@ NLParseTestUnifyingListener("do you know who can fix the ship?", o.getSort("perf
 NLParseTestUnifyingListener("who can repair a ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(verb.can(X, verb.repair(X, Y)), ship(Y))))");
 NLParseTestUnifyingListener("keep going south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [south]))");
 NLParseTestUnifyingListener("keep pushing south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, [south]))");
+
+// For version 2.8:
+NLParseTestUnifyingListener("drop the ship here", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], [space.here]))");
+NLParseTestUnifyingListener("drop the ship on the floor", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("could you drop the ship on the ground?", o.getSort("performative"),  context, 'etaoin', "perf.q.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("drop the ship in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("put the ship in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.put-in('etaoin'[#id], '2'[#id], 'room1'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

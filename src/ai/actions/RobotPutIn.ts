@@ -52,6 +52,15 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 
 		let containerObjectL:A4Object[] = ai.game.findObjectByID(containerID);
 		if (containerObjectL == null) {
+			// check if it's a location:
+			let targetLocation:AILocation = ai.game.getAILocationByID(containerID);
+			if (targetLocation != null) {
+				let term2:Term = intention.clone([]);
+				term2.functor = ai.o.getSort("action.drop");
+				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
+				return true;
+			}
+
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+containerID+"'[#id]))", ai.o);

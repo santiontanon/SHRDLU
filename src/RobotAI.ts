@@ -17,6 +17,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new RobotStop_IntentionAction());
 		this.intentionHandlers.push(new RobotTake_IntentionAction());
 		this.intentionHandlers.push(new RobotPutIn_IntentionAction());
+		this.intentionHandlers.push(new RobotDrop_IntentionAction());
 		this.intentionHandlers.push(new RobotGive_IntentionAction());
 		this.intentionHandlers.push(new RobotOpenClose_IntentionAction());
 		this.intentionHandlers.push(new RobotHelp_IntentionAction());

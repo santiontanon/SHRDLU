@@ -2665,6 +2665,28 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"/>
+	<NLPattern name="perf.request.action-drop-in"
+			   head="perf.request.action(LISTENER, action.drop(LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
+			   		 verb('action.drop'[symbol], N, [second-person], T)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 (preposition('space.at'[space.at]) | preposition('space.on.top.of'[space.on.top.of])) 
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"/>
+	<!--NLPattern name="perf.request.action-put-in"
+			   head="perf.request.action(LISTENER, action.put-in(LISTENER, OBJECT2, OBJECT3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
+			   		 verb('verb.put'[symbol], N, [second-person], T)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 (preposition('space.at'[space.at]) | preposition('space.on.top.of'[space.on.top.of])) 
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefFromContext(C3, OBJECT3)"/-->
 	<NLPattern name="perf.request.action-propernoun"
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, NOUN))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -3016,6 +3038,33 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefFromContext(CO, TARGET)
     		         #derefFromContext(C4, LOCATION)"
     		   priority="200"/>
+
+    <!-- special cases of the verb drop" -->
+
+    <NLPattern name="perf.request.action-drop-to-floor"
+    		   head="perf.request.action(LISTENER, action.drop(LISTENER, TARGET))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('action.drop'[symbol], N, [second-person], T) | verb('verb.put'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X2, N2, P2, CO)
+    		   		 (preposition('space.at'[space.at]) | preposition('space.on.top.of'[space.on.top.of])) 
+    		   		 'the' noun('ground'[ground], [singular])
+    		         [[','] 'please'] '!'*
+    		         #derefFromContext(CO, TARGET)"/>
+    <NLPattern name="perf.q.action-drop-to-floor"
+    		   head="perf.q.action(LISTENER, action.drop(LISTENER, TARGET))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N0, [second-person], T0) | verb('verb.will'[symbol], N0, [second-person], T0)) subject-personal-pronoun(X1, N0, G, [second-person])
+    		   		 ['please']
+    		   		 (verb('action.drop'[symbol], N, [second-person], T) | verb('verb.put'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X2, N2, P2, CO)
+    		   		 (preposition('space.at'[space.at]) | preposition('space.on.top.of'[space.on.top.of])) 
+    		   		 'the' noun('ground'[ground], [singular])
+    		         [[','] 'please'] ('!'|'?')*
+    		         #derefFromContext(CO, TARGET)"/>
 
   	<!-- Patterns for performative "perf.request.action" and "perf.q.action" (they are the same except the later is a question) -->
     <NLPattern name="perf.q.action-verb-object"
