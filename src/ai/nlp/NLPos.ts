@@ -1028,6 +1028,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("century", "time.century", o);
     this.addStandardNounPOS("chair", "chair", o);
     this.addStandardNounPOS("character", "character", o);
+    this.addTokenPOS(new PartOfSpeech("cloth", "clothing", Term.fromString("noun('clothing'[clothing], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("clothes", "clothing", Term.fromString("noun('clothing'[clothing], [plural])", o), 1.0));    
+    this.addStandardNounPOS("clothing", "clothing", o);
     this.addStandardNounPOS("colonist", "colonist", o);    
     this.addStandardNounPOS("colour", "color", o);    // synonym, so, it's out of order
     this.addStandardNounPOS("color", "color", o);    
@@ -1135,6 +1138,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("laboratory", "lab.room", Term.fromString("noun('lab.room'[lab.room], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("laboratories", "lab.room", Term.fromString("noun('lab.room'[lab.room], [plural])", o), 1.0));
     this.addStandardNounPOS("language", "language", o);
+    this.addStandardNounPOS("laundry", "laundry", o);
+    this.addStandardNounPOS("laundry", "laundry.room", o);
     this.addStandardNounPOS("laundry room", "laundry.room", o);
     this.addStandardNounPOS("left", "direction.left", o);
     this.addStandardNounPOS("leg", "leg", o);
@@ -1363,6 +1368,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.clean", "launder","laundered","laundered","laundered","laundering", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.clean", "wash","washes","washed","washed","washing", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1377,6 +1384,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.call", "call","calls","called","called","calling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.can", "can","can","could",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.cause", "cause","causes","caused","caused","causing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.clean", "clean","cleans","cleaned","cleaned","cleaning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.connect", "connect","connects","connected","connected","connecting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "charge","charges","charged","charged","charging", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.close", "close","closes","closed","closed","closing", false, multitokens_raw, o);

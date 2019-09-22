@@ -204,6 +204,8 @@
 	<sentence provenance="background" sentence="space.at(X,L) ; ~verb.can(X, verb.find(X,Z)) ; ~space.at(Z,L)"/>
 	<sentence provenance="background" sentence="space.at(X,'location-as27'[#id]) ; ~object(Y) ; ~verb.can(X, verb.analyze(X,Y))"/>
 
+	<sentence provenance="background" sentence="space.at(X,'location-as20'[#id]) ; ~character(X:[#id]) ; ~clothing(Y:[#id]); ~verb.can(X, verb.clean(X, Y))"/>
+
 	<!-- where can things be found -->
 	<sentence provenance="background" sentence="space.at(X,'location-as23'[#id]) ; ~verb.can(X, verb.find(X,'food'[food]))"/>
 	<sentence provenance="background" sentence="space.at(X,'location-as27'[#id]) ; ~verb.can(X, verb.find(X,'microscope'[microscope]))"/>
@@ -244,6 +246,9 @@
 	<sentence provenance="background" sentence="verb.can(etaoin:[#id], action.close(etaoin:[#id], X)); ~door(X)"/>
 	<sentence provenance="background" sentence="verb.can(qwerty:[#id], action.close(qwerty:[#id], X)); ~door(X)"/>
 	<sentence provenance="background" sentence="verb.can(shrdlu:[#id], action.close(shrdlu:[#id], X)); ~door(X)"/>
+	<!--sentence provenance="background" sentence="~verb.can(X:[#id], verb.clean(X, Y)); verb.can(X, verb.clean(X))"/-->
+	<sentence provenance="background" sentence="~clothing(Y:[#id]); ~space.at(X:[#id], 'location-as20'[#id]); verb.can(X, verb.clean(X, Y))"/>
+	<!--sentence provenance="background" sentence="~character(X:[#id]); ~space.at(X, 'location-as20'[#id]); verb.can(X, verb.clean(X, [clothing]))"/-->
 
 	<!-- alternative names for some rooms -->
 	<sentence provenance="background" sentence="name('location-maintenance'[#id],'maintenance room'[symbol])"/>

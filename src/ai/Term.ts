@@ -1337,7 +1337,7 @@ class Term {
             return null;
         }
         if (str.substring(idx).trim()!="") {
-            console.error("Term.fromString: extra characters found after term! " + str.substring(idx));
+            console.error("Term.fromString: extra characters found after term! " + str.substring(idx) + " in " + str);
             return null;
         }
 //        console.log("attribute strings("+attributeStrings.length+"): " + attributeStrings);

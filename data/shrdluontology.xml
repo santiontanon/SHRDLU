@@ -414,6 +414,8 @@
     <sort name="sound" super="abstract-entity"/>
     <sort name="voice" super="sound"/>
 
+    <sort name="laundry" super="object"/>
+
     <sort name="signal" super="abstract-entity"/>
     <sort name="distress-signal" super="signal"/>
 
@@ -563,6 +565,7 @@
     <sort name="verb.read" super="verb"/>
     <sort name="verb.save" super="verb"/>
     <sort name="verb.salvage" super="verb.save"/>
+    <sort name="verb.clean" super="verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>

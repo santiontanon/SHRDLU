@@ -1,3 +1,11 @@
+/*
+
+- This file contains a series of test sentences with their expected logic parses. 
+- Every time I detect the game failing to parse a sentence, I add it to this list, and then fix the grammar.
+- So, this is sort of a list of "unit tests" for the natural language parsing module.
+
+*/
+
 var o:Ontology = new Ontology();
 Sort.clear();
 var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
@@ -234,7 +242,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -995,7 +1003,7 @@ NLParseTestUnifyingListener("do you know who can fix the ship?", o.getSort("perf
 NLParseTestUnifyingListener("who can repair a ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(verb.can(X, verb.repair(X, Y)), ship(Y))))");
 NLParseTestUnifyingListener("keep going south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go(V0, [south]))");
 NLParseTestUnifyingListener("keep pushing south", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.push(V0, [south]))");
-*/
+
 // For version 2.8:
 NLParseTestUnifyingListener("drop the ship here", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], [space.here]))");
 NLParseTestUnifyingListener("drop the ship on the floor", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
@@ -1005,6 +1013,21 @@ NLParseTestUnifyingListener("put the ship in the kitchen", o.getSort("performati
 NLParseTestUnifyingListener("how do I talk to etaoin?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], action.talk('1'[#id],'etaoin'[#id]))");
 NLParseTestUnifyingListener("how long do I wait?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, time.duration(verb.wait('1'[#id]), X))");
 NLParseTestUnifyingListener("how long do I have to wait?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, time.duration(goal('1'[#id], verb.wait('1'[#id])), X))");
+NLParseTestUnifyingListener("can I clean the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can('1'[#id],verb.clean('1'[#id], '2'[#id])))");
+NLParseTestUnifyingListener("can I clean clothes?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can('1'[#id],verb.clean('1'[#id], X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("can I clean some clothes?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can('1'[#id],verb.clean('1'[#id], X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("where can I clean some clothes?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE,verb.clean(SOMEONE, X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("where can I clean clothes?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE,verb.clean(SOMEONE, X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("can I do laundry?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can('1'[#id],verb.clean('1'[#id], X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("can I do laundry in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, X:'hypothetical-object'[#id])), #and(clothing(X), space.at(SOMEONE, 'room1'[#id]))))");
+NLParseTestUnifyingListener("can I do laundry in here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, X:'hypothetical-object'[#id])), #and(clothing(X), space.at(SOMEONE, 'room1'[#id]))))");
+NLParseTestUnifyingListener("can I clean the ship in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, '2'[#id])), space.at(SOMEONE, 'room1'[#id])))");
+NLParseTestUnifyingListener("can I clean the ship here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, '2'[#id])), space.at(SOMEONE, 'room1'[#id])))");
+NLParseTestUnifyingListener("where can I do laundry?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE,verb.clean(SOMEONE, X:'hypothetical-object'[#id])), clothing(X)))");
+NLParseTestUnifyingListener("where can I clean the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE,verb.clean(SOMEONE, '2'[#id])))");
+
+
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 
