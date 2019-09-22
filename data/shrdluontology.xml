@@ -642,6 +642,7 @@
     <sort name="time.year" super="time.unit"/>
     <sort name="time.century" super="time.unit"/>
     <sort name="time.millenium" super="time.unit"/>
+    <sort name="time.duration" super="relation-with-value,abstract-entity"/>
 
     <sort name="space" super="any"/>
     <sort name="space.location" super="space"/>
@@ -842,6 +843,7 @@
     <sort name="property.blind" super="property,#stateSort"/>
     <sort name="property.sighted" super="property,#stateSort"/>
     <sort name="colonist" super="property"/>
+    <sort name="automatic" super="property"/>
 
     <sort name="alive" super="property,#stateSort"/>
     <sort name="dead" super="property"/>

@@ -223,6 +223,8 @@
 	<sentence provenance="background" sentence="~object(Y) ; relation.howto(verb.analyze(X, Y), action.use(X, [microscope]))"/>
 	<sentence provenance="background" sentence="relation.howto(verb.repair(X, SS:[datapad]), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
 	<sentence provenance="background" sentence="~datapad(SS) ; relation.howto(verb.repair(X, SS), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
+	<sentence provenance="background" sentence="relation.howto(action.talk(X, 'etaoin'[#id]), verb.need(X, 'communicator'[#id]))"/>
+	<sentence provenance="background" sentence="relation.howto(action.use(X, 'communicator'[#id]), automatic('communicator'[#id]))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>
@@ -394,6 +396,7 @@
 	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as34'[#id])"/>
 
 	<!-- other general knowledge -->
+	<sentence provenance="background" sentence="communicator('communicator'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('david-stasis-pod'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('broken-stasis-pod'[#id])"/>
 	<sentence provenance="background" sentence="relation.belongs('david-stasis-pod'[#id], 'david'[#id])"/>

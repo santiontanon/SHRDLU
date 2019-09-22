@@ -1497,6 +1497,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("action.talk","to", "talk","talks","talk","talk","talking", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):
     this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
@@ -1508,6 +1509,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     // adjectives:    
     this.addTokenPOS(new PartOfSpeech("alive", "alive", Term.fromString("adjective('alive'[alive])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("alone", "alone", Term.fromString("adjective('alone'[alone])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("automatic", "automatic", Term.fromString("adjective('automatic'[automatic])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("awake", "awake", Term.fromString("adjective('awake'[awake])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("big", "big", Term.fromString("adjective('big'[big])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("black", "black", Term.fromString("adjective('black'[black])", o), 1.0));
