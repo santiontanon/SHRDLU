@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<body>
+<h2>Natural Language Performatives</h2>
+
+Just a small log of the performatives the game is using and what are the parameters. The document is not complete, since I just fill it up as I need to think about them. I should complete it though...
+
+<ul>
+	<li><b>perf.callattention(listener)</b></li>
+	<li><b>perf.greet(listener)</b></li>
+	<li><b>perf.nicetomeetyou(listener)</b></li>
+	<li><b>perf.nicetomeetyoutoo(listener)</b></li>
+	<li><b>perf.q.howareyou(listener)</b></li>
+	<li><b>perf.farewell(listener)</b></li>
+	<li><b>perf.thankyou(listener)</b></li>
+	<li><b>perf.youarewelcome(listener)</b></li>
+</ul>
+<ul>
+	<li><b>perf.inform(listener, statement)</b>: the speaker states that "statement" is true. The AI will run an inference procedure to see if statement creates a contradiction, and if it does not, it will memorize it.</li>
+	<li><b>perf.inform.parseerror(listener, statement)</b>: exactly the same as perf.inform. We just separate it for internal reasons.</li>
+	<li><b>perf.inform.answer(listener, constant)</b>: expresses an answer to a question. The constant is 'yes', 'no', 'unknown'</li>
+	<li><b>perf.inform.answer(listener, constant, statement)</b>: same as above, but adds an additional statement that complements the answer. For example, when saying "yes, I have the key", constant will be 'yes', and statement will encode 'I have the key'.</li>
+</ul>
+<ul>
+	<li><b>perf.ack.ok(listener)</b></li>
+	<li><b>perf.ack.denyrequest(listener)</b></li>
+	<li><b>perf.ackresponse(listener)</b>: this is for things like "me too!"</li>
+	<li><b>perf.ack.unsure(listener, ...)</b>: ...</li>
+	<li><b>perf.ack.contradict(listener, ...)</b>: ...</li>
+	<li><b>perf.ack.invalidanswer(listener, ...)</b>: ...</li>
+</ul>
+<font color="red">
+<ul>
+	<li><b>perf.sentiment.good(listener)</b></li>
+	<li><b>perf.sentiment.bad(listener)</b></li>
+	<li><b>perf.sentiment.surprise(listener)</b></li>
+</ul>
+</font>
+<ul>
+	<li><b>perf.request.action(listener, action)</b></li>
+	<li><b>perf.request.stopaction(listener, action)</b></li>
+	<li><b>perf.request.repeataction(listener)</b></li>
+	<li><b>perf.request.repeataction(listener, action)</b></li>
+</ul>
+<ul>
+	<li><b>perf.q.predicate(listener, predicate)</b></li>
+	<li><font color="red">I need versions of these two that have a 3rd parameter with additional sentences for the inference process</font></li>
+	<li><b>perf.q.predicate-negated(listener, predicate)</b>: same as perf.q.predicate, but it will test the negation of the predicate</li>
+	<li><b>perf.q.query(listener, variable, query)</b></li>
+	<li><font color="red">I need a version of the previous that has a 3rd parameter with additional sentences for the inference process (come up with examples to parse them)</font></li>
+	<li><b>perf.q.whereis(listener, ...)</b>: ...</li>
+	<li><b>perf.q.whereto(listener, ...)</b>: ...</li>
+	<li><b>perf.q.query-followup(listener, ...)</b>: ...</li>
+	<li><b>perf.q.whois.name(listener, ...)</b>: ...</li>
+	<li><b>perf.q.whois.noname(listener, ...)</b>: ...</li>
+	<li><b>perf.q.whatis.name(listener, ...)</b>: ...</li>
+	<li><b>perf.q.whatis.noname(listener, ...)</b>: ...</li>
+	<li><b>perf.q.action(listener, ...)</b>: ...</li>
+	<li><b>perf.q.when(listener, ...)</b>: ...</li>
+	<li><b>perf.q.howmany(listener, ...)</b>: ...</li>
+	<li><b>perf.q.why(listener, ...)</b>: ...</li>
+	<li><b>perf.q.how(listener, ...)</b>: ...</li>
+	<li><b>perf.moreresults(listener, ...)</b>: ...</li>
+</ul>
+</ul>
+</html>
+

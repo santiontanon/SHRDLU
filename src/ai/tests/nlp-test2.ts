@@ -33,6 +33,9 @@ testAI.selfID = 'etaoin';
 var successfulTests:number = 0;
 var totalTests:number = 0;
 
+var nParametersPerPerformative:{ [performative: string] : number[]; } = {};
+
+
 function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultStr:string) : boolean
 {
     totalTests++;
@@ -73,6 +76,17 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
                 }
                 context.ai.time_in_seconds++;
             }
+        }
+        {
+          let n:number = expectedResult.attributes.length;
+          let tmp:number[] = nParametersPerPerformative[expectedResult.functor.name];
+          if (tmp == undefined) {
+            nParametersPerPerformative[expectedResult.functor.name] = [n];
+          } else {
+            if (tmp.indexOf(n) == -1) {
+              tmp.push(n);
+            }
+          }
         }
         successfulTests++;
         return true;
@@ -131,6 +145,17 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
                 context.ai.time_in_seconds++;
             }
         }
+        {
+          let n:number = expectedResult.attributes.length;
+          let tmp:number[] = nParametersPerPerformative[expectedResult.functor.name];
+          if (tmp == undefined) {
+            nParametersPerPerformative[expectedResult.functor.name] = [n];
+          } else {
+            if (tmp.indexOf(n) == -1) {
+              tmp.push(n);
+            }
+          }
+        }        
         successfulTests++;
         return true;
     }
@@ -241,7 +266,6 @@ for(let ce of context.shortTermMemory) {
     testAI.shortTermMemory.addTerm(t, PERCEPTION_PROVENANCE, 0, 0);
   }
 }
-
 
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
@@ -1025,11 +1049,15 @@ NLParseTestUnifyingListener("can I clean the ship in the kitchen?", o.getSort("p
 NLParseTestUnifyingListener("can I clean the ship here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, '2'[#id])), space.at(SOMEONE, 'room1'[#id])))");
 NLParseTestUnifyingListener("where can I do laundry?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE,verb.clean(SOMEONE, X:'hypothetical-object'[#id])), clothing(X)))");
 NLParseTestUnifyingListener("where can I clean the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE,verb.clean(SOMEONE, '2'[#id])))");
-
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestionTimeStamp_stack.push(0);
+NLParseTestUnifyingListener("No I do not", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
+NLParseTestUnifyingListener("No, I don't", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
+NLParseTestUnifyingListener("Yes I do", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol])");
 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
-
+console.log(nParametersPerPerformative);
 
 

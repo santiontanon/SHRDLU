@@ -181,10 +181,13 @@
     <sort name="relation.howto" super="relation"/>
     
     <sort name="performative" super="abstract-entity"/>
+    <sort name="perf.request" super="performative"/>
+    <sort name="perf.question" super="perf.request"/>
     <sort name="perf.callattention" super="performative"/>  <!-- This is when you just say "Etaoin!" -->
     <sort name="perf.greet" super="performative"/>
     <sort name="perf.nicetomeetyou" super="performative"/>
     <sort name="perf.nicetomeetyoutoo" super="performative"/>
+    <sort name="perf.q.howareyou" super="perf.question"/>
     <sort name="perf.farewell" super="performative"/>
     <sort name="perf.thankyou" super="performative"/>
     <sort name="perf.youarewelcome" super="performative"/>
@@ -202,11 +205,9 @@
     <sort name="perf.sentiment.good" super="perf.sentiment"/>
     <sort name="perf.sentiment.bad" super="perf.sentiment"/>
     <sort name="perf.sentiment.surprise" super="perf.sentiment"/>
-    <sort name="perf.request" super="performative"/>
     <sort name="perf.request.action" super="perf.request"/>
     <sort name="perf.request.stopaction" super="perf.request"/>
     <sort name="perf.request.repeataction" super="perf.request"/>
-    <sort name="perf.question" super="perf.request"/>
     <sort name="perf.q.predicate" super="perf.question"/>
     <sort name="perf.q.predicate-negated" super="perf.question"/>
     <sort name="perf.q.whereis" super="perf.question"/>
@@ -218,7 +219,6 @@
     <sort name="perf.q.whatis.name" super="perf.question"/>
     <sort name="perf.q.whatis.noname" super="perf.question"/>
     <sort name="perf.q.action" super="perf.question,perf.request.action"/> <!-- this is similar to perf.request.action, except that it is a question, rather than a command -->
-    <sort name="perf.q.howareyou" super="perf.question"/>
     <sort name="perf.q.when" super="perf.question"/>
     <sort name="perf.q.howmany" super="perf.question"/>
     <sort name="perf.q.why" super="perf.question"/>

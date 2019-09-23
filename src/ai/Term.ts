@@ -1005,9 +1005,9 @@ class Term {
         var sentences:Sentence[] = [];
 
         // We start by bringing the #not inwards:
-        console.log("before bringNotInwards: " + term);
+        // console.log("before bringNotInwards: " + term);
         term = Term.bringNotInwards(term, o);
-        console.log("after bringNotInwards: " + term);
+        // console.log("after bringNotInwards: " + term);
 
         var sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
         /*

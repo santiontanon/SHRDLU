@@ -102,6 +102,13 @@ console.log("-------------------------");
 // inference test, it checks whether the query_str contradicts KB_str
 function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:boolean, o:Ontology)
 {
+    resolutionTest2(KB_str, [], query_str_l, expectedResult, o);
+}
+
+
+// inference test, it checks whether the query_str contradicts KB_str
+function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[], expectedResult:boolean, o:Ontology)
+{
     DEBUG_resolution = false;
     DEBUG_resolution_detailed = false;
 
@@ -111,12 +118,17 @@ function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:bo
 //        console.log("parsed KB sentence: " + s.toString());
         KB.addSentence(s, "background", 1, 0);
     }
+    var additionalSentences:Sentence[] = [];
+    for(let str of AS_str) {
+        var s:Sentence = Sentence.fromString(str, o);
+        additionalSentences.push(s);
+    }
     var query:Sentence[] = [];
     for(let query_str of query_str_l) {
         query.push(Sentence.fromString(query_str, o));
     }
 //    console.log("parsed query sentence: " + query.toString());
-    var r:InterruptibleResolution = new InterruptibleResolution(KB, [], query, true, true, true, testAI);
+    var r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
 //    var steps:number = 0;
     while(!r.step()) {
 //        steps++;
@@ -472,4 +484,15 @@ resolutionTest(
     ["weight('engine1'[#id], 'light-weight'[light-weight])"],
     true,    // should contradict
     o);
+
+
+resolutionTest2(
+    ["~clothing(Y:[#id]); ~space.at(X:[#id], 'location-as20'[#id]); verb.can(X, verb.clean(X, Y))",
+     "space.at(X,'location-as20'[#id]) ; ~character(X:[#id]) ; ~clothing(Y:[#id]); ~verb.can(X, verb.clean(X, Y))"],
+    ["space.at('david'[#id],'location-as20'[#id])",
+     "clothing('hypothetical-object'[#id])"],
+    ["~verb.can('david'[#id],verb.clean('david'[#id], 'hypothetical-object'[#id]))"],
+    true,
+    o);
+
 

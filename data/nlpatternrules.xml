@@ -612,6 +612,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure') [','] perf.inform(LISTENER, P) ('!'|'?')*"/>
+	<NLPattern name="answer-yes-complex-specialcase"
+			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ('yes' | 'yeah' | 'of' 'course' | 'sure') [','] 'i' 'do' ('!'|'?')*"
+			   priority="200"/>
 	<NLPattern name="answer-no"
 			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -624,7 +631,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'i' ('do'|'will') 'not' ('!'|'?')*"/>
+			   		 ['no' [',']] 'i' ('do'|'will') 'not' ('!'|'?')*"/>
 	<NLPattern name="answer-no3"
 			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
