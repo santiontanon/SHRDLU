@@ -79,9 +79,7 @@ class NLGenerator {
 		if (t.functor.is_a(o.getSort("perf.ackresponse"))) return "Ok";
 		if (t.functor.is_a(o.getSort("perf.inform.answer"))) return this.termToEnglish_Inform_Answer(t, speakerID, context);
 		if (t.functor.is_a(o.getSort("perf.inform"))) return this.termToEnglish_Inform(t, speakerID, context);
-		if (t.functor.is_a(o.getSort("perf.sentiment.good")))  return this.termToEnglish_Sentiment_Good(t);
-		if (t.functor.is_a(o.getSort("perf.sentiment.bad")))  return this.termToEnglish_Sentiment_Bad(t);
-		if (t.functor.is_a(o.getSort("perf.sentiment.surprise")))  return this.termToEnglish_Sentiment_Surprise(t);
+		if (t.functor.is_a(o.getSort("perf.sentiment")))  return this.termToEnglish_Sentiment(t);
 		if (t.functor.is_a(o.getSort("perf.q.action"))) return this.termToEnglish_QuestionAction(t, speakerID, context);
 		if (t.functor.is_a(o.getSort("perf.request.action"))) return this.termToEnglish_RequestAction(t, speakerID, context, rootPerformative, true);
 		if (t.functor.is_a(o.getSort("perf.q.predicate"))) return this.termToEnglish_Q_Predicate(t, speakerID, context);
@@ -218,22 +216,17 @@ class NLGenerator {
 	}
 	
 
-
-	termToEnglish_Sentiment_Good(t:Term) : string
+	termToEnglish_Sentiment(t:Term) : string
 	{
-		return "Good!";
-	}
-
-
-	termToEnglish_Sentiment_Bad(t:Term) : string
-	{
-		return "That's bad";
-	}
-	
-
-	termToEnglish_Sentiment_Surprise(t:Term) : string
-	{
-		return "Wow!";
+		if (t.attributes[1] instanceof ConstantTermAttribute) {
+			let value:string = (<ConstantTermAttribute>t.attributes[1]).value;
+			if (value == "good") return "Good!";
+			else if (value == "bad") return "That's bad";
+			else if (value == "surprise") return "Wow!";
+			else return null;
+		} else {
+			return null;
+		}
 	}
 
 

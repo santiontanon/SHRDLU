@@ -202,9 +202,6 @@
     <sort name="perf.ack.denyrequest" super="perf.acknowledge"/>
     <sort name="perf.ackresponse" super="perf.acknowledge"/>    <!-- acknowledging a response, like "me too" -->
     <sort name="perf.sentiment" super="performative"/>
-    <sort name="perf.sentiment.good" super="perf.sentiment"/>
-    <sort name="perf.sentiment.bad" super="perf.sentiment"/>
-    <sort name="perf.sentiment.surprise" super="perf.sentiment"/>
     <sort name="perf.request.action" super="perf.request"/>
     <sort name="perf.request.stopaction" super="perf.request"/>
     <sort name="perf.request.repeataction" super="perf.request"/>

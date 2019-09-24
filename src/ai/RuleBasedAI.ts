@@ -804,11 +804,15 @@ class RuleBasedAI {
 				// Do nothing
 			} else if (perf2.functor.name == "perf.q.predicate") {
 				let t2:Term = Term.fromString("action.answer.predicate('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
-				t2.addAttribute(perf2.attributes[1]);
+				for(let i:number = 1;i<perf2.attributes.length;i++) {
+					t2.addAttribute(perf2.attributes[i]);
+				}
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.q.predicate-negated") {
 				let t2:Term = Term.fromString("action.answer.predicate-negated('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
-				t2.addAttribute(perf2.attributes[1]);
+				for(let i:number = 1;i<perf2.attributes.length;i++) {
+					t2.addAttribute(perf2.attributes[i]);
+				}
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.q.whereis") {
 				let t2:Term = Term.fromString("action.answer.whereis('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);

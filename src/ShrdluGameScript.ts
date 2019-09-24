@@ -276,7 +276,7 @@ class ShrdluGameScript {
 
 		case 4:
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, awake($PLAYER)))");
 			} else if (this.act_intro_state_timer == 120) {
 				this.game.eyesClosedState = 1;
@@ -395,7 +395,7 @@ class ShrdluGameScript {
 
 		case 9:	// player says her name, QWERTY and ETAOIN memorize it, and QWERTY acknowledges and greets again
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.greet($PLAYER))");		
 
 				// tell ETAOIN the player's name:
@@ -450,7 +450,7 @@ class ShrdluGameScript {
 
 		case 11: // player remembers the station, so QWERTY just says good, and moves on
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER. 'good'[symbol]))");
 			} else {
 				if (this.game.qwertyAI.intentions.length == 0 &&
 					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 13;
@@ -459,7 +459,7 @@ class ShrdluGameScript {
 
 		case 12: // player does not remember the station, so QWERTY talks a bit, and moves on
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.bad($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'bad'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER,#and(X:settlement('location-aurora-station'[#id])," +
 																			  "#and(time.permanent(X)," +
 																			  "#and(relation.purpose(X, #and(Y:[human], plural(Y))), " +
@@ -488,7 +488,7 @@ class ShrdluGameScript {
 															   "Wow! I feel very light, why?! where am I?", A4_DIRECTION_NONE, this.game);
 
 			} else if (this.act_intro_state_timer > 60 && !this.game.currentPlayer.isTalking()) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, verb.try($PLAYER,verb.walk($PLAYER))))");
 				this.act_intro_state = 15;
 			}
@@ -518,7 +518,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.game.qwertyAI.clearCurrentAction();
 				this.qwertyMoves(11*8, 30*8, this.game.qwertyAI.robot.map);	// move qwerty near the chair
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER,'good'[symbol]))");
 			} else if (this.game.qwertyAI.robot.x == 11*8 &&
 					   this.game.qwertyAI.robot.y == 30*8) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($QWERTY, verb.test($QWERTY, #and(C:[strength], relation.belongs(C, $PLAYER))))))");
@@ -562,7 +562,7 @@ class ShrdluGameScript {
 
 		case 101:
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment.good($PLAYER))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, verb.follow($PLAYER, $QWERTY)))");
 
 				let term:Term = Term.fromString("goal(D:'david'[#id],verb.follow(X, 'qwerty'[#id]))",this.game.ontology);

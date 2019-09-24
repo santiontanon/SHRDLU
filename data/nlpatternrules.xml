@@ -117,14 +117,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<!-- Patterns for performative "perf.sentiment" -->
 	<NLPattern name="sentiment-good"
-			   head="perf.sentiment.good(LISTENER)"
+			   head="perf.sentiment(LISTENER, 'good'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 ('good' | 'awesome' | 'great' | 'fantastic') ('!'|'?')*"
 			   priority="150"/>
 
 	<NLPattern name="sentiment-bad"
-			   head="perf.sentiment.bad(LISTENER)"
+			   head="perf.sentiment(LISTENER, 'bad'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 (('ow'|'oww'|'owww') | 'i' 'am'  'sorry' | 'too' 'bad' | 'that' ('is'|'\'s') ('bad'|'sad'))
@@ -132,7 +132,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   priority="150"/>
 
 	<NLPattern name="sentiment-surprise"
-			   head="perf.sentiment.surprise(LISTENER)"
+			   head="perf.sentiment(LISTENER, 'surprise'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 ('lol' | 'what' 'the' ('fuck'|'hell'|'heck') | 'wtf') ('!'|'?')*"
@@ -688,14 +688,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
 			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
 			   		 #derefUniversal(C, V, LEFTSIDE)"/>
-	<NLPattern head="perf.q.predicate(LISTENER, #and(LEFTSIDE, #cons(X2, V:[#id])))"
+	<NLPattern name="perf.q.predicate-hypothetical"
+			   head="perf.q.predicate(LISTENER, #cons(X2, V:[#id]), LEFTSIDE)"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) 
 			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
 			   		 #derefHypothetical(C, V, LEFTSIDE)"/>
-	<NLPattern head="perf.q.predicate(LISTENER, #and(LEFTSIDE, #and(PRED:#cons(X2, V:[#id]), time.past(PRED))))"
+	<NLPattern name="perf.q.predicate-hypothetical-past"
+			   head="perf.q.predicate(LISTENER, #and(PRED:#cons(X2, V:[#id]), time.past(PRED)), LEFTSIDE)"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1417,7 +1419,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*"/>
 
 	<NLPattern name="perf.q.predicate-can-action-noun"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SUBJECT, #cons(VERB, SUBJECT, HO:'hypothetical-object'[#id])), #cons(NOUN, HO)))"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, HO:'hypothetical-object'[#id])), #cons(NOUN, HO))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1428,9 +1430,24 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, [plural])
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, SUBJECT)"/>
+	<NLPattern name="perf.q.predicate-can-action-noun-in-location"
+			   head="perf.q.predicate(LISTENER, verb.can(SOMEONE:'hypothetical-character'[#id], #cons(VERB, SOMEONE, HO:'hypothetical-object'[#id])), #and(#cons(NOUN, HO), space.at(SOMEONE, LOCATION)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X2, [singular], P2, C2)
+			   		 verb(VERB, N3, P3, [infinitive-tense]) 
+			   		 ['some']
+			   		 noun(NOUN, [plural])
+			   		 preposition('space.at'[space.at])
+			   		 nounPhrase(X5, [singular], P5, C5)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(C5, LOCATION)"/>
 
 	<NLPattern name="perf.q.predicate-can-verb-object-in-location"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SOMEONE:'hypothetical-character'[#id], #cons(VERB, SOMEONE, OBJECT)), space.at(SOMEONE, LOCATION)))"
+			   head="perf.q.predicate(LISTENER, verb.can(SOMEONE:'hypothetical-character'[#id], #cons(VERB, SOMEONE, OBJECT)), space.at(SOMEONE, LOCATION))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1446,7 +1463,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C5, LOCATION)"/>
 
 	<NLPattern name="perf.q.predicate-can-verb-object-in-here"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SOMEONE:'hypothetical-character'[#id], #cons(VERB, SOMEONE, OBJECT)), space.at(SOMEONE, LOCATION)))"
+			   head="perf.q.predicate(LISTENER, verb.can(SOMEONE:'hypothetical-character'[#id], #cons(VERB, SOMEONE, OBJECT)), space.at(SOMEONE, LOCATION))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1462,7 +1479,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<!-- special cases for understanding that `doing laundry' means `cloean clothes' -->
 	<NLPattern name="perf.q.predicate-can-do-laundry"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SUBJECT, verb.clean(SUBJECT, HO:'hypothetical-object'[#id])), clothing(HO)))"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, verb.clean(SUBJECT, HO:'hypothetical-object'[#id])), clothing(HO))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1474,7 +1491,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, SUBJECT)"/>
 	<NLPattern name="perf.q.predicate-can-do-laundry-in"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, HO:'hypothetical-object'[#id])), #and(clothing(HO), space.at(SOMEONE, LOCATION))))"
+			   head="perf.q.predicate(LISTENER, verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, HO:'hypothetical-object'[#id])), #and(clothing(HO), space.at(SOMEONE, LOCATION)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1489,7 +1506,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C2, SUBJECT)
 			   		 #derefFromContext(C4, LOCATION)"/>
 	<NLPattern name="perf.q.predicate-can-do-laundry-in-here"
-			   head="perf.q.predicate(LISTENER, #and(verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, HO:'hypothetical-object'[#id])), #and(clothing(HO), space.at(SOMEONE, LOCATION))))"
+			   head="perf.q.predicate(LISTENER, verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, HO:'hypothetical-object'[#id])), #and(clothing(HO), space.at(SOMEONE, LOCATION)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]

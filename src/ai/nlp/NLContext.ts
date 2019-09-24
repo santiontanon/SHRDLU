@@ -396,9 +396,7 @@ class NLContext {
 			perf.functor.is_a(o.getSort("perf.ackresponse")) ||
 			perf.functor.is_a(o.getSort("perf.thankyou")) ||
 			perf.functor.is_a(o.getSort("perf.youarewelcome")) ||
-			perf.functor.is_a(o.getSort("perf.sentiment.good")) ||
-			perf.functor.is_a(o.getSort("perf.sentiment.bad")) ||
-			perf.functor.is_a(o.getSort("perf.sentiment.surprise")) ||
+			perf.functor.is_a(o.getSort("perf.sentiment")) ||
 			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
 			perf.functor.is_a(o.getSort("perf.moreresults")) ||
 			perf.functor.is_a(o.getSort("perf.request.repeataction"))) {

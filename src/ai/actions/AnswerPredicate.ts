@@ -10,13 +10,20 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
+
+		let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term, ai.o);
+		let additional_sentences:Sentence[] = [];
+		let variablesPresent:boolean = false;
+
+		if (intention.attributes.length == 4) {
+			additional_sentences = Term.termToSentences((<TermTermAttribute>intention.attributes[3]).term, ai.o);
+		}
 
 		console.log(ai.selfID + " answer predicate: " + intention.attributes[2]);	
-		var s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term, ai.o);
-		console.log("term to sentences: " + s_l);	
-		var variablesPresent:boolean = false;
+		console.log("term to sentences: " + s_l);
+		console.log("additional sentences: " + additional_sentences);
 
 		// search for time-related sentences (which just indicate the time at which this query must be performed):
 		let toDelete:Sentence[] = [];
@@ -57,9 +64,9 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		console.log("executeIntention answer predicate: negated_s = " + negated_s);
 		if (variablesPresent) {
 			// if there are variables in the query, we should only add the negated version, since otherwise, we get spurious results!
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));
+			ai.inferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));
 		} else {
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [s_l,[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));				
+			ai.inferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [s_l,[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));				
 		}
 		
 		return true;
