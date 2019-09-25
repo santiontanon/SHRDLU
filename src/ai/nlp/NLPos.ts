@@ -750,6 +750,7 @@ this.addTokenPOS(new PartOfSpeech("other than", "~=", Term.fromString("prepositi
   "out from",
 */
 this.addTokenPOS(new PartOfSpeech("out of", "space.outside.of", Term.fromString("preposition('space.outside.of'[space.outside.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("outside", "space.outside.of", Term.fromString("preposition('space.outside.of'[space.outside.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("outside of", "space.outside.of", Term.fromString("preposition('space.outside.of'[space.outside.of])", o), 1.0));
   /*
   "owing to",

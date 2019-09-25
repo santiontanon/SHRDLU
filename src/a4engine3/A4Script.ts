@@ -335,14 +335,15 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                     let cmd:A4CharacterCommand = new A4CharacterCommand(A4CHARACTER_COMMAND_INTERACT, 0, o.direction, null, null, 10);
                     (<A4Character>o).issueCommand(cmd, game);
                 } else if ((o2 instanceof ShrdluAirlockDoor)) {
-                    if (o2.targetMap == script.ID) {
+                    if (script.ID != aic.map.name) {
+                    // if (o2.targetMap == script.ID) {
                         // if we are going outside, then use it:
                         let door:ShrdluAirlockDoor = <ShrdluAirlockDoor>o2;
                         // close the corresponding airlock door if it is not closed:
                         let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                         if (otherdoor == null || otherdoor.closed) {
                             // if it is closed, then teleport outside:
-                            game.requestWarp(o, map, door.targetX, door.targetY-o.tallness);
+                            game.requestWarp(o, game.getMap(o2.targetMap), door.targetX, door.targetY-o.tallness);
                         } else {
                             otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
                         }

@@ -1240,6 +1240,19 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}	
 
 
+	locationOutsideOf(loc:AILocation) : AILocation
+	{
+		let loc_idx:number = this.game.locations.indexOf(loc);
+		for(let loc2_idx:number = 0;loc2_idx < this.game.locations.length; loc2_idx++) {
+			if (this.game.location_connects[loc_idx][loc2_idx] &&
+				!this.game.location_in[loc2_idx][loc_idx]) {
+				return this.game.locations[loc2_idx];
+			}
+		}
+		return null;
+	}
+
+
 	restoreFromXML(xml:Element)
 	{
 		super.restoreFromXML(xml);

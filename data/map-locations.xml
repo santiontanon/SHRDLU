@@ -581,6 +581,7 @@
 
 
 	<!-- Additional connections to the location graph that are not automatically inferred : -->
+	<location_connects l1="location-aurora-station" l2="location-aurora-settlement"/>
 	<location_connects l1="location-as31" l2="location-aurora-settlement"/>
 	<location_connects l1="location-as32" l2="location-aurora-settlement"/>
 	<location_connects l1="location-as33" l2="location-aurora-settlement"/>

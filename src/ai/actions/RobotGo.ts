@@ -18,6 +18,12 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let requester:TermAttribute = ir.requester;
 
 		if (ai.robot.isInVehicle()) {
+			if (intention.attributes.length == 2 && intention.attributes[1].sort.name == "space.outside") {
+				// redirect to leave the vehicle:
+				let term2:Term = new Term(ai.o.getSort("verb.leave"), [intention.attributes[0]]);
+				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
+				return true;				
+			}
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
@@ -102,8 +108,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 						destinationX = tmp2[0];
 						destinationY = tmp2[1];
 					} else {
-						if (destinationLocation.maps.length > 0 && 
-							destinationLocation.maps.indexOf(ai.robot.map) == -1) {
+						if (destinationLocation.maps.length > 0) {
 							// we set this so that we can later give the proper reason for why we cannot go
 							let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[0], ai.robot);
 							if (tmp3 != null) {
@@ -160,6 +165,41 @@ class RobotGo_IntentionAction extends IntentionAction {
 				} else {
 					targetObject = null;	// to triger the denyrequest message
 				}
+
+			} else if (intention.attributes.length == 2 && intention.attributes[1].sort.name == "space.outside") {
+				// Find a nearby location and go there:
+				let startLocation:AILocation = ai.game.getAILocation(ai.robot);
+				if (startLocation != null) {
+					destinationLocation = ai.locationOutsideOf(startLocation);
+					if (destinationLocation != null) {
+						destinationLocationID = destinationLocation.id;
+						let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+						// ensure that the target location is actually outside of the specified location:
+						let tmp2location:AILocation = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
+						if (tmp2 != null && 
+							tmp2location != startLocation &&									
+							!ai.game.location_in[ai.game.locations.indexOf(tmp2location)][ai.game.locations.indexOf(startLocation)]) {
+							destinationMap = ai.robot.map;
+							destinationX = tmp2[0];
+							destinationY = tmp2[1];
+						} else {
+							for(let mapidx:number = 0; mapidx<destinationLocation.maps.length; mapidx++) {
+								// we set this so that we can later give the proper reason for why we cannot go
+								let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[mapidx], ai.robot);
+								// ensure that the target location is actually outside of the specified location:
+								let tmp3location:AILocation = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
+								if (tmp3 != null && 
+									tmp3location != startLocation &&
+									!ai.game.location_in[ai.game.locations.indexOf(tmp3location)][ai.game.locations.indexOf(startLocation)]) {
+									destinationMap = destinationLocation.maps[mapidx];
+									destinationX = tmp3[0];
+									destinationY = tmp3[1];
+								}
+							}
+						}
+					}
+				}
+
 			} else if (intention.attributes[1].sort.is_a_string("direction")) {
 				let movementAmount:number = 4;
 				if (intention.attributes.length == 3 && 
@@ -254,6 +294,49 @@ class RobotGo_IntentionAction extends IntentionAction {
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				}
 				return true;
+			}
+
+		} else if (intention.attributes.length >= 2 && 
+			       (intention.attributes[1] instanceof TermTermAttribute) &&
+			       intention.attributes[1].sort.is_a(ai.o.getSort("space.outside.of"))) {
+			// go outside of a specific location:
+			let ooTerm:Term = (<TermTermAttribute>intention.attributes[1]).term;
+			if (ooTerm.attributes.length == 1 && 
+				ooTerm.attributes[0] instanceof ConstantTermAttribute) {
+				// Find a nearby location and go there:
+				let startLocation:AILocation = ai.game.getAILocationByID((<ConstantTermAttribute>ooTerm.attributes[0]).value);
+				if (startLocation != null) {
+					destinationLocation = ai.locationOutsideOf(startLocation);
+					if (destinationLocation != null) {
+						destinationLocationID = destinationLocation.id;
+						let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+						// ensure that the target location is actually outside of the specified location:
+						let tmp2location:AILocation = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
+						if (tmp2 != null && 
+							tmp2location != startLocation &&
+							!ai.game.location_in[ai.game.locations.indexOf(tmp2location)][ai.game.locations.indexOf(startLocation)]) {
+							destinationMap = ai.robot.map;
+							destinationX = tmp2[0];
+							destinationY = tmp2[1];
+						} else {
+
+							for(let mapidx:number = 0; mapidx<destinationLocation.maps.length; mapidx++) {
+								// we set this so that we can later give the proper reason for why we cannot go
+								let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[mapidx], ai.robot);
+								// ensure that the target location is actually outside of the specified location:
+								let tmp3location:AILocation = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
+								if (tmp3 != null && 
+									tmp3location != startLocation &&
+									!ai.game.location_in[ai.game.locations.indexOf(tmp3location)][ai.game.locations.indexOf(startLocation)]) {
+									destinationMap = destinationLocation.maps[mapidx];
+									destinationX = tmp3[0];
+									destinationY = tmp3[1];
+									break;
+								}
+							}
+						}
+					}
+				}
 			}
 
 		} else {

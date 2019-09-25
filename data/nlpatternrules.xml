@@ -2789,7 +2789,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] 'please'] '!'*
     		         #derefFromContext(CO, OBJECT)"/>
 
-	<NLPattern name="perf.request.action1"
+	<NLPattern name="perf.request.action-2-objects"
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -2821,17 +2821,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"/>
-	<!--NLPattern name="perf.request.action-put-in"
-			   head="perf.request.action(LISTENER, action.put-in(LISTENER, OBJECT2, OBJECT3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'please') [',']]
-			   		 verb('verb.put'[symbol], N, [second-person], T)
-			   		 nounPhrase(X2, N2, P2, C2)
-			   		 (preposition('space.at'[space.at]) | preposition('space.on.top.of'[space.on.top.of])) 
-			   		 nounPhrase(X3, N3, P3, C3)
-			   		 #derefFromContext(C2, OBJECT2)
-			   		 #derefFromContext(C3, OBJECT3)"/-->
 	<NLPattern name="perf.request.action-propernoun"
 			   head="perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, NOUN))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2842,7 +2831,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 properNounCompound(NOUN, N3)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
-	<NLPattern name="perf.request.action1-negated"
+	<NLPattern name="perf.request.action-2-objects-negated"
 			   head="perf.request.action(LISTENER, #not(#cons(VERB, LISTENER, OBJECT2, OBJECT3)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -2854,7 +2843,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X3, N3, P3, C3) '!'*
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"/>
-	<NLPattern name="perf.request.action1-negated"
+	<NLPattern name="perf.request.action-object-noun-negated"
 			   head="perf.request.action(LISTENER, #not(#cons(VERB:'verb.call'[symbol], LISTENER, OBJECT2, NOUN)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -3047,6 +3036,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ['with' 'me']
 			   		 #derefFromContext(C2, OBJECT)"/>
 
+    <NLPattern name="perf.request.action-go-outside-object"
+    		   head="perf.request.action(LISTENER, verb.leave(LISTENER, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.go'[symbol], N, [second-person], T)|verb('verb.get'[symbol], N, [second-person], T))
+    		   		 'outside'
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		         [[','] 'please'] ('!'|'?')*
+    		         #derefFromContext(C2, OBJECT)"
+    		   priority="150"/>
 
     <!-- requests with phrasal verbs -->
     <NLPattern name="perf.request.action-phrasal1"
@@ -4509,6 +4509,22 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 ('!'|'?')*
 					 #derefFromContext(C2, SUBJECT)
 					 #derefFromContext(C4, OBJECT)"/>
+
+    <NLPattern name="perf.q.how-go-outside-object"
+    		   head="perf.q.how(LISTENER, verb.leave(SUBJECT,OBJECT))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
+		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
+		           	 		 verb('verb.shall'[symbol], N, P, T))]
+		           	 nounPhrase(X2, N2, P2, C2)
+		           	 (verb('verb.go'[symbol], N3, P3, [infinitive-tense])|verb('verb.get'[symbol], N3, P3, [infinitive-tense])) 
+		           	 'outside'
+					 nounPhrase(X4, N4, P4, C4) ('!'|'?')*
+					 #derefFromContext(C2, SUBJECT)
+					 #derefFromContext(C4, OBJECT)"/>
+
     <!-- Noun phrases: 
     	X: the root "noun" or "proper noun"
     	N: the grammatical number (singular/prular)

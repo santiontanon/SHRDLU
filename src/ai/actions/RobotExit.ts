@@ -5,14 +5,15 @@ class RobotExit_IntentionAction extends IntentionAction {
 		if (intention.functor.is_a(ai.o.getSort("verb.leave"))) {
 			if (intention.attributes.length>=2 &&
 				(intention.attributes[1] instanceof ConstantTermAttribute)) {
-				let id:string = (<ConstantTermAttribute>intention.attributes[1]).value;
-				let targetObject:A4Object = (<RobotAI>ai).game.findObjectByIDJustObject(id);
-				if (targetObject != null &&
-					targetObject.map == (<RobotAI>ai).robot.map) {
+				//let id:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+				//let targetObject:A4Object = (<RobotAI>ai).game.findObjectByIDJustObject(id);
+				//if (targetObject != null &&
+				//	targetObject.map == (<RobotAI>ai).robot.map) {
 					return true;
-				}
+				//}
 			}
-			if ((<RobotAI>ai).robot.isInVehicle() && intention.attributes.length == 1) {
+			if (/*(<RobotAI>ai).robot.isInVehicle() && */
+				intention.attributes.length == 1) {
 				return true;
 			}
 		}
@@ -27,11 +28,23 @@ class RobotExit_IntentionAction extends IntentionAction {
 		let requester:TermAttribute = ir.requester;
 
 		if (!ai.robot.isInVehicle()) {
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			if (intention.attributes.length == 1) {
+				let term2:Term = new Term(ai.o.getSort("verb.go"), [intention.attributes[0], new VariableTermAttribute(ai.o.getSort("space.outside"), null)]);
+				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
+				return true;				
+			} else if (intention.attributes.length == 2) {
+				let term2:Term = new Term(ai.o.getSort("verb.go"), [intention.attributes[0], 
+																	new TermTermAttribute(new Term(ai.o.getSort("space.outside.of"), 
+																						  		   [intention.attributes[1]]))]);
+				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
+				return true;				
+			} else {
+				if (requester != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				}
+				return true;
 			}
-			return true;
 		}		
 
 		if (ai.selfID == "shrdlu" && !ai.visionActive) {

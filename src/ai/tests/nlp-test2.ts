@@ -1056,6 +1056,8 @@ NLParseTestUnifyingListener("No, I don't", o.getSort("performative"),  context, 
 NLParseTestUnifyingListener("Yes I do", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol])");
 NLParseTestUnifyingListener("can I clean keys?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(SOMEONE:'1'[#id], verb.clean(SOMEONE, 'hypothetical-object'[#id])), key('hypothetical-object'[#id]))"); 
 NLParseTestUnifyingListener("can I clean keys in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, 'hypothetical-object'[#id])), #and(key('hypothetical-object'[#id]), space.at('hypothetical-character'[#id], 'room1'[#id])))"); 
+NLParseTestUnifyingListener("how do i get outside the kitchen", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.leave('1'[#id], 'room1'[#id]))"); 
+NLParseTestUnifyingListener("go outside the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.leave('etaoin'[#id], 'room1'[#id]))"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
