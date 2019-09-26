@@ -399,52 +399,30 @@ class NLContext {
 			perf.functor.is_a(o.getSort("perf.sentiment")) ||
 			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
 			perf.functor.is_a(o.getSort("perf.moreresults")) ||
-			perf.functor.is_a(o.getSort("perf.request.repeataction"))) {
-			if (perf.attributes[0] instanceof ConstantTermAttribute) {
-				IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
-			}
-		} else if (perf.functor.is_a(o.getSort("perf.inform")) ||
-				   perf.functor.is_a(o.getSort("perf.q.predicate")) ||
-				   perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
-				   perf.functor.is_a(o.getSort("perf.request.action")) ||
-				   perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
-				   perf.functor.is_a(o.getSort("perf.q.action")) ||
-				   perf.functor.is_a(o.getSort("perf.q.why")) ||
-				   perf.functor.is_a(o.getSort("perf.q.how"))) {
+			perf.functor.is_a(o.getSort("perf.request.repeataction")) ||
+			perf.functor.is_a(o.getSort("perf.inform")) ||
+		    perf.functor.is_a(o.getSort("perf.q.predicate")) ||
+		    perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
+		    perf.functor.is_a(o.getSort("perf.request.action")) ||
+		    perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
+		    perf.functor.is_a(o.getSort("perf.q.action")) ||
+		    perf.functor.is_a(o.getSort("perf.q.why")) ||
+		    perf.functor.is_a(o.getSort("perf.q.how")) ||
+			perf.functor.is_a(o.getSort("perf.q.query")) ||
+	 	    perf.functor.is_a(o.getSort("perf.q.howmany")) ||
+			perf.functor.is_a(o.getSort("perf.rephrase.entity")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whereis")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whereto")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whois.name")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whatis.noname")) ||
+			perf.functor.is_a(o.getSort("perf.q.when"))) {
 			for(let i:number = 0;i<perf.attributes.length;i++) {
 				if (perf.attributes[i] instanceof ConstantTermAttribute) {
-					IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
+					IDs.push(<ConstantTermAttribute>(perf.attributes[i]));
 				} else if (perf.attributes[i] instanceof TermTermAttribute) {
-					this.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, IDs, o);
-				}
-			}
-		} else if (perf.functor.is_a(o.getSort("perf.q.query")) ||
-				   perf.functor.is_a(o.getSort("perf.q.howmany"))) {
-			if (perf.attributes[0] instanceof ConstantTermAttribute) {
-				IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
-			}
-			// search for IDs inside of the clause:
-			if (perf.attributes[2] instanceof TermTermAttribute) {
-				this.searchForIDsInClause((<TermTermAttribute>perf.attributes[2]).term, IDs, o);
-			}
-		} else if (perf.functor.is_a(o.getSort("perf.q.whereis")) ||
-				   perf.functor.is_a(o.getSort("perf.q.whereto")) ||
-				   perf.functor.is_a(o.getSort("perf.q.whois.name")) ||
-				   perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
-				   perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
-				   perf.functor.is_a(o.getSort("perf.q.whatis.noname"))) {
-			if (perf.attributes[0] instanceof ConstantTermAttribute) {
-				IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
-			}
-			if (perf.attributes[1] instanceof ConstantTermAttribute) {
-				IDs.push(<ConstantTermAttribute>(perf.attributes[1]));
-			}
-		} else if (perf.functor.is_a(o.getSort("perf.q.when"))) {
-			for(let i:number = 0;i<perf.attributes.length;i++) {
-				if (perf.attributes[i] instanceof ConstantTermAttribute) {
-					IDs.push(<ConstantTermAttribute>(perf.attributes[0]));
-				} else if (perf.attributes[i] instanceof TermTermAttribute) {
-					this.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, IDs, o);
+					NLContext.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, IDs, o);
 				}
 			}
 		} else {
@@ -566,7 +544,17 @@ class NLContext {
 	}
 
 
-	searchForIDsInClause(clause:Term, IDs:ConstantTermAttribute[], o:Ontology)
+	lastPerformativeByExcept(speaker:string, perf:Term) : NLContextPerformative
+	{
+		for(let i:number = 0;i<this.performatives.length;i++) {
+			if (this.performatives[i].speaker == speaker &&
+				this.performatives[i].performative != perf) return this.performatives[i];
+		}
+		return null;
+	}
+
+
+	static searchForIDsInClause(clause:Term, IDs:ConstantTermAttribute[], o:Ontology)
 	{
 //		console.log("searchForIDsInClause");
 		for(let i:number = 0;i<clause.attributes.length;i++) {
@@ -575,7 +563,7 @@ class NLContext {
 //					console.log("searchForIDsInClause: " + clause.attributes[0]);
 				IDs.push(<ConstantTermAttribute>(clause.attributes[i]));
 			} else if (clause.attributes[i] instanceof TermTermAttribute) {
-				this.searchForIDsInClause((<TermTermAttribute>clause.attributes[i]).term, IDs, o);
+				NLContext.searchForIDsInClause((<TermTermAttribute>clause.attributes[i]).term, IDs, o);
 			}
 		}
 	}

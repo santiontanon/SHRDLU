@@ -632,13 +632,13 @@ class Term {
 
 
     // same as equals, but considers the #and functor in a spceial way, so that #and(X, #and(Y,Z)) is the same as #and(#and(X, Y), Z)
-    equalsConsideringAnd(t:Term) : boolean
+    equalsConsideringAndList(t:Term) : boolean
     {
-        return this.equalsConsideringAndInternal(t, new Bindings());
+        return this.equalsConsideringAndListInternal(t, new Bindings());
     }
 
 
-    equalsConsideringAndInternal(t:Term, bindings:Bindings) : boolean
+    equalsConsideringAndListInternal(t:Term, bindings:Bindings) : boolean
     {
         // if they have a different number of attributes -> return false
         if (this.attributes.length != t.attributes.length) return false;
@@ -646,17 +646,18 @@ class Term {
         // if functors do not match -> return false
         if (this.functor != t.functor) return false;
 
-        if (this.functor.name == "#and") {
+        if (this.functor.name == "#and" ||
+            this.functor.name == "#list") {
             // special case!
-            var tl1:TermAttribute[] = Term.elementsInAndList(this);
-            var tl2:TermAttribute[] = Term.elementsInAndList(t);
+            var tl1:TermAttribute[] = Term.elementsInGenericList(this, this.functor.name);
+            var tl2:TermAttribute[] = Term.elementsInGenericList(t, this.functor.name);
 
             if (tl1.length != tl2.length) return false;
             for(let t1 of tl1) {
                 var found:TermAttribute = null;
                 for(let t2 of tl2) {
                     let bl:number = bindings.l.length;
-                    if (Term.equalsAttributeConsideringAnd(t1,t2,bindings)) {
+                    if (Term.equalsAttributeConsideringAndList(t1,t2,bindings)) {
                         found = t2;
                         break;
                     }
@@ -671,7 +672,7 @@ class Term {
                 var att1:TermAttribute = this.attributes[i];
                 var att2:TermAttribute = t.attributes[i];
 
-                if (!Term.equalsAttributeConsideringAnd(att1, att2, bindings)) return false;
+                if (!Term.equalsAttributeConsideringAndList(att1, att2, bindings)) return false;
             }
         }
 
@@ -681,15 +682,27 @@ class Term {
 
     static elementsInAndList(list:Term) : TermAttribute[]
     {
+        return Term.elementsInGenericList(list, "#and");
+    }
+
+
+    static elementsInListList(list:Term) : TermAttribute[]
+    {
+        return Term.elementsInGenericList(list, "#list");
+    }
+
+
+    static elementsInGenericList(list:Term, functor:string) : TermAttribute[]
+    {
         var output:TermAttribute[] = [];
 
-        while(list.functor.name == "#and") {
+        while(list.functor.name == functor) {
             if (list.attributes[0] instanceof TermTermAttribute &&
-                (<TermTermAttribute>list.attributes[0]).term.functor.name == "#and") {
+                (<TermTermAttribute>list.attributes[0]).term.functor.name == functor) {
                 output.push(list.attributes[1]);
                 list = (<TermTermAttribute>list.attributes[0]).term;
             } else if (list.attributes[1] instanceof TermTermAttribute &&
-                (<TermTermAttribute>list.attributes[1]).term.functor.name == "#and") {
+                (<TermTermAttribute>list.attributes[1]).term.functor.name == functor) {
                 output.push(list.attributes[0]);
                 list = (<TermTermAttribute>list.attributes[1]).term;
             } else {
@@ -740,7 +753,7 @@ class Term {
     }
 
 
-    static equalsAttributeConsideringAnd(att1:TermAttribute, att2:TermAttribute, bindings:Bindings) : boolean
+    static equalsAttributeConsideringAndList(att1:TermAttribute, att2:TermAttribute, bindings:Bindings) : boolean
     {
         // - if they are both constants, and are different -> return false
         if ((att1 instanceof ConstantTermAttribute) &&
@@ -753,7 +766,7 @@ class Term {
         // - if they are both terms -> recursive call
         if ((att1 instanceof TermTermAttribute) &&
             (att2 instanceof TermTermAttribute)) {
-            return att1.term.equalsConsideringAndInternal(att2.term, bindings);
+            return att1.term.equalsConsideringAndListInternal(att2.term, bindings);
         }
 
         // - if one of them is a variable that does not occur inside the other (occurs check) -> add binding

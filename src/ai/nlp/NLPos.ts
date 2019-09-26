@@ -391,6 +391,7 @@ class POSParser {
       "a tiny bit",
 
       // random other words:
+      "the whole",
       "artificial intelligence",
       "artificial intelligences",
       "atari 2600",
@@ -465,6 +466,7 @@ class POSParser {
     // determiners:
     this.addTokenPOS(new PartOfSpeech("a", "a", Term.fromString("indefinite-article('a'[symbol], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("an", "a", Term.fromString("indefinite-article('a'[symbol], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("the whole", "the", Term.fromString("definite-article('the'[symbol], [grammatical-number])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("the", "the", Term.fromString("definite-article('the'[symbol], [grammatical-number])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("some", "some", Term.fromString("indefinite-article('some'[symbol], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("any", "article.any", Term.fromString("indefinite-article('article.any'[symbol], [grammatical-number])", o), 1.0));
@@ -1371,6 +1373,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.clean", "launder","laundered","laundered","laundered","laundering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.clean", "wash","washes","washed","washed","washing", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("action.talk","to", "talk","talks","talk","talk","talking", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1506,7 +1509,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
-    this.addPhrasalVerbPOS("action.talk","to", "talk","talks","talk","talk","talking", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):
     this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));

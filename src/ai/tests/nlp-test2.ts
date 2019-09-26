@@ -58,7 +58,7 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
 //        if (parses.length > 1) console.warn("Multiple parses for sentence '" + sentence + "'");
         var expectedResult:Term = Term.fromString(expectedResultStr, o);
         var found:boolean = false;
-        if (parse.result.equalsConsideringAnd(expectedResult)) found = true;
+        if (parse.result.equalsConsideringAndList(expectedResult)) found = true;
         if (!found) {
             console.log(sentence + "\n" + parses.length + " parses:");
             for(let p of parses) {
@@ -124,7 +124,7 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
         //console.log("result BEFORE unifyListener: " + parse.result);
         parse.result = parser.unifyListener(parse.result, listener);
         //console.log("result AFTER unifyListener: " + parse.result);
-        if (parse.result.equalsConsideringAnd(expectedResult)) found = true;
+        if (parse.result.equalsConsideringAndList(expectedResult)) found = true;
         if (!found) {
             console.log(sentence + "\n" + parses.length + " parses:");
             for(let p of parses) {
@@ -1058,6 +1058,11 @@ NLParseTestUnifyingListener("can I clean keys?", o.getSort("performative"),  con
 NLParseTestUnifyingListener("can I clean keys in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, 'hypothetical-object'[#id])), #and(key('hypothetical-object'[#id]), space.at('hypothetical-character'[#id], 'room1'[#id])))"); 
 NLParseTestUnifyingListener("how do i get outside the kitchen", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.leave('1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("go outside the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.leave('etaoin'[#id], 'room1'[#id]))"); 
+NLParseTestUnifyingListener("where is the whole bedroom?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'room2'[#id])");
+NLParseTestUnifyingListener("No I meant the whole ship", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], '2'[#id])");
+NLParseTestUnifyingListener("I wanted to say the whole ship", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], '2'[#id])");
+
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

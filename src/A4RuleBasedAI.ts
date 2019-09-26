@@ -498,7 +498,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				if (perf.performative.attributes[i] instanceof ConstantTermAttribute) {
 					IDs.push(<ConstantTermAttribute>(perf.performative.attributes[0]));
 				} else if (perf.performative.attributes[i] instanceof TermTermAttribute) {
-					context.searchForIDsInClause((<TermTermAttribute>perf.performative.attributes[i]).term, IDs, context.ai.o);
+					NLContext.searchForIDsInClause((<TermTermAttribute>perf.performative.attributes[i]).term, IDs, context.ai.o);
 				}
 			}
 			let locations:AILocation[] = [];

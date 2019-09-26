@@ -954,6 +954,35 @@ class RuleBasedAI {
 				let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
 				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 
+			} else if (perf2.functor.name == "perf.rephrase.entity" &&
+					   perf2.attributes.length == 2) {
+				// Find the previous performative:
+				let previous:NLContextPerformative = context.lastPerformativeByExcept(context.speaker, perf2);
+				if (previous == null) {
+					// do not understand:
+					this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.time_in_seconds));
+				} else {
+					// see if it has a single mention to an entity (other than attribute 0, which is the listener):
+					let previousPerf:Term = previous.performative;
+					let IDs:ConstantTermAttribute[] = [];
+					for(let i:number = 1;i<previousPerf.attributes.length;i++) {
+						if (previousPerf.attributes[i] instanceof ConstantTermAttribute) {
+							IDs.push(<ConstantTermAttribute>(previousPerf.attributes[i]));
+						} else if (previousPerf.attributes[i] instanceof TermTermAttribute) {
+							NLContext.searchForIDsInClause((<TermTermAttribute>previousPerf.attributes[i]).term, IDs, this.o);
+						}
+					}
+					console.log("IDs: " + IDs);
+					if (IDs.length == 1) {
+						// repeat the previous performative, but replacing the previous ID by the new ID:
+						let newPerf:Term = previousPerf.clone([]);
+						this.replaceID(newPerf, IDs[0], perf2.attributes[1]);
+						return this.reactToPerformative(newPerf, speaker, context);
+					} else {
+						// do not understand:
+						this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.time_in_seconds));
+					}
+				}
 			} else {
 				console.error("RuleBasedAI.reactToPerformative: unknown performative " + perf2);
 			}
@@ -966,6 +995,20 @@ class RuleBasedAI {
 		context.expectingFarewell = false;		
 
 		return reaction;
+	}
+
+
+	replaceID(t:Term, id:ConstantTermAttribute, replacement:TermAttribute)
+	{
+		for(let i:number = 0;i<t.attributes.length;i++) {
+			if (t.attributes[i] instanceof ConstantTermAttribute) {
+				if (t.attributes[i] == id) {
+					t.attributes[i] = replacement;
+				}
+			} else if (t.attributes[i] instanceof TermTermAttribute) {
+				this.replaceID((<TermTermAttribute>t.attributes[i]).term, id, replacement);
+			}
+		}
 	}
 
 

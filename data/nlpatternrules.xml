@@ -4525,6 +4525,31 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C2, SUBJECT)
 					 #derefFromContext(C4, OBJECT)"/>
 
+	<!-- perf.rephrase.entity patterns --> 
+    <NLPattern name="perf.rephrase.entity"
+    		   head="perf.rephrase.entity(LISTENER, OBJECT)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 ['no' [(','|'!'*)]]
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
+		           	 nounPhrase(X3, N3, P3, C3)
+					 ('!'|'?')*
+					 #derefFromContext(C, SPEAKER)
+					 #derefFromContext(C3, OBJECT)"
+			   priority="200"/>
+    <NLPattern name="perf.rephrase.entity2"
+    		   head="perf.rephrase.entity(LISTENER, OBJECT)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 ['no' [(','|'!'*)]]
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.want'[symbol], N2, P2, T2) 'to' 'say'
+		           	 nounPhrase(X3, N3, P3, C3)
+					 ('!'|'?')*
+					 #derefFromContext(C, SPEAKER)
+					 #derefFromContext(C3, OBJECT)"/>
+
     <!-- Noun phrases: 
     	X: the root "noun" or "proper noun"
     	N: the grammatical number (singular/prular)

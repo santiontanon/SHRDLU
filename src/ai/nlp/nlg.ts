@@ -2905,5 +2905,5 @@ class NLGenerator {
 	nlg_cache_sort_measuringunit:Sort = null;
 
 	consonants:string = "qwrtypsdfghjklzxcvbnmQWRTYPSDFGHJKLZXCVBNM";
-	consonants_for_a_vs_an:string = "qwrtpsdfgjklzxcvbnmQWRTPSDFGJKLZXCVBNM";
+	consonants_for_a_vs_an:string = "qwrtpsdfghjklzxcvbnmQWRTPSDFGJKLZXCVBNM";
 }
