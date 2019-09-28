@@ -2001,7 +2001,7 @@ class A4Script {
             }
             case A4_SCRIPT_GAINITEM:
             {
-                if (this.ID != null) xmlString += " inventory=\"" + this.ID + "\"";
+                if (this.ID != null) xmlString += " id=\"" + this.ID + "\"";
                 if (this.objectDefinition!=null) {
                     xmlString +=">\n";
                     tagClosed = true;

@@ -284,7 +284,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 			        	break;
 			        }
 				}
-				destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
+				if (destinationMap != null) destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
 				if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 			} else {
 				// we should never get here:

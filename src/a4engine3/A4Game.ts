@@ -1007,7 +1007,7 @@ class A4Game {
             if (this.currentPlayer.map.name == "Aurora Station" ||
                 this.currentPlayer.isInVehicle()) {
                 if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                    this.suit_oxygen+=4;
+                    this.suit_oxygen+=8;
                     this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
                 }
             } else {
@@ -1025,7 +1025,7 @@ class A4Game {
             }
         } else {
             if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                this.suit_oxygen+=4;
+                this.suit_oxygen+=8;
                 this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
             }
         }

@@ -201,10 +201,7 @@ class ShrdluGameScript {
 	skip_to_act_2_crash_site()
 	{
 		this.skip_to_act_2_shrdluback_repair_outside();
-
-		this.game.shrdluAI.allowPlayerInto("location-as29","COMMAND");
-		this.game.qwertyAI.allowPlayerInto("location-as29","COMMAND");
-		this.game.etaoinAI.allowPlayerInto("location-as29","COMMAND");
+		this.updateKnowledgeAfterRepairingCommTower();
 		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
 		this.game.currentPlayer.warp(40*8, 12*8, this.game.maps[6]);	// crash site
@@ -1257,8 +1254,9 @@ class ShrdluGameScript {
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					let v:TermAttribute = null;
-					let queryTerms:TermAttribute[] = null;
-					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis"))) {
+					let toolsFound:boolean = false;
+					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis")) && perf.attributes.length == 2) {
+						let queryTerms:TermAttribute[] = null;
 						v = perf.attributes[1];
 						if (v instanceof ConstantTermAttribute) {
 							queryTerms = [v];
@@ -1266,27 +1264,36 @@ class ShrdluGameScript {
 							let query:Term = (<TermTermAttribute>v).term;
 							queryTerms = NLParser.elementsInList(query, "#and");							
 						}
+						if (queryTerms != null) {
+							for(let ta of queryTerms) {
+								if ((ta instanceof ConstantTermAttribute) &&
+									(<ConstantTermAttribute>ta).value == "wrench") toolsFound = true;
+								if ((ta instanceof ConstantTermAttribute) &&
+									(<ConstantTermAttribute>ta).value == "screwdriver") toolsFound = true;
+								if ((ta instanceof TermTermAttribute) &&
+									(<TermTermAttribute>ta).term.functor.name == "tool") toolsFound = true;
+							}
+						}
+					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis")) && perf.attributes.length == 4) {
+						if ((perf.attributes[1] instanceof VariableTermAttribute) &&
+							(perf.attributes[3] instanceof TermTermAttribute)) {
+							let queryTerm:Term = (<TermTermAttribute>perf.attributes[3]).term;
+							if (queryTerm.functor.is_a(this.game.ontology.getSort("tool")) &&
+								queryTerm.attributes.length == 1) {
+								toolsFound = true;
+							}
+						}
 					}
-					if (queryTerms != null) {
-						let toolsFound:boolean = false;
-						for(let ta of queryTerms) {
-							if ((ta instanceof ConstantTermAttribute) &&
-								(<ConstantTermAttribute>ta).value == "wrench") toolsFound = true;
-							if ((ta instanceof ConstantTermAttribute) &&
-								(<ConstantTermAttribute>ta).value == "screwdriver") toolsFound = true;
-							if ((ta instanceof TermTermAttribute) &&
-								(<TermTermAttribute>ta).term.functor.name == "tool") toolsFound = true;
-						}
-						if (toolsFound) {
-							this.act_1_asked_about_tools = true;
+					// perf.q.whereis(LISTENER_0:[any], SUBJECT_0:[any], LOCATION_0:[any], V3:tool(SUBJECT_0))
+					if (toolsFound) {
+						this.act_1_asked_about_tools = true;
 //							console.log("this.act_1_asked_about_tools = true");
-							this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'maintenance-key'[#id]))");
-							let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
-							this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
-							this.game.shrdluAI.allowPlayerInto("location-maintenance","MAINTENANCE");
-							this.game.qwertyAI.allowPlayerInto("location-maintenance","MAINTENANCE");
-							this.game.etaoinAI.allowPlayerInto("location-maintenance","MAINTENANCE");
-						}
+						this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'maintenance-key'[#id]))");
+						let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
+						this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
+						this.game.shrdluAI.allowPlayerInto("location-maintenance","MAINTENANCE");
+						this.game.qwertyAI.allowPlayerInto("location-maintenance","MAINTENANCE");
+						this.game.etaoinAI.allowPlayerInto("location-maintenance","MAINTENANCE");
 					}
 				}
 			}
@@ -2047,24 +2054,8 @@ class ShrdluGameScript {
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
 		
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-				this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
+				this.updateKnowledgeAfterRepairingCommTower();
 
-				this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
-				this.etaoinSays("perf.request.action('david'[#id], #and(V1:verb.go-to('david'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('david'[#id]))))");
-				this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
-
-				let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("command-key");
-				this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
-				this.game.shrdluAI.allowPlayerInto("location-as29", "COMMAND");
-				this.game.qwertyAI.allowPlayerInto("location-as29", "COMMAND");
-				this.game.etaoinAI.allowPlayerInto("location-as29", "COMMAND");
-				this.game.comm_tower_repaired = true;
 				this.act_2_state = 220;
 			}
 			break;
@@ -2222,6 +2213,48 @@ class ShrdluGameScript {
 		} else {
 			this.act_2_repair_shuttle_state_timer = 0;
 		}
+	}
+
+
+	updateKnowledgeAfterRepairingCommTower()
+	{
+		// remove all the knowledge about communicator-range:
+		{
+			let toRemove:Sentence[] = [];
+			let s:Sentence = this.game.etaoinAI.longTermMemory.firstMatch(this.game.ontology.getSort("space.at"), 2, this.game.ontology);
+			while(s != null) {
+				if (s.terms.length == 1 &&
+					(s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
+					(<ConstantTermAttribute>s.terms[0].attributes[1]).value == "communicator-range") {
+					toRemove.push(s);
+				}
+				s = this.game.etaoinAI.longTermMemory.nextMatch();
+			}
+			for(let s2 of toRemove) {
+				this.game.etaoinAI.longTermMemory.removeSentence(s2);
+			}
+		}
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('aurora'[#id],'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("space.at(X,'aurora'[#id]);~space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
+
+		this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
+		this.etaoinSays("perf.request.action('david'[#id], #and(V1:verb.go-to('david'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('david'[#id]))))");
+		this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
+
+		let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("command-key");
+		this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
+		this.game.shrdluAI.allowPlayerInto("location-as29", "COMMAND");
+		this.game.qwertyAI.allowPlayerInto("location-as29", "COMMAND");
+		this.game.etaoinAI.allowPlayerInto("location-as29", "COMMAND");
+		this.game.comm_tower_repaired = true;
 	}
 
 
@@ -3580,6 +3613,10 @@ class ShrdluGameScript {
     	for(let xml_tmp of getElementChildrenByTag(xml,"thoughtBubbleQueue")) {
     		this.thoughtBubbleQueue.push(xml_tmp.getAttribute("value"));
     	}
+
+		this.contextEtaoin = this.game.etaoinAI.contextForSpeaker(this.playerID);
+		this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+		this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
     }
 
 
