@@ -1512,7 +1512,7 @@ scriptFunctions[A4_SCRIPT_EMBARK_ON_GARAGE] = function(script:A4Script, o:A4Obje
     if (o.sort.is_a_string("garage-rover")) {
         game.takeRoverOutOfTheGarage(<A4Vehicle>o, otherCharacter);
     } else if (o.sort.is_a_string("garage-shuttle")) {
-        // ...
+        game.takeShuttleToTrantorCrater(<A4Vehicle>o, otherCharacter);
     }
     return SCRIPT_FINISHED;
 }

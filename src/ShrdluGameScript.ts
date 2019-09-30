@@ -36,6 +36,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
+			//this.skip_to_end_of_act_2();
 		//}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -119,7 +120,7 @@ class ShrdluGameScript {
 		this.game.qwertyAI.robot.inventory.splice(1,1);
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("workingspacesuit", this.game, false, false));
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("full-battery", this.game, false, false));
-		this.game.setStoryStateVariable("act1-corpse", "discovered");
+		this.game.setStoryStateVariable("act1-corpse", "discovered");		
 
 		let term1:Term = Term.fromString("verb.happen('etaoin'[#id], erased('etaoin-memory'[#id]))", this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term1, PERCEPTION_PROVENANCE);
@@ -221,6 +222,39 @@ class ShrdluGameScript {
 		let engine:A4Object = this.game.objectFactory.createObject("shuttle-engine", this.game, false, false);
 		engine.ID = "shuttle-engine";
 		this.game.shrdluAI.robot.inventory.push(engine);
+	}
+
+	skip_to_end_of_act_2()
+	{
+		this.skip_to_act_2_crash_site();
+		this.game.currentPlayer.x = 864;
+		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);	// garage
+		this.game.shrdluAI.robot.warp(864-16, 40, this.game.maps[0]);	// garage
+		this.act_2_state = 223;
+		let item:A4Object = this.game.objectFactory.createObject("fixed-datapad", this.game, false, false);
+		item.ID = "shuttle-datapad";
+		this.game.currentPlayer.inventory.push(item);
+		// replace the background knowledge:
+		for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
+			let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("shuttle-datapad('shuttle-datapad'[#id])", this.game.ontology));
+			if (se != null) se.sentence.terms[0].functor = this.game.ontology.getSort("fixed-datapad");
+		}
+		this.act_2_datapad_state = 0;
+		this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");
+		this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");
+		this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-datapad.xml");		
+		this.game.setStoryStateVariable("act2-datapad", "read");
+
+		// swap the shuttle:
+		let shuttle:A4Object = this.game.findObjectByIDJustObject("garage-shuttle");
+        shuttle.map.removeObject(shuttle);
+		this.game.requestDeletion(shuttle);
+        let newShuttle:A4Vehicle = <A4Vehicle>this.game.objectFactory.createObject("garage-shuttle", this.game, true, false);
+        newShuttle.ID = shuttle.ID;
+        newShuttle.direction = 2;
+        let map:A4Map = this.game.getMap("Aurora Station")
+        newShuttle.warp(shuttle.x, shuttle.y, map);
+		this.act_2_repair_shuttle_state = 2;
 	}
 
 
@@ -2096,7 +2130,7 @@ class ShrdluGameScript {
 			break;
 
 		case 223:
-			// end of act 1!
+			// end of act 2!
 			if (this.game.currentPlayer.isIdle() && 
 				this.game.getStoryStateVariable("act") == "act3") {
 				this.game.introact_request = 3;

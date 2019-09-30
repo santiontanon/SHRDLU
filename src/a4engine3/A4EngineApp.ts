@@ -1115,6 +1115,7 @@ class A4EngineApp {
                     this.introact_state_timer = 0;
                     if (act >= 2) this.game.gameScript.act = "" + act;
 
+                    /*
                     //if (act == 2) {
                     if (act == 3) {
                         this.introact_state = 2;
@@ -1147,6 +1148,7 @@ class A4EngineApp {
 
                         return this.state;
                     }
+                    */
                     return A4ENGINE_STATE_GAME;
                 }
                 break;

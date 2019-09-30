@@ -2282,6 +2282,22 @@ class A4Game {
     }
 
 
+    takeShuttleToTrantorCrater(shuttle:A4Vehicle, player:A4Character) : boolean
+    {
+        // ...
+        
+        return true;
+    }
+
+
+    takeShuttleFromTrantorCrater(shuttle:A4Vehicle, player:A4Character) : boolean
+    {
+        // ....
+
+        return true;
+    }
+
+
     putRoverBackInGarage(rover:A4Vehicle) : boolean
     {
         // 1) spawn a new vehicle on the garage
