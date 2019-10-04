@@ -1039,6 +1039,7 @@ class A4Game {
 
         this.cycle++;
         this.in_game_seconds++;    // we keep a separate count from cycles, since in some game scenes, time might advance faster
+        if (this.cycles_without_redrawing > 0) this.cycles_without_redrawing--;
 
         return true;
     }
@@ -1056,6 +1057,7 @@ class A4Game {
 
         // do not draw anything unless we have already executed a cycle:
         if (this.cycle==0) return;
+        if (this.cycles_without_redrawing>0) return;
 
         this.drawWorld(screen_width, split+tileSize);
         this.drawHUD(screen_width, screen_height, split);
@@ -2589,6 +2591,7 @@ class A4Game {
     objectDefinitionFiles:string[] = [];
     
 	cycle:number = 0;
+    cycles_without_redrawing:number = 0;
     gameComplete:boolean = false;
     gameComplete_ending_ID:string = null;
 

@@ -32,14 +32,15 @@ class GLTManager {
 
     getPiece(name:string, x:number, y:number, width:number, height:number):GLTile
     {
-        var tile:GLTile = this.hash[name+"-"+x+"-"+y+"-"+width+"-"+height];
+        let tileName:string = name+"-"+x+"-"+y+"-"+width+"-"+height;
+        var tile:GLTile = this.hash[tileName];
         if (tile!=null) return tile;
 
         var img:HTMLImageElement = this.getImage(name);
 
         if (img.width!=0) {
             tile = new GLTile(img, x, y, width, height);
-            this.hash[name] = tile;
+            this.hash[tileName] = tile;
             return tile;
         }
         return null;
@@ -48,14 +49,15 @@ class GLTManager {
 
     getPieceDark(name:string, x:number, y:number, width:number, height:number):GLTile
     {
-        var tile:GLTile = this.hash[name+"-"+x+"-"+y+"-"+width+"-"+height];
+        let tileName:string = name+"-"+x+"-"+y+"-"+width+"-"+height+"-dark";
+        var tile:GLTile = this.hash[tileName];
         if (tile!=null) return tile;
 
         var img:HTMLImageElement = this.getImageDark(name);
 
         if (img.width!=0) {
             tile = new GLTile(img, x, y, width, height);
-            this.hash[name] = tile;
+            this.hash[tileName] = tile;
             return tile;
         }
         return null;

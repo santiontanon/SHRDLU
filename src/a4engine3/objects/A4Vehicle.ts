@@ -190,8 +190,8 @@ class A4Vehicle extends A4WalkingObject {
                             this.direction == A4_DIRECTION_RIGHT && this.x == 59*this.map.tileWidth) {
                             if (!game.takeShuttleFromTrantorCrater(this)) {
                                 // we shlud never reach here!
-                                // ...
                             }
+                            game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                         }
                         break;
                     }

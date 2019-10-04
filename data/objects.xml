@@ -1015,9 +1015,11 @@
 							<talkOther text="Ok! Let's go see that second distress signal!" thought="true" wait="true"/>
 							<storyState scope="game" variable="act" value="act3"/>
 							<delay cycles="1"/> <!-- The delay is to prevent a graphical glitch that shows the rover outside of the garage, before showing ACT 3 for one game frame -->
+							<cutScene cutscene="8"/>
 							<embarkOnGarage/>
 						</then>
 						<else>
+							<cutScene cutscene="8"/>
 							<embarkOnGarage/>
 						</else>
 					</if>

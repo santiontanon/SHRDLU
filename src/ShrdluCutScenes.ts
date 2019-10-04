@@ -5,6 +5,8 @@ var CUTSCENE_FUNGI:number = 4;
 var CUTSCENE_MSX:number = 5;
 var CUTSCENE_CRASHED_SHUTTLE:number = 6;
 var CUTSCENE_DATAPAD:number = 7;
+var CUTSCENE_SHUTTLE_TAKEOFF:number = 8;
+var CUTSCENE_SHUTTLE_LAND:number = 9;
 
 
 class ShrdluCutScenes {
@@ -25,6 +27,8 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_MSX) return this.updateCutSceneMSX();
 		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) return this.updateCutSceneCrashedShuttle();
 		if (cutScene == CUTSCENE_DATAPAD) return this.updateCutSceneDatapad();
+		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) return this.updateCutSceneShuttleTakeOff();
+		if (cutScene == CUTSCENE_SHUTTLE_LAND) return this.updateCutSceneShuttleLand();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -38,6 +42,8 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_MSX) this.drawCutSceneMSX(screen_width, screen_height);
 		if (cutScene == CUTSCENE_CRASHED_SHUTTLE) this.drawCutSceneCrashedShuttle(screen_width, screen_height);
 		if (cutScene == CUTSCENE_DATAPAD) this.drawCutSceneDatapad(screen_width, screen_height);
+		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) this.drawCutSceneShuttleTakeOff(screen_width, screen_height);
+		if (cutScene == CUTSCENE_SHUTTLE_LAND) this.drawCutSceneShuttleLand(screen_width, screen_height);
 	}
 
 
@@ -610,6 +616,123 @@ class ShrdluCutScenes {
 		ctx.restore();
 	}
 
+
+	updateCutSceneShuttleTakeOff() : boolean
+	{
+		let stateTimes:number[] = [100, 128, 256, -1];
+
+		this.game.cycles_without_redrawing = 1;	// give the game a cycle after the cutscene before redrawing to avoid some flicker
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneShuttleTakeOff(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-travel1.png", 
+								  "data/cutscene-travel1.png", 
+								  "data/cutscene-travel1.png", 
+								  null];
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+
+			if (this.cutSceneState == 1) {
+				// shuttle taking off:
+				let t:GLTile = this.game.GLTM.getPiece("data/vehicles.png", 80, 144, 40, 26);
+				t.draw(108, 192 - this.cutSceneStateTimer*2)
+	
+				let img2:GLTile = this.game.GLTM.getPiece(stateImgs[this.cutSceneState], 0, 184, 256, 8);
+				if (img2 != null) img2.draw(0,184);
+			}
+
+			if (this.cutSceneState == 2) {
+				// shuttle flying in the distance:
+				let t:GLTile = this.game.GLTM.getPiece("data/vehicles.png", 64, 176, 24, 16);
+				t.draw(256 - this.cutSceneStateTimer*2, 32)
+			}
+		}
+
+		ctx.restore();
+	}
+
+
+	updateCutSceneShuttleLand() : boolean
+	{
+		let stateTimes:number[] = [100, 128, 256, -1];
+
+		this.game.cycles_without_redrawing = 1;	// give the game a cycle after the cutscene before redrawing to avoid some flicker
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneShuttleLand(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-travel1.png", 
+								  "data/cutscene-travel1.png", 
+								  "data/cutscene-travel1.png", 
+								  null];
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+
+			if (this.cutSceneState == 1) {
+				// shuttle flying in the distance:
+				let t:GLTile = this.game.GLTM.getPiece("data/vehicles.png", 40, 176, 24, 16);
+				t.draw(-24 + this.cutSceneStateTimer*2, 32)
+			}
+
+			if (this.cutSceneState == 2) {
+				// shuttle landing:
+				let t:GLTile = this.game.GLTM.getPiece("data/vehicles.png", 120, 176, 40, 28);
+				t.draw(108, -32 + this.cutSceneStateTimer*2)
+	
+				let img2:GLTile = this.game.GLTM.getPiece(stateImgs[this.cutSceneState], 0, 184, 256, 8);
+				if (img2 != null) img2.draw(0,184);
+			}
+		}
+
+		ctx.restore();
+	}
 
 
 	cutSceneState:number = 0;
