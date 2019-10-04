@@ -979,14 +979,31 @@
         <eventRule event="interact">
         	<talkOther text="This rover is missing the wheels!" thought="true"/>
         </eventRule>
-  	</ObjectClass>		
+  	</ObjectClass>	
 
-	<ObjectClass class="garage-shuttle" super="*shuttle,obstacle" name="shuttle">
+	<ObjectClass class="driveable-shuttle" super="*shuttle,vehicle" name="shuttle">
+		<attribute name="tallness" value="16"/>
+		<attribute name="walk_speed" value="8"/>
+		<animation name="idle-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">280</animation>
+		<animation name="idle-left" dx="5" dy="4" period="4" looping="false" file="vehicles.png">285</animation>
+		<animation name="idle-up" dx="5" dy="4" period="4" looping="false" file="vehicles.png">290</animation>
+		<animation name="idle-down" dx="5" dy="4" period="4" looping="false" file="vehicles.png">295</animation>
+		<animation name="moving-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">360</animation>
+		<animation name="moving-left" dx="5" dy="4" period="4" looping="false" file="vehicles.png">365</animation>
+		<animation name="moving-up" dx="5" dy="4" period="4" looping="false" file="vehicles.png">370</animation>
+		<animation name="moving-down" dx="5" dy="4" period="4" looping="false" file="vehicles.png">375</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<embark/>
+        </eventRule>
+  	</ObjectClass>
+
+	<ObjectClass class="garage-shuttle" super="*shuttle,vehicle" name="shuttle">
 		<attribute name="tallness" value="16"/>
 		<animation name="idle-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">280</animation>
 		<animation name="idle-left" dx="5" dy="4" period="4" looping="false" file="vehicles.png">285</animation>
-		<animation name="idle-up" dx="4" dy="5" period="4" looping="false" file="vehicles.png">290</animation>
-		<animation name="idle-down" dx="4" dy="5" period="4" looping="false" file="vehicles.png">295</animation>
+		<animation name="idle-up" dx="5" dy="4" period="4" looping="false" file="vehicles.png">290</animation>
+		<animation name="idle-down" dx="5" dy="4" period="4" looping="false" file="vehicles.png">295</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
 			<if>
@@ -1234,17 +1251,17 @@
         </eventRule>
 	</ObjectClass>	
 
-	<ObjectClass class="driveable-rover" super="vehicle,*rover" name="rover">
+	<ObjectClass class="driveable-rover" super="*rover,vehicle" name="rover">
 		<attribute name="tallness" value="16"/>
 		<attribute name="walk_speed" value="8"/>
 		<animation name="idle-right" dx="5" dy="5" period="4" looping="false" file="vehicles.png">0</animation>
 		<animation name="idle-left" dx="5" dy="5" period="4" looping="false" file="vehicles.png">10</animation>
 		<animation name="idle-up" dx="5" dy="5" period="4" looping="false" file="vehicles.png">100</animation>
 		<animation name="idle-down" dx="5" dy="5" period="4" looping="false" file="vehicles.png">110</animation>
-		<animation name="moving-right" dx="5" dy="5" period="12" looping="true" file="vehicles.png">0,5</animation>
-		<animation name="moving-left" dx="5" dy="5" period="12" looping="true" file="vehicles.png">10,15</animation>
-		<animation name="moving-up" dx="5" dy="5" period="12" looping="true" file="vehicles.png">100,105</animation>
-		<animation name="moving-down" dx="5" dy="5" period="12" looping="true" file="vehicles.png">110,115</animation>
+		<animation name="moving-right" dx="5" dy="5" period="8" looping="true" file="vehicles.png">0,5</animation>
+		<animation name="moving-left" dx="5" dy="5" period="8" looping="true" file="vehicles.png">10,15</animation>
+		<animation name="moving-up" dx="5" dy="5" period="8" looping="true" file="vehicles.png">100,105</animation>
+		<animation name="moving-down" dx="5" dy="5" period="8" looping="true" file="vehicles.png">110,115</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<embark/>

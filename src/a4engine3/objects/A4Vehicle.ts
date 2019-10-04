@@ -184,6 +184,15 @@ class A4Vehicle extends A4WalkingObject {
                                 game.addMessage("There is something in the garage blocking the parking spot!");
                             }
                         }
+
+                        // check if we need to go back to the station with the shuttle:
+                        if (this.map.name == "Trantor Crater" &&
+                            this.direction == A4_DIRECTION_RIGHT && this.x == 59*this.map.tileWidth) {
+                            if (!game.takeShuttleFromTrantorCrater(this)) {
+                                // we shlud never reach here!
+                                // ...
+                            }
+                        }
                         break;
                     }
                 }

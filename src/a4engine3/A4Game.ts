@@ -2279,20 +2279,40 @@ class A4Game {
             this.shrdluAI.robot.warp(336, 408, map);
             this.shrdluAI.robot.embark(newRover);
         }
+
+        return true;
     }
 
 
     takeShuttleToTrantorCrater(shuttle:A4Vehicle, player:A4Character) : boolean
     {
-        // ...
-        
-        return true;
-    }
+        // 1) spawn a new vehicle on the outside
+        let newShuttle:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-shuttle", this, true, false);
+        if (newShuttle == null) return false;
+        newShuttle.ID = shuttle.ID;
+        newShuttle.direction = A4_DIRECTION_LEFT;
+        let map:A4Map = this.getMap("Trantor Crater")
+        if (map == null) return false;
+        if (!map.walkable(57*8, 15*8, 40, 40, newShuttle)) return false;
+        newShuttle.warp(57*8, 15*8, map);
 
+        // 2) remove shuttle from the game
+        shuttle.map.removeObject(shuttle);
+        this.requestDeletion(shuttle);
 
-    takeShuttleFromTrantorCrater(shuttle:A4Vehicle, player:A4Character) : boolean
-    {
-        // ....
+        // 3) teleport the player, and any other robots that were inside, and embark
+        player.warp(57*8, 15*8, map);
+        player.embark(newShuttle);
+        if (this.qwertyAI.robot.vehicle == shuttle) {
+            this.qwertyAI.robot.disembark();
+            this.qwertyAI.robot.warp(57*8, 15*8, map);
+            this.qwertyAI.robot.embark(newShuttle);
+        }
+        if (this.shrdluAI.robot.vehicle == shuttle) {
+            this.shrdluAI.robot.disembark();
+            this.shrdluAI.robot.warp(57*8, 15*8, map);
+            this.shrdluAI.robot.embark(newShuttle);
+        }
 
         return true;
     }
@@ -2330,6 +2350,45 @@ class A4Game {
         if (this.shrdluAI.robot.vehicle == rover) {
             this.shrdluAI.robot.warp(848, 72, map);
             this.shrdluAI.robot.embark(newRover);
+            this.shrdluAI.robot.disembark();
+        }
+
+        return true;
+    }
+
+
+    takeShuttleFromTrantorCrater(shuttle:A4Vehicle) : boolean
+    {
+        // 1) spawn a new vehicle on the garage
+        let newShuttle:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("garage-shuttle", this, true, false);
+        if (newShuttle == null) return false;
+        newShuttle.ID = shuttle.ID;
+        newShuttle.direction = 2;
+        let map:A4Map = this.getMap("Aurora Station")
+        if (map == null) return false;
+        if (!map.walkable(848, 192, 40, 40, newShuttle)) return false;
+        newShuttle.warp(848, 192, map);
+
+        // 2) remove shuttle from the outside
+        shuttle.disembark(this.currentPlayer);
+        this.currentPlayer.state = A4CHARACTER_STATE_IDLE;
+        this.currentPlayer.vehicle = null;
+        shuttle.map.removeObject(shuttle);
+        this.requestDeletion(shuttle);
+
+        // 3) teleport the player, and any robots in the vehicle, and disembark
+        this.currentPlayer.warp(848, 192, map);
+        this.currentPlayer.embark(newShuttle);
+        this.currentPlayer.disembark();
+
+        if (this.qwertyAI.robot.vehicle == shuttle) {
+            this.qwertyAI.robot.warp(848, 192, map);
+            this.qwertyAI.robot.embark(newShuttle);
+            this.qwertyAI.robot.disembark();
+        }
+        if (this.shrdluAI.robot.vehicle == shuttle) {
+            this.shrdluAI.robot.warp(848, 192, map);
+            this.shrdluAI.robot.embark(newShuttle);
             this.shrdluAI.robot.disembark();
         }
 

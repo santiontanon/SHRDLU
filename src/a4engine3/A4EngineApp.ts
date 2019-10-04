@@ -812,6 +812,7 @@ class A4EngineApp {
     game_cycle(k:KeyboardState) : number
     {
         let fast_time:boolean = false;
+        let fast_time_direction_command:number = A4_DIRECTION_NONE;
 
         if (this.game.introact_request == 1) {
             this.game.introact_request = 0;
@@ -909,15 +910,17 @@ class A4EngineApp {
                             }
                         //}
                     } else {
-                        var command:number = -1;
-                        var direction:number = A4_DIRECTION_NONE;
+                        let direction:number = A4_DIRECTION_NONE;
                         if (k.keyboard[this.key_left]) direction = A4_DIRECTION_LEFT;
                         if (k.keyboard[this.key_up]) direction = A4_DIRECTION_UP;
                         if (k.keyboard[this.key_right]) direction = A4_DIRECTION_RIGHT;
                         if (k.keyboard[this.key_down]) direction = A4_DIRECTION_DOWN;
                         if (direction != A4_DIRECTION_NONE) {
-                            if (k.keyboard[this.key_fast_time]) fast_time = true;
-                            command = this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,direction);
+                            if (k.keyboard[this.key_fast_time]) {
+                                fast_time = true;
+                                fast_time_direction_command = direction;
+                            }
+                            this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,direction);
                         }
                     }
                 
@@ -977,6 +980,11 @@ class A4EngineApp {
             let cycles_to_execute:number = 1;
             if (fast_time) cycles_to_execute = 2;
             for(let cycle:number = 0;cycle<cycles_to_execute;cycle++) {
+                if (fast_time && 
+                    cycle > 0 &&
+                    fast_time_direction_command != A4_DIRECTION_NONE) {
+                    this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,fast_time_direction_command);
+                }
                 if (!this.game.update()) {
                     if (!this.game.allowSaveGames) this.game.deleteSaveGame("slot1");
                     return A4ENGINE_STATE_INTRO;

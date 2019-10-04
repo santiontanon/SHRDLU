@@ -207,6 +207,7 @@ class ShrdluGameScript {
 		this.act_2_shrdlu_agenda_state = 40;
 		this.game.currentPlayer.warp(40*8, 12*8, this.game.maps[6]);	// crash site
 		this.game.shrdluAI.robot.warp(32*8, 12*8, this.game.maps[6]);	// crash site
+		this.game.setStoryStateVariable("permission-to-take-shrdlu", "true");
 	}
 
 	skip_to_act_2_after_crash_site()
