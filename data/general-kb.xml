@@ -227,6 +227,7 @@
 	<sentence provenance="background" sentence="~datapad(SS) ; relation.howto(verb.repair(X, SS), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
 	<sentence provenance="background" sentence="relation.howto(action.talk(X, 'etaoin'[#id]), verb.need(X, 'communicator'[#id]))"/>
 	<sentence provenance="background" sentence="relation.howto(action.use(X, 'communicator'[#id]), automatic('communicator'[#id]))"/>
+	<sentence provenance="background" sentence="~space.at(X,'spacer-valley'[#id]) ; relation.howto(verb.go-to(X, 'trantor-crater'[#id]), verb.need(X, [shuttle]))"/>
 
 	<!-- what can things do -->
 	<sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/>
@@ -407,6 +408,7 @@
 	<sentence provenance="background" sentence="relation.belongs('location-as8'[#id], 'david'[#id])"/>
 	<sentence provenance="background" sentence="rover('garage-rover'[#id])"/>
 	<sentence provenance="background" sentence="rover('broken-rover'[#id])"/>
+	<sentence provenance="background" sentence="shuttle('garage-shuttle'[#id])"/>
 	<sentence provenance="background" sentence="wrench('wrench'[#id])"/>
 	<sentence provenance="background" sentence="screwdriver('screwdriver'[#id])"/>
 	<sentence provenance="background" sentence="pliers('pliers'[#id])"/>
@@ -417,6 +419,10 @@
 	<sentence provenance="background" sentence="space.at('spacesuit'[#id], 'location-garage'[#id])"/>
 	<sentence provenance="background" sentence="toolbox('toolbox'[#id])"/>
 	<sentence provenance="background" sentence="space.at('toolbox'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="space.at('garage-rover'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="space.at('garage-shuttle'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="microscope-table('521'[#id])"/>
+	<sentence provenance="background" sentence="space.at('521'[#id], 'location-as27'[#id])"/>
 
 	<sentence provenance="background" sentence="batteryrecharge.facility('batteryrecharge.facility'[#id])"/>
 	<sentence provenance="background" sentence="space.at('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>
