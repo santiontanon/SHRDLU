@@ -7,6 +7,7 @@ var CUTSCENE_CRASHED_SHUTTLE:number = 6;
 var CUTSCENE_DATAPAD:number = 7;
 var CUTSCENE_SHUTTLE_TAKEOFF:number = 8;
 var CUTSCENE_SHUTTLE_LAND:number = 9;
+var CUTSCENE_CRATER:number = 10;
 
 
 class ShrdluCutScenes {
@@ -29,6 +30,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_DATAPAD) return this.updateCutSceneDatapad();
 		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) return this.updateCutSceneShuttleTakeOff();
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) return this.updateCutSceneShuttleLand();
+		if (cutScene == CUTSCENE_CRATER) return this.updateCutSceneCrater();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -44,6 +46,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_DATAPAD) this.drawCutSceneDatapad(screen_width, screen_height);
 		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) this.drawCutSceneShuttleTakeOff(screen_width, screen_height);
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) this.drawCutSceneShuttleLand(screen_width, screen_height);
+		if (cutScene == CUTSCENE_CRATER) this.drawCutSceneCrater(screen_width, screen_height);
 	}
 
 
@@ -733,6 +736,65 @@ class ShrdluCutScenes {
 
 		ctx.restore();
 	}
+
+
+	updateCutSceneCrater() : boolean
+	{
+		let stateTimes:number[] = [300, 600, 600, 600, -1];
+
+		this.game.cycles_without_redrawing = 1;	// give the game a cycle after the cutscene before redrawing to avoid some flicker
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("Look at that! The distress signal comes from that crashed spaceship, and it is enormous! Is that the Tardis 8?", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("I must go down and investigate!", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneCrater(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-crater1.png", 
+								  "data/cutscene-crater1.png",
+								  "data/cutscene-crater1.png",
+								  "data/cutscene-crater1.png",
+								  null];
+		let stateText:string[] = [null,
+								  "Look at that! The distress signal comes from that crashed spaceship, and it is enormous! Is that the Tardis 8?",
+								  "I must go down and investigate!",
+								  null,
+								  null];						  
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}	
 
 
 	cutSceneState:number = 0;

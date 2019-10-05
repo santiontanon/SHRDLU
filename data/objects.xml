@@ -1016,6 +1016,7 @@
 							<storyState scope="game" variable="act" value="act3"/>
 							<delay cycles="1"/> <!-- The delay is to prevent a graphical glitch that shows the rover outside of the garage, before showing ACT 3 for one game frame -->
 							<cutScene cutscene="8"/>
+							<cutScene cutscene="10"/>
 							<embarkOnGarage/>
 						</then>
 						<else>
