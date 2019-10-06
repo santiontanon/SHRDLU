@@ -248,13 +248,13 @@
   <object id="706" type="window" x="136" y="400" width="16" height="16"/>
   <object id="707" type="window" x="56" y="400" width="16" height="16"/>
   <object id="723" name="AURORA-SETTLEMENT-EAST" type="BridgeDestination" x="624" y="216" width="16" height="64"/>
-  <object id="728" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="8" width="104" height="24"/>
-  <object id="729" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="8" y="192" width="16" height="32"/>
-  <object id="730" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="288" y="440" width="40" height="32"/>
-  <object id="724" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="640" y="8" width="8" height="464"/>
-  <object id="725" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="0" y="0" width="648" height="8"/>
-  <object id="726" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="16" width="8" height="456"/>
-  <object id="727" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="0" y="472" width="648" height="8"/>
+  <object id="728" name="AURORA-SETTLEMENT-NORTH" type="BridgeDestination" x="176" y="8" width="104" height="32"/>
+  <object id="729" name="AURORA-SETTLEMENT-WEST" type="BridgeDestination" x="8" y="184" width="16" height="48"/>
+  <object id="730" name="AURORA-SETTLEMENT-SOUTH" type="BridgeDestination" x="280" y="440" width="48" height="32"/>
+  <object id="724" name="AURORA-SETTLEMENT-EAST" type="Bridge" x="632" y="8" width="16" height="464"/>
+  <object id="725" name="AURORA-SETTLEMENT-NORTH" type="Bridge" x="8" y="0" width="632" height="16"/>
+  <object id="726" name="AURORA-SETTLEMENT-WEST" type="Bridge" x="0" y="8" width="16" height="464"/>
+  <object id="727" name="AURORA-SETTLEMENT-SOUTH" type="Bridge" x="8" y="464" width="632" height="16"/>
   <object id="comm-tower" type="communication.tower" x="44" y="136" width="24" height="48"/>
   <object id="733" type="paper.recycling.facility" x="240" y="128" width="8" height="24"/>
   <object id="734" type="paper.recycling.facility" x="248" y="128" width="8" height="24"/>

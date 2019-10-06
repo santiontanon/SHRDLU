@@ -271,7 +271,9 @@ class A4Character extends A4WalkingObject {
                     }
                     if ((this.x%this.map.tileWidth == 0) && (this.y%this.map.tileHeight == 0)) {
                         let bridge:A4MapBridge = null;
-                        if (!this.canMove(this.direction, false) || (this.y<=0 && this.direction == A4_DIRECTION_UP)) {
+                        if (!this.canMove(this.direction, false) || 
+                            (this.y<=0 && this.direction == A4_DIRECTION_UP) ||
+                            (this.x<=0 && this.direction == A4_DIRECTION_LEFT)) {
                             this.state = A4CHARACTER_STATE_IDLE;
                             this.currentAnimation = A4_ANIMATION_IDLE_LEFT+this.direction;
                             this.animations[this.currentAnimation].reset();

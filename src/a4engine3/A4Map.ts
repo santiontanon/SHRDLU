@@ -75,10 +75,10 @@ class A4Map {
         this.width = Number(xml.getAttribute("width"));
         this.height = Number(xml.getAttribute("height"));
 
-        var properties_xml:Element = getFirstElementChildByTag(xml, "properties");
-        var properties_xmls:Element[] = getElementChildrenByTag(properties_xml, "property");
+        let properties_xml:Element = getFirstElementChildByTag(xml, "properties");
+        let properties_xmls:Element[] = getElementChildrenByTag(properties_xml, "property");
         for(let i:number = 0;i<properties_xmls.length;i++) {
-            var property:Element = properties_xmls[i];
+            let property:Element = properties_xmls[i];
             if (property.getAttribute("name") == "name") {
                 this.name = property.getAttribute("value");
 //                console.log("Map name is: " + this.name);
@@ -91,12 +91,12 @@ class A4Map {
         for(let i:number = 0;i<this.width*this.height;i++) this.lightOnStatus.push(1);
 
         // load tilesets:
-        var gfs:A4GraphicFile[] = [];
-        var tilesets_xmls:Element[] = getElementChildrenByTag(xml, "tileset");
+        let gfs:A4GraphicFile[] = [];
+        let tilesets_xmls:Element[] = getElementChildrenByTag(xml, "tileset");
         for(let i:number = 0;i<tilesets_xmls.length;i++) {
-            var source_xmls:Element[] = getElementChildrenByTag(tilesets_xmls[i], "image");
+            let source_xmls:Element[] = getElementChildrenByTag(tilesets_xmls[i], "image");
             for(let j:number = 0;j<source_xmls.length;j++) {
-                var gf:A4GraphicFile = game.getGraphicFile(source_xmls[j].getAttribute("source"));
+                let gf:A4GraphicFile = game.getGraphicFile(source_xmls[j].getAttribute("source"));
                 // console.log("Loaded tileset: " + source_xmls[j].getAttribute("source") + " -> " + gf);
                 gfs.push(gf);
             }
@@ -105,25 +105,25 @@ class A4Map {
         this.tileHeight = gfs[0].tileHeight;
 
         // load tile layers:
-        var layers_xmls:Element[] = getElementChildrenByTag(xml, "layer");
+        let layers_xmls:Element[] = getElementChildrenByTag(xml, "layer");
         this.layers = [];
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers.push(new A4MapLayer(this.width, this.height, gfs));
             if (i<layers_xmls.length) {
-                var layer_properties_xml:Element = getFirstElementChildByTag(layers_xmls[i], "properties");
-                var layer_properties_xmls:Element[] = getElementChildrenByTag(layer_properties_xml, "property");
+                let layer_properties_xml:Element = getFirstElementChildByTag(layers_xmls[i], "properties");
+                let layer_properties_xmls:Element[] = getElementChildrenByTag(layer_properties_xml, "property");
                 for(let j:number = 0;j<layer_properties_xmls.length;j++) {
-                    var property:Element = layer_properties_xmls[j];
+                    let property:Element = layer_properties_xmls[j];
                     if (property.getAttribute("name") == "elevation") {
                         this.layers[i].elevation = Number(property.getAttribute("value"));
                     }
                 }
 
-                var data_xml:Element = getFirstElementChildByTag(layers_xmls[i], "data");
-                var encoding:string = data_xml.getAttribute("encoding");
+                let data_xml:Element = getFirstElementChildByTag(layers_xmls[i], "data");
+                let encoding:string = data_xml.getAttribute("encoding");
                 if (encoding == "csv") {
-                    var values:string[] = data_xml.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
-                    var idx:number = 0;
+                    let values:string[] = data_xml.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
+                    let idx:number = 0;
                     for(let j:number = 0;j<values.length;j++) {
                         if (values[j]!="") {
                             this.layers[i].tiles[idx] = Number(values[j]) - 1;
@@ -131,7 +131,7 @@ class A4Map {
                         }
                     }
                 } else {
-                    var tile_xmls:Element[] = getElementChildrenByTag(data_xml, "tile");
+                    let tile_xmls:Element[] = getElementChildrenByTag(data_xml, "tile");
                     for(let j:number = 0;j<tile_xmls.length;j++) {
                         this.layers[i].tiles[j] = Number(tile_xmls[j].getAttribute("gid")) - 1;
                     }
@@ -141,12 +141,12 @@ class A4Map {
         }
 
         // load object layers:
-        var objectgroups_xml:Element[] = getElementChildrenByTag(xml, "objectgroup");
+        let objectgroups_xml:Element[] = getElementChildrenByTag(xml, "objectgroup");
         for(let i:number = 0;i<objectgroups_xml.length;i++) {
-            var object_xml_l:Element[] = getElementChildrenByTag(objectgroups_xml[i], "object");
+            let object_xml_l:Element[] = getElementChildrenByTag(objectgroups_xml[i], "object");
             for(let j:number = 0;j<object_xml_l.length;j++) {
-                var object_xml:Element = object_xml_l[j];
-                var o:A4Object = this.loadObjectFromXML(object_xml, game, objectsToRevisit_xml, objectsToRevisit_object);
+                let object_xml:Element = object_xml_l[j];
+                let o:A4Object = this.loadObjectFromXML(object_xml, game, objectsToRevisit_xml, objectsToRevisit_object);
                 if (o!=null) {
                     o.x = Number(object_xml.getAttribute("x"));
                     o.y = Number(object_xml.getAttribute("y"));
@@ -159,15 +159,15 @@ class A4Map {
         // loading scripts:
         {
             // on start:
-            var onstarts_xml:Element[] = getElementChildrenByTag(xml, "onStart");
+            let onstarts_xml:Element[] = getElementChildrenByTag(xml, "onStart");
             for(let i:number = 0;i<onstarts_xml.length;i++) {
-                var onstart_xml:Element = onstarts_xml[i];
-                var tmp:A4ScriptExecutionQueue = null;
-//                var script_xml_l:NodeListOf<Element> = onstart_xml.children;
-                var script_xml_l:HTMLCollection = onstart_xml.children;
+                let onstart_xml:Element = onstarts_xml[i];
+                let tmp:A4ScriptExecutionQueue = null;
+//                let script_xml_l:NodeListOf<Element> = onstart_xml.children;
+                let script_xml_l:HTMLCollection = onstart_xml.children;
                 for(let j:number = 0;j<script_xml_l.length;j++) {
-                    var script_xml:Element = script_xml_l[j];
-                    var s:A4Script = A4Script.fromXML(script_xml);
+                    let script_xml:Element = script_xml_l[j];
+                    let s:A4Script = A4Script.fromXML(script_xml);
                     if (tmp == null) tmp = new A4ScriptExecutionQueue(null, this, game, null);
                     tmp.scripts.push(s);
                 }
@@ -175,10 +175,10 @@ class A4Map {
             }        
 
             // event rules:
-            var eventrules_xml:Element[] = getElementChildrenByTag(xml, "eventRule");
+            let eventrules_xml:Element[] = getElementChildrenByTag(xml, "eventRule");
             for(let i:number = 0;i<eventrules_xml.length;i++) {
-                var rule_xml:Element = eventrules_xml[i];
-                var r:A4EventRule = A4EventRule.fromXML(rule_xml);
+                let rule_xml:Element = eventrules_xml[i];
+                let r:A4EventRule = A4EventRule.fromXML(rule_xml);
                 if (this.eventScripts[r.event] == null) this.eventScripts[r.event] = [];
                 this.eventScripts[r.event].push(r);
             }        
@@ -192,17 +192,17 @@ class A4Map {
                       objectsToRevisit_xml:Element[],
                       objectsToRevisit_object:A4Object[]) : A4Object
     {
-        var o:A4Object = null;
-        var of:A4ObjectFactory = game.objectFactory;
-        //var layer:number = A4_LAYER_FG;
-        var o_ID:string = object_xml.getAttribute("id");
-        var o_class:string = object_xml.getAttribute("class");
+        let o:A4Object = null;
+        let of:A4ObjectFactory = game.objectFactory;
+        //let layer:number = A4_LAYER_FG;
+        let o_ID:string = object_xml.getAttribute("id");
+        let o_class:string = object_xml.getAttribute("class");
         if (o_class == null) o_class = object_xml.getAttribute("type");
-        var completeRedefinition:boolean = false;
+        let completeRedefinition:boolean = false;
         if (object_xml.getAttribute("completeRedefinition") == "true") completeRedefinition = true;
 
         if (o_class == "Bridge") {
-            var mb:A4MapBridge = new A4MapBridge(object_xml, this);
+            let mb:A4MapBridge = new A4MapBridge(object_xml, this);
             mb.loadObjectAdditionalContent(object_xml, game, of, objectsToRevisit_xml, objectsToRevisit_object);
             this.bridges.push(mb);
             if (o_ID != null) {
@@ -213,7 +213,7 @@ class A4Map {
             }
             return null;
         } else if (o_class == "BridgeDestination") {
-            var mb:A4MapBridge = new A4MapBridge(object_xml, this);
+            let mb:A4MapBridge = new A4MapBridge(object_xml, this);
             mb.loadObjectAdditionalContent(object_xml, game, of, objectsToRevisit_xml, objectsToRevisit_object);
             this.bridgeDestinations.push(mb);
             if (o_ID != null) {
@@ -228,14 +228,14 @@ class A4Map {
                               Number(object_xml.getAttribute("width")),
                               Number(object_xml.getAttribute("height")));
             o.loadObjectAdditionalContent(object_xml, game, of, objectsToRevisit_xml, objectsToRevisit_object);
-            var once:boolean = true;
+            let once:boolean = true;
             if (object_xml.getAttribute("repeat") == "true") once = false;
-            var scripts_xmls:Element[] = getElementChildrenByTag(object_xml, "script");
+            let scripts_xmls:Element[] = getElementChildrenByTag(object_xml, "script");
             if (scripts_xmls != null && scripts_xmls.length>0) {
-//                var tmp:NodeListOf<Element> = scripts_xmls[0].children;
-                var tmp:HTMLCollection = scripts_xmls[0].children;
+//                let tmp:NodeListOf<Element> = scripts_xmls[0].children;
+                let tmp:HTMLCollection = scripts_xmls[0].children;
                 for(let i:number = 0;i<tmp.length;i++) {
-                    var s:A4Script = A4Script.fromXML(tmp[i]);
+                    let s:A4Script = A4Script.fromXML(tmp[i]);
                     o.addEventRule(A4_EVENT_ACTIVATE, new A4EventRule(A4_EVENT_ACTIVATE, s, once, 0, 0));
                 }
             }
@@ -261,7 +261,7 @@ class A4Map {
 
     saveToXML(game:A4Game) : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         xmlString += "<map version=\"1.0\" " + 
                      "orientation=\"orthogonal\" " + 
                      "width=\"" + this.width + "\" " +
@@ -272,7 +272,7 @@ class A4Map {
          xmlString += "<properties>\n";
          xmlString += "<property name=\"name\" value=\""+this.name+"\"/>\n";
          xmlString += "</properties>\n";
-         var firstID:number = 1;
+         let firstID:number = 1;
         for(let gf of game.graphicFiles) {
             xmlString += "<tileset";
             xmlString += " firstgid=\"" + firstID + "\"";
@@ -290,7 +290,7 @@ class A4Map {
 
         // tile layers:
         for(let i:number = 0;i<this.layers.length;i++) {
-            var ml:A4MapLayer = this.layers[i];
+            let ml:A4MapLayer = this.layers[i];
             xmlString += "<layer name=\"Tile Layer "+(i+1)+"\""+
                                " width=\""+this.width+"\""+
                                " height=\""+this.height+"\">\n";
@@ -327,7 +327,7 @@ class A4Map {
         }
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            var ml:A4MapLayer = this.layers[i];
+            let ml:A4MapLayer = this.layers[i];
             for(let o of ml.objects) {
                 if (!o.isPlayer())
                     xmlString += o.saveToXML(game,0,true) + "\n";
@@ -337,7 +337,7 @@ class A4Map {
         xmlString += "</objectgroup>\n";
         
         // save state:
-        var onStarttagOpen:boolean = false;
+        let onStarttagOpen:boolean = false;
         for(let v in this.storyState) {
             if (!onStarttagOpen) {
                 xmlString += "<onStart>\n";
@@ -385,7 +385,7 @@ class A4Map {
 */
 
         // objects:
-        var toDelete:A4Object[] = [];
+        let toDelete:A4Object[] = [];
         for(let o of this.objects) {
 //            if (this.cycle==0) console.log("Map "+this.name+" update cycle 0 of " + o.name);
             if (!o.update(game)) {
@@ -394,7 +394,7 @@ class A4Map {
             }
         }
         for(let o of toDelete) {
-            var idx:number = this.objects.indexOf(o);
+            let idx:number = this.objects.indexOf(o);
             this.objects.splice(idx, 1);
         }
 
@@ -408,35 +408,35 @@ class A4Map {
         this.executeScriptQueues(game);
 
         {
-            var toDeleteSB:[A4TextBubble,number][] = [];
+            let toDeleteSB:[A4TextBubble,number][] = [];
             for(let sb of this.textBubbles) {
                 sb[1]--;
                 if (sb[1]<=0) toDeleteSB.push(sb);
             }
             for(let sb of toDeleteSB) {
-                var idx:number = this.textBubbles.indexOf(sb);
+                let idx:number = this.textBubbles.indexOf(sb);
                 this.textBubbles.splice(idx,1);
             }
         }
 
         // perception buffers:
         {
-            var toDelete2:PerceptionBufferRecord[] = [];
+            let toDelete2:PerceptionBufferRecord[] = [];
             for(let pbr of this.perceptionBuffer) {
                 if ((pbr.time+CYCLES_IN_PERCEPTION_BUFFER)<this.cycle) toDelete2.push(pbr);
             }
             for(let dv of toDelete2) {
-                var idx:number = this.perceptionBuffer.indexOf(dv);
+                let idx:number = this.perceptionBuffer.indexOf(dv);
                 this.perceptionBuffer.splice(idx,1);
             }
         }
         {
-            var toDelete3:PerceptionBufferObjectWarpedRecord[] = [];
+            let toDelete3:PerceptionBufferObjectWarpedRecord[] = [];
             for(let wpbr of this.warpPerceptionBuffer) {
                 if ((wpbr.time+CYCLES_IN_PERCEPTION_BUFFER)<this.cycle) toDelete3.push(wpbr);
             }
             for(let dv of toDelete3) {
-                var idx:number = this.warpPerceptionBuffer.indexOf(dv);
+                let idx:number = this.warpPerceptionBuffer.indexOf(dv);
                 this.warpPerceptionBuffer.splice(idx,1);
             }
         }
@@ -454,9 +454,9 @@ class A4Map {
         ctx.save();
         ctx.scale(zoom, zoom);
 
-        var object_idx:number = 0;
-        var y:number = -offsety;
-        var ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
+        let object_idx:number = 0;
+        let y:number = -offsety;
+        let ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
         for(let row:number = 0;row<this.layers[0].height+SHRDLUMAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
             if (y+this.tileHeight<0) continue;
 //            console.log("draw: " + row + " -> " + y);
@@ -468,13 +468,13 @@ class A4Map {
 
             // objects:
             for(;object_idx<this.objects.length;object_idx++) {
-                var o:A4Object = this.objects[object_idx];
+                let o:A4Object = this.objects[object_idx];
                 if (o.burrowed) continue;
                 if ((o.y + o.getPixelHeight()) < (row-1)*this.tileHeight) continue;
                 if ((o.y + o.getPixelHeight()) > (row+1)*this.tileHeight) break;
-                var tx:number = Math.floor(o.x/this.tileWidth);
-                var ty:number = Math.floor(o.y/this.tileHeight);
-                var draw:boolean = false;
+                let tx:number = Math.floor(o.x/this.tileWidth);
+                let ty:number = Math.floor(o.y/this.tileHeight);
+                let draw:boolean = false;
                 for(let i:number = 0;i<Math.floor(o.getPixelHeight()/this.tileHeight) && !draw;i++) {
                     for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
                         if (tx+j>=0 && tx+j<this.width &&
@@ -497,9 +497,9 @@ class A4Map {
         ctx.save();
         ctx.scale(zoom, zoom);
 
-        var object_idx:number = 0;
-        var y:number = -offsety;
-        var ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
+        let object_idx:number = 0;
+        let y:number = -offsety;
+        let ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
         for(let row:number = 0;row<this.layers[0].height+SHRDLUMAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
             if (y+this.tileHeight<0) continue;
 //            console.log("drawRegion: " + row + " -> " + y);
@@ -510,22 +510,22 @@ class A4Map {
 //            }
 
             // objects:
-            var xx:number;
-            var yy:number;
-            var offset:number;
+            let xx:number;
+            let yy:number;
+            let offset:number;
             for(;object_idx<this.objects.length;object_idx++) {
-                var o:A4Object = this.objects[object_idx];
+                let o:A4Object = this.objects[object_idx];
                 if (o.burrowed) continue;
                 if ((o.y + o.getPixelHeight()) < (row-1)*this.tileHeight) continue;
                 if ((o.y + o.getPixelHeight()) > (row+1)*this.tileHeight) break;
                 //console.log("drawRegion(object): " + y + " vs " + (o.y + o.getPixelHeight()));
-//                var tx:number = Math.floor(o.x/this.tileWidth);
-//                var ty:number = Math.floor(o.y/this.tileHeight);
-                var tx:number = Math.floor(o.x/this.tileWidth);
-                var ty:number = Math.floor((o.y + o.tallness)/this.tileHeight);
+//                let tx:number = Math.floor(o.x/this.tileWidth);
+//                let ty:number = Math.floor(o.y/this.tileHeight);
+                let tx:number = Math.floor(o.x/this.tileWidth);
+                let ty:number = Math.floor((o.y + o.tallness)/this.tileHeight);
 
-                var draw:boolean = false;
-                var dark:boolean = true;
+                let draw:boolean = false;
+                let dark:boolean = true;
                 for(let i:number = 0;i<Math.floor((o.getPixelHeight()-o.tallness)/this.tileHeight) && !draw;i++) {
                     for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
                         xx = tx+j;
@@ -574,9 +574,9 @@ class A4Map {
         for(let o of this.objects) {
             if (o.burrowed) continue;
             if (!o.isCharacter()) continue;
-            var tx:number = Math.floor(o.x/this.tileWidth);
-            var ty:number = Math.floor(o.y/this.tileHeight);
-            var draw:boolean = false;
+            let tx:number = Math.floor(o.x/this.tileWidth);
+            let ty:number = Math.floor(o.y/this.tileHeight);
+            let draw:boolean = false;
             for(let i:number = 0;i<Math.floor(o.getPixelHeight()/this.tileHeight) && !draw;i++) {
                 for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
                     if (tx+j>=0 && tx+j<this.width &&
@@ -588,7 +588,7 @@ class A4Map {
             if (draw && game.drawTextBubbles) (<A4Character>o).drawTextBubbles(-offsetx,-offsety, SCREEN_X/zoom, SCREEN_Y/zoom, game);
         }
 
-        var y:number = 0;
+        let y:number = 0;
         for(let sb of this.textBubbles) {
             sb[0].drawNoArrow(Math.floor(SCREEN_X/zoom/2) - (sb[0].width)/2, y, false, 1);
             y += sb[0].height;
@@ -603,15 +603,15 @@ class A4Map {
         ctx.save();
         ctx.scale(zoom, zoom);
         
-        var xx:number;
-        var yy:number;
-        var offset:number;
+        let xx:number;
+        let yy:number;
+        let offset:number;
         for(let o of this.objects) {
             if (o.burrowed) continue;
             if (!o.isCharacter()) continue;
-            var tx:number = Math.floor(o.x/this.tileWidth);
-            var ty:number = Math.floor(o.y/this.tileHeight);
-            var draw:boolean = false;
+            let tx:number = Math.floor(o.x/this.tileWidth);
+            let ty:number = Math.floor(o.y/this.tileHeight);
+            let draw:boolean = false;
             for(let i:number = 0;i<Math.floor(o.getPixelHeight()/this.tileHeight) && !draw;i++) {
                 for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
                     xx = tx+j;
@@ -640,7 +640,7 @@ class A4Map {
             if (draw && game.drawTextBubbles) (<A4Character>o).drawTextBubbles(-offsetx,-offsety, SCREEN_X/zoom, SCREEN_Y/zoom, game);
         }      
 
-        var y:number = 0;
+        let y:number = 0;
         for(let sb of this.textBubbles) {
             sb[0].drawNoArrow(Math.floor(SCREEN_X/zoom/2) - (sb[0].width)/2, y, false, 1);
             y += sb[0].height;
@@ -652,7 +652,7 @@ class A4Map {
 
     getNeighborMaps() : A4Map[]
     {
-        var l:A4Map[] = [];
+        let l:A4Map[] = [];
 
         for(let mb of this.bridges) {
             if (mb.linkedTo != null) {
@@ -668,11 +668,11 @@ class A4Map {
 
     executeScriptQueues(game:A4Game)
     {
-        var toDelete:A4ScriptExecutionQueue[] = [];
+        let toDelete:A4ScriptExecutionQueue[] = [];
         for(let seb of this.scriptQueues) {
             while(true) {
-                var s:A4Script = seb.scripts[0];
-                var retval:number = s.execute(seb.object,
+                let s:A4Script = seb.scripts[0];
+                let retval:number = s.execute(seb.object,
                                               (seb.map == null ? this:seb.map),
                                               (seb.game == null ? game:seb.game),
                                               seb.otherCharacter);
@@ -691,7 +691,7 @@ class A4Map {
             }
         }
         for(let seb of toDelete) {
-            var idx:number = this.scriptQueues.indexOf(seb);
+            let idx:number = this.scriptQueues.indexOf(seb);
             this.scriptQueues.splice(idx, 1);
         }
     }
@@ -722,7 +722,7 @@ class A4Map {
             this.layers[o.layer].removeObject(o);
         }
         */
-        var idx:number = this.objects.indexOf(o);
+        let idx:number = this.objects.indexOf(o);
         if (idx>=0) {
             this.objects.splice(idx, 1);        
             return true;
@@ -769,7 +769,7 @@ class A4Map {
     {
         for(let o of this.objects) {
             if (o.name == name) return [o];
-            var o2:A4Object[] = o.findObjectByName(name);
+            let o2:A4Object[] = o.findObjectByName(name);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
@@ -783,7 +783,7 @@ class A4Map {
     {
         for(let o of this.objects) {
             if (o.ID == ID) return [o];
-            var o2:A4Object[] = o.findObjectByID(ID);
+            let o2:A4Object[] = o.findObjectByID(ID);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
@@ -813,7 +813,7 @@ class A4Map {
         */
         for(let o of this.objects) {
             if (o.isDoor()) {
-                var d:A4Door = <A4Door>o;
+                let d:A4Door = <A4Door>o;
                 if (d.doorGroupID == doorGroup) {
                     if (!d.checkForBlockages(state, character, map, game, [])) return false;
                 }
@@ -832,7 +832,7 @@ class A4Map {
         */
         for(let o of this.objects) {
             if (o.isDoor()) {
-                var d:A4Door = <A4Door>o;
+                let d:A4Door = <A4Door>o;
                 if (d.doorGroupID == doorGroup) {
                     d.changeStateRecursively(state, character, map, game);
                 }
@@ -938,10 +938,10 @@ class A4Map {
 
     walkableConsideringVehicles(x:number, y:number, dx:number, dy:number, subject:A4Object) : boolean
     {
-        var granularityX:number = this.layers[0].tileWidth;
-        var granularityY:number = this.layers[0].tileHeight;
-        var rettiles:boolean = true;
-        var retobjects:boolean = true;
+        let granularityX:number = this.layers[0].tileWidth;
+        let granularityY:number = this.layers[0].tileHeight;
+        let rettiles:boolean = true;
+        let retobjects:boolean = true;
         for(let i:number = 0;i<this.layers.length;i++) {
             if (rettiles && !this.layers[i].walkableOnlyBackground(x,y,dx,dy, subject)) rettiles = false;
 //            if (retobjects && !this.layers[i].walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
@@ -951,7 +951,7 @@ class A4Map {
         // if there is a vehicle, characters can always walk on them (unless there is a collision with an object):
         /*
         if (!rettiles && retobjects && subject.isCharacter()) {
-            var buffer:A4Object[] = this.getAllObjects(x, y, dx, dy);
+            let buffer:A4Object[] = this.getAllObjects(x, y, dx, dy);
             for(let o of buffer) {
                 if (o!=subject && o.isVehicle() && (<A4Vehicle>o).isEmpty()) {
                     // see if the vehicle covers all the area that was not walkable:
@@ -993,7 +993,7 @@ class A4Map {
     {
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            var o:A4Object = this.layers[i].getTakeableObject(x,y,dx,dy);
+            let o:A4Object = this.layers[i].getTakeableObject(x,y,dx,dy);
             if (o!=null) return o;
         }
         return null;
@@ -1009,7 +1009,7 @@ class A4Map {
     {
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            var o:A4Object = this.layers[i].getBurrowedObject(x,y,dx,dy);
+            let o:A4Object = this.layers[i].getBurrowedObject(x,y,dx,dy);
             if (o!=null) return o;
         }
         return null;
@@ -1025,7 +1025,7 @@ class A4Map {
     {
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            var o:A4Object = this.layers[i].getUsableObject(x,y,dx,dy);
+            let o:A4Object = this.layers[i].getUsableObject(x,y,dx,dy);
             if (o!=null) return o;
         }
         return null;
@@ -1041,7 +1041,7 @@ class A4Map {
     {
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            var o:A4Object = this.layers[i].getVehicleObject(x,y,dx,dy);
+            let o:A4Object = this.layers[i].getVehicleObject(x,y,dx,dy);
             if (o!=null) return o;
         }
         return null;
@@ -1061,7 +1061,7 @@ class A4Map {
 
     getAllObjectCollisionsWithOffset(o:A4Object, xoffs:number, yoffs:number) : A4Object[]
     {
-        var l:A4Object[] = [];
+        let l:A4Object[] = [];
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers[i].getAllObjectCollisionsWithOffset(o, xoffs, yoffs, l);
@@ -1077,7 +1077,7 @@ class A4Map {
 
     getAllObjects(x:number, y:number, dx:number, dy:number) : A4Object[]
     {
-        var l:A4Object[] = [];
+        let l:A4Object[] = [];
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers[i].getAllObjects(x, y, dx, dy, l);
@@ -1092,7 +1092,7 @@ class A4Map {
 
     getAllObjectsInRegion(x:number, y:number, dx:number, dy:number, region:number) : A4Object[]
     {
-        var l:A4Object[] = [];
+        let l:A4Object[] = [];
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers[i].getAllObjectsInRegion(x, y, dx, dy, this, region, l);
@@ -1100,9 +1100,9 @@ class A4Map {
         */
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
-                var tx:number = Math.floor(o.x/this.tileWidth);
-                var ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
-                var region2:number = this.visibilityRegion(tx,ty);
+                let tx:number = Math.floor(o.x/this.tileWidth);
+                let ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
+                let region2:number = this.visibilityRegion(tx,ty);
                 if (region == region2) l.push(o);
             }
         }        
@@ -1110,9 +1110,9 @@ class A4Map {
     }
 
 
-    getAllObjectsInRegionPlusDoors(x:number, y:number, dx:number, dy:number, region:number) : A4Object[]
+    getAllObjectsInRegionPlusDoorsAndObstacles(x:number, y:number, dx:number, dy:number, region:number) : A4Object[]
     {
-        var l:A4Object[] = [];
+        let l:A4Object[] = [];
         /*
         for(let i:number = 0;i<A4_N_LAYERS;i++) {
             this.layers[i].getAllObjectsInRegion(x, y, dx, dy, this, region, l);
@@ -1120,10 +1120,14 @@ class A4Map {
         */
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
-                var tx:number = Math.floor(o.x/this.tileWidth);
-                var ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
-                var region2:number = this.visibilityRegion(tx,ty);
-                if (region == region2 || o instanceof A4Door) l.push(o);
+                let tx:number = Math.floor(o.x/this.tileWidth);
+                let ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
+                let region2:number = this.visibilityRegion(tx,ty);
+                if (region == region2 || 
+                    (o instanceof A4Door) ||
+                    (o instanceof A4Obstacle) ||
+                    (o instanceof A4ObstacleContainer) ||
+                    (o instanceof A4PushableWall)) l.push(o);
             }
         }        
         return l;
@@ -1132,10 +1136,10 @@ class A4Map {
 
     chopTree(o:A4Character, tool:A4Object, game:A4Game, direction:number) : boolean
     {
-        var x:number = o.x + direction_x_inc[direction];
-        var y:number = o.y + direction_y_inc[direction];
-        var dx:number = o.getPixelWidth();
-        var dy:number = o.getPixelHeight();
+        let x:number = o.x + direction_x_inc[direction];
+        let y:number = o.y + direction_y_inc[direction];
+        let dx:number = o.getPixelWidth();
+        let dy:number = o.getPixelHeight();
         for(let i:number = 0;i<this.layers.length;i++) {
             if (this.layers[i].chopTree(x,y,dx,dy)) {
                 tool.event(A4_EVENT_USE, o, this, game);
@@ -1210,10 +1214,10 @@ class A4Map {
 
 	reevaluateVisibility()
     {
-        var x:number;
-        var y:number;
-        var nextRegion:number = 1;
-        var inOpen:boolean[] = new Array(this.width * this.height);
+        let x:number;
+        let y:number;
+        let nextRegion:number = 1;
+        let inOpen:boolean[] = new Array(this.width * this.height);
         for(let i:number = 0;i<this.width * this.height;i++) {
             this.visibilityRegions[i] = 0;
             inOpen[i] = false;
@@ -1222,12 +1226,12 @@ class A4Map {
         for(let start_y:number = 0;start_y<this.height;start_y++) {
             for(let start_x:number = 0;start_x<this.width;start_x++) {
                 if (this.visibilityRegions[start_x+start_y*this.width]==0 && this.seeThrough(start_x, start_y)) {
-                    var stack:number[] = [];
+                    let stack:number[] = [];
                     stack.push(start_x+start_y*this.width);
                     inOpen[start_x+start_y*this.width] = true;
                     
                     while(stack.length>0) {
-                        var tmp:number = stack[0];
+                        let tmp:number = stack[0];
                         stack.splice(0,1);
                         x = tmp%this.width;
                         y = Math.floor(tmp/this.width);
@@ -1328,16 +1332,16 @@ class A4Map {
     // this function assumes they are already almost sorted, and thus uses simple shuffle sort:
     sortObjectByYCoordinate()
     {
-//        var anychange:boolean = false;
-        var change:boolean = true;
-        var tmp:A4Object = null;
+//        let anychange:boolean = false;
+        let change:boolean = true;
+        let tmp:A4Object = null;
 
         while(change) {
             change = false;
             // going up:
             for(let i:number = 0;i<this.objects.length-1;i++) {
-                var yi1:number = this.objects[i].y   + this.objects[i].getPixelHeight();
-                var yi2:number = this.objects[i+1].y   + this.objects[i+1].getPixelHeight();
+                let yi1:number = this.objects[i].y   + this.objects[i].getPixelHeight();
+                let yi2:number = this.objects[i+1].y   + this.objects[i+1].getPixelHeight();
                 if (yi1 > yi2 ||
                     // A4Characters have preference over other objects:
                     (yi1 == yi2 &&
@@ -1354,8 +1358,8 @@ class A4Map {
 //                anychange = true;
                 change = false;
                 for(let i:number = this.objects.length-2;i>=0;i--) {
-                    var yi1:number = this.objects[i].y   + this.objects[i].getPixelHeight();
-                    var yi2:number = this.objects[i+1].y   + this.objects[i+1].getPixelHeight();
+                    let yi1:number = this.objects[i].y   + this.objects[i].getPixelHeight();
+                    let yi2:number = this.objects[i+1].y   + this.objects[i+1].getPixelHeight();
                     if (yi1 > yi2 ||
                         // A4Characters have preference over other objects:
                         (yi1 == yi2 &&
@@ -1372,7 +1376,7 @@ class A4Map {
 /*
         if (anychange) 
         {
-            var heights:string[] = [];
+            let heights:string[] = [];
             for(let i:number = 0;i<this.objects.length;i++) {
                 heights.push("("+this.objects[i].name+this.objects[i].y+"+"+this.objects[i].getPixelHeight()+")");
             }

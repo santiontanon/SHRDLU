@@ -299,6 +299,18 @@ class RobotAI extends A4RuleBasedAI {
 			let cause:Term = Term.fromString("#not(verb.have('david'[#id],[permission-to]))", this.o);
 			return cause;
 		}
+
+		// if the robot does not know the path:
+		if (this.robot.AI.map2mapPaths != null) {
+			let map1idx:number = this.robot.AI.map2mapNames.indexOf(this.robot.map.name);
+			let map2idx:number = this.robot.AI.map2mapNames.indexOf(map.name);
+			if (map1idx >= 0 && map2idx >= 0 && map1idx != map2idx) {
+				if (this.robot.AI.map2mapPaths[map1idx][map2idx] == null) {
+					let cause:Term = Term.fromString("#not(verb.know('"+this.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", this.o);
+					return cause;					
+				}
+			}
+		}
 		return null;
 	}
 

@@ -342,7 +342,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                         // close the corresponding airlock door if it is not closed:
                         let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                         if (otherdoor == null || otherdoor.closed) {
-                            // if it is closed, then teleport outside:
+                            // if it is closed, then teleport to the other side:
                             game.requestWarp(o, game.getMap(o2.targetMap), door.targetX, door.targetY-o.tallness);
                         } else {
                             otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
@@ -363,7 +363,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                             // close the corresponding airlock door if it is not closed:
                             let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                             if (otherdoor == null || otherdoor.closed) {
-                                // if it is closed, then teleport outside:
+                                // if it is closed, then teleport to the other side:
                                 game.requestWarp(o, map, door.targetX, door.targetY-o.tallness);
                             } else {
                                 otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
@@ -371,9 +371,6 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                         }
                     }
                 }
-
-                // ....
-
             }
 
             return SCRIPT_NOT_FINISHED;

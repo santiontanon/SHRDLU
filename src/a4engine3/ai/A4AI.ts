@@ -18,7 +18,6 @@ var PERCEIVED_ACTION_ACTIVATION:number = 100;
 var PERCEIVED_WARP_ACTIVATION:number = 200;
 
 
-
 class PFTarget {
     x0:number;
     y0:number;
@@ -52,7 +51,7 @@ class A4AI {
         // 6: behavior:
         if (this.character.isIdle()) {
             // pathfinding:
-            var c:A4CharacterCommand = this.navigationCycle(game);
+            let c:A4CharacterCommand = this.navigationCycle(game);
             if (c!=null) this.character.issueCommand(c, game);
         }
         this.pathfinding_targets = [];
@@ -63,36 +62,36 @@ class A4AI {
 
     updateAllObjectsCache()
     {
-        var map:A4Map = this.character.map;
-        var tx:number = Math.floor(this.character.x/this.tileWidth);
-        var ty:number = Math.floor((this.character.y+this.character.tallness)/this.tileHeight);
-        var perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
-        var perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
-        var perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
-        var perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
+        let map:A4Map = this.character.map;
+        let tx:number = Math.floor(this.character.x/this.tileWidth);
+        let ty:number = Math.floor((this.character.y+this.character.tallness)/this.tileHeight);
+        let perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
+        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
+        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
+        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
         
-        var region:number = map.visibilityRegion(tx,ty);
-        this.all_objects_buffer = map.getAllObjectsInRegionPlusDoors(perception_x0, perception_y0,
-                                                                     perception_x1-perception_x0, perception_y1-perception_y0,
-                                                                     region);
+        let region:number = map.visibilityRegion(tx,ty);
+        this.all_objects_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(perception_x0, perception_y0,
+                                                                                 perception_x1-perception_x0, perception_y1-perception_y0, 
+                                                                                 region);
     }
 
 
     perception(game:A4Game)
     {
         this.lastPerceptionCycle = this.cycle;
-        var map:A4Map = this.character.map;
+        let map:A4Map = this.character.map;
         this.tileWidth = map.getTileWidth();
         this.tileHeight = map.getTileHeight();
 
-        var perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
-        var perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
-        var perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
-        var perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
+        let perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
+        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
+        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
+        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
 
         this.updateAllObjectsCache();
         
-        var triggerSort:Sort = game.ontology.getSort("trigger");
+        let triggerSort:Sort = game.ontology.getSort("trigger");
         for(let o of this.all_objects_buffer) {
             if (o!=this.character && !o.burrowed && !o.is_a(triggerSort)) {
                 this.updateObjectPerceptionWME(o, 100, true, true);
@@ -124,7 +123,7 @@ class A4AI {
                     b.y<perception_y1 && b.y+b.height>perception_y0) {
                     // perceived a bridge:
                     if (b.linkedTo != null) {
-                        var wme:WME = new WME("bridge", this.period*2);
+                        let wme:WME = new WME("bridge", this.period*2);
                         wme.addParameter(b.linkedTo.map.name, WME_PARAMETER_SYMBOL);
                         wme.addParameter(b.x, WME_PARAMETER_INTEGER);
                         wme.addParameter(b.y, WME_PARAMETER_INTEGER);
@@ -142,7 +141,7 @@ class A4AI {
         // commented out, as this is not needed in SHRDLU:
         /*
         // pick a wme at random from the long term memory, and see if it contradicts perceptions:
-        var wme:WME = this.memory.getRandomLongTermWME();
+        let wme:WME = this.memory.getRandomLongTermWME();
         if (wme!=null && wme.functor == "object") this.factCheckObject(wme, map, perception_x0, perception_y0, perception_x1, perception_y1);
         if (wme!=null && wme.functor == "inventory") this.factCheckInventory(wme);
         */
@@ -151,15 +150,15 @@ class A4AI {
 
     navigationCycle(game:A4Game) : A4CharacterCommand
     {
-        var subject:A4WalkingObject = this.character;
+        let subject:A4WalkingObject = this.character;
         if (this.character.isInVehicle()) {
             return;    // in shrdlu, we don't want the robots to drive vehicles
             // subject = this.character.vehicle;
         }
         if (subject == null) return;
-        var command:A4CharacterCommand = null;
-        var highest_priority_target:number = -1;
-        var highest_priority:number = 0;
+        let command:A4CharacterCommand = null;
+        let highest_priority_target:number = -1;
+        let highest_priority:number = 0;
 
         if (this.pathfinding_targets.length == 0) return null;
 
@@ -171,7 +170,7 @@ class A4AI {
             }
         }
 
-        var pathfind:boolean = false;
+        let pathfind:boolean = false;
         if (this.pathfinding_result_x==-1 ||
             (this.cycle - this.pathFinding_lastUpdated)>subject.getWalkSpeed()) {
             pathfind = true;
@@ -186,16 +185,16 @@ class A4AI {
         }
 
         if (this.pathfinding_result_x!=-1) {
-            var pixelx:number = subject.x;
-            var pixely:number = subject.y + subject.tallness;
-            var pixelx1:number = subject.x + subject.getPixelWidth();
-            var pixely1:number = subject.y + subject.getPixelHeight();
-            var pixel_target_x:number = this.pathfinding_result_x * this.tileWidth;
-            var pixel_target_y:number = this.pathfinding_result_y * this.tileHeight;
+            let pixelx:number = subject.x;
+            let pixely:number = subject.y + subject.tallness;
+            let pixelx1:number = subject.x + subject.getPixelWidth();
+            let pixely1:number = subject.y + subject.getPixelHeight();
+            let pixel_target_x:number = this.pathfinding_result_x * this.tileWidth;
+            let pixel_target_y:number = this.pathfinding_result_y * this.tileHeight;
             this.pathfinding_result_offset_x = pixel_target_x - pixelx;
             this.pathfinding_result_offset_y = pixel_target_y - pixely;
-            var abs_diff_x:number = (this.pathfinding_result_offset_x<0 ? -this.pathfinding_result_offset_x:this.pathfinding_result_offset_x);
-            var abs_diff_y:number = (this.pathfinding_result_offset_y<0 ? -this.pathfinding_result_offset_y:this.pathfinding_result_offset_y);
+            let abs_diff_x:number = (this.pathfinding_result_offset_x<0 ? -this.pathfinding_result_offset_x:this.pathfinding_result_offset_x);
+            let abs_diff_y:number = (this.pathfinding_result_offset_y<0 ? -this.pathfinding_result_offset_y:this.pathfinding_result_offset_y);
 //            console.log("pixelx: " + pixelx + ", pixely: " + pixely);
 //            console.log("abs_diff_x: " + abs_diff_x + ", abs_diff_y: " + abs_diff_y);
 //            console.log("this.pathfinding_result_offset_x: " + this.pathfinding_result_offset_x + ", this.pathfinding_result_offset_y: " + this.pathfinding_result_offset_y);
@@ -230,8 +229,8 @@ class A4AI {
 
     updateObjectPerceptionWME(o:A4Object, activation:number, includePosition:boolean, includeMap:boolean) : WME
     {
-        var n_parameters:number = 6;
-        var hash:number = stringHashFunction("object") % WME_HASH_SIZE;
+        let n_parameters:number = 6;
+        let hash:number = stringHashFunction("object") % WME_HASH_SIZE;
         for(let wme2 of this.memory.short_term_memory[hash]) {
             if (wme2.functor == "object" &&
                 wme2.parameters[0] == o.ID && wme2.parameters.length == n_parameters) {
@@ -304,7 +303,7 @@ class A4AI {
         }
 
         // add new WME:
-        var wme:WME = new WME("object", activation);
+        let wme:WME = new WME("object", activation);
         wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
         if (includePosition) {
             wme.addParameter(o.x, WME_PARAMETER_INTEGER);
@@ -325,7 +324,7 @@ class A4AI {
         wme.sourceObject = o;
         wme = this.memory.addShortTermWME(wme);
 
-        var wme2:WME = new WME("is_a", activation);
+        let wme2:WME = new WME("is_a", activation);
         wme2.addParameter(o.ID, WME_PARAMETER_SYMBOL);
         wme2.addParameter(o.sort, WME_PARAMETER_SORT);
         wme2.sourceObject = o;
@@ -336,7 +335,7 @@ class A4AI {
 
     updateObjectSortPerceptionWME(o:A4Object, activation:number) : WME
     {
-        var hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
+        let hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
         for(let wme2 of this.memory.short_term_memory[hash]) {
             if (wme2.functor == "is_a" &&
                 wme2.parameters[0] == o.ID) {
@@ -358,7 +357,7 @@ class A4AI {
         }
         
         // add new WME:
-        var wme2:WME = new WME("is_a", activation);
+        let wme2:WME = new WME("is_a", activation);
         wme2.addParameter(o.ID, WME_PARAMETER_SYMBOL);
         wme2.addParameter(o.sort, WME_PARAMETER_SORT);
         wme2.sourceObject = o;
@@ -371,9 +370,9 @@ class A4AI {
     {
         if (pbr.directObjectSymbol==null && pbr.directObjectSort==null) {
             // 1 parameter:
-            var wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
+            let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
             wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-            var wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
+            let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
             wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
             wme.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
             this.memory.addShortTermWME(wme);
@@ -381,8 +380,8 @@ class A4AI {
             return wme;
         } else {
             // 2 or 3 parameter:
-            var p2:any;
-            var p2_type:number;
+            let p2:any;
+            let p2_type:number;
             if (pbr.directObjectSymbol!=null) {
                 p2 = pbr.directObjectSymbol;
                 p2_type = WME_PARAMETER_SYMBOL;
@@ -390,7 +389,7 @@ class A4AI {
                 if (pbr.directObjectID!=null) {
                     p2 = pbr.directObjectID;
                     p2_type = WME_PARAMETER_SYMBOL;
-                    var wme3:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
+                    let wme3:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
                     wme3.addParameter(p2, p2_type);
                     wme3.addParameter(pbr.directObjectSort, WME_PARAMETER_SORT);
                     this.memory.addShortTermWME(wme3);
@@ -402,27 +401,27 @@ class A4AI {
             
             if (pbr.indirectObjectSort==null) {
                 // 2 parameter:
-                var wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
+                let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
                 wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
                 wme.addParameter(p2, p2_type);
 
-                var wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
+                let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
                 wme2.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
                 wme2.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
                 this.memory.addShortTermWME(wme);
                 this.memory.addShortTermWME(wme2);
                 return wme;
             } else {
-                var wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
+                let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
                 wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
                 wme.addParameter(p2, p2_type);
                 wme.addParameter(pbr.indirectObjectID, WME_PARAMETER_SYMBOL);
 
-                var wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
+                let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
                 wme2.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
                 wme2.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
 
-                var wme4:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
+                let wme4:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
                 wme4.addParameter(pbr.indirectObjectID, WME_PARAMETER_SYMBOL);
                 wme4.addParameter(pbr.indirectObjectSort, WME_PARAMETER_SORT);
 
@@ -437,8 +436,8 @@ class A4AI {
 
     addWarpPerceptionBufferWMEs(pbr:PerceptionBufferObjectWarpedRecord) : WME
     {
-        var n_parameters:number = 6;
-        var hash:number = stringHashFunction("object") % WME_HASH_SIZE;
+        let n_parameters:number = 6;
+        let hash:number = stringHashFunction("object") % WME_HASH_SIZE;
         for(let wme2 of this.memory.short_term_memory[hash]) {
             if (wme2.functor == "object" &&
                 wme2.parameters[0] == pbr.ID && wme2.parameters.length == n_parameters) {
@@ -479,7 +478,7 @@ class A4AI {
         }        
 
         // add new WME:
-        var wme:WME = new WME("object",PERCEIVED_WARP_ACTIVATION);
+        let wme:WME = new WME("object",PERCEIVED_WARP_ACTIVATION);
         wme.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
         wme.addParameter(0, WME_PARAMETER_WILDCARD);
         wme.addParameter(0, WME_PARAMETER_WILDCARD);
@@ -487,7 +486,7 @@ class A4AI {
         wme.addParameter(0, WME_PARAMETER_WILDCARD);
         wme.addParameter(pbr.targetMap, WME_PARAMETER_SYMBOL);
         wme = this.memory.addShortTermWME(wme);
-        var wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
+        let wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
         wme2.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
         wme2.addParameter(pbr.sort, WME_PARAMETER_SORT);
         this.memory.addShortTermWME(wme2);
@@ -497,7 +496,7 @@ class A4AI {
 
     addWarpPerceptionBufferSortWMEs(pbr:PerceptionBufferObjectWarpedRecord) : WME
     {
-        var hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
+        let hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
         for(let wme2 of this.memory.short_term_memory[hash]) {
             if (wme2.functor == "is_a" &&
                 wme2.parameters[0] == pbr.ID) {
@@ -518,7 +517,7 @@ class A4AI {
         }
         
         // add new WME:
-        var wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
+        let wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
         wme2.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
         wme2.addParameter(pbr.sort, WME_PARAMETER_SORT);
         wme2 = this.memory.addShortTermWME(wme2);
@@ -540,7 +539,7 @@ class A4AI {
 
     updateNavigationPerceptionBuffer(game:A4Game, force:boolean)
     {
-        var subject:A4Object = this.character;
+        let subject:A4Object = this.character;
         if (this.character.isInVehicle()) {
             return;    // in shrdlu, we don't want the robots to drive vehicles
             // subject = this.character.vehicle;
@@ -555,15 +554,15 @@ class A4AI {
             this.navigationBuffer_bridges = new Array(this.navigationBuffer_size*this.navigationBuffer_size);
         }
 
-        var map:A4Map = subject.map;
+        let map:A4Map = subject.map;
         this.navigationBuffer_map = map;
         this.navigationBuffer_mapWidth = map.width;
-        var cx:number = Math.floor((subject.x + subject.getPixelWidth()/2) / this.tileWidth);
-        var cy:number = Math.floor((subject.y + subject.tallness + (subject.getPixelHeight() - subject.tallness)/2) / this.tileHeight);
+        let cx:number = Math.floor((subject.x + subject.getPixelWidth()/2) / this.tileWidth);
+        let cy:number = Math.floor((subject.y + subject.tallness + (subject.getPixelHeight() - subject.tallness)/2) / this.tileHeight);
         this.navigationBuffer_x = cx - Math.floor(this.character.sightRadius + (subject.getPixelWidth()/2)/this.tileWidth);
         this.navigationBuffer_y = cy - Math.floor(this.character.sightRadius + ((subject.getPixelHeight() - subject.tallness)/2)/this.tileHeight);
-//        var character_tileWidth:number = subject.getPixelWidth()/this.tileWidth;
-//        var character_tileHeight:number = (subject.getPixelHeight() - subject.tallness)/this.tileHeight;
+//        let character_tileWidth:number = subject.getPixelWidth()/this.tileWidth;
+//        let character_tileHeight:number = (subject.getPixelHeight() - subject.tallness)/this.tileHeight;
         
         for(let i:number = 0;i<this.navigationBuffer_size;i++) {
             for(let j:number = 0;j<this.navigationBuffer_size;j++) {
@@ -581,7 +580,7 @@ class A4AI {
         for(let o of this.all_objects_buffer) {
             if (o!=this.character && !o.isWalkable() && o!=this.character.vehicle) {
                 // if it's a door, and we have the key, then ignore the door:
-                var add:boolean = true;
+                let add:boolean = true;
                 if ((o instanceof A4Door) && 
                     ((this.doorsNotToOpenWhileWalking.indexOf((<A4Door>o).doorID) == -1 &&
                       (this.character.hasKey((<A4Door>o).doorID) ||
@@ -589,10 +588,10 @@ class A4AI {
                      (<A4Door>o).automatic)) add = false;
 
                 if (add) {
-                    var x0:number = Math.floor(o.x/this.tileWidth) - this.navigationBuffer_x;
-                    var y0:number = Math.floor((o.y + o.tallness)/this.tileHeight) - this.navigationBuffer_y;
-                    var x1:number = Math.floor((o.x+o.getPixelWidth()-1)/this.tileWidth) - this.navigationBuffer_x;
-                    var y1:number = Math.floor((o.y+o.getPixelHeight()-1)/this.tileHeight) - this.navigationBuffer_y;
+                    let x0:number = Math.floor(o.x/this.tileWidth) - this.navigationBuffer_x;
+                    let y0:number = Math.floor((o.y + o.tallness)/this.tileHeight) - this.navigationBuffer_y;
+                    let x1:number = Math.floor((o.x+o.getPixelWidth()-1)/this.tileWidth) - this.navigationBuffer_x;
+                    let y1:number = Math.floor((o.y+o.getPixelHeight()-1)/this.tileHeight) - this.navigationBuffer_y;
     //                x0 -= (character_tileWidth - 1);
     //                y0 -= (character_tileHeight - 1);
                     for(let y:number = y0;y<=y1;y++) {
@@ -610,10 +609,10 @@ class A4AI {
         
         // add bridges:
         for(let b of map.bridges) {
-            var x0:number = Math.floor(b.x/this.tileWidth) - this.navigationBuffer_x;
-            var y0:number = Math.floor(b.y/this.tileHeight) - this.navigationBuffer_y;
-            var x1:number = Math.floor((b.x+b.width-1)/this.tileWidth) - this.navigationBuffer_x;
-            var y1:number = Math.floor((b.y+b.height-1)/this.tileHeight) - this.navigationBuffer_y;
+            let x0:number = Math.floor(b.x/this.tileWidth) - this.navigationBuffer_x;
+            let y0:number = Math.floor(b.y/this.tileHeight) - this.navigationBuffer_y;
+            let x1:number = Math.floor((b.x+b.width-1)/this.tileWidth) - this.navigationBuffer_x;
+            let y1:number = Math.floor((b.y+b.height-1)/this.tileHeight) - this.navigationBuffer_y;
 //            x0 -= (character_tileWidth - 1);
 //            y0 -= (character_tileHeight - 1);
             for(let y:number = y0;y<=y1;y++) {
@@ -635,7 +634,7 @@ class A4AI {
         /*
         console.log("Navigation buffer:");
         for(let i:number = 0;i<this.navigationBuffer_size;i++) {
-            var line:string = "";
+            let line:string = "";
             for(let j:number = 0;j<this.navigationBuffer_size;j++) {
                 if (this.navigationBuffer[j+i*this.navigationBuffer_size] == NAVIGATION_BUFFER_WALKABLE) {
                     line += ".";
@@ -652,10 +651,10 @@ class A4AI {
     // pathfinding:
     addPFTargetObject(action:number, priority:number, flee:boolean, target:A4Object)
     {
-        var tilex0:number = target.x;///this.tileWidth;
-        var tiley0:number = (target.y+target.tallness);///this.tileWidth;
-        var tilex1:number = (target.x+target.getPixelWidth());///this.tileWidth;
-        var tiley1:number = (target.y+target.getPixelHeight());///this.tileWidth;
+        let tilex0:number = target.x;///this.tileWidth;
+        let tiley0:number = (target.y+target.tallness);///this.tileWidth;
+        let tilex1:number = (target.x+target.getPixelWidth());///this.tileWidth;
+        let tiley1:number = (target.y+target.getPixelHeight());///this.tileWidth;
         for(let pft of this.pathfinding_targets) {
             if (pft.flee) continue;
             if (pft.x0 == tilex0 && pft.y0 == tiley0 &&
@@ -669,7 +668,7 @@ class A4AI {
             }
         }
 
-        var pft2:PFTarget = new PFTarget();
+        let pft2:PFTarget = new PFTarget();
         pft2.x0 = tilex0;
         pft2.y0 = tiley0;
         pft2.x1 = tilex1;
@@ -698,7 +697,7 @@ class A4AI {
             }
         }
 
-        var pft2:PFTarget = new PFTarget();
+        let pft2:PFTarget = new PFTarget();
         pft2.x0 = tilex0;
         pft2.y0 = tiley0;
         pft2.x1 = tilex1;
@@ -719,11 +718,11 @@ class A4AI {
                 this.navigationBuffer_lastUpdated <= this.cycle-this.period) {
                 this.updateNavigationPerceptionBuffer(a_game, false);
             }
-            var target:A4Object = w.sourceObject;
-            if (target!=null && !this.navigationBuffer_map.contains(target)) target = null;
+            let target:A4Object = w.sourceObject;
+            if (target != null && !this.navigationBuffer_map.contains(target)) target = null;
                     
-            var map2:A4Map = a_game.getMap(<string>w.parameters[5]);
-            if (map2==this.navigationBuffer_map) {
+            let map2:A4Map = a_game.getMap(<string>w.parameters[5]);
+            if (map2 == this.navigationBuffer_map) {
                 // same map where a_character is:
                 //console.log("addPFTargetWME: same map.");
                 if (w.parameterTypes[1] == WME_PARAMETER_INTEGER) {
@@ -738,13 +737,21 @@ class A4AI {
             } else {
                 // different map, just target the map:
                 //console.log("addPFTargetWME: different map.");
-                var l:WME[] = this.memory.retrieveByFunctor("bridge");
+                let l:WME[] = this.memory.retrieveByFunctor("bridge");
+                let targetMap:string = <string>w.parameters[5];
+                if (this.map2mapPaths != null) {
+                    let idx1:number = a_game.getMapIndex(this.navigationBuffer_map.name);
+                    let idx2:number = a_game.getMapIndex(targetMap);
+                    if (idx1 >= 0 && idx2 >= 0 && this.map2mapPaths[idx1][idx2] != null) {
+                        targetMap = this.map2mapPaths[idx1][idx2];
+                    }
+                }
                 for(let wme of l) {
                     if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
                         wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
                         wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
                         wme.parameters[5] == this.navigationBuffer_map.name &&
-                        wme.parameters[0] == w.parameters[5]) {
+                        wme.parameters[0] == targetMap) {
                         this.addPFTarget(wme.parameters[1],
                                          wme.parameters[2],
                                          wme.parameters[3],
@@ -752,13 +759,13 @@ class A4AI {
                                          A4CHARACTER_COMMAND_IDLE, priority, flee, null);
                     }
                 }
-                var l:WME[] = this.memory.retrieveByFunctor("airlock-outside-door");
+                l = this.memory.retrieveByFunctor("airlock-outside-door");
                 for(let wme of l) {
                     if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
                         wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
                         wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
                         wme.parameters[5] == this.navigationBuffer_map.name &&
-                        wme.parameters[0] == w.parameters[5]) {
+                        wme.parameters[0] == targetMap) {
                         this.addPFTarget(wme.parameters[1],
                                          wme.parameters[2],
                                          wme.parameters[3],
@@ -778,13 +785,13 @@ class A4AI {
         if (this.pathfinding_targets.length == 0) return false;
         if (isNaN(this.navigationBuffer_x)) return false;
 
-        var otx:number;
-        var oty:number;
+        let otx:number;
+        let oty:number;
         // compute the origin tile cordinates (from the center of the top-left tile of the sprite):
-        var pw:number = subject.getPixelWidth();
-        var ph:number = subject.getPixelHeight() - subject.tallness;
-        var tw:number = Math.floor(pw/this.tileWidth);
-        var th:number = Math.floor(ph/this.tileHeight);
+        let pw:number = subject.getPixelWidth();
+        let ph:number = subject.getPixelHeight() - subject.tallness;
+        let tw:number = Math.floor(pw/this.tileWidth);
+        let th:number = Math.floor(ph/this.tileHeight);
         if (pw>this.tileWidth) {
             otx = Math.floor((subject.x + this.tileWidth/2)/this.tileWidth);
         } else {
@@ -802,17 +809,17 @@ class A4AI {
             return false;
         }
 
-        var start:number = (otx - this.navigationBuffer_x) + (oty - this.navigationBuffer_y)*this.navigationBuffer_size;
-        var openInsertPosition:number = 0;
-        var openRemovePosition:number = 0;
-        var current:number,currentx:number,currenty:number;
-        var next:number;
-        var i:number;
-        var bestScore:number = undefined;
-        var bestPriority:number = undefined;
-        var bestTarget:number = start;
-        var score:number = 0, priority = 0;
-        var size_sq:number = this.navigationBuffer_size*this.navigationBuffer_size;
+        let start:number = (otx - this.navigationBuffer_x) + (oty - this.navigationBuffer_y)*this.navigationBuffer_size;
+        let openInsertPosition:number = 0;
+        let openRemovePosition:number = 0;
+        let current:number,currentx:number,currenty:number;
+        let next:number;
+        let i:number;
+        let bestScore:number = undefined;
+        let bestPriority:number = undefined;
+        let bestTarget:number = start;
+        let score:number = 0, priority = 0;
+        let size_sq:number = this.navigationBuffer_size*this.navigationBuffer_size;
 
         // initialize open/closed lists:
         if (this.pathfinding_open==null) {
@@ -848,7 +855,7 @@ class A4AI {
                 // LEFT:
                 if (currentx > this.navigationBuffer_x) {
                     next = current-1;
-                    var canWalk:boolean = true;
+                    let canWalk:boolean = true;
                     for(i = 0;i<th;i++) {
                         if (this.navigationBuffer[next+i*this.navigationBuffer_size]==NAVIGATION_BUFFER_NOT_WALKABLE) {
                             canWalk = false;
@@ -865,7 +872,7 @@ class A4AI {
                 // RIGHT:
                 if (currentx < this.navigationBuffer_x+this.navigationBuffer_size - tw) {
                     next = current+1;
-                    var canWalk:boolean = true;
+                    let canWalk:boolean = true;
                     for(i = 0;i<th;i++) {
                         if (this.navigationBuffer[next+(tw-1)+i*this.navigationBuffer_size]==NAVIGATION_BUFFER_NOT_WALKABLE) {
                             canWalk = false;
@@ -882,7 +889,7 @@ class A4AI {
                 // UP:
                 if (currenty > this.navigationBuffer_y) {
                     next = current-this.navigationBuffer_size;
-                    var canWalk:boolean = true;
+                    let canWalk:boolean = true;
                     for(i = 0;i<tw;i++) {
                         if (this.navigationBuffer[next+i]==NAVIGATION_BUFFER_NOT_WALKABLE) {
                             canWalk = false;
@@ -899,7 +906,7 @@ class A4AI {
                 // DOWN:
                 if (currenty < this.navigationBuffer_y+this.navigationBuffer_size - th) {
                     next = current+this.navigationBuffer_size;
-                    var canWalk:boolean = true;
+                    let canWalk:boolean = true;
                     for(i = 0;i<tw;i++) {
                         if (this.navigationBuffer[next+(th-1)*this.navigationBuffer_size+i]==NAVIGATION_BUFFER_NOT_WALKABLE) {
                             canWalk = false;
@@ -935,18 +942,18 @@ class A4AI {
 
     pathFindingScore(character_x0:number, character_y0:number, subject:A4Object) : [number,number]
     {
-        var out_score:number;
-        var priority:number;
-        var bestGotoScorePriority:number = -1;
-        var bestGotoScore:number = Number.MAX_VALUE;
-        var bestFleeScorePriority:number = -1;
-        var bestFleeScore:number = 0;
-        var score:number = 0;
-        var dx:number;
-        var dy:number;
-//        var character_x1:number = character_x0 + Math.floor(subject.getPixelWidth()/this.tileWidth)-1;
-//        var character_y1:number = character_y0 + Math.floor((subject.getPixelHeight()-subject.tallness)/this.tileHeight)-1;
-        var x0:number,y0:number,x1:number,y1:number;
+        let out_score:number;
+        let priority:number;
+        let bestGotoScorePriority:number = -1;
+        let bestGotoScore:number = Number.MAX_VALUE;
+        let bestFleeScorePriority:number = -1;
+        let bestFleeScore:number = 0;
+        let score:number = 0;
+        let dx:number;
+        let dy:number;
+//        let character_x1:number = character_x0 + Math.floor(subject.getPixelWidth()/this.tileWidth)-1;
+//        let character_y1:number = character_y0 + Math.floor((subject.getPixelHeight()-subject.tallness)/this.tileHeight)-1;
+        let x0:number,y0:number,x1:number,y1:number;
         
         for(let i:number = 0;i<this.pathfinding_targets.length;i++) {
             if (this.pathfinding_targets[i].flee) {
@@ -1015,13 +1022,13 @@ class A4AI {
             wme.parameterTypes[5]  == WME_PARAMETER_SYMBOL &&
             wme.parameters[5] == map.name &&
             wme.parameterTypes[1] == WME_PARAMETER_INTEGER) {
-            var ltox0:number = <number>wme.parameters[1];
-            var ltoy0:number = <number>wme.parameters[2];
-            var ltox1:number = <number>wme.parameters[3];
-            var ltoy1:number = <number>wme.parameters[4];
+            let ltox0:number = <number>wme.parameters[1];
+            let ltoy0:number = <number>wme.parameters[2];
+            let ltox1:number = <number>wme.parameters[3];
+            let ltoy1:number = <number>wme.parameters[4];
             if (ltox0<perception_x1 && ltox1>perception_x0 &&
                 ltoy0<perception_y1 && ltoy1>perception_y0) {
-                var found:boolean = false;
+                let found:boolean = false;
                 for(let o of this.all_objects_buffer) {
                     if (!o.burrowed) {
                         if (o.x==ltox0 && o.y+o.tallness==ltoy0 && wme.parameters[0] == o.ID) {
@@ -1041,7 +1048,7 @@ class A4AI {
 
     factCheckInventory(wme:WME)
     {
-        var found:boolean = false;
+        let found:boolean = false;
         for(let o of this.character.inventory) {
             if (o.ID == wme.parameters[0]) found = true;
         }
@@ -1055,6 +1062,83 @@ class A4AI {
     objectRemoved(o:A4Object) 
     {
         if (this.memory!=null) this.memory.objectRemoved(o);
+    }
+
+
+    precomputeMap2mapPaths(game:A4Game)
+    {
+        let map:boolean[][] = [];
+        let n:number = game.maps.length;
+        this.map2mapNames = [];
+        this.map2mapPaths = [];
+        for(let i:number = 0;i<n;i++) {
+            let row:boolean[] = [];
+            let rowPaths:string[] = [];
+            for(let j:number = 0;j<n;j++) {
+                let linked:boolean = false;
+                // see if there is a bridge or an airlock linking the two maps:
+                for(let b of game.maps[i].bridges) {
+                    if (b.linkedTo != null && 
+                        b.linkedTo.map == game.maps[j]) {
+                        linked = true;
+                    }
+                }
+                for(let o of game.maps[i].objects) {
+                    if (o instanceof ShrdluAirlockDoor) {
+                        let ald:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
+                        if (o.targetMap == game.maps[j].name) {
+                            linked = true;
+                        }
+                    }
+                }
+                rowPaths.push(null);
+                row.push(linked);
+            }
+            map.push(row);
+            this.map2mapPaths.push(rowPaths);
+            this.map2mapNames.push(game.maps[i].name);
+        }
+
+        for(let i:number = 0;i<n;i++) {
+            for(let j:number = 0;j<n;j++) {
+                if (i == j) continue;
+                // find a path from one map to the other:
+                let path:number[] = this.map2mapPath(i, j, map);
+
+                // cache the first step of the path in this.map2mapPaths:
+                if (path != null && path.length > 1) {
+                    this.map2mapPaths[i][j] = game.maps[path[1]].name;
+                }
+            }
+        }
+
+        console.log(map);
+        console.log(this.map2mapPaths);
+    }
+
+
+    // BFS (since the map is very small, it's fast enough):
+    map2mapPath(start:number, end:number, map:boolean[][]) : number[]
+    {
+        let open:number[][] = [[start]];
+        let closed:number[] = [];
+
+        while(open.length > 0) {
+            let currentPath:number[] = open[0];
+            let current:number = currentPath[currentPath.length-1];
+            if (current == end) {
+                return currentPath;
+            }
+            open.splice(0, 1);
+            closed.push(current);
+            for(let i:number = 0;i<map.length;i++) {
+                if (map[current][i] && closed.indexOf(i) == -1) {
+                    open.push(currentPath.concat([i]));
+                }
+            }
+        }
+
+        return null;
     }
 
 
@@ -1099,4 +1183,7 @@ class A4AI {
 
     // cached WMEs:
     is_a_pattern:WME = null;
+
+    map2mapNames:string[] = null;
+    map2mapPaths:string[][] = null;
 }

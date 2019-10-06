@@ -156,7 +156,7 @@ class A4ObjectFactory {
                 o = new A4PlayerCharacter(o_name,s);
             } else {
                 var s:Sort = ontology.getSort(classStr);
-                o = new A4AICharacter(o_name,s);
+                o = new A4AICharacter(o_name, s);
             }
         } else if (baseClassName == "obstacle") {
             var s:Sort = ontology.getSort(classStr);

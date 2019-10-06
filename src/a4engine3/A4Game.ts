@@ -608,6 +608,9 @@ class A4Game {
         let script_e:Element = getFirstElementChildByTag(this.xml,"ShrdluGameScript");
         if (script_e != null) this.gameScript.restoreFromXML(script_e);
 
+        // make sure SHRDLU knows how to go places for which it has to traverse multiple maps:
+        this.shrdluAI.robot.AI.precomputeMap2mapPaths(this);
+
         console.log("A4Game created\n");
         console.log("currentPlayer = " + this.currentPlayer);
     }
@@ -1799,6 +1802,15 @@ class A4Game {
             if (name == m.name) return m;
         }
         return null;
+    }
+
+
+    getMapIndex(name:string) : number
+    {
+        for(let m of this.maps) {
+            if (name == m.name) return this.maps.indexOf(m);
+        }
+        return -1;
     }
 
 
