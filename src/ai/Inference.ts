@@ -431,6 +431,7 @@ class InterruptibleResolution
 		}
 
 		console.log("step_internal: finished with #resolutions = " + resolutions + "(" + this.total_resolutions + "), closed: "+this.closed.length+", end results: " + this.endResults.length);
+		//console.log("closed: " + this.closed)
 		this.internal_step_state = 1;
 		return this.newResolventsWithBindings;
 	}

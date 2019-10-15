@@ -311,5 +311,6 @@ testNLG("perf.inform('1'[#id], #and(X:permission-to(V3:'1'[#id], action.take('1'
 testNLG("perf.inform('1'[#id], too-small('c2'[#id]))", "etaoin", "the crate of qwerty is too small");
 testNLG("perf.inform('1'[#id], #and(V:verb.salvage('etaoin'[#id], #and(some(X:'crate'[symbol], [plural]), noun(X, [plural]))), time.past(V)))", "etaoin", "I salvaged some crates");
 
+testNLG("perf.inform('1'[#id], verb.run-out-of('1'[#id], [oxygen]))", "etaoin", "you run out of oxygen");
 
 

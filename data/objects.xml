@@ -972,14 +972,14 @@
         </eventRule>
 	</ObjectClass>		
 
-	<ObjectClass class="broken-rover" super="*rover,obstacle" name="rover">
+	<!--ObjectClass class="broken-rover" super="*rover,obstacle" name="rover">
 		<attribute name="tallness" value="16"/>
 		<animation name="idle-right" dx="5" dy="4" period="4" looping="false" file="vehicles.png">200</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<talkOther text="This rover is missing the wheels!" thought="true"/>
         </eventRule>
-  	</ObjectClass>	
+  	</ObjectClass-->	
 
 	<ObjectClass class="driveable-shuttle" super="*shuttle,vehicle" name="shuttle">
 		<attribute name="tallness" value="16"/>

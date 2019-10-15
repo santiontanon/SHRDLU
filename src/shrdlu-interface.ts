@@ -77,6 +77,7 @@ class BShrdluTextFrame extends BShrdluFrame {
 
         let x:number = this.x + 8*PIXEL_SIZE;
         let y:number = this.y + 8*PIXEL_SIZE + this.fontHeight;
+        let highlighted:boolean = false;
         if (this.centered) {
             x = this.x + this.width/2;
             ctx.textAlign = "center";
@@ -87,14 +88,30 @@ class BShrdluTextFrame extends BShrdluFrame {
         ctx.font = this.font;
         ctx.textBaseline = "bottom"; 
         for(let line of this.text) { 
-            ctx.fillText(line, x, y);
+            let line_x:number = x;
+            for(let i:number = 0;i<line.length;i++) {
+                if (line[i] == '*') {
+                    if (highlighted) {
+                        ctx.fillStyle = "white";
+                        highlighted = false;
+                    } else {
+                        ctx.fillStyle = MSX_COLOR_LIGHT_GREEN;
+                        highlighted = true;
+                    }
+                } else {
+                    ctx.fillText(line[i], line_x, y);
+                    line_x += this.fontWidth;
+                }
+                
+            }
             y += this.fontHeight;
         }        
     }
 
     centered:boolean = false;
     font:string = null;
-    fontHeight:number = 8;
+    fontWidth:number = 6*PIXEL_SIZE;    // note: this number is hardcoded!
+    fontHeight:number = 8*PIXEL_SIZE;
     text:string[] = null;
 }
 

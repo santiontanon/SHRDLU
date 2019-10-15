@@ -57,7 +57,7 @@ class NLParser {
 	{
 		// STEP 1: Tokenization
 		var tokens:string[] = this.posParser.tokenize(sentence);
-//		console.log("Tokenization:\n" + tokens);
+		// console.log("Tokenization:\n" + tokens);
 		if (tokens == null || tokens.length == 0) return [];
 
 		// STEP 2: Dictionary-based multi-token word detection (merge tokens)

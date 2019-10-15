@@ -406,5 +406,5 @@ class RobotAI extends A4RuleBasedAI {
 
 	etaoin_perception_term:Term = null;
 
-	perceptionRadius:number = 10;
+	perceptionRadius:number = 16;
 }

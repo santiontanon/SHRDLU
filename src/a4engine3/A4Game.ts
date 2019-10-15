@@ -1475,6 +1475,11 @@ class A4Game {
 
     mouseClick(mouse_x: number, mouse_y: number, button: number) 
     {
+        if (mouse_y < PIXEL_SIZE*8*17) {
+            // click in the game screen: this should skip text bubbles, cutscenes, etc.
+            this.skipSpeechBubble();
+        }
+
         if (mouse_x >= PIXEL_SIZE*8*27 &&
             mouse_x < PIXEL_SIZE*8*28 &&
             mouse_y >= PIXEL_SIZE*8*17 &&

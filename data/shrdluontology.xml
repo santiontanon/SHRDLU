@@ -32,6 +32,7 @@
     <sort name="etcetera" super="any"/>
 
     <sort name="abstract-entity" super="any"/>
+    <sort name="physical-entity" super="any"/>
 
     <sort name="measuring-unit" super="abstract-entity"/>
 
@@ -64,6 +65,7 @@
     <sort name="exclamation" super="punctuation"/>    
     <sort name="question" super="punctuation"/>    
     <sort name="quote" super="punctuation"/>    
+    <sort name="emoticon" super="part-of-speech"/>    
 
     <sort name="interjection" super="part-of-speech"/>   
     <sort name="interjection-sound" super="interjection"/>   
@@ -223,7 +225,7 @@
     <sort name="perf.moreresults" super="performative"/>   <!-- things like "who else?", "anyone else?", "what else?" -->
     <sort name="perf.rephrase.entity" super="performative"/>
 
-    <sort name="object" super="any"/>
+    <sort name="object" super="physical-entity"/>
     <sort name="obstacle" super="object"/>
     <sort name="item" super="object"/>
     <sort name="key" super="item"/>
@@ -413,11 +415,18 @@
     <sort name="voice" super="sound"/>
 
     <sort name="laundry" super="object"/>
+    <sort name="money" super="object"/>
 
     <sort name="signal" super="abstract-entity"/>
     <sort name="distress-signal" super="signal"/>
 
     <sort name="feeling" super="abstract-entity"/>
+
+    <sort name="chemical-element" super="physical-entity"/>
+    <sort name="gas" super="physical-entity"/>
+    <sort name="oxygen" super="chemical-element,gas"/>
+    <sort name="hydrogen" super="chemical-element,gas"/>
+    <sort name="nitrogen" super="chemical-element,gas"/>
 
     <sort name="state" super="abstract-entity"/>
     <sort name="state.welcome" super="state"/>
@@ -505,7 +514,8 @@
     <sort name="verb.define" super="verb"/>
     <sort name="verb.face" super="verb"/>
     <sort name="verb.feel" super="verb"/>
-    <sort name="verb.find" super="verb-with-optional-location-3rd-argument"/>
+    <sort name="verb.locate" super="verb-with-optional-location-3rd-argument"/>
+    <sort name="verb.find" super="verb.locate"/>
     <sort name="verb.fill" super="verb"/>
     <sort name="verb.follow" super="verb"/>
     <sort name="verb.happen" super="verb,#stateSort"/>
@@ -564,6 +574,9 @@
     <sort name="verb.save" super="verb"/>
     <sort name="verb.salvage" super="verb.save"/>
     <sort name="verb.clean" super="verb"/>
+    <sort name="verb.die" super="verb"/>
+    <sort name="verb.run-out-of" super="verb"/>
+    <sort name="verb.wear" super="verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
@@ -585,6 +598,8 @@
     <sort name="action.disembark" super="actionverb,verb.leave"/>
     <sort name="action.memorize" super="actionverb"/>
     <sort name="action.erase" super="actionverb"/>
+    <sort name="action.print" super="actionverb"/>
+    <sort name="action.3dprint" super="actionverb"/>
     <sort name="action.answer.predicate" super="actionverb"/>
     <sort name="action.answer.predicate-negated" super="actionverb"/>
     <sort name="action.answer.whereis" super="actionverb"/>
@@ -632,6 +647,7 @@
     <sort name="time.end" super="time.location,end"/>
     <sort name="time.date" super="time"/>
     <sort name="time.already" super="time"/>
+    <sort name="time.ever" super="time"/>
 
     <sort name="time.unit" super="time,measuring-unit"/>
     <sort name="time.second" super="time.unit"/>
@@ -832,6 +848,7 @@
     <sort name="property.strange" super="property"/>
 
     <sort name="awake" super="property"/>
+    <sort name="asleep" super="property"/>
     <sort name="erased" super="property"/>
     <sort name="healthy" super="property"/>
     <sort name="sick" super="property"/>

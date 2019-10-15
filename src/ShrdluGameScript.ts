@@ -291,10 +291,10 @@ class ShrdluGameScript {
 												" But you want to try to respond...   ",
 												"",
 												" To say something, type what you want",
-												" to say, and then press ENTER.       ",
-												" For example, try to say 'yes'.      ",
+												" to say, and then press *ENTER*.       ",
+												" For example, try to say \"*yes*\".      ",
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
 				this.act_intro_state = 3;
 			}
 			break;
@@ -532,11 +532,11 @@ class ShrdluGameScript {
 
 		case 16:
 			if (this.act_intro_state_timer == 0) {
-				this.app.tutorialMessages.push([" To move around, use the arrow keys. ",
+				this.app.tutorialMessages.push([" To move around, use the *arrow keys*. ",
 											    " For now, just walk around the room  ",
 											    " and follow Qwerty's instructions.   ",
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
 			} else {
 				if (this.game.currentPlayer.state == A4CHARACTER_STATE_WALKING) this.act_intro_state = 98;
 			}
@@ -570,14 +570,14 @@ class ShrdluGameScript {
 		case 99:
 			if (!this.game.qwertyAI.robot.isTalking()) {
 				this.app.tutorialMessages.push([" To push or pull objects, walk up to ",
-											    " them, hold SPACE, and then press the",
+											    " them, *hold SPACE*, and then press the",
 											    " direction in which you want to push ",
 											    " them.                               ",
 											    "",
 											    " Walk to the chair in the south-east ",
 											    " of the room and push it now.        ",
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
 				this.act_intro_state = 100;		
 			}
 			break;
@@ -702,11 +702,11 @@ class ShrdluGameScript {
 			} else if (!this.game.qwertyAI.robot.isTalking()) {
 //			} else if (this.act_intro_state_timer == 180) {
 				this.app.tutorialMessages.push([" To take objects, walk onto them and ",
-												" press SPACE. Access your inventory  ",
-												" by pressing the TAB key. Take the   ",
+												" press *SPACE*. Access your inventory  ",
+												" by pressing the *TAB* key. Take the   ",
 												" communicator now.",
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
 				this.act_intro_state = 109;
 			}
 			break;
@@ -723,8 +723,6 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.can($PLAYER, #and(Y:action.talk($PLAYER), relation.target(Y, $ETAOIN))), relation.tool(X, 'communicator'[#id]))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.need($PLAYER, verb.sleep($PLAYER)), #and(time.first(X), conjunction-contrast(X)))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, #and(X:verb.go($PLAYER, verb.sleep($PLAYER)), time.now(X))))");
-				this.qwertyDropsObject("bedroom5-key");
-        		this.qwertyMoves(560, 272, this.game.qwertyAI.robot.map);
 
 				let term:Term = Term.fromString("goal(D:'david'[#id],verb.go-to(X, 'verb.sleep'[verb.sleep]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
@@ -739,10 +737,12 @@ class ShrdluGameScript {
 				this.app.tutorialMessages.push([" Some doors need to be operated by   ",
 												" hand. Take the key card qwerty just ",
 												" dropped, walk to your bedroom door  ",
-												" and open it. Press SPACE when facing",
+												" and open it. Press *SPACE* when facing",
 												" an object to interact with it.      ",
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
+				this.qwertyDropsObject("bedroom5-key");
+        		this.qwertyMoves(560, 272, this.game.qwertyAI.robot.map);
 			} else {
 				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
 					this.game.currentPlayer.y >= 192 && this.game.currentPlayer.y<240) {
@@ -756,11 +756,11 @@ class ShrdluGameScript {
 		/*
 			if (this.act_intro_state_timer == 0) {
 				this.app.tutorialMessages.push([" To interact with objects, just walk ",
-												" on to them and press SPACE. Walk up ",
-												" to your bed now and press SPACE to  ", 
+												" on to them and press *SPACE*. Walk up ",
+												" to your bed now and press *SPACE* to  ", 
 												" sleep.                              ", 
 											    "",
-											    "  [press ESC to close this message]  "]);
+											    "  [press *ESC* to close this message]  "]);
 			} else {
 				*/
 				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
@@ -1040,10 +1040,10 @@ class ShrdluGameScript {
 											" anywhere within Aurora Station, you ",
 											" can talk to Etaoin by first calling ",
 											" his attention. For example, you can ",
-											" say \"Hi Etaoin!\", and from then on, ",
+											" say \"*Hi Etaoin!*\", and from then on, ",
 											" you can ask Etaoin questions.       ",
 										    "",
-										    "  [press ESC to close this message]  "]);
+										    "  [press *ESC* to close this message]  "]);
 			this.act_1_state = 5;
 			break;
 
@@ -3720,4 +3720,6 @@ class ShrdluGameScript {
 	finding_life_side_plot_analyzed_question:boolean = false;
 	what_is_dust_side_plot_taken_question:boolean = false;
 	player_has_asked_to_take_shrdlu:boolean = false;
+
+	triggerOutOfCommRangeMessage:boolean = false;
 }

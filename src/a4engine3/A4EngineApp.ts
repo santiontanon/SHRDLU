@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "Demo v3.0"
+var SHRDLU_VERSION:string = "Demo v3.1"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1
@@ -261,6 +261,8 @@ class A4EngineApp {
             this.game.shrdluAI.intentions = [];
         }
 
+        this.mouse_click_last_frame = false;
+
         return true;
     }
 
@@ -308,6 +310,8 @@ class A4EngineApp {
 
     mouseClick(mouse_x: number, mouse_y: number, button: number, event:MouseEvent) 
     {
+        this.mouse_click_last_frame = true;
+
         if (this.state == A4ENGINE_STATE_GAME) {
             if (this.ingame_menu != INGAME_MENU && 
                 this.ingame_menu != INGAME_LOAD_MENU && 
@@ -339,7 +343,6 @@ class A4EngineApp {
         var sceneDuration:number = SHRDLU_FADEIN_TIME*2+textShowTime;
         var currentScene:number = Math.floor(this.state_cycle / sceneDuration);
 
-
         if (k.key_press(KEY_CODE_ESCAPE)) {
             if (this.state_cycle < 350) {
                 this.state_cycle = 350;
@@ -348,7 +351,8 @@ class A4EngineApp {
             }
         } 
         if (k.key_press(KEY_CODE_SPACE) ||
-            k.key_press(KEY_CODE_RETURN)) {
+            k.key_press(KEY_CODE_RETURN) ||
+            this.mouse_click_last_frame) {
             if (this.state_cycle < 11*sceneDuration) {
                 this.state_cycle = (currentScene+1)*sceneDuration;
             } else {
@@ -1110,7 +1114,7 @@ class A4EngineApp {
                 this.introact_state_timer++;
                 if (this.introact_state_timer >= SHRDLU_FADEIN_TIME && 
                     (k.key_press(KEY_CODE_ESCAPE) || k.key_press(KEY_CODE_SPACE) || k.key_press(KEY_CODE_RETURN) ||
-                    this.introact_state_timer >= 600)) {
+                    this.mouse_click_last_frame || this.introact_state_timer >= 600)) {
                     this.introact_state_timer = 0;
                     this.introact_state = 1;
                 }
@@ -1210,7 +1214,7 @@ class A4EngineApp {
                 this.gameover_state_timer++;
                 if (this.gameover_state_timer >= SHRDLU_FADEIN_TIME && 
                     (k.key_press(KEY_CODE_ESCAPE) || k.key_press(KEY_CODE_SPACE) || k.key_press(KEY_CODE_RETURN) ||
-                    this.gameover_state_timer >= 600)) {
+                    this.mouse_click_last_frame || this.gameover_state_timer >= 600)) {
                     this.gameover_state_timer = 0;
                     this.gameover_state = 1;
 
@@ -1297,6 +1301,7 @@ class A4EngineApp {
     mouse_x:number;
     mouse_y:number;
     mouse_button:number;
+    mouse_click_last_frame:boolean = false;
 
     screen_width:number;
     screen_height:number;
