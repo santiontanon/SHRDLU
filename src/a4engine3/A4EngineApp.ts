@@ -98,7 +98,6 @@ class A4EngineApp {
 //        var configString:string = null;
         if (configString != null) {
             console.log("Found config stored in the browser, loading it...");
-            //console.log(configString);      
             // if we can find a configuration saved in the browser, load it:
             var oParser:DOMParser = new DOMParser();
             config_xml = oParser.parseFromString(configString, "text/xml").documentElement;
@@ -108,7 +107,6 @@ class A4EngineApp {
             var defaultGame:Element[] = getElementChildrenByTag(config_xml,"defaultGame");
             var volume_xml:Element[] = getElementChildrenByTag(config_xml,"volume");
             var controls_xml:Element[] = getElementChildrenByTag(config_xml,"controls");
-            //console.log(defaultGame);
             if (defaultGame != null && defaultGame.length > 0) {
                 var path:string = defaultGame[0].getAttribute("path");
                 var gameFile:string = defaultGame[0].getAttribute("gamefile");
@@ -208,7 +206,6 @@ class A4EngineApp {
         configString += "</A4Configuration>"
         localStorage.setItem(A4CONFIG_STORAGE_KEY, configString);
         console.log("Config saved to the browser ... (key: " + A4CONFIG_STORAGE_KEY + ")");  
-        //console.log(configString);      
     }
 
 
@@ -1110,7 +1107,6 @@ class A4EngineApp {
 
         switch(this.introact_state) {
             case 0:
-                if (this.introact_state_timer == 0) console.log("actintro_cycle: cycle 0");
                 this.introact_state_timer++;
                 if (this.introact_state_timer >= SHRDLU_FADEIN_TIME && 
                     (k.key_press(KEY_CODE_ESCAPE) || k.key_press(KEY_CODE_SPACE) || k.key_press(KEY_CODE_RETURN) ||
@@ -1127,8 +1123,6 @@ class A4EngineApp {
                     this.introact_state_timer = 0;
                     if (act >= 2) this.game.gameScript.act = "" + act;
 
-                    /*
-                    //if (act == 2) {
                     if (act == 3) {
                         this.introact_state = 2;
                         var menuItems:string[] = [];
@@ -1138,7 +1132,6 @@ class A4EngineApp {
                         menuCallbacks.push(null);
                         menuItems.push("end of this Demo!");
                         menuCallbacks.push(null);
-//                        menuItems.push("Send Debug Log");
                         menuItems.push("Generate Debug Log");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {    
@@ -1151,8 +1144,6 @@ class A4EngineApp {
                                      app.introact_state = 3;
                                });
                         BInterface.push();
-            //            createShrdluMenu(menuItems,menuCallbacks,  
-            //                             fontFamily32px,32,this.screen_width/2-8*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,16*8*PIXEL_SIZE,7*8*PIXEL_SIZE,0,1,this.GLTM);
                         createShrdluMenu(menuItems,menuCallbacks,  
                                          fontFamily32px,32,this.screen_width/2-10*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,20*8*PIXEL_SIZE,6*8*PIXEL_SIZE,0,1,this.GLTM);
                         BInterface.getElementByID(1).setEnabled(false);
@@ -1160,7 +1151,6 @@ class A4EngineApp {
 
                         return this.state;
                     }
-                    */
                     return A4ENGINE_STATE_GAME;
                 }
                 break;
@@ -1210,7 +1200,6 @@ class A4EngineApp {
 
         switch(this.gameover_state) {
             case 0:
-                if (this.gameover_state_timer == 0) console.log("gameover_cycle: cycle 0");
                 this.gameover_state_timer++;
                 if (this.gameover_state_timer >= SHRDLU_FADEIN_TIME && 
                     (k.key_press(KEY_CODE_ESCAPE) || k.key_press(KEY_CODE_SPACE) || k.key_press(KEY_CODE_RETURN) ||
@@ -1290,13 +1279,10 @@ class A4EngineApp {
     key_fast_time:number;
 
     // game:
-//    configFilePath:string;
     game_path:string;
     game_filename:string;
     gameDefinition:Element;
     game:A4Game;
-
-    //BitmapFont *m_font32,*m_font16,*m_font8;
 
     mouse_x:number;
     mouse_y:number;
@@ -1346,6 +1332,5 @@ class A4EngineApp {
     gamecomplete_state:number;
 
     // AI debugger:
-    //AI_debugger_focus:A4AICharacter = null;
     SHRDLU_AI_debugger:RuleBasedAIDebugger = new RuleBasedAIDebugger();
 }
