@@ -70,6 +70,14 @@
 	<sentence provenance="background" sentence="role('turing'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('turing'[#id])"/>
 
+	<!-- general about games and characters -->
+	<sentence provenance="background" sentence="game-protagonist('popolon'[#id])"/>
+	<sentence provenance="background" sentence="game-protagonist('aphrodite'[#id])"/>
+	<sentence provenance="background" sentence="name('popolon'[#id],'popolon'[symbol])"/>
+	<sentence provenance="background" sentence="name('aphrodite'[#id],'aphrodite'[symbol])"/>
+	<sentence provenance="background" sentence="game-protagonist('guybrush'[#id])"/>
+	<sentence provenance="background" sentence="name('guybrush'[#id],'guybrush threepwood'[symbol])"/>
+
 	<!-- general knowledge about locations -->
 	<sentence provenance="background" sentence="universe('universe'[#id])"/>
 	<sentence provenance="background" sentence="name('universe'[#id],'the universe'[symbol])"/>
@@ -497,6 +505,7 @@
 	<sentence provenance="background" sentence="~weight(X:[#id], 'light-weight'[light-weight]); ~weight(X, 'heavy-weight'[heavy-weight])"/>
 	<sentence provenance="background" sentence="~relation.owns(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
 	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); relation.owns(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.like(X:[#id], Y:[#id]); ~verb.hate(X, Y)"/>	
 
 	<sentence provenance="background" sentence="~relation.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); relation.contains(Y,X)"/>
@@ -536,6 +545,5 @@
 	<sentence provenance="background" sentence="~space.at(X:[#id], Y:[#id]); space.near(X, Y)"/>
 	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); space.near(Y, X)"/>
 	<sentence provenance="background" sentence="~space.far(X:[#id], Y:[#id]); space.far(Y, X)"/>
-
-
+	
 </knowledgeBase>

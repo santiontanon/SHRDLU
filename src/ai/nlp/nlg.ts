@@ -578,6 +578,15 @@ class NLGenerator {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 			let propertyStr:string = this.pos.getPropertyString(t.functor);
+
+			if (propertyStr == null) {
+				propertyStr = this.pos.getNounString(t.functor, 0, false);	// without trying ancestors
+				if (propertyStr != null) propertyStr = "a " + propertyStr;
+			}
+			if (propertyStr == null) {
+				propertyStr = this.pos.getNounString(t.functor, 0, true);		// we are despearte, try ancestors
+				if (propertyStr != null) propertyStr = "a " + propertyStr;
+			}
 			if (adverb_str != null && adverb_str_term != time_term) complements = complements + " " + adverb_str;
 			if (verbStr != null && propertyStr != null) 
 				return subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr + complements;

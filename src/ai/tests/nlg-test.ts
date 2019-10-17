@@ -313,4 +313,6 @@ testNLG("perf.inform('1'[#id], #and(V:verb.salvage('etaoin'[#id], #and(some(X:'c
 
 testNLG("perf.inform('1'[#id], verb.run-out-of('1'[#id], [oxygen]))", "etaoin", "you run out of oxygen");
 
+testNLG("perf.inform('1'[#id], game-protagonist('qwerty'[#id]))", "etaoin", "qwerty is a game protagonist");
+
 

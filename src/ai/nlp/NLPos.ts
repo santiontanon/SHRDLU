@@ -221,6 +221,8 @@ class POSParser {
       "after that",
       "right now",
       "in the past",
+      "in addition",
+      "as well",
 
       // nouns (space):
       "the universe",
@@ -382,6 +384,10 @@ class POSParser {
       "too small",
       "T-14 hyperdrive generator",
       "chemical element",
+      "game character",
+      "game protagonist",
+      "video game character",
+      "video game protagonist",
 
       // adjectives:
       "in stasis",
@@ -991,6 +997,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("access key", "key-card", o);
     this.addStandardNounPOS("floor", "ground", o);
     this.addStandardNounPOS("restroom", "bathroom", o);
+    this.addStandardNounPOS("video game character", "game-character", o);
+    this.addStandardNounPOS("video game protagonist", "game-protagonist", o);
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o);
@@ -1112,6 +1120,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("fungi", "fungi", Term.fromString("noun('fungi'[fungi], [plural])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("furniture", "furniture", Term.fromString("noun('furniture'[furniture], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("g", "gravity.unit.g", o);
+    this.addStandardNounPOS("game", "game", o);
+    this.addStandardNounPOS("game character", "game-character", o);
+    this.addStandardNounPOS("game protagonist", "game-protagonist", o);
     this.addStandardNounPOS("galaxy", "galaxy", o);
     this.addStandardNounPOS("garage", "garage", o);
     this.addStandardNounPOS("gas", "gas", o);
@@ -1222,6 +1233,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addUncountableNounPOS("permission", "permission-to", o);
     this.addStandardNounPOS("person", "human", o);
     this.addStandardNounPOS("physicist", "physicist", o);
+    this.addStandardNounPOS("pizza", "pizza", o);
     this.addStandardNounPOS("place", "space.location", o);
     this.addStandardNounPOS("planet", "planet", o);
     this.addStandardNounPOS("plastic 3d printer", "plastic-3dprinter", o);
@@ -1241,6 +1253,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("profession", "profession", o);
     this.addTokenPOS(new PartOfSpeech("property", "property", Term.fromString("noun('property'[property], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("properties", "property", Term.fromString("noun('property'[property], [plural])", o), 1.0));
+    this.addStandardNounPOS("protagonist", "protagonist", o);
     this.addStandardNounPOS("question", "perf.question", o);
     this.addStandardNounPOS("radius", "radius", o);    
     this.addStandardNounPOS("ration", "ration", o);
@@ -1522,6 +1535,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.will", "will","will","would",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.will", "'ll","'ll","'d",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.may", "may","may","might",null,null, true, multitokens_raw, o);
+    this.addStandardVerbPOS("action.lock", "lock","locks","locked","locked","locking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.unlock", "unlock","unlocks","unlocked","unlocked","unlocking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.like", "like","likes","liked","liked","liking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.love", "love","loves","loved","loved","loving", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.hate", "hate","hates","hated","hated","hating", false, multitokens_raw, o);
 
     this.addPhrasalVerbPOS("verb.wait-for","for", "wait","waits","waited","waited","waiting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-on","on", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
@@ -1651,6 +1669,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("slightly", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("already", "time.already", Term.fromString("adverb('time.already'[time.already])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("ever", "time.ever", Term.fromString("adverb('time.ever'[time.ever])", o), 1.0));
+
+    this.addTokenPOS(new PartOfSpeech("too", "in-addition", Term.fromString("adverb('in-addition'[in-addition])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("in addition", "in-addition", Term.fromString("adverb('in-addition'[in-addition])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("as well", "in-addition", Term.fromString("adverb('in-addition'[in-addition])", o), 1.0));
     
 
     this.generateMultitokenTable(multitokens_raw);

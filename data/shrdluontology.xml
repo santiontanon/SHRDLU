@@ -295,6 +295,7 @@
     <sort name="ration" super="food"/>
     <sort name="sausage" super="food"/>
     <sort name="vitamins" super="food"/>
+    <sort name="pizza" super="food"/>
     <sort name="dumbbell" super="item"/>
     <sort name="tube" super="item"/>
     <sort name="milk" super="drink"/>
@@ -437,7 +438,7 @@
 
     <sort name="role" super="property-with-value,abstract-entity"/>
     <sort name="unique-role" super="role"/>    <!-- roles that can be filled by just one character -->
-    <sort name="profession" super="role"/>
+    <sort name="profession" super="role,character"/>
     <sort name="medic" super="profession"/>
     <sort name="supervisor" super="profession,unique-role"/>
     <sort name="maintenance-robot" super="profession"/>
@@ -450,6 +451,12 @@
     <sort name="physicist" super="scientist"/>
     <sort name="mathematician" super="scientist"/>
     <sort name="captain" super="profession"/>
+
+    <sort name="game" super="abstract-entity"/>
+
+    <sort name="protagonist" super="role,character"/>
+    <sort name="game-character" super="role,character"/>
+    <sort name="game-protagonist" super="protagonist,game-character"/>
 
     <sort name="owner" super="abstract-entity"/>
 
@@ -577,6 +584,10 @@
     <sort name="verb.die" super="verb"/>
     <sort name="verb.run-out-of" super="verb"/>
     <sort name="verb.wear" super="verb"/>
+
+    <sort name="verb.like" super="relation-verb"/>
+    <sort name="verb.love" super="verb.like"/>
+    <sort name="verb.hate" super="relation-verb"/>
     
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
@@ -590,7 +601,9 @@
     <sort name="action.push" super="actionverb"/>
     <sort name="action.pull" super="actionverb"/>
     <sort name="action.open" super="actionverb"/>
+    <sort name="action.unlock" super="action.open"/>
     <sort name="action.close" super="actionverb"/>
+    <sort name="action.lock" super="action.close"/>
     <sort name="action.use" super="actionverb"/>
     <sort name="action.interact" super="actionverb"/>
     <sort name="action.die" super="actionverb"/>
@@ -697,6 +710,8 @@
     <sort name="space.near" super="spatial-relation"/>
     <sort name="space.far" super="spatial-relation"/>
     <sort name="ground" super="space.location"/>
+
+    <sort name="in-addition" super="adverb"/>
 
     <sort name="celestial-entity" super="object,space.location"/>
     <sort name="outer-space" super="space,celestial-entity"/>
