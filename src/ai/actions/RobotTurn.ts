@@ -135,7 +135,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 		let destinationLocation:AILocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
 		let destinationLocationID:string = null;
 		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
-		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
 				// deny request:

@@ -72,13 +72,13 @@ class QwertyAI extends RobotAI {
 	- If it returns "null", it means the robot can go
 	- If it returns a Term, it means the robot cannot go, for the reason specified in the Term (e.g., not allowed)
 	*/
-	canGoTo(map:A4Map, locationID:string) : Term
+	canGoTo(map:A4Map, locationID:string, requester:TermAttribute) : Term
 	{
 		if (map != this.robot.map) {
 			let cause:Term = Term.fromString("#not(verb.can(ME:'"+this.selfID+"'[#id], verb.go(ME, [space.outside])))", this.o);
 			return cause;
 		}
-		return super.canGoTo(map, locationID);
+		return super.canGoTo(map, locationID, requester);
 	}
 
 

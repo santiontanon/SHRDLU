@@ -362,7 +362,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		}
 
 		// Check if the robot can go:
-		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
 				// deny request:

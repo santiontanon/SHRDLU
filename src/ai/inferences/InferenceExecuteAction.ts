@@ -24,9 +24,16 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 				ai.intentions.push(new IntentionRecord(term, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds));
 			}
 		} else {
-			let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
-			let term:Term = Term.fromString(tmp2, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			if (this.action.functor.is_a(ai.o.getSort("verb.hear")) ||
+				this.action.functor.is_a(ai.o.getSort("verb.see"))) {
+				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+inf.triggeredBySpeaker+"'[#id],'no'[symbol]))";
+				let term:Term = Term.fromString(tmp2, ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			} else {
+				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
+				let term:Term = Term.fromString(tmp2, ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
 		}		
 	}
 

@@ -85,7 +85,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		let destinationLocation:AILocation = ai.game.getAILocation(containerObjectL[0]);
 		let destinationLocationID:string = null;
 		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
-		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
 				// deny request:

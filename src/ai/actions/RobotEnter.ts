@@ -74,7 +74,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			destinationMap = ai.game.getMap("Spacer Valley South");
 			destinationLocationID = "spacer-valley-south";
 		}
-		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID);
+		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
 				// deny request:

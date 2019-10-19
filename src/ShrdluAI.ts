@@ -66,17 +66,23 @@ class ShrdluAI extends RobotAI {
 	- If it returns "null", it means the robot can go
 	- If it returns a Term, it means the robot cannot go, for the reason specified in the Term (e.g., not allowed)
 	*/
-	canGoTo(map:A4Map, locationID:string) : Term
+	canGoTo(map:A4Map, locationID:string, requester:TermAttribute) : Term
 	{
 		if ((this.robot.map.name == "Aurora Station" || this.robot.map.name == "Aurora Station Outdoors") &&
 			map.name != "Aurora Station" &&
 			map.name != "Aurora Station Outdoors") {
 			if (this.game.getStoryStateVariable("permission-to-take-shrdlu") == "false") {
-				let cause:Term = Term.fromString("verb.need('"+this.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))", this.o);
-				return cause;
+				if ((requester instanceof ConstantTermAttribute) &&
+					(<ConstantTermAttribute>requester).value == "etaoin") {
+					this.game.setStoryStateVariable("permission-to-take-shrdlu", "true");
+					return null;
+				} else {
+					let cause:Term = Term.fromString("verb.need('"+this.selfID+"'[#id], #and(X:[permission-to], relation.origin(X, 'etaoin'[#id])))", this.o);
+					return cause;
+				}
 			}
 		}
-		return super.canGoTo(map, locationID);
+		return super.canGoTo(map, locationID, requester);
 	}
 
 }
