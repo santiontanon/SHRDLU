@@ -1020,6 +1020,8 @@ class NLContext {
 //							console.log("Context: \nM:" + this.mentions + "\nP:" + this.shortTermMemory);
 //						}
 						// apply determiners:
+						// If there is no determiners, assume a "the":
+						if (determinerTerms.length == 0) the_determiner = true;
 						let entities:NLContextEntity[] = null;
 						if (the_determiner) {
 							if (singular) {
@@ -1184,9 +1186,11 @@ class NLContext {
 			// short term memory:
 			let d1:number = msl[1][0].distanceFromSpeaker;
 			let d2:number = msl[1][1].distanceFromSpeaker;
-			// if the distance d1 is SIGNIFICANTLY smaller than d2:
+			// if the distance d1 is smaller than d2:
 			if (d1 != null && d2 != null) {
-				if (d1 <= 32 && d2 >= 64) return [msl[1][0]];
+				// if the distance d1 is SIGNIFICANTLY smaller than d2:
+				//if (d1 <= 32 && d2 >= 64) return [msl[1][0]];
+				if (d1 < d2) return [msl[1][0]];
 			}
 			return [];
 		} else if (msl[2].length==1) {

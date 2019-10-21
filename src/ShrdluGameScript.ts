@@ -27,17 +27,17 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
-			//this.skip_to_act_2();
+			this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
 			//this.skip_to_end_of_act_2();
-		//}
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -371,6 +371,7 @@ class ShrdluGameScript {
 						}
 					} else {
 						// this can only mean the player answered with a statement, from which QWERTY could infer his name
+						// or it could be that the answer was complex, and had a counter question (which makes the answer NOT be the "lastPerformativeBy")
 						this.act_intro_state = 9;
 					}
 //				} else {

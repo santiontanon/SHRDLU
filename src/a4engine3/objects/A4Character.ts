@@ -452,6 +452,7 @@ class A4Character extends A4WalkingObject {
                     // after the speech bubble is done, we record it in the map:
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IDLE;
                     this.talkingTarget = null;
                 }
@@ -469,6 +470,7 @@ class A4Character extends A4WalkingObject {
                 if (this.stateCycle>=this.talkingBubbleDuration) {
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IDLE;
                     this.talkingTarget = null;
                 }
@@ -524,6 +526,7 @@ class A4Character extends A4WalkingObject {
                     }
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
                     this.talkingTarget = null;
                 }
@@ -541,6 +544,7 @@ class A4Character extends A4WalkingObject {
                 if (this.stateCycle>=this.talkingBubbleDuration) {
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IN_BED;
                     this.talkingTarget = null;
                 }
@@ -559,6 +563,7 @@ class A4Character extends A4WalkingObject {
                     // after the speech bubble is done, we record it in the map:
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
                     this.talkingTarget = null;
                 }
@@ -586,6 +591,7 @@ class A4Character extends A4WalkingObject {
                     }                    
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IN_VEHICLE;
                     this.talkingTarget = null;
                 }
@@ -603,6 +609,7 @@ class A4Character extends A4WalkingObject {
                 if (this.stateCycle>=this.talkingBubbleDuration) {
                     this.talkingText = null;
                     this.talkingBubble = null;
+                    this.talkingBubbleDuration = 0;
                     this.state = A4CHARACTER_STATE_IN_VEHICLE;
                     this.talkingTarget = null;
                 }

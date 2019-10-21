@@ -9,13 +9,29 @@ class CompiledNLPatternRules extends NLPatternContainer {
 //			this.listenerVariable = new VariableTermAttribute(o.getSort("any"),"LISTENER");
 //		}
 	} 
+
+
+	ruleHeadMatchesSort(sort:Sort, rule:NLPatternRule) : boolean
+	{
+		if (rule.head.functor.is_a(sort)) {
+			return true;
+		} else if (rule.head.functor.name == "#list" &&
+			       rule.head.attributes.length>0 &&
+			       rule.head.attributes[0] instanceof TermTermAttribute) {
+			if ((<TermTermAttribute>rule.head.attributes[0]).term.functor.is_a(sort)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 
 	populate(sort:Sort, parser:NLParser) 
 	{
 		this.root = new CompiledNLPatternState();
 		for(let rule of parser.rules) {
-			if (rule.head.functor.is_a(sort)) {
+			if (this.ruleHeadMatchesSort(sort, rule)) {
+//			if (rule.head.functor.is_a(sort)) {
 //				console.log("rule head: " + rule.head);
 				this.root.addRule(rule, this.speakerVariable, this.listenerVariable);	
 			}

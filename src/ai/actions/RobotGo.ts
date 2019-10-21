@@ -18,7 +18,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let requester:TermAttribute = ir.requester;
 
 		if (ai.robot.isInVehicle()) {
-			if (intention.attributes.length == 2 && intention.attributes[1].sort.name == "space.outside") {
+			if (intention.attributes.length == 2 && 
+				(intention.attributes[1].sort.name == "space.outside" ||
+				 intention.attributes[1].sort.name == "space.away")) {
 				// redirect to leave the vehicle:
 				let term2:Term = new Term(ai.o.getSort("verb.leave"), [intention.attributes[0]]);
 				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));

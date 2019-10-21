@@ -376,6 +376,10 @@ class POSParser {
       "computer password",
       "fixing tool",
       "fixing tools",
+      "cable tool",
+      "cable tools",
+      "necessary tool",
+      "necessary tools",
       "distress signal",
       "distress signals",
       "airlock door",
@@ -582,8 +586,8 @@ NLPAddTokenPOS("about", PartOfSpeech.generatePreposition("about", POS_TYPE_PPREP
   ["above",  "PREP"],
   ["across",  "PREP"],
   ["after",  "PREP"],
-  ["against",  "PREP"],
   */
+this.addTokenPOS(new PartOfSpeech("against", "against", Term.fromString("preposition('relation.against'[relation.against])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("alone in", "alone-in", Term.fromString("preposition('alone-in'[alone-in])", o), 1.0));
   /*
   ["along",  "PREP"],
@@ -999,6 +1003,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("restroom", "bathroom", o);
     this.addStandardNounPOS("video game character", "game-character", o);
     this.addStandardNounPOS("video game protagonist", "game-protagonist", o);
+    this.addStandardNounPOS("fixing tool", "tool", o);
+    this.addStandardNounPOS("cable tool", "tool", o);
+    this.addStandardNounPOS("necessary tool", "tool", o);
+    this.addStandardNounPOS("crash", "collision", o);    
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o);
@@ -1054,7 +1062,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("clothing", "clothing", o);
     this.addStandardNounPOS("colonist", "colonist", o);    
     this.addStandardNounPOS("colour", "color", o);    // synonym, so, it's out of order
-    this.addStandardNounPOS("color", "color", o);    
+    this.addStandardNounPOS("color", "color", o);
+    this.addStandardNounPOS("collision", "collision", o);    
     this.addStandardNounPOS("communication", "communication", o);
     this.addStandardNounPOS("comm tower", "communication.tower", o);
     this.addStandardNounPOS("communication tower", "communication.tower", o);
@@ -1109,7 +1118,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("facility", "facility", Term.fromString("noun('facility'[facility], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("facilities", "facility", Term.fromString("noun('facility'[facility], [plural])", o), 1.0));
     this.addStandardNounPOS("feeling", "feeling", o);
-    this.addStandardNounPOS("fixing tool", "tool", o);
     this.addUncountableNounPOS("food", "food", o);
     this.addTokenPOS(new PartOfSpeech("foot", "foot", Term.fromString("noun('foot'[foot], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("feet", "foot", Term.fromString("noun('foot'[foot], [plural])", o), 1.0));
@@ -1418,7 +1426,14 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.take-out", "remove","removes","removed","removed","removing", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.reproduce-media", "reproduce","reproduces","reproduced","reproduced","reproducing", false, multitokens_raw, o);
-    
+    this.addStandardVerbPOS("verb.see", "can see","can see","could see",null, null, false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.hear", "can hear","can hear","could hear",null, null, false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "bump into","bumps into","bumped into","bumped into","bumping into", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "run into","runs into","ran into","run into","running into", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "collide against","collides against","collided against","collided against","colliding against", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "bump against","bumps against","bumped against","bumped against","bumping against", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "run against","runs against","ran against","run against","running against", false, multitokens_raw, o);
+
     this.addStandardVerbPOS("action.3dprint", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1555,7 +1570,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.hate", "hate","hates","hated","hated","hating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.play", "play","plays","played","played","playing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.run-out-of", "run out of","runs out of","ran out of","run out of","running out of", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "collide with","collides with","collided with","collided with","colliding with", false, multitokens_raw, o);
 
+    // I only define as phrasal verbs those for which there might be something in between the verb and the preposision, otherwise,
+    // they are just regular verbs:
     this.addPhrasalVerbPOS("verb.wait-for","for", "wait","waits","waited","waited","waiting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-on","on", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
@@ -1564,7 +1583,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
-    this.addPhrasalVerbPOS("verb.run-out-of","out of", "run","runs","ran","run","running", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):
     this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));

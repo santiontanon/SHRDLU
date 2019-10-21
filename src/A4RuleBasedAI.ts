@@ -371,7 +371,7 @@ class A4RuleBasedAI extends RuleBasedAI {
         		}
         		actionTerms = actionTerms2;
 		    } else {
-		    	console.warn("A4RuleBasedAI: cannot parse sentence: " + pbr.directObjectSymbol);
+		    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + pbr.directObjectSymbol);
 		    	if (this.naturalLanguageParser.error_semantic) console.warn("    semantic error!");
 		    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 		    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);

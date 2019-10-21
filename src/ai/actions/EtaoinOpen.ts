@@ -38,6 +38,11 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
         			}
         		}
         	}
+		} else if (door_tmp.sort.is_a(ai.o.getSort("light"))) {
+			// if it's a light, redirect to switch.on:
+			let term2:Term = new Term(ai.o.getSort("verb.switch-on"), intention.attributes);
+			ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
+			return true;							
 		}
 
 		if (doors.length == 0) {

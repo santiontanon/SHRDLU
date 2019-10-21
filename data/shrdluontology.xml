@@ -412,6 +412,8 @@
     <sort name="situation" super="abstract-entity"/>
     <sort name="emergency" super="situation"/>
 
+    <sort name="collision" super="abstract-entity"/>
+
     <sort name="language" super="abstract-entity"/>
 
     <sort name="sound" super="abstract-entity"/>
@@ -466,6 +468,7 @@
     <sort name="alone" super="property,#stateSort"/>
     <sort name="alone-in" super="relation,#stateSort"/>
     <sort name="last" super="property,#stateSort"/>
+    <sort name="relation.against" super="relation"/>
 
     <sort name="username" super="property-with-value,abstract-entity"/>
     <sort name="password" super="property-with-value,abstract-entity"/>    
@@ -589,6 +592,7 @@
     <sort name="verb.wear" super="verb"/>
     <sort name="verb.play" super="verb"/>
     <sort name="verb.reproduce-media" super="verb"/>
+    <sort name="verb.collide-with" super="relation-verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
