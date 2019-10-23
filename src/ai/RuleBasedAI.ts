@@ -458,6 +458,24 @@ class RuleBasedAI {
 	}
 
 
+	addEpisodeTerm(t:string, provenance:string)
+	{
+		this.currentEpisodeTerms.push(t);
+		let term:Term = Term.fromString(t, this.o);
+		this.longTermMemory.addSentence(new Sentence([term],[true]), provenance, 1, this.time_in_seconds);
+	}
+
+
+	clearEpisodeTerms()
+	{
+		for(let t of this.currentEpisodeTerms) {
+			let term:Term = Term.fromString(t, this.o);
+			this.longTermMemory.removeSentence(new Sentence([term],[true]));
+		}
+		this.currentEpisodeTerms = [];
+	}
+
+
 	loadLongTermRulesFromFile(rulesFileName:string)
 	{
 		let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
@@ -1014,6 +1032,8 @@ class RuleBasedAI {
 
 	reactToRequestActionPerformative(perf2:Term, speaker:TermAttribute, context:NLContext) 
 	{
+		this.clearEpisodeTerms();
+
 		if (perf2.attributes[1] instanceof TermTermAttribute) {
 			let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
 			if (perf2.attributes.length>=3 &&
@@ -1059,6 +1079,8 @@ class RuleBasedAI {
 
 	reactToRepeatActionPerformative(perf:Term, speaker:TermAttribute, context:NLContext) : boolean
 	{
+		this.clearEpisodeTerms();
+
 		// to be handled by the classes that inherit from this one
 		return false;
 	}
@@ -1882,6 +1904,12 @@ class RuleBasedAI {
 			this.loadLongTermRulesFromXML(ltm_xml);
 		}
 
+		this.currentEpisodeTerms = [];
+		let currentEpisodeTerm_xmls:Element[] = getElementChildrenByTag(xml, "currentEpisodeTerm");
+		for(let currentEpisodeTerm_xml of currentEpisodeTerm_xmls) {
+			this.currentEpisodeTerms.push(currentEpisodeTerm_xml.getAttribute("text"));
+		}
+
 		// context:
 		let context_xmls:Element[] = getElementChildrenByTag(xml, "context");
 		for(let context_xml of context_xmls) {
@@ -1962,6 +1990,10 @@ class RuleBasedAI {
 			}
 		}
 		str += "</longTermMemory>\n";
+
+		for(let et of this.currentEpisodeTerms) {
+			str += "<currentEpisodeTerm str=\""+et+"\">\n";
+		}
 
 		for(let t of this.intentions) {
 			str += t.saveToXML(this);
@@ -2082,6 +2114,19 @@ class RuleBasedAI {
 
 	contexts:NLContext[] = [];	// contexts for natural language processing (one per entity we speak to)
 	terminateConversationAfterThisPerformative:boolean = false;
+
+	currentEpisodeTerms:string[] = [];	// Terms that are to be remembered or the current "episode" (i.e., while the AI is executing an action),
+										// but that will be erased when a new action is started.
+										// This is a hack, but it is to avoid having to have the concept of "immediate past" and "far past",
+										// since parsince those from text would be hard. 
+										// To illustrate the problem, consider this interaction:
+										// - Shrdlu, go north
+										// - There is an obstacle here.
+										// - go south.
+										// - Ok.
+										// - did you collide with something?
+										// The expected answer is "no", but it would say "yes", as it collided with something in the first command.
+										// So, we add the "collided-with" type of knowledge to the episode terms, and we clear them after each episode.
 
 	// Sort cache for perception:
 	cache_sort_name:Sort = null;

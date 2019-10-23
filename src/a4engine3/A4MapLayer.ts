@@ -246,7 +246,7 @@ class A4MapLayer {
         return true;    
     }
 
-    
+    /*
     chopTree(x:number, y:number, dx:number, dy:number) : boolean
     {
         if (x<0 || y<0) return false;
@@ -311,7 +311,7 @@ class A4MapLayer {
 
         return false;
     }
-
+    */
 
 	width:number;
     height:number;

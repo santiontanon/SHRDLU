@@ -3413,6 +3413,7 @@ class ShrdluGameScript {
 
 	qwertyMoves(x:number, y:number, map:A4Map)
 	{
+        this.game.qwertyAI.clearEpisodeTerms();
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
@@ -3424,6 +3425,7 @@ class ShrdluGameScript {
 
 	qwertyMovesOverrideable(x:number, y:number, map:A4Map, action:Term)
 	{
+        this.game.qwertyAI.clearEpisodeTerms();
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
@@ -3437,6 +3439,7 @@ class ShrdluGameScript {
 
 	shrdluMoves(x:number, y:number, map:A4Map)
 	{
+		this.game.shrdluAI.clearEpisodeTerms();
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.shrdluAI.robot, this.game.shrdluAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
@@ -3448,6 +3451,7 @@ class ShrdluGameScript {
 
 	shrdluMovesOverrideable(x:number, y:number, map:A4Map, action:Term)
 	{
+        this.game.shrdluAI.clearEpisodeTerms();
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.shrdluAI.robot, this.game.shrdluAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;

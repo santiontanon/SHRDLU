@@ -1133,7 +1133,7 @@ class A4Map {
         return l;
     }
 
-
+/*
     chopTree(o:A4Character, tool:A4Object, game:A4Game, direction:number) : boolean
     {
         let x:number = o.x + direction_x_inc[direction];
@@ -1150,7 +1150,6 @@ class A4Map {
     }
 
 
-/*
     spellCollision(spell:A4Object, caster:A4Object) : boolean
     {
         for(let i:number = 0;i<this.layers.length;i++) {

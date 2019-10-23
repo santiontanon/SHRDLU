@@ -193,6 +193,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 		}
 
+		let perceivedLocations:AILocation[] = [location];
+
 		for(let o of l) {
 			let tile_ox:number = Math.floor(o.x/map.tileWidth);
 			let tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
@@ -208,6 +210,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 					// it's not in "location":
 					let l2:AILocation = this.game.getAILocation(o);
 					if (l2!=null) locationID = l2.id;
+					if (perceivedLocations.indexOf(l2) == -1) {
+						perceivedLocations.push(l2);
+						this.addTermToPerception(new Term(l2.sort, [new ConstantTermAttribute(l2.id, this.cache_sort_id)]));
+					}
 				}
 
 				// perceived an object!

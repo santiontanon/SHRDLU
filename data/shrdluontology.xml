@@ -592,7 +592,7 @@
     <sort name="verb.wear" super="verb"/>
     <sort name="verb.play" super="verb"/>
     <sort name="verb.reproduce-media" super="verb"/>
-    <sort name="verb.collide-with" super="relation-verb"/>
+    <sort name="verb.collide-with" super="relation-verb,#stateSort"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
