@@ -124,6 +124,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			return true;
 		}
 
 		// go to destination:
@@ -132,10 +133,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
     	s = new A4Script(A4_SCRIPT_PUT_IN_CONTAINER, containerObjectL[0].ID, null, 0, false, false);
         s.ID2 = itemID;	// the object we want to put in
         q.scripts.push(s);
-		ai.currentAction_scriptQueue = q;
-		ai.currentActionHandler = null;
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
+        ai.setNewAction(intention, requester, q, null);
 		ai.addLongTermTerm(new Term(intention.functor,
 									[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);

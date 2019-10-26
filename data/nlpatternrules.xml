@@ -86,7 +86,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 '!'*"/>
 	<NLPattern name="perf.ackresponse2"
 			   head="perf.ackresponse(LISTENER)"
-			   body="[('yes'|'yep'|'yeah') [',']] ('same' ['here'] | 'me' ('too'|'neither')) '!'*"
+			   body="[('yes'|'yep'|['hell'] yeah') [',']] ('same' ['here'] | 'me' ('too'|'neither')) '!'*"
 			   priority="200"/>
 
 	<!-- Patterns for performative "perf.q.howareyou" -->

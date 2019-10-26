@@ -77,10 +77,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 	//					s.x = door.x;
 	//					s.y = (door.y+door.tallness)// - ai.robot.tallness;
 				        q.scripts.push(s);
-						ai.currentAction_scriptQueue = q;
-						ai.currentActionHandler = null;
-						ai.currentAction = intention;
-						ai.currentAction_requester = ir.requester;
+				        ai.setNewAction(intention, ir.requester, q, null);
 						ai.addLongTermTerm(new Term(intention.functor,
 													  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 													   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
@@ -122,10 +119,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 //					s.x = door.x;
 //					s.y = (door.y+door.tallness)// - ai.robot.tallness;
 		        q.scripts.push(s);
-				ai.currentAction_scriptQueue = q;
-				ai.currentActionHandler = null;
-				ai.currentAction = intention;
-				ai.currentAction_requester = ir.requester;
+		        ai.setNewAction(intention, ir.requester, q, null);
 				ai.addLongTermTerm(new Term(intention.functor,
 											  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 											   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);

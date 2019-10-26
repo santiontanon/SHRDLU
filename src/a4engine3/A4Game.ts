@@ -4,7 +4,7 @@ var SHRDLU_HUD_STATE_MESSAGES_INPUT:number = 1;
 var SHRDLU_HUD_STATE_INVENTORY:number = 2;
 var SHRDLU_HUD_STATE_SPLIT_INVENTORY:number = 3;
 
-var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 4*50*60;    // 4 minutes of game time
+var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 8*50*60;    // 8 minutes of game time
 var COMMUNICATOR_CONNECTION_TIMEOUT:number = 50*60;    // 1 minute of game time
 
 var SHRDLU_START_DATE:number = 45186163200;    // Thursday, October 21st, 2432
@@ -1010,14 +1010,14 @@ class A4Game {
             if (this.currentPlayer.map.name == "Aurora Station" ||
                 this.currentPlayer.isInVehicle()) {
                 if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                    this.suit_oxygen+=8;
+                    this.suit_oxygen += 16;
                     this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
                 }
             } else {
                 if (this.suit_oxygen > 0) {
                     if (this.currentPlayer.map.name == "Spacer Valley South" ||
                         this.currentPlayer.map.name == "Spacer Valley North") {
-                        this.suit_oxygen-=4;
+                        this.suit_oxygen -= 4;
                         this.suit_oxygen = Math.max(this.suit_oxygen, 0)
                     } else {
                         this.suit_oxygen--;
@@ -1028,7 +1028,7 @@ class A4Game {
             }
         } else {
             if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                this.suit_oxygen+=8;
+                this.suit_oxygen += 16;
                 this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
             }
         }

@@ -56,10 +56,7 @@ class QwertyAI extends RobotAI {
 		let repairSort:Sort = this.o.getSort("verb.repair");
 		if (intention.functor.is_a(repairSort)) {
 			// just ignore, the story script will take charge of making qwerty do the repair...
-            this.currentAction_scriptQueue = null;
-            this.currentAction = null;
-            this.currentAction_requester = null;
-            this.currentActionHandler = null;
+			this.clearCurrentAction();
 
 			return true;
 		}

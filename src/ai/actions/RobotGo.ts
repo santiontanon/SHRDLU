@@ -415,8 +415,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
+
 		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
@@ -428,7 +427,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		}
 
 		if (stepByStepMovement) {
-			ai.currentActionHandler = this;
+	        ai.setNewAction(intention, requester, null, this);
 			if (!this.executeContinuous(ai)) {
 				this.needsContinuousExecution = true;
 			} else {
@@ -442,9 +441,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 	        s.y = destinationY;
 	        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
 	        q.scripts.push(s);
-			ai.currentAction_scriptQueue = q;
-			ai.currentActionHandler = null;
 			this.needsContinuousExecution = false;
+	        ai.setNewAction(intention, requester, q, null);
 		}
 		return true;
 	}

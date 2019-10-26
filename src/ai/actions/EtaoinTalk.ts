@@ -30,7 +30,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 					performative.functor.name != "perf.greet") {
 					// we need to greet first:
 					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
-					ai.queuedIntentions.push(ir);
+					ai.queueIntentionRecord(ir);
 				} else {
 					for(let c of ai.contexts) {
 						if (c!=context && c.inConversation) {

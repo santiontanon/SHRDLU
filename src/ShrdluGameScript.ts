@@ -483,7 +483,7 @@ class ShrdluGameScript {
 
 		case 11: // player remembers the station, so QWERTY just says good, and moves on
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER. 'good'[symbol]))");
+				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 			} else {
 				if (this.game.qwertyAI.intentions.length == 0 &&
 					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 13;
@@ -571,8 +571,8 @@ class ShrdluGameScript {
 		case 99:
 			if (!this.game.qwertyAI.robot.isTalking()) {
 				this.app.tutorialMessages.push([" To push or pull objects, walk up to ",
-											    " them, *hold SPACE*, and then press the",
-											    " direction in which you want to push ",
+											    " them, *hold SPACE*, and then *press the",
+											    " direction* in which you want to push ",
 											    " them.                               ",
 											    "",
 											    " Walk to the chair in the south-east ",
@@ -1476,10 +1476,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.respondToPerformatives = false;	// to prevent the player messing up with the sequence
 					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'spacesuit'[#id]), time.future(V)) ))");
 					// clear whatever qwerty is doing now:
-				    this.game.qwertyAI.currentAction = null;
-				    this.game.qwertyAI.currentAction_requester = null;
-				    this.game.qwertyAI.currentAction_scriptQueue = null;
-				    this.game.qwertyAI.currentActionHandler = null;
+					this.game.qwertyAI.clearCurrentAction();
 
 					let currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
 					if (currentRoom.id != "location-as25") {
@@ -2230,10 +2227,7 @@ class ShrdluGameScript {
 									// done:
 									this.act_2_repair_shuttle_state = 2;
 
-						            this.game.shrdluAI.currentAction_scriptQueue = null;
-						            this.game.shrdluAI.currentAction = null;
-						            this.game.shrdluAI.currentAction_requester = null;
-						            this.game.shrdluAI.currentActionHandler = null;
+									this.game.shrdluAI.clearCurrentAction();
 								}
 							} else {
 								// something went wrong, reset!
@@ -2337,10 +2331,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.respondToPerformatives = false;	// to prevent the player messing up with the sequence
 					this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(V:verb.repair($QWERTY, 'shuttle-datapad'[#id]), time.future(V)) ))");
 					// clear whatever qwerty is doing now:
-				    this.game.qwertyAI.currentAction = null;
-				    this.game.qwertyAI.currentAction_requester = null;
-				    this.game.qwertyAI.currentAction_scriptQueue = null;
-				    this.game.qwertyAI.currentActionHandler = null;
+					this.game.qwertyAI.clearCurrentAction();
 
 					let currentRoom:AILocation = this.game.getAILocation(this.game.qwertyAI.robot);
 					if (currentRoom.id != "location-as29") {
@@ -3431,9 +3422,7 @@ class ShrdluGameScript {
         s.x = x;
         s.y = y+this.game.qwertyAI.robot.tallness;
         q.scripts.push(s);
-        this.game.qwertyAI.clearCurrentAction();
-        this.game.qwertyAI.currentAction = action;
-		this.game.qwertyAI.currentAction_scriptQueue = q;
+        this.game.qwertyAI.setNewAction(action, null, q, null);
 	}
 
 
@@ -3445,6 +3434,7 @@ class ShrdluGameScript {
         s.x = x;
         s.y = y+this.game.shrdluAI.robot.tallness;
         q.scripts.push(s);
+        this.game.shrdluAI.clearCurrentAction();
 		this.game.shrdluAI.robot.addScriptQueue(q);
 	}
 
@@ -3457,9 +3447,7 @@ class ShrdluGameScript {
         s.x = x;
         s.y = y+this.game.shrdluAI.robot.tallness;
         q.scripts.push(s);
-        this.game.shrdluAI.clearCurrentAction();
-        this.game.shrdluAI.currentAction = action;
-		this.game.shrdluAI.currentAction_scriptQueue = q;
+        this.game.shrdluAI.setNewAction(action, null, q, null);
 	}
 
 

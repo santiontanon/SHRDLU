@@ -115,10 +115,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 	        s.ID2 = targetObjectL[1].ID;	// the object we want to take
         }
         q.scripts.push(s);
-		ai.currentAction_scriptQueue = q;
-		ai.currentActionHandler = null;
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
+        ai.setNewAction(intention, requester, q, null);
 		ai.addLongTermTerm(new Term(intention.functor,
 									[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);

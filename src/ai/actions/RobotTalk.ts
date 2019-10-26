@@ -37,7 +37,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 					performative.functor.name != "perf.greet") {
 					// we need to greet first:
 					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
-					ai.queuedIntentions.push(ir);
+					ai.queueIntentionRecord(ir);
 					changingToCallAttention = true;
 				}
 
@@ -60,7 +60,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		if (txt != null) {
 //				ai.game.addMessage(ai.selfID + ": " + txt);
 			if (changingToCallAttention) {
-				ai.queuedIntentions.push(ir);
+				ai.queueIntentionRecord(ir);
 			} else {
 				if (!ai.robot.issueCommandWithString(A4CHARACTER_COMMAND_TALK, txt, 0, ai.game)) {
 					return null;	// not yet!

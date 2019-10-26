@@ -159,10 +159,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
         s.x = destinationX;
         s.y = destinationY;
         q.scripts.push(s);
-		ai.currentAction_scriptQueue = q;
-		ai.currentActionHandler = null;
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
+        ai.setNewAction(intention, requester, q, null);
 		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);

@@ -1639,6 +1639,14 @@ class RuleBasedAI {
 	}
 
 
+	queueIntentionRecord(ir:IntentionRecord)
+	{
+		if (this.queuedIntentions.indexOf(ir) == -1) {
+			this.queuedIntentions.push(ir);
+		}
+	}
+
+
 	canSee(characterID:string)
 	{
 		return true;
@@ -1927,7 +1935,7 @@ class RuleBasedAI {
 		if (queuedIntentions_xml != null) {
 			for(let intention_xml of getElementChildrenByTag(queuedIntentions_xml, "IntentionRecord")) {
 				let intention:IntentionRecord = IntentionRecord.fromXML(intention_xml, this, this.o);
-				this.queuedIntentions.push(intention);
+				this.queueIntentionRecord(intention);
 			}
 		}
 		this.intentionsCausedByRequest = [];

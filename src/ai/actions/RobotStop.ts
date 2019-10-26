@@ -19,10 +19,7 @@ class RobotStop_IntentionAction extends IntentionAction {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
-			ai.currentAction_scriptQueue = null;
-			ai.currentAction = null;
-			ai.currentActionHandler = null;
-			ai.currentAction_requester = null;
+			ai.clearCurrentAction();
 			ai.addLongTermTerm(Term.fromString("verb.do('"+ai.selfID+"'[#id], 'nothing'[nothing])", ai.o), PERCEPTION_PROVENANCE);
 		} else if (intention.attributes.length == 2 &&
 				   (intention.attributes[1] instanceof VariableTermAttribute) &&
@@ -33,10 +30,7 @@ class RobotStop_IntentionAction extends IntentionAction {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
-			ai.currentAction_scriptQueue = null;
-			ai.currentAction = null;
-			ai.currentActionHandler = null;
-			ai.currentAction_requester = null;
+			ai.clearCurrentAction();
 			ai.addLongTermTerm(Term.fromString("verb.do('"+ai.selfID+"'[#id], 'nothing'[nothing])", ai.o), PERCEPTION_PROVENANCE);
 		} else {
 			if (requester != null) {

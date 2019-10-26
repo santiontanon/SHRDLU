@@ -112,14 +112,11 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		ai.currentActionHandler = this;
-		ai.currentAction = intention;
-		ai.currentAction_requester = requester;
+		ai.setNewAction(intention, requester, null, this);
 		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
 		ai.intentionsCausedByRequest.push(ir);
-		ai.currentAction_scriptQueue = null;
 
 		if (requester != null) {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";

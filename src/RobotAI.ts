@@ -52,9 +52,7 @@ class RobotAI extends A4RuleBasedAI {
 				this.addLongTermTerm(new Term(this.o.getSort("verb.do"),
 											  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
 											   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
-        		this.currentAction = null;
-        		this.currentActionHandler = null;
-        		this.currentAction_requester = null;
+				this.clearCurrentAction();
         	}
         }
 
@@ -188,14 +186,14 @@ class RobotAI extends A4RuleBasedAI {
 
 	stopAction(actionRequest:Term, requester:string) : boolean
 	{
-		if (super.stopAction(actionRequest, requester)) return true;
+		if (super.stopAction(actionRequest, requester)) {
+			this.robot.scriptQueues = [];
+			return true;
+		}
 
 		if (this.currentAction != null && 
 			this.currentAction.equalsNoBindings(actionRequest) == 1) {
-			this.currentAction = null;
-			this.currentAction_requester = null;
-			this.currentAction_scriptQueue = null;
-			this.currentActionHandler = null;
+			this.clearCurrentAction();
 			return true;
 		}
 
@@ -205,10 +203,21 @@ class RobotAI extends A4RuleBasedAI {
 
 	clearCurrentAction()
 	{
+		this.robot.scriptQueues = [];
 		this.currentAction = null;
 		this.currentAction_requester = null;
 		this.currentAction_scriptQueue = null;
 		this.currentActionHandler = null;		
+	}
+
+
+	setNewAction(action:Term, requester:TermAttribute, scriptQueue:A4ScriptExecutionQueue, handler:IntentionAction)
+	{
+		this.robot.scriptQueues = [];
+		this.currentAction = action;
+		this.currentAction_requester = requester;
+		this.currentAction_scriptQueue = scriptQueue;
+		this.currentActionHandler = handler;				
 	}
 	
 
@@ -224,9 +233,7 @@ class RobotAI extends A4RuleBasedAI {
             if (retval == SCRIPT_FINISHED) {
                 this.currentAction_scriptQueue.scripts.splice(0,1);
                 if (this.currentAction_scriptQueue.scripts.length == 0) {
-                    this.currentAction_scriptQueue = null;
-                    this.currentAction = null;
-                    this.currentAction_requester = null;
+                	this.clearCurrentAction();
                     this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
                 }
             } else if (retval == SCRIPT_NOT_FINISHED) {
@@ -243,9 +250,7 @@ class RobotAI extends A4RuleBasedAI {
                 }
                 break;
             } else if (retval == SCRIPT_FAILED) {
-                this.currentAction_scriptQueue = null;
-                this.currentAction = null;
-                this.currentAction_requester = null;
+            	this.clearCurrentAction();
                 this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
             }
         }        

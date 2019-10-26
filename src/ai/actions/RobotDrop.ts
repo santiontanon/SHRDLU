@@ -75,10 +75,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        let s:A4Script = null
 	    	s = new A4Script(A4_SCRIPT_DROP, itemID, null, 0, false, false);
 	        q.scripts.push(s);
-			ai.currentAction_scriptQueue = q;
-			ai.currentActionHandler = null;
-			ai.currentAction = intention;
-			ai.currentAction_requester = requester;
+	        ai.setNewAction(intention, requester, q, null);
 			ai.addLongTermTerm(new Term(intention.functor,
 										[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 										 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
@@ -156,10 +153,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        q.scripts.push(s);
 	        s = new A4Script(A4_SCRIPT_DROP, itemID, null, 0, false, false);
 	        q.scripts.push(s);
-			ai.currentAction_scriptQueue = q;
-			ai.currentActionHandler = null;
-			ai.currentAction = intention;
-			ai.currentAction_requester = requester;
+			ai.setNewAction(intention, requester, q, null);
 			ai.addLongTermTerm(new Term(intention.functor,
 										[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 										 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
