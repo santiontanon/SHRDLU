@@ -230,6 +230,10 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_subsumes(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;
+		} else if (this.term.functor.name == "#doesnotsubsume") {
+			let term2:Term = this.term.applyBindings(parse.bindings);
+			let  nlprl:NLParseRecord[] = this.specialfunction_doesnotsubsume(parse, term2.attributes[0], term2.attributes[1], parser.o);
+			return nlprl;
 		} else if (this.term.functor.name == "#sortParent") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_sortParent(parse, term2.attributes[0], term2.attributes[1], parser.o);
@@ -950,6 +954,16 @@ class NLPattern {
 	}
 
 
+	specialfunction_doesnotsubsume(parse:NLParseRecord, sortAtt:TermAttribute, att:TermAttribute, o:Ontology) : NLParseRecord[]
+	{
+		if (sortAtt instanceof VariableTermAttribute) {
+			let s:Sort = sortAtt.sort
+			if (!att.sort.is_a(s)) return [parse];
+		}
+		return null;
+	}
+
+
 	specialfunction_sortParent(parse:NLParseRecord, sortAtt:TermAttribute, att:TermAttribute, o:Ontology) : NLParseRecord[]
 	{
 		let sort:Sort = sortAtt.sort;
@@ -1117,6 +1131,11 @@ class NLPattern {
 				}
 			}
 		}
+
+		if (inquote) {
+			console.error("Unclosed quotation while parsing NLPattern: " + str);
+		}
+
 		if (!inquote && parentheses == 0 && squareBrackets == 0 && tmp.length > 0) {
 			// we have an element!
 			tmp = tmp.trim();

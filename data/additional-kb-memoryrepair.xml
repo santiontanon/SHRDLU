@@ -9,5 +9,4 @@
 	<sentence provenance="background" time="42895872000" sentence="verb.go-to('etaoin'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" time="42895872000" sentence="verb.go-to('qwerty'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" time="42895872000" sentence="verb.go-to('shrdlu'[#id],'aurora'[#id])"/>
-	<sentence provenance="background" time="42895872000" sentence="verb.go-to('jcuken'[#id],'aurora'[#id])"/>
 </knowledgeBase>

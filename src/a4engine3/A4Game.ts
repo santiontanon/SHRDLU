@@ -1193,28 +1193,30 @@ class A4Game {
             for(let i:number = split+PIXEL_SIZE*8;i<screen_height;i+=PIXEL_SIZE*8) {
                 this.HUD_vseparator.drawWithZoom(26*8*PIXEL_SIZE, i, PIXEL_SIZE);
             }
-            if (this.currentPlayer.selectedItem>=0) {
-                var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
-                if (item!=null) {
-                    if ((<A4Item>item).droppable) {
-                        fillTextTopLeft("  o ", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                        fillTextTopLeft("Dr p", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
+            if (!this.currentPlayer.isInVehicle()) {
+                if (this.currentPlayer.selectedItem>=0) {
+                    var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                    if (item!=null) {
+                        if ((<A4Item>item).droppable) {
+                            fillTextTopLeft("  o ", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
+                            fillTextTopLeft("Dr p", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
+                        } else {
+                            fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
+                        }
+                        if (item.usable) {
+                            fillTextTopLeft("U  ", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
+                            fillTextTopLeft(" se", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
+                        } else {
+                            fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
+                        }
                     } else {
                         fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                    }
-                    if (item.usable) {
-                        fillTextTopLeft("U  ", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                        fillTextTopLeft(" se", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-                    } else {
                         fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
                     }
                 } else {
                     fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
                     fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
                 }
-            } else {
-                fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
             }
             if (this.HUD_uparrow1!=null && this.HUD_uparrow2!=null) {
                 if (this.HUD_inventory_start>0) {
@@ -1954,11 +1956,13 @@ class A4Game {
     playerInput_UseItem() 
     {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
-            if (this.currentPlayer.selectedItem>=0) {
+            if (!this.currentPlayer.isInVehicle() &&
+                this.currentPlayer.selectedItem>=0) {
                 this.playerInput_issueCommand(A4CHARACTER_COMMAND_USE,app.game.currentPlayer.selectedItem,A4_DIRECTION_NONE);
             }
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-            if (this.HUD_remote_inventory_selected>=0 &&
+            if (!this.currentPlayer.isInVehicle() &&
+                this.HUD_remote_inventory_selected>=0 &&
                 this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected].takeable) {
                 var item:A4Object = this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected];
                 var idx:number = this.HUD_remote_inventory.content.indexOf(item);
@@ -1975,7 +1979,8 @@ class A4Game {
     playerInput_DropItem() 
     {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
-            if (this.currentPlayer.selectedItem>=0) {
+            if (!this.currentPlayer.isInVehicle() &&
+                this.currentPlayer.selectedItem>=0) {
                 var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
                 if (item!=null && (<A4Item>item).droppable) {
                     this.playerInput_issueCommand(A4CHARACTER_COMMAND_DROP,app.game.currentPlayer.selectedItem,null);
@@ -1983,7 +1988,8 @@ class A4Game {
                 }
             }
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-            if (this.currentPlayer.selectedItem>=0) {
+            if (!this.currentPlayer.isInVehicle() &&
+                this.currentPlayer.selectedItem>=0) {
                 var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
                 if (item!=null && (<A4Item>item).droppable) {
                     var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];

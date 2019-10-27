@@ -3372,7 +3372,6 @@ class ShrdluGameScript {
 		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('etaoin'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
 		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('qwerty'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
 		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('shrdlu'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('jcuken'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
 		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('david'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
 		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("property.born('david'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 40392525600);
 	}

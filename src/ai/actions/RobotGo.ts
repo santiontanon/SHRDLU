@@ -481,11 +481,15 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	        	if (collision != null) {
 					ai.addEpisodeTerm("verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])", MEMORIZE_PROVENANCE);
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])))";					
+					let term:Term = Term.fromString(tmp, ai.o);
+					ai.queueIntention(term, ai.currentAction_requester, null);
+				} else {
+					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", #and(obstacle(X), space.at(X, [space.here]))))";					
+					let term:Term = Term.fromString(tmp, ai.o);
+					ai.queueIntention(term, ai.currentAction_requester, null);					
 				}
 
-				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", #and(obstacle(X), space.at(X, [space.here]))))";					
-				let term:Term = Term.fromString(tmp, ai.o);
-				ai.queueIntention(term, ai.currentAction_requester, null);
 				return true;
 	        }
 

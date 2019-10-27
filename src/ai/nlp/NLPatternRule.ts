@@ -56,7 +56,7 @@ class NLDerefErrorRecord {
 	derefHypotheticalErrors:TermAttribute[] = [];
 	derefQueryErrors:TermAttribute[] = [];
 
-	derefErrorType:number = 0;
+	derefErrorType:number = -1;
 	tokensLeftToParse:number = -1;
 
 	toString() : string
@@ -182,6 +182,7 @@ class NLPatternRule extends NLPatternContainer {
 	{
         var variableNames:string[] = [];
         var variableValues:VariableTermAttribute[] = [];
+
 		var h:Term = Term.fromStringInternal(head, o, variableNames, variableValues).term;
 		if (h == null) {
 			console.error("NLPatternRule.fromString: cannot parse head: " + head);

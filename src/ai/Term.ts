@@ -1245,6 +1245,8 @@ class Term {
         var term_a:TermTermAttribute = new TermTermAttribute(term);
         var state:number = 0;
 
+        if (str.indexOf("location2") >= 0) console.log("str: " + str);
+
 //        console.log("Term.fromStringInternal: " + str);
 
         // parse sort string (potentially with variable name):
@@ -1368,7 +1370,7 @@ class Term {
 
     static parseAttribute(attributeString:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : TermAttribute
     {
-//            console.log("attributeString: " + attributeString);
+        // if (attributeString.indexOf("location2") >= 0) console.log("attributeString: " + attributeString);
         let tmp:string = "";
         let idx:number = 0;
         let len:number = attributeString.length;
@@ -1382,6 +1384,10 @@ class Term {
                     tmp = attributeString.substring(idx,idx2);
                     if (attributeString.substring(idx2+1).trim() != "") {
                         console.error("Term.parseAttribute: extra characters found after VariableTermAttribute!");
+                        return null;
+                    }
+                    if (tmp.indexOf("'") >= 0) {
+                        console.error("Term.parseAttribute: unexpected character ' in sort name: " + tmp);
                         return null;
                     }
                     var a_sort:Sort = o.getSort(tmp);
@@ -1414,6 +1420,10 @@ class Term {
                     var idx4:number = attributeString.substring(idx2).indexOf("]");
                     tmp = attributeString.substring(idx,idx2);
                     var tmp2:string = attributeString.substring(idx2).substring(idx3+1,idx4);
+                    if (tmp2.indexOf("'") >= 0) {
+                        console.error("Term.parseAttribute: unexpected character ' in sort name: " + tmp2);
+                        return null;
+                    }
                     var a_sort:Sort = o.getSort(tmp2);
                     if (a_sort == null) {
                         console.error("Term.parseAttribute: unknown sort " + tmp2);

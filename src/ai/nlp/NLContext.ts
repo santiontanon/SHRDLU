@@ -770,7 +770,11 @@ class NLContext {
 						console.log("context.deref: unsupported pronoun! " + pronounTerm);					
 					}
 				}
-			}			
+			}	
+			if (output.length == 0) {
+				this.lastDerefErrorType = DEREF_ERROR_NO_REFERENTS;
+				return null;
+			}		
 			return output;
 		} else if (nounTerms.length == 1) {
 			let output:TermAttribute[] = [];

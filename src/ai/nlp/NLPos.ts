@@ -991,7 +991,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
                                  "socrates","plato","aristotle",
                                  */
-                                 "etaoin", "shrdlu", "qwerty", "jcuken", "david",
+                                 "etaoin", "shrdlu", "qwerty", "david",
                                  "aurora station"];
     for(let proper_noun of proper_nouns) {
       this.addTokenPOS(new PartOfSpeech(proper_noun, "symbol", Term.fromString("proper-noun('"+proper_noun+"'[symbol], [singular])", o), 1.0));

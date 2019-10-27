@@ -102,7 +102,6 @@ class NLGenerator {
 		sentence = sentence.split(" etaoin").join(" Etaoin");
 		sentence = sentence.split(" qwerty").join(" Qwerty");
 		sentence = sentence.split(" shrdlu").join(" Shrdlu");
-		sentence = sentence.split(" jcuken").join(" Jcuken");
 		sentence = sentence.split(" aurora").join(" Aurora");
 		return sentence;
 	}

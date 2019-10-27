@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "Demo v3.1"
+var SHRDLU_VERSION:string = "Demo v3.2"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1
@@ -146,7 +146,7 @@ class A4EngineApp {
                 key_xml = getFirstElementChildByTag(controls_xml[0],"take"); this.key_take = Number(key_xml.getAttribute("key"));
                 key_xml = getFirstElementChildByTag(controls_xml[0],"talk"); this.key_talk = Number(key_xml.getAttribute("key"));
                 key_xml = getFirstElementChildByTag(controls_xml[0],"use_item"); this.key_use_item = Number(key_xml.getAttribute("key"));
-                key_xml = getFirstElementChildByTag(controls_xml[0],"next_item"); this.key_next_item = Number(key_xml.getAttribute("key"));
+                key_xml = getFirstElementChildByTag(controls_xml[0],"drop_item"); this.key_drop_item = Number(key_xml.getAttribute("key"));
                 key_xml = getFirstElementChildByTag(controls_xml[0],"fast_time"); this.key_fast_time = Number(key_xml.getAttribute("key"));
             } else {
                 this.setDefaultConfiguration();
@@ -174,7 +174,7 @@ class A4EngineApp {
         this.key_take = KEY_CODE_SPACE;
         this.key_talk = KEY_CODE_RETURN;
         this.key_use_item = KEY_CODE_U;
-        this.key_next_item = KEY_CODE_O;
+        this.key_drop_item = KEY_CODE_O;
         this.key_fast_time = KEY_CODE_LSHIFT;
     }
 
@@ -199,7 +199,7 @@ class A4EngineApp {
         configString += "<take key=\""+this.key_take+"\"/>"
         configString += "<talk key=\""+this.key_talk+"\"/>"
         configString += "<use_item key=\""+this.key_use_item+"\"/>"
-        configString += "<next_item key=\""+this.key_next_item+"\"/>"
+        configString += "<drop_item key=\""+this.key_drop_item+"\"/>"
         configString += "<fast_time key=\""+this.key_fast_time+"\"/>"
 
         configString += "</controls>"
@@ -856,8 +856,7 @@ class A4EngineApp {
             } else {
                 // playing:
                 //<SHRDLU-specific>
-                // Note: in the SHRDLU game, I reuse the "next item" key as the "drop item" key:
-                if (k.key_press(this.key_next_item)) this.game.playerInput_DropItem();
+                if (k.key_press(this.key_drop_item)) this.game.playerInput_DropItem();
                 if (k.key_press(this.key_use_item)) this.game.playerInput_UseItem();
                 if (k.key_press(KEY_CODE_RETURN)) {
                     if (!this.game.skipSpeechBubble()) {
@@ -1275,7 +1274,7 @@ class A4EngineApp {
     key_take:number;
     key_talk:number;
     key_use_item:number;
-    key_next_item:number;
+    key_drop_item:number;
     key_fast_time:number;
 
     // game:
