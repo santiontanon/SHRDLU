@@ -1,5 +1,5 @@
 <knowledgeBase>
-	<sentence provenance="background"  sentence="ship('tardis8'[#id])"/>
+	<sentence provenance="background"  sentence="spaceship('tardis8'[#id])"/>
 	<sentence provenance="background"  sentence="ai('tardis8'[#id])"/>
 	<sentence provenance="background"  sentence="name('tardis8'[#id],'tardis 8'[symbol])"/>
 

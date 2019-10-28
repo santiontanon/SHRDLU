@@ -259,6 +259,7 @@ class A4Game {
                                   "location-garage",
                                   "location-west-cave-dark",
                                   "location-east-cave-dark",
+                                  "tardis8",
                                   ];
 
         this.rooms_with_lights_on = ["location-as4",    // bedroom 1

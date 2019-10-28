@@ -1275,9 +1275,18 @@ class A4Map {
                 }
             }
         }
-        //console.log("ReevaluateVisibility called!");
         //console.log("Regions: " + this.visibilityRegions);
-
+        /*
+        console.log("ReevaluateVisibility called on " + this.name);
+        let debugstr:string = "";
+        for(let i:number = 0;i<this.height;i++) {
+            for(let j:number = 0;j<this.width;j++) {
+                debugstr += ""+this.visibilityRegions[j+i*this.width];
+            }
+            debugstr += "\n";
+        }
+        console.log(debugstr);
+        */
         this.visibilityReevaluationRequested = false;
     }
 

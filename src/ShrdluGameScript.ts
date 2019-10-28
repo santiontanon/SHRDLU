@@ -37,6 +37,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
 			//this.skip_to_end_of_act_2();
+			//this.skip_to_tardis8();
 		//}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -228,7 +229,6 @@ class ShrdluGameScript {
 	skip_to_end_of_act_2()
 	{
 		this.skip_to_act_2_crash_site();
-		this.game.currentPlayer.x = 864;
 		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);	// garage
 		this.game.shrdluAI.robot.warp(864-16, 40, this.game.maps[0]);	// garage
 		this.act_2_state = 223;
@@ -256,6 +256,14 @@ class ShrdluGameScript {
         let map:A4Map = this.game.getMap("Aurora Station")
         newShuttle.warp(shuttle.x, shuttle.y, map);
 		this.act_2_repair_shuttle_state = 2;
+	}
+
+	skip_to_tardis8()
+	{
+		this.skip_to_end_of_act_2();
+
+		this.game.currentPlayer.warp(96*8, 15*8, this.game.maps[8]);	// tardis 8
+
 	}
 
 

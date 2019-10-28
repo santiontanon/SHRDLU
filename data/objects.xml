@@ -706,9 +706,22 @@
       <eventRule event="open" once="false">
       	<playSound sound="data/sfx/doorOpen.wav"/>
       </eventRule>
-		<onStart>
-			<addPerceptionProperty property="grey"/>
-		</onStart>
+	  <onStart>
+		<addPerceptionProperty property="grey"/>
+	  </onStart>
+    </ObjectClass>
+
+	<ObjectClass class="tardis-horizontal-door" super="door" name="door">
+      <animation name="closed" dx="3" dy="3" period="4" looping="false" file="background.png">876</animation>
+      <animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">879</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+  	  <onStart>
+		<addPerceptionProperty property="black"/>
+		<addPerceptionProperty property="yellow"/>
+	  </onStart>
     </ObjectClass>
 
 	<ObjectClass class="vertical-door" super="door" name="door">
@@ -718,10 +731,24 @@
       <eventRule event="open" once="false">
       	<playSound sound="data/sfx/doorOpen.wav"/>
       </eventRule>
-		<onStart>
+	  <onStart>
 			<addPerceptionProperty property="grey"/>
-		</onStart>
+	  </onStart>
     </ObjectClass>
+
+	<ObjectClass class="tardis-vertical-door" super="door" name="door">
+      <animation name="closed" dx="1" dy="4" period="4" looping="false" file="background.png">894,893,892,891</animation>
+      <animation name="idle" dx="1" dy="4" period="4" looping="false" file="background.png">892,893,894,895</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+	  <onStart>
+		<addPerceptionProperty property="black"/>
+		<addPerceptionProperty property="yellow"/>
+	  </onStart>
+    </ObjectClass>
+
 
 	<ObjectClass class="airlock-door" super="door" name="airlock-door">
       <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">144,142,140,138,136</animation>
@@ -1060,8 +1087,8 @@
 	</ObjectClass>		
 
 	<ObjectClass class="crashedshuttle" super="*shuttle,obstacle" name="shuttle">
-		<attribute name="tallness" value="16"/>
-		<animation name="idle" dx="5" dy="4" period="4" looping="false" file="background.png">747</animation>
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="5" dy="4" period="4" looping="false" file="background.png">795</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<talkOther text="This is a terrible scene... I can see several dead bodies inside the shuttle..." thought="true"/>
@@ -1358,5 +1385,23 @@
         	<talkOther text="What is it doing here?!" thought="true"/>
         </eventRule>		
 	</ObjectClass>	
+
+	<ObjectClass class="collapsed-ceiling-right" super="obstacle" name="collapsed ceiling">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="3" dy="4" period="4" looping="false" file="background.png">750</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="The ceiling has collapsed here, I need to find an alternative route if I want to get through..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+	<ObjectClass class="collapsed-ceiling-left" super="obstacle" name="collapsed ceiling">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="3" dy="4" period="4" looping="false" file="background.png">747</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="The ceiling has collapsed here, I need to find an alternative route if I want to get through..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
 
 </Objects>

@@ -265,13 +265,6 @@
 
     <sort name="life" super="abstract-entity"/> 
 
-    <sort name="flying-vehicle" super="vehicle"/>
-    <sort name="ship" super="flying-vehicle"/>
-    <sort name="land-vehicle" super="vehicle"/>
-    <sort name="rover" super="land-vehicle"/>
-    <sort name="shuttle" super="flying-vehicle"/>
-    <sort name="spaceship" super="ship"/>
-
     <sort name="ai" super="character"/>
     <sort name="disembodied-ai" super="ai"/>
     <sort name="machine" super="object"/>
@@ -793,6 +786,13 @@
     <sort name="canyon" super="outdoor.location"/>
     <sort name="crater" super="outdoor.location"/>
 
+    <sort name="flying-vehicle" super="vehicle"/>
+    <sort name="ship" super="flying-vehicle,space.location"/>
+    <sort name="land-vehicle" super="vehicle"/>
+    <sort name="rover" super="land-vehicle"/>
+    <sort name="shuttle" super="flying-vehicle"/>
+    <sort name="spaceship" super="ship"/>
+    
     <sort name="three-laws-of-robotics" super="abstract-entity"/>
 
     <sort name="name" super="property-with-value,abstract-entity"/>
