@@ -245,6 +245,7 @@ class POSParser {
       "communication range",
       "outer space",
       "tardis 8",
+      "the tardis 8",
       "key card",
       "access key",
       "aurora station",
@@ -392,6 +393,9 @@ class POSParser {
       "game protagonist",
       "video game character",
       "video game protagonist",
+
+      "tardis bridge",
+      "tardis 8 bridge",
 
       // adjectives:
       "in stasis",
@@ -1045,6 +1049,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("boulder", "rock", o);
     this.addTokenPOS(new PartOfSpeech("box", "box", Term.fromString("noun('box'[box], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("boxes", "box", Term.fromString("noun('box'[box], [plural])", o), 1.0));
+    this.addStandardNounPOS("bridge", "ship-bridge", o);
+    this.addStandardNounPOS("tardis bridge", "ship-bridge", o);
+    this.addStandardNounPOS("tardis 8 bridge", "ship-bridge", o);
     this.addStandardNounPOS("brightness", "brightness", o);
     this.addStandardNounPOS("cable", "cable", o);
     this.addStandardNounPOS("can", "can", o);

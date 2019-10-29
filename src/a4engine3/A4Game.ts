@@ -259,7 +259,13 @@ class A4Game {
                                   "location-garage",
                                   "location-west-cave-dark",
                                   "location-east-cave-dark",
-                                  "tardis8",
+                                  "tardis8-bridge", 
+                                  "tardis8-computer",
+                                  "tardis8-corridor-east",
+                                  "tardis8-corridor-west",
+                                  "tardis8-stasis1",
+                                  "tardis8-stasis2",
+                                  "tardis8-engineering",
                                   ];
 
         this.rooms_with_lights_on = ["location-as4",    // bedroom 1
@@ -609,12 +615,37 @@ class A4Game {
         let script_e:Element = getFirstElementChildByTag(this.xml,"ShrdluGameScript");
         if (script_e != null) this.gameScript.restoreFromXML(script_e);
 
+        if (this.gameScript.act == "3") {
+            this.loadTardis8LocationKnowledge();
+        }
+
         // make sure SHRDLU knows how to go places for which it has to traverse multiple maps:
         this.shrdluAI.robot.AI.precomputeMap2mapPaths(this);
+
+        this.ensureUniqueObjectIDs();
 
         console.log("A4Game created\n");
         console.log("currentPlayer = " + this.currentPlayer);
     }
+
+
+    loadTardis8LocationKnowledge()
+    {
+        var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+        xmlhttp.overrideMimeType("text/xml");
+        xmlhttp.open("GET", "data/map-locations-tardis.xml", false); 
+        xmlhttp.send();
+        AILocation.loadLocationsFromXML(xmlhttp.responseXML.documentElement, this, this.ontology);
+        this.etaoinAI.precalculateLocationKnowledge(this, this.ontology);
+        this.shrdluAI.precalculateLocationKnowledge(this, this.ontology);
+        this.qwertyAI.precalculateLocationKnowledge(this, this.ontology);
+
+        this.getMap("Tardis 8").reevaluateVisibility();
+        this.getMap("Tardis 8").recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, 
+                                                          this.map_location_names[this.getMapIndex("Tardis 8")]);
+
+    }
+
     
 
     saveGame(saveName:string)
@@ -2596,6 +2627,44 @@ class A4Game {
     }
 
 
+    /*
+    Checks to see if there is any repeated IDs, and returns false if there are any repeated, pringing info about them
+    */
+    ensureUniqueObjectIDs()
+    {
+        let IDs:string[] = [];
+
+        for(let map of this.maps) {
+            for(let object of map.objects) {
+                let ID:string = object.ID;
+                if (IDs.indexOf(ID) >= 0) {
+                    console.error("Repeated ID: " + ID + " in map " + map.name);
+                }
+                IDs.push(ID);
+                if (object instanceof A4Character) {
+                    for(let o2 of (<A4Character>object).inventory) {
+                        let ID2:string = o2.ID;
+                        if (IDs.indexOf(ID2) >= 0) {
+                            console.error("Repeated ID: " + ID2 + " in map " + map.name);
+                        }
+                        IDs.push(ID2);
+                    }
+                }
+                if (object instanceof A4Container) {
+                    for(let o2 of (<A4Container>object).content) {
+                        let ID2:string = o2.ID;
+                        if (IDs.indexOf(ID2) >= 0) {
+                            console.error("Repeated ID: " + ID2 + " in map " + map.name);
+                        }
+                        IDs.push(ID2);
+                    }
+                }
+            }
+        }
+        //console.log("IDs: " + IDs);
+    }
+
+
     xml:Element = null;    // the XML definition of the game
 
 	sfx_volume:number;
@@ -2709,6 +2778,7 @@ class A4Game {
     location_in:boolean[][];
     location_connects:boolean[][];
     map_location_names:string[][];
+    additional_location_connects:[string,string][] = [];
 
     in_game_seconds:number = SHRDLU_START_DATE;
     suit_oxygen:number = SHRDLU_MAX_SPACESUIT_OXYGEN;

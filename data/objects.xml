@@ -790,13 +790,26 @@
 		</eventRule>
 	</ObjectClass>	
 
-	<ObjectClass class="broken-stasis-pod" super="obstacle-container" name="stasis pod">
+	<ObjectClass class="broken-stasis-pod" super="stasis-pod" name="stasis pod">
 		<attribute name="tallness" value="8"/>
 		<attribute name="closed" value="true"/>
 		<animation name="closed" dx="3" dy="2" period="4" looping="false" file="background.png">28</animation>
 		<animation name="idle" dx="3" dy="2" period="4" looping="false" file="background.png">92</animation>
 		<items>
-			<object id="corpse" class="corpse"/>
+			<object class="corpse"/>
+		</items>
+		<eventRule event="interact" once="false">
+			<playSound sound="data/sfx/openContainer.wav"/>
+		</eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="tardis-stasis-pod" super="stasis-pod" name="stasis pod">
+		<attribute name="tallness" value="8"/>
+		<attribute name="closed" value="true"/>
+		<animation name="closed" dx="3" dy="2" period="4" looping="false" file="background.png">28</animation>
+		<animation name="idle" dx="3" dy="2" period="4" looping="false" file="background.png">92</animation>
+		<items>
+			<object class="corpse"/>
 		</items>
 		<eventRule event="interact" once="false">
 			<playSound sound="data/sfx/openContainer.wav"/>

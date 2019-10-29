@@ -203,6 +203,9 @@ class ShrdluGameScript {
 	skip_to_act_2_crash_site()
 	{
 		this.skip_to_act_2_shrdluback_repair_outside();
+		this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
+		this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
+		this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");		
 		this.updateKnowledgeAfterRepairingCommTower();
 		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
@@ -261,6 +264,8 @@ class ShrdluGameScript {
 	skip_to_tardis8()
 	{
 		this.skip_to_end_of_act_2();
+		this.act = "3";
+		this.act_3_state = 0;
 
 		this.game.currentPlayer.warp(96*8, 15*8, this.game.maps[8]);	// tardis 8
 
@@ -2096,6 +2101,9 @@ class ShrdluGameScript {
 				this.game.currentPlayer.map.textBubbles.length == 0) {
 		
 				this.updateKnowledgeAfterRepairingCommTower();
+				this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
+				this.etaoinSays("perf.request.action('david'[#id], #and(V1:verb.go-to('david'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('david'[#id]))))");
+				this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
 
 				this.act_2_state = 220;
 			}
@@ -2282,10 +2290,6 @@ class ShrdluGameScript {
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
-
-		this.etaoinSays("perf.inform('david'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
-		this.etaoinSays("perf.request.action('david'[#id], #and(V1:verb.go-to('david'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('david'[#id]))))");
-		this.etaoinSays("perf.inform('david'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
 
 		let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("command-key");
 		this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
@@ -2480,8 +2484,14 @@ class ShrdluGameScript {
 	{
 		let previous_state:number = this.act_3_state;
 
-		//switch(this.act_3_state) {
-		//}
+		switch(this.act_3_state) {
+			case 0: this.game.loadTardis8LocationKnowledge();
+					this.act_3_state = 1;
+					break;
+
+			case 1:	// ...
+					break;
+		}
 
 		this.qwertyAgendaUpdate();
 

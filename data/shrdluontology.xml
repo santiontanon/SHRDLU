@@ -771,6 +771,7 @@
     <sort name="lab.room" super="room"/>
     <sort name="garage" super="room"/>
     <sort name="airlock" super="room"/>
+    <sort name="ship-bridge" super="room"/>
 
     <sort name="communication.tower" super="facility,tower"/>
     <sort name="recycling.facility" super="facility"/>

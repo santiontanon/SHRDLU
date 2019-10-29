@@ -1320,14 +1320,14 @@
    </properties>
   </object>
 
-  <object id="597" type="crate" x="872" y="24" width="8" height="16">
+  <object id="197" type="crate" x="872" y="24" width="8" height="16">
   	<items>
   		<object type="helmet"/>
   		<!--object type="spacesuit"/-->
   	</items>
   </object>
 
-  <object id="598" type="crate" x="888" y="24" width="8" height="16">
+  <object id="198" type="crate" x="888" y="24" width="8" height="16">
   	<items>
   		<!--object type="helmet"/-->
   		<object id="spacesuit" type="brokenspacesuit"/>

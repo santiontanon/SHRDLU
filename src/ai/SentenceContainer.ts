@@ -148,6 +148,27 @@ class SentenceContainer {
 		return false;
 	}
 
+
+	// Removes all the sentences with a certain provenance (e.g., to clear all coming from perception, of from locations knowledge):
+	removeAllWithProvenance(provenance:string)
+	{
+		let toDelete:SentenceEntry[] = []
+		for(let se of this.plainSentenceList) {
+			if (se.provenance == provenance) {
+				toDelete.push(se);
+			}
+		}
+
+		for(let se of toDelete) {
+			this.removeInternal(se);
+		}
+
+		// Note: we are ignoring the "plainPreviousSentenceList", or "previousSentencesWithNoCurrentSentence"...
+		// - This is because that would involve some expensive search with the current structure... 
+		// TODO: add a pointer in SentenceEntry from previous sentence to current, so that I can do this efficiently
+		// ...
+	}
+
 	
 	removeSentence(s:Sentence)
 	{

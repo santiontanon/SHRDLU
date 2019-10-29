@@ -68,23 +68,24 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	precalculateLocationKnowledge(game:A4Game, o:Ontology)
 	{
+		// First, remove any location knowledge that was previously in the KB:
+		this.longTermMemory.removeAllWithProvenance(LOCATIONS_PROVENANCE);
+
 		// console.log("RuleBasedAI.precalculateLocationKnowledge...");
-
-
 		for(let location of game.locations) {
 			let str:string = location.sort.name + "('"+location.id+"'[#id])";
 			let term:Term = Term.fromString(str, o);
 			//console.log(term.toString());
-			this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+			this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 
 			if (location.name != null) {
 				let str:string =  "name('"+location.id+"'[#id], '"+location.name+"'[symbol])";
 				let term:Term = Term.fromString(str, o);
 				//console.log(term.toString());
-				//this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+				//this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 				// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
 				// names we might have added!
-				this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+				this.addLongTermRuleNow(new Sentence([term], [true]), LOCATIONS_PROVENANCE);
 
 				if (location.name.indexOf(' ') != -1) {
 					// it's a multitoken! we should add it:
@@ -117,17 +118,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 					if (!somethingInBetween) {
 						let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						//console.log(term.toString());
-						// this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+						// this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 						// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
 						// names we might have added!
-						this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+						this.addLongTermRuleNow(new Sentence([term], [true]), LOCATIONS_PROVENANCE);
 						n_space_at++;
 						// debug_text += term + "\n";
 					}
 				} else {
 					let s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 					//console.log(term.toString());
-					this.addLongTermRuleNow(s, BACKGROUND_PROVENANCE);
+					this.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
 					n_not_space_at++;
 					// debug_text += s + "\n";
 				}
@@ -146,7 +147,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 					let str:string = "space.connects('"+l1.id+"'["+l1.sort.name+"], '"+l2.id+"'["+l2.sort.name+"])";
 					let term:Term = Term.fromString(str, o);
 					//console.log(term.toString());
-					this.addLongTermTerm(term, BACKGROUND_PROVENANCE);
+					this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 					n_space_connects++;
 					// debug_text += str + "\n";
 				}

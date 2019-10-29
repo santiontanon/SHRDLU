@@ -18,6 +18,7 @@ var BACKGROUND_PROVENANCE:string = "background";
 var PERCEPTION_PROVENANCE:string = "perception";
 var REACTION_PROVENANCE:string = "reaction";
 var MEMORIZE_PROVENANCE:string = "memorize";
+var LOCATIONS_PROVENANCE:string = "locations";
 
 var MENTION_MEMORY_SIZE:number = 10;
 

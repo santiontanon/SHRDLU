@@ -110,7 +110,7 @@ class AILocation {
 
 	static loadLocationsFromXML(xml:Element, game:A4Game, o:Ontology)
 	{
-		// load the locations:
+		// load the new locations:
 		for(let map_xml of getElementChildrenByTag(xml,"map")) {
 			let mapName:string = map_xml.getAttribute("name");
 			let w:number = Number(map_xml.getAttribute("width"));
@@ -151,7 +151,7 @@ class AILocation {
 			}
 		}
 
-
+		// recalculate in and connect caches:
 		game.location_in = new Array(game.locations.length);
 		game.location_connects = new Array(game.locations.length);
 		for(let idx_l1:number = 0;idx_l1<game.locations.length;idx_l1++) {
@@ -244,51 +244,16 @@ class AILocation {
 		for(let connection_xml of getElementChildrenByTag(xml,"location_connects")) {
 			let l1_name:string = connection_xml.getAttribute("l1");
 			let l2_name:string = connection_xml.getAttribute("l2");
+			game.additional_location_connects.push([l1_name, l2_name]);
+		}
 
+		for(let [l1_name, l2_name] of game.additional_location_connects) {
 			let l1_idx:number = game.locations.indexOf(game.getAILocationByID(l1_name));
 			let l2_idx:number = game.locations.indexOf(game.getAILocationByID(l2_name));
-
 			game.location_connects[l1_idx][l2_idx] = true;	
 			game.location_connects[l2_idx][l1_idx] = true;
 		}		
 
-		// add missing links manually (this could be done automatically, but why bother :)):
-		/*
-		{
-			let al1:number = game.locations.indexOf(game.getAILocationByID("location-as31"));
-			let al2:number = game.locations.indexOf(game.getAILocationByID("location-as32"));
-			let al3:number = game.locations.indexOf(game.getAILocationByID("location-as33"));
-			let al4:number = game.locations.indexOf(game.getAILocationByID("location-as34"));
-
-			let as:number = game.locations.indexOf(game.getAILocationByID("location-aurora-settlement"));
-			let asct:number = game.locations.indexOf(game.getAILocationByID("location-comm-tower"));
-			let asr:number = game.locations.indexOf(game.getAILocationByID("location-recycling"));
-			let aso:number = game.locations.indexOf(game.getAILocationByID("location-oxygen"));
-			let asw:number = game.locations.indexOf(game.getAILocationByID("location-water"));
-			let asgh:number = game.locations.indexOf(game.getAILocationByID("location-greenhouse"));
-			let aspp:number = game.locations.indexOf(game.getAILocationByID("location-powerplant"));
-
-			let sv:number = game.locations.indexOf(game.getAILocationByID("spacer-valley"));
-
-			let ec:number = game.locations.indexOf(game.getAILocationByID("location-east-cave"));
-
-			game.location_connects[al1][as] = true;	game.location_connects[as][al1] = true;
-			game.location_connects[al2][as] = true;	game.location_connects[as][al2] = true;
-			game.location_connects[al3][as] = true;	game.location_connects[as][al3] = true;
-			game.location_connects[al4][as] = true;	game.location_connects[as][al4] = true;
-
-			game.location_connects[asct][as] = true;	game.location_connects[as][asct] = true;
-			game.location_connects[asr][as] = true;	game.location_connects[as][asr] = true;
-			game.location_connects[aso][as] = true;	game.location_connects[as][aso] = true;
-			game.location_connects[asw][as] = true;	game.location_connects[as][asw] = true;
-			game.location_connects[asgh][as] = true;	game.location_connects[as][asgh] = true;
-			game.location_connects[aspp][as] = true;	game.location_connects[as][aspp] = true;
-
-			game.location_connects[sv][as] = true;	game.location_connects[as][sv] = true;
-			
-			game.location_connects[sv][ec] = true;	game.location_connects[ec][sv] = true;
-		}
-		*/
 	}
 
 }
