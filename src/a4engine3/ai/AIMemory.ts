@@ -19,9 +19,7 @@ class AIMemory {
         for(let wme of this.short_term_memory_plain) {
             if (wme.activation >= this.freezeThreshold ||
                 this.time - wme.startTime >= this.freezeThreshold) {
-                if (this.unfreezeableFunctors.indexOf(wme.functor)==-1) {
-                    toFreeze.push(wme);
-                }
+                toFreeze.push(wme);
             } else {
                 wme.activation -= steps;
                 if (wme.activation <= 0) {
@@ -208,7 +206,6 @@ class AIMemory {
         return null;
     }    
 
-
     retrieveFirstByRelativeSubsumption(wme:WME) : WME
     {
         var hash:number = stringHashFunction(wme.functor)%WME_HASH_SIZE;
@@ -220,117 +217,6 @@ class AIMemory {
         }
         return null;
     }
-
-
-    isSubsumedByAnyWME(wme:WME) : boolean
-    {
-        var hash:number = stringHashFunction(wme.functor)%WME_HASH_SIZE;
-        for(let wme2 of this.short_term_memory[hash]) {
-            if (wme2.subsumption(wme)) {
-//                console.log(wme2.toString() + " subsumes " + wme.toString());
-                return true;
-            }
-        }
-        for(let wme2 of this.long_term_memory[hash]) {
-            if (wme2.subsumption(wme)) {
-//                console.log(wme2.toString() + " subsumes " + wme.toString());
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    WMEwithFunctorExists(functor:string) : boolean
-    {
-        var hash:number = stringHashFunction(functor)%WME_HASH_SIZE;
-        for(let wme2 of this.short_term_memory[hash]) {
-            if (wme2.functor == functor) return true;
-        }
-        for(let wme2 of this.long_term_memory[hash]) {
-            if (wme2.functor == functor) return true;
-        }
-        return false;
-    }
-
-
-    maxActivationOfWMEwithFunctor(functor:string) : number
-    {
-        var max:number = 0;
-        var hash:number = stringHashFunction(functor)%WME_HASH_SIZE;
-        for(let wme2 of this.short_term_memory[hash]) {
-            if (wme2.functor == functor && wme2.activation>max) max = wme2.activation;
-        }
-        for(let wme2 of this.long_term_memory[hash]) {
-            if (wme2.functor == functor && wme2.activation>max) max = wme2.activation;
-        }
-        return max;
-    }
-
-
-    maxActivationOfWMEwithFunctorAndIntegerParameter(functor:string, p1:number) : number
-    {
-        var max:number = 0;
-        var hash:number = stringHashFunction(functor)%WME_HASH_SIZE;
-        for(let wme2 of this.short_term_memory[hash]) {
-            if (wme2.functor == functor &&
-                wme2.parameters.length > 0 &&
-                wme2.parameterTypes[0] == WME_PARAMETER_INTEGER &&
-                wme2.parameters[0] == p1 &&
-                wme2.activation>max) max = wme2.activation;
-        }
-        for(let wme2 of this.long_term_memory[hash]) {
-            if (wme2.functor == functor &&
-                wme2.parameters.length > 0 &&
-                wme2.parameterTypes[0] == WME_PARAMETER_INTEGER &&
-                wme2.parameters[0] == p1 &&
-                wme2.activation>max) max = wme2.activation;
-        }
-        return max;
-    }
-
-
-    maxActivationOfWMEwithFunctorAndSymbolParameter(functor:string, p1:string) : number
-    {
-        var max:number = 0;
-        var hash:number = stringHashFunction(functor)%WME_HASH_SIZE;
-        for(let wme2 of this.short_term_memory[hash]) {
-            if (wme2.functor == functor &&
-                wme2.parameters.length > 0 &&
-                wme2.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                wme2.parameters[0] == p1 &&
-                wme2.activation>max) max = wme2.activation;
-        }
-        for(let wme2 of this.long_term_memory[hash]) {
-            if (wme2.functor == functor &&
-                wme2.parameters.length > 0 &&
-                wme2.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                wme2.parameters[0] == p1 &&
-                wme2.activation>max) max = wme2.activation;
-        }
-        return max;
-    }
-
-
-    getRandomLongTermWME() : WME
-    {
-        if (this.long_term_memory_plain.length == 0) return null;
-        var idx:number = Math.floor(Math.random()*this.long_term_memory_plain.length);
-        return this.long_term_memory_plain[idx];
-    }
-
-
-    preceptionContradicts(wme:WME)
-    {
-        wme.activation -= PERCEPTION_CONTRADICTION_CONSTANT;
-        if (wme.activation <= 0) this.removeWME(wme);
-    }
-
-
-    addUnfreezeableFunctor(f:string) 
-    {
-        this.unfreezeableFunctors.push(f);
-    };
 
 
     objectRemoved(o:A4Object)
@@ -346,7 +232,6 @@ class AIMemory {
 
     freezeThreshold:number;
     time:number = 0;
-    unfreezeableFunctors:string[] = [];
     short_term_memory:WME[][] = new Array(WME_HASH_SIZE);
     short_term_memory_plain:WME[] = [];     // this list contains ALL the elements in m_short_term_memory
                                             // is ueful for quick iteration, without having to go through

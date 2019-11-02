@@ -286,14 +286,7 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
                 // we went through a bridge, stop!
                 return SCRIPT_FINISHED;
             }
-            let wme:WME = new WME("object",0);
-            wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
-            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-            wme.addParameter(map.name, WME_PARAMETER_SYMBOL);
-            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            ai.addPFTarget(script.x, script.y, script.x, script.y, map, game, A4CHARACTER_COMMAND_IDLE, priority, false, null);
             return SCRIPT_NOT_FINISHED;
         }
     } else {
@@ -317,14 +310,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                 // we went through a bridge, stop!
                 return SCRIPT_FINISHED;
             }
-            let wme:WME = new WME("object",0);
-            wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
-            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-            wme.addParameter(map.name, WME_PARAMETER_SYMBOL);
-            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            ai.addPFTarget(script.x, script.y, script.x, script.y, map, game, A4CHARACTER_COMMAND_IDLE, priority, false, null);
 
             let collisions:A4Object[] = o.map.getAllObjectCollisionsWithOffset(o, direction_x_inc[o.direction], direction_y_inc[o.direction]);
             for(let o2 of collisions) {
@@ -419,7 +405,7 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
             if (script.wait) return SCRIPT_FAILED;   // when we don't see the target anymore, we are done
             return SCRIPT_FAILED;
         } else {
-            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
         }
     } else {
@@ -459,14 +445,12 @@ scriptFunctions[A4_SCRIPT_USE] = function(script:A4Script, o:A4Object, map:A4Map
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    let wme:WME = new WME("object", 0);
-                    wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-                    wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-                    ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+                    ai.addPFTarget(script.x, script.y, 
+                                   script.x + o.getPixelWidth(),
+                                   script.y + o.getPixelHeight(),
+                                   map, game,
+                                   A4CHARACTER_COMMAND_IDLE, priority, false, null);
+
                     return SCRIPT_NOT_FINISHED;
                 }
             } else {
@@ -692,14 +676,11 @@ scriptFunctions[A4_SCRIPT_TAKE] = function(script:A4Script, o:A4Object, map:A4Ma
                 return SCRIPT_NOT_FINISHED;
             }
         } else {
-            let wme:WME = new WME("object",0);
-            wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-            wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-            wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-            wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-            wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            ai.addPFTarget(script.x, script.y, 
+                           script.x + o.getPixelWidth(),
+                           script.y + o.getPixelHeight(),
+                           map, game,
+                           A4CHARACTER_COMMAND_IDLE, priority, false, null);
             return SCRIPT_NOT_FINISHED;
         }
     } else {
@@ -741,14 +722,11 @@ scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    let wme:WME = new WME("object",0);
-                    wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-                    wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-                    ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+                    ai.addPFTarget(script.x, script.y, 
+                                   script.x + o.getPixelWidth(),
+                                   script.y + o.getPixelHeight(),
+                                   map, game,
+                                   A4CHARACTER_COMMAND_IDLE, priority, false, null);
                     return SCRIPT_NOT_FINISHED;
                 }
             } else {
@@ -824,7 +802,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             if (script.wait) return SCRIPT_FAILED;   // if we don't see the target anymore, we are done
             return SCRIPT_FAILED;
         } else {
-            ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+            ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
         }
     } else {
@@ -874,14 +852,11 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    let wme:WME = new WME("object",0);
-                    wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-                    wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-                    ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+                    ai.addPFTarget(script.x, script.y, 
+                                   script.x + o.getPixelWidth(),
+                                   script.y + o.getPixelHeight(),
+                                   map, game,
+                                   A4CHARACTER_COMMAND_IDLE, priority, false, null);
                     return SCRIPT_NOT_FINISHED;
                 }
             } else {
@@ -934,14 +909,11 @@ scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map
                     c.disembark();
                     return SCRIPT_FINISHED;
                 } else {
-                    let wme:WME = new WME("object",0);
-                    wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-                    wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-                    ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+                    ai.addPFTarget(script.x, script.y, 
+                                   script.x + o.getPixelWidth(),
+                                   script.y + o.getPixelHeight(),
+                                   map, game,
+                                   A4CHARACTER_COMMAND_IDLE, priority, false, null);
                     return SCRIPT_NOT_FINISHED;
                 }
             } else {
@@ -1013,14 +985,11 @@ scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Ma
                         return SCRIPT_NOT_FINISHED;
                     }
                 } else {
-                    let wme:WME = new WME("object",0);
-                    wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-                    wme.addParameter(script.x, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y, WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(script.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-                    wme.addParameter(map.name,WME_PARAMETER_SYMBOL);
-                    ai.addPFTargetWME(wme, game, A4CHARACTER_COMMAND_IDLE, priority, false);
+                    ai.addPFTarget(script.x, script.y, 
+                                   script.x + o.getPixelWidth(),
+                                   script.y + o.getPixelHeight(),
+                                   map, game,
+                                   A4CHARACTER_COMMAND_IDLE, priority, false, null);
                     return SCRIPT_NOT_FINISHED;
                 }
             } else {
@@ -1296,10 +1265,10 @@ scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Objec
                 m.addLongTermWME(wme);
             }
         }
-        for(let o of map_tf.objects) {
+        for(let o2 of map_tf.objects) {
             // perceived a bridge:
-            if (o instanceof ShrdluAirlockDoor) {
-                let d:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
+            if (o2 instanceof ShrdluAirlockDoor) {
+                let d:ShrdluAirlockDoor = <ShrdluAirlockDoor>o2;
                 let wme:WME = new WME(d.sort.name, m.freezeThreshold);
                 wme.addParameter(d.targetMap, WME_PARAMETER_SYMBOL);
                 wme.addParameter(d.x, WME_PARAMETER_INTEGER);

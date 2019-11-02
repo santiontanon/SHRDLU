@@ -92,14 +92,14 @@ class RobotFollow_IntentionAction extends IntentionAction {
 
 		var destinationMap:A4Map = this.targetObject.map;
 		// if the targt is outside the map, we just wait
-		if (destinationMap == null || destinationMap != ai.robot.map) return false;
+		// if (destinationMap == null || destinationMap != ai.robot.map) return false;
 
 		var destinationX:number = this.targetObject.x;
 		var destinationY:number = (this.targetObject.y+this.targetObject.tallness);
 
 		// go to destination:
         var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-        var s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
+        var s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetObject.map.name, null, 0, false, false);
         s.x = destinationX;
         s.y = destinationY;
         q.scripts.push(s);

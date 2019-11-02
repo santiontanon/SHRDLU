@@ -1522,7 +1522,7 @@ class ShrdluGameScript {
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
 						if (d>0) {
-							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0], this.game);
 						} else {
 							if (this.game.qwertyAI.robot.takeAction(this.game)) {
 								this.act_1_stasis_thread_state = 3;
@@ -1534,7 +1534,7 @@ class ShrdluGameScript {
 					} else {
 						// someone has the spacesuit (this could be qwerty itself):
 						if (d>16) {
-							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0], this.game);
 						} else {
 							if (target_l[0] instanceof A4Character) {
 								// assume spacesuit is target_l[1]!!!
@@ -1604,7 +1604,7 @@ class ShrdluGameScript {
 				let y2:number = this.game.currentPlayer.y;
 				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 				if (d>16) {
-					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer);
+					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer, this.game);
 				} else {
 					// give the space suit:
 					let idx:number = 0;
@@ -2378,7 +2378,7 @@ class ShrdluGameScript {
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
 						if (d>0) {
-							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0], this.game);
 						} else {
 							if (this.game.qwertyAI.robot.takeAction(this.game)) {
 								this.act_2_datapad_state = 3;
@@ -2390,7 +2390,7 @@ class ShrdluGameScript {
 					} else {
 						// someone has the spacesuit (this could be qwerty itself):
 						if (d>16) {
-							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0]);
+							this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, target_l[0], this.game);
 						} else {
 							if (target_l[0] instanceof A4Character) {
 								// assume datapad is target_l[1]!!!
@@ -2432,7 +2432,7 @@ class ShrdluGameScript {
 				let y2:number = this.game.currentPlayer.y;
 				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 				if (d>16) {
-					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer);
+					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer, this.game);
 				} else {
 					// give the datapad:
 					let idx:number = 0;

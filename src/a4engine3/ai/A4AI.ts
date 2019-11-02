@@ -135,16 +135,7 @@ class A4AI {
                     }
                 }
             }
-        }
-        
-        // 2) fact checking:
-        // commented out, as this is not needed in SHRDLU:
-        /*
-        // pick a wme at random from the long term memory, and see if it contradicts perceptions:
-        let wme:WME = this.memory.getRandomLongTermWME();
-        if (wme!=null && wme.functor == "object") this.factCheckObject(wme, map, perception_x0, perception_y0, perception_x1, perception_y1);
-        if (wme!=null && wme.functor == "inventory") this.factCheckInventory(wme);
-        */
+        }        
     }
 
 
@@ -649,16 +640,25 @@ class A4AI {
 
 
     // pathfinding:
-    addPFTargetObject(action:number, priority:number, flee:boolean, target:A4Object)
+    addPFTargetObject(action:number, priority:number, flee:boolean, target:A4Object, game:A4Game)
     {
-        let tilex0:number = target.x;///this.tileWidth;
-        let tiley0:number = (target.y+target.tallness);///this.tileWidth;
-        let tilex1:number = (target.x+target.getPixelWidth());///this.tileWidth;
-        let tiley1:number = (target.y+target.getPixelHeight());///this.tileWidth;
+        if (this.navigationBuffer_lastUpdated == -1 ||
+            this.navigationBuffer_lastUpdated <= this.cycle-this.period) {
+            this.updateNavigationPerceptionBuffer(game, false);
+        }
+        if (target.map != this.navigationBuffer_map) {
+            this.addPFTargetMap(action, priority, flee, target.map, game);
+            return;
+        }
+
+        let x0:number = target.x;
+        let y0:number = (target.y+target.tallness);
+        let x1:number = (target.x+target.getPixelWidth());
+        let y1:number = (target.y+target.getPixelHeight());
         for(let pft of this.pathfinding_targets) {
             if (pft.flee) continue;
-            if (pft.x0 == tilex0 && pft.y0 == tiley0 &&
-                pft.x1 == tilex1 && pft.y1 == tiley1) {
+            if (pft.x0 == x0 && pft.y0 == y0 &&
+                pft.x1 == x1 && pft.y1 == y1) {
                 if (pft.priority<=priority) {
                     pft.action = action;
                     pft.priority = priority;
@@ -669,10 +669,10 @@ class A4AI {
         }
 
         let pft2:PFTarget = new PFTarget();
-        pft2.x0 = tilex0;
-        pft2.y0 = tiley0;
-        pft2.x1 = tilex1;
-        pft2.y1 = tiley1;
+        pft2.x0 = x0;
+        pft2.y0 = y0;
+        pft2.x1 = x1;
+        pft2.y1 = y1;
         pft2.action = action;
         pft2.priority = priority;
         pft2.flee = flee;
@@ -682,12 +682,21 @@ class A4AI {
 
 
     // pathfinding:
-    addPFTarget(tilex0:number, tiley0:number, tilex1:number, tiley1:number, action:number, priority:number, flee:boolean, target:A4Object)
+    addPFTarget(x0:number, y0:number, x1:number, y1:number, map:A4Map, game:A4Game, action:number, priority:number, flee:boolean, target:A4Object)
     {
+        if (this.navigationBuffer_lastUpdated == -1 ||
+            this.navigationBuffer_lastUpdated <= this.cycle-this.period) {
+            this.updateNavigationPerceptionBuffer(game, false);
+        }
+        if (map != this.navigationBuffer_map) {
+            this.addPFTargetMap(action, priority, flee, map, game);
+            return;
+        }
+
         for(let pft of this.pathfinding_targets) {
             if (pft.flee) continue;
-            if (pft.x0 == tilex0 && pft.y0 == tiley0 &&
-                pft.x1 == tilex1 && pft.y1 == tiley1) {
+            if (pft.x0 == x0 && pft.y0 == y0 &&
+                pft.x1 == x1 && pft.y1 == y1) {
                 if (pft.priority<=priority) {
                     pft.action = action;
                     pft.priority = priority;
@@ -698,10 +707,10 @@ class A4AI {
         }
 
         let pft2:PFTarget = new PFTarget();
-        pft2.x0 = tilex0;
-        pft2.y0 = tiley0;
-        pft2.x1 = tilex1;
-        pft2.y1 = tiley1;
+        pft2.x0 = x0;
+        pft2.y0 = y0;
+        pft2.x1 = x1;
+        pft2.y1 = y1;
         pft2.action = action;
         pft2.priority = priority;
         pft2.flee = flee;
@@ -710,6 +719,53 @@ class A4AI {
     }
 
 
+    addPFTargetMap(action:number, priority:number, flee:boolean, map:A4Map, game:A4Game)
+    {
+        // different map, just target the map:
+        let l:WME[] = this.memory.retrieveByFunctor("bridge");
+        let targetMap:string = map.name;
+        if (this.map2mapPaths != null) {
+            let idx1:number = game.getMapIndex(this.navigationBuffer_map.name);
+            let idx2:number = game.getMapIndex(targetMap);
+            if (idx1 >= 0 && idx2 >= 0 && this.map2mapPaths[idx1][idx2] != null) {
+                targetMap = this.map2mapPaths[idx1][idx2];
+            }
+        }
+        for(let wme of l) {
+            if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
+                wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
+                wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
+                wme.parameters[5] == this.navigationBuffer_map.name &&
+                wme.parameters[0] == targetMap) {
+                this.addPFTarget(wme.parameters[1],
+                                 wme.parameters[2],
+                                 wme.parameters[3],
+                                 wme.parameters[4],
+                                 this.navigationBuffer_map,
+                                 game,
+                                 A4CHARACTER_COMMAND_IDLE, priority, flee, null);
+            }
+        }
+        l = this.memory.retrieveByFunctor("airlock-outside-door");
+        for(let wme of l) {
+            if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
+                wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
+                wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
+                wme.parameters[5] == this.navigationBuffer_map.name &&
+                wme.parameters[0] == targetMap) {
+                this.addPFTarget(wme.parameters[1],
+                                 wme.parameters[2],
+                                 wme.parameters[3],
+                                 wme.parameters[4],
+                                 this.navigationBuffer_map,
+                                 game,
+                                 A4CHARACTER_COMMAND_IDLE, priority, flee, null);
+            }
+        }
+    }
+
+
+    /*
     addPFTargetWME(w:WME, a_game:A4Game, action:number, priority:number, flee:boolean)
     {
 //        console.log("addPFTargetWME: " + w.toString());
@@ -778,6 +834,7 @@ class A4AI {
             // we don't know where the object is, so nothing to be done ...
         }
     }
+    */
 
 
     pathFinding(subject:A4Object) : boolean
@@ -1012,50 +1069,6 @@ class A4AI {
             priority = bestGotoScorePriority;
         }
         return [out_score, priority];
-    }
-
-
-    // fact check:
-    factCheckObject(wme:WME, map:A4Map, perception_x0:number, perception_y0:number, perception_x1:number, perception_y1:number)
-    {
-        if (wme.parameters.length==6 &&
-            wme.parameterTypes[5]  == WME_PARAMETER_SYMBOL &&
-            wme.parameters[5] == map.name &&
-            wme.parameterTypes[1] == WME_PARAMETER_INTEGER) {
-            let ltox0:number = <number>wme.parameters[1];
-            let ltoy0:number = <number>wme.parameters[2];
-            let ltox1:number = <number>wme.parameters[3];
-            let ltoy1:number = <number>wme.parameters[4];
-            if (ltox0<perception_x1 && ltox1>perception_x0 &&
-                ltoy0<perception_y1 && ltoy1>perception_y0) {
-                let found:boolean = false;
-                for(let o of this.all_objects_buffer) {
-                    if (!o.burrowed) {
-                        if (o.x==ltox0 && o.y+o.tallness==ltoy0 && wme.parameters[0] == o.ID) {
-                            // found!
-                            found = true;
-                        }
-                    }
-                }
-                if (!found) {
-                    // perception contradicts memory!
-                    this.memory.preceptionContradicts(wme);
-                }
-            }
-        }
-    }
- 
-
-    factCheckInventory(wme:WME)
-    {
-        let found:boolean = false;
-        for(let o of this.character.inventory) {
-            if (o.ID == wme.parameters[0]) found = true;
-        }
-        if (!found) {
-            // perception contradicts memory!
-            this.memory.preceptionContradicts(wme);
-        }
     }
 
 

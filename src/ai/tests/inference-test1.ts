@@ -178,7 +178,7 @@ function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpe
     }
 }
 
-/*
+
 for(let pair of term_unification_l) {
     var term1:Term = Term.fromString(pair[0], o);
     var term2:Term = Term.fromString(pair[1], o);
@@ -502,7 +502,6 @@ resolutionTest2(
     ["~verb.can('david'[#id],verb.clean('david'[#id], 'hypothetical-object'[#id]))"],
     true,
     o);
-*/
 
 
 // some concepts for the following test:
