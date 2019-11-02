@@ -33,20 +33,14 @@ class PFTarget {
 class A4AI {
     constructor(c:A4AICharacter)
     {
-        // 3000 = 50*60 (50 fps * 60 seconds: a character remembers something if it has been activated for 1 minute continuously)
-        this.memory = new AIMemory(3000);
         this.character = c;
     }
     
     
     update(game:A4Game)
     {
-
         // 1) perception & 2) fact checking:
         this.perception(game);
-
-        // 4) memory updates:
-        this.memory.update(this.period);
         
         // 6: behavior:
         if (this.character.isIdle()) {
@@ -71,7 +65,7 @@ class A4AI {
         let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
         
         let region:number = map.visibilityRegion(tx,ty);
-        this.all_objects_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(perception_x0, perception_y0,
+        this.object_perception_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(perception_x0, perception_y0,
                                                                                  perception_x1-perception_x0, perception_y1-perception_y0, 
                                                                                  region);
     }
@@ -79,6 +73,8 @@ class A4AI {
 
     perception(game:A4Game)
     {
+        if (this.lastPerceptionCycle != -1 &&
+            this.lastPerceptionCycle + this.period > this.cycle) return;
         this.lastPerceptionCycle = this.cycle;
         let map:A4Map = this.character.map;
         this.tileWidth = map.getTileWidth();
@@ -90,52 +86,6 @@ class A4AI {
         let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
 
         this.updateAllObjectsCache();
-        
-        let triggerSort:Sort = game.ontology.getSort("trigger");
-        for(let o of this.all_objects_buffer) {
-            if (o!=this.character && !o.burrowed && !o.is_a(triggerSort)) {
-                this.updateObjectPerceptionWME(o, 100, true, true);
-            }
-        }
-
-        for(let o of this.character.inventory) {
-            this.updateObjectPerceptionWME(o, this.period*2, false, false);
-        }
-        
-        {
-            for(let pbr of map.perceptionBuffer) {
-                if (pbr.x0<perception_x1 && pbr.x1>perception_x0 &&
-                    pbr.y0<perception_y1 && pbr.y1>perception_y0) {
-                    // perceived an action!:
-                    this.addPerceptionBufferWMEs(pbr);
-                }
-            }
-            for(let wpbr of map.warpPerceptionBuffer) {
-                if (wpbr.x0<perception_x1 && wpbr.x1>perception_x0 &&
-                    wpbr.y0<perception_y1 && wpbr.y1>perception_y0) {
-                    // perceived an warp!:
-                    this.addWarpPerceptionBufferWMEs(wpbr);
-                }
-            }
-
-            for(let b of map.bridges) {
-                if (b.x<perception_x1 && b.x+b.width>perception_x0 &&
-                    b.y<perception_y1 && b.y+b.height>perception_y0) {
-                    // perceived a bridge:
-                    if (b.linkedTo != null) {
-                        let wme:WME = new WME("bridge", this.period*2);
-                        wme.addParameter(b.linkedTo.map.name, WME_PARAMETER_SYMBOL);
-                        wme.addParameter(b.x, WME_PARAMETER_INTEGER);
-                        wme.addParameter(b.y, WME_PARAMETER_INTEGER);
-                        wme.addParameter(b.x + b.width, WME_PARAMETER_INTEGER);
-                        wme.addParameter(b.y + b.height, WME_PARAMETER_INTEGER);
-                        wme.addParameter(map.name, WME_PARAMETER_SYMBOL);
-                        wme.sourceObject = b;
-                        this.memory.addShortTermWME(wme);
-                    }
-                }
-            }
-        }        
     }
 
 
@@ -218,313 +168,29 @@ class A4AI {
     }
 
 
-    updateObjectPerceptionWME(o:A4Object, activation:number, includePosition:boolean, includeMap:boolean) : WME
+    addBridgeToLongTermMemory(o:A4Object)
     {
-        let n_parameters:number = 6;
-        let hash:number = stringHashFunction("object") % WME_HASH_SIZE;
-        for(let wme2 of this.memory.short_term_memory[hash]) {
-            if (wme2.functor == "object" &&
-                wme2.parameters[0] == o.ID && wme2.parameters.length == n_parameters) {
-                if (includePosition) {
-                    wme2.parameters[1] = o.x;
-                    wme2.parameterTypes[1] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[2] = o.y + o.tallness;
-                    wme2.parameterTypes[2] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[3] = o.x + o.getPixelWidth();
-                    wme2.parameterTypes[3] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[4] = o.y + o.getPixelHeight();
-                    wme2.parameterTypes[4] = WME_PARAMETER_INTEGER;
-                } else {
-                    wme2.parameters[1] = 0;
-                    wme2.parameterTypes[1] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[2] = 0;
-                    wme2.parameterTypes[2] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[3] = 0;
-                    wme2.parameterTypes[3] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[4] = 0;
-                    wme2.parameterTypes[4] = WME_PARAMETER_WILDCARD;
-                }
-                if (includeMap) {
-                    wme2.parameters[5] = o.map.name;
-                    wme2.parameterTypes[5] = WME_PARAMETER_SYMBOL;
-                } else {
-                    wme2.parameters[5] = 0;
-                    wme2.parameterTypes[5] = WME_PARAMETER_WILDCARD;
-                }
-                if (activation > wme2.activation) wme2.activation = activation;
-                this.updateObjectSortPerceptionWME(o, activation);
-                return wme2;
-            }
-        }
-        
-        // NOTE: this is a bit weird (updating long-term WMEs), think of a better way when I have time:
-        for(let wme2 of this.memory.long_term_memory[hash]) {
-            if (wme2.functor == "object" &&
-                wme2.parameters[0] == o.ID && wme2.parameters.length == n_parameters) {
-                if (includePosition) {
-                    wme2.parameters[1] = o.x;
-                    wme2.parameterTypes[1] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[2] = o.y + o.tallness;
-                    wme2.parameterTypes[2] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[3] = o.x + o.getPixelWidth();
-                    wme2.parameterTypes[3] = WME_PARAMETER_INTEGER;
-                    wme2.parameters[4] = o.y + o.getPixelHeight();
-                    wme2.parameterTypes[4] = WME_PARAMETER_INTEGER;
-                } else {
-                    wme2.parameters[1] = 0;
-                    wme2.parameterTypes[1] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[2] = 0;
-                    wme2.parameterTypes[2] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[3] = 0;
-                    wme2.parameterTypes[3] = WME_PARAMETER_WILDCARD;
-                    wme2.parameters[4] = 0;
-                    wme2.parameterTypes[4] = WME_PARAMETER_WILDCARD;
-                }
-                if (includeMap) {
-                    wme2.parameters[5] = o.map.name;
-                    wme2.parameterTypes[5] = WME_PARAMETER_SYMBOL;
-                } else {
-                    wme2.parameters[5] = 0;
-                    wme2.parameterTypes[5] = WME_PARAMETER_WILDCARD;
-                }
-                if (activation > wme2.activation) wme2.activation = activation;
-                this.updateObjectSortPerceptionWME(o, activation);
-                return wme2;
-            }
-        }
-
-        // add new WME:
-        let wme:WME = new WME("object", activation);
-        wme.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-        if (includePosition) {
-            wme.addParameter(o.x, WME_PARAMETER_INTEGER);
-            wme.addParameter(o.y + o.tallness, WME_PARAMETER_INTEGER);
-            wme.addParameter(o.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-            wme.addParameter(o.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-        } else {
-            wme.addParameter(0, WME_PARAMETER_WILDCARD);
-            wme.addParameter(0, WME_PARAMETER_WILDCARD);
-            wme.addParameter(0, WME_PARAMETER_WILDCARD);
-            wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        }
-        if (includeMap) {
-            wme.addParameter(o.map.name, WME_PARAMETER_SYMBOL);
-        } else {
-            wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        }
-        wme.sourceObject = o;
-        wme = this.memory.addShortTermWME(wme);
-
-        let wme2:WME = new WME("is_a", activation);
-        wme2.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-        wme2.addParameter(o.sort, WME_PARAMETER_SORT);
-        wme2.sourceObject = o;
-        this.memory.addShortTermWME(wme2);
-        return wme;
+        this.long_term_object_perception_buffer.push(o);    
     }
 
 
-    updateObjectSortPerceptionWME(o:A4Object, activation:number) : WME
+    canSeeObject(object:A4Object)
     {
-        let hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
-        for(let wme2 of this.memory.short_term_memory[hash]) {
-            if (wme2.functor == "is_a" &&
-                wme2.parameters[0] == o.ID) {
-                wme2.parameters[1] = o.sort;
-                wme2.parameterTypes[1] = WME_PARAMETER_SORT;
-                if (activation > wme2.activation) wme2.activation = activation;
-                return wme2;
-            }
-        }
-        
-        // NOTE: this is a bit weird (updating long-term WMEs), think of a better way when I have time:
-        for(let wme2 of this.memory.long_term_memory[hash]) {
-            if (wme2.functor == "is_a" &&
-                wme2.parameters[0] == o.ID) {
-                wme2.parameters[1] = o.sort;
-                wme2.parameterTypes[1] = WME_PARAMETER_SORT;
-                return wme2;
-            }
-        }
-        
-        // add new WME:
-        let wme2:WME = new WME("is_a", activation);
-        wme2.addParameter(o.ID, WME_PARAMETER_SYMBOL);
-        wme2.addParameter(o.sort, WME_PARAMETER_SORT);
-        wme2.sourceObject = o;
-        wme2 = this.memory.addShortTermWME(wme2);
-        return wme2;
-    }
-
-
-    addPerceptionBufferWMEs(pbr:PerceptionBufferRecord) : WME
-    {
-        if (pbr.directObjectSymbol==null && pbr.directObjectSort==null) {
-            // 1 parameter:
-            let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
-            wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-            let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
-            wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-            wme.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
-            this.memory.addShortTermWME(wme);
-            this.memory.addShortTermWME(wme2);
-            return wme;
-        } else {
-            // 2 or 3 parameter:
-            let p2:any;
-            let p2_type:number;
-            if (pbr.directObjectSymbol!=null) {
-                p2 = pbr.directObjectSymbol;
-                p2_type = WME_PARAMETER_SYMBOL;
-            } else {
-                if (pbr.directObjectID!=null) {
-                    p2 = pbr.directObjectID;
-                    p2_type = WME_PARAMETER_SYMBOL;
-                    let wme3:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
-                    wme3.addParameter(p2, p2_type);
-                    wme3.addParameter(pbr.directObjectSort, WME_PARAMETER_SORT);
-                    this.memory.addShortTermWME(wme3);
-                } else {
-                    p2 = pbr.directObjectSort;
-                    p2_type = WME_PARAMETER_SORT;
-                }
-            }
-            
-            if (pbr.indirectObjectSort==null) {
-                // 2 parameter:
-                let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
-                wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-                wme.addParameter(p2, p2_type);
-
-                let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
-                wme2.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-                wme2.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
-                this.memory.addShortTermWME(wme);
-                this.memory.addShortTermWME(wme2);
-                return wme;
-            } else {
-                let wme:WME = new WME(pbr.action, PERCEIVED_ACTION_ACTIVATION);
-                wme.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-                wme.addParameter(p2, p2_type);
-                wme.addParameter(pbr.indirectObjectID, WME_PARAMETER_SYMBOL);
-
-                let wme2:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
-                wme2.addParameter(pbr.subjectID, WME_PARAMETER_SYMBOL);
-                wme2.addParameter(pbr.subjectSort, WME_PARAMETER_SORT);
-
-                let wme4:WME = new WME("is_a", PERCEIVED_ACTION_ACTIVATION);
-                wme4.addParameter(pbr.indirectObjectID, WME_PARAMETER_SYMBOL);
-                wme4.addParameter(pbr.indirectObjectSort, WME_PARAMETER_SORT);
-
-                this.memory.addShortTermWME(wme);
-                this.memory.addShortTermWME(wme2);
-                this.memory.addShortTermWME(wme4);
-                return wme;
-            }
-        }
-    }
-
-
-    addWarpPerceptionBufferWMEs(pbr:PerceptionBufferObjectWarpedRecord) : WME
-    {
-        let n_parameters:number = 6;
-        let hash:number = stringHashFunction("object") % WME_HASH_SIZE;
-        for(let wme2 of this.memory.short_term_memory[hash]) {
-            if (wme2.functor == "object" &&
-                wme2.parameters[0] == pbr.ID && wme2.parameters.length == n_parameters) {
-                wme2.parameters[1] = 0;
-                wme2.parameterTypes[1] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[2] = 0;
-                wme2.parameterTypes[2] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[3] = 0;
-                wme2.parameterTypes[3] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[4] = 0;
-                wme2.parameterTypes[4] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[5] = pbr.targetMap;
-                wme2.parameterTypes[5] = WME_PARAMETER_SYMBOL;
-                if (PERCEIVED_WARP_ACTIVATION > wme2.activation) wme2.activation = PERCEIVED_WARP_ACTIVATION;
-                this.addWarpPerceptionBufferSortWMEs(pbr);
-                return wme2;
-            }
-        }
-        
-        // NOTE: this is a bit weird (updating long-term WMEs), think of a better way when I have time:
-        for(let wme2 of this.memory.long_term_memory[hash]) {
-            if (wme2.functor == "object" &&
-                wme2.parameters[0] == pbr.ID && wme2.parameters.length == n_parameters) {
-                wme2.parameters[1] = 0;
-                wme2.parameterTypes[1] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[2] = 0;
-                wme2.parameterTypes[2] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[3] = 0;
-                wme2.parameterTypes[3] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[4] = 0;
-                wme2.parameterTypes[4] = WME_PARAMETER_WILDCARD;
-                wme2.parameters[5] = pbr.targetMap;
-                wme2.parameterTypes[5] = WME_PARAMETER_SYMBOL;
-                if (PERCEIVED_WARP_ACTIVATION > wme2.activation) wme2.activation = PERCEIVED_WARP_ACTIVATION;
-                this.addWarpPerceptionBufferSortWMEs(pbr);
-                return wme2;
-            }
-        }        
-
-        // add new WME:
-        let wme:WME = new WME("object",PERCEIVED_WARP_ACTIVATION);
-        wme.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
-        wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        wme.addParameter(0, WME_PARAMETER_WILDCARD);
-        wme.addParameter(pbr.targetMap, WME_PARAMETER_SYMBOL);
-        wme = this.memory.addShortTermWME(wme);
-        let wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
-        wme2.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
-        wme2.addParameter(pbr.sort, WME_PARAMETER_SORT);
-        this.memory.addShortTermWME(wme2);
-        return wme;
-    }
-
-
-    addWarpPerceptionBufferSortWMEs(pbr:PerceptionBufferObjectWarpedRecord) : WME
-    {
-        let hash:number = stringHashFunction("is_a") % WME_HASH_SIZE;
-        for(let wme2 of this.memory.short_term_memory[hash]) {
-            if (wme2.functor == "is_a" &&
-                wme2.parameters[0] == pbr.ID) {
-                wme2.parameters[1] = pbr.sort;
-                if (PERCEIVED_WARP_ACTIVATION > wme2.activation) wme2.activation = PERCEIVED_WARP_ACTIVATION;
-                return wme2;
-            }
-        }
-        
-        // NOTE: this is a bit weird (updating long-term WMEs), think of a better way when I have time:
-        for(let wme2 of this.memory.long_term_memory[hash]) {
-            if (wme2.functor == "is_a" &&
-                wme2.parameters[0] == pbr.ID) {
-                wme2.parameters[1] = pbr.sort;
-                if (PERCEIVED_WARP_ACTIVATION > wme2.activation) wme2.activation = PERCEIVED_WARP_ACTIVATION;
-                return wme2;
-            }
-        }
-        
-        // add new WME:
-        let wme2:WME = new WME("is_a", PERCEIVED_WARP_ACTIVATION);
-        wme2.addParameter(pbr.ID, WME_PARAMETER_SYMBOL);
-        wme2.addParameter(pbr.sort, WME_PARAMETER_SORT);
-        wme2 = this.memory.addShortTermWME(wme2);
-        return wme2;
+        if (this.object_perception_buffer.indexOf(object) != -1) return true;
+        if (this.long_term_object_perception_buffer.indexOf(object) != -1) return true;
+        return false;
     }
 
 
     getObjectPerceptionCache() : A4Object[]
     {
-        return this.all_objects_buffer;
+        return this.object_perception_buffer;
     }
 
 
     getObjectPerceptionCacheSize() : number
     {
-        return this.all_objects_buffer.length;
+        return this.object_perception_buffer.length;
     }
 
 
@@ -568,7 +234,7 @@ class A4AI {
         }
         
         // add objects:
-        for(let o of this.all_objects_buffer) {
+        for(let o of this.object_perception_buffer) {
             if (o!=this.character && !o.isWalkable() && o!=this.character.vehicle) {
                 // if it's a door, and we have the key, then ignore the door:
                 let add:boolean = true;
@@ -722,119 +388,38 @@ class A4AI {
     addPFTargetMap(action:number, priority:number, flee:boolean, map:A4Map, game:A4Game)
     {
         // different map, just target the map:
-        let l:WME[] = this.memory.retrieveByFunctor("bridge");
-        let targetMap:string = map.name;
+        let targetMapName:string = map.name;
         if (this.map2mapPaths != null) {
             let idx1:number = game.getMapIndex(this.navigationBuffer_map.name);
-            let idx2:number = game.getMapIndex(targetMap);
+            let idx2:number = game.getMapIndex(targetMapName);
             if (idx1 >= 0 && idx2 >= 0 && this.map2mapPaths[idx1][idx2] != null) {
-                targetMap = this.map2mapPaths[idx1][idx2];
+                targetMapName = this.map2mapPaths[idx1][idx2];
             }
         }
-        for(let wme of l) {
-            if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
-                wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
-                wme.parameters[5] == this.navigationBuffer_map.name &&
-                wme.parameters[0] == targetMap) {
-                this.addPFTarget(wme.parameters[1],
-                                 wme.parameters[2],
-                                 wme.parameters[3],
-                                 wme.parameters[4],
-                                 this.navigationBuffer_map,
-                                 game,
-                                 A4CHARACTER_COMMAND_IDLE, priority, flee, null);
-            }
-        }
-        l = this.memory.retrieveByFunctor("airlock-outside-door");
-        for(let wme of l) {
-            if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
-                wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
-                wme.parameters[5] == this.navigationBuffer_map.name &&
-                wme.parameters[0] == targetMap) {
-                this.addPFTarget(wme.parameters[1],
-                                 wme.parameters[2],
-                                 wme.parameters[3],
-                                 wme.parameters[4],
-                                 this.navigationBuffer_map,
-                                 game,
-                                 A4CHARACTER_COMMAND_IDLE, priority, flee, null);
+        for(let o of this.long_term_object_perception_buffer) {
+            if (o instanceof A4MapBridge) {
+                let b:A4MapBridge = <A4MapBridge>o;
+                if (b.map == this.navigationBuffer_map &&
+                    b.linkedTo.map.name == targetMapName) {
+                    this.addPFTarget(b.x, b.y,
+                                     b.x + b.width, b.y + b.height,
+                                     this.navigationBuffer_map,
+                                     game,
+                                     A4CHARACTER_COMMAND_IDLE, priority, flee, null);                    
+                }
+            } else if (o instanceof ShrdluAirlockDoor) {
+                let b:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
+                if (b.map == this.navigationBuffer_map &&
+                    b.targetMap == targetMapName) {
+                    this.addPFTarget(b.x, b.y + b.tallness,
+                                     b.x + b.getPixelWidth(), b.y + b.getPixelHeight(),
+                                     this.navigationBuffer_map,
+                                     game,
+                                     A4CHARACTER_COMMAND_IDLE, priority, flee, null);                    
+                }
             }
         }
     }
-
-
-    /*
-    addPFTargetWME(w:WME, a_game:A4Game, action:number, priority:number, flee:boolean)
-    {
-//        console.log("addPFTargetWME: " + w.toString());
-        if (w.parameterTypes[5] == WME_PARAMETER_SYMBOL) {
-            if (this.navigationBuffer_lastUpdated == -1 ||
-                this.navigationBuffer_lastUpdated <= this.cycle-this.period) {
-                this.updateNavigationPerceptionBuffer(a_game, false);
-            }
-            let target:A4Object = w.sourceObject;
-            if (target != null && !this.navigationBuffer_map.contains(target)) target = null;
-                    
-            let map2:A4Map = a_game.getMap(<string>w.parameters[5]);
-            if (map2 == this.navigationBuffer_map) {
-                // same map where a_character is:
-                //console.log("addPFTargetWME: same map.");
-                if (w.parameterTypes[1] == WME_PARAMETER_INTEGER) {
-                    this.addPFTarget(w.parameters[1],
-                                     w.parameters[2],
-                                     w.parameters[3],
-                                     w.parameters[4],
-                                     action, priority, flee, target);
-                } else {
-                    // we are the the right map, but we don't know where the object is, so nothing to be done ...
-                }
-            } else {
-                // different map, just target the map:
-                //console.log("addPFTargetWME: different map.");
-                let l:WME[] = this.memory.retrieveByFunctor("bridge");
-                let targetMap:string = <string>w.parameters[5];
-                if (this.map2mapPaths != null) {
-                    let idx1:number = a_game.getMapIndex(this.navigationBuffer_map.name);
-                    let idx2:number = a_game.getMapIndex(targetMap);
-                    if (idx1 >= 0 && idx2 >= 0 && this.map2mapPaths[idx1][idx2] != null) {
-                        targetMap = this.map2mapPaths[idx1][idx2];
-                    }
-                }
-                for(let wme of l) {
-                    if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                        wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
-                        wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
-                        wme.parameters[5] == this.navigationBuffer_map.name &&
-                        wme.parameters[0] == targetMap) {
-                        this.addPFTarget(wme.parameters[1],
-                                         wme.parameters[2],
-                                         wme.parameters[3],
-                                         wme.parameters[4],
-                                         A4CHARACTER_COMMAND_IDLE, priority, flee, null);
-                    }
-                }
-                l = this.memory.retrieveByFunctor("airlock-outside-door");
-                for(let wme of l) {
-                    if (wme.parameterTypes[0] == WME_PARAMETER_SYMBOL &&
-                        wme.parameterTypes[1] == WME_PARAMETER_INTEGER &&
-                        wme.parameterTypes[5] == WME_PARAMETER_SYMBOL &&
-                        wme.parameters[5] == this.navigationBuffer_map.name &&
-                        wme.parameters[0] == targetMap) {
-                        this.addPFTarget(wme.parameters[1],
-                                         wme.parameters[2],
-                                         wme.parameters[3],
-                                         wme.parameters[4],
-                                         A4CHARACTER_COMMAND_IDLE, priority, flee, null);
-                    }
-                }
-            }
-        } else {
-            // we don't know where the object is, so nothing to be done ...
-        }
-    }
-    */
 
 
     pathFinding(subject:A4Object) : boolean
@@ -1074,7 +659,10 @@ class A4AI {
 
     objectRemoved(o:A4Object) 
     {
-        if (this.memory!=null) this.memory.objectRemoved(o);
+        let idx:number = this.object_perception_buffer.indexOf(o);
+        if (idx != -1) this.object_perception_buffer.splice(idx, 1)
+        idx = this.long_term_object_perception_buffer.indexOf(o);
+        if (idx != -1) this.long_term_object_perception_buffer.splice(idx, 1)
     }
 
 
@@ -1181,10 +769,9 @@ class A4AI {
 
     doorsNotToOpenWhileWalking:string[] = [];
 
-    period:number = 1;       // the AI will only run once each m_period cycles
+    period:number = 2;       // the AI will only run once each period cycles
     cycle:number = 0;        // current cycle
     character:A4AICharacter = null;
-    memory:AIMemory = null;
 
     lastPerceptionCycle:number = -1;
         
@@ -1192,10 +779,9 @@ class A4AI {
     tileWidth:number = 0;
     tileHeight:number = 0;
 
-    all_objects_buffer:A4Object[] = [];
-
-    // cached WMEs:
-    is_a_pattern:WME = null;
+    object_perception_buffer:A4Object[] = [];
+    long_term_object_perception_buffer:A4Object[] = [];    // this stores objects of the "familiar" maps
+    maps_familiar_with:string[] = [];
 
     map2mapNames:string[] = null;
     map2mapPaths:string[][] = null;

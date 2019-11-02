@@ -1981,7 +1981,8 @@ class RuleBasedAI {
 
 		for(let se of this.longTermMemory.previousSentencesWithNoCurrentSentence) {
 			if (se.provenance != BACKGROUND_PROVENANCE &&
-				se.provenance != ONTOLOGY_PROVENANCE) {
+				se.provenance != ONTOLOGY_PROVENANCE &&
+				se.provenance != LOCATIONS_PROVENANCE) {
 				str += "<previousSentence activation=\""+se.activation+"\" " +
 					   "provenance=\""+se.provenance+"\" " +
 					   "sentence=\""+se.sentence.toStringXML()+"\" "+
@@ -1991,7 +1992,8 @@ class RuleBasedAI {
 		}
 		for(let se of this.longTermMemory.plainSentenceList) {
 			if (se.provenance != BACKGROUND_PROVENANCE &&
-				se.provenance != ONTOLOGY_PROVENANCE) {
+				se.provenance != ONTOLOGY_PROVENANCE &&
+				se.provenance != LOCATIONS_PROVENANCE) {
 				str += this.saveSentenceEntryToXML(se, false);
 			}
 		}

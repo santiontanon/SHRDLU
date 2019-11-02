@@ -44,9 +44,6 @@ var A4_SCRIPT_EVENTRULE:number = 34;
 var A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION:number = 12;
 var A4_SCRIPT_STORYSTATE:number = 13;
 var A4_SCRIPT_STORYSTATECHECK:number = 50;
-var A4_SCRIPT_ADDWME:number = 14;
-var A4_SCRIPT_ADDWMETOOTHERS:number = 15;
-var A4_SCRIPT_ADDCURRENTPOSITIONWME:number = 29;
 var A4_SCRIPT_FAMILIARWITHMAP:number = 31;
 var A4_SCRIPT_LOSEITEM:number = 20;
 var A4_SCRIPT_GAINITEM:number = 21;
@@ -69,7 +66,7 @@ var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 
-var A4_N_SCRIPTS:number = 69;
+var A4_N_SCRIPTS:number = 69;    // #14, #15 and #29 are available
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -121,9 +118,6 @@ scriptNames[A4_SCRIPT_EVENTRULE] = "eventRule";
 scriptNames[A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION] = "updateConversationGraphTransition";
 scriptNames[A4_SCRIPT_STORYSTATE] = "storyState";
 scriptNames[A4_SCRIPT_STORYSTATECHECK] = "storyStateCheck";
-scriptNames[A4_SCRIPT_ADDWME] = "addWME";
-scriptNames[A4_SCRIPT_ADDWMETOOTHERS] = "addWMEToOthers";
-scriptNames[A4_SCRIPT_ADDCURRENTPOSITIONWME] = "addCurrentPositionWME";
 scriptNames[A4_SCRIPT_FAMILIARWITHMAP] = "familiarWithMap";
 scriptNames[A4_SCRIPT_LOSEITEM] = "loseItem";
 scriptNames[A4_SCRIPT_GAINITEM] = "gainItem";
@@ -391,22 +385,12 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
         let distance:number = distance_x + distance_y;
         if (distance <= 0) return SCRIPT_FINISHED;
         
-        let pattern:WME = new WME("object",0);
-        pattern.addParameter(script.ID, WME_PARAMETER_SYMBOL);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        
-        let wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
-        
-        if (wme==null) {
-            if (script.wait) return SCRIPT_FAILED;   // when we don't see the target anymore, we are done
-            return SCRIPT_FAILED;
-        } else {
+        if (ai.canSeeObject(targetObject)) {
             ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
+        } else {
+            if (script.wait) return SCRIPT_FAILED;   // when we don't see the target anymore, we are done
+            return SCRIPT_FAILED;
         }
     } else {
         return SCRIPT_FAILED;
@@ -788,22 +772,12 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             }
         }
         
-        let pattern:WME = new WME("object",0);
-        pattern.addParameter(script.ID, WME_PARAMETER_SYMBOL);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        pattern.addParameter(0, WME_PARAMETER_WILDCARD);
-        
-        let wme:WME = ai.memory.retrieveFirstByRelativeSubsumption(pattern);
-        
-        if (wme==null) {
-            if (script.wait) return SCRIPT_FAILED;   // if we don't see the target anymore, we are done
-            return SCRIPT_FAILED;
-        } else {
+        if (ai.canSeeObject(targetObject)) {
             ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
+        } else {
+            if (script.wait) return SCRIPT_FAILED;   // if we don't see the target anymore, we are done
+            return SCRIPT_FAILED;
         }
     } else {
         return SCRIPT_FAILED;
@@ -1197,55 +1171,10 @@ scriptFunctions[A4_SCRIPT_STORYSTATECHECK] = function(script:A4Script, o:A4Objec
 }
 
 
-scriptFunctions[A4_SCRIPT_ADDWME] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    let exp:Expression = Expression.fromString(script.text);
-    if (exp==null) return SCRIPT_FINISHED;
-    let wme:WME = WME.fromExpression(exp, game.ontology, script.value);
-    (<A4AICharacter>o).AI.memory.addShortTermWME(wme);
-    return SCRIPT_FINISHED;
-}
-
-
-scriptFunctions[A4_SCRIPT_ADDWMETOOTHERS] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    let exp:Expression = Expression.fromString(script.text);
-    if (exp==null) return SCRIPT_FINISHED;
-    
-    let ai:A4AI = (<A4AICharacter>o).AI;
-    let sort:Sort = game.ontology.getSort(script.ID);
-    
-    for(let o2 of ai.getObjectPerceptionCache()) {
-        if (o2.is_a(sort)) {
-            let wme:WME = WME.fromExpression(exp, game.ontology, script.value);
-            (<A4AICharacter>o2).AI.memory.addShortTermWME(wme);
-            if (script.x!=0) { // if "select = first":
-                return SCRIPT_FINISHED;
-            }
-        }
-    }    
-    return SCRIPT_FINISHED;
-}
-
-
-scriptFunctions[A4_SCRIPT_ADDCURRENTPOSITIONWME] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    let wme:WME = new WME("location", script.value);
-    wme.addParameter(script.ID, WME_PARAMETER_SYMBOL);
-    wme.addParameter(o.x, WME_PARAMETER_INTEGER);
-    wme.addParameter(o.y, WME_PARAMETER_INTEGER);
-    wme.addParameter(o.x + o.getPixelWidth(), WME_PARAMETER_INTEGER);
-    wme.addParameter(o.y + o.getPixelHeight(), WME_PARAMETER_INTEGER);
-    wme.addParameter(o.map.name, WME_PARAMETER_SYMBOL);
-    (<A4AICharacter>o).AI.memory.addShortTermWME(wme);
-    return SCRIPT_FINISHED;
-}
-
-
 scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (!o.isAICharacter()) return SCRIPT_FAILED;
-    let m:AIMemory = (<A4AICharacter>o).AI.memory;
+    //let m:AIMemory = (<A4AICharacter>o).AI.memory;
     let map_tf:A4Map = game.getMap(script.ID);
     
     if (map_tf==null) {
@@ -1254,31 +1183,17 @@ scriptFunctions[A4_SCRIPT_FAMILIARWITHMAP] = function(script:A4Script, o:A4Objec
         for(let b of map_tf.bridges) {
             // perceived a bridge:
             if (b.linkedTo != null) {
-                let wme:WME = new WME("bridge", m.freezeThreshold);
-                wme.addParameter(b.linkedTo.map.name, WME_PARAMETER_SYMBOL);
-                wme.addParameter(b.x, WME_PARAMETER_INTEGER);
-                wme.addParameter(b.y, WME_PARAMETER_INTEGER);
-                wme.addParameter(b.x+b.width, WME_PARAMETER_INTEGER);
-                wme.addParameter(b.y+b.height, WME_PARAMETER_INTEGER);
-                wme.addParameter(map_tf.name, WME_PARAMETER_SYMBOL);
-                wme.sourceObject = b;
-                m.addLongTermWME(wme);
+                (<A4AICharacter>o).AI.addBridgeToLongTermMemory(b);
             }
         }
         for(let o2 of map_tf.objects) {
             // perceived a bridge:
             if (o2 instanceof ShrdluAirlockDoor) {
-                let d:ShrdluAirlockDoor = <ShrdluAirlockDoor>o2;
-                let wme:WME = new WME(d.sort.name, m.freezeThreshold);
-                wme.addParameter(d.targetMap, WME_PARAMETER_SYMBOL);
-                wme.addParameter(d.x, WME_PARAMETER_INTEGER);
-                wme.addParameter(d.y+d.tallness, WME_PARAMETER_INTEGER);
-                wme.addParameter(d.x+d.getPixelWidth(), WME_PARAMETER_INTEGER);
-                wme.addParameter(d.y+d.getPixelHeight(), WME_PARAMETER_INTEGER);
-                wme.addParameter(map_tf.name, WME_PARAMETER_SYMBOL);
-                wme.sourceObject = d;
-                m.addLongTermWME(wme);
+                (<A4AICharacter>o).AI.addBridgeToLongTermMemory(o2);
             }
+        }
+        if ((<A4AICharacter>o).AI.maps_familiar_with.indexOf(script.ID) == -1) {
+            (<A4AICharacter>o).AI.maps_familiar_with.push(script.ID);
         }
 
         return SCRIPT_FINISHED;
@@ -1645,27 +1560,6 @@ class A4Script {
                         s.ID = xml.getAttribute("variable");
                         s.text = xml.getAttribute("value");
                         break;
-                    
-                    case A4_SCRIPT_ADDWME:
-                        s.text = xml.getAttribute("wme");
-                        s.value = Number(xml.getAttribute("activation"));
-                        break;
-                    
-                    case A4_SCRIPT_ADDWMETOOTHERS:
-                        s.text = xml.getAttribute("wme");
-                        s.value = Number(xml.getAttribute("activation"));
-                        
-                        // characterClass
-                        s.ID = xml.getAttribute("characterClass");
-                        
-                        // select
-                        if (xml.getAttribute("select") == "all") {
-                            s.x = 0;
-                        } else {
-                            s.x = 1;
-                        }
-                        break;
-                    
                     case A4_SCRIPT_STEAL:
                         s.ID = xml.getAttribute("name");
                         break;
@@ -1735,11 +1629,6 @@ class A4Script {
                         if (xml.getAttribute("thought") == "true") s.thought = true;
                         s.wait = false;
                         if (xml.getAttribute("wait") == "true") s.wait = true;
-                        break;
-
-                    case A4_SCRIPT_ADDCURRENTPOSITIONWME:
-                        s.ID = xml.getAttribute("name");
-                        s.value = Number(xml.getAttribute("activation"));
                         break;
                     
                     case A4_SCRIPT_STARTTRADING:
@@ -1927,21 +1816,6 @@ class A4Script {
                 xmlString += " value=\"" + this.text + "\"";
                 break;
             }
-            case A4_SCRIPT_ADDWME:
-            {
-                xmlString += " wme=\"" + this.text + "\"";
-                xmlString += " activation=\"" + this.value + "\"";
-                break;
-            }
-            case A4_SCRIPT_ADDWMETOOTHERS:
-            {
-                xmlString += " wme=\"" + this.text + "\"";
-                xmlString += " activation=\"" + this.value + "\"";
-                xmlString += " characterClass=\"" + this.ID + "\"";
-                if (this.x==0) xmlString += " select=\"all\"";
-                          else xmlString += " select=\"first\"";
-                break;
-            }
             case A4_SCRIPT_STEAL:
             {
                 xmlString += " name=\"" + this.ID + "\"";
@@ -2029,12 +1903,6 @@ class A4Script {
                 break;
             }
 
-            case A4_SCRIPT_ADDCURRENTPOSITIONWME:
-            {
-                xmlString += " name=\"" + this.ID + "\"";
-                xmlString += " activation=\"" + this.value + "\"";
-                break;
-            }
             case A4_SCRIPT_STARTTRADING:
                 break;
             case A4_SCRIPT_FAMILIARWITHMAP:

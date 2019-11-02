@@ -6,40 +6,6 @@ class A4AICharacter extends A4Character {
         this.AI = new A4AI(this);
     }
 
-
-    loadObjectAdditionalContent(xml:Element, game:A4Game, of:A4ObjectFactory, objectsToRevisit_xml:Element[], objsctsToRevisit_object:A4Object[])
-    {
-        super.loadObjectAdditionalContent(xml,game,of, objectsToRevisit_xml, objsctsToRevisit_object);
-        
-        // conversation graph:
-        /*
-        var conversationgraph_xml:Element = getFirstElementChildByTag(xml,"conversationGraph");
-        if (conversationgraph_xml!=null) {
-            var file:string = conversationgraph_xml.getAttribute("name");
-            if (file!=null) {
-                // it's defined in an external file:
-                var fullPath:string = game.game_path + "/" + file;
-                var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
-                xmlhttp.overrideMimeType("text/xml");
-                xmlhttp.open("GET", fullPath, false); 
-                xmlhttp.send();
-                var xml2:Element = xmlhttp.responseXML.documentElement;
-                this.AI.conversationGraph = ConversationGraph.fromXML(xml2);
-            } else {
-                // it's defined on the spot:
-                this.AI.conversationGraph = ConversationGraph.fromXML(conversationgraph_xml);
-            }
-        }
-        
-        // conversation rules:
-        var conversationrules_xml:Element[] = getElementChildrenByTag(xml,"conversationGraphTransition");
-        for(let rule_xml of conversationrules_xml) {
-            this.AI.conversationGraph.addConversationGraphTransitionFromXML(rule_xml);
-        }
-        */
-        
-    }
-
     
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
@@ -72,33 +38,15 @@ class A4AICharacter extends A4Character {
 
         var tagOpen:boolean = false;
 
-        for(let wme of this.AI.memory.short_term_memory_plain) {
+        for(let map_name of this.AI.maps_familiar_with) {
             if (!tagOpen) {
                 xmlString += "<onStart>\n";
                 tagOpen = true;
             }
-            xmlString += "<addWME wme=\"" + wme.toStringNoActivation() + "\" activation=\""+wme.activation+"\"/>\n";
+            xmlString += "<familiarWithMap map=\""+map_name+"\"/>\n";
         }
-        for(let wme of this.AI.memory.long_term_memory_plain) {
-            if (!tagOpen) {
-                xmlString += "<onStart>\n";
-                tagOpen = true;
-            }
-            xmlString += "<addWME wme=\"" + wme.toStringNoActivation() + "\" activation=\""+wme.activation+"\"/>\n";
-        }
-        /*
-        for(let pt of this.AI.pendingTalk) {
-            if (!tagOpen) {
-                xmlString += "<onStart>\n";
-                tagOpen = true;
-            }
-            xmlString += pt.saveToXML() + "\n";
-        }
-        */
         if (tagOpen) xmlString += "</onStart>\n";
-        
-//        if (this.AI.conversationGraph!=null) xmlString += this.AI.conversationGraph.saveToXML() + "\n";
-        
+                
         return xmlString;
     }
 
@@ -118,16 +66,9 @@ class A4AICharacter extends A4Character {
     }
 
 
-/*
-    receiveSpeechAct(speaker:A4Character, receiver:A4Character, sa:SpeechAct) {
-        this.AI.receiveSpeechAct(speaker, receiver, sa);
-    }
-*/
-
     objectRemoved(o:A4Object)
     {
         super.objectRemoved(o);
-
         this.AI.objectRemoved(o);
     }
 
