@@ -133,10 +133,11 @@
 	<sentence provenance="background" sentence="space.area('communicator-range'[#id])"/>
 	<sentence provenance="background" sentence="name('communicator-range'[#id],'communicator range'[symbol])"/>
 	<sentence provenance="background" sentence="name('communicator-range'[#id],'communication range'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('spacer-valley-south'[#id],'communicator-range'[#id])"/>
+	<!--sentence provenance="background" sentence="space.at('spacer-valley-south'[#id],'communicator-range'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('spacer-valley-north'[#id],'communicator-range'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('location-east-cave'[#id],'communicator-range'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('location-west-cave'[#id],'communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="~space.at('location-west-cave'[#id],'communicator-range'[#id])"/-->
+	<sentence provenance="background" sentence="~space.at(X,'spacer-valley-south'[#id]);space.at(X,'communicator-range'[#id])"/>
 
 	<sentence provenance="background" sentence="communication.tower('comm-tower'[#id])"/>
 	<sentence provenance="background" sentence="space.at('comm-tower'[#id],'location-aurora-settlement'[#id])"/>

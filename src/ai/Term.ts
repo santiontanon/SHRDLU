@@ -846,7 +846,7 @@ class Term {
 
         if (att1 instanceof VariableTermAttribute) {
             if (att2 instanceof VariableTermAttribute) {
-                if (att1 == att2) return 1;
+                //if (att1 == att2) return 1;
                 if (att1.sort == att2.sort) return 1;
                 return 0;
             } else {

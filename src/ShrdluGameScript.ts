@@ -264,6 +264,7 @@ class ShrdluGameScript {
 	skip_to_tardis8()
 	{
 		this.skip_to_end_of_act_2();
+		this.updateKnowledgeAfterReachingTrantorCrater();
 		this.act = "3";
 		this.act_3_state = 0;
 
@@ -2265,23 +2266,25 @@ class ShrdluGameScript {
 	updateKnowledgeAfterRepairingCommTower()
 	{
 		// remove all the knowledge about communicator-range:
+		/*
 		{
 			let toRemove:Sentence[] = [];
-			let s:Sentence = this.game.etaoinAI.longTermMemory.firstMatch(this.game.ontology.getSort("space.at"), 2, this.game.ontology);
+			let s:Sentence = this.game.etaoinAI.longTermMemory.firstSingleTermMatch(this.game.ontology.getSort("space.at"), 2, this.game.ontology);
 			while(s != null) {
-				if (s.terms.length == 1 &&
-					(s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
+				if ((s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
 					(<ConstantTermAttribute>s.terms[0].attributes[1]).value == "communicator-range") {
 					toRemove.push(s);
 				}
-				s = this.game.etaoinAI.longTermMemory.nextMatch();
+				s = this.game.etaoinAI.longTermMemory.nextSingleTermMatch();
 			}
 			for(let s2 of toRemove) {
 				this.game.etaoinAI.longTermMemory.removeSentence(s2);
 			}
 		}
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('aurora'[#id],'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-		this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("space.at(X,'aurora'[#id]);~space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		*/
+		//this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('aurora'[#id],'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		//this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("space.at(X,'aurora'[#id]);~space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("~space.at(X,'aurora'[#id]);space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2486,6 +2489,7 @@ class ShrdluGameScript {
 
 		switch(this.act_3_state) {
 			case 0: this.game.loadTardis8LocationKnowledge();
+					this.updateKnowledgeAfterReachingTrantorCrater();
 					this.act_3_state = 1;
 					break;
 
@@ -2501,6 +2505,14 @@ class ShrdluGameScript {
 			this.act_3_state_timer = 0;
 			this.act_3_state_start_time = this.game.in_game_seconds;
 		}		
+	}
+
+
+	updateKnowledgeAfterReachingTrantorCrater()
+	{
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
+		this.game.shrdluAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
+		this.game.qwertyAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
 	}
 
 

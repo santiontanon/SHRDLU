@@ -274,8 +274,8 @@ class SentenceContainer {
 		return true;
 	}
 
-
-	firstMatch(s:Sort, arity:number, o:Ontology) : Sentence
+	
+	firstSingleTermMatch(s:Sort, arity:number, o:Ontology) : Sentence
 	{
 		this.match_cache_l = [];
 		for(let sortName in this.sentenceHash) {
@@ -283,6 +283,8 @@ class SentenceContainer {
 			if (s2.is_a(s) || s.is_a(s2)) {
 				let l:SentenceEntry[] = this.sentenceHash[sortName];
 				for(let se of l) {
+					if (se.sentence.terms.length != 1 ||
+						!se.sentence.sign[0]) continue;
 					let matchesArity:boolean = false;
 					for(let t of se.sentence.terms) {
 						if (t.functor == s2 && t.attributes.length == arity) {
@@ -300,13 +302,13 @@ class SentenceContainer {
 		}
 		this.firstMatch_counter++;
 		this.match_cache_idx = 0;
-		return this.nextMatch();
+		return this.nextSingleTermMatch();
 	}
 
 
-	nextMatch() : Sentence
+	nextSingleTermMatch() : Sentence
 	{
-		if (this.match_cache_l==null) return null;
+		if (this.match_cache_l == null) return null;
 		while(this.match_cache_idx<this.match_cache_l.length) {
 			let se2:SentenceEntry = this.match_cache_l[this.match_cache_idx];
 			this.match_cache_idx++;
@@ -318,57 +320,18 @@ class SentenceContainer {
 	}
 
 
-	allMatches(s:Sort, arity:number, o:Ontology) : Sentence[]
+	allSingleTermMatches(s:Sort, arity:number, o:Ontology) : Sentence[]
 	{
 		let l:Sentence[] = [];
-		let match:Sentence = this.firstMatch(s, arity, o);
+		let match:Sentence = this.firstSingleTermMatch(s, arity, o);
 		if (match == null) return l;
 		while(match!=null) {
 			l.push(match);
-			match = this.nextMatch();
+			match = this.nextSingleTermMatch();
 		}
 		return l;
 	}
-
-
-
-	cacheMatchesWithSign(query:Term, sign:boolean, o:Ontology)
-	{
-		this.match_cache_l = [];
-		for(let sortName in this.sentenceHash) {
-			let s2:Sort = o.getSort(sortName);
-			if (s2.is_a(query.functor) || query.functor.is_a(s2)) {
-				let l:SentenceEntry[] = this.sentenceHash[sortName];
-				for(let se of l) {
-					if (se.allPotentialMatchesWithSentenceForResolution_counter == this.allPotentialMatchesWithSentenceForResolution_counter) continue;
-					let matches:boolean = false;
-					for(let i:number = 0;i<se.sentence.terms.length;i++) {
-						let t:Term = se.sentence.terms[i];
-						if (t.functor == s2 && 
-							t.attributes.length == query.attributes.length && 
-							se.sentence.sign[i] == sign) {
-							matches = true;
-							for(let j:number = 0;j<t.attributes.length;j++) {
-								if (query.attributes[j] instanceof ConstantTermAttribute) {
-									if (t.attributes[j] instanceof TermTermAttribute) matches = false;
-									else if ((t.attributes[j] instanceof ConstantTermAttribute) &&
-											 (<ConstantTermAttribute>t.attributes[j]).value != (<ConstantTermAttribute>query.attributes[j]).value) matches = false;
-								}
-							}
-							break;
-						}
-					}
-					if (matches && this.match_cache_l.indexOf(se)==-1) {
-						this.match_cache_l.push(se);
-					}
-					se.allPotentialMatchesWithSentenceForResolution_counter = this.allPotentialMatchesWithSentenceForResolution_counter;
-				}
-			}
-		}
-		this.allPotentialMatchesWithSentenceForResolution_counter++;
-		this.match_cache_idx = 0;
-	}
-
+	
 
 	allPotentialMatchesWithSentenceForResolution(s:Sentence, o:Ontology) : Sentence[]
 	{

@@ -126,11 +126,22 @@ class A4RuleBasedAI extends RuleBasedAI {
 						// debug_text += term + "\n";
 					}
 				} else {
-					let s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
-					//console.log(term.toString());
-					this.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
-					n_not_space_at++;
-					// debug_text += s + "\n";
+					let mostSpecific:boolean = true;
+					for(let idx_l3:number = 0;idx_l3<game.locations.length;idx_l3++) {
+						if (idx_l3 != idx_l1 && idx_l3 != idx_l2 &&
+							game.location_in[idx_l1][idx_l3] &&
+							!game.location_in[idx_l2][idx_l3]) {
+							mostSpecific = false;
+							break;
+						}
+					}
+					if (mostSpecific) {					
+						let s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+						//console.log(term.toString());
+						this.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
+						n_not_space_at++;
+						// debug_text += s + "\n";
+					}
 				}
 			}
 		}

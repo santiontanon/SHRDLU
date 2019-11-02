@@ -308,8 +308,7 @@ class NLContext {
 			}
 		}
 		for(let tmp of typeSortsWithArity) {
-			for(let s of this.ai.longTermMemory.allMatches(<Sort>(tmp[0]), <number>(tmp[1]), o)) {
-				if (s.terms.length>1 || !s.sign[0]) continue;
+			for(let s of this.ai.longTermMemory.allSingleTermMatches(<Sort>(tmp[0]), <number>(tmp[1]), o)) {
 //				console.log("NLContext: considering sentence " + s);
 				for(let att of s.terms[0].attributes) {
 					if (att instanceof ConstantTermAttribute &&
@@ -1301,9 +1300,8 @@ class NLContext {
 		}
 
 		let nameSort:Sort = o.getSort("name");
-		for(let s of this.ai.longTermMemory.allMatches(nameSort, 2, o)) {
-			if (s.terms.length == 1 && s.sign[0]==true &&
-				s.terms[0].functor == nameSort && 
+		for(let s of this.ai.longTermMemory.allSingleTermMatches(nameSort, 2, o)) {
+			if (s.terms[0].functor == nameSort && 
 				s.terms[0].attributes[1] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
 				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
@@ -1344,9 +1342,8 @@ class NLContext {
 		}
 
 		results = [];
-		for(let s of this.ai.longTermMemory.allMatches(sort, 1, o)) {
-			if (s.terms.length == 1 && s.sign[0]==true &&
-				s.terms[0].functor.is_a(sort) &&
+		for(let s of this.ai.longTermMemory.allSingleTermMatches(sort, 1, o)) {
+			if (s.terms[0].functor.is_a(sort) &&
 				s.terms[0].attributes[0] instanceof ConstantTermAttribute) {
 				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
 				if (e != null) results.push(e);

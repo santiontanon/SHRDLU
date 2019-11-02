@@ -1710,14 +1710,13 @@ class RuleBasedAI {
 		if (tmp!=null) return tmp[1];
 
 		// long term memory:
-		let s:Sentence = this.longTermMemory.firstMatch(q.functor, q.attributes.length, o);
+		let s:Sentence = this.longTermMemory.firstSingleTermMatch(q.functor, q.attributes.length, o);
 		while(s != null) {
 			let b:Bindings = new Bindings();
-			if (s.terms.length == 1 && s.sign[0] &&
-				q.unify(s.terms[0], true, b)) {
+			if (q.unify(s.terms[0], true, b)) {
 				return b;
 			}
-			s = this.longTermMemory.nextMatch();
+			s = this.longTermMemory.nextSingleTermMatch();
 		}
 
 		return null;
@@ -1836,30 +1835,28 @@ class RuleBasedAI {
 			if (isMoreSpecific) mostSpecificTypes.push(t);
 		}
 
-		for(let match of this.longTermMemory.allMatches(query.functor, query.attributes.length, this.o)) {
-			if (match.terms.length == 1 && match.sign[0]) {
-				let t:Term = match.terms[0];
-				if (query.unify(t, true, new Bindings())) {
-					// if we don't know how to render this, then ignore:
-					let msType:Sort = this.mostSpecificTypeThatCanBeRendered(t.functor);
-					if (msType == null) continue;
-					t = t.clone([]);
-					t.functor = msType;
+		for(let match of this.longTermMemory.allSingleTermMatches(query.functor, query.attributes.length, this.o)) {
+			let t:Term = match.terms[0];
+			if (query.unify(t, true, new Bindings())) {
+				// if we don't know how to render this, then ignore:
+				let msType:Sort = this.mostSpecificTypeThatCanBeRendered(t.functor);
+				if (msType == null) continue;
+				t = t.clone([]);
+				t.functor = msType;
 
-					let isMoreSpecific:boolean = true;
-					let toDelete:Term[] = [];
-					for(let previous of mostSpecificTypes) {
-						if (t.functor.subsumes(previous.functor)) {
-							isMoreSpecific = false;
-						} else if (previous.functor.subsumes(t.functor)) {
-							toDelete.push(previous);
-						}
+				let isMoreSpecific:boolean = true;
+				let toDelete:Term[] = [];
+				for(let previous of mostSpecificTypes) {
+					if (t.functor.subsumes(previous.functor)) {
+						isMoreSpecific = false;
+					} else if (previous.functor.subsumes(t.functor)) {
+						toDelete.push(previous);
 					}
-					for(let previous of toDelete) {
-						mostSpecificTypes.splice(mostSpecificTypes.indexOf(previous),1);
-					}
-					if (isMoreSpecific) mostSpecificTypes.push(t);
 				}
+				for(let previous of toDelete) {
+					mostSpecificTypes.splice(mostSpecificTypes.indexOf(previous),1);
+				}
+				if (isMoreSpecific) mostSpecificTypes.push(t);
 			}
 		}
 		return mostSpecificTypes;

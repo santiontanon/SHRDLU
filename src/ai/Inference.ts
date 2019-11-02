@@ -50,6 +50,30 @@ class InterruptibleResolution
 			if (s == null) continue;
 			this.targetWithBindings.push([s,new Bindings()]);
 		}
+
+		/*
+		// Synthesize a test case to debug resolution:
+		let KB_str:string = "[";
+		for(let sc of KB.plainSentenceList) {
+			KB_str += "\"" + sc.sentence + "\",\n";
+		}
+		KB_str += "],";
+		let AS_str:string = "[";
+		for(let s of additionalSentences) {
+			AS_str += "\"" + s + "\",\n";
+		}
+		AS_str += "],";
+		let query_str:string = "[";
+		for(let s of target) {
+			query_str += "\"" + s + "\",\n";
+		}
+		query_str += "]";
+		console.log("InterruptibleResolution:");
+		console.log(KB_str);
+		console.log(AS_str);
+		console.log(query_str);
+		*/
+
 /*
 		if (DEBUG_resolution) {
 			console.log("InterruptibleResolution:");

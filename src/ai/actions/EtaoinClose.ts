@@ -23,20 +23,18 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 		} else if (door_tmp == null) {
         	// see if it's a location with a door (e.g., a bedroom):
         	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
-        	let belong_l:Sentence[] = ai.longTermMemory.allMatches(ai.o.getSort("relation.belongs"), 2, ai.o);
+        	let belong_l:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("relation.belongs"), 2, ai.o);
         	for(let belong of belong_l) {
-        		if (belong.terms.length == 1 && belong.sign[0] == true) {
-        			let t:Term = belong.terms[0];
-        			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
-        				(t.attributes[1] instanceof ConstantTermAttribute)) {
-        				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
-        					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
-        					if (door != null && (door instanceof A4Door)) {
-        						doors.push(door);
-        					}
-        				}
-        			}
-        		}
+    			let t:Term = belong.terms[0];
+    			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
+    				(t.attributes[1] instanceof ConstantTermAttribute)) {
+    				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
+    					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
+    					if (door != null && (door instanceof A4Door)) {
+    						doors.push(door);
+    					}
+    				}
+    			}
         	}
 		} else if (door_tmp.sort.is_a(ai.o.getSort("light"))) {
 			// if it's a light, redirect to switch.on:
