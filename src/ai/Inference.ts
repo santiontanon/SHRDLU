@@ -98,6 +98,15 @@ class InterruptibleResolution
 	}
 
 
+	step() : boolean
+	{
+		if (this.stepAccumulatingResults()) return true;
+		if (this.endResults.length > 0) return true;
+		return false;
+	}
+
+
+/*
 	// returns "true" when the inference process is over, and "false", when it still needs more steps.
 	step() : boolean
 	{
@@ -184,7 +193,7 @@ class InterruptibleResolution
 
 		return false;
 	}
-
+*/
 
 
 	// this is the same as "step", but it does not stop upon finding the same result, and keeps going until all results have been found

@@ -50,27 +50,55 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			console.log("new intention: " + term);
 		} else {
 			// get the location ID
-			var targetLocation:AILocation = null;
-			var targetIfItsALocation:AILocation = ai.game.getAILocationByID(targetID);
-			var targetLocationID:string = null;
-			var speakerLocation:AILocation = null;
-			for(let b of inf.inferences[0].endResults[0].l) {
-				if (b[0].name == "WHERE") {
-					var v:TermAttribute = b[1];
-					if (v instanceof ConstantTermAttribute) {
-						targetLocationID = (<ConstantTermAttribute>v).value;
-						targetLocation = ai.game.getAILocationByID(targetLocationID);
-						break;
-					}
-				}
-			}
-			if (inf.inferences[1].endResults.length != 0) {
-				for(let b of inf.inferences[1].endResults[0].l) {
+			let targetLocation:AILocation = null;
+			let targetIfItsALocation:AILocation = ai.game.getAILocationByID(targetID);
+			let targetLocationID:string = null;
+			let speakerLocation:AILocation = null;
+			let speakerLocationID:string = null;
+			for(let bindings of inf.inferences[0].endResults) {
+				for(let b of bindings.l) {
 					if (b[0].name == "WHERE") {
 						var v:TermAttribute = b[1];
 						if (v instanceof ConstantTermAttribute) {
-							speakerLocation = ai.game.getAILocationByID((<ConstantTermAttribute>v).value);
-							break;
+							// select the most specific one:
+							if (targetLocation == null) {
+								targetLocationID = (<ConstantTermAttribute>v).value;
+								targetLocation = ai.game.getAILocationByID(targetLocationID);
+							} else {
+								let targetLocationID2:string = (<ConstantTermAttribute>v).value;
+								let targetLocation2:AILocation = ai.game.getAILocationByID(targetLocationID2);
+								let idx1:number = ai.game.locations.indexOf(targetLocation);
+								let idx2:number = ai.game.locations.indexOf(targetLocation2);
+								if (ai.game.location_in[idx2][idx1]) {
+									targetLocationID = targetLocationID2;
+									targetLocation = targetLocation2;
+								}
+							}
+						}
+					}
+				}
+			}			
+			if (inf.inferences[1].endResults.length != 0) {
+				for(let bindings of inf.inferences[1].endResults) {
+					for(let b of bindings.l) {
+						if (b[0].name == "WHERE") {
+							var v:TermAttribute = b[1];
+							if (v instanceof ConstantTermAttribute) {
+								// select the most specific one:
+								if (speakerLocation == null) {
+									speakerLocationID = (<ConstantTermAttribute>v).value;
+									speakerLocation = ai.game.getAILocationByID(speakerLocationID);
+								} else {
+									let speakerLocationID2:string = (<ConstantTermAttribute>v).value;
+									let speakerLocation2:AILocation = ai.game.getAILocationByID(speakerLocationID2);
+									let idx1:number = ai.game.locations.indexOf(speakerLocation);
+									let idx2:number = ai.game.locations.indexOf(speakerLocation2);
+									if (ai.game.location_in[idx2][idx1]) {
+										speakerLocationID = speakerLocationID2;
+										speakerLocation = speakerLocation2;
+									}
+								}
+							}
 						}
 					}
 				}
