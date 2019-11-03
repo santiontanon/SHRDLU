@@ -374,6 +374,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 			// parse the text:
 		    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(pbr.directObjectSymbol, this.cache_sort_performative, context, this);
+		    if (parses == null || parses.length == 0 && this.naturalLanguageParser.error_semantic.length > 0) {
+		    	// if we cannot parse sentences in any other way, at least consider the semantic errors as the parses:
+		    	parses = this.naturalLanguageParser.error_semantic;
+		    }
 		    if (parses != null && parses.length > 0) {
 		    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
 		    	console.log("AIRuleBasedAI("+this.selfID+"): parsed sentence '" + pbr.directObjectSymbol + "'\n  " + HPparse.result);
@@ -390,7 +394,7 @@ class A4RuleBasedAI extends RuleBasedAI {
         		actionTerms = actionTerms2;
 		    } else {
 		    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + pbr.directObjectSymbol);
-		    	if (this.naturalLanguageParser.error_semantic) console.warn("    semantic error!");
+		    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
 		    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 		    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
 		    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");

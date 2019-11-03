@@ -69,7 +69,7 @@ class NLParser {
 		this.posParser.POSTagging(tokens2, this.o);
 		//console.log("POS Tagging:\n" + tokens2.toString());
 
-		this.error_semantic = false;
+		this.error_semantic = [];
 		this.error_deref = [];
 		this.error_unrecognizedTokens = [];
 		this.error_grammatical = false;
@@ -77,7 +77,7 @@ class NLParser {
 		var results:NLParseRecord[] = [];
 		var derefErrors:NLDerefErrorRecord[] = [];
 		var bestPriorityOfFirstRule:number = 0;
-		var semanticalErrors:boolean = false;
+		var semanticalErrors:NLParseRecord[] = [];
 
 		var compiled:CompiledNLPatternRules = this.compiledRules[s.name];
 		if (compiled != null) {
@@ -90,34 +90,34 @@ class NLParser {
 					r.result = this.resolveLists(r.result);
 					//console.log("(2) result after resolving the lists:" + r.result);
 //					console.log("result! (" + r.priorities[0] + "): " + r.result);
-					if (this.semanticallyCorrect(r.result, context)) {
-						// properly resolve the "listener" variable:
-						if (s.name == "performative" && r.result.attributes.length>0) {
-							let performativeHead:Term = r.result;
-							while(performativeHead.functor.name == "#list" ||
-								  performativeHead.functor.name == "#and") {
-								if (performativeHead.attributes.length>0 &&
-									performativeHead.attributes[0] instanceof TermTermAttribute) {
-									performativeHead = (<TermTermAttribute>performativeHead.attributes[0]).term;
-								} else {
-									break;
-								}
-							}
-
-							// performative
-							if (performativeHead.functor.is_a_string("performative")) {
-								if (compiled.listenerVariable != performativeHead.attributes[0]) {
-									var b2:Bindings = new Bindings();
-									b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
-									r.result = r.result.applyBindings(b2);
-								}
+					// properly resolve the "listener" variable:
+					if (s.name == "performative" && r.result.attributes.length>0) {
+						let performativeHead:Term = r.result;
+						while(performativeHead.functor.name == "#list" ||
+							  performativeHead.functor.name == "#and") {
+							if (performativeHead.attributes.length>0 &&
+								performativeHead.attributes[0] instanceof TermTermAttribute) {
+								performativeHead = (<TermTermAttribute>performativeHead.attributes[0]).term;
+							} else {
+								break;
 							}
 						}
+
+						// performative
+						if (performativeHead.functor.is_a_string("performative")) {
+							if (compiled.listenerVariable != performativeHead.attributes[0]) {
+								var b2:Bindings = new Bindings();
+								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
+								r.result = r.result.applyBindings(b2);
+							}
+						}
+					}
+					if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
+					if (this.semanticallyCorrect(r.result, context)) {						
 						results.push(r);
 						//console.log("(3) result after applying bindings:" + r.result);
-						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 					} else {
-						semanticalErrors = true;
+						semanticalErrors.push(r);
 					}
 				}
 			} else {
@@ -136,19 +136,19 @@ class NLParser {
 					for(let r of results2) {
 		//					console.log("result! (" + r.priorities[0] + ")");
 						r.result = this.resolveLists(r.result);
-						if (this.semanticallyCorrect(r.result, context)) {
-							// properly resolve the "listener" variable:
-							if (s.name == "performative" && r.result.attributes.length>0) {
-								if (compiled.listenerVariable != r.result.attributes[0]) {
-									var b2:Bindings = new Bindings();
-									b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
-									r.result = r.result.applyBindings(b2);
-								}
+						// properly resolve the "listener" variable:
+						if (s.name == "performative" && r.result.attributes.length>0) {
+							if (compiled.listenerVariable != r.result.attributes[0]) {
+								var b2:Bindings = new Bindings();
+								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
+								r.result = r.result.applyBindings(b2);
 							}
+						}
+						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
+						if (this.semanticallyCorrect(r.result, context)) {
 							results.push(r);
-							if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 						} else {
-							semanticalErrors = true;
+							semanticalErrors.push(r);
 						}
 					}
 				} else {
@@ -169,9 +169,10 @@ class NLParser {
 
 		if (results.length == 0) {
 			// record why couldn't we parse the sentence:
-			if (semanticalErrors) {
+			if (semanticalErrors.length > 0) {
 				// parse error was due to a semantical error!
-				this.error_semantic = true;
+				// only if we cannot parse the sentence in any other way, we return the parses with semantic errors:
+				this.error_semantic = semanticalErrors;
 			} else if (this.posParser.unrecognizedTokens.length > 0) {
 				// parse error was due to unrecognized words:
 				this.error_unrecognizedTokens = this.posParser.unrecognizedTokens;
@@ -253,6 +254,14 @@ class NLParser {
 	// for example: space.at(X, Y) only makes sense if Y is a location
 	semanticallyCorrect(parse:Term, context:NLContext) : boolean
 	{
+		return this.semanticallyCorrectInternal(parse, context, []);
+	}
+
+	semanticallyCorrectInternal(parse:Term, context:NLContext, closed:Term[]) : boolean
+	{
+		if (closed.indexOf(parse) != -1) return true;
+		closed.push(parse);
+
 		if (parse.functor.is_a(this.o.getSort("time.at"))) {
 			if (parse.attributes[1].sort.is_a(this.o.getSort("number"))) return true;
 			console.log("semanticallyCorrect: fail! " + parse);
@@ -280,7 +289,7 @@ class NLParser {
 
 		for(let ta of parse.attributes) {
 			if (ta instanceof TermTermAttribute) {
-				if (!this.semanticallyCorrect((<TermTermAttribute>ta).term, context)) return false;
+				if (!this.semanticallyCorrectInternal((<TermTermAttribute>ta).term, context, closed)) return false;
 			}
 		}
 
@@ -509,7 +518,7 @@ class NLParser {
 	compiledRules:{ [sort: string] : CompiledNLPatternRules; } = {};
 
 	// errors from the last parse:
-	error_semantic:boolean = false;
+	error_semantic:NLParseRecord[] = [];	// stores the parses that were properly parsed, but failed semantic checks
 	error_deref:NLDerefErrorRecord[] = [];
 	error_unrecognizedTokens:string[] = [];
 	error_grammatical:boolean = false;

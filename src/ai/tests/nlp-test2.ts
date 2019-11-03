@@ -102,7 +102,7 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
     if (parses == null || parses.length == 0) {
         if (expectedResultStr != null) {
             console.error("Sentence '" + sentence + "' could not be parsed with sort " + s.name);
-            if (parser.error_semantic) console.error("    semantic error!");
+            if (parser.error_semantic.length > 0) console.error("    semantic error!");
             if (parser.error_deref.length > 0) console.error("    could not deref expressions: " + parser.error_deref);
             if (parser.error_unrecognizedTokens.length > 0) console.error("    unrecognized tokens: " + parser.error_unrecognizedTokens);
             if (parser.error_grammatical) console.error("    grammatical error!");

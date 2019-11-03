@@ -648,7 +648,7 @@ class RuleBasedAI {
     	if (context != null) {
     		if (this.talkingToUs(context, speakerID, null)) {
 	    		// respond!
-	    		if (this.naturalLanguageParser.error_semantic) {
+	    		if (this.naturalLanguageParser.error_semantic.length > 0) {
 	    			console.log(this.selfID + ": semantic error when parsing a performative from " + speakerID);
 	    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular]))))))", this.o), null, null, null, this.time_in_seconds));
 	    		} else if (this.naturalLanguageParser.error_deref.length > 0) {
@@ -824,7 +824,8 @@ class RuleBasedAI {
 				t2.addAttribute(perf2.attributes[1]);
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.inform.answer") {
-				// Do nothing
+				let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
+				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.q.predicate") {
 				let t2:Term = Term.fromString("action.answer.predicate('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
 				for(let i:number = 1;i<perf2.attributes.length;i++) {
@@ -1164,8 +1165,14 @@ class RuleBasedAI {
 	{
 		let reaction:Term[] = [];
 		let lastQuestion:NLContextPerformative = context.expectingAnswerToQuestion_stack[context.expectingAnswerToQuestion_stack.length-1];
-		console.log("Checking if " + perf + " is a proper answer to " + lastQuestion.performative);
 
+		if (lastQuestion == null) {
+			let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
+			this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf), null, this.time_in_seconds));
+			return reaction;						
+		}
+
+		console.log("Checking if " + perf + " is a proper answer to " + lastQuestion.performative);
 		if (lastQuestion.performative.functor.is_a(this.o.getSort("perf.q.predicate"))) {
 			// perf.inform.answer(LISTENER, 'yes'[#id])
 			if ((perf.functor.is_a(this.o.getSort("perf.inform")) && perf.attributes.length == 2)) {

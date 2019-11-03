@@ -315,5 +315,6 @@ testNLG("perf.inform('1'[#id], verb.run-out-of('1'[#id], [oxygen]))", "etaoin", 
 testNLG("perf.inform('1'[#id], game-protagonist('qwerty'[#id]))", "etaoin", "qwerty is a game protagonist");
 
 testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], action.give('etaoin'[#id], 's1'[#id], '1'[#id]))))", "etaoin", "I can not give my ship to you");
-
+testNLG("perf.inform('1'[#id], #not(verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything]) ) )", "etaoin", "I do not ask anything");
+testNLG("perf.inform('1'[#id], #and(#not(X:verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X)))", "etaoin", "I did not ask anything");
 

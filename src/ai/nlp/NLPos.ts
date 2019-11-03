@@ -389,7 +389,7 @@ class POSParser {
       "airlock doors",
       "data pad",
       "too small",
-      "T-14 hyperdrive generator",
+      "t-14 hyperdrive generator",
       "chemical element",
       "game character",
       "game protagonist",
@@ -1151,7 +1151,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("greenhouse", "greenhouse.facility", o, multitokens_raw);
     this.addStandardNounPOS("ground", "ground", o, multitokens_raw);
     this.addStandardNounPOS("gym", "gym.room", o, multitokens_raw);
-    this.addStandardNounPOS("gym bench", "gym-bench", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("gym bench", "gym-bench", Term.fromString("noun('gym-bench'[gym-bench], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("gym benches", "gym-bench", Term.fromString("noun('gym-bench'[gym-bench], [plural])", o), 1.0));
     this.addStandardNounPOS("gymnasium", "gym.room", o, multitokens_raw);
@@ -1282,7 +1281,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("reanimation", "reanimation", Term.fromString("noun('reanimation'[reanimation], [singular])", o), 1.0));
     this.addStandardNounPOS("battery charger", "batteryrecharge.facility", o, multitokens_raw);
     this.addStandardNounPOS("recharging station", "batteryrecharge.facility", o, multitokens_raw);
-    this.addStandardNounPOS("recycling facility", "recycling.facility", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("recycling facility", "recycling.facility", Term.fromString("noun('recycling.facility'[recycling.facility], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("recycling facilities", "recycling.facility", Term.fromString("noun('recycling.facility'[recycling.facility], [plural])", o), 1.0));
     this.addStandardNounPOS("reel", "reel", o, multitokens_raw);
     this.addStandardNounPOS("refrigerator", "fridge", o, multitokens_raw);
     this.addStandardNounPOS("report", "report", o, multitokens_raw);
@@ -1343,7 +1343,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("suit", "suit", o, multitokens_raw);
     this.addStandardNounPOS("supervisor", "supervisor", o, multitokens_raw);
     this.addStandardNounPOS("system", "system", o, multitokens_raw);
-    this.addStandardNounPOS("T-14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
+    this.addStandardNounPOS("t-14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
     this.addStandardNounPOS("table", "table", o, multitokens_raw);
     this.addStandardNounPOS("tear", "tear", o, multitokens_raw);
     this.addStandardNounPOS("temperature", "temperature", o, multitokens_raw);
@@ -1382,7 +1382,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("washing machine", "washing-machine", o, multitokens_raw);
     this.addUncountableNounPOS("water", "water", o);
     this.addStandardNounPOS("water bottle", "water-bottle", o, multitokens_raw);
-    this.addStandardNounPOS("water filtering facility", "waterfiltering.facility", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("water filtering facility", "waterfiltering.facility", Term.fromString("noun('waterfiltering.facility'[waterfiltering.facility], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("water filtering facilities", "waterfiltering.facility", Term.fromString("noun('waterfiltering.facility'[waterfiltering.facility], [plural])", o), 1.0));
     this.addStandardNounPOS("week", "time.week", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("weight", "weight", Term.fromString("noun('weight'[weight], [singular])", o), 1.0));
     this.addStandardNounPOS("weight", "dumbbell", o, multitokens_raw);
@@ -1808,7 +1809,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
       }
       if (multitokens.indexOf(noun + "s") == -1) {
         multitokens.push(noun + "s");
-        console.warn("missing multitoken added: " + noun);
+        console.warn("missing multitoken added: " + noun + "s");
       }
     }
     o.getSort(sortName);  // this is just to check that we have all the sorts!
