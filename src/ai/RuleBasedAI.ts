@@ -20,6 +20,10 @@ var REACTION_PROVENANCE:string = "reaction";
 var MEMORIZE_PROVENANCE:string = "memorize";
 var LOCATIONS_PROVENANCE:string = "locations";
 
+var ACTION_REQUEST_CANNOT_BE_SATISFIED:number = 0;
+var ACTION_REQUEST_CAN_BE_SATISFIED:number = 1;
+var ACTION_REQUEST_WILL_BE_HANDLED_EXTERNALLY:number = 2;
+
 var MENTION_MEMORY_SIZE:number = 10;
 
 var DEFAULT_QUESTION_PATIENCE_TIMER:number = 1200;
@@ -1061,10 +1065,11 @@ class RuleBasedAI {
 				ir.triggeredBySpeaker = context.speaker;
 				this.inferenceProcesses.push(ir);
 			} else {
-				let tmp:number = this.canSatisfyActionRequest(action);
-				if (tmp == 1) {
-					this.intentions.push(new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds));
-				} else if (tmp == 0) {
+				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
+				let tmp:number = this.canSatisfyActionRequest(ir);
+				if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
+					this.intentions.push(ir);
+				} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 					let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
 					let term:Term = Term.fromString(tmp, this.o);
 					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
@@ -1119,14 +1124,9 @@ class RuleBasedAI {
 	}
 
 
-	/*
-	return values:
-	0: request cannot be satisfied
-	1: request can be satisfied
-	2: request can be satisfied, but will be handled externally, so, we do not need to do anything
-	*/
-	canSatisfyActionRequest(actionRequest:Term) : number
+	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
+		let actionRequest:Term = ir.action;
 		let functor:Sort = actionRequest.functor;
 		if (functor.name == "#and") {
 			let actionRequest_l:Term[] = NLParser.termsInList(actionRequest, "#and");
@@ -1134,9 +1134,9 @@ class RuleBasedAI {
 		}
 
 		for(let ih of this.intentionHandlers) {
-			if (ih.canHandle(actionRequest, this)) return 1;
+			if (ih.canHandle(actionRequest, this)) return ACTION_REQUEST_CAN_BE_SATISFIED;
 		}
-		return 0;
+		return ACTION_REQUEST_CANNOT_BE_SATISFIED;
 	}
 
 

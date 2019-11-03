@@ -1127,17 +1127,13 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	/*
-	return values:
-	0: request cannot be satisfied
-	1: request can be satisfied
-	2: request can be satisfied, but will be handled externally, so, we do not need to do anything
-	*/
-	canSatisfyActionRequest(actionRequest:Term) : number
+	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
-		if (this.game.gameScript.actionRequestHandleByScript(actionRequest)) return 2;
-		return super.canSatisfyActionRequest(actionRequest);
+		let actionRequest:Term = ir.action;
+		if (this.game.gameScript.actionRequestHandleByScript(actionRequest)) return ACTION_REQUEST_WILL_BE_HANDLED_EXTERNALLY;
+		return super.canSatisfyActionRequest(ir);
 	}
+	
 
 	allowPlayerInto(location:string, door:string)
 	{

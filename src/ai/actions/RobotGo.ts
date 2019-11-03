@@ -448,8 +448,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 	}
 
 
-
-
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
 		var ai:RobotAI = <RobotAI>ai_raw;

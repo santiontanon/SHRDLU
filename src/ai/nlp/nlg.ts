@@ -2217,7 +2217,7 @@ class NLGenerator {
 			// determine if it's enough:
 			let msl:NLContextEntity[][] = context.findEntitiesOfSort(typeSort, ai.o);
 			let candidates:NLContextEntity[] = context.applySingularTheDeterminer(msl);
-			if (candidates.length == 1) {
+			if (candidates.length == 1 && candidates[0] == ce) {
 				return ["the " + typeString, 2, undefined, 0];
 			}
 
@@ -2690,8 +2690,60 @@ class NLGenerator {
 			}
 
 
-		} else {
-			// ...
+		} else if (t.attributes.length == 3 && 
+				   (t.functor.name == "verb.tell" ||
+				   	t.functor.name == "action.talk" ||
+				   	t.functor.name == "action.give" ||
+				   	t.functor.name == "verb.go" ||
+				   	t.functor.name == "verb.guide" ||
+				   	t.functor.name == "verb.take-to"||
+				   	t.functor.name == "verb.bring"||
+				   	t.functor.name == "verb.help")) {
+			let subjectStr:[string, number, string, number];
+			if ((t.attributes[0] instanceof ConstantTermAttribute)) {
+				if ((<ConstantTermAttribute>(t.attributes[0])).value == mainVerbSubjectID) {
+					// when the subject in a nested verb is the same as the parnet ver, it should not be rendered:
+					subjectStr = ["", 0, undefined, 0];
+				} else {
+					subjectStr = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, mainVerbSubjectID, true);
+					if (subjectStr == null) return null;
+					mainVerbSubjectID = (<ConstantTermAttribute>(t.attributes[0])).value;
+				}
+			} else {
+				subjectStr = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, mainVerbSubjectID, true);
+				if (subjectStr == null) return null;
+			}
+			let object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
+												 											  ((t.attributes[0] instanceof ConstantTermAttribute) ? 
+																						      (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
+			let object2Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false,
+												 											  ((t.attributes[0] instanceof ConstantTermAttribute) ? 
+																						      (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
+			let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
+			if (subjectStr != null && object1Str != null && object2Str != null) {
+				if (t.functor.name == "verb.help" &&
+					(t.attributes[1] instanceof ConstantTermAttribute) &&
+					(t.attributes[2] instanceof TermTermAttribute) &&
+					(<TermTermAttribute>t.attributes[2]).term.attributes.length >= 1 &&
+					((<TermTermAttribute>t.attributes[2]).term.attributes[0] instanceof ConstantTermAttribute)) {
+					let obj1:string = (<ConstantTermAttribute>t.attributes[1]).value;
+					let obj2:string = (<ConstantTermAttribute>(<TermTermAttribute>t.attributes[2]).term.attributes[0]).value;
+					if (obj1 == obj2) {
+						object2Str = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, obj1, true);						
+					}
+					return [subjectStr[0] + verbStr + " " + object1Str[0] + " " + object2Str[0] + verbComplements, 0, undefined, 0];
+				} else if (t.functor.name == "verb.tell" ||
+				   	t.functor.name == "action.talk") { 
+					return [subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements, 0, undefined, 0];
+				} else if (t.functor.name == "verb.take-to"||
+				   		   t.functor.name == "verb.bring") {
+					// verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
+					verbStr = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
+					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0], 0, undefined, 0];
+				} else {
+					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0], 0, undefined, 0];
+				}
+			}
 		}
 
 		return null;

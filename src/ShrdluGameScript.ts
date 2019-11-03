@@ -642,6 +642,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 216, this.game.qwertyAI.robot.map);
             	}
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+    	        this.qwertyMoves(104, 216, this.game.qwertyAI.robot.map);
+    	        this.act_intro_state_timer = 0;
 			}
 			break;
 
@@ -656,6 +659,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 272, this.game.qwertyAI.robot.map);
             	}
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+    	        this.qwertyMoves(136, 216, this.game.qwertyAI.robot.map);
+    	        this.act_intro_state_timer = 0;
 			}
 			break;
 
@@ -670,6 +676,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(256, 272, this.game.qwertyAI.robot.map);
             	}
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+    	        this.qwertyMoves(136, 272, this.game.qwertyAI.robot.map);
+    	        this.act_intro_state_timer = 0;
 			}
 			break;
 
@@ -684,6 +693,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(544, 272, this.game.qwertyAI.robot.map);
             	}
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+    	        this.qwertyMoves(256, 272, this.game.qwertyAI.robot.map);
+    	        this.act_intro_state_timer = 0;
 			}
 			break;
 
@@ -696,6 +708,9 @@ class ShrdluGameScript {
             	if (d2 < 32*32) {
             		this.act_intro_state = 107;
             	}
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+        		this.qwertyMoves(544, 272, this.game.qwertyAI.robot.map);
+    	        this.act_intro_state_timer = 0;
 			}
 			break;
 

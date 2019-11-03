@@ -19,14 +19,9 @@ class QwertyAI extends RobotAI {
 	}
 
 
-	/*
-	return values:
-	0: request cannot be satisfied
-	1: request can be satisfied
-	2: request can be satisfied, but will be handled externally, so, we do not need to do anything
-	*/
-	canSatisfyActionRequest(actionRequest:Term) : number
+	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
+		let actionRequest:Term = ir.action;
 		let repairSort:Sort = this.o.getSort("verb.repair");
 		if (actionRequest.functor.is_a(repairSort) && actionRequest.attributes.length>=2) {
 			let thingToRepair:TermAttribute = actionRequest.attributes[1];
@@ -36,17 +31,17 @@ class QwertyAI extends RobotAI {
 					let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject(thingToRepair_id);
 					if (thingToRepairObject.sort.name == "brokenspacesuit") {
 						// broken space suit:
-						return 1;
+						return ACTION_REQUEST_CAN_BE_SATISFIED;
 					}
 				} else if (thingToRepair_id == "shuttle-datapad") {
-					return 1;
+					return ACTION_REQUEST_CAN_BE_SATISFIED;
 				}
 			} else {
-				return 0;
+				return ACTION_REQUEST_CANNOT_BE_SATISFIED;
 			}
 		}
 		
-		return super.canSatisfyActionRequest(actionRequest);
+		return super.canSatisfyActionRequest(ir);
 	}
 
 

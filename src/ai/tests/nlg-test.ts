@@ -130,11 +130,10 @@ testNLG_entity(new ConstantTermAttribute('s1',idSort), "etaoin", "my ship");
 testNLG_entity(new ConstantTermAttribute('s2',idSort), "etaoin", "a red ship");
 testNLG_entity(new ConstantTermAttribute('s3',idSort), "etaoin", "the blue ship");
 testNLG_entity(new ConstantTermAttribute('c2',idSort), "etaoin", "the crate of qwerty");
-testNLG_entity(new ConstantTermAttribute('ch1',idSort), "etaoin", "the chair in the kitchen");
+testNLG_entity(new ConstantTermAttribute('ch1',idSort), "etaoin", "the chair");
 testNLG_entity(new ConstantTermAttribute('ch2',idSort), "etaoin", "the chair in the bedroom");
 
 // Tests with NL context:
-
 // Tests with inform performatives:
 testNLG("perf.inform('1'[#id], crate('s1'[#id]))", "etaoin", "my ship is a crate");
 testNLG("perf.inform('1'[#id], color('s1'[#id],'red'[red]))", "etaoin", "my ship's color is red");
@@ -189,7 +188,7 @@ testNLG("perf.request.action('1'[#id], #and(V1:action.take('1'[#id], 's1'[#id]),
 
 testNLG("perf.inform('1'[#id], verb.have('qwerty'[#id],'k2'[#id]))", "etaoin", "qwerty has the red key card");
 
-testNLG("perf.inform('1'[#id], verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) )))", "etaoin", "you can find the chair in the kitchen in the bedroom");
+testNLG("perf.inform('1'[#id], verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) )))", "etaoin", "you can find the chair in the bedroom");
 
 testNLG("perf.inform.answer('1'[#id], time.date('0'[number], [time.minute]))", "etaoin", "8:00am");
 testNLG("perf.inform.answer('1'[#id], time.date('0'[number], [time.hour]))", "etaoin", "8am");
@@ -247,7 +246,7 @@ testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , verb.want('qwert
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.want('qwerty'[#id], 'food'[food]))))", "etaoin", "because qwerty does not want food");
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(verb.know('etaoin'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))))", "etaoin", "because I do not know the path");
 testNLG("perf.inform.answer(V0:'1'[#id], relation.cause([any] , #not(door('1'[#id]))))", "etaoin", "because you are not a door");
-testNLG("perf.inform.answer('1'[#id], relation.cause([any] , verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) ))))", "etaoin", "because you can find the chair in the kitchen in the bedroom");
+testNLG("perf.inform.answer('1'[#id], relation.cause([any] , verb.can('1'[#id], #and(F:verb.find('1'[#id], 'ch1'[#id]), space.at(F,'room2'[#id]) ))))", "etaoin", "because you can find the chair in the bedroom");
 testNLG("perf.request.action(V0:'1'[#id], V1:action.give(V0, V3:'k1'[#id], V2:'qwerty'[#id]))", "etaoin", "please, give your key card to qwerty");
 testNLG("perf.request.action(V0:'1'[#id], V1:action.talk(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id]))))", "etaoin", "please, tell qwerty to follow me");
 testNLG("perf.inform(V0:'1'[#id], V1:verb.tell(V0, V2:perf.request.action(V3:'qwerty'[#id], V4:verb.follow(V3, V5:'etaoin'[#id])), V3))", "etaoin", "you tell qwerty to follow me");
@@ -314,5 +313,7 @@ testNLG("perf.inform('1'[#id], #and(V:verb.salvage('etaoin'[#id], #and(some(X:'c
 testNLG("perf.inform('1'[#id], verb.run-out-of('1'[#id], [oxygen]))", "etaoin", "you run out of oxygen");
 
 testNLG("perf.inform('1'[#id], game-protagonist('qwerty'[#id]))", "etaoin", "qwerty is a game protagonist");
+
+testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], action.give('etaoin'[#id], 's1'[#id], '1'[#id]))))", "etaoin", "I can not give my ship to you");
 
 

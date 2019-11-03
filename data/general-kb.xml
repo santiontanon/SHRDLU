@@ -157,6 +157,7 @@
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'qwerty'[#id])"/>
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="verb.do('etaoin'[#id],'nothing'[nothing])"/>
+	<sentence provenance="background" sentence="good('etaoin'[#id])"/>
 
 	<sentence provenance="background" sentence="qwerty('qwerty'[#id])"/>
 	<sentence provenance="background" sentence="body('qwerty-body'[#id])"/>
@@ -170,6 +171,7 @@
 	<sentence provenance="background" sentence="height('qwerty'[#id],'1.5'[meter])"/>
 	<sentence provenance="background" sentence="verb.do('qwerty'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="verb.have('qwerty'[#id],'qwerty-body'[#id])"/>
+	<sentence provenance="background" sentence="good('qwerty'[#id])"/>
 
 	<sentence provenance="background" sentence="robot('shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="body('shrdlu-body'[#id])"/>
@@ -183,6 +185,7 @@
 	<sentence provenance="background" sentence="height('shrdlu'[#id],'1.75'[meter])"/>
 	<sentence provenance="background" sentence="verb.do('shrdlu'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="verb.have('shrdlu'[#id],'shrdlu-body'[#id])"/>
+	<sentence provenance="background" sentence="good('shrdlu'[#id])"/>
 
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id])"/>
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id],'location-aurora-station'[#id])"/>
@@ -499,6 +502,9 @@
 	<sentence provenance="background" sentence="~relation.owns(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
 	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); relation.owns(Y,X)"/>
 	<sentence provenance="background" sentence="~verb.like(X:[#id], Y:[#id]); ~verb.hate(X, Y)"/>	
+	<sentence provenance="background" sentence="good(X:[#id]); bad(X)"/>
+	<sentence provenance="background" sentence="~good(X:[#id]); ~bad(X)"/>	
+	<sentence provenance="background" sentence="~verb.suck(X:[#id]); bad(X)"/>
 
 	<sentence provenance="background" sentence="~relation.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); relation.contains(Y,X)"/>

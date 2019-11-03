@@ -40,20 +40,6 @@ class Memorize_InferenceEffect extends InferenceEffect {
 				memorize = true;
 			} else {
 				// contradiction:
-				// Check for the special case, where the player is just correcting a wrong statement she stated in the past:
-				let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
-				if (s_l.length == 1 && s_l[0].terms.length == 1) {
-					let negatedToMemorize:Sentence = new Sentence(s_l[0].terms, [!s_l[0].sign[0]]);
-					let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(negatedToMemorize)
-					if (se != null && se.provenance == MEMORIZE_PROVENANCE) {
-						console.log("Correcting a wrong statement she stated in the past!");
-						ai.longTermMemory.removeSentence(negatedToMemorize);
-						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-						return;
-					}
-				}
-
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}

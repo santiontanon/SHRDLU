@@ -48,7 +48,8 @@ class RobotGive_IntentionAction extends IntentionAction {
 			if (item != null) {
 				if (ai.objectsNotAllowedToGive.indexOf(itemToGiveID) != -1) {
 					// state that it cannot give this item:
-					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], action.give('"+ai.selfID+"'[#id], "+itemToGive+", "+requester+")))))";
+					//var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					var term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 
@@ -100,12 +101,8 @@ class RobotGive_IntentionAction extends IntentionAction {
 							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 
 					        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, targetCharacter);
-					        var s:A4Script = new A4Script(A4_SCRIPT_GOTO_CHARACTER, targetID, null, 0, false, false);
-		//			        s.x = targetCharacter.x;
-		//			        s.y = targetCharacter.y;
-					        q.scripts.push(s);
-					        var s2:A4Script = new A4Script(A4_SCRIPT_GIVE, itemToGiveID, null, 0, false, false);
-					        q.scripts.push(s2);
+					        q.scripts.push(new A4Script(A4_SCRIPT_GOTO_CHARACTER, targetID, null, 0, false, false));
+					        q.scripts.push(new A4Script(A4_SCRIPT_GIVE, itemToGiveID, null, 0, false, false));
 		        	        ai.setNewAction(intention, requester, q, this);
 							ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 														  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
@@ -122,7 +119,7 @@ class RobotGive_IntentionAction extends IntentionAction {
 			}
 		} else {
 			// we do not have such item:
-			var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have('"+ai.selfID+"'[#id],"+intention.attributes[2].toString()+"))))";
+			var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id],action.give('"+ai.selfID+"'[#id],"+itemToGive+","+requester+")))))";
 			var term:Term = Term.fromString(tmp, ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}

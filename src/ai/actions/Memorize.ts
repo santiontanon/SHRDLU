@@ -30,6 +30,8 @@ class Memorize_IntentionAction extends IntentionAction {
 			}
 		}
 
+
+
 		if (timeModifierPresent) {
 			console.log("time modifiers present, not memorizing for now...");
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
@@ -87,6 +89,17 @@ class Memorize_IntentionAction extends IntentionAction {
 			negated_s_l = [negated_s];
 			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, true), ai.o));
 		} else {
+			if (s_l.length == 1 && s_l[0].terms.length == 1) {
+				// Check for the special case, where the player is just correcting a wrong statement she stated in the past:
+				let negatedToMemorize:Sentence = new Sentence(s_l[0].terms, [!s_l[0].sign[0]]);
+				let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(negatedToMemorize)
+				if (se != null && se.provenance == MEMORIZE_PROVENANCE) {
+					console.log("Correcting a wrong statement she stated in the past! checking if this would cause a contradiction");
+					// We can safely remove the "negatedToMemorize" sentence, since, if the new one causes a contradiction, it means it was already
+					// implied by the KB, so it wasn't needed. But if it does not, then we had to remove it anyway:
+					ai.longTermMemory.removeSentence(negatedToMemorize);
+				}
+			}
 			console.log("executeIntention memorize: sentence list of length 1, easy case: " + s_l);
 			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, false), ai.o));
 		}

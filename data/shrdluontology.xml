@@ -587,6 +587,7 @@
     <sort name="verb.play" super="verb"/>
     <sort name="verb.reproduce-media" super="verb"/>
     <sort name="verb.collide-with" super="relation-verb,#stateSort"/>
+    <sort name="verb.suck" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
@@ -808,9 +809,12 @@
     <sort name="small-amount" super="amount"/>
     <sort name="large-amount" super="amount"/>
 
+    <sort name="goodness" super="property"/>
+    <sort name="good" super="goodness"/>
+    <sort name="bad" super="goodness"/>
+
     <sort name="size" super="property"/>
     <sort name="big" super="size"/>
-    <sort name="great" super="big"/>
     <sort name="small" super="size"/>
     <sort name="too-small" super="small"/>
     <sort name="size.medium" super="size"/>

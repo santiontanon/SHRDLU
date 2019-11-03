@@ -56,6 +56,16 @@ class RobotAI extends A4RuleBasedAI {
         	}
         }
 
+        // actions waiting to be executed:
+        if (this.intentionsToExecuteAfterTheCurrentAction.length > 0 && 
+        	this.intentions.length == 0 &&
+        	this.queuedIntentions.length == 0 &&
+        	this.currentAction == null &&
+        	this.time_in_seconds > this.lastActionRequestTime) {
+        	this.queueIntentionRecord(this.intentionsToExecuteAfterTheCurrentAction[0]);
+        	this.intentionsToExecuteAfterTheCurrentAction.splice(0, 1);
+        }
+
 		this.executeScriptQueues();
 	}
 
@@ -194,6 +204,7 @@ class RobotAI extends A4RuleBasedAI {
 		if (this.currentAction != null && 
 			this.currentAction.equalsNoBindings(actionRequest) == 1) {
 			this.clearCurrentAction();
+			this.intentionsToExecuteAfterTheCurrentAction = [];
 			return true;
 		}
 
@@ -255,6 +266,25 @@ class RobotAI extends A4RuleBasedAI {
             }
         }        
     }
+
+
+	canSatisfyActionRequest(ir:IntentionRecord) : number
+	{
+		let actionRequest:Term = ir.action;
+		let tmp:number = super.canSatisfyActionRequest(ir);
+		if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
+			if (this.time_in_seconds == this.lastActionRequestTime) {
+				// multiple requests in the same performative, just queue them:
+				this.intentionsToExecuteAfterTheCurrentAction.push(ir);
+				return ACTION_REQUEST_WILL_BE_HANDLED_EXTERNALLY;
+			} else {
+				// clear the queue, as there will be a new request, that overwrites the previous requests:
+				this.intentionsToExecuteAfterTheCurrentAction = [];
+			}
+			this.lastActionRequestTime = this.time_in_seconds;
+		}
+		return tmp;
+	}
 
 
 	canSee(characterID:string)
@@ -398,6 +428,8 @@ class RobotAI extends A4RuleBasedAI {
 
 	robot:A4AICharacter = null;
 
+	lastActionRequestTime:number = -1;
+
 	// In addition to the script queues directly in the robot, these are script queues that are managed directly by the AI. 
 	// Specifically, scripts responsible for making the robot perform the current action the robot is trying to accomplish,
 	// are placed here. Each time the robot is given a new task, this script is cleared.
@@ -405,6 +437,10 @@ class RobotAI extends A4RuleBasedAI {
     currentAction_requester:TermAttribute = null;
     currentAction_scriptQueue: A4ScriptExecutionQueue = null;
     currentActionHandler:IntentionAction = null;
+
+    intentionsToExecuteAfterTheCurrentAction:IntentionRecord[] = [];	// some times the player requests more than one action at a time in the same
+    																	// performative (e.g., "give me all the keys"). These have to be handled one by
+    																	// one. This list stores those that are waiting to be executed
 
 	// the IDs of the objects we do not want to give to the player:
 	objectsNotAllowedToGive:string[] = [];

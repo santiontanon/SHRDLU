@@ -1140,6 +1140,10 @@ context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy te
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("the crate", o.getSort("performative"), context, 'etaoin',  "perf.inform.answer('etaoin'[#id], '5'[#id])");
 
+NLParseTestUnifyingListener("you suck", o.getSort("performative"),  context, 'etaoin', "perf.inform(X:'etaoin'[#id], verb.suck(X))");
+NLParseTestUnifyingListener("do you suck?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(X:'etaoin'[#id], verb.suck(X))");
+NLParseTestUnifyingListener("who sucks?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(verb.suck(X), character(X)))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
