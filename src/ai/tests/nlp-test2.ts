@@ -268,7 +268,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1123,7 +1123,7 @@ NLParseTestUnifyingListener("did you collide with a rock?", o.getSort("performat
 NLParseTestUnifyingListener("did you have a collision with a rock?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(V:verb.collide-with('etaoin'[#id], X:[#id]), #and(time.past(V), rock(X))))");
 NLParseTestUnifyingListener("what did you collide with?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(V:verb.collide-with('etaoin'[#id], X), time.past(V)))");
 NLParseTestUnifyingListener("what did you have a collision with?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(V:verb.collide-with('etaoin'[#id], X), time.past(V)))");
-
+*/
 
 // For version 3.2:
 // now add a sentence that has a mention to a room:
@@ -1150,6 +1150,10 @@ NLParseTestUnifyingListener("which is the closest bathroom to you?!", o.getSort(
 NLParseTestUnifyingListener("where is the nearest bathroom?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'1'[#id])))");
 NLParseTestUnifyingListener("where is the bathroom closest to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
 NLParseTestUnifyingListener("where is the closest bathroom to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
+
+NLParseTestUnifyingListener("why don't you know?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(verb.know(S)))"); 
+NLParseTestUnifyingListener("how don't you know?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(verb.know(S)))"); 
+NLParseTestUnifyingListener("how come you don't know?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(verb.know(S)))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

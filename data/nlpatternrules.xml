@@ -4739,6 +4739,27 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefFromContext(CO2, SUBJECT)
     		         #derefFromContext(CO4, OBJECT)"/>
 
+    <NLPattern name="why-donot-know-special-form"
+    		   head="perf.q.why(LISTENER,#not(verb.know(SUBJECT)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 
+			   		 verb('verb.do'[symbol], N, P, T) 'not'
+			   		 nounPhrase(X, N2, P2, C) 
+			   		 verb('verb.know'[symbol], N3, P3, [present-tense]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+    <NLPattern name="why-donot-know-special-form"
+    		   head="perf.q.why(LISTENER,#not(verb.know(SUBJECT)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' ['come']
+			   		 nounPhrase(X, N2, P2, C) 
+			   		 verb('verb.do'[symbol], N, P, T) 'not'
+			   		 verb('verb.know'[symbol], N3, P3, [present-tense]) 
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C, SUBJECT)"/>
+
 	<!-- whose rules -->
     <NLPattern name="whose-noun-is-this"
     		   head="perf.q.query(LISTENER, QUERY_V, relation.owns(QUERY_V, OBJECT))"

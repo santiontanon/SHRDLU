@@ -465,6 +465,28 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (sourceLocation != null && targetLocation != null) {
 			return sourceLocation.distanceFromLocation(targetLocation, this.game);
 		}
+
+		// special cases:
+		if (source == 'earth') {
+			if (targetObject != null || targetLocation != null || target == 'aurora') {
+				return 1.1246e+20;
+			}
+		}
+		if (target == 'earth') {
+			if (sourceObject != null || sourceLocation != null || source == 'aurora') {
+				return 1.1246e+20;
+			}
+		}
+		if (source == 'aurora') {
+			if (targetObject != null || targetLocation != null) {
+				return 0;
+			}
+		}
+		if (target == 'aurora') {
+			if (sourceObject != null || sourceLocation != null) {
+				return 0;
+			}
+		}
 		return null;
 	}
 
