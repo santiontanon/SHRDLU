@@ -1139,10 +1139,17 @@ NLParseTestUnifyingListener("the crate", o.getSort("performative"), context, 'et
 context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("the crate", o.getSort("performative"), context, 'etaoin',  "perf.inform.answer('etaoin'[#id], '5'[#id])");
-
 NLParseTestUnifyingListener("you suck", o.getSort("performative"),  context, 'etaoin', "perf.inform(X:'etaoin'[#id], verb.suck(X))");
 NLParseTestUnifyingListener("do you suck?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(X:'etaoin'[#id], verb.suck(X))");
 NLParseTestUnifyingListener("who sucks?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(verb.suck(X), character(X)))");
+NLParseTestUnifyingListener("what's wrong with me?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,verb.happen('1'[#id], X))");
+NLParseTestUnifyingListener("let me go", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.go('1'[#id]))");
+NLParseTestUnifyingListener("which is the nearest bathroom?!", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(bathroom(X), space.nearest-to(X,'1'[#id])))");
+NLParseTestUnifyingListener("which is the bathroom closest to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
+NLParseTestUnifyingListener("which is the closest bathroom to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
+NLParseTestUnifyingListener("where is the nearest bathroom?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'1'[#id])))");
+NLParseTestUnifyingListener("where is the bathroom closest to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
+NLParseTestUnifyingListener("where is the closest bathroom to you?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(bathroom(X), space.nearest-to(X,'etaoin'[#id])))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

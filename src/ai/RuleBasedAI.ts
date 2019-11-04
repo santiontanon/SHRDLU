@@ -1771,6 +1771,12 @@ class RuleBasedAI {
 	}
 
 
+	processSuperlatives(results:Bindings[], superlative:Sentence)
+	{
+		return results;
+	}
+
+
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
 		// just return what we know (this function will never be used in SHRDLU anyway, it's only for testing)::

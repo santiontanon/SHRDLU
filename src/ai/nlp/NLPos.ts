@@ -646,6 +646,10 @@ this.addTokenPOS(new PartOfSpeech("except", "~=", Term.fromString("preposition('
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "relation.origin", Term.fromString("preposition('relation.origin'[space.at])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("farthest to", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("furthest to", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("furthest from", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("farthest from", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 
 this.addTokenPOS(new PartOfSpeech("into", "relation.target", Term.fromString("preposition('relation.target'[relation.target])", o), 1.0));
@@ -655,11 +659,10 @@ this.addTokenPOS(new PartOfSpeech("into", "relation.target", Term.fromString("pr
   ["minus",  "PREP"],
 */
 this.addTokenPOS(new PartOfSpeech("near", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
-/*
-  ["nearer",  "PREP"],
-  ["nearest",  "PREP"],
-  ["notwithstanding",  "PREP"],
-*/
+
+//  ["nearer",  "PREP"],
+this.addTokenPOS(new PartOfSpeech("nearest to", "space.nearest-to", Term.fromString("preposition('space.nearest-to'[space.nearest-to])", o), 1.0));
+//  ["notwithstanding",  "PREP"],
 this.addTokenPOS(new PartOfSpeech("of", "relation.composition", Term.fromString("preposition('relation.composition'[relation.composition])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("of", "relation.origin", Term.fromString("preposition('relation.origin'[relation.origin])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("of", "relation.belongs", Term.fromString("preposition('relation.belongs'[relation.belongs])", o), 1.0));
@@ -1084,6 +1087,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("coordinate", "space.position", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("coordination", "coordination", Term.fromString("noun('coordination'[coordination], [singular])", o), 1.0));
     this.addStandardNounPOS("corpse", "corpse", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("correctness", "correctness", Term.fromString("noun('correctness'[correctness], [singular])", o), 1.0));
     this.addStandardNounPOS("corridor", "corridor", o, multitokens_raw);
     this.addStandardNounPOS("course", "path", o, multitokens_raw);
     this.addStandardNounPOS("crate", "crate", o, multitokens_raw);
@@ -1146,6 +1150,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("gas", "gas", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("gas", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("gases", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("goodness", "goodness", Term.fromString("noun('goodness'[goodness], [singular])", o), 1.0));
     this.addStandardNounPOS("gorge", "canyon", o, multitokens_raw);
     this.addStandardNounPOS("gravity", "gravity", o, multitokens_raw);
     this.addStandardNounPOS("greenhouse", "greenhouse.facility", o, multitokens_raw);
@@ -1610,6 +1615,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("terrible", "bad", Term.fromString("adjective('bad'[bad])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("horrible", "bad", Term.fromString("adjective('bad'[bad])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("deadful", "bad", Term.fromString("adjective('bad'[bad])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("wrong", "incorrect", Term.fromString("adjective('incorrect'[incorrect])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("closest", "space.nearest-to", Term.fromString("adjective('space.nearest-to'[space.nearest-to])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("furthest", "space.farthest-from", Term.fromString("adjective('space.farthest-from'[space.farthest-from])", o), 1.0));
 
     // adjectives:    
     this.addTokenPOS(new PartOfSpeech("alive", "alive", Term.fromString("adjective('alive'[alive])", o), 1.0));
@@ -1635,6 +1643,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("else", "else", Term.fromString("adjective('else'[else])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("empty", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("erased", "erased", Term.fromString("adjective('erased'[erased])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("farthest", "space.farthest-from", Term.fromString("adjective('space.farthest-from'[space.farthest-from])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("flat", "shape.flat", Term.fromString("adjective('shape.flat'[shape.flat])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("full", "full", Term.fromString("adjective('full'[full])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("good", "good", Term.fromString("adjective('good'[good])", o), 1.0));
@@ -1662,6 +1671,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("medium", "size.medium", Term.fromString("adjective('size.medium'[size.medium])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("medium", "fill.medium", Term.fromString("adjective('fill.medium'[fill.medium])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("mortal", "mortal", Term.fromString("adjective('mortal'[mortal])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("nearest", "space.nearest-to", Term.fromString("adjective('space.nearest-to'[space.nearest-to])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("north", "north", Term.fromString("adjective('north'[north])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("old", "property.old", Term.fromString("adjective('property.old'[property.old])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("on", "powered.on", Term.fromString("adjective('powered.on'[powered.on])", o), 1.0));
@@ -1687,6 +1697,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("warm", "hot", Term.fromString("adjective('hot'[hot])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("west", "west", Term.fromString("adjective('west'[west])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("white", "white", Term.fromString("adjective('white'[white])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("incorrect", "incorrect", Term.fromString("adjective('incorrect'[incorrect])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("correct", "correct", Term.fromString("adjective('correct'[correct])", o), 1.0));
 
     this.addTokenPOS(new PartOfSpeech("larger", "relation.larger", Term.fromString("adjective('relation.larger'[relation.larger])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("smaller", "relation.smaller", Term.fromString("adjective('relation.smaller'[relation.smaller])", o), 1.0));

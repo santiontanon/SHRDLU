@@ -547,9 +547,11 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (!this.visionActive) return false;
 		// if the character is in the perception buffer:
 		let objectSort:Sort = this.o.getSort("object");
+		let locationSort:Sort = this.o.getSort("space.location");
 		for(let tc of this.shortTermMemory.plainTermList) {
 			let t:Term = tc.term;
-			if (t.functor.is_a(objectSort) && t.attributes.length == 1 &&
+			if ((t.functor.is_a(objectSort) || t.functor.is_a(locationSort)) && 
+				t.attributes.length == 1 &&
 				t.attributes[0] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>t.attributes[0]).value == "" + characterID) {
 				return true;
@@ -1002,6 +1004,71 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		return relations;
+	}
+
+
+	processSuperlatives(results:Bindings[], superlative:Sentence)
+	{
+		if (superlative.terms.length == 1 &&
+			superlative.terms[0].functor.name == "space.nearest-to" &&
+			superlative.terms[0].attributes.length == 2) {
+			let best:Bindings = null;
+			let best_distance:number = null;
+			for(let result of results) {
+				let tmp:Term = superlative.terms[0].applyBindings(result);
+				if ((tmp.attributes[0] instanceof ConstantTermAttribute) &&
+					(tmp.attributes[1] instanceof ConstantTermAttribute)) {
+					let d:number = this.distanceBetweenIds((<ConstantTermAttribute>tmp.attributes[0]).value,
+														   (<ConstantTermAttribute>tmp.attributes[1]).value);
+					if (!superlative.sign[0] && d != null) d = -d;
+					console.log("processSuperlatives: d = " + d + ", from: " + tmp);
+					if (best_distance == null) {
+						best = result;
+						best_distance = d;
+					} else if (d != null && 
+							   best_distance > d) {
+						best = result;
+						best_distance = d;
+					}
+				} else {
+					if (best == null) {
+						best = result;
+					}
+				}
+			}
+			console.log("processSuperlatives: best = " + best);
+			return [best];
+		} else if (superlative.terms.length == 1 &&
+			superlative.terms[0].functor.name == "space.farthest-from" &&
+			superlative.terms[0].attributes.length == 2) {
+			let best:Bindings = null;
+			let best_distance:number = null;
+			for(let result of results) {
+				let tmp:Term = superlative.terms[0].applyBindings(result);
+				if ((tmp.attributes[0] instanceof ConstantTermAttribute) &&
+					(tmp.attributes[1] instanceof ConstantTermAttribute)) {
+					let d:number = this.distanceBetweenIds((<ConstantTermAttribute>tmp.attributes[0]).value,
+														   (<ConstantTermAttribute>tmp.attributes[1]).value);
+					if (!superlative.sign[0] && d != null) d = -d;
+					console.log("processSuperlatives: d = " + d + ", from: " + tmp);
+					if (best_distance == null) {
+						best = result;
+						best_distance = d;
+					} else if (d != null && 
+							   best_distance < d) {
+						best = result;
+						best_distance = d;
+					}
+				} else {
+					if (best == null) {
+						best = result;
+					}
+				}
+			}
+			console.log("processSuperlatives: best = " + best);
+			return [best];
+		}
+		return results;
 	}
 
 

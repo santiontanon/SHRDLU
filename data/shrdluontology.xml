@@ -152,6 +152,7 @@
     <sort name="past-tense" super="verb-tense"/>
 
     <sort name="adjective" super="part-of-speech"/>    
+    <sort name="superlative-adjective" super="adjective"/>    
 
     <sort name="adverb" super="part-of-speech"/>    
 
@@ -712,6 +713,8 @@
     <sort name="distance" super="space,relation-with-value,#stateSort,abstract-entity"/>
     <sort name="relation.contains" super="spatial-relation"/>
     <sort name="space.near" super="spatial-relation"/>
+    <sort name="space.nearest-to" super="spatial-relation,superlative-adjective"/>
+    <sort name="space.farthest-from" super="spatial-relation,superlative-adjective"/>
     <sort name="space.far" super="spatial-relation"/>
     <sort name="ground" super="space.location"/>
 
@@ -765,6 +768,9 @@
     <sort name="kitchen" super="room"/>
     <sort name="mess.hall" super="room"/>
     <sort name="storage.room" super="room"/>
+    <sort name="maintenance.room" super="room"/>
+    <sort name="command.room" super="room"/>
+    <sort name="stasis.room" super="room"/>
     <sort name="bathroom" super="room"/>
     <sort name="laundry.room" super="room"/>
     <sort name="gym.room" super="room"/>
@@ -772,7 +778,7 @@
     <sort name="lab.room" super="room"/>
     <sort name="garage" super="room"/>
     <sort name="airlock" super="room"/>
-    <sort name="ship-bridge" super="room"/>
+    <sort name="ship-bridge" super="command.room"/>
 
     <sort name="communication.tower" super="facility,tower"/>
     <sort name="recycling.facility" super="facility"/>
@@ -812,6 +818,10 @@
     <sort name="goodness" super="property"/>
     <sort name="good" super="goodness"/>
     <sort name="bad" super="goodness"/>
+
+    <sort name="correctness" super="property"/>
+    <sort name="correct" super="correctness"/>
+    <sort name="incorrect" super="correctness"/>
 
     <sort name="size" super="property"/>
     <sort name="big" super="size"/>

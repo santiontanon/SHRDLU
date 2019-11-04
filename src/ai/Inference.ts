@@ -31,12 +31,14 @@ class InterruptibleResolution
 	constructor(KB:SentenceContainer, additionalSentences:Sentence[], target:Sentence[], occursCheck:boolean, reconsiderTarget:boolean, treatSpatialPredicatesSpecially:boolean, ai:RuleBasedAI)
 	{
 		this.sort_cache_spatial_relation = ai.o.getSort("spatial-relation");
+		this.sort_cache_superlative = ai.o.getSort("superlative-adjective");
 
 		this.KB = KB;
 		this.originalTarget = target;
 		this.occursCheck = occursCheck;
 		this.reconsiderTarget = reconsiderTarget;
 		this.treatSpatialPredicatesSpecially = treatSpatialPredicatesSpecially;
+		this.superlativePredicates = [];	// These are predicates such as "nearest", that can only be checked once we have all the solutions
 		this.ai = ai;
 		this.internal_step_state = 1;	// signal that we need to start from scratch the first time step_internal is called
 		this.internal_step_state_index = 0;
@@ -46,7 +48,7 @@ class InterruptibleResolution
 		}
 		for(let s of target) {
 			s = this.resolutionEqualityCheck(s);
-			if (s != null && this.treatSpatialPredicatesSpecially) s = this.resolutionSpatialPredicatesCheck(s, this.ai);
+			if (s != null && this.treatSpatialPredicatesSpecially) s = this.resolutionSpatialPredicatesCheck(s, true);
 			if (s == null) continue;
 			this.targetWithBindings.push([s,new Bindings()]);
 		}
@@ -94,6 +96,7 @@ class InterruptibleResolution
 	resolve() : Bindings[]
 	{
 		while(!this.step()) {}
+		this.processSuperlatives();
 		return this.endResults;
 	}
 
@@ -101,7 +104,10 @@ class InterruptibleResolution
 	step() : boolean
 	{
 		if (this.stepAccumulatingResults()) return true;
-		if (this.endResults.length > 0) return true;
+		if (this.endResults.length > 0) {
+			this.processSuperlatives();
+			return true;
+		}
 		return false;
 	}
 
@@ -204,10 +210,14 @@ class InterruptibleResolution
 //		let newResolventsWithBindings:[Sentence,Bindings][] = 
 		this.step_internal(this.additionalSentences, this.targetWithBindings, this.occursCheck, false);
 		if (this.internal_step_state == 0) return false;
-		if (this.internal_step_state == 2) return true;	// computation limit reached
+		if (this.internal_step_state == 2) {
+			this.processSuperlatives();
+			return true;	// computation limit reached
+		}
 		this.firstStep = false;
 		if (this.newResolventsWithBindings == null || this.newResolventsWithBindings.length == 0) {
 			if (DEBUG_resolution) console.log("  - no more resolvents: " +this.endResults.length + " sets of bindings cause a contradiction! (CLOSED: " + this.closed.length + ")");
+			this.processSuperlatives();
 			return true;
 		}
 
@@ -280,6 +290,7 @@ class InterruptibleResolution
 
 		if (!anyNewResolvent) {
 			console.log("all the resolvents in this round where already in the closed list, so we are done!");
+			this.processSuperlatives();
 			return true;
 		}
 
@@ -339,7 +350,7 @@ class InterruptibleResolution
 //					console.log("    tmp: " + tmp.length);
 					for(let r of tmp) {
 						r[0] = this.resolutionEqualityCheck(r[0]);
-						if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
+						if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
 						if (r[0] == null) continue;
 						let found:boolean = false;
 						for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
@@ -391,7 +402,7 @@ class InterruptibleResolution
 				this.total_resolutions++;
 				for(let r of tmp) {
 					r[0] = this.resolutionEqualityCheck(r[0]);
-					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
+					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
 					if (r[0] == null) continue;
 
 					let found:boolean = false;
@@ -425,7 +436,7 @@ class InterruptibleResolution
 				this.total_resolutions++;
 				for(let r of tmp) {
 					r[0] = this.resolutionEqualityCheck(r[0]);
-					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], this.ai);
+					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
 					if (r[0] == null) continue;
 
 					let found:boolean = false;
@@ -499,19 +510,28 @@ class InterruptibleResolution
 	}
 
 
-	resolutionSpatialPredicatesCheck(s:Sentence, ai:RuleBasedAI) : Sentence
+	resolutionSpatialPredicatesCheck(s:Sentence, firstTime:boolean) : Sentence
 	{
 		let toDelete:Term[] = [];
 		for(let i:number = 0;i<s.terms.length;i++) {
+			if (firstTime) {
+				if (s.terms[i].functor.is_a(this.sort_cache_superlative) &&
+					s.terms[i].functor.is_a(this.sort_cache_spatial_relation)) {
+					toDelete.push(s.terms[i]);
+					this.superlativePredicates.push(new Sentence([s.terms[i]], [!s.sign[i]]))
+					continue;
+				}
+			}
+
 			if (s.terms[i].functor.is_a(this.sort_cache_spatial_relation) &&
 				s.terms[i].attributes.length == 2 &&
 				s.terms[i].attributes[0] instanceof ConstantTermAttribute &&
 				s.terms[i].attributes[1] instanceof ConstantTermAttribute) {
 				// check if it's true or false, and see if it has to be eliminated from the sentence:
-				let truth:boolean = ai.checkSpatialRelation(s.terms[i].functor,
+				let truth:boolean = this.ai.checkSpatialRelation(s.terms[i].functor,
 															(<ConstantTermAttribute>s.terms[i].attributes[0]).value,
 															(<ConstantTermAttribute>s.terms[i].attributes[1]).value,
-															ai.selfID);
+															this.ai.selfID);
 				//console.log("checkSpatialRelation: " + s.terms[i] + " -> " + truth );
 				if (truth != null &&
 					truth != s.sign[i]) {
@@ -527,6 +547,14 @@ class InterruptibleResolution
 			s.sign.splice(idx,1);
 		}
 		return s;
+	}
+
+
+	processSuperlatives()
+	{
+		for(let superlative of this.superlativePredicates) {
+			this.endResults = this.ai.processSuperlatives(this.endResults, superlative);
+		}
 	}
 
 
@@ -671,6 +699,8 @@ class InterruptibleResolution
 	originalTarget:Sentence[] = null;
 	ai:RuleBasedAI = null;
 
+	superlativePredicates:Sentence[] = [];
+
 	firstStep:boolean = true;
 	closed:Sentence[] = [];
 
@@ -682,4 +712,5 @@ class InterruptibleResolution
 	total_resolutions:number = 0;
 
 	sort_cache_spatial_relation:Sort = null;
+	sort_cache_superlative:Sort = null;
 }

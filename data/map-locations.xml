@@ -77,10 +77,10 @@
 		<location code="o" id="location-as23" name="kitchen storage" sort="storage.room"/>
 		<location code="p" id="location-as24" name="medical storage" sort="storage.room"/>
 		<location code="q" id="location-as25" sort="infirmary"/>
-		<location code="r" id="location-as26" name="stasis pod room" sort="room"/>
+		<location code="r" id="location-as26" name="stasis pod room" sort="stasis.room"/>
 		<location code="s" id="location-as27" sort="lab.room"/>
-		<location code="t" id="location-maintenance" name="maintenance" sort="room"/>
-		<location code="u" id="location-as29" name="command center" sort="room"/>
+		<location code="t" id="location-maintenance" name="maintenance" sort="maintenance.room"/>
+		<location code="u" id="location-as29" name="command center" sort="command.room"/>
 		<location code="v" id="location-garage" sort="garage"/>
 		<location code="w" id="location-as31" name="airlock 1" sort="airlock"/>
 		<location code="x" id="location-as32" name="airlock 2" sort="airlock"/>

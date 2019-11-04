@@ -23,6 +23,10 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
 		var targetID:string = null;
 		var targetTermString:string = null;
+
+		console.log("query result, answer where (target): " + inf.inferences[0].endResults);
+		console.log("query result, answer where (speaker): " + inf.inferences[1].endResults);
+
 		if (this.effectParameter.attributes[2] instanceof ConstantTermAttribute) {
 			targetID = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
 			if (targetID == "hypothetical-character") {
@@ -35,8 +39,6 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			targetTermString = "["+this.effectParameter.attributes[2].sort+"]";
 		}
 
-		console.log("query result, answer where (target): " + inf.inferences[0].endResults);
-		console.log("query result, answer where (speaker): " + inf.inferences[1].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
 			var term1:Term = null;
 			if (targetID != null) {
@@ -50,6 +52,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			console.log("new intention: " + term);
 		} else {
 			// get the location ID
+			let selectedBindings:Bindings = null;
 			let targetLocation:AILocation = null;
 			let targetIfItsALocation:AILocation = ai.game.getAILocationByID(targetID);
 			let targetLocationID:string = null;
@@ -64,14 +67,16 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 							if (targetLocation == null) {
 								targetLocationID = (<ConstantTermAttribute>v).value;
 								targetLocation = ai.game.getAILocationByID(targetLocationID);
+								selectedBindings = bindings;
 							} else {
 								let targetLocationID2:string = (<ConstantTermAttribute>v).value;
 								let targetLocation2:AILocation = ai.game.getAILocationByID(targetLocationID2);
 								let idx1:number = ai.game.locations.indexOf(targetLocation);
 								let idx2:number = ai.game.locations.indexOf(targetLocation2);
-								if (ai.game.location_in[idx2][idx1]) {
+								if (idx1>=0 && idx2>=0 && ai.game.location_in[idx2][idx1]) {
 									targetLocationID = targetLocationID2;
 									targetLocation = targetLocation2;
+									selectedBindings = bindings;
 								}
 							}
 						}
@@ -93,7 +98,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 									let speakerLocation2:AILocation = ai.game.getAILocationByID(speakerLocationID2);
 									let idx1:number = ai.game.locations.indexOf(speakerLocation);
 									let idx2:number = ai.game.locations.indexOf(speakerLocation2);
-									if (ai.game.location_in[idx2][idx1]) {
+									if (idx1>=0 && idx2>=0 && ai.game.location_in[idx2][idx1]) {
 										speakerLocationID = speakerLocationID2;
 										speakerLocation = speakerLocation2;
 									}
@@ -102,6 +107,18 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						}
 					}
 				}
+			}
+			if (selectedBindings != null && this.effectParameter.attributes[2] instanceof VariableTermAttribute) {
+				let tmp:TermAttribute = this.effectParameter.attributes[2].applyBindings(selectedBindings);
+				if (tmp instanceof ConstantTermAttribute) {
+					targetID = (<ConstantTermAttribute>tmp).value;
+					if (targetID == "hypothetical-character") {
+						targetID = null;
+						targetTermString = "[any]";
+					} else {
+						targetTermString = "'"+targetID + "'[#id]";
+					}
+				}				
 			}
 			if (targetLocationID == null) {
 				console.error("A4RuleBasedAI.executeInferenceEffect: cannot find location from results " + inf.inferences[0].endResults);

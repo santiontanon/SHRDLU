@@ -30,15 +30,27 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 			var intention:Term = this.effectParameter;
 			var action:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			if (inf.inferences[0].endResults.length != 0) {
-				for(let b of inf.inferences[0].endResults[0].l) {
-					if (b[0].name == "WHERE") {
-						var v:TermAttribute = b[1];
-						if (v instanceof ConstantTermAttribute) {
-							sourceLocation = ai.game.getAILocationByID((<ConstantTermAttribute>v).value);
-							break;
+				// get the location ID
+				for(let bindings of inf.inferences[0].endResults) {
+					for(let b of bindings.l) {
+						if (b[0].name == "WHERE") {
+							var v:TermAttribute = b[1];
+							if (v instanceof ConstantTermAttribute) {
+								// select the most specific one:
+								if (sourceLocation == null) {
+									sourceLocation = ai.game.getAILocationByID((<ConstantTermAttribute>v).value);
+								} else {
+									let sourceLocation2:AILocation = ai.game.getAILocationByID((<ConstantTermAttribute>v).value);
+									let idx1:number = ai.game.locations.indexOf(sourceLocation);
+									let idx2:number = ai.game.locations.indexOf(sourceLocation2);
+									if (idx1>=0 && idx2>=0 && ai.game.location_in[idx2][idx1]) {
+										sourceLocation = sourceLocation2;
+									}
+								}
+							}
 						}
 					}
-				}
+				}	
 			}
 			var path:AILocation[] = null;
 			if (action.attributes[1] instanceof ConstantTermAttribute) {
