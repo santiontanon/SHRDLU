@@ -27,10 +27,10 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			//this.skip_to_end_of_act_1();
+			this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
@@ -38,7 +38,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_after_crash_site();
 			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
-		//}
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -114,6 +114,8 @@ class ShrdluGameScript {
 //		this.act_1_state = 15;	// etaoin will ask to go find Shrdlu
 		this.act_1_state = 19;
 
+		let term_h:Term = Term.fromString("verb.need(E:'etaoin'[#id], verb.help(D:'david'[#id], E, verb.find(D, 'shrdlu'[#id])))",this.game.ontology);
+		this.game.etaoinAI.addLongTermTerm(term_h, MEMORIZE_PROVENANCE);
 		let term:Term = Term.fromString("goal(D:'david'[#id], verb.find(X, 'shrdlu'[#id]))",this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
@@ -1244,6 +1246,8 @@ class ShrdluGameScript {
 				if (!this.contextEtaoin.inConversation) {
 					this.etaoinSays("perf.callattention('david'[#id])");
 				}
+				let term_h:Term = Term.fromString("verb.need(E:'etaoin'[#id], verb.help(D:'david'[#id], E, verb.find(D, 'shrdlu'[#id])))",this.game.ontology);
+				this.game.etaoinAI.addLongTermTerm(term_h, MEMORIZE_PROVENANCE);
 				this.etaoinSays("perf.q.action('david'[#id], verb.find('david'[#id], 'shrdlu'[#id]))");
 			} else {
 				// waiting for an answer from the player to "would you please find shrdlu?"
@@ -1882,6 +1886,8 @@ class ShrdluGameScript {
 		case 100:
 			// Conversation with Shrdlu has started!
 			if (this.game.currentPlayer.map.name == "East Cave") {
+				let term_h:Term = Term.fromString("verb.need(S:'shrdlu'[#id], verb.help(D:'david'[#id], S, verb.take-to(D, 'shrdlu'[#id], 'location-aurora-station'[#id])))",this.game.ontology);
+				this.game.shrdluAI.addLongTermTerm(term_h, MEMORIZE_PROVENANCE);
 				this.shrdluSays("perf.request.action(V0:'david'[#id], verb.help('david'[#id], 'shrdlu'[#id]))");			
 				this.shrdluSays("perf.inform('david'[#id], #and(V:verb.damage('east-cave-cave-in'[#id], 'shrdlu-perception'[#id]), time.past(V)))");
 				this.shrdluSays("perf.inform(V0:'david'[#id], property.blind('shrdlu'[#id]))");
@@ -1990,6 +1996,10 @@ class ShrdluGameScript {
 				this.game.etaoinAI.intentions.length == 0 &&
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
+				let term_h:Term = Term.fromString("verb.need(E:'etaoin'[#id], verb.help(D:'david'[#id], E, verb.find(D, 'shrdlu'[#id])))",this.game.ontology);
+				this.game.etaoinAI.addLongTermTermWithSign(term_h, MEMORIZE_PROVENANCE, false);
+				term_h = Term.fromString("verb.need(S:'shrdlu'[#id], verb.help(D:'david'[#id], S, verb.take-to(D, 'shrdlu'[#id], 'location-aurora-station'[#id])))",this.game.ontology);
+				this.game.shrdluAI.addLongTermTermWithSign(term_h, MEMORIZE_PROVENANCE, false);
 				this.etaoinSays("perf.thankyou('david'[#id])")
 				this.act_2_state = 109;
 			}

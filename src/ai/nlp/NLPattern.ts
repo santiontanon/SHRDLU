@@ -1134,6 +1134,15 @@ class NLPattern {
 
 		if (inquote) {
 			console.error("Unclosed quotation while parsing NLPattern: " + str);
+			return null;
+		}
+		if (parentheses > 0) {
+			console.error("Unclosed parenthesis while parsing NLPattern: " + str);
+			return null;
+		}
+		if (squareBrackets > 0) {
+			console.error("Unclosed square brackets while parsing NLPattern: " + str);
+			return null;
 		}
 
 		if (!inquote && parentheses == 0 && squareBrackets == 0 && tmp.length > 0) {

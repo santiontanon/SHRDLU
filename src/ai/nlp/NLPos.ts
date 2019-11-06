@@ -1018,6 +1018,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("crash", "collision", o, multitokens_raw);    
     this.addStandardNounPOS("colour", "color", o, multitokens_raw);
     this.addStandardNounPOS("tyre", "tire", o, multitokens_raw);
+    this.addStandardNounPOS("way", "facing-direction", o, multitokens_raw);
+    this.addStandardNounPOS("way", "cardinal-direction", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("backwards", "backward", Term.fromString("noun('backward'[backward], [singular])", o), 1.0));
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);
@@ -1037,6 +1040,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("astronomer", "astronomer", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("away", "space.away", Term.fromString("noun('space.away'[space.away], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("back", "space.back", Term.fromString("noun('space.back'[space.back], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("backward", "backward", Term.fromString("noun('backward'[backward], [singular])", o), 1.0));
     this.addStandardNounPOS("barrel", "barrel", o, multitokens_raw);
     this.addStandardNounPOS("basket", "basket", o, multitokens_raw);
     this.addStandardNounPOS("bathroom", "bathroom", o, multitokens_raw);
@@ -1135,6 +1139,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addUncountableNounPOS("food", "food", o);
     this.addTokenPOS(new PartOfSpeech("foot", "foot", Term.fromString("noun('foot'[foot], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("feet", "foot", Term.fromString("noun('foot'[foot], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("forward", "forward", Term.fromString("noun('forward'[forward], [singular])", o), 1.0));
     this.addStandardNounPOS("fridge", "fridge", o, multitokens_raw);
     this.addStandardNounPOS("front", "space.front", o, multitokens_raw);
     this.addStandardNounPOS("functionality", "role", o, multitokens_raw);
@@ -1405,7 +1410,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("year", "time.year", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("yesterday", "time.yesterday", Term.fromString("noun('time.yesterday'[time.yesterday], [singular])", o), 1.0));
 
-
     // verbs:
     this.addTokenPOS(new PartOfSpeech("to be", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [no-person], [infinitive-tense])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("be", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [no-person], [infinitive-tense])", o), 1.0));
@@ -1450,6 +1454,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("action.take", "grab","grabs","grabbed","grabbed","grabbing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.take-out", "remove","removes","removed","removed","removing", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.explore", "scout","scouts","scouted","scouted","scouting", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("action.3dprint", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
@@ -1486,6 +1491,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.erase", "erase","erases","erased","erased","erasing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.examine", "examine","examines","examined","examined","examining", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.explore", "explore","explores","explored","explored","exploring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.let", "let","lets","let","let","letting", false, multitokens_raw, o);
@@ -1710,8 +1716,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("away", "space.away", Term.fromString("adverb('space.away'[space.away])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("forward", "forward", Term.fromString("adverb('forward'[forward])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("straight", "forward", Term.fromString("adverb('forward'[forward])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("backward", "backward", Term.fromString("adverb('backward'[backward])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("backwards", "backward", Term.fromString("adverb('backward'[backward])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("backward", "backward", Term.fromString("adverb('backward'[backward])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("left", "direction.left", Term.fromString("adverb('direction.left'[direction.left])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("right", "direction.right", Term.fromString("adverb('direction.right'[direction.right])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("up", "direction.up", Term.fromString("adverb('direction.up'[direction.up])", o), 1.0));

@@ -539,7 +539,7 @@
     <sort name="verb.hear" super="verb"/>
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
-    <sort name="verb.need" super="verb"/>
+    <sort name="verb.need" super="verb,#stateSort"/>
     <sort name="verb.obtain" super="verb"/>
     <sort name="verb.own" super="verb,relation.owns"/>
     <sort name="verb.parse" super="verb"/>
@@ -562,7 +562,7 @@
     <sort name="verb.wait" super="verb.stop"/>
     <sort name="verb.wait-for" super="verb.wait"/>
     <sort name="verb.walk" super="movementverb"/>
-    <sort name="verb.want" super="verb"/>
+    <sort name="verb.want" super="relation-verb,#stateSort"/>
     <sort name="verb.allow" super="verb"/>
     <sort name="verb.build" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.switch" super="verb"/>
@@ -594,6 +594,8 @@
     <sort name="verb.love" super="verb.like"/>
     <sort name="verb.hate" super="relation-verb"/>
     
+    <sort name="verb.explore" super="verb"/>
+
     <sort name="actionverb" super="verb"/>  <!-- actions that the AI can do -->
     <sort name="action.talk" super="actionverb"/>
     <sort name="verb.speak" super="action.talk"/>
@@ -870,6 +872,7 @@
     <sort name="direction" super="abstract-entity"/>
     <sort name="facing-direction" super="direction,property-with-value,#stateSort"/> <!-- which cardinal direction is a character or obejct facing -->
     <sort name="cardinal-direction" super="property,direction"/>
+    <sort name="relative-direction" super="direction,property-with-value"/> <!-- directions relative to the direction I was facing -->
     <sort name="east" super="cardinal-direction"/>
     <sort name="north" super="cardinal-direction"/>
     <sort name="south" super="cardinal-direction"/>

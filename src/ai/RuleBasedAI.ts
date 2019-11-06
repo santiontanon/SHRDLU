@@ -369,14 +369,26 @@ class RuleBasedAI {
 
 	addLongTermTerm(t:Term, provenance:string)
 	{
-		this.addLongTermTermWithTime(t, provenance, this.time_in_seconds)
+		this.addLongTermTermWithTimeAndSign(t, provenance, this.time_in_seconds, true)
 	}
 
 
 	addLongTermTermWithTime(t:Term, provenance:string, time:number)
 	{
+		this.addLongTermTermWithTimeAndSign(t, provenance, time, true)
+	}
+
+
+	addLongTermTermWithSign(t:Term, provenance:string, sign:boolean)
+	{
+		this.addLongTermTermWithTimeAndSign(t, provenance, this.time_in_seconds, sign)
+	}
+
+
+	addLongTermTermWithTimeAndSign(t:Term, provenance:string, time:number, sign:boolean)
+	{
 		// intentions:
-		if (t.functor == this.cache_sort_intention) {
+		if (t.functor == this.cache_sort_intention && sign) {
 			this.intentions.push(new IntentionRecord(
 									(<TermTermAttribute>t.attributes[0]).term, 
 								   	t.attributes.length > 0 ? t.attributes[1]:null,
@@ -387,7 +399,7 @@ class RuleBasedAI {
 		}
 
 		if (t.functor.is_a(this.cache_sort_stateSort)) {
-			if (this.longTermMemory.addStateSentenceIfNew(new Sentence([t],[true]), provenance, 1, time)) {
+			if (this.longTermMemory.addStateSentenceIfNew(new Sentence([t],[sign]), provenance, 1, time)) {
 				// term added
 				for(let context of this.contexts) {
 					context.newLongTermStateTerm(t);
@@ -395,7 +407,7 @@ class RuleBasedAI {
 				this.reactiveBehaviorUpdate(t);
 			}
 		} else {		
-			if (this.longTermMemory.addSentenceIfNew(new Sentence([t],[true]), provenance, 1, time)) {
+			if (this.longTermMemory.addSentenceIfNew(new Sentence([t],[sign]), provenance, 1, time)) {
 				// term added
 				for(let context of this.contexts) {
 					context.newLongTermTerm(t);
@@ -1065,16 +1077,41 @@ class RuleBasedAI {
 				ir.triggeredBy = perf2;
 				ir.triggeredBySpeaker = context.speaker;
 				this.inferenceProcesses.push(ir);
-			} else {
+			} else if (perf2.attributes.length==2) {
+				// First check if the actor is us:
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);
 				if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
 					this.intentions.push(ir);
 				} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
-					let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
-					let term:Term = Term.fromString(tmp, this.o);
-					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+					if (action.attributes.length>=1 &&
+						(action.attributes[0] instanceof ConstantTermAttribute) &&
+						(<ConstantTermAttribute>action.attributes[0]).value == this.selfID) {					
+						let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+						let term:Term = Term.fromString(tmp, this.o);
+						this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+					} else {
+						// The action is not for us, just say "ok" :)
+						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
+						this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+
+						// If the speaker is requesting an action for herself, then record it in the memory as a "verb.want":
+						let speakerID:string = null;
+						if (speaker instanceof ConstantTermAttribute) speakerID = (<ConstantTermAttribute>speaker).value;
+						if (action.attributes.length>=1 &&
+							(action.attributes[0] instanceof ConstantTermAttribute) &&
+							(<ConstantTermAttribute>action.attributes[0]).value == speakerID) {
+							let term2:Term = new Term(this.o.getSort("verb.want"), [speaker, new TermTermAttribute(action)]);
+							let term3:Term = Term.fromString("action.memorize('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
+							term3.attributes.push(new TermTermAttribute(term2));
+							this.intentions.push(new IntentionRecord(term3, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+						}						
+					}
 				}
+			} else {
+				let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";
+				let term:Term = Term.fromString(tmp, this.o);
+				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			}
 		} else {
 			let tmp:string = "action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest('"+context.speaker+"'[#id]))";

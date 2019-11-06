@@ -467,6 +467,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		// special cases:
+		// NOTE: this is bad, I should have these in the KB in some declarative form!
 		if (source == 'earth') {
 			if (targetObject != null || targetLocation != null || target == 'aurora') {
 				return 1.1246e+20;

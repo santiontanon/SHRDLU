@@ -1230,7 +1230,12 @@ class Term {
 
     static fromString(str:string, o:Ontology) : Term
     {
-        return Term.fromStringInternal(str, o, [], []).term;
+        let ta:TermTermAttribute = Term.fromStringInternal(str, o, [], []);
+        if (ta == null) {
+            console.error("Error parsing term: " + str);
+            return null;
+        }
+        return ta.term;
     }
 
 
@@ -1457,11 +1462,20 @@ class Term {
                             return null;
                         }
                         var a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
-                        variableNames.push(tmp);
-                        variableValues.push(a_term);
+                        if (variableNames.indexOf(tmp) == -1) {
+                            variableNames.push(tmp);
+                            variableValues.push(a_term);
+                        } else {
+                            console.error("Repeated definition of variable sort for variable '"+tmp +"' in: " + attributeString);
+                            return null;
+                        }
                         return a_term;
                     } else if (attributeString.charAt(idx)=="\'") {
                         // VariableName:'constant'[sort]
+                        if (variableNames.indexOf(tmp) != -1) {
+                            console.error("Repeated definition of variable sort for variable '"+tmp +"' in: " + attributeString);
+                            return null;
+                        }                        
                         variableNames.push(tmp);
                         attributeString = attributeString.substring(idx);
                         idx = 1;
