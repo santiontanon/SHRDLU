@@ -2682,7 +2682,7 @@ class A4Game {
 
     xml:Element = null;    // the XML definition of the game
 
-	sfx_volume:number;
+	  sfx_volume:number;
     drawTextBubbles:boolean = true;
     
     gameName:string = null;
@@ -2698,23 +2698,23 @@ class A4Game {
     characterDefinitionFiles:string[] = [];
     objectDefinitionFiles:string[] = [];
     
-	cycle:number = 0;
+	  cycle:number = 0;
     cycles_without_redrawing:number = 0;
     gameComplete:boolean = false;
     gameComplete_ending_ID:string = null;
 
-	game_path:string = null;
-	GLTM:GLTManager = null;
-	SFXM:SFXManager = null;
+  	game_path:string = null;
+  	GLTM:GLTManager = null;
+  	SFXM:SFXManager = null;
     graphicFiles:A4GraphicFile[] = [];
-	objectFactory:A4ObjectFactory = new A4ObjectFactory();
-	tileWidth:number = 16;
+  	objectFactory:A4ObjectFactory = new A4ObjectFactory();
+  	tileWidth:number = 16;
     tileHeight:number = 16;
 
     // AI:
     ontology:Ontology = new Ontology();
 
-	// HUD:
+	  // HUD:
     HUD_state:number = SHRDLU_HUD_STATE_MESSAGES;
     messages:string[][] = [];    // [text, color, timestamp]
     trade_requested:A4Character = null;
@@ -2747,15 +2747,15 @@ class A4Game {
     currentPlayer:A4PlayerCharacter = null;
     currentPlayerIndex:number = 0;
     
-	warpRequests:WarpRequest[] = [];
-	deletionRequests:A4Object[] = [];
-    
-	// camera:
+  	warpRequests:WarpRequest[] = [];
+  	deletionRequests:A4Object[] = [];
+      
+  	// camera:
     zoom:number = 1;
     targetZoom:number = 1;
     defaultZoom:number = 1;
 
-	// scripts:
+  	// scripts:
     eventScripts:A4EventRule[][] = new Array(A4_NEVENTS);
 
     // script excution queues (these contain scripts that are pending execution, will be executed in the next "cycle"):
@@ -2764,7 +2764,7 @@ class A4Game {
     // story state:
     storyState: { [id: string] : string; } = {};
     lastTimeStoryStateChanged:number = 0;
-//    knownSpeechActs:SpeechAct[] = [];
+    //    knownSpeechActs:SpeechAct[] = [];
 
     //<shrdlu-specific>
     naturalLanguageParser:NLParser = null;

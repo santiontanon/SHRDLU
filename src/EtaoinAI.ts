@@ -91,8 +91,6 @@ class EtaoinAI extends A4RuleBasedAI {
 
 	attentionAndPerception()
 	{
-		this.clearPerception();
-
 		// attention selection:
 		// pick the object that generates the maximum anxiety:
 		let max_anxiety_object:AttentionRecord = null;
@@ -109,9 +107,6 @@ class EtaoinAI extends A4RuleBasedAI {
 
 		let attention_object:A4Object = null;
 		let attention_object_l:A4Object[] = null;
-		let attention_map:A4Map = null;
-		let attention_x:number = 0;
-		let attention_y:number = 0;
 		if (max_anxiety_object != null) {
 			max_anxiety_object.anxiety = 0;
 			attention_object = max_anxiety_object.object;
@@ -121,10 +116,26 @@ class EtaoinAI extends A4RuleBasedAI {
 					attention_object = attention_object_l[0];				
 				}
 			}
-			attention_map = attention_object.map;
-			attention_x = attention_object.x;
-			attention_y = attention_object.y + attention_object.tallness;
 		}
+
+		if (attention_object==null) {
+			//console.log("EtaoinAI: attention_map = null");
+			return;
+		}
+
+		if (attention_object_l == null) attention_object_l = [max_anxiety_object.object];
+		this.perceptionFocusedOnObject(attention_object_l, max_anxiety_object.object);
+	}
+
+
+	perceptionFocusedOnObject(attention_object_l:A4Object[], max_anxiety_object:A4Object)
+	{
+		this.clearPerception();
+
+		let attention_object:A4Object = attention_object_l[0];
+		let attention_map:A4Map = attention_object.map;
+		let attention_x:number = attention_object.x;
+		let attention_y:number = attention_object.y + attention_object.tallness;
 
 		if (attention_map==null) {
 			//console.log("EtaoinAI: attention_map = null");
@@ -169,8 +180,8 @@ class EtaoinAI extends A4RuleBasedAI {
 							(tile_y+perceptionRadius)*attention_map.tileHeight, 
 						    location, attention_map, visibilityRegion, occupancyMap, null);
 
-			if (max_anxiety_object.object.name == "communicator" &&
-				max_anxiety_object.object != attention_object &&
+			if (max_anxiety_object.name == "communicator" &&
+				max_anxiety_object != attention_object &&
 				attention_object_l.length>1) {
 				// the communicator is in the pocket of someone, or in some container:
 				let container:A4Object = attention_object_l[attention_object_l.length-2];

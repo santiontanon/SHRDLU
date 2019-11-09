@@ -434,6 +434,10 @@
 	<sentence provenance="background" sentence="space.at('garage-shuttle'[#id], 'location-garage'[#id])"/>
 	<sentence provenance="background" sentence="microscope-table('521'[#id])"/>
 	<sentence provenance="background" sentence="space.at('521'[#id], 'location-as27'[#id])"/>
+	<sentence provenance="background" sentence="metal-3dprinter('metal3dprinter1'[#id])"/>
+	<sentence provenance="background" sentence="metal-3dprinter('metal3dprinter2'[#id])"/>
+	<sentence provenance="background" sentence="plastic-3dprinter('plastic3dprinter1'[#id])"/>
+	<sentence provenance="background" sentence="plastic-3dprinter('plastic3dprinter2'[#id])"/>
 
 	<sentence provenance="background" sentence="batteryrecharge.facility('batteryrecharge.facility'[#id])"/>
 	<sentence provenance="background" sentence="space.at('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>

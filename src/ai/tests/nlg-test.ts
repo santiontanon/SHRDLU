@@ -318,3 +318,5 @@ testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], action.give('etaoin'
 testNLG("perf.inform('1'[#id], #not(verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything]) ) )", "etaoin", "I do not ask anything");
 testNLG("perf.inform('1'[#id], #and(#not(X:verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X)))", "etaoin", "I did not ask anything");
 
+testNLG("perf.inform('1'[#id], #not(X:verb.know-how(E:'etaoin'[#id], action.print(E, [fork]))))", "etaoin", "I do not know how to print a fork");
+

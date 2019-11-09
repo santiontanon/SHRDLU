@@ -1515,42 +1515,49 @@
         </eventRule>
 	</ObjectClass>		
 
-	<ObjectClass class="plastic-cup" super="cup" name="plastic cup">
+	<ObjectClass class="cup" super="item" name="cup"/>
+	<ObjectClass class="plate" super="item" name="cup"/>
+	<ObjectClass class="fork" super="item" name="cup"/>
+	<ObjectClass class="spoon" super="item" name="cup"/>
+	<ObjectClass class="knife" super="item" name="cup"/>
+	<ObjectClass class="chopstick" super="item" name="cup"/>
+
+	<ObjectClass class="plastic-cup" super="cup,plastic" name="plastic cup">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">890</animation>		
 		<onStart>
 			<addPerceptionProperty property="white"/>
 		</onStart>
 	</ObjectClass>	
-	<ObjectClass class="plastic-plate" super="plate" name="plastic plate">
+	<ObjectClass class="plastic-plate" super="plate,plastic" name="plastic plate">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">921</animation>		
 		<onStart>
 			<addPerceptionProperty property="white"/>
 		</onStart>
 	</ObjectClass>	
-	<ObjectClass class="plastic-fork" super="fork" name="plastic fork">
+	<ObjectClass class="plastic-fork" super="fork,plastic" name="plastic fork">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">954</animation>		
 		<onStart>
 			<addPerceptionProperty property="white"/>
 		</onStart>
 	</ObjectClass>	
-	<ObjectClass class="plastic-spoon" super="spoon" name="plastic spoon">
+	<ObjectClass class="plastic-spoon" super="spoon,plastic" name="plastic spoon">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">922</animation>		
 		<onStart>
 			<addPerceptionProperty property="white"/>
 		</onStart>
 	</ObjectClass>	
-	<ObjectClass class="plastic-knife" super="knife" name="plastic knife">
+	<ObjectClass class="plastic-knife" super="knife,plastic" name="plastic knife">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">986</animation>		
 		<onStart>
 			<addPerceptionProperty property="white"/>
 		</onStart>
 	</ObjectClass>	
-	<ObjectClass class="plastic-chopstick" super="chopstick" name="plastic chopstick">
+	<ObjectClass class="plastic-chopstick" super="chopstick,plastic" name="plastic chopstick">
 		<attribute name="tallness" value="0"/>
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">889</animation>		
 		<onStart>

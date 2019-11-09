@@ -1169,6 +1169,7 @@ NLParseTestUnifyingListener("what do I need to print a fork?", o.getSort("perfor
 NLParseTestUnifyingListener("what materials do I need to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for('1'[#id], V, action.print('1'[#id], [fork])))");
 NLParseTestUnifyingListener("what is needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V, verb.need-for(X, V, action.print(X, [fork])))");
 NLParseTestUnifyingListener("what materials are needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for(X, V, action.print(X, [fork])))");
+NLParseTestUnifyingListener("print some pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [pliers]))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

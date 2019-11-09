@@ -321,13 +321,20 @@
     <sort name="pliers" super="tool"/>
 
     <sort name="utensil" super="item"/>
+
     <sort name="fork" super="utensil"/>
+    <sort name="plastic-fork" super="fork,plastic"/>
     <sort name="spoon" super="utensil"/>
+    <sort name="plastic-spoon" super="spoon,plastic"/>
     <sort name="knife" super="utensil"/>
+    <sort name="plastic-knife" super="knife,plastic"/>
     <sort name="chopstick" super="utensil"/>
+    <sort name="plastic-chopstick" super="chopstick,plastic"/>
 
     <sort name="cup" super="item"/>
+    <sort name="plastic-cup" super="cup,plastic"/>
     <sort name="plate" super="item"/>
+    <sort name="plastic-plate" super="plate,plastic"/>
 
     <sort name="clothing" super="item"/>
     <sort name="suit" super="clothing"/>
@@ -548,6 +555,7 @@
     <sort name="verb.happen" super="verb,#stateSort"/>
     <sort name="verb.keep" super="verb"/>
     <sort name="verb.know" super="verb"/>
+    <sort name="verb.know-how" super="verb"/>
     <sort name="verb.mean" super="verb"/>
     <sort name="verb.remember" super="verb.know"/>
     <sort name="verb.try" super="verb"/>

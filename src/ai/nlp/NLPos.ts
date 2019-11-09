@@ -1283,12 +1283,12 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("planet", "planet", o, multitokens_raw);
     this.addUncountableNounPOS("plastic", "plastic", o);
     this.addStandardNounPOS("plastic 3d printer", "plastic-3dprinter", o, multitokens_raw);
-    this.addUncountableNounPOS("plastic chopstick", "plastic-chopstick", o);
-    this.addUncountableNounPOS("plastic cup", "plastic-cup", o);
-    this.addUncountableNounPOS("plastic fork", "plastic-fork", o);
-    this.addUncountableNounPOS("plastic knife", "plastic-knife", o);
-    this.addUncountableNounPOS("plastic plate", "plastic-plate", o);
-    this.addUncountableNounPOS("plastic spoon", "plastic-spoon", o);
+    this.addStandardNounPOS("plastic chopstick", "plastic-chopstick", o, multitokens_raw);
+    this.addStandardNounPOS("plastic cup", "plastic-cup", o, multitokens_raw);
+    this.addStandardNounPOS("plastic fork", "plastic-fork", o, multitokens_raw);
+    this.addStandardNounPOS("plastic knife", "plastic-knife", o, multitokens_raw);
+    this.addStandardNounPOS("plastic plate", "plastic-plate", o, multitokens_raw);
+    this.addStandardNounPOS("plastic spoon", "plastic-spoon", o, multitokens_raw);
     this.addStandardNounPOS("plastic reel", "plastic-reel", o, multitokens_raw);
     this.addStandardNounPOS("plate", "plate", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("pliers", "pliers", Term.fromString("noun('pliers'[pliers], [singular])", o), 1.0));
@@ -1548,6 +1548,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.investigate", "investigate","investigates","investigated","investigated","investigating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.keep", "keep","keeps","kept","kept","keeping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.know-how", "know how","knows how","knew how","known how","knowing how", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.embark", "embark","embarks","embarked","embarked","embarking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "list","lists","listed","listed","listing", false, multitokens_raw, o);
