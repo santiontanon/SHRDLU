@@ -2,9 +2,9 @@ class A4Animation {
     static fromXML(xml:Element, game:A4Game) : A4Animation
     {
         // <animation name="curious" dx="1" dy="1" period="8" looping="true" file="graphics2x.png">74,-1</animation>
-        var a:A4Animation = new A4Animation();
+        let a:A4Animation = new A4Animation();
 
-        var file:string = xml.getAttribute("file");
+        let file:string = xml.getAttribute("file");
         a.gf = game.getGraphicFile(file);
         if (a.gf == null) console.log("A4Animation: cannot get graphic file " + file);
         a.widthInTiles = Number(xml.getAttribute("dx"));
@@ -12,8 +12,8 @@ class A4Animation {
         a.period = Number(xml.getAttribute("period"));
         if (xml.getAttribute("looping") == "true") a.looping = true;
 
-        var sequenceText:string = xml.firstChild.nodeValue;
-        var sequenceFrames:string[] = sequenceText.split(",");
+        let sequenceText:string = xml.firstChild.nodeValue;
+        let sequenceFrames:string[] = sequenceText.split(",");
         a.length = sequenceFrames.length;
         a.sequence = [];
         for(let frame of sequenceFrames) {
@@ -25,7 +25,7 @@ class A4Animation {
 
     static fromAnimation(a:A4Animation)
     {
-        var a2:A4Animation = new A4Animation();
+        let a2:A4Animation = new A4Animation();
 
         a2.gf = a.gf;
         a2.widthInTiles = a.widthInTiles;
@@ -46,7 +46,7 @@ class A4Animation {
 
     saveToXML(name:string) : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         xmlString += "<animation ";
         xmlString += "name=\"" + name + "\" ";
         xmlString += "dx=\"" + this.widthInTiles + "\" ";
@@ -96,11 +96,11 @@ class A4Animation {
 
     draw(x:number, y:number)
     {
-        var t:number = this.getTile();
+        let t:number = this.getTile();
         if (t<0) return;
         for(let i:number = 0;i<this.heightInTiles;i++) {
             for(let j:number = 0;j<this.widthInTiles;j++) {
-                var tile:GLTile = this.gf.getTile(t+j + i*this.gf.tilesPerRow);
+                let tile:GLTile = this.gf.getTile(t+j + i*this.gf.tilesPerRow);
                 tile.draw(x+(j*tile.width), y+(i*tile.height));
             }
         }
@@ -109,11 +109,11 @@ class A4Animation {
 
     drawDark(x:number, y:number)
     {
-        var t:number = this.getTile();
+        let t:number = this.getTile();
         if (t<0) return;
         for(let i:number = 0;i<this.heightInTiles;i++) {
             for(let j:number = 0;j<this.widthInTiles;j++) {
-                var tile:GLTile = this.gf.getTileDark(t+j + i*this.gf.tilesPerRow);
+                let tile:GLTile = this.gf.getTileDark(t+j + i*this.gf.tilesPerRow);
                 if (tile!=null) tile.draw(x+(j*tile.width), y+(i*tile.height));
             }
         }
@@ -122,40 +122,20 @@ class A4Animation {
 
     drawWithZoom(x:number, y:number, zoom:number)
     {
-        var t:number = this.getTile();
+        let t:number = this.getTile();
         if (t<0) return;
         for(let i:number = 0;i<this.heightInTiles;i++) {
             for(let j:number = 0;j<this.widthInTiles;j++) {
-                var tile:GLTile = this.gf.getTile(t+j + i*this.gf.tilesPerRow);
+                let tile:GLTile = this.gf.getTile(t+j + i*this.gf.tilesPerRow);
                 if (tile!=null) tile.drawWithZoom(x+(j*tile.width), y+(i*tile.height), zoom);
             }
         }
     }
 
-/*
-    drawWithAlpha(x:number, y:number, alpha:number)
-    {
-        var t:number = this.getTile();
-    //    output_debug_message("A4Animation::draw %i\n",t);
-        if (t<0) return;
-        for(let i:number = 0;i<this.heightInTiles;i++) {
-            for(let j:number = 0;j<this.widthInTiles;j++) {
-                var tile:GLTile = this.gf.getTile(t+j + i*this.gf.tilesPerRow);
-    //            output_debug_message("A4Animation::draw(2) %p\n",tile);
-                tile.drawWithAlpha(x+(j*tile.width), y+(i*tile.height), alpha);
-            }
-        }
-    }
-*/
-
-
-/*
-    bool isCompleted();
-*/
 
     seeThrough() : boolean
     {
-        var tile:number = this.getTile();
+        let tile:number = this.getTile();
         if (tile<0) return true;
 
         if (this.gf.tileSeeThrough[tile]==1) return false;

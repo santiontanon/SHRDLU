@@ -13,10 +13,10 @@ class A4Object {
     loadObjectAdditionalContent(xml:Element, game:A4Game, of:A4ObjectFactory, objectsToRevisit_xml:Element[], objsctsToRevisit_object:A4Object[])
     {
         // add animations:
-        var animations_xml:Element[] = getElementChildrenByTag(xml, "animation");
+        let animations_xml:Element[] = getElementChildrenByTag(xml, "animation");
         for(let i:number = 0;i<animations_xml.length;i++) {
-            var animation_xml:Element = animations_xml[i];
-            var a:A4Animation = A4Animation.fromXML(animation_xml, game);
+            let animation_xml:Element = animations_xml[i];
+            let a:A4Animation = A4Animation.fromXML(animation_xml, game);
             
             for(let idx:number = 0;idx<A4_N_ANIMATIONS;idx++) {
                 if (animationNames[idx] == animation_xml.getAttribute("name")) {
@@ -29,12 +29,12 @@ class A4Object {
         }
             
         // set attributes (we allow them to be either "attribute" tags, or the "property" tags set by TILED)::
-        var canWalkSet:boolean = false;
-        var canSwimSet:boolean = false;
-        var attributes_xml:Element[] = getElementChildrenByTag(xml, "attribute");
+        let canWalkSet:boolean = false;
+        let canSwimSet:boolean = false;
+        let attributes_xml:Element[] = getElementChildrenByTag(xml, "attribute");
         for(let i:number = 0;i<attributes_xml.length;i++) {
-            var attribute_xml:Element = attributes_xml[i];
-            var a_name:string = attribute_xml.getAttribute("name");
+            let attribute_xml:Element = attributes_xml[i];
+            let a_name:string = attribute_xml.getAttribute("name");
             
             if (a_name == "canSwim") {
                 canSwimSet = true;
@@ -48,12 +48,12 @@ class A4Object {
                 console.error("Unknown attribute: " + a_name + " for object " + xml.getAttribute("class"));
             }
         }
-        var properties_l_xml:Element = getFirstElementChildByTag(xml, "properties");
+        let properties_l_xml:Element = getFirstElementChildByTag(xml, "properties");
         if (properties_l_xml != null) {
-            var properties_xml:Element[] = getElementChildrenByTag(properties_l_xml, "property");
+            let properties_xml:Element[] = getElementChildrenByTag(properties_l_xml, "property");
             for(let i:number = 0;i<properties_xml.length;i++) {
-                var attribute_xml:Element = properties_xml[i];
-                var a_name:string = attribute_xml.getAttribute("name");
+                let attribute_xml:Element = properties_xml[i];
+                let a_name:string = attribute_xml.getAttribute("name");
                 
                 if (a_name == "canSwim") {
                     canSwimSet = true;
@@ -77,15 +77,15 @@ class A4Object {
         // loading scripts:
         {
             // on start:
-            var onstarts_xml:Element[] = getElementChildrenByTag(xml, "onStart");
+            let onstarts_xml:Element[] = getElementChildrenByTag(xml, "onStart");
             for(let i:number = 0;i<onstarts_xml.length;i++) {
-                var onstart_xml:Element = onstarts_xml[i];
-                var tmpq:A4ScriptExecutionQueue = null;
-//                var onstart_xml_l:NodeListOf<Element> = onstart_xml.children;
-                var onstart_xml_l:HTMLCollection = onstart_xml.children;
+                let onstart_xml:Element = onstarts_xml[i];
+                let tmpq:A4ScriptExecutionQueue = null;
+//                let onstart_xml_l:NodeListOf<Element> = onstart_xml.children;
+                let onstart_xml_l:HTMLCollection = onstart_xml.children;
                 for(let j:number = 0;j<onstart_xml_l.length;j++) {
-                    var script_xml:Element = onstart_xml_l[j];
-                    var s:A4Script = A4Script.fromXML(script_xml);
+                    let script_xml:Element = onstart_xml_l[j];
+                    let s:A4Script = A4Script.fromXML(script_xml);
                     if (tmpq==null) tmpq = new A4ScriptExecutionQueue(this, null, null, null);
                     tmpq.scripts.push(s);
                 }
@@ -93,23 +93,24 @@ class A4Object {
             }
             
             // on end:
-            var onends_xml:Element[] = getElementChildrenByTag(xml, "onEnd");
+            let onends_xml:Element[] = getElementChildrenByTag(xml, "onEnd");
             for(let i:number = 0;i<onends_xml.length;i++) {
-                var onend_xml:Element = onends_xml[i];
-//                var script_xml_l:NodeListOf<Element> = onend_xml.children;
-                var script_xml_l:HTMLCollection = onend_xml.children;
+                let onend_xml:Element = onends_xml[i];
+//                let script_xml_l:NodeListOf<Element> = onend_xml.children;
+                let script_xml_l:HTMLCollection = onend_xml.children;
                 for(let j:number = 0;j<script_xml_l.length;j++) {
-                    var script_xml:Element = script_xml_l[j];
+                    let script_xml:Element = script_xml_l[j];
+                    let s:A4Script = A4Script.fromXML(script_xml);
                     if (this.eventScripts[A4_EVENT_END] == null) this.eventScripts[A4_EVENT_END] = [];
                     this.eventScripts[A4_EVENT_END].push(new A4EventRule(A4_EVENT_END, s, false, 0, 0));
                 }
             }
                     
             // event rules:
-            var eventrules_xml:Element[] = getElementChildrenByTag(xml, "eventRule");
+            let eventrules_xml:Element[] = getElementChildrenByTag(xml, "eventRule");
             for(let i:number = 0;i<eventrules_xml.length;i++) {
-                var rule_xml:Element = eventrules_xml[i];
-                var r:A4EventRule = A4EventRule.fromXML(rule_xml);
+                let rule_xml:Element = eventrules_xml[i];
+                let r:A4EventRule = A4EventRule.fromXML(rule_xml);
                 if (this.eventScripts[r.event] == null) this.eventScripts[r.event] = [];
                 this.eventScripts[r.event].push(r);
             }
@@ -125,7 +126,7 @@ class A4Object {
 
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
-        var name:string = attribute_xml.getAttribute("name");
+        let name:string = attribute_xml.getAttribute("name");
         
         /*
         if (name == "ID") {
@@ -193,7 +194,7 @@ class A4Object {
 
     pushScripttoExecute(script:A4Script, map:A4Map, game:A4Game, otherCharacter:A4Character)
     {
-        var sq:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this, map, game, otherCharacter);
+        let sq:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this, map, game, otherCharacter);
         sq.scripts.push(script);
         this.addScriptQueue(sq);        
     }
@@ -201,7 +202,7 @@ class A4Object {
 
     saveToXML(game:A4Game, type:number, saveLocation:boolean) : string
     {
-        var xmlString:string = "<object id=\"" + this.ID + "\"";
+        let xmlString:string = "<object id=\"" + this.ID + "\"";
 
         if (type==0) {
             xmlString +=" type=\""+this.sort.name + "\"";
@@ -236,7 +237,7 @@ class A4Object {
   
     saveToXMLForMainFile(game:A4Game, tag:string, mapNumber:number) : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         xmlString += "<" + tag + " id=\"" + this.ID + "\"" + 
                                  " type=\""+ this.sort.name +"\"" +
                                  " completeRedefinition=\"true\"" +
@@ -253,7 +254,7 @@ class A4Object {
     
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         
         for(let i:number = 0;i<A4_N_ANIMATIONS;i++) {
             if (this.animations[i]!=null) {
@@ -280,7 +281,7 @@ class A4Object {
         if (this.pixel_height != 0) xmlString += this.saveObjectAttributeToXML("pixel_height",this.pixel_height) + "\n";
         if (!this.drawDarkIfNoLight) xmlString += this.saveObjectAttributeToXML("drawDarkIfNoLight",this.drawDarkIfNoLight) + "\n";
 
-        var onStarttagOpen:boolean = false;
+        let onStarttagOpen:boolean = false;
         for(let v in this.storyState) {
             if (!onStarttagOpen) {
                 xmlString += "<onStart>\n";
@@ -354,12 +355,12 @@ class A4Object {
         if (this.eventScripts[A4_EVENT_STORYSTATE]!=null) {
             for(let r of this.eventScripts[A4_EVENT_STORYSTATE]) r.execute(this,this.map,game,null);
         }
-        var toDelete:Agenda[] = [];
+        let toDelete:Agenda[] = [];
         for(let a of this.agendas) {
             if (a.execute(this,this.map,game,null)) toDelete.push(a);
         }
         for(let a of toDelete) {
-            var idx:number = this.agendas.indexOf(a);
+            let idx:number = this.agendas.indexOf(a);
             this.agendas.splice(idx, 1);
         }
         
@@ -462,11 +463,11 @@ class A4Object {
 
     executeScriptQueues(game:A4Game)
     {
-        var toDelete:A4ScriptExecutionQueue[] = [];
+        let toDelete:A4ScriptExecutionQueue[] = [];
         for(let seb of this.scriptQueues) {
             while(true) {
-                var s:A4Script = seb.scripts[0];
-                var retval:number = s.execute((seb.object == null ? this:seb.object),
+                let s:A4Script = seb.scripts[0];
+                let retval:number = s.execute((seb.object == null ? this:seb.object),
                                               (seb.map == null ? this.map:seb.map),
                                               (seb.game == null ? game:seb.game),
                                               seb.otherCharacter);
@@ -485,7 +486,7 @@ class A4Object {
             }
         }
         for(let seb of toDelete) {
-            var idx:number = this.scriptQueues.indexOf(seb);
+            let idx:number = this.scriptQueues.indexOf(seb);
             this.scriptQueues.splice(idx, 1);
         }
     }
@@ -533,7 +534,7 @@ class A4Object {
         if (this.pixel_width != 0) return this.pixel_width;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_width_cache;
         if (this.currentAnimation<0) return 0;
-        var a:A4Animation = this.animations[this.currentAnimation];
+        let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return 0;
         this.pixel_width_cache = a.getPixelWidth();
         this.pixel_height_cache = a.getPixelHeight();
@@ -547,7 +548,7 @@ class A4Object {
         if (this.pixel_height != 0) return this.pixel_height;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_height_cache;
         if (this.currentAnimation<0) return 0;
-        var a:A4Animation = this.animations[this.currentAnimation];
+        let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return 0;
         this.pixel_width_cache = a.getPixelWidth();
         this.pixel_height_cache = a.getPixelHeight();
@@ -596,7 +597,7 @@ class A4Object {
 
     seeThrough() : boolean
     {
-        var a:A4Animation = this.animations[this.currentAnimation];
+        let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return true;
         return a.seeThrough();
     }
@@ -604,8 +605,8 @@ class A4Object {
 
     collision(x2:number, y2:number, dx2:number, dy2:number):boolean
     {
-        var dx:number = this.getPixelWidth();
-        var dy:number = this.getPixelHeight()-this.tallness;
+        let dx:number = this.getPixelWidth();
+        let dy:number = this.getPixelHeight()-this.tallness;
         if (this.x+dx > x2 && x2+dx2 > this.x &&
             (this.y+this.tallness)+dy > y2 && y2+dy2 > (this.y+this.tallness)) return true;
         return false;        
@@ -614,10 +615,10 @@ class A4Object {
 
     collisionObject(o2:A4Object):boolean
     {
-        var dx:number = this.getPixelWidth();
-        var dy:number = this.getPixelHeight()-this.tallness;
-        var dx2:number = o2.getPixelWidth();
-        var dy2:number = o2.getPixelHeight()-o2.tallness;
+        let dx:number = this.getPixelWidth();
+        let dy:number = this.getPixelHeight()-this.tallness;
+        let dx2:number = o2.getPixelWidth();
+        let dy2:number = o2.getPixelHeight()-o2.tallness;
         if (this.x+dx > o2.x && o2.x+dx2 > this.x &&
             (this.y+this.tallness)+dy > (o2.y+o2.tallness) && (o2.y+o2.tallness)+dy2 > (this.y+this.tallness)) return true;
         return false;
@@ -626,10 +627,10 @@ class A4Object {
 
     collisionObjectOffset(xoffs:number, yoffs:number, o2:A4Object):boolean
     {
-        var dx:number = this.getPixelWidth();
-        var dy:number = this.getPixelHeight()-this.tallness;
-        var dx2:number = o2.getPixelWidth();
-        var dy2:number = o2.getPixelHeight()-o2.tallness;
+        let dx:number = this.getPixelWidth();
+        let dy:number = this.getPixelHeight()-this.tallness;
+        let dx2:number = o2.getPixelWidth();
+        let dy2:number = o2.getPixelHeight()-o2.tallness;
         if (this.x+xoffs+dx > o2.x && o2.x+dx2 > this.x+xoffs &&
             (this.y+this.tallness)+yoffs+dy > (o2.y+o2.tallness) && (o2.y+o2.tallness)+dy2 > (this.y+this.tallness)+yoffs) return true;
         return false;
@@ -692,13 +693,13 @@ class A4Object {
 
     pixelDistance(o2:A4Object) : number
     {
-        var dx:number = 0;
+        let dx:number = 0;
         if (this.x > o2.x+o2.getPixelWidth()) {
             dx = this.x - (o2.x+o2.getPixelWidth());
         } else if (o2.x > this.x+this.getPixelWidth()) {
             dx = o2.x - (this.x+this.getPixelWidth());
         }
-        var dy:number = 0;
+        let dy:number = 0;
         if (this.y + this.tallness > o2.y+o2.getPixelHeight()) {
             dy = this.y + this.tallness - (o2.y+o2.getPixelHeight());
         } else if (o2.y + o2.tallness > this.y+this.getPixelHeight()) {
@@ -719,7 +720,7 @@ class A4Object {
     {
         for(let a2 of this.agendas) {
             if (a2.name == agenda) {
-                var idx:number = this.agendas.indexOf(a2);
+                let idx:number = this.agendas.indexOf(a2);
                 this.agendas.splice(idx,1);
                 return;
             }

@@ -45,8 +45,8 @@ class A4EventRule {
 
     static fromXML(xml:Element) : A4EventRule
     {
-        var r:A4EventRule = new A4EventRule(0, null, true, 0, 0);
-        var event_name:string = xml.getAttribute("event");
+        let r:A4EventRule = new A4EventRule(0, null, true, 0, 0);
+        let event_name:string = xml.getAttribute("event");
         if (event_name == null) {
             console.error("A4EventRule: no event in rule!");
             return null;
@@ -85,7 +85,7 @@ class A4EventRule {
             } else if (event_name == "end") {
                 r.event = A4_EVENT_END;
             } else if (event_name == "story_state") {
-                var scope_name:string = xml.getAttribute("scope");
+                let scope_name:string = xml.getAttribute("scope");
                 if (scope_name!=null) {
                     // it's a story state rule:
                     r.event = A4_EVENT_STORYSTATE;
@@ -126,8 +126,8 @@ class A4EventRule {
                 /*
             } else if (event_name == "action_talk") {
                 r.event = A4_EVENT_ACTION_TALK;
-                var tmp:string = xml.getAttribute("performative");
-                var found:boolean = false;
+                let tmp:string = xml.getAttribute("performative");
+                let found:boolean = false;
                 for(let i:number = 0;i<talkPerformativeNames.length;i++) {
                     if (tmp == talkPerformativeNames[i]) {
                         r.performative = i;
@@ -166,8 +166,8 @@ class A4EventRule {
         r.once = false;
         if (xml.getAttribute("once") == "true") r.once = true;
 
-//        var script_xml_l:NodeListOf<Element> = xml.children;
-        var script_xml_l:HTMLCollection = xml.children;
+//        let script_xml_l:NodeListOf<Element> = xml.children;
+        let script_xml_l:HTMLCollection = xml.children;
         for(let i:number = 0;i<script_xml_l.length;i++) {
             r.effects.push(A4Script.fromXML(script_xml_l[i]));
         }
@@ -178,7 +178,7 @@ class A4EventRule {
     
     static fromA4EventRule(rule:A4EventRule) : A4EventRule
     {
-        var r:A4EventRule = new A4EventRule(rule.event, null, rule.once, rule.time, rule.period);
+        let r:A4EventRule = new A4EventRule(rule.event, null, rule.once, rule.time, rule.period);
         r.startTime = rule.startTime;
         r.executed = rule.executed;
         r.variable = rule.variable;
@@ -197,7 +197,7 @@ class A4EventRule {
 
     saveToXML() : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         if (this.once && this.executed) return xmlString;   // it has already been executed, so, no need to save it!
         
         // event rules:
@@ -314,8 +314,8 @@ class A4EventRule {
     {
         if (this.once && this.executed) return SCRIPT_FINISHED;
         this.executed = true;
-        var retValue:number = SCRIPT_FINISHED;
-        var seq:A4ScriptExecutionQueue = null;
+        let retValue:number = SCRIPT_FINISHED;
+        let seq:A4ScriptExecutionQueue = null;
         for(let s of this.effects) {
             if (seq == null) {
                 s.reset();
@@ -355,7 +355,7 @@ class A4EventRule {
             case A4_EVENT_TIMER:
                 {
                     if (this.startTime<0) this.startTime = game.cycle;
-                    var t:number = game.cycle - this.startTime;
+                    let t:number = game.cycle - this.startTime;
                     if (this.period!=0) {
                         if ((t%this.period) == this.time) return this.executeEffects(o, map, game, otherCharacter);
                     } else {

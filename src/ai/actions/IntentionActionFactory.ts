@@ -20,6 +20,7 @@ class IntentionActionFactory {
 		if (xml.getAttribute("type") == "EtaoinSwitchOn_IntentionAction") return EtaoinSwitchOn_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinTalk_IntentionAction") return EtaoinTalk_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinConnectTo_IntentionAction") return EtaoinConnectTo_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "Etaoin3DPrint_IntentionAction") return Etaoin3DPrint_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "Memorize_IntentionAction") return Memorize_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotFollow_IntentionAction") return RobotFollow_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotGive_IntentionAction") return RobotGive_IntentionAction.loadFromXML(xml, ai);

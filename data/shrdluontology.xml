@@ -302,13 +302,32 @@
 
     <sort name="test-tube" super="tube"/>
 
+    <sort name="material" super="object"/>
+    <sort name="plastic" super="material"/>
+    <sort name="metal" super="material"/>
+    <sort name="iron" super="metal"/>
+    <sort name="aluminium" super="metal"/>
+    <sort name="copper" super="metal"/>
+
     <sort name="reel" super="item"/>
-    <sort name="plastic-reel" super="reel"/>
+    <sort name="plastic-reel" super="reel,plastic"/>
+    <sort name="iron-reel" super="reel,iron"/>
+    <sort name="aluminium-reel" super="reel,aluminium"/>
+    <sort name="copper-reel" super="reel,copper"/>
 
     <sort name="tool" super="item"/>
     <sort name="wrench" super="tool"/>
     <sort name="screwdriver" super="tool"/>
     <sort name="pliers" super="tool"/>
+
+    <sort name="utensil" super="item"/>
+    <sort name="fork" super="utensil"/>
+    <sort name="spoon" super="utensil"/>
+    <sort name="knife" super="utensil"/>
+    <sort name="chopstick" super="utensil"/>
+
+    <sort name="cup" super="item"/>
+    <sort name="plate" super="item"/>
 
     <sort name="clothing" super="item"/>
     <sort name="suit" super="clothing"/>
@@ -540,6 +559,7 @@
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
     <sort name="verb.need" super="verb,#stateSort"/>
+    <sort name="verb.need-for" super="verb"/>
     <sort name="verb.obtain" super="verb"/>
     <sort name="verb.own" super="verb,relation.owns"/>
     <sort name="verb.parse" super="verb"/>
@@ -619,7 +639,6 @@
     <sort name="action.memorize" super="actionverb"/>
     <sort name="action.erase" super="actionverb"/>
     <sort name="action.print" super="actionverb"/>
-    <sort name="action.3dprint" super="actionverb"/>
     <sort name="action.answer.predicate" super="actionverb"/>
     <sort name="action.answer.predicate-negated" super="actionverb"/>
     <sort name="action.answer.whereis" super="actionverb"/>

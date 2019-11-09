@@ -237,9 +237,9 @@
 	<sentence provenance="background" sentence="relation.howto(action.use(X, 'communicator'[#id]), automatic('communicator'[#id]))"/>
 	<sentence provenance="background" sentence="~space.at(X,'spacer-valley'[#id]) ; relation.howto(verb.go-to(X, 'trantor-crater'[#id]), verb.need(X, [shuttle]))"/>
 	<sentence provenance="background" sentence="~human(X) ; relation.howto(verb.die(X), verb.run-out-of(X, [oxygen]))"/>
-
 	<sentence provenance="background" sentence="~verb.need(X, verb.help(Y, X, Z)) ; relation.howto(verb.help(Y, X), Z)"/>
-	<!--sentence provenance="background" sentence="~verb.need(X, verb.help(Y, X, Z)) ; relation.howto(verb.help(Y, X, Z), Z)"/-->
+	<sentence provenance="background" sentence="relation.howto(action.print(X), verb.ask(X, 'etaoin'[#id]))"/>
+	<sentence provenance="background" sentence="relation.howto(action.print(X, Y), verb.ask(X, 'etaoin'[#id]))"/>
 
 	<!-- what can things do -->
 	<!--sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/-->

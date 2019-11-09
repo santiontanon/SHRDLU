@@ -10,7 +10,7 @@ class A4AICharacter extends A4Character {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
         
         if (a_name == "sightRadius") {
             this.sightRadius = Number(attribute_xml.getAttribute("value"));
@@ -29,14 +29,14 @@ class A4AICharacter extends A4Character {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("sightRadius",this.sightRadius) + "\n";
 
         xmlString += this.saveObjectAttributeToXML("AI.period",this.AI.period) + "\n";
         xmlString += this.saveObjectAttributeToXML("AI.cycle",this.AI.cycle) + "\n";
 
-        var tagOpen:boolean = false;
+        let tagOpen:boolean = false;
 
         for(let map_name of this.AI.maps_familiar_with) {
             if (!tagOpen) {

@@ -63,9 +63,9 @@ class A4EngineApp {
         this.SFXM = new SFXManager();
 
         if (this.game_path!=null && this.game_filename!=null) {
-            var fullPath:string = this.game_path + "/" + this.game_filename;
+            let fullPath:string = this.game_path + "/" + this.game_filename;
 
-            var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+            let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
             xmlhttp.overrideMimeType("text/xml");
             xmlhttp.open("GET", fullPath, false); 
             xmlhttp.send();
@@ -92,24 +92,23 @@ class A4EngineApp {
 
     loadConfiguration()
     {
-        var config_xml:Element = null;
+        let config_xml:Element = null;
 
-        var configString:string = localStorage.getItem(A4CONFIG_STORAGE_KEY);
-//        var configString:string = null;
+        let configString:string = localStorage.getItem(A4CONFIG_STORAGE_KEY);
         if (configString != null) {
             console.log("Found config stored in the browser, loading it...");
             // if we can find a configuration saved in the browser, load it:
-            var oParser:DOMParser = new DOMParser();
+            let oParser:DOMParser = new DOMParser();
             config_xml = oParser.parseFromString(configString, "text/xml").documentElement;
         }
         
         if (config_xml!=null) {
-            var defaultGame:Element[] = getElementChildrenByTag(config_xml,"defaultGame");
-            var volume_xml:Element[] = getElementChildrenByTag(config_xml,"volume");
-            var controls_xml:Element[] = getElementChildrenByTag(config_xml,"controls");
+            let defaultGame:Element[] = getElementChildrenByTag(config_xml,"defaultGame");
+            let volume_xml:Element[] = getElementChildrenByTag(config_xml,"volume");
+            let controls_xml:Element[] = getElementChildrenByTag(config_xml,"controls");
             if (defaultGame != null && defaultGame.length > 0) {
-                var path:string = defaultGame[0].getAttribute("path");
-                var gameFile:string = defaultGame[0].getAttribute("gamefile");
+                let path:string = defaultGame[0].getAttribute("path");
+                let gameFile:string = defaultGame[0].getAttribute("gamefile");
                 if (path != null) {
                     this.game_path = path;
                 } else {
@@ -135,7 +134,7 @@ class A4EngineApp {
             }
 
             if (controls_xml != null && controls_xml.length > 0) {
-                var key_xml:Element = null;
+                let key_xml:Element = null;
                 key_xml = getFirstElementChildByTag(controls_xml[0],"messageconsole_up"); this.key_messageconsole_up = Number(key_xml.getAttribute("key"));
                 key_xml = getFirstElementChildByTag(controls_xml[0],"messageconsole_down"); this.key_messageconsole_down = Number(key_xml.getAttribute("key"));
                 key_xml = getFirstElementChildByTag(controls_xml[0],"inventory_toggle"); this.key_inventory_toggle = Number(key_xml.getAttribute("key"));
@@ -181,7 +180,7 @@ class A4EngineApp {
 
     saveConfiguration()
     {
-        var configString:string = "<A4Configuration>";
+        let configString:string = "<A4Configuration>";
 
         configString += "<volume sfx=\""+this.SFX_volume+"\"/>"
 
@@ -212,7 +211,7 @@ class A4EngineApp {
     cycle(mouse_x:number, mouse_y:number, k:KeyboardState) : boolean
     {
         try{
-            var old_state:number = this.state;
+            let old_state:number = this.state;
           
             if (this.state_cycle == 0) console.log("First Cycle started for state " + this.state + "...");
 
@@ -336,9 +335,9 @@ class A4EngineApp {
 
     intro_cycle(k:KeyboardState) : number
     {    
-        var textShowTime:number = 600;
-        var sceneDuration:number = SHRDLU_FADEIN_TIME*2+textShowTime;
-        var currentScene:number = Math.floor(this.state_cycle / sceneDuration);
+        let textShowTime:number = 600;
+        let sceneDuration:number = SHRDLU_FADEIN_TIME*2+textShowTime;
+        let currentScene:number = Math.floor(this.state_cycle / sceneDuration);
 
         if (k.key_press(KEY_CODE_ESCAPE)) {
             if (this.state_cycle < 350) {
@@ -366,7 +365,7 @@ class A4EngineApp {
     intro_draw()
     {
         // each of these parts is in screen for SHRDLU_FADEIN_TIME*2+300 cycles
-        var images:string[] = ["data/braingames.png",
+        let images:string[] = ["data/braingames.png",
                                "data/cutscene-intro1.png",
                                "data/cutscene-intro1.png",
                                "data/cutscene-intro1.png",
@@ -377,7 +376,7 @@ class A4EngineApp {
                                "data/cutscene-intro3.png",
                                "data/cutscene-intro3.png",
                                null];
-        var text:string[] = [null,
+        let text:string[] = [null,
                              "Planet Earth, Sol system, year 2304.",
                              "Despite significant technological\nadvancements, planet Earth was still\nhumanity's only home.",
                              "But that was about to change...",
@@ -388,25 +387,25 @@ class A4EngineApp {
                              "The fleet consisted of 16 ships, each\nheaded for a different nearby star,\nwith the hope of finding a new home...",
                              "One of them was sent on a 48 year\njourney to nearby Tau Ceti, where a\nplanet called Aurora was one of the\nmost promising alternatives.",
                              "However, not everything unfolded\naccording to plan..."];        
-        var textShowTime:number = 600;
-        var sceneDuration:number = SHRDLU_FADEIN_TIME*2+textShowTime;
-        var currentScene:number = Math.floor(this.state_cycle / sceneDuration);
-        var sceneTime:number = this.state_cycle - currentScene*sceneDuration;
-        var f1:number = 1.0;
+        let textShowTime:number = 600;
+        let sceneDuration:number = SHRDLU_FADEIN_TIME*2+textShowTime;
+        let currentScene:number = Math.floor(this.state_cycle / sceneDuration);
+        let sceneTime:number = this.state_cycle - currentScene*sceneDuration;
+        let f1:number = 1.0;
 
         if (currentScene < 11) {            
             ctx.save();
             ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
             if (images[currentScene] != null) {
-                var img_bg:GLTile = this.game.GLTM.get(images[currentScene]);
+                let img_bg:GLTile = this.game.GLTM.get(images[currentScene]);
                 if (img_bg != null) {
                     if (currentScene == 0) img_bg.draw(40,72);
                                       else img_bg.draw(0,0);
                 }
             }
             if (text[currentScene] != null) {
-                var lines:string[] = text[currentScene].split("\n");
-                var y:number = 192-lines.length*10;
+                let lines:string[] = text[currentScene].split("\n");
+                let y:number = 192-lines.length*10;
                 for(let line of lines) {
                     fillTextTopLeft(line, 8, y, fontFamily8px, MSX_COLOR_WHITE);
                     y+=10;
@@ -441,7 +440,7 @@ class A4EngineApp {
             // background:
             f1 = sceneTime/800.0;
             if (f1>1) f1 = 1;
-            var img_bg:GLTile = this.game.GLTM.get("data/shrdlu-title-bg.png");
+            let img_bg:GLTile = this.game.GLTM.get("data/shrdlu-title-bg.png");
             if (img_bg != null) img_bg.draw(0,Math.floor((1-f1)*64));
 
             // title:
@@ -453,10 +452,10 @@ class A4EngineApp {
                     this.intro_logofader = new FizzleFade(192,60);
                 }
 
-                var img_logo:GLTile = this.game.GLTM.get("data/shrdlu-title-logo.png");
+                let img_logo:GLTile = this.game.GLTM.get("data/shrdlu-title-logo.png");
                 if (img_logo != null) {
                     for(let i:number = 0;i<25;i++) {
-                        var xy:[number,number] = this.intro_logofader.nextPixelToFizzle();
+                        let xy:[number,number] = this.intro_logofader.nextPixelToFizzle();
                         if (xy != null) {
                             this.intro_logoaux.getContext("2d").drawImage(img_logo.src, xy[0],xy[1],1,1,xy[0],xy[1],1,1);
                         }
@@ -467,7 +466,7 @@ class A4EngineApp {
 
             // title:
             if (sceneTime>=550) {
-                var img_credits:GLTile = this.game.GLTM.get("data/shrdlu-title-credits.png");
+                let img_credits:GLTile = this.game.GLTM.get("data/shrdlu-title-credits.png");
                 if (img_credits != null) img_credits.draw(32,176);
             }
             ctx.restore();
@@ -482,13 +481,13 @@ class A4EngineApp {
             this.titlescreen_state = 0;
             this.titlescreen_timer = 0;
             BInterface.reset();
-            var menuItems:string[] = [];
-            var menuCallbacks:((any, number) => void)[] = [];
+            let menuItems:string[] = [];
+            let menuCallbacks:((any, number) => void)[] = [];
 
             menuItems.push("Play");
             menuCallbacks.push(
                 function(arg:any, ID:number) {
-                        var app = <A4EngineApp>arg;
+                        let app = <A4EngineApp>arg;
                         if (app.titlescreen_state == 2) return;
                         app.titlescreen_state = 2;
                         app.titlescreen_timer = 0;
@@ -499,26 +498,26 @@ class A4EngineApp {
                 menuItems.push("load");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                        var app = <A4EngineApp>arg;
+                        let app = <A4EngineApp>arg;
                         if (app.titlescreen_state == 2) return;
 
-                        var menuItems:string[] = [];
-                        var menuCallbacks:((any, number) => void)[] = [];
+                        let menuItems:string[] = [];
+                        let menuCallbacks:((any, number) => void)[] = [];
 
                         for(let i:number = 0;i<4;i++) {
-                            var saveName:string = app.game.checkSaveGame("slot" + (i+1));
+                            let saveName:string = app.game.checkSaveGame("slot" + (i+1));
                             if (saveName!=null) {
                                 menuItems.push("slot" + (i+1) + ": " + saveName);
                                 menuCallbacks.push(
                                     function(arg:any, ID:number) {
                                             ID -= 9;    // convert from menu item ID to slot ID
-                                            var app = <A4EngineApp>arg;
-                                            var xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
+                                            let app = <A4EngineApp>arg;
+                                            let xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
                                             console.log("Decompresed string is: " + xmlString.length);        
 //                                            console.log(xmlString);
-                                            var dp:DOMParser = new DOMParser();
-                                            var xml:Document = dp.parseFromString(xmlString, "text/xml");
-                                            var gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
+                                            let dp:DOMParser = new DOMParser();
+                                            let xml:Document = dp.parseFromString(xmlString, "text/xml");
+                                            let gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
 
 //                                            console.log(xml);
                                             app.titlescreen_state = 3;
@@ -536,14 +535,14 @@ class A4EngineApp {
                         menuItems.push("back");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {
-                                     var app = <A4EngineApp>arg;
+                                     let app = <A4EngineApp>arg;
                                      BInterface.pop();
                                });
                         BInterface.push();
                         createShrdluMenu(menuItems,menuCallbacks,  
                                          fontFamily32px,32,app.screen_width/2-10*8*PIXEL_SIZE,app.screen_height/2-4*8*PIXEL_SIZE,20*8*PIXEL_SIZE,7*8*PIXEL_SIZE,0,10,app.GLTM);
                         for(let i:number = 0;i<4;i++) {
-                            var saveName:string = app.game.checkSaveGame("slot" + (i+1));
+                            let saveName:string = app.game.checkSaveGame("slot" + (i+1));
                             if (saveName == null) {
                                 BInterface.disable(i+10);
                             }
@@ -553,7 +552,7 @@ class A4EngineApp {
             menuItems.push("Instructions");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                       var app = <A4EngineApp>arg;
+                       let app = <A4EngineApp>arg;
                        if (app.titlescreen_state == 2) return;
 
                        BInterface.push();
@@ -577,7 +576,7 @@ class A4EngineApp {
             // if there are no savegames, load is disabled:
             let anySaveGame:boolean = false;
             for(let i:number = 0;i<4;i++) {
-                var saveName:string = app.game.checkSaveGame("slot" + (i+1));
+                let saveName:string = app.game.checkSaveGame("slot" + (i+1));
                 if (saveName != null) {
                     anySaveGame = true;
                     break;
@@ -618,8 +617,8 @@ class A4EngineApp {
 
     titlescreen_draw()
     {
-        var f1:number = 1;
-//        var f2:number = 1;
+        let f1:number = 1;
+//        let f2:number = 1;
         if (this.titlescreen_state == 0) {
 //            f2 = this.titlescreen_timer/SHRDLU_FADEIN_TIME;
 //            if (f2<0) f2 = 0;
@@ -634,11 +633,11 @@ class A4EngineApp {
         ctx.save();
         ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-        var img_bg:GLTile = this.game.GLTM.get("data/shrdlu-title-bg.png");
+        let img_bg:GLTile = this.game.GLTM.get("data/shrdlu-title-bg.png");
         if (img_bg != null) img_bg.draw(0,0);
-        var img_logo:GLTile = this.game.GLTM.get("data/shrdlu-title-logo.png");
+        let img_logo:GLTile = this.game.GLTM.get("data/shrdlu-title-logo.png");
         if (img_logo != null) img_logo.draw(32,32);
-        var img_credits:GLTile = this.game.GLTM.get("data/shrdlu-title-credits.png");
+        let img_credits:GLTile = this.game.GLTM.get("data/shrdlu-title-credits.png");
         if (img_credits != null) img_credits.draw(32,176);
 
         fillTextTopLeft(SHRDLU_VERSION, 1, 1, fontFamily8px, MSX_COLOR_WHITE);
@@ -1011,14 +1010,14 @@ class A4EngineApp {
             if (this.quit_request_action == QUIT_REQUEST_ACTION_QUIT) {
                 return A4ENGINE_STATE_INTRO;
             } else {
-                var ID:number = (this.quit_request_action - QUIT_REQUEST_ACTION_LOAD1) + 1;
-                var xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
+                let ID:number = (this.quit_request_action - QUIT_REQUEST_ACTION_LOAD1) + 1;
+                let xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
                 console.log("Decompresed string is: " + xmlString.length);        
 
-                var dp:DOMParser = new DOMParser();
-                var xml:Document = dp.parseFromString(xmlString, "text/xml");
+                let dp:DOMParser = new DOMParser();
+                let xml:Document = dp.parseFromString(xmlString, "text/xml");
 //                            console.log(xml);
-                var gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
+                let gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
                 this.game = new A4Game(gamexml, this.game_path, this.GLTM, this.SFXM, this.SFX_volume);
                 this.game.finishLoadingGame(xml.documentElement, this);
                 BInterface.reset();
@@ -1058,7 +1057,7 @@ class A4EngineApp {
             BInterface.reset();
             // create game complete screen
             BInterface.push();
-            var tmp:string[] = this.game.getGameEnding(this.game.gameComplete_ending_ID);
+            let tmp:string[] = this.game.getGameEnding(this.game.gameComplete_ending_ID);
             if (tmp==null) {
                 console.error("Cannot find text for game ending with id '" + this.game.gameComplete_ending_ID + "'!!");
                 return A4ENGINE_STATE_GAMECOMPLETE;
@@ -1067,7 +1066,7 @@ class A4EngineApp {
             BInterface.addElement(new BTextFrame(tmp, false, fontFamily8px, 8, 80, 40, app.screen_width-160, app.screen_height-100));
             BInterface.addElement(new BButton("Keep Playing", fontFamily16px, app.screen_width/2-120, app.screen_height-120, 240, 30, 1, 
                                          function(arg:any, ID:number) {
-                                            var app = <A4EngineApp>arg;
+                                            let app = <A4EngineApp>arg;
                                             BInterface.reset();
                                             app.game.setGameComplete(false, null);
                                             app.ingame_menu = 0;
@@ -1075,7 +1074,7 @@ class A4EngineApp {
                                          }));
             BInterface.addElement(new BButton("Quit", fontFamily16px, app.screen_width/2-120, app.screen_height-80, 240, 30, 2, 
                                          function(arg:any, ID:number) {
-                                            var app = <A4EngineApp>arg;
+                                            let app = <A4EngineApp>arg;
                                             BInterface.reset();
                                             app.game.setGameComplete(false, null);
                                             app.ingame_menu = 0;
@@ -1124,8 +1123,8 @@ class A4EngineApp {
 
                     if (act == 3) {
                         this.introact_state = 2;
-                        var menuItems:string[] = [];
-                        var menuCallbacks:((any, number) => void)[] = [];
+                        let menuItems:string[] = [];
+                        let menuCallbacks:((any, number) => void)[] = [];
 
                         menuItems.push("You have reached the");
                         menuCallbacks.push(null);
@@ -1139,7 +1138,7 @@ class A4EngineApp {
                         menuItems.push("No thanks");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {
-                                     var app = <A4EngineApp>arg;
+                                     let app = <A4EngineApp>arg;
                                      app.introact_state = 3;
                                });
                         BInterface.push();
@@ -1174,7 +1173,7 @@ class A4EngineApp {
     {
         ctx.save();
         ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
-        var img:GLTile;
+        let img:GLTile;
         if (act == 1) img = this.game.GLTM.get("data/act1.png");
         if (act == 2) img = this.game.GLTM.get("data/act2.png");
         if (act == 3) img = this.game.GLTM.get("data/act3.png");
@@ -1206,8 +1205,8 @@ class A4EngineApp {
                     this.gameover_state_timer = 0;
                     this.gameover_state = 1;
 
-                    var menuItems:string[] = [];
-                    var menuCallbacks:((any, number) => void)[] = [];
+                    let menuItems:string[] = [];
+                    let menuCallbacks:((any, number) => void)[] = [];
 
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
@@ -1217,7 +1216,7 @@ class A4EngineApp {
                     menuItems.push("Title Screen");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {
-                                 var app = <A4EngineApp>arg;
+                                 let app = <A4EngineApp>arg;
                                  app.gameover_state = 2;
                            });
                     BInterface.push();
@@ -1247,7 +1246,7 @@ class A4EngineApp {
     {
         ctx.save();
         ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
-        var img:GLTile;
+        let img:GLTile;
         if (this.gameover_type == 1) img = this.game.GLTM.get("data/cutscene-death-oxygen.png");
         if (img != null) img.draw(0,0);
         ctx.restore();

@@ -1028,6 +1028,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("ai", "ai", o, multitokens_raw);
     this.addStandardNounPOS("airlock", "airlock", o, multitokens_raw);
     this.addStandardNounPOS("airlock door", "airlock-door", o, multitokens_raw);
+    this.addUncountableNounPOS("aluminum", "aluminium", o);
+    this.addStandardNounPOS("aluminum reel", "aluminium-reel", o, multitokens_raw);
+    this.addUncountableNounPOS("aluminium", "aluminium", o);
+    this.addStandardNounPOS("aluminium reel", "aluminium-reel", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("analysis", "analysis", Term.fromString("noun('analysis'[analysis], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("analyses", "analysis", Term.fromString("noun('analysis'[analysis], [plural])", o), 1.0));
     this.addStandardNounPOS("animal", "animal", o, multitokens_raw);
@@ -1075,6 +1079,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("chair", "chair", o, multitokens_raw);
     this.addStandardNounPOS("character", "character", o, multitokens_raw);
     this.addStandardNounPOS("chemical element", "chemical-element", o, multitokens_raw);
+    this.addStandardNounPOS("chopstick", "chopstick", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("cloth", "clothing", Term.fromString("noun('clothing'[clothing], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("clothes", "clothing", Term.fromString("noun('clothing'[clothing], [plural])", o), 1.0));    
     this.addStandardNounPOS("clothing", "clothing", o, multitokens_raw);
@@ -1090,12 +1095,15 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("computer tower", "computer-tower", o, multitokens_raw);
     this.addStandardNounPOS("coordinate", "space.position", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("coordination", "coordination", Term.fromString("noun('coordination'[coordination], [singular])", o), 1.0));
+    this.addUncountableNounPOS("copper", "copper", o);
+    this.addStandardNounPOS("copper reel", "copper-reel", o, multitokens_raw);
     this.addStandardNounPOS("corpse", "corpse", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("correctness", "correctness", Term.fromString("noun('correctness'[correctness], [singular])", o), 1.0));
     this.addStandardNounPOS("corridor", "corridor", o, multitokens_raw);
     this.addStandardNounPOS("course", "path", o, multitokens_raw);
     this.addStandardNounPOS("crate", "crate", o, multitokens_raw);
     this.addStandardNounPOS("crater", "crater", o, multitokens_raw);
+    this.addStandardNounPOS("cup", "cup", o, multitokens_raw);    
     this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("data", "data", Term.fromString("noun('data'[data], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("day", "time.day", o, multitokens_raw);
@@ -1139,6 +1147,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addUncountableNounPOS("food", "food", o);
     this.addTokenPOS(new PartOfSpeech("foot", "foot", Term.fromString("noun('foot'[foot], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("feet", "foot", Term.fromString("noun('foot'[foot], [plural])", o), 1.0));
+    this.addStandardNounPOS("fork", "fork", o, multitokens_raw);    
     this.addTokenPOS(new PartOfSpeech("forward", "forward", Term.fromString("noun('forward'[forward], [singular])", o), 1.0));
     this.addStandardNounPOS("fridge", "fridge", o, multitokens_raw);
     this.addStandardNounPOS("front", "space.front", o, multitokens_raw);
@@ -1178,6 +1187,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("infirmary bed", "infirmary-bed", o, multitokens_raw);
     this.addStandardNounPOS("instant", "time.location", o, multitokens_raw);
     this.addStandardNounPOS("instruction", "instruction", o, multitokens_raw);
+    this.addUncountableNounPOS("iron", "iron", o);
+    this.addStandardNounPOS("iron reel", "iron-reel", o, multitokens_raw);
     this.addStandardNounPOS("item", "item", o, multitokens_raw);
     this.addStandardNounPOS("jumpsuit", "jumpsuit", o, multitokens_raw);
     this.addStandardNounPOS("jump suit", "jumpsuit", o, multitokens_raw);
@@ -1189,6 +1200,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("km", "kilometer", o, multitokens_raw);
     this.addStandardNounPOS("kilometer", "kilometer", o, multitokens_raw);
     this.addStandardNounPOS("kitchen", "kitchen", o, multitokens_raw);
+    this.addStandardNounPOS("knife", "knife", o, multitokens_raw);
     this.addStandardNounPOS("lab", "lab.room", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("laboratory", "lab.room", Term.fromString("noun('lab.room'[lab.room], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("laboratories", "lab.room", Term.fromString("noun('lab.room'[lab.room], [plural])", o), 1.0));
@@ -1210,11 +1222,13 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("man", "man", Term.fromString("noun('man'[man], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("men", "man", Term.fromString("noun('man'[man], [plural])", o), 1.0));
     this.addStandardNounPOS("map", "map", o, multitokens_raw);
+    this.addStandardNounPOS("material", "material", o, multitokens_raw);
     this.addStandardNounPOS("mathematician", "mathematician", o, multitokens_raw);
     this.addUncountableNounPOS("media", "media", o);
     this.addStandardNounPOS("medic", "medic", o, multitokens_raw);
     this.addStandardNounPOS("memory", "memory-bank", o, multitokens_raw);
     this.addStandardNounPOS("memory bank", "memory-bank", o, multitokens_raw);
+    this.addStandardNounPOS("metal", "metal", o, multitokens_raw);
     this.addStandardNounPOS("metal 3d printer", "metal-3dprinter", o, multitokens_raw);
     this.addStandardNounPOS("meter", "meter", o, multitokens_raw);
     this.addStandardNounPOS("mess hall", "mess.hall", o, multitokens_raw);
@@ -1267,8 +1281,16 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addUncountableNounPOS("pizza", "pizza", o);
     this.addStandardNounPOS("place", "space.location", o, multitokens_raw);
     this.addStandardNounPOS("planet", "planet", o, multitokens_raw);
+    this.addUncountableNounPOS("plastic", "plastic", o);
     this.addStandardNounPOS("plastic 3d printer", "plastic-3dprinter", o, multitokens_raw);
+    this.addUncountableNounPOS("plastic chopstick", "plastic-chopstick", o);
+    this.addUncountableNounPOS("plastic cup", "plastic-cup", o);
+    this.addUncountableNounPOS("plastic fork", "plastic-fork", o);
+    this.addUncountableNounPOS("plastic knife", "plastic-knife", o);
+    this.addUncountableNounPOS("plastic plate", "plastic-plate", o);
+    this.addUncountableNounPOS("plastic spoon", "plastic-spoon", o);
     this.addStandardNounPOS("plastic reel", "plastic-reel", o, multitokens_raw);
+    this.addStandardNounPOS("plate", "plate", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("pliers", "pliers", Term.fromString("noun('pliers'[pliers], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("pliers", "pliers", Term.fromString("noun('pliers'[pliers], [plural])", o), 1.0));
     this.addStandardNounPOS("pod", "pod", o, multitokens_raw);
@@ -1334,6 +1356,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("southwest", "southwest", Term.fromString("noun('southwest'[southwest], [singular])", o), 1.0));
     this.addStandardNounPOS("space", "space", o, multitokens_raw);
     this.addStandardNounPOS("spaceship", "spaceship", o, multitokens_raw);
+    this.addStandardNounPOS("spoon", "spoon", o, multitokens_raw);
     this.addStandardNounPOS("outer space", "outer-space", o, multitokens_raw);
     this.addStandardNounPOS("spacesuit", "spacesuit", o, multitokens_raw);
     this.addStandardNounPOS("space suit", "spacesuit", o, multitokens_raw);
@@ -1382,6 +1405,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("unit", "measuring-unit", o, multitokens_raw);
     this.addStandardNounPOS("user name", "username", o, multitokens_raw);
     this.addStandardNounPOS("username", "username", o, multitokens_raw);
+    this.addStandardNounPOS("utensil", "utensil", o, multitokens_raw);
     this.addStandardNounPOS("vehicle", "vehicle", o, multitokens_raw);
     this.addStandardNounPOS("video", "video", o, multitokens_raw);
     this.addUncountableNounPOS("video", "video", o);
@@ -1455,8 +1479,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.take-out", "remove","removes","removed","removed","removing", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.explore", "scout","scouts","scouted","scouted","scouting", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.print", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
 
-    this.addStandardVerbPOS("action.3dprint", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);
@@ -1605,6 +1629,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):
     this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
@@ -1823,11 +1848,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     if (noun.indexOf(" ") != -1) {
       if (multitokens.indexOf(noun) == -1) {
         multitokens.push(noun);
-        console.warn("missing multitoken added: " + noun);
+        // console.warn("missing multitoken added: " + noun);
       }
       if (multitokens.indexOf(noun + "s") == -1) {
         multitokens.push(noun + "s");
-        console.warn("missing multitoken added: " + noun + "s");
+        // console.warn("missing multitoken added: " + noun + "s");
       }
     }
     o.getSort(sortName);  // this is just to check that we have all the sorts!

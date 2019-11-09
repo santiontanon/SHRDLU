@@ -4,11 +4,11 @@ class AgendaEntry {
 
     static fromXML(xml: Element): AgendaEntry
     {
-        var ae:AgendaEntry = new AgendaEntry();
+        let ae:AgendaEntry = new AgendaEntry();
         
         ae.time = Number(xml.getAttribute("time"));
         for(let i:number = 0;i<xml.children.length;i++) {
-            var script_xml:Element = xml.children[i];
+            let script_xml:Element = xml.children[i];
             ae.scripts.push(A4Script.fromXML(script_xml));
         }         
 
@@ -18,7 +18,7 @@ class AgendaEntry {
 
     static fromAgendaEntry(ae: AgendaEntry): AgendaEntry
     {
-        var ae2:AgendaEntry = new AgendaEntry();
+        let ae2:AgendaEntry = new AgendaEntry();
 
         ae2.time = ae.time;
         for(let s of ae.scripts) {
@@ -31,8 +31,8 @@ class AgendaEntry {
 
     execute(o: A4Object, map: A4Map, game: A4Game, otherCharacter: A4Character):number
     {
-        var retValue:number = SCRIPT_FINISHED;
-        var seq : A4ScriptExecutionQueue = null;
+        let retValue:number = SCRIPT_FINISHED;
+        let seq : A4ScriptExecutionQueue = null;
         for(let s of this.scripts) {
             if (seq == null) {
                 s.reset();
@@ -73,7 +73,7 @@ class Agenda {
 
     static fromXML(xml:Element) : Agenda
     {
-        var a:Agenda = new Agenda();
+        let a:Agenda = new Agenda();
         a.name = xml.getAttribute("agenda");
         a.duration = Number(xml.getAttribute("duration"));
         a.cycle = 0;
@@ -97,7 +97,7 @@ class Agenda {
 
     static fromAgenda(a:Agenda) : Agenda
     {
-        var a2:Agenda = new Agenda();
+        let a2:Agenda = new Agenda();
 
         a2.name = a.name;
         a2.duration = a.duration;

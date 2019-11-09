@@ -630,7 +630,34 @@
       <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">510</animation>
   	  <attribute name="useable" value="true"/>
 	  <eventRule event="use">
-		<talkOther text="I think these are spares feed lines for 3d printers..." thought="true"/>
+		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="iron-reel" super="reel" name="iron reel">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">842</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="aluminium-reel" super="reel" name="aluminium reel">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">975</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
+	  </eventRule>
+    </ObjectClass>
+
+    <ObjectClass class="copper-reel" super="reel" name="copper reel">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">1007</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
 	  </eventRule>
     </ObjectClass>
 
@@ -897,7 +924,64 @@
 		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">368</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="This seems like a large 3d printer" thought="true"/>
+        	<talkOther text="This seems like a large metal 3d printer" thought="true"/>
+        	<if>
+        		<condition><storyStateCheck scope="object" variable="plastic" value="false"/></condition>
+        		<then>
+        			<if>
+        				<condition><loseItem type="plastic-reel"/></condition>
+        				<then>
+        					<talkOther text="There, I placed this plastic reel into the machine." thought="true"/>
+        					<storyState scope="object" variable="plastic" value="true"/>
+        				</then>
+        				<else><talkOther text="It is out of plastic." thought="true"/></else>
+        			</if>
+        		</then>
+        		<else><talkOther text="It seems to still have plastic left." thought="true"/></else>
+        	</if>
+        	<if>
+        		<condition><storyStateCheck scope="object" variable="iron" value="false"/></condition>
+        		<then>
+        			<if>
+        				<condition><loseItem type="iron-reel"/></condition>
+        				<then>
+        					<talkOther text="There, I placed this iron reel into the machine." thought="true"/>
+        					<storyState scope="object" variable="iron" value="true"/>
+        				</then>
+        				<else><talkOther text="It is out of iron." thought="true"/></else>
+        			</if>
+        		</then>
+        		<else><talkOther text="It seems to still have iron left." thought="true"/></else>
+        	</if>
+        	<if>
+        		<condition><storyStateCheck scope="object" variable="aluminium" value="false"/></condition>
+        		<then>
+        			<if>
+        				<condition><loseItem type="aluminium-reel"/></condition>
+        				<then>
+        					<talkOther text="There, I placed this aluminium reel into the machine." thought="true"/>
+        					<storyState scope="object" variable="aluminium" value="true"/>
+        				</then>
+        				<else><talkOther text="It is out of aluminium." thought="true"/></else>
+        			</if>
+        		</then>
+        		<else><talkOther text="It seems to still have aluminium left." thought="true"/></else>
+        	</if>
+        	<if>
+        		<condition><storyStateCheck scope="object" variable="copper" value="false"/></condition>
+        		<then>
+        			<if>
+        				<condition><loseItem type="copper-reel"/></condition>
+        				<then>
+        					<talkOther text="There, I placed this copper reel into the machine." thought="true"/>
+        					<storyState scope="object" variable="copper" value="true"/>
+        				</then>
+        				<else><talkOther text="It is out of copper." thought="true"/></else>
+        			</if>
+        		</then>
+        		<else><talkOther text="It seems to still have copper left." thought="true"/></else>
+        	</if>
+        	<talkOther text="I would not know how to use it though, I better ask Etaoin..." thought="true"/>
         </eventRule>
 	</ObjectClass>		
 
@@ -906,7 +990,22 @@
 		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">372</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="This seems like a large 3d printer" thought="true"/>
+        	<talkOther text="This seems like a large 3d printer." thought="true"/>
+        	<if>
+        		<condition><storyStateCheck scope="object" variable="plastic" value="false"/></condition>
+        		<then>
+        			<if>
+        				<condition><loseItem type="plastic-reel"/></condition>
+        				<then>
+        					<talkOther text="There, I placed this plastic reel into the machine." thought="true"/>
+        					<storyState scope="object" variable="plastic" value="true"/>
+        				</then>
+        				<else><talkOther text="It is out of plastic." thought="true"/></else>
+        			</if>
+        		</then>
+        		<else><talkOther text="It seems to still have plastic left." thought="true"/></else>
+        	</if>
+        	<talkOther text="I would not know how to use it though, I better ask Etaoin..." thought="true"/>
         </eventRule>
 	</ObjectClass>		
 
@@ -1415,6 +1514,49 @@
         	<talkOther text="The ceiling has collapsed here, I need to find an alternative route if I want to get through..." thought="true"/>
         </eventRule>
 	</ObjectClass>		
+
+	<ObjectClass class="plastic-cup" super="cup" name="plastic cup">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">890</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="plastic-plate" super="plate" name="plastic plate">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">921</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="plastic-fork" super="fork" name="plastic fork">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">954</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="plastic-spoon" super="spoon" name="plastic spoon">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">922</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="plastic-knife" super="knife" name="plastic knife">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">986</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
+	<ObjectClass class="plastic-chopstick" super="chopstick" name="plastic chopstick">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">889</animation>		
+		<onStart>
+			<addPerceptionProperty property="white"/>
+		</onStart>
+	</ObjectClass>	
 
 
 </Objects>

@@ -1,9 +1,9 @@
 class A4TextBubble {
     constructor(text:string, maxWidth:number, font:string, fontWidth:number, fontHeight:number, game:A4Game, speaker:A4Character)
     {
-        var buffer:string = "";
-        var last_space = 0;
-        var longestLine = 0;
+        let buffer:string = "";
+        let last_space = 0;
+        let longestLine = 0;
 
         this.speaker = speaker;
 
@@ -20,7 +20,7 @@ class A4TextBubble {
                     buffer = "";
                 } else {
 //                    console.log("i: " + i + ", buffer: " + buffer + ", last_space: " + last_space);
-                    var backspaces:number = i - last_space;
+                    let backspaces:number = i - last_space;
                     buffer = buffer.substring(0,buffer.length-backspaces);
                     i-=backspaces;
                     this.lines.push(buffer);
@@ -115,7 +115,7 @@ class A4TextBubble {
             A4TextBubble.tiles3[8].draw(x+this.width-8, y+this.height-8);
 
             // draw arrow:
-            var arrowx:number = pointx-4;
+            let arrowx:number = pointx-4;
             if (pointx < x+8) pointx = x+8;
             if (pointx > x+this.width-16) pointx = x+this.width-16;
             if (pointy>y) {
@@ -140,7 +140,7 @@ class A4TextBubble {
             A4TextBubble.tiles[8].draw(x+this.width-8, y+this.height-8);
 
             // draw arrow:
-            var arrowx:number = pointx-4;
+            let arrowx:number = pointx-4;
             if (pointx < x+8) pointx = x+8;
             if (pointx > x+this.width-16) pointx = x+this.width-16;
             if (pointy>y) {
@@ -154,7 +154,7 @@ class A4TextBubble {
 
         y+=4;
         for(let line of this.lines) {
-            var tx:number = x + Math.floor((this.width - line.length*this.fontWidth)/2);
+            let tx:number = x + Math.floor((this.width - line.length*this.fontWidth)/2);
             fillTextTopLeft(line, tx, y, this.font, MSX_COLOR_BLACK);
             y+= this.fontHeight;
         }        
@@ -181,7 +181,7 @@ class A4TextBubble {
 
         y+=4;
         for(let line of this.lines) {
-            var tx:number = x + Math.floor((this.width - line.length*this.fontWidth)/2);
+            let tx:number = x + Math.floor((this.width - line.length*this.fontWidth)/2);
             fillTextTopLeft(line, tx, y, this.font, MSX_COLOR_BLACK);
             y+= this.fontHeight;
         }        

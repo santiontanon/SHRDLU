@@ -2,28 +2,28 @@ class A4ObjectFactory {
 
     addDefinitions(xml:Element, game:A4Game, baseClassName:string)
     {
-        var o:Ontology = game.ontology;        
-        var classes_xml:Element[] = getElementChildrenByTag(xml, baseClassName);
+        let o:Ontology = game.ontology;        
+        let classes_xml:Element[] = getElementChildrenByTag(xml, baseClassName);
         for(let i:number = 0;i<classes_xml.length;i++) {
-            var class_xml:Element = classes_xml[i];
+            let class_xml:Element = classes_xml[i];
             this.objectTypes.push(class_xml);
 
-            var sortName:string = class_xml.getAttribute("class");
-            var s:Sort = o.getSortSilent(sortName);
+            let sortName:string = class_xml.getAttribute("class");
+            let s:Sort = o.getSortSilent(sortName);
             if (s==null) s = o.newSort(sortName,[]);
-            var superClasses:string[] = class_xml.getAttribute("super").split(',');
+            let superClasses:string[] = class_xml.getAttribute("super").split(',');
 
 //            console.log("added class " + s.name + " to A4ObjectFactory.objectTypes");
 
             for(let className of superClasses) {
                 if (className.charAt(0) == '*') {
-                    var sortName:string = className.substring(1);
-                    var s2:Sort = o.getSortSilent(sortName);
+                    let sortName:string = className.substring(1);
+                    let s2:Sort = o.getSortSilent(sortName);
                     if (s2 == null) s2 = o.newSort(sortName, []);
                     s.addParent(s2);
                 } else {
-                    var sortName:string = className;
-                    var s2:Sort = o.getSort(sortName);
+                    let sortName:string = className;
+                    let s2:Sort = o.getSort(sortName);
                     if (s2 == null) s2 = o.newSort(sortName, []);
                     s.addParent(s2);
                 }
@@ -34,7 +34,7 @@ class A4ObjectFactory {
 
     createObject(className:string, game:A4Game, isPlayer:boolean, completeRedefinition:boolean) : A4Object
     {
-        var xml:Element = this.getObjectType(className);
+        let xml:Element = this.getObjectType(className);
         if (xml != null) return this.createObjectFromXML(xml, game, isPlayer, completeRedefinition);
         
         if (className == "obstacle") {
@@ -78,32 +78,32 @@ class A4ObjectFactory {
 
     createObjectFromXML(xml:Element, game:A4Game, isPlayer:boolean, completeRedefinition:boolean) : A4Object
     {
-        var baseClasses:string[] = ["item","container","vehicle","character","obstacle","obstacle-container","door","key","pushable-wall","food","spade","object","ShrdluAirlockDoor"];
-        var o:A4Object;
-        var ontology:Ontology = game.ontology;
+        let baseClasses:string[] = ["item","container","vehicle","character","obstacle","obstacle-container","door","key","pushable-wall","food","spade","object","ShrdluAirlockDoor"];
+        let o:A4Object;
+        let ontology:Ontology = game.ontology;
 
         if (xml.getAttribute("completeRedefinition") == "true") completeRedefinition = true;
 
         // find base class, and additional definitions to add:
-        var classes:Element[] = [];
-        var baseClassName:string = null;
+        let classes:Element[] = [];
+        let baseClassName:string = null;
 
         {
-            var open:string[] = [xml.getAttribute("class")];
+            let open:string[] = [xml.getAttribute("class")];
 
             while(open.length > 0) {
-                var current:string = open[0];
+                let current:string = open[0];
                 //console.log("considering: " + current);
                 open.splice(0,1);
-                var loadContent:boolean = true;
-                var current2:string = current;
+                let loadContent:boolean = true;
+                let current2:string = current;
                 if (current.charAt(0) == '*') {
                     loadContent = false;
                     current2 = current.substring(1);
                     continue;
                 }
-                var current_xml:Element = this.getObjectType(current2);
-                var found:number = baseClasses.indexOf(current2);
+                let current_xml:Element = this.getObjectType(current2);
+                let found:number = baseClasses.indexOf(current2);
 
                 if (current_xml == null && found >= 0) {
                     if (baseClassName == null) {
@@ -115,8 +115,8 @@ class A4ObjectFactory {
                 } else {
                     if (current_xml != null) {
                         if (loadContent) classes.unshift(current_xml);    // push at the front of the array
-                        var superString:string = current_xml.getAttribute("super");
-                        var superClasses:string[] = superString.split(',');
+                        let superString:string = current_xml.getAttribute("super");
+                        let superClasses:string[] = superString.split(',');
                         for(let className of superClasses) {
                             open.push(className);
                         }
@@ -130,8 +130,8 @@ class A4ObjectFactory {
             return null;
         }
 
-        var o_ID:string = xml.getAttribute("id");
-        var o_name:string = xml.getAttribute("name");
+        let o_ID:string = xml.getAttribute("id");
+        let o_name:string = xml.getAttribute("name");
         if (o_name == null) {
             for(let xml2 of classes) {
                 o_name = xml2.getAttribute("name");
@@ -142,48 +142,48 @@ class A4ObjectFactory {
         let classStr:string = xml.getAttribute("class");
         if (classStr == null) classStr = xml.getAttribute("type");
         if (baseClassName == "item") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Item(o_name, s);
         } else if (baseClassName == "container") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Container(o_name, s, null);
         } else if (baseClassName == "vehicle") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Vehicle(o_name,s);
         } else if (baseClassName == "character") {
             if (isPlayer) {
-                var s:Sort = ontology.getSort(classStr);
+                let s:Sort = ontology.getSort(classStr);
                 o = new A4PlayerCharacter(o_name,s);
             } else {
-                var s:Sort = ontology.getSort(classStr);
+                let s:Sort = ontology.getSort(classStr);
                 o = new A4AICharacter(o_name, s);
             }
         } else if (baseClassName == "obstacle") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Obstacle(o_name, s);
         } else if (baseClassName == "obstacle-container") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4ObstacleContainer(o_name, s, null, true, false, null, null);
         } else if (baseClassName == "door") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Door(s, null, true, false, null, null);
         } else if (baseClassName == "key") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Key(o_name,s, null, null);
         } else if (baseClassName == "pushable-wall") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4PushableWall(o_name, s, null);
         } else if (baseClassName == "food") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Food(o_name, s, null, 0);
         } else if (baseClassName == "spade") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Spade(s, null, 0);
         } else if (baseClassName == "object") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new A4Object(o_name, s);
         } else if (baseClassName == "ShrdluAirlockDoor") {
-            var s:Sort = ontology.getSort(classStr);
+            let s:Sort = ontology.getSort(classStr);
             o = new ShrdluAirlockDoor(o_name, s);
         } else {
             console.error("A4ObjectFactory::createObject: Could not create object " + classStr);

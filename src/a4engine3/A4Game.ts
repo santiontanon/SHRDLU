@@ -156,7 +156,7 @@ class A4Game {
         this.ontology = new Ontology();
         Sort.clear();
 
-        var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", "data/shrdluontology.xml", false); 
         xmlhttp.send();
@@ -169,51 +169,51 @@ class A4Game {
         console.log("game title: " + this.gameTitle);
         console.log("game subtitle: " + this.gameSubtitle);
 
-        var title_xml:Element = getFirstElementChildByTag(xml, "titleImage");
+        let title_xml:Element = getFirstElementChildByTag(xml, "titleImage");
         if (title_xml!=null) {
             console.log("Title image:" + title_xml.firstChild.nodeValue);
             this.gameTitleImage = title_xml.firstChild.nodeValue;
         }
 
-        var tmp:string = xml.getAttribute("allowSaveGames");
+        let tmp:string = xml.getAttribute("allowSaveGames");
         if (tmp!=null) this.allowSaveGames = (tmp == "true");
 
         if (xml.getAttribute("cycle") != null) {
             this.cycle = Number(xml.getAttribute("cycle"));
         }
 
-        var story_xml:Element = getFirstElementChildByTag(xml, "story");
+        let story_xml:Element = getFirstElementChildByTag(xml, "story");
         if (story_xml!=null) {
-            var story_lines:Element[] = getElementChildrenByTag(story_xml,"line");
+            let story_lines:Element[] = getElementChildrenByTag(story_xml,"line");
             this.storyText = [];
             for(let i:number = 0;i<story_lines.length;i++) {
-                var line_xml:Element = story_lines[i];
+                let line_xml:Element = story_lines[i];
                 this.storyText.push(line_xml.firstChild.nodeValue);
             }
         }
 
-        var ending_xmls:Element[] = getElementChildrenByTag(xml, "ending");
+        let ending_xmls:Element[] = getElementChildrenByTag(xml, "ending");
         for(let i:number = 0;i<ending_xmls.length;i++) {
-            var ending_xml:Element = ending_xmls[i];
-            var ID:string = ending_xml.getAttribute("id");
+            let ending_xml:Element = ending_xmls[i];
+            let ID:string = ending_xml.getAttribute("id");
             if (ID == null) {
                 console.log("Ending in game definition file does not specify an ID!");
                 continue;
             }
 
-            var ending_lines:Element[] = getElementChildrenByTag(ending_xml, "line");
-            var endingText:string[] = [];
+            let ending_lines:Element[] = getElementChildrenByTag(ending_xml, "line");
+            let endingText:string[] = [];
             for(let i:number = 0;i<ending_lines.length;i++) {
-                var line_xml:Element = ending_lines[i];
+                let line_xml:Element = ending_lines[i];
                 endingText.push(line_xml.firstChild.nodeValue);
             }
 
             this.addEnding(ID, endingText);
         }
 
-        var tiles_xml:Element = getFirstElementChildByTag(xml, "tiles");
+        let tiles_xml:Element = getFirstElementChildByTag(xml, "tiles");
         
-        var targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
+        let targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
         this.tileWidth = Number(tiles_xml.getAttribute("sourcewidth"));
         this.tileHeight = Number(tiles_xml.getAttribute("sourceheight"));
         this.defaultZoom = targetwidth/this.tileWidth;
@@ -221,9 +221,9 @@ class A4Game {
         // In a first pass, we just trigger loading all the images (since browser games load them asynchronously)
         // later in finishLoadingGame, the rest of the game is loaded...
         for(let i:number = 0;i<tiles_xml.children.length;i++) {
-            var c:Element = tiles_xml.children[i];
-            var file:string = c.getAttribute("file");
-            var gf:A4GraphicFile = this.getGraphicFile(file);
+            let c:Element = tiles_xml.children[i];
+            let file:string = c.getAttribute("file");
+            let gf:A4GraphicFile = this.getGraphicFile(file);
             if (gf == null) {
                 gf = new A4GraphicFile(file, this.tileWidth, this.tileHeight, this.game_path, this.GLTM);
                 this.graphicFiles.push(gf);
@@ -296,6 +296,17 @@ class A4Game {
                                   "location-as29",
                                   "location-garage",
                                   ];
+
+        this.three_d_printer_recipies = {"plastic-cup": ["plastic"],
+                                         "plastic-plate": ["plastic"],
+                                         "plastic-fork": ["plastic"],
+                                         "plastic-spoon": ["plastic"],
+                                         "plastic-knife": ["plastic"],
+                                         "plastic-chopstick": ["plastic"],
+                                         "screwdriver": ["plastic", "iron"],
+                                         "pliers": ["plastic", "iron"],
+                                         "wrench": ["plastic", "iron"],
+                                        };
     }
 
 
@@ -312,17 +323,17 @@ class A4Game {
     // if "saveGameXml" is != null, this is a call to restore from a save state
     finishLoadingGame(saveGameXml:Element, app:A4EngineApp)
     {
-        var tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
-        var targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
+        let tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
+        let targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
         for(let idx:number = 0;idx<tiles_xml.children.length;idx++) {
-            var c:Element = tiles_xml.children[idx];
-            var file:string = c.getAttribute("file");
-            var gf:A4GraphicFile = this.getGraphicFile(file);
+            let c:Element = tiles_xml.children[idx];
+            let file:string = c.getAttribute("file");
+            let gf:A4GraphicFile = this.getGraphicFile(file);
             if (gf.tiles == null) gf.updateAfterLoaded();
 
             if (c.tagName == "types") {
-                var values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
-                var j:number = 0;
+                let values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
+                let j:number = 0;
                 for(let i:number = 0;i<values.length;i++) {
                     if (values[i] != "") {
                         gf.tileTypes[j] = Number(values[i]);
@@ -331,8 +342,8 @@ class A4Game {
                 }
                 console.log("Loaded " + j + " types for image " + gf.name);
             } else if (c.tagName == "seeThrough") {
-                var values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
-                var j:number = 0;
+                let values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
+                let j:number = 0;
                 for(let i:number = 0;i<values.length;i++) {
                     if (values[i] != "") {
                         gf.tileSeeThrough[j] = Number(values[i]);
@@ -341,8 +352,8 @@ class A4Game {
                 }
                 console.log("Loaded " + j + " seeThroughs for image " + gf.name);
             } else if (c.tagName == "canDig") {
-                var values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
-                var j:number = 0;
+                let values:string[] = c.firstChild.nodeValue.split(new RegExp(",| |\n|\t|\r"));
+                let j:number = 0;
                 for(let i:number = 0;i<values.length;i++) {
                     if (values[i] != "") {
                         gf.tileCanDig[j] = Number(values[i]);
@@ -351,7 +362,7 @@ class A4Game {
                 }
                 console.log("Loaded " + j + " canDigs for image " + gf.name);
             } else if (c.tagName == "animation") {
-                var a:A4Animation = A4Animation.fromXML(c, this);
+                let a:A4Animation = A4Animation.fromXML(c, this);
                 switch(c.getAttribute("name")) {
                     default:
                         console.warn("Unknown animation name in A4Game definition: " + c.getAttribute("name"));
@@ -363,65 +374,65 @@ class A4Game {
 
         // loading object types:
         {
-            var files_xml:Element[] = getElementChildrenByTag(this.xml, "objectDefinition");
+            let files_xml:Element[] = getElementChildrenByTag(this.xml, "objectDefinition");
             for(let i:number = 0;i<files_xml.length;i++) {
-                var file_xml:Element = files_xml[i];
-                var objects_file:string = file_xml.getAttribute("file");
+                let file_xml:Element = files_xml[i];
+                let objects_file:string = file_xml.getAttribute("file");
                 this.objectDefinitionFiles.push(objects_file);
 
                 console.log("Loading objects from file " + this.game_path + "/" + objects_file);
-                var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+                let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
                 xmlhttp.overrideMimeType("text/xml");
                 xmlhttp.open("GET", this.game_path + "/" + objects_file, false); 
                 xmlhttp.send();
-                var obejcts_xml:Element = xmlhttp.responseXML.documentElement;
+                let obejcts_xml:Element = xmlhttp.responseXML.documentElement;
                 this.objectFactory.addDefinitions(obejcts_xml, this, "ObjectClass");
             }
         }
 
         // loading character types:
         {
-            var files_xml:Element[] = getElementChildrenByTag(this.xml, "characterDefinition");
+            let files_xml:Element[] = getElementChildrenByTag(this.xml, "characterDefinition");
             for(let i:number = 0;i<files_xml.length;i++) {
-                var file_xml:Element = files_xml[i];
-                var objects_file:string = file_xml.getAttribute("file");
+                let file_xml:Element = files_xml[i];
+                let objects_file:string = file_xml.getAttribute("file");
                 this.characterDefinitionFiles.push(objects_file);
 
                 console.log("Loading characters from file " + this.game_path + "/" + objects_file);
-                var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+                let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
                 xmlhttp.overrideMimeType("text/xml");
                 xmlhttp.open("GET", this.game_path + "/" + objects_file, false); 
                 xmlhttp.send();
-                var obejcts_xml:Element = xmlhttp.responseXML.documentElement;
+                let obejcts_xml:Element = xmlhttp.responseXML.documentElement;
                 this.objectFactory.addDefinitions(obejcts_xml, this, "CharacterClass");
             }
         }
         
         // loading maps:
-        var objectsToRevisit_xml:Element[] = [];
-        var objectsToRevisit_object:A4Object[] = [];
+        let objectsToRevisit_xml:Element[] = [];
+        let objectsToRevisit_object:A4Object[] = [];
         {
             if (saveGameXml != null) {
-                var maps_xml:Element[] = getElementChildrenByTag(saveGameXml, "map");
+                let maps_xml:Element[] = getElementChildrenByTag(saveGameXml, "map");
                 for(let i:number = 0;i<maps_xml.length;i++) {
-                    tmx = maps_xml[i];
-                    var map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    let tmx:Element = maps_xml[i];
+                    let map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
                     this.maps.push(map);
                 }
             } else {
-                var maps_xml:Element[] = getElementChildrenByTag(this.xml, "map");
+                let maps_xml:Element[] = getElementChildrenByTag(this.xml, "map");
                 for(let i:number = 0;i<maps_xml.length;i++) {
-                    var map_xml:Element = maps_xml[i];
-                    var tmx_file:string = map_xml.getAttribute("file");
+                    let map_xml:Element = maps_xml[i];
+                    let tmx_file:string = map_xml.getAttribute("file");
 
-                    var tmx:Element = null;
+                    let tmx:Element = null;
                     console.log("loading A4Map from file... " + this.game_path + "/" + tmx_file);
-                    var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+                    let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
                     xmlhttp.overrideMimeType("text/xml");
                     xmlhttp.open("GET", this.game_path + "/" + tmx_file, false); 
                     xmlhttp.send();
                     tmx = xmlhttp.responseXML.documentElement;
-                    var map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    let map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
                     this.maps.push(map);
                 }
             }
@@ -446,15 +457,15 @@ class A4Game {
         // loading scripts:
         {
             // on start:
-            var onstarts_xml:Element[] = getElementChildrenByTag(this.xml, "onStart");
+            let onstarts_xml:Element[] = getElementChildrenByTag(this.xml, "onStart");
             for(let i:number = 0;i<onstarts_xml.length;i++) {
-                var onstart_xml:Element = onstarts_xml[i];
-                var tmp:A4ScriptExecutionQueue = null;
-//                var script_xml_l:NodeListOf<Element> = onstart_xml.children;
-                var script_xml_l:HTMLCollection = onstart_xml.children;
+                let onstart_xml:Element = onstarts_xml[i];
+                let tmp:A4ScriptExecutionQueue = null;
+//                let script_xml_l:NodeListOf<Element> = onstart_xml.children;
+                let script_xml_l:HTMLCollection = onstart_xml.children;
                 for(let j:number = 0;j<script_xml_l.length;j++) {
-                    var script_xml:Element = script_xml_l[j];
-                    var s:A4Script = A4Script.fromXML(script_xml);
+                    let script_xml:Element = script_xml_l[j];
+                    let s:A4Script = A4Script.fromXML(script_xml);
                     if (tmp == null) tmp = new A4ScriptExecutionQueue(null, null, this, null);
                     tmp.scripts.push(s);
                 }
@@ -462,10 +473,10 @@ class A4Game {
             }        
 
             // event rules:
-            var eventrules_xml:Element[] = getElementChildrenByTag(this.xml, "eventRule");
+            let eventrules_xml:Element[] = getElementChildrenByTag(this.xml, "eventRule");
             for(let i:number = 0;i<eventrules_xml.length;i++) {
-                var rule_xml:Element = eventrules_xml[i];
-                var r:A4EventRule = A4EventRule.fromXML(rule_xml);
+                let rule_xml:Element = eventrules_xml[i];
+                let r:A4EventRule = A4EventRule.fromXML(rule_xml);
                 if (this.eventScripts[r.event] == null) this.eventScripts[r.event] = [];
                 this.eventScripts[r.event].push(r);
             }        
@@ -475,20 +486,20 @@ class A4Game {
 
         // spawning player characters:
         {
-            var players_xml:Element[] = getElementChildrenByTag(this.xml, "player");
+            let players_xml:Element[] = getElementChildrenByTag(this.xml, "player");
             for(let i:number = 0;i<players_xml.length;i++) {
-                var player_xml:Element = players_xml[i];
-                var id:string = player_xml.getAttribute("id");
-                var className:string = player_xml.getAttribute("class");
+                let player_xml:Element = players_xml[i];
+                let id:string = player_xml.getAttribute("id");
+                let className:string = player_xml.getAttribute("class");
                 if (className == null) className = player_xml.getAttribute("type");
-                var x:number = Number(player_xml.getAttribute("x"));
-                var y:number = Number(player_xml.getAttribute("y"));
-                var mapIdx:number = Number(player_xml.getAttribute("map"));
+                let x:number = Number(player_xml.getAttribute("x"));
+                let y:number = Number(player_xml.getAttribute("y"));
+                let mapIdx:number = Number(player_xml.getAttribute("map"));
                 console.log("Spawning player "+className+" at "+x+","+y+" in map " + mapIdx);
 
-                var completeRedefinition:boolean = false;
+                let completeRedefinition:boolean = false;
                 if (player_xml.getAttribute("completeRedefinition") == "true") completeRedefinition = true;
-                var p:A4Object = this.objectFactory.createObject(className, this, true, completeRedefinition);
+                let p:A4Object = this.objectFactory.createObject(className, this, true, completeRedefinition);
                 if (id != null) {
                     p.ID = id;
                     if (!isNaN(Number(id)) &&
@@ -502,7 +513,7 @@ class A4Game {
 
         // load messages:
         {
-            var console_xml:Element = getFirstElementChildByTag(this.xml, "console");
+            let console_xml:Element = getFirstElementChildByTag(this.xml, "console");
             if (console_xml != null) {
                 for(let message_xml of getElementChildrenByTag(console_xml, "message")) {
                     if (message_xml.getAttribute("timeStamp") != null) {
@@ -522,7 +533,7 @@ class A4Game {
         }
 
         // load the location information
-        var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", "data/map-locations.xml", false); 
         xmlhttp.send();
@@ -544,7 +555,7 @@ class A4Game {
         this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Shrdlu")[0]), this, 
                                       ["data/general-kb.xml","data/shrdlu-kb.xml"]);
         if (saveGameXml) {
-            var ais_xml:Element[] = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
+            let ais_xml:Element[] = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
             this.etaoinAI.restoreFromXML(ais_xml[0]);
             this.qwertyAI.restoreFromXML(ais_xml[1]);
             this.shrdluAI.restoreFromXML(ais_xml[2]);
@@ -594,14 +605,14 @@ class A4Game {
             }
             if (vname == "error_messages_for_log") {
                 for(let tmp_xml of getElementChildrenByTag(variable_xml, "message")) {
-                    var tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
+                    let tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
                     if (tmp_array[tmp_array.length-1] == "") tmp_array.splice(tmp_array.length-1, 1);
                     this.error_messages_for_log.push(tmp_array);
                 }
             }
             if (vname == "in_game_actions_for_log") {
                 for(let tmp_xml of getElementChildrenByTag(variable_xml, "action")) {
-                    var tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
+                    let tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
                     if (tmp_array[tmp_array.length-1] == "") tmp_array.splice(tmp_array.length-1, 1);
                     this.in_game_actions_for_log.push(tmp_array);
                 }
@@ -631,7 +642,7 @@ class A4Game {
 
     loadTardis8LocationKnowledge()
     {
-        var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", "data/map-locations-tardis.xml", false); 
         xmlhttp.send();
@@ -650,8 +661,8 @@ class A4Game {
 
     saveGame(saveName:string)
     {
-        var complete_xmlString:string = "<SHRDLU_savegame>\n";
-        var xmlString:string = this.saveToXML();
+        let complete_xmlString:string = "<SHRDLU_savegame>\n";
+        let xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
         //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, xmlString);
 
@@ -687,16 +698,16 @@ class A4Game {
 
         // save it:
         console.log("Size of sample is: " + complete_xmlString.length);
-        var compressed = LZString.compressToUTF16(complete_xmlString);
+        let compressed = LZString.compressToUTF16(complete_xmlString);
         console.log("Size of compressed sample is: " + compressed.length);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, compressed);
         // downloadStringAsFile(complete_xmlString, "A4Game-saveGame.xml");
 
         // savegame name:
-        var seconds:number = Math.floor(this.cycle/60)%60;
-        var minutes:number = Math.floor(this.cycle/(60*60))%60;
-        var hours:number = Math.floor(this.cycle/(60*60*60));
-        var name:string = hours+":";
+        let seconds:number = Math.floor(this.cycle/60)%60;
+        let minutes:number = Math.floor(this.cycle/(60*60))%60;
+        let hours:number = Math.floor(this.cycle/(60*60*60));
+        let name:string = hours+":";
         if (minutes<10) {
             name += "0" + minutes + ":";
         } else {
@@ -713,7 +724,7 @@ class A4Game {
 
     saveToXML() : string
     {
-        var xmlString:string = "";
+        let xmlString:string = "";
         xmlString += "<A4Game";
         if (this.gameName != null) xmlString += " name=\"" + this.gameName + "\"";
         if (this.gameTitle != null) xmlString += " title=\"" + this.gameTitle + "\"";
@@ -794,7 +805,7 @@ class A4Game {
 
         // players:
         for(let pc of this.players) {
-            var idx:number = 0;
+            let idx:number = 0;
             for(let idx:number = 0;idx<this.maps.length;idx++) {                
                 if (pc.map == this.maps[idx]) {
                     xmlString += pc.saveToXMLForMainFile(this, "player", idx) + "\n";
@@ -804,7 +815,7 @@ class A4Game {
         }
 
         // save state:
-        var onStarttagOpen:boolean = false;
+        let onStarttagOpen:boolean = false;
         /*
         for(let sa of this.knownSpeechActs) {
             if (sa.performative==A4_TALK_PERFORMATIVE_ASK) {
@@ -952,7 +963,7 @@ class A4Game {
 
         // update all the objects in the game:
         // figure out which maps to update:
-        var maps_to_update:A4Map[] = [];
+        let maps_to_update:A4Map[] = [];
         for(let m of this.currentPlayer.map.getNeighborMaps()) {
             if (maps_to_update.indexOf(m) == -1) maps_to_update.push(m);
         }
@@ -966,15 +977,15 @@ class A4Game {
         }
 
         for(let wr of this.warpRequests) {
-            var m:A4Map = wr.map;
-            var createRecord:boolean = wr.o.isCharacter() || wr.o.isVehicle();
-            var acceptWarp:boolean = true;
+            let m:A4Map = wr.map;
+            let createRecord:boolean = wr.o.isCharacter() || wr.o.isVehicle();
+            let acceptWarp:boolean = true;
             if (createRecord &&
                 m!=null &&
                 !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
             
             if (acceptWarp) {
-                var isCurrentPlayer:boolean = (wr.o == this.currentPlayer);
+                let isCurrentPlayer:boolean = (wr.o == this.currentPlayer);
                 if (m!=null && createRecord) {
                     wr.o.map.addPerceptionBufferObjectWarpedRecord(
                         new PerceptionBufferObjectWarpedRecord(wr.o.ID, wr.o.sort, m.name,
@@ -1082,8 +1093,8 @@ class A4Game {
 
 	draw(screen_width:number, screen_height:number)
     {
-        var tileSize:number = (screen_height/24);
-        var split:number = Math.floor(tileSize*17);
+        let tileSize:number = (screen_height/24);
+        let split:number = Math.floor(tileSize*17);
 
         if (this.cutSceneActivated >= 0) {
             this.cutScenes.draw(this.cutSceneActivated, screen_width, split);
@@ -1097,9 +1108,9 @@ class A4Game {
         this.drawWorld(screen_width, split+tileSize);
         this.drawHUD(screen_width, screen_height, split);
 
-        var y:number = 8;
+        let y:number = 8;
         for(let i:number = 0;i<this.narrationMessages.length;i++) {
-            var width:number = this.narrationMessages[i].length*6*PIXEL_SIZE;
+            let width:number = this.narrationMessages[i].length*6*PIXEL_SIZE;
             fillTextTopLeft(this.narrationMessages[i], screen_width/2 - width/2, y, fontFamily32px, MSX_COLOR_WHITE);
             y += 8;
         }
@@ -1109,18 +1120,18 @@ class A4Game {
     drawWorld(screen_width:number, screen_height:number)
     {
         if (this.currentPlayer!=null) {
-            var map:A4Map = this.currentPlayer.map;
-            var mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
-            var mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
-            var tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
-            var ty:number = Math.floor((this.currentPlayer.y+this.currentPlayer.tallness)/this.tileHeight);
+            let map:A4Map = this.currentPlayer.map;
+            let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
+            let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
+            let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
+            let ty:number = Math.floor((this.currentPlayer.y+this.currentPlayer.tallness)/this.tileHeight);
             map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
             this.drawEyesclosedCover(screen_width, screen_height);
             map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
         } else {
             // this part is not needed for SHRDLU (the character doesn't die like in other games)
             /*
-            var map:A4Map = this.maps[0];
+            let map:A4Map = this.maps[0];
             map.draw(0, 0, this.zoom,screen_width, screen_height, this);
             this.drawEyesclosedCover(screen_width, screen_height);
             map.drawTextBubbles(0, 0, this.zoom, screen_width, screen_height, this);
@@ -1137,34 +1148,38 @@ class A4Game {
             ctx.fillRect(0, 0, screen_width, screen_height);
             break;
         case 1:
-            var f:number = (EYESOPEN_SPEED - this.eyesClosedTimer)/EYESOPEN_SPEED;
-            if (f<0) f = 0;
-            if (f>1) f = 1;
-            var x:number = 4*f - 1;
-            f = 0.125 * (5 + x - 3*x*x + x*x*x);
-            if (f<0) f = 0;
-            if (f>1) f = 1;
-            f = Math.sqrt(f)/2;
-            var height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, screen_width, height);
-            ctx.fillRect(0, screen_height-height, screen_width, height);
+            {
+              let f:number = (EYESOPEN_SPEED - this.eyesClosedTimer)/EYESOPEN_SPEED;
+              if (f<0) f = 0;
+              if (f>1) f = 1;
+              let x:number = 4*f - 1;
+              f = 0.125 * (5 + x - 3*x*x + x*x*x);
+              if (f<0) f = 0;
+              if (f>1) f = 1;
+              f = Math.sqrt(f)/2;
+              let height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
+              ctx.fillStyle = "black";
+              ctx.fillRect(0, 0, screen_width, height);
+              ctx.fillRect(0, screen_height-height, screen_width, height);
+            }
             break;
         case 2:
             break;
         case 3:
-            var f:number = this.eyesClosedTimer/EYESOPEN_SPEED;
-            if (f<0) f = 0;
-            if (f>1) f = 1;
-            var x:number = 4*f - 1;
-            f = 0.125 * (5 + x - 3*x*x + x*x*x);
-            if (f<0) f = 0;
-            if (f>1) f = 1;
-            f = Math.sqrt(f)/2;
-            var height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, screen_width, height);
-            ctx.fillRect(0, screen_height-height, screen_width, height);
+            {
+              let f:number = this.eyesClosedTimer/EYESOPEN_SPEED;
+              if (f<0) f = 0;
+              if (f>1) f = 1;
+              let x:number = 4*f - 1;
+              f = 0.125 * (5 + x - 3*x*x + x*x*x);
+              if (f<0) f = 0;
+              if (f>1) f = 1;
+              f = Math.sqrt(f)/2;
+              let height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
+              ctx.fillStyle = "black";
+              ctx.fillRect(0, 0, screen_width, height);
+              ctx.fillRect(0, screen_height-height, screen_width, height);
+            }
             break;
         }        
     }
@@ -1207,7 +1222,7 @@ class A4Game {
         // we can only show either the inventory or the messags (not both):
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
             // inventory:
-            var inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE;
+            let inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE;
             if (this.currentPlayer.inventory.length<=inventoryMaxSize) this.HUD_inventory_start = 0;
             if (this.currentPlayer.selectedItem>=0 &&
                 this.currentPlayer.selectedItem < this.HUD_inventory_start) {
@@ -1227,7 +1242,7 @@ class A4Game {
             }
             if (!this.currentPlayer.isInVehicle()) {
                 if (this.currentPlayer.selectedItem>=0) {
-                    var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                    let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
                     if (item!=null) {
                         if ((<A4Item>item).droppable) {
                             fillTextTopLeft("  o ", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
@@ -1267,9 +1282,9 @@ class A4Game {
             // draw the inventory:
             for(let i:number = 0;i<inventoryMaxSize &&
                                  i+this.HUD_inventory_start < this.currentPlayer.inventory.length;i++) {
-                var x:number = (i%2)*8*14*PIXEL_SIZE;
-                var y:number = split + (1+Math.floor(i/2))*8*PIXEL_SIZE;
-                var item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
+                let x:number = (i%2)*8*14*PIXEL_SIZE;
+                let y:number = split + (1+Math.floor(i/2))*8*PIXEL_SIZE;
+                let item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
 
                 if (i+this.HUD_inventory_start == this.currentPlayer.selectedItem) {
                     ctx.fillStyle = MSX_COLOR_DARK_BLUE;
@@ -1277,7 +1292,7 @@ class A4Game {
                 }
 
                 // item icon:
-                var anim:A4Animation = item.getCurrentAnimation();
+                let anim:A4Animation = item.getCurrentAnimation();
                 if (anim!=null) {
                     anim.drawWithZoom(x,y,this.zoom);
                 }
@@ -1289,8 +1304,8 @@ class A4Game {
 
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
             // inventory:
-            var inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE/2;
-            var inventoryRemoteMaxSize:number = (SHRDLU_INVENTORY_DISPLAY_SIZE/2)-1;
+            let inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE/2;
+            let inventoryRemoteMaxSize:number = (SHRDLU_INVENTORY_DISPLAY_SIZE/2)-1;
             // player inventory scroll:
             if (this.currentPlayer.inventory.length<=inventoryMaxSize) this.HUD_inventory_start = 0;
             if (this.currentPlayer.selectedItem>=0 &&
@@ -1350,16 +1365,16 @@ class A4Game {
             }
             for(let i:number = 0;i<inventoryMaxSize &&
                                  i+this.HUD_inventory_start < this.currentPlayer.inventory.length;i++) {
-                var x:number = 0;
-                var y:number = split + (1+i)*8*PIXEL_SIZE;
-                var item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
+                let x:number = 0;
+                let y:number = split + (1+i)*8*PIXEL_SIZE;
+                let item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
                 if (item==null) continue;
                 if (i+this.HUD_inventory_start == this.currentPlayer.selectedItem) {
                     ctx.fillStyle = MSX_COLOR_DARK_BLUE;
                     ctx.fillRect(x, y, 12*8*PIXEL_SIZE, 8*PIXEL_SIZE);
                 }
                 // item icon:
-                var anim:A4Animation = item.getCurrentAnimation();
+                let anim:A4Animation = item.getCurrentAnimation();
                 if (anim!=null) {
                     anim.drawWithZoom(x,y,this.zoom);
                 }
@@ -1387,16 +1402,16 @@ class A4Game {
             // inventory:
             for(let i:number = 0;i<inventoryRemoteMaxSize &&
                                  i+this.HUD_remote_inventory_start < this.HUD_remote_inventory.content.length;i++) {
-                var x:number = 20*8*PIXEL_SIZE;
-                var y:number = split + (2+i)*8*PIXEL_SIZE;
-                var item:A4Object = this.HUD_remote_inventory.content[i+this.HUD_remote_inventory_start];
+                let x:number = 20*8*PIXEL_SIZE;
+                let y:number = split + (2+i)*8*PIXEL_SIZE;
+                let item:A4Object = this.HUD_remote_inventory.content[i+this.HUD_remote_inventory_start];
                 if (item==null) continue;
                 if (i+this.HUD_remote_inventory_start == this.HUD_remote_inventory_selected) {
                     ctx.fillStyle = MSX_COLOR_DARK_BLUE;
                     ctx.fillRect(x, y, 12*8*PIXEL_SIZE, 8*PIXEL_SIZE);
                 }
                 // item icon:
-                var anim:A4Animation = item.getCurrentAnimation();
+                let anim:A4Animation = item.getCurrentAnimation();
                 if (anim!=null) {
                     anim.drawWithZoom(x,y,this.zoom);
                 }
@@ -1405,10 +1420,10 @@ class A4Game {
             }
         } else { 
             // messages:
-            var x:number = 0;
-            var y:number = split+8*PIXEL_SIZE;
+            let x:number = 0;
+            let y:number = split+8*PIXEL_SIZE;
 
-            var start:number = 0;
+            let start:number = 0;
             if (this.console_first_message==-1) {
                 start = this.messages.length - A4_N_MESSAGES_IN_HUD;
             } else {
@@ -1467,7 +1482,7 @@ class A4Game {
             this.HUD_oxygen.drawWithZoom(23*8*PIXEL_SIZE, 0, PIXEL_SIZE);
             this.HUD_oxygen_bar.drawWithZoom(28*8*PIXEL_SIZE, 0, PIXEL_SIZE);
 
-            var oxygen_bar_size:number = Math.floor((32-6)*(this.suit_oxygen/SHRDLU_MAX_SPACESUIT_OXYGEN));
+            let oxygen_bar_size:number = Math.floor((32-6)*(this.suit_oxygen/SHRDLU_MAX_SPACESUIT_OXYGEN));
             if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN*0.2) {
                 ctx.fillStyle = MSX_COLOR_RED;
             } else {
@@ -1478,7 +1493,7 @@ class A4Game {
 
         // when any of the AIs is thinking:
         if ((this.cycle%32) < 16) {
-            var thinkingY:number = 128;
+            let thinkingY:number = 128;
             if (this.etaoinAI.inferenceProcesses.length > 0) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;
@@ -1550,8 +1565,8 @@ class A4Game {
             }
             if (mouse_x < PIXEL_SIZE*8*12 && 
                 mouse_y >= PIXEL_SIZE*8*18) {
-                var y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
-                var selected:number = this.HUD_inventory_start + y*2;
+                let y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
+                let selected:number = this.HUD_inventory_start + y*2;
                 if (selected < this.currentPlayer.inventory.length &&
                     this.currentPlayer.inventory[selected] != null) {
                     this.currentPlayer.selectedItem = selected;
@@ -1560,8 +1575,8 @@ class A4Game {
             if (mouse_x >= PIXEL_SIZE*8*14 && 
                 mouse_x < PIXEL_SIZE*8*26 && 
                 mouse_y >= PIXEL_SIZE*8*18) {
-                var y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
-                var selected:number = this.HUD_inventory_start + 1 + y*2;
+                let y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
+                let selected:number = this.HUD_inventory_start + 1 + y*2;
                 if (selected < this.currentPlayer.inventory.length &&
                     this.currentPlayer.inventory[selected] != null) {
                     this.currentPlayer.selectedItem = selected;
@@ -1585,8 +1600,8 @@ class A4Game {
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
             if (mouse_x < PIXEL_SIZE*8*12 && 
                 mouse_y >= PIXEL_SIZE*8*18) {
-                var y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
-                var selected:number = this.HUD_inventory_start + y;
+                let y:number = Math.floor((mouse_y-PIXEL_SIZE*8*18)/(PIXEL_SIZE*8));
+                let selected:number = this.HUD_inventory_start + y;
                 if (selected < this.currentPlayer.inventory.length &&
                     this.currentPlayer.inventory[selected] != null) {
                     this.currentPlayer.selectedItem = selected;
@@ -1596,8 +1611,8 @@ class A4Game {
             // select on the other inventory:
             if (mouse_x >= PIXEL_SIZE*8*20 && 
                 mouse_y >= PIXEL_SIZE*8*19) {
-                var y:number = Math.floor((mouse_y-PIXEL_SIZE*8*19)/(PIXEL_SIZE*8));
-                var selected:number = this.HUD_remote_inventory_start + y;
+                let y:number = Math.floor((mouse_y-PIXEL_SIZE*8*19)/(PIXEL_SIZE*8));
+                let selected:number = this.HUD_remote_inventory_start + y;
                 if (selected < this.HUD_remote_inventory.content.length &&
                     this.HUD_remote_inventory.content[selected] != null) {
                     this.HUD_remote_inventory_selected = selected;
@@ -1664,8 +1679,8 @@ class A4Game {
                 mouse_y < PIXEL_SIZE*8*20) {
                 if (this.HUD_remote_inventory_selected>=0 &&
                     this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected].takeable) {
-                    var item:A4Object = this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected];
-                    var idx:number = this.HUD_remote_inventory.content.indexOf(item);
+                    let item:A4Object = this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected];
+                    let idx:number = this.HUD_remote_inventory.content.indexOf(item);
                     this.HUD_remote_inventory.content.splice(idx,1);
                     this.HUD_remote_inventory.objectRemoved(item);
                     this.currentPlayer.inventory.push(item);
@@ -1679,8 +1694,8 @@ class A4Game {
                 mouse_y >= PIXEL_SIZE*8*21 &&
                 mouse_y < PIXEL_SIZE*8*22) {
                 if (this.currentPlayer.selectedItem>=0) {
-                    var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
-                    var idx:number = this.currentPlayer.inventory.indexOf(item);
+                    let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                    let idx:number = this.currentPlayer.inventory.indexOf(item);
                     this.currentPlayer.inventory.splice(idx,1);
                     this.HUD_remote_inventory.addContent(item);
                     this.currentPlayer.selectedItem = -1;
@@ -1726,11 +1741,11 @@ class A4Game {
 
     executeScriptQueues()
     {
-        var toDelete:A4ScriptExecutionQueue[] = [];
+        let toDelete:A4ScriptExecutionQueue[] = [];
         for(let seb of this.scriptQueues) {
             while(true) {
-                var s:A4Script = seb.scripts[0];
-                var retval:number = s.execute(seb.object,
+                let s:A4Script = seb.scripts[0];
+                let retval:number = s.execute(seb.object,
                                               seb.map,
                                               (seb.game == null ? this:seb.game),
                                               seb.otherCharacter);
@@ -1749,7 +1764,7 @@ class A4Game {
             }
         }
         for(let seb of toDelete) {
-            var idx:number = this.scriptQueues.indexOf(seb);
+            let idx:number = this.scriptQueues.indexOf(seb);
             this.scriptQueues.splice(idx, 1);
         }
     }
@@ -1764,7 +1779,7 @@ class A4Game {
 	// the game that this happened.
 	objectRemoved(o:A4Object)
     {
-        var idx:number = this.players.indexOf(<A4PlayerCharacter>o);
+        let idx:number = this.players.indexOf(<A4PlayerCharacter>o);
         if (idx>=0) this.players.splice(idx,1);
         if (this.currentPlayer == o) {
             this.currentPlayerIndex = 0
@@ -1855,11 +1870,11 @@ class A4Game {
 
 	getCameraX(focus:A4Object, map_width:number, screen_width:number) : number
     {
-        var target_x:number = 0;
+        let target_x:number = 0;
         if (map_width<screen_width/this.zoom) {
             target_x = (map_width-screen_width/this.zoom)/2;
         } else {
-            var target_x = focus.x+this.tileWidth/2;
+            target_x = focus.x+this.tileWidth/2;
             target_x -= (screen_width/2)/this.zoom;
 
             if (target_x<0) target_x = 0;
@@ -1873,10 +1888,10 @@ class A4Game {
 
 	getCameraY(focus:A4Object, map_height:number, screen_height:number) : number
     {
-        var top_HUD:number = 40;
-        var bottom_HUD:number = 56;
-        var center_Y:number = (screen_height - (top_HUD + bottom_HUD))/2 + top_HUD;
-        var target_y:number = 0;
+        let top_HUD:number = 40;
+        let bottom_HUD:number = 56;
+        let center_Y:number = (screen_height - (top_HUD + bottom_HUD))/2 + top_HUD;
+        let target_y:number = 0;
 
         if (map_height<(screen_height-(top_HUD + bottom_HUD))/this.zoom) {
             target_y = (map_height - (center_Y*2)/this.zoom)/2;
@@ -1924,8 +1939,8 @@ class A4Game {
 	addMessageWithColorTime(text:string, color:string, timeStamp:number)
     {
         // split longer messages into different lines:
-        var buffer:string = "";
-        var last_space:number = 0;
+        let buffer:string = "";
+        let last_space:number = 0;
 
         for(let i:number=0;i<text.length;i++) {
             buffer += text.charAt(i);
@@ -1936,8 +1951,8 @@ class A4Game {
                     this.messages.push([buffer,color,""+timeStamp]);
                     buffer = "";
                 } else {
-                    var backspaces:number = i - last_space;
-                    var tmp:string = buffer.substring(0, buffer.length-backspaces);
+                    let backspaces:number = i - last_space;
+                    let tmp:string = buffer.substring(0, buffer.length-backspaces);
                     this.messages.push([tmp,color,""+timeStamp]);
                     buffer = "  " + buffer.substring((buffer.length-backspaces));
                 }
@@ -1996,8 +2011,8 @@ class A4Game {
             if (!this.currentPlayer.isInVehicle() &&
                 this.HUD_remote_inventory_selected>=0 &&
                 this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected].takeable) {
-                var item:A4Object = this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected];
-                var idx:number = this.HUD_remote_inventory.content.indexOf(item);
+                let item:A4Object = this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected];
+                let idx:number = this.HUD_remote_inventory.content.indexOf(item);
                 this.HUD_remote_inventory.content.splice(idx,1);
                 this.HUD_remote_inventory.objectRemoved(item);
                 this.currentPlayer.inventory.push(item);
@@ -2013,7 +2028,7 @@ class A4Game {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
             if (!this.currentPlayer.isInVehicle() &&
                 this.currentPlayer.selectedItem>=0) {
-                var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
                 if (item!=null && (<A4Item>item).droppable) {
                     this.playerInput_issueCommand(A4CHARACTER_COMMAND_DROP,app.game.currentPlayer.selectedItem,null);
                     this.currentPlayer.selectedItem = -1;
@@ -2022,10 +2037,10 @@ class A4Game {
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
             if (!this.currentPlayer.isInVehicle() &&
                 this.currentPlayer.selectedItem>=0) {
-                var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
                 if (item!=null && (<A4Item>item).droppable) {
-                    var item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
-                    var idx:number = this.currentPlayer.inventory.indexOf(item);
+                    let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
+                    let idx:number = this.currentPlayer.inventory.indexOf(item);
                     this.currentPlayer.inventory.splice(idx,1);
                     this.HUD_remote_inventory.addContent(item);
                     this.currentPlayer.selectedItem = -1;
@@ -2137,14 +2152,14 @@ class A4Game {
             // detect whether we should change "walk" to attack or talk if we walk against an enemy or npc:
             // only change action if there is an obstacle and we cannot walk around it:
             if (!this.currentPlayer.canMove(direction, false)) {
-                var map:A4Map = this.currentPlayer.map;
+                let map:A4Map = this.currentPlayer.map;
                 // detect whether we will collide with another character/object, and decide whether to change to another action:
-                var collisions:A4Object[] = map.getAllObjectCollisionsWithOffset(this.currentPlayer, direction_x_inc[direction], direction_y_inc[direction]);
+                let collisions:A4Object[] = map.getAllObjectCollisionsWithOffset(this.currentPlayer, direction_x_inc[direction], direction_y_inc[direction]);
                 for(let o of collisions) {
                     if (o.isCharacter()) {
                         // determine whether the character is friendly or unfriendly
                         if (o.isAICharacter()) {
-                            var ai:A4AI = (<A4AICharacter>o).AI;
+                            let ai:A4AI = (<A4AICharacter>o).AI;
                             if (ai.isUnfriendly(this.currentPlayer.ID)) {
                                 // attack!
                                 this.currentPlayer.issueCommandWithArguments(A4CHARACTER_COMMAND_ATTACK, arg, direction, o, this);
@@ -2197,7 +2212,7 @@ class A4Game {
     findObjectByName(name:string) : A4Object[]
     {
         for(let m of this.maps) {
-            var o2:A4Object[] = m.findObjectByName(name);
+            let o2:A4Object[] = m.findObjectByName(name);
             if (o2!=null) return o2;
         }
         return null;
@@ -2206,7 +2221,7 @@ class A4Game {
 
     findObjectByIDJustObject(ID:string) : A4Object
     {
-        var tmp:A4Object[] = this.findObjectByID(ID);
+        let tmp:A4Object[] = this.findObjectByID(ID);
         if (tmp == null) return null;
         return tmp[tmp.length-1];
     }
@@ -2218,7 +2233,7 @@ class A4Game {
     findObjectByID(ID:string) : A4Object[]
     {
         for(let m of this.maps) {
-            var o2:A4Object[] = m.findObjectByID(ID);
+            let o2:A4Object[] = m.findObjectByID(ID);
             if (o2!=null) return o2;
         }
         return null;
@@ -2227,7 +2242,7 @@ class A4Game {
 
     getAILocation(o:A4Object) : AILocation
     {
-        var map:A4Map = o.map;
+        let map:A4Map = o.map;
         if (map==null) {
             let tmp:A4Object[] = this.findObjectByID(o.ID);
             if (tmp == null || tmp.length == 0) return null;
@@ -2235,19 +2250,19 @@ class A4Game {
             map = tmp[0].map;
             o = tmp[0];
         }
-        var tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
-        var tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
+        let tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
+        let tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
         return this.getAILocationTileCoordinate(map, tile_x, tile_y);
     }    
 
 
     getAILocationTileCoordinate(map:A4Map, tile_x:number, tile_y:number) : AILocation
     {
-        var offset:number = tile_x + tile_y*map.width;
-        var location:AILocation = null;
-        var location_idx:number = -1;
+        let offset:number = tile_x + tile_y*map.width;
+        let location:AILocation = null;
+        let location_idx:number = -1;
         for(let location_idx2:number = 0;location_idx2<this.locations.length;location_idx2++) {
-            var l:AILocation = this.locations[location_idx2];
+            let l:AILocation = this.locations[location_idx2];
             for(let i:number = 0;i<l.maps.length;i++) {
                 if (l.maps[i] == map) {
                     if (l.mapOccupancyMaps[i][offset]) {
@@ -2482,7 +2497,7 @@ class A4Game {
         }
 
         if (this.currentPlayer.map.textBubbles.length > 0) {
-            var bubble:A4TextBubble = this.currentPlayer.map.textBubbles[0][0];
+            let bubble:A4TextBubble = this.currentPlayer.map.textBubbles[0][0];
             this.currentPlayer.map.textBubbles[0][1] = 0;
             return true;
         }
@@ -2539,7 +2554,7 @@ class A4Game {
 
     textInputEvent(e:KeyboardEvent, SFXM:SFXManager)
     {
-        var textInputLimit:number = 40;
+        let textInputLimit:number = 40;
 
 //        console.log("key: " + e.key + ", keyCode:" + e.keyCode + ", modifiers: " + e.getModifierState("Shift") + " | " + e.getModifierState("CapsLock"));
         if (e.key.length == 1 && this.HUD_text_input_buffer.length <= textInputLimit) {
@@ -2791,6 +2806,8 @@ class A4Game {
 
     error_messages_for_log:string[][] = [];
     in_game_actions_for_log:string[][] = [];
+
+    three_d_printer_recipies:{ [item: string] : string[]; };
     //</shrdlu-specific>
 
 }

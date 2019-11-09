@@ -36,8 +36,8 @@ class A4GraphicFile {
         }
 
         if (this.tiles[n] != null) return this.tiles[n];
-        var x:number = (n%this.tilesPerRow)*this.tileWidth;
-        var y:number = Math.floor(n/this.tilesPerRow)*this.tileHeight;
+        let x:number = (n%this.tilesPerRow)*this.tileWidth;
+        let y:number = Math.floor(n/this.tilesPerRow)*this.tileHeight;
         //    output_debug_message("%i -> %i,%i - %i,%i\n",n,x,y,m_tile_dx,m_tile_dy);
         this.tiles[n] = this.GLTM.getPiece(this.fullName , x, y, this.tileWidth, this.tileHeight);
         return this.tiles[n];        
@@ -52,8 +52,8 @@ class A4GraphicFile {
         }
 
         if (this.tilesDark[n] != null) return this.tilesDark[n];
-        var x:number = (n%this.tilesPerRow)*this.tileWidth;
-        var y:number = Math.floor(n/this.tilesPerRow)*this.tileHeight;
+        let x:number = (n%this.tilesPerRow)*this.tileWidth;
+        let y:number = Math.floor(n/this.tilesPerRow)*this.tileHeight;
         //    output_debug_message("%i -> %i,%i - %i,%i\n",n,x,y,m_tile_dx,m_tile_dy);
         this.tilesDark[n] = this.GLTM.getPieceDark(this.fullName , x, y, this.tileWidth, this.tileHeight);
         return this.tilesDark[n];        
