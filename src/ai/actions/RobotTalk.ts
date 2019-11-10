@@ -14,7 +14,6 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		let requester:TermAttribute = ir.requester;
 		let txt:string = null;
 		let performative:Term = (<TermTermAttribute>(intention.attributes[1])).term;
-		let changingToCallAttention:boolean = false;
 		let context:NLContext = null;
 
 		if (intention.attributes[1] instanceof TermTermAttribute) {
@@ -38,7 +37,6 @@ class RobotTalk_IntentionAction extends IntentionAction {
 					// we need to greet first:
 					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
 					ai.queueIntentionRecord(ir);
-					changingToCallAttention = true;
 				}
 
 				if (requester instanceof ConstantTermAttribute &&
@@ -59,20 +57,16 @@ class RobotTalk_IntentionAction extends IntentionAction {
 
 		if (txt != null) {
 //				ai.game.addMessage(ai.selfID + ": " + txt);
-			if (changingToCallAttention) {
-				ai.queueIntentionRecord(ir);
-			} else {
-				if (!ai.robot.issueCommandWithString(A4CHARACTER_COMMAND_TALK, txt, 0, ai.game)) {
-					return null;	// not yet!
-				}
+			if (!ai.robot.issueCommandWithString(A4CHARACTER_COMMAND_TALK, txt, 0, ai.game)) {
+				return null;	// not yet!
+			}
 
-				// see if we also need to create a speech bubble, since david can hear this character through the communicator:
-				if (ai.game.communicatorConnectedTo == ai.selfID) {
-					ai.game.currentPlayer.map.textBubbles.push(
-						[new A4TextBubble(ai.selfID + ": " + txt, 32, fontFamily8px, 6, 8, ai.game, null),
-						 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
-						);
-				}
+			// see if we also need to create a speech bubble, since david can hear this character through the communicator:
+			if (ai.game.communicatorConnectedTo == ai.selfID) {
+				ai.game.currentPlayer.map.textBubbles.push(
+					[new A4TextBubble(ai.selfID + ": " + txt, 32, fontFamily8px, 6, 8, ai.game, null),
+					 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
+					);
 			}
 
 			// update natural language context:

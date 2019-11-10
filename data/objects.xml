@@ -1200,7 +1200,7 @@
 
 	<ObjectClass class="crashedshuttle" super="*shuttle,obstacle" name="shuttle">
 		<attribute name="tallness" value="8"/>
-		<animation name="idle" dx="5" dy="4" period="4" looping="false" file="background.png">795</animation>
+		<animation name="idle" dx="5" dy="3" period="4" looping="false" file="background.png">795</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<talkOther text="This is a terrible scene... I can see several dead bodies inside the shuttle..." thought="true"/>

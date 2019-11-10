@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="80" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="1233">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="80" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="1234">
  <properties>
   <property name="name" value="Spacer Gorge"/>
  </properties>
  <tileset firstgid="1" name="background" tilewidth="8" tileheight="8" tilecount="1024" columns="32">
   <image source="background.png" width="256" height="256"/>
- </tileset>
- <tileset firstgid="1025" name="robots" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="robots.png" width="128" height="128"/>
  </tileset>
  <layer name="height 0" width="80" height="32">
   <properties>
@@ -97,7 +94,7 @@
 0,0,0,0,741,742,0,0,0,743,744,0,0,0,0,0,0,0,0,0,748,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,775,776,0,0,0,0,837,838,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,773,774,0,0,0,775,776,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,743,744,0,0,0,0,0,0,0,
 0,0,0,0,805,806,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,775,776,0,0,741,742,0,0,0,
-0,0,0,0,837,838,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,848,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,773,774,0,0,0,
+0,0,0,0,837,838,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,773,774,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,805,806,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,837,838,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -138,7 +135,7 @@
   <object id="1225" type="large-boulder" x="96" y="96" width="16" height="16"/>
   <object id="1226" name="SPACER-GORGE" type="BridgeDestination" x="512" y="208" width="64" height="40"/>
   <object id="1227" name="SPACER-GORGE" type="Bridge" x="512" y="240" width="64" height="16"/>
-  <object id="1229" type="crashedshuttle" x="160" y="16" width="40" height="32"/>
+  <object id="1229" type="crashedshuttle" x="160" y="16" width="40" height="24"/>
   <object id="1230" type="shuttle-corpse" x="152" y="48" width="16" height="16"/>
   <object id="shuttle-engine" type="shuttle-engine" x="208" y="56" width="8" height="16"/>
   <object id="1232" type="huge-boulder" x="544" y="120" width="24" height="24"/>
