@@ -11,7 +11,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 		console.log("AnswerPredicate_InferenceEffect");
 		console.log("inf.inferences.length: " + inf.inferences.length);
 		for(let i:number = 0;i<inf.inferences.length;i++) {
-			console.log("inf.inferences["+i+"].endResults: " + inf.inferences[i].endResults);
+			console.log("inf.inferences["+i+"].endResults.length: " + inf.inferences[i].endResults.length);
 		}
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
@@ -30,12 +30,12 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 //				console.log("new intention: " + term);
-			} else if (inf.inferences[0].endResults[0].l.length == 0) {
+			} else if (inf.inferences[0].endResults[0].bindings.l.length == 0) {
 				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'unknown'[symbol]))";
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
-				for(let [variable,value] of inf.inferences[0].endResults[0].l) {
+				for(let [variable,value] of inf.inferences[0].endResults[0].bindings.l) {
 					if (value instanceof ConstantTermAttribute &&
 						value.sort.name == "#id") {
 						// we need to add this mention to the context entity list:
@@ -51,11 +51,11 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 					}
 				}
 
-				let answer:string = "yes"
+				let answer:string = "yes";
 				if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "no";
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
-				var term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))", ai.o);
+				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
@@ -71,8 +71,9 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 					if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "no";
 					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 					var term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-	//				console.log("new intention: " + term);
+
+					let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[1].originalTarget, inf.inferences[1].endResults[0], ai);
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 				}
 			} else {
 				//console.log("inference.endResults.length != 0");
@@ -80,8 +81,8 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "yes";
 				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 				var term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-	//				console.log("new intention: " + term);
+				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 			}
 		}
 	}

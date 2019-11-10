@@ -29,7 +29,8 @@ class Memorize_InferenceEffect extends InferenceEffect {
 			} else {
 				// we already knew, just say ok:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
@@ -41,7 +42,8 @@ class Memorize_InferenceEffect extends InferenceEffect {
 			} else {
 				// contradiction:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 			}
 		}
 

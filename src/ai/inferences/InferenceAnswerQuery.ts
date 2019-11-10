@@ -11,7 +11,7 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 	{
 		console.log("AnswerQuery_InferenceEffect");
 		console.log("inf.inferences.length: " + inf.inferences.length);
-		console.log("inf.inferences[0].endResults: " + inf.inferences[0].endResults);
+		console.log("inf.inferences[0].endResults.length: " + inf.inferences[0].endResults.length);
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
 			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
@@ -36,8 +36,8 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 			 
 		if (inf.inferences[0].endResults.length != 0) {
 			let results:TermAttribute[] = [];
-			for(let b of inf.inferences[0].endResults) {
-				for(let [variable, value] of b.l) {
+			for(let result of inf.inferences[0].endResults) {
+				for(let [variable, value] of result.bindings.l) {
 					if (variable == queryVariable) {
 						// we have a result! check for duplicates:
 						let found:boolean = false;

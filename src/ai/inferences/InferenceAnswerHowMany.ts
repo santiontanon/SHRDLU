@@ -10,7 +10,7 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 	{
 		console.log("executeInferenceEffect: INFERENCE_RECORD_EFFECT_ANSWER_HOWMANY");
 		console.log("inf.inferences.length: " + inf.inferences.length);
-		console.log("inf.inferences[0].endResults: " + inf.inferences[0].endResults);
+		console.log("inf.inferences[0].endResults.length: " + inf.inferences[0].endResults.length);
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
 			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
@@ -29,8 +29,8 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 			 queryTerm.functor.is_a(ai.cache_sort_relation_with_value))) negativeAnswer = "'unknown'[symbol]";
 		if (inf.inferences[0].endResults.length != 0) {
 			var results:TermAttribute[] = [];
-			for(let b of inf.inferences[0].endResults) {
-				for(let [variable, value] of b.l) {
+			for(let result of inf.inferences[0].endResults) {
+				for(let [variable, value] of result.bindings.l) {
 					if (variable == queryVariable) {
 						let found:boolean = false;
 						for(let value2 of results) {

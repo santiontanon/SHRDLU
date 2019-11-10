@@ -1090,6 +1090,7 @@ class Term {
         return sentences;
     }
 
+
     static bringNotInwards(term:Term, o:Ontology) : Term
     {
         if (term.functor.name == "#not" && 
@@ -1134,6 +1135,26 @@ class Term {
             }
             return term2;
         }
+    }
+
+
+    static sentenceToTerm(sentence:Sentence, o:Ontology) : Term
+    {
+        let term:Term = null;
+
+        for(let i:number = 0; i<sentence.terms.length; i++) {
+            let term2:Term = sentence.terms[i];
+            if (!sentence.sign[i]) {
+                term2 = new Term(o.getSort("#not"), [new TermTermAttribute(term2)]);
+            }
+            if (term == null) {
+                term = term2;
+            } else {
+                term = new Term(o.getSort("#or"), [new TermTermAttribute(term), new TermTermAttribute(term2)]);
+            }
+        }
+
+        return term;
     }
 
 

@@ -18,7 +18,7 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 			targetIDVariableName = (<VariableTermAttribute>(this.effectParameter.attributes[2])).name;
 		}
 		if (inf.inferences[0].endResults.length != 0) {
-			for(let b of inf.inferences[0].endResults[0].l) {
+			for(let b of inf.inferences[0].endResults[0].bindings.l) {
 				if (b[0].name == "NAME") {
 					var v:TermAttribute = b[1];
 					if (v instanceof ConstantTermAttribute) {

@@ -38,7 +38,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_after_crash_site();
 			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
-		//}
+		///}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -1196,7 +1196,7 @@ class ShrdluGameScript {
 				if (!this.contextEtaoin.inConversation) {
 					this.etaoinSays("perf.callattention('david'[#id])");
 				}
-				this.etaoinSays("perf.inform(D:'david'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(relation.owns(D, Q), plural(Q)))), time.past(V))))");
+				this.etaoinSays("perf.inform(D:'david'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), plural(Q)))), time.past(V))))");
 				this.etaoinSays("perf.inform('david'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
 				if (this.game.etaoinAI.intentions.length == 0 &&
@@ -1211,7 +1211,7 @@ class ShrdluGameScript {
 				if (!this.contextEtaoin.inConversation) {
 					this.etaoinSays("perf.callattention('david'[#id])");
 				}
-				this.etaoinSays("perf.inform(D:'david'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(relation.owns(D, Q), #and(relation.target(Q, 'qwerty'[#id]), plural(Q))))), time.past(V))))");
+				this.etaoinSays("perf.inform(D:'david'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), #and(relation.target(Q, 'qwerty'[#id]), plural(Q))))), time.past(V))))");
 				this.etaoinSays("perf.inform('david'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
 				if (this.game.etaoinAI.intentions.length == 0 &&

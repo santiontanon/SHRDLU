@@ -31,7 +31,8 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 			var action:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			if (inf.inferences[0].endResults.length != 0) {
 				// get the location ID
-				for(let bindings of inf.inferences[0].endResults) {
+				for(let result of inf.inferences[0].endResults) {
+					let bindings:Bindings = result.bindings;
 					for(let b of bindings.l) {
 						if (b[0].name == "WHERE") {
 							var v:TermAttribute = b[1];

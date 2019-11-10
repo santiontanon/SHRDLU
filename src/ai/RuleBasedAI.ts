@@ -303,6 +303,27 @@ abstract class InferenceEffect {
 	{
 		return this.saveToXMLInternal(ai, [], []);
 	}
+
+
+	generateCauseRecord(target:Sentence[], result:InferenceNode, ai:RuleBasedAI) : CauseRecord
+	{
+		let baseSentences:Sentence[] = result.getBaseSentences(target);
+				
+		if (baseSentences.length == 0) {
+			return null;
+		} else {
+			let cause:Term = null;
+			for(let s of baseSentences) {
+				let s_term:Term = Term.sentenceToTerm(s, ai.o);
+	            if (cause == null) {
+	                cause = s_term;
+	            } else {
+	                cause = new Term(ai.o.getSort("#and"), [new TermTermAttribute(cause), new TermTermAttribute(s_term)]);
+	            }
+			}
+			return new CauseRecord(cause, null, ai.time_in_seconds)
+		}
+	}	
 }
 
 
@@ -1808,7 +1829,7 @@ class RuleBasedAI {
 	}
 
 
-	processSuperlatives(results:Bindings[], superlative:Sentence)
+	processSuperlatives(results:InferenceNode[], superlative:Sentence)
 	{
 		return results;
 	}

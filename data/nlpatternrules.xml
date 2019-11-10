@@ -316,21 +316,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   priority="200"/>
 
 	<!-- e.g.: "the ship is mine" -->
-	<NLPattern head="perf.inform(LISTENER, relation.owns(SPEAKER, OBJECT))"
+	<NLPattern head="perf.inform(LISTENER, verb.own(SPEAKER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 possessive-pronoun(PP2,[singular],G2,[first-person]) ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"/>
-	<NLPattern head="perf.inform(LISTENER, relation.owns(LISTENER, OBJECT))"
+	<NLPattern head="perf.inform(LISTENER, verb.own(LISTENER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 possessive-pronoun(PP2,[singular],G2,[second-person]) ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"/>
-	<NLPattern head="perf.inform(LISTENER, relation.owns(OWNER, OBJECT))"
+	<NLPattern head="perf.inform(LISTENER, verb.own(OWNER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -918,21 +918,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 properNounCompound(X2, N) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 
-	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(SPEAKER, OBJECT))"
+	<NLPattern head="perf.q.predicate(LISTENER, verb.own(SPEAKER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C)  
 			   		 possessive-pronoun(PP2,[singular],G2,[first-person]) ('!'|'?')*
 			   		 #derefFromContext(C, OBJECT)"/>
-	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(LISTENER, OBJECT))"
+	<NLPattern head="perf.q.predicate(LISTENER, verb.own(LISTENER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.be'[symbol], N, P, T) nounPhrase(X, N, P, C) 
 			   		 possessive-pronoun(PP2,[singular],G2,[second-person]) ('!'|'?')*
 			   		 #derefFromContext(C, OBJECT)"/>
-	<NLPattern head="perf.q.predicate(LISTENER, relation.owns(OWNER, OBJECT))"
+	<NLPattern head="perf.q.predicate(LISTENER, verb.own(OWNER, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -4912,7 +4912,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<!-- whose rules -->
     <NLPattern name="whose-noun-is-this"
-    		   head="perf.q.query(LISTENER, QUERY_V, relation.owns(QUERY_V, OBJECT))"
+    		   head="perf.q.query(LISTENER, QUERY_V, verb.own(QUERY_V, OBJECT))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 'whose' 
@@ -4923,7 +4923,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(#and(noun(X, N), #cons(DET, X, N3)), OBJECT)"/>
 
     <NLPattern name="who-is-the-owner-object"
-    		   head="perf.q.query(LISTENER, QUERY_V, relation.owns(QUERY_V, OBJECT))"
+    		   head="perf.q.query(LISTENER, QUERY_V, verb.own(QUERY_V, OBJECT))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 'who' 
@@ -5337,10 +5337,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="nounPhrase(X, N, P, #and(indefinite-pronoun(X, N, G, P), adjective(X, ADJ)))"
 			   body="indefinite-pronoun(X, N, G, P) adjective(ADJ)"/>
 	<NLPattern name="nounphrase-saxon-genitive1"
-			   head="nounPhrase(X2, N2, [third-person], #and(relation.owns(X,X2), #and(noun(X2, N2), C)))"
+			   head="nounPhrase(X2, N2, [third-person], #and(verb.own(X,X2), #and(noun(X2, N2), C)))"
 			   body="nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>
 	<NLPattern name="nounphrase-saxon-genitive2"
-			   head="nounPhrase(X2, N2, [third-person], #and(relation.owns(X,X2), 
+			   head="nounPhrase(X2, N2, [third-person], #and(verb.own(X,X2), 
 														#and(noun(X2, N2),
 														#and(#cons(ART, X, N), C))))"
 			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>

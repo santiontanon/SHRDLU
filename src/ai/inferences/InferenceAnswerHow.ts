@@ -29,7 +29,7 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 			var how:Term = null;
 			var intention:Term = this.effectParameter;
 			if (inf.inferences[0].endResults.length != 0) {
-				for(let b of inf.inferences[0].endResults[0].l) {
+				for(let b of inf.inferences[0].endResults[0].bindings.l) {
 					if (b[0].name == "HOW") {
 						var v:TermAttribute = b[1];
 						if (v instanceof TermTermAttribute) {

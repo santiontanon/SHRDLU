@@ -58,8 +58,8 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			let targetLocationID:string = null;
 			let speakerLocation:AILocation = null;
 			let speakerLocationID:string = null;
-			for(let bindings of inf.inferences[0].endResults) {
-				for(let b of bindings.l) {
+			for(let result of inf.inferences[0].endResults) {
+				for(let b of result.bindings.l) {
 					if (b[0].name == "WHERE") {
 						var v:TermAttribute = b[1];
 						if (v instanceof ConstantTermAttribute) {
@@ -67,7 +67,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 							if (targetLocation == null) {
 								targetLocationID = (<ConstantTermAttribute>v).value;
 								targetLocation = ai.game.getAILocationByID(targetLocationID);
-								selectedBindings = bindings;
+								selectedBindings = result.bindings;
 							} else {
 								let targetLocationID2:string = (<ConstantTermAttribute>v).value;
 								let targetLocation2:AILocation = ai.game.getAILocationByID(targetLocationID2);
@@ -76,7 +76,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 								if (idx1>=0 && idx2>=0 && ai.game.location_in[idx2][idx1]) {
 									targetLocationID = targetLocationID2;
 									targetLocation = targetLocation2;
-									selectedBindings = bindings;
+									selectedBindings = result.bindings;
 								}
 							}
 						}
@@ -84,8 +84,8 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 				}
 			}			
 			if (inf.inferences[1].endResults.length != 0) {
-				for(let bindings of inf.inferences[1].endResults) {
-					for(let b of bindings.l) {
+				for(let result of inf.inferences[1].endResults) {
+					for(let b of result.bindings.l) {
 						if (b[0].name == "WHERE") {
 							var v:TermAttribute = b[1];
 							if (v instanceof ConstantTermAttribute) {

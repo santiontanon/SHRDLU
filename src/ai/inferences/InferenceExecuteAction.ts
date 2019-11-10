@@ -14,7 +14,7 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 			let speaker:string = inf.triggeredBySpeaker;
 			let context:NLContext = ai.contextForSpeaker(speaker);
 			let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
-			this.action = this.action.applyBindings(inf.inferences[0].endResults[0]);
+			this.action = this.action.applyBindings(inf.inferences[0].endResults[0].bindings);
 			let ir:IntentionRecord = new IntentionRecord(this.action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds);
 			let tmp:number = ai.canSatisfyActionRequest(ir);
 			if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {

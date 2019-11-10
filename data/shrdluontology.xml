@@ -499,7 +499,7 @@
     <sort name="relation.composition" super="relation"/>
     <sort name="relation.effect" super="relation"/>
     <sort name="relation.origin" super="relation"/>
-    <sort name="relation.owns" super="relation"/>
+    <!--sort name="verb.own" super="relation"/-->
     <sort name="relation.purpose" super="relation"/>
     <sort name="relation.target" super="relation"/>
     <sort name="relation.tool" super="relation"/>
@@ -569,7 +569,7 @@
     <sort name="verb.need" super="verb,#stateSort"/>
     <sort name="verb.need-for" super="verb"/>
     <sort name="verb.obtain" super="verb"/>
-    <sort name="verb.own" super="verb,relation.owns"/>
+    <sort name="verb.own" super="relation-verb"/>
     <sort name="verb.parse" super="verb"/>
     <sort name="verb.put" super="verb"/>
     <sort name="verb.repair" super="verb"/>
@@ -635,7 +635,7 @@
     <sort name="action.drop" super="actionverb"/>
     <sort name="action.push" super="actionverb"/>
     <sort name="action.pull" super="actionverb"/>
-    <sort name="action.open" super="actionverb"/>
+    <sort name="action.open" super="actionverb,relation-verb"/>
     <sort name="action.unlock" super="action.open"/>
     <sort name="action.close" super="actionverb"/>
     <sort name="action.lock" super="action.close"/>
@@ -673,11 +673,9 @@
     <sort name="start" super="abstract-entity"/>    
     <sort name="end" super="abstract-entity"/>   
 
-    <sort name="relation.opens" super="relation"/>
-
     <sort name="time" super="any"/>
     <sort name="time.location" super="time"/>
-    <sort name="time.current" super="time,property"/>
+    <sort name="time.current" super="time,property-with-value"/>
     <sort name="time.permanent" super="time,property"/>
     <sort name="time.at" super="time,relation"/>
     <sort name="time.past" super="time"/>

@@ -854,10 +854,10 @@ class NLContext {
 							} else if (determinerTerm.functor.is_a(possessiveDeterminerSort)) {
 								if (determinerTerm.functor.name == "determiner.my") {
 									// find owner:
-//									var ownerRelation:Term = Term.fromString("relation.owns('"+this.speaker+"'[#id])", o);
+//									var ownerRelation:Term = Term.fromString("verb.own('"+this.speaker+"'[#id])", o);
 //									ownerRelation.addAttribute(determinerTerm.attributes[0]);
 //									relationTerms.push(ownerRelation);
-									let belongsRelation:Term = new Term(o.getSort("relation.owns"), 
+									let belongsRelation:Term = new Term(o.getSort("verb.own"), 
 																	    [new ConstantTermAttribute(this.speaker, o.getSort("#id")),
 																	     determinerTerm.attributes[0]]);
 									let haveRelation:Term = new Term(o.getSort("verb.have"), 
@@ -866,10 +866,10 @@ class NLContext {
 									relationTerms.push([belongsRelation, haveRelation]);
 								} else if (determinerTerm.functor.name == "determiner.your") {
 									// find owner:
-//									let ownerRelation:Term = Term.fromString("relation.owns('"+this.ai.selfID+"'[#id])", o);
+//									let ownerRelation:Term = Term.fromString("verb.own('"+this.ai.selfID+"'[#id])", o);
 //									ownerRelation.addAttribute(determinerTerm.attributes[0]);
 //									relationTerms.push(ownerRelation);
-									let belongsRelation:Term = new Term(o.getSort("relation.owns"), 
+									let belongsRelation:Term = new Term(o.getSort("verb.own"), 
 																	    [new ConstantTermAttribute(this.ai.selfID, o.getSort("#id")),
 																	     determinerTerm.attributes[0]]);
 									let haveRelation:Term = new Term(o.getSort("verb.have"), 

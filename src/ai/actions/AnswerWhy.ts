@@ -24,8 +24,22 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 
 					if (lastPerf.cause != null) {
 						// we already know the cause!!
-						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id], relation.cause([any],"+lastPerf.cause.term+")))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, lastPerf.cause.cause, ai.time_in_seconds));
+						let causeTerm:Term = lastPerf.cause.term;
+						let causeTerms:Term[] = [];
+						if (causeTerm.functor.name == "#and") {
+							let tal:TermAttribute[] = NLParser.elementsInList(causeTerm,"#and");
+							for(let ta of tal) {
+								if (ta instanceof TermTermAttribute) {
+									causeTerms.push((<TermTermAttribute>ta).term);
+								}
+							}
+						} else {
+							causeTerms = [causeTerm];
+						}
+						for(let causeTerm2 of causeTerms) {
+							var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id], relation.cause([any],"+causeTerm2+")))", ai.o);
+							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, lastPerf.cause.cause, ai.time_in_seconds));
+						}
 						return true;
 					}
 

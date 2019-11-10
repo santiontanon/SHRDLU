@@ -44,6 +44,9 @@ class NLGenerator {
 	termToEnglish(t:Term, speakerID:string, listenerID:ConstantTermAttribute, context:NLContext) : string
 	{
 		let listenerPrefix:string = "";
+
+		this.renderingSentenceVariables = null;	// mark that we are NOT rendering a sentence with more than one #or-red term
+
 		if (listenerID != null) {
 			let targetString:string = this.termToEnglish_EntityName(listenerID, context);
 			if (targetString != null) {
@@ -52,7 +55,9 @@ class NLGenerator {
 				listenerPrefix = targetString + ", ";
 			}			
 		}
-		return listenerPrefix + this.termToEnglishInternal(t, speakerID, context, true);
+		let render:string = this.termToEnglishInternal(t, speakerID, context, true);
+		if (render == null) return null;
+		return listenerPrefix + render;
 	}
 
 
@@ -88,6 +93,7 @@ class NLGenerator {
 		if (t.functor.is_a(o.getSort("perf.q.how"))) return this.termToEnglish_How(t, speakerID, context);
 
 		// default case, just convert to string:
+		console.error("termToEnglishInternal: could not render " + t.toString());
 		return t.toString();
 	}
 
@@ -429,7 +435,7 @@ class NLGenerator {
 				// special case of an answer of the type "in the bedroom":
 
 				let relationStr:string = this.pos.getRelationString(t2.functor);
-				let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, false, 
+				let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, true, 
 																							         ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
 																							         (<ConstantTermAttribute>(t2.attributes[0])).value:null), true);
 				let relationsAggregateStr:string = "";
@@ -465,6 +471,11 @@ class NLGenerator {
 		if (!(pt.attributes[1] instanceof TermTermAttribute)) {
 			console.error("termToEnglish_Inform: could not render " + pt);
 			return pt.toString();
+		}
+		let or_tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#or");
+		if (or_tl.length > 1) {
+			// we are trying to render a sentence, not just a term:
+			return this.termToEnglish_Inform_ComplexSentence(or_tl, speakerID, context);
 		}
 		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
 		for(let tmp_t of tl) {
@@ -702,7 +713,7 @@ class NLGenerator {
 
 		} else if (t.functor.is_a(this.nlg_cache_sort_relation) &&
 				   !t.functor.is_a(this.nlg_cache_sort_verb)) {			
-//			console.log("termToEnglish_Inform: relation " + t.functor.name);
+			// console.log("termToEnglish_Inform: relation " + t.functor.name);
 			let subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let time:Sort = this.nlg_cache_sort_present;
 			if (subjectStr != null) {
@@ -1572,8 +1583,15 @@ class NLGenerator {
 	{
 		let tl:TermAttribute[] = [entityRaw];
 		if (entityRaw instanceof TermTermAttribute) {
-			if ((<TermTermAttribute>entityRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
+			if ((<TermTermAttribute>entityRaw).term.functor.name == "#or") {
+				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#or");
+				if (tl.length > 1) {
+					// we are trying to render a sentence, not just a term:
+					return [this.termToEnglish_Inform_ComplexSentence(tl, speakerID, context), 2, null, 0];
+				}
+			}
+			if ((<TermTermAttribute>tl[0]).term.functor.name == "#and") {
+				tl = NLParser.elementsInList((<TermTermAttribute>tl[0]).term,"#and");
 			}
 		}
 		let entity:TermAttribute = null;
@@ -1614,8 +1632,15 @@ class NLGenerator {
 				return ["anything", 2, undefined, 0]
 			} else if (entity.sort.name == "pronoun.something") {
 				return ["something", 2, undefined, 0]
-			} else {
+			} else if (entity.sort.name == "symbol") {
 				return [(<ConstantTermAttribute>entity).value,2,null,0];
+			} else {
+				let nounStr:string = this.pos.getNounString(entity.sort, 0, false);
+				if (nounStr != null) {
+					return [nounStr,2,null,0];
+				} else {
+					return [(<ConstantTermAttribute>entity).value,2,null,0];
+				}
 			}
 		}
 		if ((entity instanceof VariableTermAttribute) ||
@@ -1654,7 +1679,7 @@ class NLGenerator {
 				return [this.pos.getPronounStringString(pronoun, num, gender), 2, undefined, num];
 			}
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_property) && entityTerm.attributes.length == 1) {
-				return this.termToEnglish_Property(entityRaw, speakerID, context);
+				return this.termToEnglish_Property(entityRaw, speakerID, !subject, context);
 			}
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_relation) && entityTerm.attributes.length == 2) {
 				return this.termToEnglish_Relation(entityRaw, speakerID, context);
@@ -1717,6 +1742,9 @@ class NLGenerator {
 						if (unitStr != null) propertyStr2 = unitStr[0];
 					} else {
 					 	propertyStr2 = this.pos.getPropertyString(entityTerm.attributes[1].sort);	
+					 	if (propertyStr2 == null) {
+					 		propertyStr2 = this.pos.getNounString(entityTerm.functor, 0, true);
+					 	}
 					}
 				} else {
 					let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[1], speakerID, true, context, false, 
@@ -1733,9 +1761,55 @@ class NLGenerator {
 					} else {
 						return [subjectStr[0] +"'s " + propertyStr + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr2, 2, undefined, 0];
 					}			
+				} else {
+					console.error("termToEnglish_RelationOrVerbArgument: could not render property with value!");
 				}
 				return [this.termToEnglish_Inform(new Term(context.ai.o.getSort("perf.inform"),[new ConstantTermAttribute(speakerID,context.ai.o.getSort("#id")),entityRaw]), speakerID, context), 2, undefined, 0];
 			}
+			if ((entityTerm.functor.is_a_string("role") ||
+				 entityTerm.functor.is_a_string("relative-direction")) && 
+				entityTerm.attributes.length == 3) {
+				// special case for "role":
+				let subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[0], speakerID, true, context, true, null, true);
+				let verbStr:string = this.pos.getVerbString(context.ai.o.getSort("verb.be"), 0, 2, 3);
+				let propertyStr:string = this.pos.getNounString(entityTerm.functor, 0, true);
+				let propertyStr2:string = null;
+				let propertyStr3:string = null;
+
+				if (entityTerm.attributes[1] instanceof ConstantTermAttribute &&
+					entityTerm.attributes[1].sort.name != "symbol") {
+					if (entityTerm.attributes[1].sort.is_a(this.nlg_cache_sort_measuringunit)) {
+						let unitStr:[string, number, string, number] = this.termToEnglish_MeasuringUnit((<ConstantTermAttribute>(entityTerm.attributes[1])).value, entityTerm.attributes[1].sort);
+						if (unitStr != null) propertyStr2 = unitStr[0];
+					} else {
+					 	propertyStr2 = this.pos.getPropertyString(entityTerm.attributes[1].sort);	
+					}
+				} else {
+					let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[1], speakerID, true, context, false, 
+																								     ((entityTerm.attributes[0] instanceof ConstantTermAttribute) ? 
+																								     (<ConstantTermAttribute>(entityTerm.attributes[0])).value:null), true);
+					if (objectStr != null) propertyStr2 = objectStr[0];
+				}
+				let objectStr2:[string, number, string, number] = this.termToEnglish_RelationArgument(entityTerm.attributes[2], speakerID, true, context, false, 
+																							     ((entityTerm.attributes[0] instanceof ConstantTermAttribute) ? 
+																							     (<ConstantTermAttribute>(entityTerm.attributes[0])).value:null), true);
+				if (objectStr2 != null) propertyStr3 = objectStr2[0];
+				if (subjectStr != null && verbStr != null && propertyStr != null && propertyStr2 != null && propertyStr3 != null) {
+					let negated_t:boolean = false;	// TODO: find the proper value for this
+					if (entityTerm.functor.is_a_string("relative-direction")) {
+						return ["the " + propertyStr + " of " + propertyStr2 + " with respect to " + subjectStr[0] + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr3, 2, undefined, 0];
+					} else {
+						if (subjectStr[0] == "I") {
+							return ["my " + propertyStr + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr2 + " in " + propertyStr3, 2, undefined, 0];
+						} else if (subjectStr[0] == "you") {
+							return ["your " + propertyStr + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr2 + " in " + propertyStr3, 2, undefined, 0];
+						} else {
+							return [subjectStr[0] +"'s " + propertyStr + " " + verbStr + " " + (negated_t ? "not ":"") + propertyStr2 + " in " + propertyStr3, 2, undefined, 0];
+						}			
+					}
+				}
+				return [this.termToEnglish_Inform(new Term(context.ai.o.getSort("perf.inform"),[new ConstantTermAttribute(speakerID,context.ai.o.getSort("#id")),entityRaw]), speakerID, context), 2, undefined, 0];
+			}			
 			if (entityTerm.functor.is_a(context.ai.o.getSort("perf.request.action"))) {
 				return [this.termToEnglish_RequestAction(entityTerm, speakerID, context, false, false), 2, undefined, 0];
 			}
@@ -1751,7 +1825,7 @@ class NLGenerator {
 
 
 
-	termToEnglish_Property(propertyRaw:TermAttribute, speakerID:string, context:NLContext) : [string, number, string, number]
+	termToEnglish_Property(propertyRaw:TermAttribute, speakerID:string, insertThat:boolean, context:NLContext) : [string, number, string, number]
 	{
 		let tl:TermAttribute[] = [propertyRaw];
 		if (propertyRaw instanceof TermTermAttribute) {
@@ -1781,8 +1855,18 @@ class NLGenerator {
 			if (num == undefined) num = subjectStr[3];
 			let verbStr:string = this.verbStringWithTime(context.ai.o.getSort("verb.be"), num, subjectStr[1], time, false);
 			let propertyStr:string = this.pos.getPropertyString(property_term.functor);
+
+			if (propertyStr == null) {
+				propertyStr = this.pos.getNounString(property_term.functor, 0, false);	// without trying ancestors
+				if (propertyStr != null) propertyStr = "a " + propertyStr;
+			}
+			if (propertyStr == null) {
+				propertyStr = this.pos.getNounString(property_term.functor, 0, true);		// we are despearte, try ancestors
+				if (propertyStr != null) propertyStr = "a " + propertyStr;
+			}
+
 			if (verbStr != null && propertyStr != null) 
-				return ["that " + subjectStr[0] + " " + verbStr + " " + propertyStr, 2, undefined, 0];
+				return [(insertThat ? "that ":"") + subjectStr[0] + " " + verbStr + " " + propertyStr, 2, undefined, 0];
 		}
 
 		console.error("termToEnglish_Property: could not render " + propertyRaw);
@@ -1808,6 +1892,12 @@ class NLGenerator {
 			let relationStr:string = this.pos.getRelationString((<TermTermAttribute>relation).term.functor);
 			if (objectStr1 == null) return null;
 			if (objectStr2 == null) return null;
+
+			if ((<TermTermAttribute>relation).term.functor.name == "relation.howto") {
+				// special case for how to:
+				return ["the way " + objectStr1[0] + " is " + objectStr2[0], 2, null, objectStr1[3]];
+			}
+
 			if (relationStr == null) return null;
 			return [objectStr1[0] + " " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
 		}
@@ -1823,6 +1913,20 @@ class NLGenerator {
 	*/
 	termToEnglish_ConceptEntity(entityRaw:TermAttribute, speakerID:string, context:NLContext) : [string, number, string, number]
 	{
+		if (this.renderingSentenceVariables != null &&
+			(entityRaw instanceof VariableTermAttribute)) {
+			if (entityRaw.sort.name == "any" ||
+				entityRaw.sort.name == "number" ||
+				entityRaw.sort.name == "#id") {
+				let idx:number = this.renderingSentenceVariables.indexOf(entityRaw);
+				if (idx == -1) {
+					idx = this.renderingSentenceVariables.length;
+					this.renderingSentenceVariables.push(entityRaw);
+				}
+				return ["X"+(idx+1), 2, null, 0];
+			}
+		}
+
 		let tl:TermAttribute[] = [entityRaw];
 		if (entityRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>entityRaw).term.functor.name == "#and") {
@@ -2696,8 +2800,9 @@ class NLGenerator {
 				   	t.functor.name == "action.give" ||
 				   	t.functor.name == "verb.go" ||
 				   	t.functor.name == "verb.guide" ||
-				   	t.functor.name == "verb.take-to"||
-				   	t.functor.name == "verb.bring"||
+				   	t.functor.name == "verb.take-to" ||
+				   	t.functor.name == "verb.bring" ||
+				   	t.functor.name == "verb.find" ||
 				   	t.functor.name == "verb.help")) {
 			let subjectStr:[string, number, string, number];
 			if ((t.attributes[0] instanceof ConstantTermAttribute)) {
@@ -2735,6 +2840,8 @@ class NLGenerator {
 				} else if (t.functor.name == "verb.tell" ||
 				   	t.functor.name == "action.talk") { 
 					return [subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements, 0, undefined, 0];
+				} else if (t.functor.name == "verb.find") {
+					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " in " + object2Str[0], 0, undefined, 0];
 				} else if (t.functor.name == "verb.take-to"||
 				   		   t.functor.name == "verb.bring") {
 					// verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
@@ -2934,8 +3041,109 @@ class NLGenerator {
 	}
 
 
+	termToEnglish_Inform_ComplexSentence(terms:TermAttribute[], speakerID:string, context:NLContext) : string
+	{
+		let negatedTerms:TermAttribute[] = [];
+		let positiveTerms:TermAttribute[] = [];
+
+		this.renderingSentenceVariables = [];	// mark that we are actually rendering a sentence
+
+		for(let term_a of terms) {
+			if (term_a instanceof TermTermAttribute) {
+				let term:Term = (<TermTermAttribute>term_a).term;
+				if (term.functor.name == "#not") {
+					if (term.attributes.length == 1 &&
+						term.attributes[0] instanceof TermTermAttribute) {
+						negatedTerms.push(term.attributes[0]);
+					} else {
+						// we should never have this
+						console.error("malformed #not term in termToEnglish_Inform_ComplexSentence: " + term);
+					}
+				} else {
+					positiveTerms.push(term_a);
+				}
+			} else {
+				console.error("malformed term in termToEnglish_Inform_ComplexSentence: " + term_a);
+				return null;
+			}
+		}
+
+		// pattern 1: if X then Y1 and ... and Yn
+		if (negatedTerms.length > 0 && positiveTerms.length > 0) {
+			let output:string = "if ";
+
+			for(let i:number = 0;i<negatedTerms.length;i++) {
+				let tmp:[string, number, string, number] = this.termToEnglish_RelationOrVerbArgument(negatedTerms[i], speakerID, true, context, true, null, true, false);
+				if (tmp == null || tmp[0] == null) return null;
+				if (i == 0) {
+					output += tmp[0];
+				} else {
+					if (i == negatedTerms.length-1) {
+						output += " and " + tmp[0];
+					} else {
+						output += ", " + tmp[0];
+					}
+				}
+			}
+			output += " then ";
+			for(let i:number = 0;i<positiveTerms.length;i++) {
+				let tmp:[string, number, string, number] = this.termToEnglish_RelationOrVerbArgument(positiveTerms[i], speakerID, true, context, true, null, true, false);
+				if (tmp == null || tmp[0] == null) return null;
+				if (i == 0) {
+					output += tmp[0];
+				} else {
+					if (i == positiveTerms.length-1) {
+						output += " and " + tmp[0];
+					} else {
+						output += ", " + tmp[0];
+					}
+				}
+			} 
+			return output;
+		}
+
+		// pattern 2: all positive
+		if (negatedTerms.length == 0 && positiveTerms.length > 0) {
+			let output:string = "or ";
+
+			for(let i:number = 0;i<positiveTerms.length;i++) {
+				let tmp:[string, number, string, number] = this.termToEnglish_RelationOrVerbArgument(positiveTerms[i], speakerID, true, context, true, null, true, false);
+				if (tmp == null || tmp[0] == null) return null;
+				if (i == 0) {
+					output += tmp[0];
+				} else {
+					output += " or " + tmp[0];
+				}
+			}
+			return output;			
+		}
+
+		// pattern 2: all positive
+		if (negatedTerms.length > 0 && positiveTerms.length == 0) {
+			let output:string = "either ";
+
+			for(let i:number = 0;i<negatedTerms.length;i++) {
+				let tmp:[string, number, string, number] = this.termToEnglish_RelationOrVerbArgument(negatedTerms[i], speakerID, true, context, true, null, true, false);
+				if (tmp == null || tmp[0] == null) return null;
+				if (i == 0) {
+					output += tmp[0] + " is not true";
+				} else {
+					output += " or " + tmp[0] + " is not true";
+				}
+			}
+			return output;			
+		}
+
+
+		console.error("termToEnglish_Inform_ComplexSentence: cannot render sentence with " + positiveTerms.length + " positive terms and " + negatedTerms.length + " negated terms! ");
+		return null;
+	}
+
+
 	o:Ontology = null;
 	pos:POSParser = null;
+
+	renderingSentenceVariables:TermAttribute[] = null;
 
 	nlg_cache_sort_id:Sort = null;
 	nlg_cache_sort_symbol:Sort = null;

@@ -21,8 +21,8 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 		var negativeAnswer:string = "'unknown'[symbol]";
 		if (inf.inferences[0].endResults.length != 0) {
 			var results:TermAttribute[] = [];
-			for(let b of inf.inferences[0].endResults) {
-				for(let [variable, value] of b.l) {
+			for(let result of inf.inferences[0].endResults) {
+				for(let [variable, value] of result.bindings.l) {
 					if (variable.name == "CAUSE" &&
 						results.indexOf(value) == -1) {
 						// we have a result!

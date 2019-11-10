@@ -26,6 +26,43 @@ var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 2500;
 var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 1000000;	// at this point, inference will stop
 
 
+class InferenceNode
+{
+	constructor(s:Sentence, b:Bindings, p1:InferenceNode, p2:InferenceNode)
+	{
+		this.sentence = s;
+		this.bindings = b;
+		this.parent1 = p1;
+		this.parent2 = p2;
+	}
+
+
+	getBaseSentences(target:Sentence[]) : Sentence[]
+	{
+		let open:InferenceNode[] = [this];
+		let l:Sentence[] = [];
+		while(open.length > 0) {
+			let current:InferenceNode = open[0];
+			if (current.parent1 == null && current.parent2 == null && current.sentence != null) {
+				if (l.indexOf(current.sentence) == -1 &&
+					target.indexOf(current.sentence) == -1) l.push(current.sentence);
+			} else {
+				if (current.parent1 != null) open.push(current.parent1);
+				if (current.parent2 != null) open.push(current.parent2);
+			}
+			open.splice(0,1);
+		}
+		return l;
+	}
+
+
+	sentence:Sentence;
+	bindings:Bindings;
+	parent1:InferenceNode;
+	parent2:InferenceNode;
+}
+
+
 class InterruptibleResolution
 {
 	constructor(KB:SentenceContainer, additionalSentences:Sentence[], target:Sentence[], occursCheck:boolean, reconsiderTarget:boolean, treatSpatialPredicatesSpecially:boolean, ai:RuleBasedAI)
@@ -44,13 +81,13 @@ class InterruptibleResolution
 		this.internal_step_state_index = 0;
 
 		for(let s of additionalSentences) {
-			this.additionalSentences.push([s,new Bindings()]);
+			this.additionalSentences.push(new InferenceNode(s, new Bindings(), null, null));
 		}
 		for(let s of target) {
 			s = this.resolutionEqualityCheck(s);
 			if (s != null && this.treatSpatialPredicatesSpecially) s = this.resolutionSpatialPredicatesCheck(s, true);
 			if (s == null) continue;
-			this.targetWithBindings.push([s,new Bindings()]);
+			this.target.push(new InferenceNode(s, new Bindings(), null, null));
 		}
 
 		/*
@@ -93,7 +130,7 @@ class InterruptibleResolution
 
 
 	// executes resolution till the end:
-	resolve() : Bindings[]
+	resolve() : InferenceNode[]
 	{
 		while(!this.step()) {}
 		this.processSuperlatives();
@@ -112,123 +149,33 @@ class InterruptibleResolution
 	}
 
 
-/*
-	// returns "true" when the inference process is over, and "false", when it still needs more steps.
-	step() : boolean
-	{
-		if (DEBUG_resolution) console.log("resolution step:");
-//		let newResolventsWithBindings:[Sentence,Bindings][] = 
-		this.step_internal(this.additionalSentences, this.targetWithBindings, this.occursCheck, true);
-		if (this.internal_step_state == 0) return false;
-		if (this.internal_step_state == 2) return true;	// computation limit reached
-		this.firstStep = false;
-		if (this.newResolventsWithBindings == null || this.newResolventsWithBindings.length == 0) {
-			if (DEBUG_resolution) console.log("  - no more resolvents: no contradiction! (CLOSED: " + this.closed.length + ")");
-			return true;
-		}
-
-		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.targetWithBindings);
-
-		let anyNewResolvent:boolean = false;
-		this.targetWithBindings = [];
-		for(let [r,b] of this.newResolventsWithBindings) {
-			if (r.terms.length == 0) {
-				// we have found a contradiction!
-				if (DEBUG_resolution) console.log("  - contradiction! (CLOSED: " + this.closed.length + ")");
-				// get the bindings in the variables from the target:
-				let variables:VariableTermAttribute[] = [];
-				for(let ts of this.originalTarget) {
-					variables = variables.concat(ts.getAllVariables());
-				}
-//				console.log("Variables: " + variables);
-				let endResult:Bindings = new Bindings();
-				for(let [v,t] of b.l) {
-					if (variables.indexOf(v)>=0) {
-						t = t.applyBindings(b);
-						endResult.l.push([v,t]);
-					}
-				}
-				this.endResults.push(endResult);
-				return true;
-			} else {
-				let found:boolean = false;
-				// make sure we are not inferring something we already knew:
-				for(let s of this.closed) {
-					if (s.subsetNoBindings(r)) {
-						found = true;
-						//console.log("R: " + r + "\n was a subset of (in closed): " + s);
-						break;
-					}
-				}
-				if (!found) {
-					for(let tmp of this.additionalSentences) {
-						if (tmp[0].subsetNoBindings(r)) {
-							//console.log("R: " + r + "\n was a subset of (in additionalSentences): " + tmp[0]);
-							found = true;
-							break;
-						}
-					}
-				}
-				if (!found) {
-					for(let se of this.KB.plainSentenceList) {
-						if (se.sentence.subsetNoBindings(r)) {
-							//console.log("R: " + r + "\n was a subset of (in plainSentenceList): " + se.sentence);
-							found = true;
-							break;
-						}
-					}
-				}
-				if (!found) {
-					this.closed.push(r);
-					this.targetWithBindings.push([r,b]);
-					anyNewResolvent = true;
-				}
-			}
-			if (DEBUG_resolution) console.log("  " + r.toString());
-		}
-		if (DEBUG_resolution) console.log("  CLOSED: " + this.closed.length);
-		if (DEBUG_resolution) console.log("  CLOSED: " + this.closed);
-		if (DEBUG_resolution) console.log("  KB.length: " + this.KB.plainSentenceList.length);
-//		if (DEBUG_resolution) console.log("  KB: " + this.KB.plainSentenceList);
-//		this.targetWithBindings = newResolventsWithBindings;
-
-		if (!anyNewResolvent) {
-			console.log("all the resolvents in this round where already in the closed list, so we are done!");
-			return true;
-		}
-
-		return false;
-	}
-*/
-
-
-	// this is the same as "step", but it does not stop upon finding the same result, and keeps going until all results have been found
-	// returns "true" when the inference process is over, and "false", when it still needs more steps.
 	stepAccumulatingResults() : boolean
 	{
 		if (DEBUG_resolution) console.log("resolution stepAccumulatingResults:");
-//		let newResolventsWithBindings:[Sentence,Bindings][] = 
-		this.step_internal(this.additionalSentences, this.targetWithBindings, this.occursCheck, false);
+		this.step_internal(this.additionalSentences, this.target, this.occursCheck, false);
 		if (this.internal_step_state == 0) return false;
 		if (this.internal_step_state == 2) {
 			this.processSuperlatives();
 			return true;	// computation limit reached
 		}
 		this.firstStep = false;
-		if (this.newResolventsWithBindings == null || this.newResolventsWithBindings.length == 0) {
+		if (this.newResolvents == null || this.newResolvents.length == 0) {
 			if (DEBUG_resolution) console.log("  - no more resolvents: " +this.endResults.length + " sets of bindings cause a contradiction! (CLOSED: " + this.closed.length + ")");
 			this.processSuperlatives();
 			return true;
 		}
 
 	//	if (DEBUG_resolution) 
-		console.log("resolution stepAccumulatingResults: newResolventsWithBindings.length = " + this.newResolventsWithBindings.length);
+		console.log("resolution stepAccumulatingResults: newResolvents.length = " + this.newResolvents.length);
 
-		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.targetWithBindings);
+		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.target);
+		// console.log("this.additionalSentences: " + this.additionalSentences.length);
 
 		let anyNewResolvent:boolean = false;
-		this.targetWithBindings = [];
-		for(let [r,b] of this.newResolventsWithBindings) {
+		this.target = [];
+		for(let newResolvent of this.newResolvents) {
+			let r:Sentence = newResolvent.sentence;
+			let b:Bindings = newResolvent.bindings;
 			if (r.terms.length == 0) {
 				// we have found a contradiction!
 				if (DEBUG_resolution) console.log("  - contradiction! (CLOSED: " + this.closed.length + ")");
@@ -238,11 +185,11 @@ class InterruptibleResolution
 					variables = variables.concat(ts.getAllVariables());
 				}
 //				console.log("Variables: " + variables);
-				let endResult:Bindings = new Bindings();
+				let endResult:InferenceNode = new InferenceNode(null, new Bindings(), newResolvent.parent1, newResolvent.parent2);
 				for(let [v,t] of b.l) {
 					if (variables.indexOf(v)>=0) {
 						let t2:TermAttribute = t.applyBindings(b);
-						endResult.l.push([v,t2]);
+						endResult.bindings.l.push([v,t2]);
 					}
 				}
 				this.endResults.push(endResult);
@@ -258,8 +205,8 @@ class InterruptibleResolution
 				}
 				if (!found) {
 					for(let tmp of this.additionalSentences) {
-						if (tmp[0].subsetNoBindings(r)) {
-							//console.log("R: " + r + "\n was a subset of (in additionalSentences): " + tmp[0]);
+						if (tmp.sentence.subsetNoBindings(r)) {
+							//console.log("R: " + r + "\n was a subset of (in additionalSentences): " + tmp.sentence);
 							found = true;
 							break;
 						}
@@ -276,7 +223,7 @@ class InterruptibleResolution
 				}
 				if (!found) {
 					this.closed.push(r);
-					this.targetWithBindings.push([r,b]);
+					this.target.push(newResolvent);
 					anyNewResolvent = true;
 				}
 			}
@@ -286,7 +233,7 @@ class InterruptibleResolution
 		if (DEBUG_resolution) console.log("  CLOSED: " + this.closed);
 		if (DEBUG_resolution) console.log("  KB.length: " + this.KB.plainSentenceList.length);
 //		if (DEBUG_resolution) console.log("  KB: " + this.KB.plainSentenceList);
-//		this.targetWithBindings = newResolventsWithBindings;
+//		this.target = newResolvents;
 
 		if (!anyNewResolvent) {
 			console.log("all the resolvents in this round where already in the closed list, so we are done!");
@@ -298,32 +245,32 @@ class InterruptibleResolution
 	}	
 
 
-	step_internal(sentences:[Sentence,Bindings][], 
-			      targetWithBindings:[Sentence,Bindings][], 
+	step_internal(sentences:InferenceNode[], 
+			      target:InferenceNode[], 
 	   		      occursCheck:boolean,
-	   		      stopOnFirstContradiction:boolean) : [Sentence,Bindings][]
+	   		      stopOnFirstContradiction:boolean) : InferenceNode[]
 	{
 		let resolutions:number = 0;
-		if (DEBUG_resolution) console.log("InterruptibleResolution.step_internal with sentences.length = " + sentences.length + ", targetWithBindings.length = " + targetWithBindings.length);		
+		if (DEBUG_resolution) console.log("InterruptibleResolution.step_internal with sentences.length = " + sentences.length + ", target.length = " + target.length);		
 		if (this.firstStep) {
-			for(let i:number = 0;i<targetWithBindings.length;i++) {
-				if (targetWithBindings[i][0].terms.length == 0) {
+			for(let i:number = 0;i<target.length;i++) {
+				if (target[i].sentence.terms.length == 0) {
 					// initial contradiction!
-					this.newResolventsWithBindings = [targetWithBindings[i]];
+					this.newResolvents = [target[i]];
 					this.internal_step_state = 1;
-					return this.newResolventsWithBindings;	// we are done!
+					return this.newResolvents;	// we are done!
 				}
 			}
 		}
 		if (this.internal_step_state == 1) {
-			this.newResolventsWithBindings = [];
+			this.newResolvents = [];
 			this.internal_step_state = 0;
 			this.internal_step_state_index = 0;
 		}
-		for(;this.internal_step_state_index<targetWithBindings.length;this.internal_step_state_index++) {
-			let s1:Sentence = targetWithBindings[this.internal_step_state_index][0];
-			let b1:Bindings = targetWithBindings[this.internal_step_state_index][1];
-			//for(let [s1,b1] of targetWithBindings) {
+		for(;this.internal_step_state_index<target.length;this.internal_step_state_index++) {
+			let n1:InferenceNode = target[this.internal_step_state_index];
+			let s1:Sentence = n1.sentence;
+			//for(let [s1,b1] of target) {
 			if (this.KB != null) {
 				let relevantSentences:Sentence[] = this.KB.allPotentialMatchesWithSentenceForResolution(s1, this.ai.o);
 				if (DEBUG_resolution) {
@@ -339,122 +286,119 @@ class InterruptibleResolution
 						if (this.originalTarget.length == 1 &&
 							s2.subsetNoBindings(s1)) {
 							if (DEBUG_resolution) console.log("step_internal: we are done! what we want to proof is in the knowledge base!!!");
-							this.newResolventsWithBindings = null;
+							this.newResolvents = null;
 							return null;
 						}
 					}
 					if (DEBUG_resolution) console.log("    Resolution (relevantSentences) between " + s1 + "   and   " + s2);
-					let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, new Bindings(), occursCheck);
+					let tmp:InferenceNode[] = this.resolutionBetweenSentencesWithBindings(n1, new InferenceNode(s2, new Bindings(), null, null), occursCheck);
 					resolutions++;
 					this.total_resolutions++;
 //					console.log("    tmp: " + tmp.length);
 					for(let r of tmp) {
-						r[0] = this.resolutionEqualityCheck(r[0]);
-						if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
-						if (r[0] == null) continue;
+						r.sentence = this.resolutionEqualityCheck(r.sentence);
+						if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
+						if (r.sentence == null) continue;
 						let found:boolean = false;
-						for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
-							if (this.newResolventsWithBindings[i][0].terms.length > 0 &&
-								this.newResolventsWithBindings[i][0].subsetNoBindings(r[0])/* &&
-								this.newResolventsWithBindings[i][1].subset(r[1])*/) {
+						for(let i:number = 0;i<this.newResolvents.length;i++) {
+							if (this.newResolvents[i].sentence.terms.length > 0 &&
+								this.newResolvents[i].sentence.subsetNoBindings(r.sentence)/* &&
+								this.newResolvents[i].bindings.subset(r.bindings)*/) {
 								found = true;
-//								console.log(" bindings filtered1: " + resolventsWithBindings[i][1]);
-//								console.log(" bindings filtered2: " + r[1]);
+//								console.log(" bindings filtered1: " + resolvents[i].bindings);
+//								console.log(" bindings filtered2: " + r.bindings);
 								break;
-							} else if (this.newResolventsWithBindings[i][0].terms.length == 0 &&
-								       r[0].terms.length == 0 &&
-								       this.newResolventsWithBindings[i][1].subset(r[1])) {
+							} else if (this.newResolvents[i].sentence.terms.length == 0 &&
+								       r.sentence.terms.length == 0 &&
+								       this.newResolvents[i].bindings.subset(r.bindings)) {
 								found = true;
-//								console.log(" bindings filtered1: " + resolventsWithBindings[i][1]);
-//								console.log(" bindings filtered2: " + r[1]);
+//								console.log(" bindings filtered1: " + resolvents[i].bindings);
+//								console.log(" bindings filtered2: " + r.bindings);
 								break;
 							}
 						}
 						if (!found) {
-							this.newResolventsWithBindings.push(r);
-							if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r[0]  + " , " + r[1]);
-							if (r[0].terms.length == 0 && stopOnFirstContradiction) {
+							this.newResolvents.push(r);
+							if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r.sentence  + " , " + r.bindings);
+							if (r.sentence.terms.length == 0 && stopOnFirstContradiction) {
 								this.internal_step_state = 1;
-								return this.newResolventsWithBindings;	// we are done!
+								return this.newResolvents;	// we are done!
 							}
 						}
 					}						
 				}	
 			}
 
-//			console.log("resolventsWithBindings.length (after this.KB): " + resolventsWithBindings.length);
-//			console.log("resolventsWithBindings (after this.KB): " + resolventsWithBindings);
+//			console.log("resolvents.length (after this.KB): " + resolvents.length);
+//			console.log("resolvents (after this.KB): " + resolvents);
 
-			for(let [s2,b2] of sentences) {
-				if (s1 == s2) continue;
+			for(let n2 of sentences) {
+				if (s1 == n2.sentence) continue;
+				let s2:Sentence = n2.sentence;
 				if (this.firstStep) {
 					if (this.originalTarget.length == 1 &&
 						s2.subsetNoBindings(s1)) {
 						if (DEBUG_resolution) console.log("step_internal: we are done! what we want to proof is in the knowledge base!!!");
 						this.internal_step_state = 1;
-						this.newResolventsWithBindings = null;
+						this.newResolvents = null;
 						return null;
 					}
 				}
 				// if (DEBUG_resolution) console.log("    Resolution (sentences) between " + s1 + "   and   " + s2);
-				let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, b2, occursCheck);
+				let tmp:InferenceNode[] = this.resolutionBetweenSentencesWithBindings(n1, n2, occursCheck);
 				resolutions++;
 				this.total_resolutions++;
 				for(let r of tmp) {
-					r[0] = this.resolutionEqualityCheck(r[0]);
-					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
-					if (r[0] == null) continue;
+					r.sentence = this.resolutionEqualityCheck(r.sentence);
+					if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
+					if (r.sentence == null) continue;
 
 					let found:boolean = false;
-//					for(let [s,b] of resolventsWithBindings) {
-//						if (r[0].equalsNoBindings(s)) {
-					for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
-						if (this.newResolventsWithBindings[i][0].subsetNoBindings(r[0]) &&
-							this.newResolventsWithBindings[i][1].subset(r[1])) {
+					for(let i:number = 0;i<this.newResolvents.length;i++) {
+						if (this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
+							this.newResolvents[i].bindings.subset(r.bindings)) {
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						this.newResolventsWithBindings.push(r);
-						if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r[0]  + " , " + r[1]);
-						if (r[0].terms.length == 0 && stopOnFirstContradiction) {
+						this.newResolvents.push(r);
+						if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r.sentence  + " , " + r.bindings);
+						if (r.sentence.terms.length == 0 && stopOnFirstContradiction) {
 							this.internal_step_state = 1;
-							return this.newResolventsWithBindings;	// we are done!
+							return this.newResolvents;	// we are done!
 						}
 					}
 				}						
 			}		
 
-//			console.log("resolventsWithBindings.length (after sentences): " + resolventsWithBindings.length);
+//			console.log("resolvents.length (after sentences): " + resolvents.length);
 
-			for(let [s2,b2] of targetWithBindings) {
-				if (s1 == s2) continue;
+			for(let n2 of target) {
+				if (s1 == n2.sentence) continue;
 				//if (DEBUG_resolution) console.log("    Resolution (target with bindings) between " + s1 + "   and   " + s2);
-				let tmp:[Sentence,Bindings][] = this.resolutionBetweenSentencesWithBindings(s1, s2, b1, b2, occursCheck);
+				let tmp:InferenceNode[] = this.resolutionBetweenSentencesWithBindings(n1, n2, occursCheck);
 				resolutions++;
 				this.total_resolutions++;
 				for(let r of tmp) {
-					r[0] = this.resolutionEqualityCheck(r[0]);
-					if (r[0] != null && this.treatSpatialPredicatesSpecially) r[0] = this.resolutionSpatialPredicatesCheck(r[0], false);
-					if (r[0] == null) continue;
+					r.sentence = this.resolutionEqualityCheck(r.sentence);
+					if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
+					if (r.sentence == null) continue;
 
 					let found:boolean = false;
-//					for(let [s,b] of resolventsWithBindings) {
-//						if (r[0].equalsNoBindings(s)) {
-					for(let i:number = 0;i<this.newResolventsWithBindings.length;i++) {
-						if (this.newResolventsWithBindings[i][0].subsetNoBindings(r[0]) &&
-							this.newResolventsWithBindings[i][1].subset(r[1])) {
+					for(let i:number = 0;i<this.newResolvents.length;i++) {
+						if (this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
+							this.newResolvents[i].bindings.subset(r.bindings)) {
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						this.newResolventsWithBindings.push(r);
-						if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r[0]  + " , " + r[1]);
-						if (r[0].terms.length == 0 && stopOnFirstContradiction) {
+						this.newResolvents.push(r);
+						if (DEBUG_resolution) console.log("step_internal: new resolvent: " + r.sentence  + " , " + r.bindings);
+						if (r.sentence.terms.length == 0 && stopOnFirstContradiction) {
 							this.internal_step_state = 1;
-							return this.newResolventsWithBindings;	// we are done!
+							return this.newResolvents;	// we are done!
 						}
 					}
 				}						
@@ -466,7 +410,7 @@ class InterruptibleResolution
 				return null;
 			}
 
-//			console.log("resolventsWithBindings.length (after targetWithBindings): " + resolventsWithBindings.length);
+//			console.log("resolvents.length (after target): " + resolvents.length);
 			if (resolutions >= INFERENCE_MAX_RESOLUTIONS_PER_STEP) {
 				// we need to interrupt:
 				console.log("step_internal: interrupted with #resolutions = " + resolutions + "(" + this.total_resolutions + "), closed "+this.closed.length+", end results: " + this.endResults.length);
@@ -477,7 +421,7 @@ class InterruptibleResolution
 		console.log("step_internal: finished with #resolutions = " + resolutions + "(" + this.total_resolutions + "), closed: "+this.closed.length+", end results: " + this.endResults.length);
 		//console.log("closed: " + this.closed)
 		this.internal_step_state = 1;
-		return this.newResolventsWithBindings;
+		return this.newResolvents;
 	}
 
 
@@ -578,17 +522,15 @@ class InterruptibleResolution
 
 	// Tries to apply the principle of "Resolution" between two sentences, and
 	// returns all possible resolvents
-	resolutionBetweenSentencesWithBindings(s1:Sentence, s2:Sentence, 
- 									       s1_bindings:Bindings,
-										   s2_bindings:Bindings,
-										   occursCheck:boolean) : [Sentence,Bindings][]
+	resolutionBetweenSentencesWithBindings(parent1:InferenceNode, parent2:InferenceNode,
+ 									       occursCheck:boolean) : InferenceNode[]
 	{
 //		console.log("resolutionBetweenSentencesWithBindings: " + s1 + " with " + s2);
-		let resolvents:[Sentence,Bindings][] = [];
+		let resolvents:InferenceNode[] = [];
 //		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, [], [], new Bindings(), resolvents, occursCheck);
-		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, new Bindings(), resolvents, occursCheck);
+		this.resolutionBetweenSentencesWithBindings_internal(parent1.sentence, parent2.sentence, parent1, parent2, new Bindings(), resolvents, occursCheck);
 		for(let r of resolvents) {
-			r[1] = s1_bindings.concat(s2_bindings.concat(r[1]));
+			r.bindings = parent1.bindings.concat(parent2.bindings.concat(r.bindings));
 		}
 		return resolvents;
 	}
@@ -596,8 +538,9 @@ class InterruptibleResolution
 
 
 	resolutionBetweenSentencesWithBindings_internal(s1:Sentence, s2:Sentence, 
+													parent1:InferenceNode, parent2:InferenceNode,
 												    bindings:Bindings, 
-												    resolvents:[Sentence,Bindings][],
+												    resolvents:InferenceNode[],
 												    occursCheck:boolean) : void
 	{
 		for(let i:number = 0;i<s1.terms.length;i++) {
@@ -638,30 +581,30 @@ class InterruptibleResolution
 				}
 
 				// generate one resolvent:
-				let r:[Sentence,Bindings] = [new Sentence([],[]), bindings2];
+				let r:InferenceNode = new InferenceNode(new Sentence([],[]), bindings2, parent1, parent2);
 				for(let i2:number = 0;i2<s1.terms.length;i2++) {
 					if (i == i2) continue;
-					r[0].terms.push(s1.terms[i2].applyBindings(bindings2));
-					r[0].sign.push(s1.sign[i2]);
+					r.sentence.terms.push(s1.terms[i2].applyBindings(bindings2));
+					r.sentence.sign.push(s1.sign[i2]);
 				}
 				for(let j2:number = 0;j2<s2.terms.length;j2++) {
 					if (j == j2) continue;
-					r[0].terms.push(s2.terms[j2].applyBindings(bindings2));
-					r[0].sign.push(s2.sign[j2]);
+					r.sentence.terms.push(s2.terms[j2].applyBindings(bindings2));
+					r.sentence.sign.push(s2.sign[j2]);
 				}
 
 				// only allow steps that do not increase the size of the sentences:
 				if (!INFERENCE_allow_increasing_sentences) {
 		//			console.log("resolvent: " + resolvent.terms);
 		//			console.log("bindings: " + bindings);
-					if (r[0].terms.length >= s1.terms.length &&
-						r[0].terms.length >= s2.terms.length) {
-						if (DEBUG_resolution_detailed) console.log("Removed because of size (1)... "  + r[0].terms.length + " vs " + s1.terms.length + " and " + s2.terms.length);
+					if (r.sentence.terms.length >= s1.terms.length &&
+						r.sentence.terms.length >= s2.terms.length) {
+						if (DEBUG_resolution_detailed) console.log("Removed because of size (1)... "  + r.sentence.terms.length + " vs " + s1.terms.length + " and " + s2.terms.length);
 						return;
 					}
 				}
-				if (r[0].terms.length > INFERENCE_maximum_sentence_size) {
-					if (DEBUG_resolution_detailed) console.log("Removed because of size (2)... "  + r[0].terms.length);
+				if (r.sentence.terms.length > INFERENCE_maximum_sentence_size) {
+					if (DEBUG_resolution_detailed) console.log("Removed because of size (2)... "  + r.sentence.terms.length);
 					return;
 				}
 
@@ -671,8 +614,8 @@ class InterruptibleResolution
 					console.log("    s1: " + s1);
 					console.log("    s2: " + s2);
 					console.log("    indexes: " + i + " , " + j);
-					console.log("    bindings: " + r[1]);
-					console.log("    resolvent: " + r[0]);
+					console.log("    bindings: " + r.bindings);
+					console.log("    resolvent: " + r.sentence);
 				}
 			}
 		}
@@ -694,8 +637,8 @@ class InterruptibleResolution
 	reconsiderTarget:boolean;
 	treatSpatialPredicatesSpecially:boolean;
 	KB:SentenceContainer = null;
-	additionalSentences:[Sentence,Bindings][] = [];
-	targetWithBindings:[Sentence,Bindings][] = [];
+	additionalSentences:InferenceNode[] = [];
+	target:InferenceNode[] = [];
 	originalTarget:Sentence[] = null;
 	ai:RuleBasedAI = null;
 
@@ -704,11 +647,11 @@ class InterruptibleResolution
 	firstStep:boolean = true;
 	closed:Sentence[] = [];
 
-	endResults:Bindings[] = [];
+	endResults:InferenceNode[] = [];
 
 	internal_step_state:number = 0;			// 0 if it is still running, 1 if it's done, 2 it's that it has reached computation limit
-	internal_step_state_index:number = 0;	// index of the next element of "targetWithBindings" to consider 
-	newResolventsWithBindings:[Sentence,Bindings][] = null;
+	internal_step_state_index:number = 0;	// index of the next element of "target" to consider 
+	newResolvents:InferenceNode[] = null;
 	total_resolutions:number = 0;
 
 	sort_cache_spatial_relation:Sort = null;

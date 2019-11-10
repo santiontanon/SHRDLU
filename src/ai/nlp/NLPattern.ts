@@ -538,8 +538,8 @@ class NLPattern {
 	Examples:
 		#and(V0:determiner.my(V1:'name'[#id], V2:[singular]), V3:noun(V1, V2)		->		name(context.selfID, queryVariable)
 		#and(V0:determiner.your(V1:'name'[#id], V2:[singular]), V3:noun(V1, V2))		->		name(listenerVariable, queryVariable)
-		#and(V0:relation.owns(V1:'ship'[#id], V2:'name'[#id]), V3:#and(V4:noun(V2, V5:[singular]), V6:#and(V7:the(V1, V8:[singular]), V9:noun(V1, V8))))
-				-> if there is a "relation.owns", separate in two:
+		#and(V0:verb.own(V1:'ship'[#id], V2:'name'[#id]), V3:#and(V4:noun(V2, V5:[singular]), V6:#and(V7:the(V1, V8:[singular]), V9:noun(V1, V8))))
+				-> if there is a "verb.own", separate in two:
 						owner V1) V7:the(V1:'ship'[#id], V8:[singular]), V9:noun(V1, V8)
 						ownee V2) V4:noun(V2:'name'[#id], V5:[singular])
 					-> owner should just be a single noun, potentially with adjectives
@@ -594,7 +594,7 @@ class NLPattern {
 					definiteArticle = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("demonstrative-determiner"))) {
 					demonstrativeDeterminer = (<TermTermAttribute>t).term;
-				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("relation.owns"))) {
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("verb.own"))) {
 					ownsRelation = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("indefinite-pronoun"))) {
 					if ((<TermTermAttribute>t).term.attributes.length > 0 &&
@@ -661,7 +661,7 @@ class NLPattern {
 		} else if (aDeterminer != null) {
 			queryFunctor = aDeterminer.attributes[0];
 		} else if (ownsRelation!=null) {
-			// case 3: if there is a "relation.owns":
+			// case 3: if there is a "verb.own":
 			let ownerVariable:TermAttribute = ownsRelation.attributes[0];
 			let ownerTerms:TermAttribute[] = [];
 			queryFunctor = ownsRelation.attributes[1];
@@ -778,11 +778,11 @@ class NLPattern {
 		}
 		if (myDeterminer != null && queryFunctorSort != null &&
 			!queryFunctorSort.is_a(o.getSort("property-with-value"))) {
-			queryTerms.push(new TermTermAttribute(new Term(o.getSort("relation.owns"), [querySubjectID, queryVariable])));
+			queryTerms.push(new TermTermAttribute(new Term(o.getSort("verb.own"), [querySubjectID, queryVariable])));
 		}
 		if (yourDeterminer != null && queryFunctorSort != null &&
 			!queryFunctorSort.is_a(o.getSort("property-with-value"))) {
-			queryTerms.push(new TermTermAttribute(new Term(o.getSort("relation.owns"), [listenerVariable, queryVariable])));	
+			queryTerms.push(new TermTermAttribute(new Term(o.getSort("verb.own"), [listenerVariable, queryVariable])));	
 		}
 		for(let adjective of adjectives) {
 			if (adjective.is_a(o.getSort("property-with-value"))) {

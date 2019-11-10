@@ -1075,6 +1075,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("card", "card", o, multitokens_raw);
     this.addStandardNounPOS("cave", "cave", o, multitokens_raw);
     this.addStandardNounPOS("cave in", "cave-in", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("celestial body", "celestial-body", Term.fromString("noun('celestial-body'[celestial-body], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("celestial bodies", "celestial-body", Term.fromString("noun('celestial-body'[celestial-body], [plural])", o), 1.0));    
     this.addStandardNounPOS("century", "time.century", o, multitokens_raw);
     this.addStandardNounPOS("chair", "chair", o, multitokens_raw);
     this.addStandardNounPOS("character", "character", o, multitokens_raw);
@@ -1104,6 +1106,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("crate", "crate", o, multitokens_raw);
     this.addStandardNounPOS("crater", "crater", o, multitokens_raw);
     this.addStandardNounPOS("cup", "cup", o, multitokens_raw);    
+    this.addStandardNounPOS("current time", "time.current", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("data", "data", Term.fromString("noun('data'[data], [grammatical-number])", o), 1.0));
     this.addStandardNounPOS("day", "time.day", o, multitokens_raw);
@@ -1118,6 +1121,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("diaries", "diary", Term.fromString("noun('diary'[diary], [plural])", o), 1.0));
     this.addStandardNounPOS("direction", "facing-direction", o, multitokens_raw);
     this.addStandardNounPOS("direction", "cardinal-direction", o, multitokens_raw);
+    this.addStandardNounPOS("direction", "relative-direction", o, multitokens_raw);
     this.addStandardNounPOS("display", "screen", o, multitokens_raw);
     this.addStandardNounPOS("distance", "distance", o, multitokens_raw);
     this.addStandardNounPOS("distress signal", "distress-signal", o, multitokens_raw);
@@ -1183,6 +1187,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("hyperdrive generator", "hyperdrive-generator", o, multitokens_raw);
     this.addStandardNounPOS("hour", "time.hour", o, multitokens_raw);
     this.addStandardNounPOS("human", "human", o, multitokens_raw);
+    this.addStandardNounPOS("indoor location", "indoor.location", o, multitokens_raw);
     this.addStandardNounPOS("infirmary", "infirmary", o, multitokens_raw);
     this.addStandardNounPOS("infirmary bed", "infirmary-bed", o, multitokens_raw);
     this.addStandardNounPOS("instant", "time.location", o, multitokens_raw);
@@ -1779,8 +1784,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.generateMultitokenTable(multitokens_raw);
 
     // reverse relations:
-    this.reverseRelations["relation.owns"] = "relation.belongs";
-    this.reverseRelations["relation.belongs"] = "relation.owns";
+    this.reverseRelations["verb.own"] = "relation.belongs";
+    this.reverseRelations["relation.belongs"] = "verb.own";
     this.reverseRelations["relation.cause"] = "relation.effect";
     this.reverseRelations["relation.effect"] = "relation.cause";
     this.reverseRelations["relation.contains"] = "space.inside.of";
@@ -2311,6 +2316,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   generatePropertySortToEnglishTable(o:Ontology)
   {
     var propertySort:Sort = o.getSort("property");
+    //var propertyWVSort:Sort = o.getSort("property-with-value");
     for(let token in this.POS) {
       var POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
@@ -2321,6 +2327,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
               sort.is_a(propertySort))  {
             this.propertySortToEnglish[POS.sortName] = token;
             //console.log(POS.sortName + " = " + token);
+          //} else if (POS.term.functor.name == "noun" &&
+          //           sort.is_a(propertyWVSort)) {
+          //  this.propertySortToEnglish[POS.sortName] = token;
           }
         }
       }

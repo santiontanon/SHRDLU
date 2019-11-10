@@ -1030,15 +1030,15 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	processSuperlatives(results:Bindings[], superlative:Sentence)
+	processSuperlatives(results:InferenceNode[], superlative:Sentence)
 	{
 		if (superlative.terms.length == 1 &&
 			superlative.terms[0].functor.name == "space.nearest-to" &&
 			superlative.terms[0].attributes.length == 2) {
-			let best:Bindings = null;
+			let best:InferenceNode = null;
 			let best_distance:number = null;
 			for(let result of results) {
-				let tmp:Term = superlative.terms[0].applyBindings(result);
+				let tmp:Term = superlative.terms[0].applyBindings(result.bindings);
 				if ((tmp.attributes[0] instanceof ConstantTermAttribute) &&
 					(tmp.attributes[1] instanceof ConstantTermAttribute)) {
 					let d:number = this.distanceBetweenIds((<ConstantTermAttribute>tmp.attributes[0]).value,
@@ -1064,10 +1064,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 		} else if (superlative.terms.length == 1 &&
 			superlative.terms[0].functor.name == "space.farthest-from" &&
 			superlative.terms[0].attributes.length == 2) {
-			let best:Bindings = null;
+			let best:InferenceNode = null;
 			let best_distance:number = null;
 			for(let result of results) {
-				let tmp:Term = superlative.terms[0].applyBindings(result);
+				let tmp:Term = superlative.terms[0].applyBindings(result.bindings);
 				if ((tmp.attributes[0] instanceof ConstantTermAttribute) &&
 					(tmp.attributes[1] instanceof ConstantTermAttribute)) {
 					let d:number = this.distanceBetweenIds((<ConstantTermAttribute>tmp.attributes[0]).value,

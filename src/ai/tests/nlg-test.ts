@@ -2,7 +2,7 @@ var g_o:Ontology = new Ontology();
 Sort.clear();
 var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
 xmlhttp.overrideMimeType("text/xml");
-xmlhttp.open("GET", "data/shrdluontology.xml", false); 
+xmlhttp.open("GET", "data/shrdluontology.xml", false);
 xmlhttp.send();
 g_o.loadSortsFromXML(xmlhttp.responseXML.documentElement);
 
@@ -42,7 +42,7 @@ var ceg1:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('1', g_
                                               null, 0, 
                                               [Term.fromString("human('1'[#id])",g_o), 
                                                Term.fromString("name('1'[#id], 'david'[symbol])",g_o),
-                                               Term.fromString("relation.owns('1'[#id],'k1'[#id])",g_o)]);
+                                               Term.fromString("verb.own('1'[#id],'k1'[#id])",g_o)]);
 var ceg2:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s1', g_o.getSort("#id")),
                                               null, 100, 
                                               [Term.fromString("ship('s1'[#id])",g_o),
@@ -52,7 +52,7 @@ var ceg3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin
                                               null, 10, 
                                               [Term.fromString("ai('etaoin'[#id])",g_o),
                                                Term.fromString("name('etaoin'[#id], 'etaoin'[#id])",g_o),
-                                               Term.fromString("relation.owns('etaoin'[#id],'s1'[#id])",g_o)]);
+                                               Term.fromString("verb.own('etaoin'[#id],'s1'[#id])",g_o)]);
 var ceg4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty', g_o.getSort("#id")),
                                               null, 10, 
                                               [Term.fromString("robot('qwerty'[#id])",g_o),
@@ -140,7 +140,7 @@ testNLG("perf.inform('1'[#id], color('s1'[#id],'red'[red]))", "etaoin", "my ship
 testNLG("perf.inform('1'[#id], space.at('s1'[#id],'room1'[#id]))", "etaoin", "my ship is in the kitchen");
 testNLG("perf.inform('1'[#id], #not(space.at('s1'[#id],'room1'[#id])))", "etaoin", "my ship is not in the kitchen");
 testNLG("perf.inform('1'[#id], relation.belongs('s1'[#id],'etaoin'[#id]))", "etaoin", "my ship is mine");
-testNLG("perf.inform('1'[#id], relation.owns('etaoin'[#id],'s1'[#id]))", "etaoin", "my ship is mine");
+testNLG("perf.inform('1'[#id], verb.own('etaoin'[#id],'s1'[#id]))", "etaoin", "I own my ship");
 
 testNLG("perf.inform('1'[#id], awake('1'[#id]))", "etaoin", "you are awake");
 
@@ -178,9 +178,9 @@ testNLG("perf.inform('1'[#id], #not(verb.understand('etaoin'[#id], #and(S:[sente
 testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], verb.parse('etaoin'[#id], #and(S:[sentence],the(S, [singular]))))))", "etaoin", "I can not parse the sentence");
 testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], verb.disambiguate('etaoin'[#id], #and(the(S:[sentence], [singular]), S)))))", "etaoin", "I can not disambiguate the sentence");
 
-testNLG("perf.inform('1'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, #and(M:[memory-bank], #and(relation.owns(E, M), plural(M) )) ))))", "etaoin", "I found an anomaly in my memory banks");
-testNLG("perf.inform(D:'1'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(relation.owns(D, Q), plural(Q)))), time.past(V))))", "etaoin", "I ran an analysis because of your questions");
-testNLG("perf.inform('1'[#id], #and(V:verb.find(E:'etaoin'[#id], #and(P1:erased(#and(M:[memory-bank], #and(relation.owns(E, M), plural(M)))), time.past(P1))), time.past(V)))", "etaoin", "I found that my memory banks were erased");
+testNLG("perf.inform('1'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, #and(M:[memory-bank], #and(verb.own(E, M), plural(M) )) ))))", "etaoin", "I found an anomaly in my memory banks");
+testNLG("perf.inform(D:'1'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), plural(Q)))), time.past(V))))", "etaoin", "I ran an analysis because of your questions");
+testNLG("perf.inform('1'[#id], #and(V:verb.find(E:'etaoin'[#id], #and(P1:erased(#and(M:[memory-bank], #and(verb.own(E, M), plural(M)))), time.past(P1))), time.past(V)))", "etaoin", "I found that my memory banks were erased");
 testNLG("perf.inform('1'[#id], #and(V:verb.go-to(E:'qwerty'[#id], 'room1'[#id]), #and(relation.purpose(V, verb.gather(E, #and(M:[mineral], plural(M)))), time.past(V))))", "etaoin", "qwerty went to the kitchen to gather minerals");
 testNLG("perf.inform('1'[#id], #and(#not(V:verb.come-back(E:'qwerty'[#id])), time.past(V)))", "etaoin", "qwerty did not come back");
 
@@ -227,10 +227,10 @@ testNLG("perf.q.predicate('1'[#id], permitted-in('etaoin'[#id], 'room1'[#id]))",
 testNLG("perf.inform.answer(V0:'1'[#id], '100'[kilogram])", "etaoin", "100 kilograms");
 testNLG("perf.inform.answer(V0:'1'[#id], '1.5'[meter])", "etaoin", "1.5 meters");
 testNLG("perf.inform.answer(V0:'1'[#id], '1'[meter])", "etaoin", "1 meter");
-testNLG("perf.inform(V0:'1'[#id], height('1'[#id],'1.8'[meter]))", "etaoin", "your height is 1.8 meters"); 
-testNLG("perf.inform(V0:'1'[#id], distance('1'[#id],'etaoin'[#id],'1.8'[meter]))", "etaoin", "the distance between you and me is 1.8 meters"); 
+testNLG("perf.inform(V0:'1'[#id], height('1'[#id],'1.8'[meter]))", "etaoin", "your height is 1.8 meters");
+testNLG("perf.inform(V0:'1'[#id], distance('1'[#id],'etaoin'[#id],'1.8'[meter]))", "etaoin", "the distance between you and me is 1.8 meters");
 
-testNLG("perf.inform(V0:'1'[#id], oxygen-level('1'[#id],'low'[low]))", "etaoin", "your oxygen level is low"); 
+testNLG("perf.inform(V0:'1'[#id], oxygen-level('1'[#id],'low'[low]))", "etaoin", "your oxygen level is low");
 testNLG("perf.request.action('1'[#id], verb.come-back(E:'1'[#id]))", "etaoin", "please, come back");
 
 // Parse errors:
@@ -269,22 +269,22 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1'[#id], V4:'light-weight'[light-weight]), V5:gravity(V6:'room2'[#id], V7:'gravity.low'[gravity.low])))", "etaoin", "your weight is light because of the bedroom's gravity is low");
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.understand(V3:'etaoin'[#id], V4:#and(V5:the(V6:'temperature'[temperature], V2_0:[singular]), V8:noun(V6, V2_0)))))", "etaoin", "I do not understand the temperature");
 testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora station'[symbol]))", "etaoin", "the kitchen's name is aurora station");
-testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property"); 
+testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:name(V3:'1'[#id], V4:'david'[symbol]), V5:#and(V6:name(V7:'qwerty'[#id], V8:'qwerty'[symbol]), V9:#and(V10:name(V11:'etaoin'[#id], V12:'etaoin'[symbol]), V13:'etcetera'[etcetera]))))", "etaoin", "your name is david, the robot's name is qwerty, my name is etaoin, ...");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remember(V4:'1'[#id], V5:'pronoun.anything'[pronoun.anything])), V6:#and(V7:in-stasis(V8:'1'[#id]), V9:time.past(V7))))", "etaoin", "you do not remember anything because of that you were in stasis");
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to(V2, verb.enter(V2, V4:'room1'[#id]))))", "etaoin", "you need to have permission to enter the kitchen");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");
 
-testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can switch on qwerty"); 
+testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can switch on qwerty");
 
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#id], 'powered.off'[powered.off]), verb.switch-off('etaoin'[#id], 's1'[#id])))", "etaoin", "my ship's state is off because I switch off my ship");
 
-testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom"); 
-testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen"); 
+testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom");
+testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen");
 
-testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom"); 
-testNLG("perf.request.action(V0:'1'[#id], verb.help('1'[#id], 'etaoin'[#id]))", "etaoin", "please, help me"); 
+testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom");
+testNLG("perf.request.action(V0:'1'[#id], verb.help('1'[#id], 'etaoin'[#id]))", "etaoin", "please, help me");
 
 testNLG("perf.inform('1'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id]), time.past(V)))" ,"etaoin", "the cave in damaged me");
 testNLG("perf.q.action('1'[#id], verb.help('1'[#id], 'etaoin'[#id], verb.go-to('etaoin'[#id], 'room1'[#id])))", "etaoin", "would you please help me to go to the kitchen?");

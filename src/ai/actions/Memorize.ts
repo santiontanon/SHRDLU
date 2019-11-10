@@ -30,8 +30,6 @@ class Memorize_IntentionAction extends IntentionAction {
 			}
 		}
 
-
-
 		if (timeModifierPresent) {
 			console.log("time modifiers present, not memorizing for now...");
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
