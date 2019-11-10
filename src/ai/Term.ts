@@ -1,6 +1,6 @@
 class Bindings {
     concat(b:Bindings) {
-        var result:Bindings = new Bindings();
+        let result:Bindings = new Bindings();
         result.l = this.l.concat(b.l);
         return result;   
     }
@@ -8,9 +8,9 @@ class Bindings {
 
     toString() : string
     {
-        var str:string = "[ ";
+        let str:string = "[ ";
         for(let b of this.l) {
-            var str2:string = "(";
+            let str2:string = "(";
             if (b[0].name != null) {
                 str2 += b[0].name;
             } else {
@@ -25,9 +25,9 @@ class Bindings {
 
     toStringWithMappings(variables:TermAttribute[], variableNames:string[]) : string
     {
-        var str:string = "[ ";
+        let str:string = "[ ";
         for(let b of this.l) {
-            var str2:string = "(";
+            let str2:string = "(";
             str2 += Term.variableNameForPrinting(b[0], variables, variableNames);
             str2 += " = " + Term.variableNameForPrinting(b[1], variables, variableNames) + ":" + b[1].toStringInternal(variables, variableNames) + ")";
             str += str2 + " ";
@@ -40,7 +40,7 @@ class Bindings {
         if (this.l.length != b.l.length) return false;
 
         for(let [variable,value] of this.l) {
-            var found:boolean = false;
+            let found:boolean = false;
             for(let [variable2,value2] of b.l) {
                 if (variable == variable2) {
                     found = true;
@@ -59,7 +59,7 @@ class Bindings {
         if (this.l.length > b.l.length) return false;
 
         for(let [variable,value] of this.l) {
-            var found:boolean = false;
+            let found:boolean = false;
             for(let [variable2,value2] of b.l) {
                 if (variable == variable2) {
                     found = true;
@@ -219,7 +219,7 @@ class VariableTermAttribute extends TermAttribute {
         for(let [v1,v2] of map) {
             if (v1 == this) return v2;
         }
-        var v:VariableTermAttribute = new VariableTermAttribute(this.sort, this.name);
+        let v:VariableTermAttribute = new VariableTermAttribute(this.sort, this.name);
         map.push([this, v]);
         return v;
     }
@@ -277,7 +277,7 @@ class TermTermAttribute extends TermAttribute {
         for(let [v1,v2] of map) {
             if (v1 == this) return v2;
         }
-        var v:TermTermAttribute = new TermTermAttribute(this.term.clone(map));
+        let v:TermTermAttribute = new TermTermAttribute(this.term.clone(map));
         map.push([this, v]);
         return v;
     }
@@ -323,8 +323,8 @@ class Term {
 
         // for each attribute:
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
             if (!Term.unifyAttribute(att1, att2, occursCheck, bindings)) return false;
         }
@@ -342,8 +342,8 @@ class Term {
 
         // for each attribute:
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
             if (!Term.unifyAttributeSameFunctor(att1, att2, occursCheck, bindings)) return false;
         }
@@ -359,8 +359,8 @@ class Term {
 
         // for each attribute:
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
             if (!Term.unifyAttributeSameFunctor(att1, att2, occursCheck, bindings)) return false;
         }
@@ -532,8 +532,8 @@ class Term {
 
         // for each attribute:
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
             if (!Term.subsumesAttribute(att1, att2, occursCheck, bindings)) return false;
         }
@@ -599,7 +599,7 @@ class Term {
 
     equalsBindings(t:Term) : Bindings
     {
-        var b:Bindings = new Bindings();
+        let b:Bindings = new Bindings();
         if (this.equalsInternal(t, b)) return b;
         return null;
     }
@@ -621,8 +621,8 @@ class Term {
 
         // for each attribute:
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
             if (!Term.equalsAttribute(att1, att2, bindings)) return false;
         }
@@ -649,12 +649,12 @@ class Term {
         if (this.functor.name == "#and" ||
             this.functor.name == "#list") {
             // special case!
-            var tl1:TermAttribute[] = Term.elementsInGenericList(this, this.functor.name);
-            var tl2:TermAttribute[] = Term.elementsInGenericList(t, this.functor.name);
+            let tl1:TermAttribute[] = Term.elementsInGenericList(this, this.functor.name);
+            let tl2:TermAttribute[] = Term.elementsInGenericList(t, this.functor.name);
 
             if (tl1.length != tl2.length) return false;
             for(let t1 of tl1) {
-                var found:TermAttribute = null;
+                let found:TermAttribute = null;
                 for(let t2 of tl2) {
                     let bl:number = bindings.l.length;
                     if (Term.equalsAttributeConsideringAndList(t1,t2,bindings)) {
@@ -669,8 +669,8 @@ class Term {
         } else {
             // for each attribute:
             for(let i:number = 0;i<this.attributes.length;i++) {
-                var att1:TermAttribute = this.attributes[i];
-                var att2:TermAttribute = t.attributes[i];
+                let att1:TermAttribute = this.attributes[i];
+                let att2:TermAttribute = t.attributes[i];
 
                 if (!Term.equalsAttributeConsideringAndList(att1, att2, bindings)) return false;
             }
@@ -694,7 +694,7 @@ class Term {
 
     static elementsInGenericList(list:Term, functor:string) : TermAttribute[]
     {
-        var output:TermAttribute[] = [];
+        let output:TermAttribute[] = [];
 
         while(list.functor.name == functor) {
             if (list.attributes[0] instanceof TermTermAttribute &&
@@ -738,7 +738,7 @@ class Term {
         if (att1 instanceof VariableTermAttribute &&
             att2 instanceof VariableTermAttribute) {
             if (att1.sort != att2.sort) return false;
-            var found:boolean = false;
+            let found:boolean = false;
             for(let [v1,v2] of bindings.l) {
                 if (v1 == att1) {
                     if (v2 != att2) return false;
@@ -773,7 +773,7 @@ class Term {
         if (att1 instanceof VariableTermAttribute &&
             att2 instanceof VariableTermAttribute) {
             if (att1.sort != att2.sort) return false;
-            var found:boolean = false;
+            let found:boolean = false;
             for(let [v1,v2] of bindings.l) {
                 if (v1 == att1) {
                     if (v2 != att2) return false;
@@ -802,12 +802,12 @@ class Term {
         if (this.functor != t.functor) return -1;
 
         // for each attribute:
-        var result:number = 1;
+        let result:number = 1;
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
-            var tmp:number = Term.equalsNoBindingsAttribute(att1, att2);
+            let tmp:number = Term.equalsNoBindingsAttribute(att1, att2);
             if (tmp==-1) return -1;
             if (tmp==0 && result==1) result = 0;
         }
@@ -874,12 +874,12 @@ class Term {
         if (!this.functor.subsumes(t.functor)) return -1;
 
         // for each attribute:
-        var result:number = 1;
+        let result:number = 1;
         for(let i:number = 0;i<this.attributes.length;i++) {
-            var att1:TermAttribute = this.attributes[i];
-            var att2:TermAttribute = t.attributes[i];
+            let att1:TermAttribute = this.attributes[i];
+            let att2:TermAttribute = t.attributes[i];
 
-            var tmp:number = Term.subsumesNoBindingsAttribute(att1, att2);
+            let tmp:number = Term.subsumesNoBindingsAttribute(att1, att2);
             if (tmp==-1) return -1;
             if (tmp==0 && result==1) result = 0;
         }
@@ -943,11 +943,11 @@ class Term {
         for(let [v1,v2] of map) {
             if (v1 == this) return v2;
         }
-        var t:Term = new Term(this.functor, []);
-        var t_a:TermTermAttribute = new TermTermAttribute(t);
+        let t:Term = new Term(this.functor, []);
+        let t_a:TermTermAttribute = new TermTermAttribute(t);
         map.push([this, t_a]);
         for(let att of this.attributes) {
-            var att2:TermAttribute = att.applyBindings_internal(bindings, map);
+            let att2:TermAttribute = att.applyBindings_internal(bindings, map);
             t.attributes.push(att2);
         }
         t_a.sort = t_a.term.functor;
@@ -1003,7 +1003,7 @@ class Term {
 
     clone(map:[TermAttribute,TermAttribute][]) : Term
     {
-        var attributes:TermAttribute[] = [];
+        let attributes:TermAttribute[] = [];
         for(let a of this.attributes) {
             attributes.push(a.clone(map));
         }
@@ -1015,75 +1015,46 @@ class Term {
     // #and, #or and #not functors. This function decodes such notation into a set of sentences:
     static termToSentences(term:Term, o:Ontology) : Sentence[]
     {
-        var sentences:Sentence[] = [];
+        let sentences:Sentence[] = [];
 
         // We start by bringing the #not inwards:
         // console.log("before bringNotInwards: " + term);
         term = Term.bringNotInwards(term, o);
         // console.log("after bringNotInwards: " + term);
 
-        var sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
-        /*
-        while(term.functor.name == "#and") {
-            var t1:Term = (<TermTermAttribute>term.attributes[0]).term;
-            var t2:Term = (<TermTermAttribute>term.attributes[1]).term;
-            if (t1.functor.name == "#and") {
-                sentenceTerms.push((<TermTermAttribute>term.attributes[1]).term);
-                term = (<TermTermAttribute>term.attributes[0]).term;
-            } else if (t2.functor.name == "#and") {
-                sentenceTerms.push((<TermTermAttribute>term.attributes[0]).term);
-                term = (<TermTermAttribute>term.attributes[1]).term;
-            } else {
-                sentenceTerms.push((<TermTermAttribute>term.attributes[0]).term);
-                term = (<TermTermAttribute>term.attributes[1]).term;
-            }
-        }
-        if (term!=null) sentenceTerms.push(term);
-        */
-
+        let sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
+  
         for(let sentenceTermA of sentenceTermAs) {
             if (!(sentenceTermA instanceof TermTermAttribute)) return null;
-            var sentenceTerm:Term = (<TermTermAttribute>sentenceTermA).term;
-            var termTermAs:TermAttribute[] = NLParser.elementsInList(sentenceTerm, "#or");
+            let sentenceTerm:Term = (<TermTermAttribute>sentenceTermA).term;
+            let termTermAs:TermAttribute[] = NLParser.elementsInList(sentenceTerm, "#or");
     
-            var terms:Term[] = [];
-            var sign:boolean[] = [];
+            let terms:Term[] = [];
+            let signs:boolean[] = [];
 
             for(let termTermA of termTermAs) {
                 if (!(termTermA instanceof TermTermAttribute)) return null;
-                var termTerm:Term = (<TermTermAttribute>termTermA).term;
+                let termTerm:Term = (<TermTermAttribute>termTermA).term;
+                let sign:boolean = true;
                 if (termTerm.functor.name == "#not" &&
                     termTerm.attributes.length == 1 &&
                     termTerm.attributes[0] instanceof TermTermAttribute) {
-                    terms.push((<TermTermAttribute>termTerm.attributes[0]).term);
-                    sign.push(false);
-                } else {
+                    termTerm = (<TermTermAttribute>termTerm.attributes[0]).term;
                     terms.push(termTerm);
-                    sign.push(true);
+                    sign = false;
                 }
-            }
-            /*
-            while(sentenceTerm.functor.name == "#or") {
-                var tmp:Term = (<TermTermAttribute>sentenceTerm.attributes[0]).term;
-                if (tmp.functor.name == "#not") {
-                    sign.push(false);
-                    tmp = (<TermTermAttribute>tmp.attributes[0]).term;
-                } else {
-                    sign.push(true);
+                // turn "!=" into a negated "="
+                if (termTerm.functor.name == "!=") {
+                    termTerm = new Term(o.getSort("="), termTerm.attributes);
+                    sign = !sign;
                 }
-                terms.push(tmp);
-                sentenceTerm = (<TermTermAttribute>sentenceTerm.attributes[1]).term;
+                terms.push(termTerm);
+                signs.push(sign);
             }
-            var tmp:Term = sentenceTerm;
-            if (tmp.functor.name == "#not") {
-                sign.push(false);
-                tmp = (<TermTermAttribute>tmp.attributes[0]).term;
-            } else {
-                sign.push(true);
-            }
-            terms.push(tmp);
-            */
-            sentences.push(new Sentence(terms, sign));
+
+
+
+            sentences.push(new Sentence(terms, signs));
         }
 
 //        console.log("termToSentences: " + sentences);
@@ -1172,8 +1143,8 @@ class Term {
 
     toStringInternal(variables:TermAttribute[], variableNames:string[]) : string
     {
-        var str:string = this.functor.name + "(";
-        var first:boolean = true;
+        let str:string = this.functor.name + "(";
+        let first:boolean = true;
         for(let a of this.attributes) {
             if (first) {
                 first = false;
@@ -1193,8 +1164,8 @@ class Term {
 
     toStringXMLInternal(variables:TermAttribute[], variableNames:string[]) : string
     {
-        var str:string = this.functor.name + "(";
-        var first:boolean = true;
+        let str:string = this.functor.name + "(";
+        let first:boolean = true;
         for(let a of this.attributes) {
             if (first) {
                 first = false;
@@ -1214,24 +1185,24 @@ class Term {
 
     static variableNameForPrinting(a:TermAttribute, variables:TermAttribute[], variableNames:string[]) : string
     {
-        var idx:number = variables.indexOf(a);
+        let idx:number = variables.indexOf(a);
         if (idx >= 0)  return variableNames[idx];
 
         variables.push(a);
-        var basevname:string = null;
-        var vname:string = null;
+        let basevname:string = null;
+        let vname:string = null;
         if (a instanceof VariableTermAttribute) basevname = (<VariableTermAttribute>a).name;               
         if (basevname == null) basevname = "V"+(variables.length-1);
         vname = basevname;
-        var idx2:number = 0;
-        var nameAllowed:boolean = true;
+        let idx2:number = 0;
+        let nameAllowed:boolean = true;
         do {
             nameAllowed = true;
             if (variableNames.lastIndexOf(vname) != -1) {
                 nameAllowed = false;
             } else {
                 for(let v2 of variables) {
-                    var vname2:string = null;
+                    let vname2:string = null;
                     if (!(v2 instanceof VariableTermAttribute)) continue;
                     vname2 = (<VariableTermAttribute>v2).name;
                     if (vname == vname2) {
@@ -1263,13 +1234,13 @@ class Term {
     static fromStringInternal(str:string, o:Ontology, 
                               variableNames:string[], variableValues:TermAttribute[]) : TermTermAttribute
     {
-        var tmp:string = "";
-        var len:number = str.length;
-        var idx:number = 0;
-        var c:string = null;
-        var term:Term = new Term(null,[]);
-        var term_a:TermTermAttribute = new TermTermAttribute(term);
-        var state:number = 0;
+        let tmp:string = "";
+        let len:number = str.length;
+        let idx:number = 0;
+        let c:string = null;
+        let term:Term = new Term(null,[]);
+        let term_a:TermTermAttribute = new TermTermAttribute(term);
+        let state:number = 0;
 
         if (str.indexOf("location2") >= 0) console.log("str: " + str);
 
@@ -1311,11 +1282,11 @@ class Term {
         }
 
         // separate the strings corresponding to each attribute:
-        var attributeStrings:string[] = [];
-        var parenthesis:number = 0;
-        var squareBrackets:number = 0;
-        var quotation:boolean = false;
-        var expectingAttribute:boolean = false;
+        let attributeStrings:string[] = [];
+        let parenthesis:number = 0;
+        let squareBrackets:number = 0;
+        let quotation:boolean = false;
+        let expectingAttribute:boolean = false;
         tmp = "";
         while(idx<len) {
             c = str.charAt(idx);
@@ -1406,7 +1377,7 @@ class Term {
             if (c == '[') {
                 if (tmp == "") {
                     // [sort]
-                    var idx2:number = attributeString.indexOf("]");
+                    let idx2:number = attributeString.indexOf("]");
                     tmp = attributeString.substring(idx,idx2);
                     if (attributeString.substring(idx2+1).trim() != "") {
                         console.error("Term.parseAttribute: extra characters found after VariableTermAttribute!");
@@ -1416,7 +1387,7 @@ class Term {
                         console.error("Term.parseAttribute: unexpected character ' in sort name: " + tmp);
                         return null;
                     }
-                    var a_sort:Sort = o.getSort(tmp);
+                    let a_sort:Sort = o.getSort(tmp);
                     if (a_sort == null) {
                         console.error("Term.parseAttribute: unknown sort " + tmp);
                         return null;
@@ -1429,8 +1400,8 @@ class Term {
             } else if (c == "\'") {
                 if (tmp == "") {
                     // 'constant'[sort]
-                    var foundQuote:boolean = false;
-                    var idx2:number = idx;
+                    let foundQuote:boolean = false;
+                    let idx2:number = idx;
                     while(idx2<len) {
                         if (attributeString.charAt(idx2) == "\'") {
                             foundQuote = true;
@@ -1442,15 +1413,15 @@ class Term {
                         console.error("Term.parseAttribute: unclosed quote in attribute!");
                         return null;
                     }
-                    var idx3:number = attributeString.substring(idx2).indexOf("[");
-                    var idx4:number = attributeString.substring(idx2).indexOf("]");
+                    let idx3:number = attributeString.substring(idx2).indexOf("[");
+                    let idx4:number = attributeString.substring(idx2).indexOf("]");
                     tmp = attributeString.substring(idx,idx2);
-                    var tmp2:string = attributeString.substring(idx2).substring(idx3+1,idx4);
+                    let tmp2:string = attributeString.substring(idx2).substring(idx3+1,idx4);
                     if (tmp2.indexOf("'") >= 0) {
                         console.error("Term.parseAttribute: unexpected character ' in sort name: " + tmp2);
                         return null;
                     }
-                    var a_sort:Sort = o.getSort(tmp2);
+                    let a_sort:Sort = o.getSort(tmp2);
                     if (a_sort == null) {
                         console.error("Term.parseAttribute: unknown sort " + tmp2);
                         return null;
@@ -1471,18 +1442,18 @@ class Term {
                 } else {
                     if (attributeString.charAt(idx)=="[") {
                         // VariableName:[sort]
-                        var idx2:number = attributeString.indexOf("]");
-                        var tmp2:string = attributeString.substring(idx+1,idx2);
+                        let idx2:number = attributeString.indexOf("]");
+                        let tmp2:string = attributeString.substring(idx+1,idx2);
                         if (attributeString.substring(idx2+1).trim() != "") {
                             console.error("Term.parseAttribute: extra characters found after VariableTermAttribute!");
                             return null;
                         }
-                        var a_sort:Sort = o.getSort(tmp2);
+                        let a_sort:Sort = o.getSort(tmp2);
                         if (a_sort == null) {
                             console.error("Term.parseAttribute: unknown sort " + tmp2);
                             return null;
                         }
-                        var a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
+                        let a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
                         if (variableNames.indexOf(tmp) == -1) {
                             variableNames.push(tmp);
                             variableValues.push(a_term);
@@ -1500,8 +1471,8 @@ class Term {
                         variableNames.push(tmp);
                         attributeString = attributeString.substring(idx);
                         idx = 1;
-                        var foundQuote:boolean = false;
-                        var idx2:number = idx;
+                        let foundQuote:boolean = false;
+                        let idx2:number = idx;
                         len = attributeString.length;
                         while(idx2<len) {
                             if (attributeString.charAt(idx2) == "\'") {
@@ -1514,16 +1485,16 @@ class Term {
                             console.error("Term.parseAttribute: unclosed quote in attribute!");
                             return null;
                         }
-                        var idx3:number = attributeString.substring(idx2).indexOf("[");
-                        var idx4:number = attributeString.substring(idx2).indexOf("]");
+                        let idx3:number = attributeString.substring(idx2).indexOf("[");
+                        let idx4:number = attributeString.substring(idx2).indexOf("]");
                         tmp = attributeString.substring(idx,idx2);
-                        var tmp2:string = attributeString.substring(idx2).substring(idx3+1,idx4);
-                        var a_sort:Sort = o.getSort(tmp2);
+                        let tmp2:string = attributeString.substring(idx2).substring(idx3+1,idx4);
+                        let a_sort:Sort = o.getSort(tmp2);
                         if (a_sort == null) {
                             console.error("Term.parseAttribute: unknown sort " + tmp2);
                             return null;
                         }
-                        var a_term:TermAttribute = null;
+                        let a_term:TermAttribute = null;
                         if (tmp.trim()!="" && !isNaN(Number(tmp))) {
                             a_term = new ConstantTermAttribute(Number(tmp), a_sort);
                         } else {
@@ -1534,7 +1505,7 @@ class Term {
 
                     } else {
                         // VariableName:functor( ... )
-                        var a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
+                        let a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
                         if (a_term == null) return null;
                         return a_term;
                     }
@@ -1542,7 +1513,7 @@ class Term {
 
             } else if (c == "(") {
                 // functor( ... )
-                var a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
+                let a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
                 if (a_term == null) return null;
                 return a_term;
             } 
@@ -1555,8 +1526,8 @@ class Term {
         idx = variableNames.indexOf(tmp);
         if (idx == -1) {
 //            console.log("   it's a new one");
-            var a_sort:Sort = o.getSort("any");
-            var a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
+            let a_sort:Sort = o.getSort("any");
+            let a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
             variableNames.push(tmp);
             variableValues.push(a_term);
             return a_term;

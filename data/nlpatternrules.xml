@@ -120,7 +120,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.sentiment(LISTENER, 'good'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 ('good' | 'awesome' | 'great' | 'fantastic' | emoticon(':)'[symbol])) ('!'|'?')*"
+			   		 (['very'] 'good' | 'awesome' | 'great' | 'fantastic' | 'amazing' | 'wonderful' | 'excellent' | emoticon(':)'[symbol])) ('!'|'?')*"
 			   priority="150"/>
 
 	<NLPattern name="sentiment-bad"
@@ -1110,21 +1110,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C2, OBJECT)
 			   		 #derefFromContext(C3, OBJECT2)"
 			   priority="200"/>
-	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #not(=(V, OBJECT))))"
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, !=(V, OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] 'no' nounPhrase(X, N, P, C)
-			   		 preposition('~='[~=]) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
+			   		 preposition('!='[!=]) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT)
 					 #derefQuery(C, V, PREDICATE)"
 			   />
-	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #not(=(V, OBJECT))))"
+	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, !=(V, OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'there' verb('verb.be'[symbol], NV, P, TV) 'no' nounPhrase(X, N, P, C)
-			   		 preposition('~='[~=]) nounPhrase(X2, [singular], P2, C2) '?' ('!'|'?')*
+			   		 preposition('!='[!=]) nounPhrase(X2, [singular], P2, C2) '?' ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT)
 					 #derefQuery(C, V, PREDICATE)"
 			   />
@@ -1272,7 +1272,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C, SUBJECT)"/>
 
 	<NLPattern name="perf.q.predicate-only-x"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #cons(NOUN, QUERY_V)))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #cons(NOUN, QUERY_V)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1281,7 +1281,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, N2) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-prep-y"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(PREP, QUERY_V, OBJECT), #cons(NOUN, QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(PREP, QUERY_V, OBJECT), #cons(NOUN, QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1292,7 +1292,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C3, OBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-adj"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(NOUN, QUERY_V), #cons(ADJ, QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(NOUN, QUERY_V), #cons(ADJ, QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1301,7 +1301,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, N2) adjective(ADJ) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-location"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(NOUN, QUERY_V), space.at(QUERY_V, LOCATION))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(NOUN, QUERY_V), space.at(QUERY_V, LOCATION))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1313,7 +1313,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(noun(L3, N3), LOCATION)"/>
 
 	<NLPattern name="perf.q.predicate-only-x2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #cons(NOUN, QUERY_V)))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #cons(NOUN, QUERY_V)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1323,7 +1323,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, N2) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-prep-y2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(PREP, QUERY_V, OBJECT), #cons(NOUN, QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(PREP, QUERY_V, OBJECT), #cons(NOUN, QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1335,7 +1335,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C3, OBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-adj2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(NOUN, QUERY_V), #cons(ADJ, QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(NOUN, QUERY_V), #cons(ADJ, QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1345,7 +1345,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, N2) adjective(ADJ) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="perf.q.predicate-only-x-location2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(#cons(NOUN, QUERY_V), space.at(QUERY_V, LOCATION))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(#cons(NOUN, QUERY_V), space.at(QUERY_V, LOCATION))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1360,7 +1360,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
  	<!-- special case for asking about the "last human", which implies, "last human alive" -->
 	<NLPattern name="perf.q.predicate-last-human"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), alive(QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), alive(QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1370,7 +1370,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="perf.q.predicate-last-human-here"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION)))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION)))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1383,7 +1383,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(noun(L3, N3), LOCATION)"
 			   priority="200"/>
 	<NLPattern name="perf.q.predicate-last-human2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), alive(QUERY_V))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), alive(QUERY_V))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1394,7 +1394,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="perf.q.predicate-last-human-here2"
-			   head="perf.q.predicate-negated(LISTENER, #and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION)))))"
+			   head="perf.q.predicate-negated(LISTENER, #and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION)))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'so') [',']]
@@ -1419,12 +1419,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefQuery(C, QUERY_VARIABLE, CONSTRAINT)"
 			   priority="200"/>
 	<NLPattern name="perf.q.predicate-any-X-LOC-other-than"
-			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(#not(=(QUERY_VARIABLE, EXCEPTION)), CONSTRAINT)))"
+			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(!=(QUERY_VARIABLE, EXCEPTION), CONSTRAINT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 nounPhrase(X, N, P, C) 
-			   		 preposition('~='[~=]) nounPhrase(X3, N3, P3, C3)
+			   		 preposition('!='[!=]) nounPhrase(X3, N3, P3, C3)
 			   		 (preposition('space.at'[space.at]) nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LOCATION) | 
 			   		  adverb(X4:[space.location]) #derefFromContext(noun(X4,[singular]), LOCATION))
 			   		 ('!'|'?')*
@@ -1432,20 +1432,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C3, EXCEPTION)"
 			   priority="250"/>
 	<NLPattern name="perf.q.predicate-any-X-LOC-other-than2"
-			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(#not(=(QUERY_VARIABLE, EXCEPTION)), CONSTRAINT)))"
+			   head="perf.q.predicate(LISTENER, #and(space.at(QUERY_VARIABLE, LOCATION), #and(!=(QUERY_VARIABLE, EXCEPTION), CONSTRAINT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 nounPhrase(X, N, P, C) 
 			   		 (preposition('space.at'[space.at]) nounPhrase(X2, N2, P2, C2) #derefFromContext(C2, LOCATION) | 
 			   		  adverb(X4:[space.location]) #derefFromContext(noun(X4,[singular]), LOCATION))
-			   		 preposition('~='[~=]) nounPhrase(X3, N3, P3, C3)
+			   		 preposition('!='[!=]) nounPhrase(X3, N3, P3, C3)
 			   		 ('!'|'?')*
 			   		 #derefQuery(C, QUERY_VARIABLE, CONSTRAINT)
 			   		 #derefFromContext(C3, EXCEPTION)"
 			   priority="250"/>
 	<NLPattern name="perf.q.predicate-someone-with-X"
-			   head="perf.q.predicate(LISTENER, #and(character(QV), #and(#not(=(QV,OBJECT)), #and(space.at(OBJECT, L), space.at(QV, L)))))"
+			   head="perf.q.predicate(LISTENER, #and(character(QV), #and(!=(QV,OBJECT), #and(space.at(OBJECT, L), space.at(QV, L)))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1962,7 +1962,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   priority="200"/>
 
     <NLPattern name="whereis-other-people"
-    		   head="perf.q.whereis(LISTENER, QUERY_V, QUERY_L, #and(#cons(NAME, QUERY_V), #and(#not(=(QUERY_V, LISTENER)), #not(=(QUERY_V, SPEAKER)))))"
+    		   head="perf.q.whereis(LISTENER, QUERY_V, QUERY_L, #and(#cons(NAME, QUERY_V), #and(!=(QUERY_V, LISTENER), !=(QUERY_V, SPEAKER))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1981,7 +1981,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*"/>
 
     <NLPattern name="whereis-someone-else"
-    		   head="perf.q.whereis(LISTENER, QUERY_V, QUERY_L, #and(character(QUERY_V), #and(#not(=(QUERY_V, LISTENER)), #not(=(QUERY_V, SPEAKER)))))"
+    		   head="perf.q.whereis(LISTENER, QUERY_V, QUERY_L, #and(character(QUERY_V), #and(!=(QUERY_V, LISTENER), !=(QUERY_V, SPEAKER))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2267,7 +2267,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefQuery(#and(noun(X3, N3), determiner.other(X3, N3)), WHO, WHO_QUERY)
 			   		 ('!'|'?')*"/>
     <NLPattern name="what-happens-past-others"
-    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(VH:verb.happen(WHO, QUERY_VARIABLE), #and(human(WHO), #and(#not(=(WHO,SPEAKER)), time.past(VH)))))"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(VH:verb.happen(WHO, QUERY_VARIABLE), #and(human(WHO), #and(!=(WHO,SPEAKER), time.past(VH)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2391,7 +2391,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
     		   		 #derefFromContext(C2, OBJECT)"/>
     <NLPattern name="who-is-in-other-X"
-    		   head="perf.q.query(LISTENER, V, #and(character(V), #and(#cons(PREPOSITION, V, V2), #and(#cons(X2, V2), #not(=(V2, OBJECT))))))"
+    		   head="perf.q.query(LISTENER, V, #and(character(V), #and(#cons(PREPOSITION, V, V2), #and(#cons(X2, V2), !=(V2, OBJECT)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2420,8 +2420,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     <NLPattern name="whoelse1"
     		   head="perf.q.query(LISTENER, V, #and(character(V), 
     										   #and(#cons(VERB, V, OBJECT), 
-    										   #and(#not(=(V, SPEAKER)), 
-    										   	    #not(=(V, LISTENER))))))"
+    										   #and(!=(V, SPEAKER), 
+    										   	    !=(V, LISTENER)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2432,8 +2432,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     <NLPattern name="whoelse2"
     		   head="perf.q.query(LISTENER, V, #and(character(V), 
     										   #and(QUERY,
-    										   #and(#not(=(V, SPEAKER)), 
-    										   	    #not(=(V, LISTENER))))))"
+    										   #and(!=(V, SPEAKER), 
+    										   	    !=(V, LISTENER)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2448,8 +2448,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     <NLPattern name="whoelse3"
     		   head="perf.q.query(LISTENER, V, #and(character(V), 
     										   #and(#cons(PREPOSITION, V, OBJECT),
-    										   #and(#not(=(V, SPEAKER)), 
-    										   	    #not(=(V, LISTENER))))))"
+    										   #and(!=(V, SPEAKER), 
+    										   	    !=(V, LISTENER)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2462,8 +2462,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     <NLPattern name="whoelse4"
     		   head="perf.q.query(LISTENER, V, #and(character(V), 
     										   #and(QUERY,
-    										   #and(#not(=(V, SPEAKER)), 
-    										   	    #not(=(V, LISTENER))))))"
+    										   #and(!=(V, SPEAKER), 
+    										   	    !=(V, LISTENER)))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -2472,8 +2472,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefQuery(adverb(ADVERB), V, QUERY)"
     		   priority="200"/>
     <NLPattern head="perf.q.query(LISTENER, V, #and(character(V), 
-    										   #and(#not(=(V, SPEAKER)), 
-    										   	    #not(=(V, LISTENER)))))"
+    										   #and(!=(V, SPEAKER), 
+    										   	    !=(V, LISTENER))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -4801,7 +4801,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C4, OBJECT)"/>
 
 	<NLPattern name="why-last-human"
-			   head="perf.q.why(LISTENER, #not(#and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), alive(QUERY_V)))))"
+			   head="perf.q.why(LISTENER, #not(#and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), alive(QUERY_V)))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -4811,7 +4811,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun('human'[human], N2) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="why-last-human-here"
-			   head="perf.q.why(LISTENER, #not(#and(#not(=(QUERY_V, SUBJECT)), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION))))))"
+			   head="perf.q.why(LISTENER, #not(#and(!=(QUERY_V, SUBJECT), #and(human(QUERY_V), #and(alive(QUERY_V), space.at(QUERY_V, LOCATION))))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]

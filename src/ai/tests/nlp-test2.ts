@@ -434,15 +434,15 @@ NLParseTestUnifyingListener("where is everyone else?", o.getSort("performative")
 NLParseTestUnifyingListener("is there anyone?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], character(X))");
 NLParseTestUnifyingListener("is there anyone here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(space.at(X,'room1'[#id]), character(X)))");
 NLParseTestUnifyingListener("who is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), space.at(X,'room1'[#id])))");
-NLParseTestUnifyingListener("is there anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(space.at(X,'room1'[#id]), character(X)))))");
-NLParseTestUnifyingListener("who else is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'room1'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
-NLParseTestUnifyingListener("is there any human other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), human(X)), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("is there anyone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
-NLParseTestUnifyingListener("is there someone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
-NLParseTestUnifyingListener("is there someone else in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
-NLParseTestUnifyingListener("is anyone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
-NLParseTestUnifyingListener("who else is in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
-NLParseTestUnifyingListener("who else is there in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
+NLParseTestUnifyingListener("is there anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(space.at(X,'room1'[#id]), character(X)))))");
+NLParseTestUnifyingListener("who else is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'room1'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
+NLParseTestUnifyingListener("is there any human other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), human(X)), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("is there anyone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
+NLParseTestUnifyingListener("is there someone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
+NLParseTestUnifyingListener("is there someone else in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
+NLParseTestUnifyingListener("is anyone else in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(space.at(X,'location-aurora-station'[#id]), character(X)))))");
+NLParseTestUnifyingListener("who else is in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
+NLParseTestUnifyingListener("who else is there in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
 
 // tests inserting the target name in front:
 NLParseTestUnifyingListener("etaoin my key is white", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], color('4'[#id],'white'[white]))");
@@ -463,13 +463,13 @@ NLParseTestUnifyingListener("etaoin Where is everybody?", o.getSort("performativ
 NLParseTestUnifyingListener("etaoin, is there anyone in aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(character(X), space.at(X,'location-aurora-station'[#id])))");
 NLParseTestUnifyingListener("etaoin, where is everyone else?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'H1'[#id])");
 NLParseTestUnifyingListener("etaoin is there anyone?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], character(X))");
-NLParseTestUnifyingListener("etaoin who else is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'room1'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
+NLParseTestUnifyingListener("etaoin who else is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'room1'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
 NLParseTestUnifyingListener("etaoin take the white key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], '4'[#id]))");
 NLParseTest("any other human", o.getSort("nounPhrase"), context, "nounPhrase(V0:'human'[human], V1:[singular], V2:[third-person], #and(article.any(V0, V1), #and(determiner.other(V0, V1), V3:noun(V0, V1))))");
-NLParseTestUnifyingListener("is there any other human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V7:#and(V8:#not(V9:=(V, V10:'H1'[#id])), V11:human(V))))");
-NLParseTestUnifyingListener("is there any other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V7:#and(V8:#not(V9:=(V, V10:'H1'[#id])), V11:human(V))))");
-NLParseTestUnifyingListener("is there any other human in this station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:#and(V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V7:#and(V8:#not(V9:=(V, V10:'H1'[#id])), V11:human(V))), V12:space.at(V, V13:'location-aurora-station'[#id])))");
-NLParseTestUnifyingListener("is there any other humans in this station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:#and(V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V7:#and(V8:#not(V9:=(V, V10:'H1'[#id])), V11:human(V))), V12:space.at(V, V13:'location-aurora-station'[#id])))");
+NLParseTestUnifyingListener("is there any other human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))))");
+NLParseTestUnifyingListener("is there any other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))))");
+NLParseTestUnifyingListener("is there any other human in this station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:#and(V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))), V12:space.at(V, V13:'location-aurora-station'[#id])))");
+NLParseTestUnifyingListener("is there any other humans in this station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:#and(V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))), V12:space.at(V, V13:'location-aurora-station'[#id])))");
 NLParseTestUnifyingListener("is your memory bank erased?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], erased('etaoin-memory'[#id]))");
 NLParseTestUnifyingListener("can I have the white key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");  
 NLParseTestUnifyingListener("could I have the white key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
@@ -533,7 +533,7 @@ NLParseTestUnifyingListener("bedroom 5 is yours", o.getSort("performative"), con
 // clear the mentions to restart
 context.mentions = [];
 NLParseTestUnifyingListener("who is there?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, character(X))");
-NLParseTestUnifyingListener("who else is there?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(E:'etaoin'[#id], X, #and(character(X), #and(#not(=(X,'1'[#id])), #not(=(X,E)))))");
+NLParseTestUnifyingListener("who else is there?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(E:'etaoin'[#id], X, #and(character(X), #and(!=(X,'1'[#id]), !=(X,E))))");
 
 // now add a sentence that has a mention to a room:
 NLParseTestUnifyingListener("where is the bedroom?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'room2'[#id])");
@@ -653,17 +653,17 @@ NLParseTestUnifyingListener("what is going on?", o.getSort("performative"),  con
 
 // from Ahmed
 NLParseTestUnifyingListener("I don't think so", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
-NLParseTestUnifyingListener("is there anyone other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), character(X)), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("is there anyone other than me on the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.on.top.of(X,'location-aurora-station'[#id]), character(X)), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("Is there anyone beside me in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("Is there anyone beside me in that station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), #not(=(X,'1'[#id]))))");
+NLParseTestUnifyingListener("is there anyone other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), character(X)), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("is there anyone other than me on the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.on.top.of(X,'location-aurora-station'[#id]), character(X)), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("Is there anyone beside me in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("Is there anyone beside me in that station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'location-aurora-station'[#id]), character(X)), !=(X,'1'[#id])))");
 NLParseTestUnifyingListener("what is your functionality?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, role('etaoin'[#id], X))");
 NLParseTestUnifyingListener("do I have access to the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:permission-to(V3:'1'[#id], V8:'room1'[#id]))"); 
 NLParseTestUnifyingListener("can I enter the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.can(V2:'1'[#id], V3:verb.enter(V2, V4:'room1'[#id])))"); 
 NLParseTestUnifyingListener("can I access the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], verb.can(V2:'1'[#id], V3:verb.access(V2, V4:'room1'[#id])))"); 
-NLParseTestUnifyingListener("are there no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("So, are there no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #not(=(X,'1'[#id]))))");
-NLParseTestUnifyingListener("So there is no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #not(=(X,'1'[#id]))))");
+NLParseTestUnifyingListener("are there no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("So, are there no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("So there is no humans other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), !=(X,'1'[#id])))");
 NLParseTestUnifyingListener("can I go to space?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V1:verb.can(V3:'1'[#id],verb.go-to(V3, V8:'space'[#id])))"); 
 NLParseTestUnifyingListener("is david here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(name(X,'david'[symbol]), space.at(X,'room1'[#id])))"); 
 
@@ -752,14 +752,14 @@ NLParseTestUnifyingListener("I don't", o.getSort("performative"),  context, 'eta
 NLParseTestUnifyingListener("Oh hi!", o.getSort("performative"),  context, 'etaoin', "perf.greet(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("how to take the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], action.take('1'[#id],'5'[#id]))");
 NLParseTestUnifyingListener("am I alone in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(S:'etaoin'[#id], alone-in('1':[#id],'location-aurora-station':[#id]))");
-NLParseTestUnifyingListener("am I the only human in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(space.at(X,'location-aurora-station'[#id]), human(X))))");
+NLParseTestUnifyingListener("am I the only human in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(space.at(X,'location-aurora-station'[#id]), human(X))))");
 NLParseTestUnifyingListener("any human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), space.at(X,'room1'[#id])))");
-NLParseTestUnifyingListener("any other human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(human(X), space.at(X,'room1'[#id]))))");
-NLParseTestUnifyingListener("any human here other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(human(X), space.at(X,'room1'[#id]))))");
-NLParseTestUnifyingListener("any human other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(human(X), space.at(X,'room1'[#id]))))");
+NLParseTestUnifyingListener("any other human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'1'[#id]), #and(human(X), space.at(X,'room1'[#id]))))");
+NLParseTestUnifyingListener("any human here other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'1'[#id]), #and(human(X), space.at(X,'room1'[#id]))))");
+NLParseTestUnifyingListener("any human other than me here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'1'[#id]), #and(human(X), space.at(X,'room1'[#id]))))");
 NLParseTestUnifyingListener("any humans the crate?", o.getSort("performative"),  context, 'etaoin', null);
 NLParseTestUnifyingListener("who is this?", o.getSort("performative"),  context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'etaoin'[#id])");
-NLParseTestUnifyingListener("is someone there with you?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(character(X), #and(#not(=(X,'etaoin'[#id])), #and(space.at('etaoin'[#id], L), space.at(X, L)))))");
+NLParseTestUnifyingListener("is someone there with you?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(character(X), #and(!=(X,'etaoin'[#id]), #and(space.at('etaoin'[#id], L), space.at(X, L)))))");
 NLParseTestUnifyingListener("is this the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], space.at('1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("help me!", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.help(V0, '1'[#id]))");
 NLParseTestUnifyingListener("help!!!", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.help(V0, '1'[#id]))");
@@ -813,7 +813,7 @@ NLParseTestUnifyingListener("get out of the way please etaoin", o.getSort("perfo
 NLParseTestUnifyingListener("will you come with me?", o.getSort("performative"), context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.follow('etaoin'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("great, what should I do?", o.getSort("performative"), context, 'etaoin',  "perf.q.query('etaoin'[#id], X, goal('1'[#id],X))");
 NLParseTestUnifyingListener("do you speak english?", o.getSort("performative"), context, 'etaoin',  "perf.q.predicate('etaoin'[#id], verb.speak('etaoin'[#id], 'english'[#id]))");
-NLParseTestUnifyingListener("where is the other people?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(human(X), #and(#not(=(X,'1'[#id])), #not(=(X,'etaoin'[#id])))))");
+NLParseTestUnifyingListener("where is the other people?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(human(X), #and(!=(X,'1'[#id]), !=(X,'etaoin'[#id]))))");
 NLParseTestUnifyingListener("how many keys are here?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), space.at(X,'room1'[#id])))"); 
 NLParseTestUnifyingListener("how many keys are there here?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), space.at(X,'room1'[#id])))"); 
 NLParseTestUnifyingListener("Why is there a dead human?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #and(human(X), dead(X)))");
@@ -821,10 +821,10 @@ NLParseTestUnifyingListener("Why is there a dead human in the kitchen?", o.getSo
 NLParseTestUnifyingListener("Why is there a dead human here?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #and(space.at(X, 'room1'[#id]), #and(human(X), dead(X))))");  
 NLParseTestUnifyingListener("okay, how can I reach the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.reach('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("my name is not santi", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #not(name('1'[#id],'santi'[symbol])))");
-NLParseTestUnifyingListener("am I the only human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), human(X)))");
-NLParseTestUnifyingListener("am I the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
-NLParseTestUnifyingListener("am I the only human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
-NLParseTestUnifyingListener("am I the last human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("am I the only human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), human(X)))");
+NLParseTestUnifyingListener("am I the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("am I the only human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("am I the last human alive?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), human(X))))");
 NLParseTestUnifyingListener("Why can't you repair the crate??", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can('etaoin'[#id], verb.repair('etaoin'[#id],'5'[#id]))))");
 NLParseTestUnifyingListener("there is a corpse here", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))");
 NLParseTestUnifyingListener("there is a crate in the kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(crate(X), space.at(X,'room1'[#id])))");
@@ -842,15 +842,15 @@ NLParseTestUnifyingListener("how should i find the crate", o.getSort("performati
 NLParseTestUnifyingListener("whose crate is this?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.own(X, '5'[#id]))");
 NLParseTestUnifyingListener("who is the owner of this crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.own(X, '5'[#id]))");
 NLParseTestUnifyingListener("who owns this crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V1:[any], V2:#and(V3:character(V1), V4:verb.own(V1, V5:'5'[#id])))");
-NLParseTestUnifyingListener("am I the last human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id])))))");
-NLParseTestUnifyingListener("am I the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(human(X), space.at(X, 'room1'[#id]))))");
-NLParseTestUnifyingListener("why am i the only human?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(#not(=(X,'1'[#id])), #and(alive(X), human(X)))))");
-NLParseTestUnifyingListener("why am i the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(#not(=(X,'1'[#id])), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id]))))))");
+NLParseTestUnifyingListener("am I the last human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id])))))");
+NLParseTestUnifyingListener("am I the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(human(X), space.at(X, 'room1'[#id]))))");
+NLParseTestUnifyingListener("why am i the only human?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(!=(X,'1'[#id]), #and(alive(X), human(X)))))");
+NLParseTestUnifyingListener("why am i the only human here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(!=(X,'1'[#id]), #and(alive(X), #and(human(X), space.at(X, 'room1'[#id]))))))");
 NLParseTestUnifyingListener("why are there no humans here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(#and(human(X), space.at(X, 'room1'[#id]))))");
 NLParseTestUnifyingListener("why don't i remember anything?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], #not(verb.remember('1'[#id], 'pronoun.anything'[pronoun.anything])))");
 NLParseTestUnifyingListener("how do i turn on the ship", o.getSort("performative"), context, 'etaoin', "perf.q.how('etaoin'[#id], verb.switch-on('1'[#id], '2'[#id]))"); 
-NLParseTestUnifyingListener("who is in the other rooms?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(space.at(X, Y), #and(room(Y), #not(=(Y, 'room1'[#id]))))))");
-NLParseTestUnifyingListener("were there other humans here before?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #and(#not(=(X,'1'[#id])), #and(V:space.at(X, 'room1'[#id]), time.past(V)))))");
+NLParseTestUnifyingListener("who is in the other rooms?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), #and(space.at(X, Y), #and(room(Y), !=(Y, 'room1'[#id])))))");
+NLParseTestUnifyingListener("were there other humans here before?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(X), #and(!=(X,'1'[#id]), #and(V:space.at(X, 'room1'[#id]), time.past(V)))))");
 NLParseTestUnifyingListener("etaoin send the crate here", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
 NLParseTestUnifyingListener("can you send the crate here?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
 NLParseTestUnifyingListener("send the crate to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.go-to(TARGET, 'room1'[#id]))))"); 
@@ -869,26 +869,26 @@ NLParseTestUnifyingListener("How did I get here?", o.getSort("performative"), co
 NLParseTestUnifyingListener("which rover should i take?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(rover(X), goal('1'[#id], action.take('1'[#id], X))))");
 NLParseTestUnifyingListener("what did happen to humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen('1'[#id], X), time.past(V)))");  
 NLParseTestUnifyingListener("what happened to humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen('1'[#id], X), time.past(V)))");
-NLParseTestUnifyingListener("what happened to the other humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(#not(=(H, '1'[#id])), time.past(V)))))");
-NLParseTestUnifyingListener("what happened to other humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(#not(=(H, '1'[#id])), time.past(V)))))");
-NLParseTestUnifyingListener("what happened to the others?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(#not(=(H, '1'[#id])), time.past(V)))))");  
-NLParseTestUnifyingListener("no other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), V11:human(V)))");
-NLParseTestUnifyingListener("no other humans here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), #and(space.at(V, 'room1'[#id]), V11:human(V))))"); 
-NLParseTestUnifyingListener("no other humans in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(V3:#not(V4:=(V:[any], V6:'1'[#id])), #and(space.at(V, 'room1'[#id]), V11:human(V))))");
+NLParseTestUnifyingListener("what happened to the other humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(!=(H, '1'[#id]), time.past(V)))))");
+NLParseTestUnifyingListener("what happened to other humans?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(!=(H, '1'[#id]), time.past(V)))))");
+NLParseTestUnifyingListener("what happened to the others?", o.getSort("performative"), context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(V:verb.happen(H, X), #and(human(H), #and(!=(H, '1'[#id]), time.past(V)))))");  
+NLParseTestUnifyingListener("no other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), V11:human(V)))");
+NLParseTestUnifyingListener("no other humans here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), #and(space.at(V, 'room1'[#id]), V11:human(V))))"); 
+NLParseTestUnifyingListener("no other humans in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), #and(space.at(V, 'room1'[#id]), V11:human(V))))");
 
 // For ACT 2:
 NLParseTestUnifyingListener("did you find life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("have you found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(V0, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("have we found life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(verb.find(Y, X, 'location-aurora-station'[#id]), living-being(X)))");
 NLParseTestUnifyingListener("is there life in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(space.at(X, 'location-aurora-station'[#id]), living-being(X)))");
-NLParseTestUnifyingListener("is there life in the station other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(space.at(X, 'location-aurora-station'[#id]), living-being(X))))");
+NLParseTestUnifyingListener("is there life in the station other than me?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(space.at(X, 'location-aurora-station'[#id]), living-being(X))))");
 NLParseTestUnifyingListener("do you know what is this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.whatis.noname('etaoin'[#id], 'room1'[#id])");
 NLParseTestUnifyingListener("do you know what is etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.whatis.name('etaoin'[#id], 'etaoin'[#id])");
 NLParseTestUnifyingListener("do you know who are you?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'etaoin'[#id])");
 NLParseTestUnifyingListener("do you know who is etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.whois.name('etaoin'[#id], 'etaoin'[#id])");
 
-NLParseTestUnifyingListener("does this mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
-NLParseTestUnifyingListener("so, does that mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(#not(=(X,'1'[#id])), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("does this mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), human(X))))");
+NLParseTestUnifyingListener("so, does that mean I am the last human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate-negated(S:'etaoin'[#id], #and(!=(X,'1'[#id]), #and(alive(X), human(X))))");
 NLParseTestUnifyingListener("why is it dark in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
 NLParseTestUnifyingListener("why is it so dark in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
 NLParseTestUnifyingListener("why is it so dark here?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], dark('room1'[#id]))");
@@ -1075,23 +1075,23 @@ NLParseTestUnifyingListener(":)", o.getSort("performative"), context, 'etaoin', 
 NLParseTestUnifyingListener(":(", o.getSort("performative"), context, 'etaoin', "perf.sentiment('etaoin'[#id], 'bad'[symbol])");  
 NLParseTestUnifyingListener("tell me what you have", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, verb.have(V0, X))");
 NLParseTestUnifyingListener("etaoin where is someone?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, character(X))");
-NLParseTestUnifyingListener("etaoin where is someone else?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(character(X), #and(#not(=(X,'1'[#id])), #not(=(X,'etaoin'[#id])))))");
+NLParseTestUnifyingListener("etaoin where is someone else?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(character(X), #and(!=(X,'1'[#id]), !=(X,'etaoin'[#id]))))");
 NLParseTestUnifyingListener("go to sleep", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.sleep('etaoin'[#id]))");
 NLParseTestUnifyingListener("how can i die?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.die('1'[#id]))");
 NLParseTestUnifyingListener("what is oxygen", o.getSort("performative"),  context, 'etaoin', "perf.q.action(X:'etaoin'[#id], verb.define(X,[oxygen]))");
 NLParseTestUnifyingListener("how do i wear my key", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.wear('1'[#id], '4'[#id]))");
-NLParseTestUnifyingListener("was there anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(AT:space.at(X,'room1'[#id]), #and(character(X), time.past(AT))))))");
-NLParseTestUnifyingListener("was there ever anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#not(=(X,'etaoin'[#id])), #and(#not(=(X,'1'[#id])), #and(AT:space.at(X,'room1'[#id]), #and(character(X), time.past(AT))))))");
+NLParseTestUnifyingListener("was there anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(AT:space.at(X,'room1'[#id]), #and(character(X), time.past(AT))))))");
+NLParseTestUnifyingListener("was there ever anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(AT:space.at(X,'room1'[#id]), #and(character(X), time.past(AT))))))");
 NLParseTestUnifyingListener("i'm awake?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], awake('1'[#id]))"); 
 NLParseTestUnifyingListener("i'm healthy?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], healthy('1'[#id]))"); 
 NLParseTestUnifyingListener("print money", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [money]))");
 NLParseTestUnifyingListener("print a key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [key]))"); 
 NLParseTestUnifyingListener("3d print pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [pliers]))"); 
-NLParseTestUnifyingListener("locate the other person?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(human(X), #and(#not(=(X,'1'[#id])), #not(=(X,'etaoin'[#id])))))");
+NLParseTestUnifyingListener("locate the other person?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(human(X), #and(!=(X,'1'[#id]), !=(X,'etaoin'[#id]))))");
 NLParseTestUnifyingListener("tell the crate to go in ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
 NLParseTestUnifyingListener("tell the crate to follow me,etaoin", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.follow(TARGET, '1'[#id]))))"); 
-NLParseTestUnifyingListener("who else is in the station too", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
-NLParseTestUnifyingListener("who else is in the station as well", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(#not(=(X,'1'[#id])), #not(=(X,L))))))");
+NLParseTestUnifyingListener("who else is in the station too", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
+NLParseTestUnifyingListener("who else is in the station as well", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
 NLParseTestUnifyingListener("am i a video game protagonist?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], game-protagonist('1'[#id]))"); 
 NLParseTestUnifyingListener("is this a game?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], game('4'[#id]))");
 NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza])), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), verb.like('1'[#id], X))))");

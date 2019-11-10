@@ -320,3 +320,5 @@ testNLG("perf.inform('1'[#id], #and(#not(X:verb.ask('etaoin'[#id], 'pronoun.anyt
 
 testNLG("perf.inform('1'[#id], #not(X:verb.know-how(E:'etaoin'[#id], action.print(E, [fork]))))", "etaoin", "I do not know how to print a fork");
 
+testNLG("perf.inform('1'[#id], #or(V0:#or(V1:#not(V2:goal(X_0:[any], Y_0:[any])), V5:#not(V6:goal(X_0, Z_0:[any]))), V8:=(Y_0, Z_0)))", "etaoin", "if X1's goal is X2 and X1's goal is X3 then X2 is equal to X3");
+

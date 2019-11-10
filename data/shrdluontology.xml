@@ -27,7 +27,7 @@
 
     <sort name="property" super="any"/>
     <sort name="relation" super="any"/>
-    <sort name="~=" super="relation"/>
+    <sort name="!=" super="relation"/>
 
     <sort name="etcetera" super="any"/>
 

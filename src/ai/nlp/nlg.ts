@@ -1897,9 +1897,9 @@ class NLGenerator {
 				// special case for how to:
 				return ["the way " + objectStr1[0] + " is " + objectStr2[0], 2, null, objectStr1[3]];
 			}
-
 			if (relationStr == null) return null;
-			return [objectStr1[0] + " " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
+			let verbStr:string = this.pos.getVerbString(context.ai.o.getSort("verb.be"), objectStr1[3], objectStr1[1], 3);
+			return [objectStr1[0] + " " + verbStr + " " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
 		}
 
 		console.error("termToEnglish_Property: could not render " + propertyRaw);

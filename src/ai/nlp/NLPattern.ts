@@ -868,8 +868,8 @@ class NLPattern {
 		// list of entities for which we have added a not(queryVariable == entity) term:
 		let nottedEntities:string[] = [];
 		if (elsePresent) {
-			queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"), [new TermTermAttribute(new Term(o.getSort("="), [queryVariable, new ConstantTermAttribute(context.speaker , o.getSort("#id"))]))])));
-			queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"), [new TermTermAttribute(new Term(o.getSort("="), [queryVariable, new ConstantTermAttribute(context.ai.selfID , o.getSort("#id"))]))])));
+			queryTerms.push(new TermTermAttribute(new Term(o.getSort("!="), [queryVariable, new ConstantTermAttribute(context.speaker , o.getSort("#id"))])));
+			queryTerms.push(new TermTermAttribute(new Term(o.getSort("!="), [queryVariable, new ConstantTermAttribute(context.ai.selfID , o.getSort("#id"))])));
 			nottedEntities.push(context.speaker);
 			nottedEntities.push(context.ai.selfID);
 		}
@@ -881,14 +881,14 @@ class NLPattern {
 				for(let e of entities_mpl[0]) {
 					let stringID:string = (<ConstantTermAttribute>(e.objectID)).value;
 					if (nottedEntities.indexOf(stringID) == -1) {
-						queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"), [new TermTermAttribute(new Term(o.getSort("="), [queryVariable, e.objectID]))])));
+						queryTerms.push(new TermTermAttribute(new Term(o.getSort("!="), [queryVariable, e.objectID])));
 						nottedEntities.push(stringID);
 					}
 				}
 				for(let e of entities_mpl[1]) {
 					let stringID:string = (<ConstantTermAttribute>(e.objectID)).value;
 					if (nottedEntities.indexOf(stringID) == -1) {
-						queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"), [new TermTermAttribute(new Term(o.getSort("="), [queryVariable, e.objectID]))])));
+						queryTerms.push(new TermTermAttribute(new Term(o.getSort("!="), [queryVariable, e.objectID])));
 						nottedEntities.push(stringID);
 					}
 				}

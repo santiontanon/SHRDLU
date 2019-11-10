@@ -609,12 +609,12 @@ this.addTokenPOS(new PartOfSpeech("alone in", "alone-in", Term.fromString("prepo
 */
 this.addTokenPOS(new PartOfSpeech("at", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("at", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("barring", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("barring", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("on", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("on", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("atop", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("ontop", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("beside", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 /*
   ["before",  "PREP"],
 */
@@ -624,8 +624,8 @@ this.addTokenPOS(new PartOfSpeech("behind of", "space.behind", Term.fromString("
   ["below",  "PREP"],
   ["beneath",  "PREP"],
   */
-this.addTokenPOS(new PartOfSpeech("beside", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("besides", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("besides", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
   /*
   ["between",  "PREP"],
   ["beyond",  "PREP"],
@@ -642,7 +642,7 @@ NLPAddTokenPOS("down", PartOfSpeech.generatePreposition("down", POS_TYPE_PPREPOS
 NLPAddTokenPOS("down", PartOfSpeech.generatePreposition("down", POS_TYPE_PPREPOSITION_DIRECTION));
 NLPAddTokenPOS("during", PartOfSpeech.generatePreposition("during", POS_TYPE_PPREPOSITION_TIME));
 */
-this.addTokenPOS(new PartOfSpeech("except", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("except", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "relation.origin", Term.fromString("preposition('relation.origin'[space.at])", o), 1.0));
@@ -744,7 +744,7 @@ this.addTokenPOS(new PartOfSpeech("northwest of", "space.northwest.of", Term.fro
   "adjacent to",
   "ahead of",
 */
-this.addTokenPOS(new PartOfSpeech("apart from", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("apart from", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 /*
   "as for",
   "as of",
@@ -759,7 +759,8 @@ NLPAddTokenPOS("close to", PartOfSpeech.generatePreposition("close to", POS_TYPE
 NLPAddTokenPOS("close to", PartOfSpeech.generatePreposition("close to", POS_TYPE_PPREPOSITION_TIME));
 NLPAddTokenPOS("due to", PartOfSpeech.generatePreposition("close to", POS_TYPE_PPREPOSITION_CAUSE));
   */
-this.addTokenPOS(new PartOfSpeech("except for", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("equal to", "=", Term.fromString("preposition('='[=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("except for", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("far from", "space.far", Term.fromString("preposition('space.far'[space.far])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
   /*
@@ -767,14 +768,14 @@ this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromStrin
   "left of",
   */
 this.addTokenPOS(new PartOfSpeech("near to", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("not including", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("not including", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
   /*
 NLPAddTokenPOS("next to", PartOfSpeech.generatePreposition("next to", POS_TYPE_PPREPOSITION_PLACE));
   /*
   "opposite of",
   "opposite to",
   */
-this.addTokenPOS(new PartOfSpeech("other than", "~=", Term.fromString("preposition('~='[~=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("other than", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
   /*
   "out from",
 */
@@ -1168,6 +1169,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("gas", "gas", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("gas", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("gases", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
+    this.addStandardNounPOS("goal", "goal", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("goodness", "goodness", Term.fromString("noun('goodness'[goodness], [singular])", o), 1.0));
     this.addStandardNounPOS("gorge", "canyon", o, multitokens_raw);
     this.addStandardNounPOS("gravity", "gravity", o, multitokens_raw);
