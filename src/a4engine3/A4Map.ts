@@ -1062,14 +1062,20 @@ class A4Map {
     getAllObjectCollisionsWithOffset(o:A4Object, xoffs:number, yoffs:number) : A4Object[]
     {
         let l:A4Object[] = [];
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].getAllObjectCollisionsWithOffset(o, xoffs, yoffs, l);
-        }
-        return l;
-        */
         for(let o2 of this.objects) {
             if (o2!=o && o.collisionObjectOffset(xoffs, yoffs, o2)) l.push(o2);
+        }
+        return l;
+    }
+
+
+    getAllObjectCollisionsOnlyWithOffset(o:A4Object, xoffs:number, yoffs:number) : A4Object[]
+    {
+        let l:A4Object[] = [];
+        for(let o2 of this.objects) {
+            if (o2!=o && 
+                o.collisionObjectOffset(xoffs, yoffs, o2) &&
+                !o.collisionObjectOffset(0, 0, o2)) l.push(o2);
         }
         return l;
     }

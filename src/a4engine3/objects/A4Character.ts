@@ -892,7 +892,7 @@ class A4Character extends A4WalkingObject {
             case A4CHARACTER_COMMAND_INTERACT:
                 {
                     // get the object to interact with:
-                    var collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
+                    var collisions:A4Object[] = this.map.getAllObjectCollisionsOnlyWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
 //                    console.log("Character received the interact command for direction " + direction + " resulting in " + collisions.length + " collisions");
                     for(let o of collisions) {
 //                        console.log("considering " + o.name);

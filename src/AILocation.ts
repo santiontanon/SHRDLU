@@ -4,6 +4,9 @@ class AILocation {
 	sort:Sort = null;
 	maps:A4Map[] = [];
 	mapOccupancyMaps:boolean[][] = [];
+	preferredCenterCoordinatesInMap:[number,number][] = [];	// if these are != null, they will be used as center coordiantes.
+															// Used, for example, for the Tardis 8, when you ask a robot to go there, so that they just
+															// enter, rather than entering and then navigating half the ship to get to the center.
 
 
 	distanceFromObject(o:A4Object, mapIdx:number) : number
@@ -59,6 +62,9 @@ class AILocation {
 
 		for(let i:number = 0;i<this.maps.length;i++) {
 			if (this.maps[i] == map) {
+				if (this.preferredCenterCoordinatesInMap[i] != null) {
+					return this.preferredCenterCoordinatesInMap[i];
+				}
 				let offset:number = 0;
 				for(let y:number = 0;y<this.maps[i].height;y++) {
 					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
@@ -86,6 +92,15 @@ class AILocation {
 
 		for(let i:number = 0;i<this.maps.length;i++) {
 			if (this.maps[i] == map) {
+				if (this.preferredCenterCoordinatesInMap[i] != null) {
+					let x:number = this.preferredCenterCoordinatesInMap[i][0];
+					let y:number = this.preferredCenterCoordinatesInMap[i][1];
+					if (map.walkable(x, y+character.tallness,
+								 	 character.getPixelWidth(), character.getPixelHeight()-character.tallness, character)) {
+						return this.preferredCenterCoordinatesInMap[i];
+					}
+				}
+
 				let offset:number = 0;
 				for(let y:number = 0;y<this.maps[i].height;y++) {
 					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
@@ -148,6 +163,7 @@ class AILocation {
 				}
 				location.maps.push(game.getMap(mapName));
 				location.mapOccupancyMaps.push(occupancyMap);
+				location.preferredCenterCoordinatesInMap.push(null);
 			}
 		}
 
@@ -241,7 +257,7 @@ class AILocation {
 			game.map_location_names.push(location_names);
 		}
 
-		for(let connection_xml of getElementChildrenByTag(xml,"location_connects")) {
+		for(let connection_xml of getElementChildrenByTag(xml, "location_connects")) {
 			let l1_name:string = connection_xml.getAttribute("l1");
 			let l2_name:string = connection_xml.getAttribute("l2");
 			game.additional_location_connects.push([l1_name, l2_name]);
@@ -253,6 +269,24 @@ class AILocation {
 			game.location_connects[l1_idx][l2_idx] = true;	
 			game.location_connects[l2_idx][l1_idx] = true;
 		}		
+
+		for(let preferred_center_xml of getElementChildrenByTag(xml, "preferred_center")) {
+			// <preferred_center id="tardis8" map=="Tardis 8" x="720" y="120"/>
+			let l_id:string = preferred_center_xml.getAttribute("id");
+			let map_name:string = preferred_center_xml.getAttribute("map");
+			let x:number = Number(preferred_center_xml.getAttribute("x"));
+			let y:number = Number(preferred_center_xml.getAttribute("y"));
+
+			for(let l of game.locations) {
+				if (l.id == l_id) {
+					for(let i:number = 0; i<l.maps.length; i++) {
+						if (l.maps[i].name == map_name) {
+							l.preferredCenterCoordinatesInMap[i] = [x, y];
+						}
+					}
+				}
+			}
+		}
 
 	}
 

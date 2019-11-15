@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="102" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="691">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="102" height="32" tilewidth="8" tileheight="8" infinite="0" nextobjectid="1410">
  <properties>
   <property name="name" value="Tardis 8"/>
  </properties>
@@ -62,16 +62,16 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,711,711,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,711,711,711,711,711,711,712,0,0,710,0,710,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,712,712,0,0,710,710,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,711,711,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,0,0,0,0,0,0,0,0,0,0,712,712,0,0,710,710,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,994,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,711,994,994,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,711,711,994,711,994,711,711,994,711,994,711,711,711,711,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,711,994,711,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,978,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,711,994,711,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,884,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,978,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,916,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,994,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,711,994,994,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,711,711,994,711,994,711,711,994,711,994,711,711,711,711,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,994,711,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,994,711,994,711,711,711,711,711,711,711,712,0,0,710,711,711,711,711,711,711,711,711,884,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,916,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,711,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,978,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,710,711,711,711,711,711,711,711,711,711,711,711,711,711,711,711,711,711,712,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -84,7 +84,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="height 2" width="102" height="32">
+ <layer name="height 2" width="102" height="32" visible="0">
   <properties>
    <property name="elevation" value="2"/>
   </properties>
@@ -101,14 +101,14 @@
 0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,715,679,679,679,679,808,679,679,679,679,680,0,0,678,679,679,679,679,841,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,839,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,840,839,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,840,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,842,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,851,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,883,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,842,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,852,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,995,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,715,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,646,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,842,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,851,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,996,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,883,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,715,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,646,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,842,679,679,679,679,679,679,679,679,679,679,679,680,0,0,678,679,679,679,679,679,679,679,679,852,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,995,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,839,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,679,840,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,807,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -124,99 +124,118 @@
 </data>
  </layer>
  <objectgroup name="objects">
-  <object id="650" type="tardis-horizontal-door" x="608" y="88" width="24" height="24">
+  <object id="tardis-east-door-4" type="tardis-horizontal-door" x="424" y="88" width="24" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-S-1"/>
+    <property name="closed" type="bool" value="true"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+      <if>
+        <condition><storyStateCheck scope="game" variable="tardis-8-lights" value="off"/></condition>
+        <then><talkOther text="This door has no power. I can't open it..." thought="true"/></then>
+      </if>
+   </eventRule>
   </object>
-  <object id="652" type="tardis-horizontal-door" x="608" y="96" width="24" height="24">
+  <object id="tardis-east-door-3" type="tardis-horizontal-door" x="424" y="96" width="24" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-S-2"/>
+    <property name="closed" type="bool" value="true"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
-  </object>
-  <object id="653" type="tardis-horizontal-door" x="608" y="136" width="24" height="24">
-   <properties>
-    <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-S-3"/>
-   </properties>
-  </object>
-  <object id="654" type="tardis-horizontal-door" x="608" y="144" width="24" height="24">
-   <properties>
-    <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-S-4"/>
-   </properties>
-  </object>
-  <object id="655" type="tardis-horizontal-door" x="424" y="88" width="24" height="24">
-   <properties>
-    <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-E-1"/>
-   </properties>
-  </object>
-  <object id="656" type="tardis-horizontal-door" x="424" y="96" width="24" height="24">
-   <properties>
-    <property name="automatic" type="bool" value="false"/>
-    <property name="closed" type="bool" value="false"/>
-    <property name="doorID" value="TARDIS-E-2"/>
-   </properties>
+   <eventRule event="interact">
+      <if>
+        <condition><storyStateCheck scope="game" variable="tardis-8-lights" value="off"/></condition>
+        <then><talkOther text="This door has no power. I can't open it..." thought="true"/></then>
+      </if>
+   </eventRule>
   </object>
   <object id="657" type="tardis-horizontal-door" x="424" y="136" width="24" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
     <property name="doorID" value="TARDIS-E-3"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+    <talkOther text="This door seems damaged, I doubt it can be open..." thought="true"/>
+   </eventRule>
   </object>
   <object id="658" type="tardis-horizontal-door" x="248" y="152" width="24" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
     <property name="doorID" value="TARDIS-S-6"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+    <talkOther text="This door seems damaged, I doubt it can be open..." thought="true"/>
+   </eventRule>
   </object>
   <object id="659" type="tardis-horizontal-door" x="248" y="112" width="24" height="24">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
     <property name="doorID" value="TARDIS-S-5"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+    <talkOther text="This door seems damaged, I doubt it can be open..." thought="true"/>
+   </eventRule>
   </object>
-  <object id="660" name="TARDIS8" type="BridgeDestination" x="768" y="96" width="32" height="64"/>
-  <object id="661" name="TARDIS8" type="Bridge" x="800" y="96" width="16" height="64"/>
+  <object id="660" name="TARDIS8" type="BridgeDestination" x="760" y="104" width="40" height="56"/>
+  <object id="661" name="TARDIS8" type="Bridge" x="800" y="104" width="16" height="56"/>
   <object id="662" type="collapsed-ceiling-left" x="512" y="104" width="24" height="32"/>
-  <object id="663" type="tardis-vertical-door" x="152" y="128" width="8" height="16">
+  <object id="tardis-west-door-1" type="tardis-vertical-door" x="152" y="128" width="8" height="16">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
     <property name="doorID" value="TARDIS-C-1"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+      <if>
+        <condition><storyStateCheck scope="game" variable="tardis-8-lights-west" value="off"/></condition>
+        <then><talkOther text="This door has no power. I can't open it..." thought="true"/></then>
+      </if>
+   </eventRule>
   </object>
-  <object id="664" type="tardis-vertical-door" x="528" y="40" width="8" height="16">
+  <object id="tardis-east-door-1" type="tardis-vertical-door" x="528" y="40" width="8" height="16">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
-    <property name="doorID" value="TARDIS-T-1B"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+      <if>
+        <condition><storyStateCheck scope="game" variable="tardis-8-lights" value="off"/></condition>
+        <then><talkOther text="This door has no power. I can't open it..." thought="true"/></then>
+      </if>
+   </eventRule>
   </object>
-  <object id="665" type="tardis-vertical-door" x="536" y="40" width="8" height="16">
+  <object id="tardis-east-door-2" type="tardis-vertical-door" x="536" y="40" width="8" height="16">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
-    <property name="doorID" value="TARDIS-T-1A"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+      <if>
+        <condition><storyStateCheck scope="game" variable="tardis-8-lights" value="off"/></condition>
+        <then><talkOther text="This door has no power. I can't open it..." thought="true"/></then>
+      </if>
+   </eventRule>
   </object>
   <object id="666" type="tardis-vertical-door" x="536" y="176" width="8" height="16">
    <properties>
     <property name="automatic" type="bool" value="false"/>
     <property name="closed" type="bool" value="true"/>
     <property name="doorID" value="TARDIS-T-2A"/>
+    <property name="canBeOpen" value="false"/>
    </properties>
+   <eventRule event="interact">
+    <talkOther text="This door seems damaged, I doubt it can be open..." thought="true"/>
+   </eventRule>
   </object>
   <object id="667" type="collapsed-ceiling-right" x="536" y="104" width="24" height="32"/>
   <object id="668" type="tardis-stasis-pod" x="680" y="160" width="24" height="16"/>
@@ -239,5 +258,93 @@
   <object id="688" type="tardis-stasis-pod" x="560" y="24" width="24" height="16"/>
   <object id="689" type="tardis-stasis-pod" x="560" y="48" width="24" height="16"/>
   <object id="690" type="tardis-stasis-pod" x="560" y="72" width="24" height="16"/>
+  <object id="tardis-wall-computer" type="tardis-wall-computer" x="680" y="104" width="16" height="24"/>
+  <object id="692" type="broken-metal-3dprinter" x="368" y="16" width="32" height="32"/>
+  <object id="693" type="broken-metal-3dprinter" x="496" y="16" width="32" height="32"/>
+  <object id="694" type="broken-metal-3dprinter" x="432" y="16" width="32" height="32"/>
+  <object id="695" type="crate" x="368" y="56" width="8" height="16">
+    <items>
+      <object type="iron-reel"/>
+      <object type="iron-reel"/>
+    </items>
+  </object>
+  <object id="697" type="crate" x="520" y="80" width="8" height="16">
+    <items>
+      <object type="iron-reel"/>
+      <object type="iron-reel"/>
+    </items>
+  </object>
+  <object id="698" type="crate" x="368" y="80" width="8" height="16">
+    <items>
+      <object type="copper-reel"/>
+      <object type="copper-reel"/>
+    </items>
+  </object>
+  <object id="699" type="crate" x="384" y="80" width="8" height="16">
+    <items>
+      <object type="copper-reel"/>
+      <object type="copper-reel"/>
+    </items>
+  </object>
+  <object id="1400" type="crate" x="400" y="80" width="8" height="16">
+    <items>
+      <object type="plastic-reel"/>
+      <object type="plastic-reel"/>
+    </items>
+  </object>
+  <object id="1401" type="crate" x="400" y="24" width="8" height="16">
+    <items>
+      <object type="plastic-reel"/>
+      <object type="plastic-reel"/>
+    </items>
+  </object>
+  <object id="1402" type="crate" x="464" y="24" width="8" height="16">
+    <items>
+      <object type="aluminium-reel"/>
+      <object type="aluminium-reel"/>
+    </items>
+  </object>
+  <object id="1403" type="crate" x="424" y="24" width="8" height="16">
+    <items>
+      <object type="aluminium-reel"/>
+      <object type="aluminium-reel"/>
+    </items>
+  </object>
+  <object id="1404" type="crate" x="488" y="24" width="8" height="16">
+    <items>
+      <object type="cable"/>
+      <object type="cable"/>
+    </items>
+  </object>
+  <object id="1405" type="crate" x="504" y="80" width="8" height="16">
+    <items>
+      <object type="cable"/>
+      <object type="cable"/>
+    </items>
+  </object>
+  <object id="1406" type="crate" x="488" y="80" width="8" height="16">
+    <items>
+      <object type="wrench"/>
+      <object type="wrench"/>
+    </items>
+  </object>
+  <object id="1407" type="crate" x="472" y="80" width="8" height="16">
+    <items>
+      <object type="pliers"/>
+      <object type="pliers"/>
+    </items>
+  </object>
+  <object id="1408" type="crate" x="456" y="80" width="8" height="16">
+    <items>
+      <object type="screwdriver"/>
+      <object type="screwdriver"/>
+    </items>
+  </object>
+  <object id="1409" type="crate" x="416" y="80" width="8" height="16">
+    <items>
+      <object type="iron-reel"/>
+      <object type="iron-reel"/>
+    </items>
+  </object>
  </objectgroup>
 </map>

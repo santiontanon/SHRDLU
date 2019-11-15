@@ -72,6 +72,13 @@
 			<addPerceptionProperty property="red"/>
 			<familiarWithMap map="Aurora Station"/>
 			<familiarWithMap map="Aurora Station Outdoors"/>
+			<familiarWithMap map="Spacer Valley South"/>
+			<familiarWithMap map="Spacer Valley North"/>
+			<familiarWithMap map="East Cave"/>
+			<familiarWithMap map="East Cave"/>
+			<familiarWithMap map="Spacer Gorge"/>
+			<familiarWithMap map="Trantor Crater"/>
+			<familiarWithMap map="Tardis 8"/>
 		</onStart>
 	</CharacterClass>
 </Characters>

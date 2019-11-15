@@ -253,6 +253,7 @@ class RobotAI extends A4RuleBasedAI {
                 for(let o of collisions) {
                     if ((o instanceof A4Door) &&
                     	(<A4Door>o).closed &&
+                    	(<A4Door>o).canOpen(this.robot, this.game) &&
                     	this.doorsPlayerIsNotPermittedToOpen.indexOf((<A4Door>o).doorID) == -1) {
                     	// try to open it!
                     	let cmd:A4CharacterCommand = new A4CharacterCommand(A4CHARACTER_COMMAND_INTERACT, 0, this.robot.direction, null, null, 10);

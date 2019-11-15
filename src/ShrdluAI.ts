@@ -30,6 +30,8 @@ class ShrdluAI extends RobotAI {
 						// broken shuttle:
 						return ACTION_REQUEST_CAN_BE_SATISFIED;
 					}
+				} else if (thingToRepair_id == "tardis-wall-computer") {
+					return ACTION_REQUEST_CAN_BE_SATISFIED;
 				}
 			} else {
 				return ACTION_REQUEST_CANNOT_BE_SATISFIED;

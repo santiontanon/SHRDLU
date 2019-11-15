@@ -270,8 +270,8 @@ class ShrdluGameScript {
 		this.act = "3";
 		this.act_3_state = 0;
 
-		this.game.currentPlayer.warp(96*8, 15*8, this.game.maps[8]);	// tardis 8
-
+		this.game.currentPlayer.warp(35*8, 29*8, this.game.maps[7]);	// trantor crater
+		this.game.shrdluAI.robot.warp(37*8, 29*8, this.game.maps[7]);	// trantor crater
 	}
 
 
@@ -2089,7 +2089,6 @@ class ShrdluGameScript {
 			if (this.game.etaoinAI.intentions.length == 0 &&
 				this.game.etaoinAI.queuedIntentions.length == 0 &&
 				this.game.currentPlayer.map.textBubbles.length == 0) {
-				//this.addKnowledgeToEtaoinAfterRepair()
 				this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
@@ -2216,7 +2215,7 @@ class ShrdluGameScript {
 
 		previous_state = this.act_2_repair_shuttle_state;
 		switch(this.act_2_repair_shuttle_state) {
-			case 0: if (this.playerAsksShrdluToFixShuttle()) {
+			case 0: if (this.playerAsksShrdluToFix("garage-shuttle")) {
 						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("garage-shuttle");
 						if (this.game.shrdluAI.canSee("garage-shuttle")) {
 							if (thingToRepairObject.sort.name == "brokenshuttle") {
@@ -2501,7 +2500,6 @@ class ShrdluGameScript {
 		} else {
 			this.act_2_datapad_state_timer = 0;
 		}
-
 	}
 
 
@@ -2518,7 +2516,42 @@ class ShrdluGameScript {
 					this.act_3_state = 1;
 					break;
 
-			case 1:	// ...
+			case 1:	if (this.game.currentPlayer.map.name == "Tardis 8") {
+						this.queueThoughtBubble("I don't know how safe will it be to walk through these halls but let's investigate!");
+						this.queueThoughtBubble("If the computer is in a working state, it can hold the key to who am I, and what happened here!");
+						// If we have given a name, question it:
+						let name:string = this.getNameGivenToTheAI();
+						if (name != null) {
+							this.queueThoughtBubble("Am I really " + name + "?");
+						}
+						this.act_3_state = 2;
+					}
+					break;
+
+			case 2: // waiting for shrdlu to repair the lights on the ship
+					if (this.act_3_repair_tardis_console_state >= 3) {
+						this.queueThoughtBubble("Alright! now we are talking!");
+						this.act_3_state = 3;
+					}
+					break;
+
+			case 3: // waiting to enter one of the stasis rooms:
+					if (this.game.currentPlayer.map.name == "Tardis 8" &&
+						this.game.currentPlayer.y < 11*8 ||
+						this.game.currentPlayer.y > 19*8) {
+						this.queueThoughtBubble("Oh! A giant stasis chamber! There must be hundreds of corpses in this ship!");
+						this.queueThoughtBubble("What an awful sight! These must be the colonists that were suposed to populate Aurora...");
+						this.act_3_state = 4;
+					}
+					break;
+
+			case 4: // waiting to enter the engineering bay:
+					if (this.game.currentPlayer.map.name == "Tardis 8" &&
+						this.game.currentPlayer.x < 65*8) {
+						this.queueThoughtBubble("This looks like an engineering bay of some sort. Most machines are destroyed...");
+						this.queueThoughtBubble("But there is a lot of suplies here that could be useful...");
+						this.act_3_state = 5;
+					}
 					break;
 		}
 
@@ -2529,6 +2562,55 @@ class ShrdluGameScript {
 		} else {
 			this.act_3_state_timer = 0;
 			this.act_3_state_start_time = this.game.in_game_seconds;
+		}
+
+
+		previous_state = this.act_3_repair_tardis_console_state;
+		switch(this.act_3_repair_tardis_console_state) {
+			case 0: if (this.playerAsksShrdluToFix("tardis-wall-computer")) {
+						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-wall-computer");
+						if (this.game.shrdluAI.canSee("tardis-wall-computer")) {
+							this.act_3_repair_tardis_console_state = 1;
+							this.shrdluSays("perf.ack.ok('david'[#id])");
+						} else {
+							this.shrdluSays("perf.inform('david'[#id], #not(verb.see('shrdlu'[#id], [tardis-wall-computer])))");
+						}
+					}
+					break;
+
+			case 1:
+					if (this.act_3_repair_tardis_console_state_timer == 0) {
+						this.shrdluMoves(85*8, 14*8, this.game.maps[8]);
+					} else {
+						if (this.game.shrdluAI.robot.x == 85*8 &&
+							this.game.shrdluAI.robot.y == 14*8) {
+							// arrived:
+							this.act_3_repair_tardis_console_state = 2;
+						} 
+					}
+					break;
+			case 2:	if (this.act_3_repair_tardis_console_state_timer >= 100) {
+						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-wall-computer");
+						// turn the lights on:
+						this.game.setStoryStateVariable("tardis-8-lights", "on");
+						this.game.turnLightOn("tardis8-corridor-east");
+						this.game.turnLightOn("tardis8-stasis1");
+						this.game.turnLightOn("tardis8-stasis2");
+						this.game.turnLightOn("tardis8-engineering");
+						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-1")).canBeOpen = true;
+						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-2")).canBeOpen = true;
+						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-3")).canBeOpen = true;
+						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-4")).canBeOpen = true;
+
+						this.act_3_repair_tardis_console_state = 3;
+					}
+					break;
+		}
+
+		if (previous_state == this.act_3_repair_tardis_console_state) {
+			this.act_3_repair_tardis_console_state_timer++;
+		} else {
+			this.act_3_repair_tardis_console_state_timer = 0;
 		}		
 	}
 
@@ -2538,6 +2620,24 @@ class ShrdluGameScript {
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
 		this.game.shrdluAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
 		this.game.qwertyAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
+	}
+
+
+	getNameGivenToTheAI() : string
+	{
+		for(let s of this.game.etaoinAI.longTermMemory.plainSentenceList) {
+			if (s.sentence.terms.length == 1 && s.sentence.sign[0] &&
+				s.sentence.terms[0].functor.name == "name" && 
+				s.sentence.terms[0].attributes.length == 2 &&
+				(s.sentence.terms[0].attributes[0] instanceof ConstantTermAttribute) &&
+				(s.sentence.terms[0].attributes[1] instanceof ConstantTermAttribute)) {
+				if ((<ConstantTermAttribute>s.sentence.terms[0].attributes[0]).value == "david") {
+					return (<ConstantTermAttribute>s.sentence.terms[0].attributes[1]).value;
+				}
+			}
+		}
+
+		return null;
 	}
 
 
@@ -2745,7 +2845,7 @@ class ShrdluGameScript {
 	} 
 
 
-	playerAsksShrdluToFixShuttle() 
+	playerAsksShrdluToFix(objectId:string) 
 	{
 		if (this.contextShrdlu != null) {
 			let p1:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
@@ -2756,7 +2856,7 @@ class ShrdluGameScript {
 					perf.attributes.length>1 &&
 					perf.attributes[1] instanceof TermTermAttribute) {
 					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
-					let pattern3:Term = Term.fromString("verb.repair('shrdlu'[#id], 'garage-shuttle'[#id])", this.game.ontology);
+					let pattern3:Term = Term.fromString("verb.repair('shrdlu'[#id], '"+objectId+"'[#id])", this.game.ontology);
 					let b:Bindings = new Bindings();
 					if (pattern3.subsumes(argument, true, b)) return true;
 				}
@@ -3413,26 +3513,6 @@ class ShrdluGameScript {
 	}
 
 
-	/*
-	addKnowledgeToEtaoinAfterRepair()
-	{
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("ship('tardis8'[#id])", this.game.ontology), BACKGROUND_PROVENANCE);
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("ai('tardis8'[#id])", this.game.ontology), BACKGROUND_PROVENANCE);
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("name('tardis8'[#id],'tardis 8'[symbol])", this.game.ontology), BACKGROUND_PROVENANCE);
-
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.leave('tardis8'[#id],'earth'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 41338676700);
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.arrive('tardis8'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.build('tardis8'[#id],'location-aurora-station'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('etaoin'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('qwerty'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('shrdlu'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("verb.go-to('david'[#id],'aurora'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 42895872000);
-		// this.game.etaoinAI.addLongTermTermWithTime(Term.fromString("property.born('david'[#id])", this.game.ontology), BACKGROUND_PROVENANCE, 40392525600);
-	}
-	*/
-
-
 	playerHasItemP(itemId:string) : boolean
 	{
 		for(let item of this.game.currentPlayer.inventory) {
@@ -3615,7 +3695,9 @@ class ShrdluGameScript {
 
         xmlString += "act_3_state=\""+this.act_3_state+"\"\n";   
         xmlString += "act_3_state_timer=\""+this.act_3_state_timer+"\"\n";   
-        xmlString += "act_3_state_start_time=\""+this.act_3_state_start_time+"\"\n";   
+        xmlString += "act_3_state_start_time=\""+this.act_3_state_start_time+"\"\n";  
+        xmlString += "act_3_repair_tardis_console_state=\""+this.act_3_repair_tardis_console_state+"\"\n";   
+        xmlString += "act_3_repair_tardis_console_state_timer=\""+this.act_3_repair_tardis_console_state_timer+"\"\n";   
 
         xmlString += "qwerty_agenda_state=\""+this.qwerty_agenda_state+"\"\n";   
         xmlString += "qwerty_agenda_state_timer=\""+this.qwerty_agenda_state_timer+"\"\n";   
@@ -3682,6 +3764,8 @@ class ShrdluGameScript {
     	this.act_3_state = Number(xml.getAttribute("act_3_state"));
     	this.act_3_state_timer = Number(xml.getAttribute("act_3_state_timer"));
     	this.act_3_state_start_time = Number(xml.getAttribute("act_3_state_start_time"));
+    	this.act_3_repair_tardis_console_state = Number(xml.getAttribute("act_3_repair_tardis_console_state"));
+    	this.act_3_repair_tardis_console_state_timer = Number(xml.getAttribute("act_3_repair_tardis_console_state_timer"));
 
     	this.qwerty_agenda_state = Number(xml.getAttribute("qwerty_agenda_state"));
     	this.qwerty_agenda_state_timer = Number(xml.getAttribute("qwerty_agenda_state_timer"));
@@ -3761,6 +3845,9 @@ class ShrdluGameScript {
 	act_3_state:number = 0;
 	act_3_state_timer:number = 0;
 	act_3_state_start_time:number = 0;
+
+	act_3_repair_tardis_console_state:number = 0;
+	act_3_repair_tardis_console_state_timer:number = 0;
 
 
 	finding_life_side_plot_taken_question:boolean = false;

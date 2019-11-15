@@ -310,6 +310,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
             for(let o2 of collisions) {
                 if ((o2 instanceof A4Door) &&
                     (<A4Door>o2).closed &&
+                    (<A4Door>o2).canOpen(aic, game) &&
                     ai.doorsNotToOpenWhileWalking.indexOf((<A4Door>o2).doorID) == -1) {
                     // try to open it!
                     let cmd:A4CharacterCommand = new A4CharacterCommand(A4CHARACTER_COMMAND_INTERACT, 0, o.direction, null, null, 10);

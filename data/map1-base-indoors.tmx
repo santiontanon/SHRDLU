@@ -1106,8 +1106,8 @@
   </object>
   <object id="487" type="crate" x="200" y="144" width="8" height="16">
   	<items>
-  		<object type="copper-reel"/>
-  		<object type="copper-reel"/>
+  		<object type="iron-reel"/>
+  		<object type="iron-reel"/>
   	</items>
   </object>
   <object id="488" type="vertical-door" x="160" y="128" width="8" height="16">
@@ -1192,7 +1192,7 @@
     <property name="direction" type="int" value="1"/>
    </properties>
   </object>
-  <object id="metal3dprinter1" type="metal-3dprinter" x="640" y="16" width="32" height="32">
+  <object id="534" type="metal-3dprinter" x="640" y="16" width="32" height="32">
 	<onStart>
   		<storyState scope="object" variable="plastic" value="true"/>
   		<storyState scope="object" variable="iron" value="true"/>
@@ -1200,7 +1200,7 @@
   		<storyState scope="object" variable="copper" value="false"/>
   	</onStart>
   </object>
-  <object id="metal3dprinter2" type="metal-3dprinter" x="672" y="16" width="32" height="32">
+  <object id="535" type="metal-3dprinter" x="672" y="16" width="32" height="32">
 	<onStart>
   		<storyState scope="object" variable="plastic" value="true"/>
   		<storyState scope="object" variable="iron" value="true"/>
@@ -1208,12 +1208,12 @@
   		<storyState scope="object" variable="copper" value="false"/>
   	</onStart>
   </object>  	
-  <object id="plastic3dprinter1" type="plastic-3dprinter" x="704" y="16" width="32" height="32">
+  <object id="536" type="plastic-3dprinter" x="704" y="16" width="32" height="32">
 	<onStart>
-  		<storyState scope="object" variable="plastic" value="false"/>
+  		<storyState scope="object" variable="plastic" value="true"/>
   	</onStart>  	
   </object>
-  <object id="plastic3dprinter2" type="plastic-3dprinter" x="736" y="16" width="32" height="32">
+  <object id="537" type="plastic-3dprinter" x="736" y="16" width="32" height="32">
 	<onStart>
   		<storyState scope="object" variable="plastic" value="true"/>
   	</onStart>  	

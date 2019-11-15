@@ -643,9 +643,9 @@
 	  </eventRule>
     </ObjectClass>
 
-    <ObjectClass class="aluminium-reel" super="reel" name="aluminium reel">
+    <ObjectClass class="aluminium-reel" super="reel" name="aluminium rl.">
   	  <attribute name="tallness" value="0"/>
-      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">975</animation>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">1007</animation>
   	  <attribute name="useable" value="true"/>
 	  <eventRule event="use">
 		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
@@ -654,7 +654,7 @@
 
     <ObjectClass class="copper-reel" super="reel" name="copper reel">
   	  <attribute name="tallness" value="0"/>
-      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">1007</animation>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">975</animation>
   	  <attribute name="useable" value="true"/>
 	  <eventRule event="use">
 		<talkOther text="I think these is a feed line for the 3d printers..." thought="true"/>
@@ -1007,7 +1007,7 @@
         	</if>
         	<talkOther text="I would not know how to use it though, I better ask Etaoin..." thought="true"/>
         </eventRule>
-	</ObjectClass>		
+	</ObjectClass>			
 
 	<ObjectClass class="command-display" super="equipment" name="command display">
 		<attribute name="tallness" value="8"/>
@@ -1565,5 +1565,29 @@
 		</onStart>
 	</ObjectClass>	
 
+	<ObjectClass class="tardis-wall-computer" super="computer" name="computer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">156,450</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<if>
+        		<condition><storyStateCheck scope="game" variable="tardis-8-lights" value="on"/></condition>
+        		<then><talkOther text="This is a computer console, probably to interface directly with the ship's main computers, I wouldn't know how to use it." thought="true"/></then>
+        		<else>
+        			<talkOther text="Can't see it very well in the dark, but I think it's a computer console." thought="true"/>
+        			<talkOther text="I hear a buzz from inside it, so, there is still some power left in the ship!" thought="true"/>
+        			<talkOther text="It can perhaps be repaired, although it's way beyond my ability..." thought="true"/>
+        		</else>
+    		</if>
+        </eventRule>
+	</ObjectClass>	
 
+	<ObjectClass class="broken-metal-3dprinter" super="3dprinter" name="metal 3d printer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="4" dy="4" period="4" looping="false" file="background.png">721</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="This seems like it was a metal 3d printer. It is ruined now..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
 </Objects>

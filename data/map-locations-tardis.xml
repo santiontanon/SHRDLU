@@ -82,4 +82,6 @@
 	</map>	
 
 	<location_connects l1="tardis8-corridor-east" l2="trantor-crater"/>	
+
+	<preferred_center id="tardis8" map="Tardis 8" x="720" y="112"/>
 </locationMap>

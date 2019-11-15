@@ -197,9 +197,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 						destinationLocation = ai.locationOutsideOf(startLocation);
 						if (destinationLocation != null) {
 							destinationLocationID = destinationLocation.id;
+
 							let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 							// ensure that the target location is actually outside of the specified location:
-							let tmp2location:AILocation = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
+							let tmp2location:AILocation = null;
+							if (tmp2 != null) tmp2location = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
 							if (tmp2 != null && 
 								tmp2location != startLocation &&									
 								!ai.game.location_in[ai.game.locations.indexOf(tmp2location)][ai.game.locations.indexOf(startLocation)]) {
@@ -211,7 +213,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 									// we set this so that we can later give the proper reason for why we cannot go
 									let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[mapidx], ai.robot);
 									// ensure that the target location is actually outside of the specified location:
-									let tmp3location:AILocation = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
+									let tmp3location:AILocation = null;
+									if (tmp3 != null) tmp3location = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
 									if (tmp3 != null && 
 										tmp3location != startLocation &&
 										!ai.game.location_in[ai.game.locations.indexOf(tmp3location)][ai.game.locations.indexOf(startLocation)]) {

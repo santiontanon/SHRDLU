@@ -8,6 +8,7 @@ class A4Door extends A4Object {
         this.closed = closed;
         this.consumeKey = consumeKey;
         this.interacteable = true;
+        this.canBeOpen = true;
         this.animations[A4_ANIMATION_CLOSED] = a_closed;
         this.animations[A4_ANIMATION_OPEN] = a_open;
         if (this.closed) this.currentAnimation = A4_ANIMATION_CLOSED;
@@ -40,6 +41,10 @@ class A4Door extends A4Object {
             this.automatic = false;
             if (attribute_xml.getAttribute("value") == "true") this.automatic = true;
             return true;
+        } else if (a_name == "canBeOpen") {
+            this.canBeOpen = false;
+            if (attribute_xml.getAttribute("value") == "true") this.canBeOpen = true;
+            return true;
         }
 
         return false;
@@ -55,6 +60,7 @@ class A4Door extends A4Object {
         xmlString += this.saveObjectAttributeToXML("closed",this.closed) + "\n";
         xmlString += this.saveObjectAttributeToXML("consumeKey",this.consumeKey) + "\n";
         xmlString += this.saveObjectAttributeToXML("automatic",this.automatic) + "\n";
+        xmlString += this.saveObjectAttributeToXML("canBeOpen",this.canBeOpen) + "\n";
 
         return xmlString;
     }
@@ -70,7 +76,7 @@ class A4Door extends A4Object {
     {
         var ret:boolean = super.update(game);
     
-        if (this.automatic) {
+        if (this.canBeOpen && this.automatic) {
             // do not check every frame
             this.automaticTimmer--;
             if (this.automaticTimmer<=0) {
@@ -107,38 +113,58 @@ class A4Door extends A4Object {
     }
 
 
+    canOpen(character:A4Character, game:A4Game) : boolean
+    {
+        if (!this.canBeOpen) return false;
+        if (this.doorID == null) return true;
+
+        // see if the character has the key:
+        for(let o of character.inventory) {
+            if (o.isKey()) {
+                var key:A4Key = <A4Key>o;
+                // the player has the proper key!
+                if (key.keyID == this.doorID) return true;
+                if (key.keyID == "MASTERKEY") {
+                    return true;
+                }
+            }
+        }
+        return false;        
+    }
+
+
+    canOpenKey(character:A4Character, game:A4Game) : A4Object
+    {
+        if (!this.canBeOpen) return null;
+        if (this.doorID == null) return null;
+
+        // see if the character has the key:
+        for(let o of character.inventory) {
+            if (o.isKey()) {
+                var key:A4Key = <A4Key>o;
+                // the player has the proper key!
+                if (key.keyID == this.doorID) return key;
+                if (key.keyID == "MASTERKEY") {
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
     event(a_event:number, character:A4Character, map:A4Map, game:A4Game)
     {
         super.event(a_event,character,map,game);
 
         if (a_event == A4_EVENT_INTERACT) {
             if (this.consumeKey && !this.closed) return;  // if it consumes the key, it cannot be reopened!
-
-            var match:boolean = false;
-            if (this.doorID == null) {
-                // if it does not require key, then just open/close directly
-                match = true;
-            }
-
-            // see if the character has the key:
-            for(let o of character.inventory) {
-                if (o.isKey()) {
-                    var key:A4Key = <A4Key>o;
-                    if (key.keyID == this.doorID ||
-                        key.keyID == "MASTERKEY") {
-                        // the player has the proper key!
-                        match = true;
-                        break;
-                    }
-                }
-            }
-
-            if (match) {
+            if (this.canOpen(character, game)) {
                 if (this.checkForBlockages(!this.closed, character, map, game, [])) {
+                    let key:A4Object = this.canOpenKey(character, game);
                     // change all the doors in the same doorgroup:
                     if (this.doorGroupID==null) {
                         this.changeStateRecursively(!this.closed, character, map, game);
-                        if (this.consumeKey) {
+                        if (this.consumeKey && key != null) {
                             character.removeFromInventory(key);
                             game.requestDeletion(key);
                         }
@@ -146,7 +172,7 @@ class A4Door extends A4Object {
                         if (game.checkIfDoorGroupStateCanBeChanged(this.doorGroupID, this.closed, character)) {
                             this.changeStateRecursively(!this.closed, character, map, game);
                             game.setDoorGroupState(this.doorGroupID, this.closed, character);
-                            if (this.consumeKey) {
+                            if (this.consumeKey && key != null) {
                                 character.removeFromInventory(key);
                                 game.requestDeletion(key);
                             }
@@ -242,6 +268,9 @@ class A4Door extends A4Object {
                 }
             }
 
+            // for the SHRDLU game, I commented this code out, since we never have two adjacent doors I want to open at the same time
+            /*
+            // check neighbors:
             var dx1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelWidth());
             var dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight());
             var dx2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelWidth());
@@ -263,6 +292,7 @@ class A4Door extends A4Object {
                     }
                 }                
             }
+            */
             
             return !blockage;
         } else {
@@ -310,4 +340,5 @@ class A4Door extends A4Object {
     consumeKey:boolean = true;
     automatic:boolean = false;
     automaticTimmer:number = 0;
+    canBeOpen:boolean = true;
 }

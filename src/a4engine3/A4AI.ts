@@ -239,9 +239,8 @@ class A4AI {
                 // if it's a door, and we have the key, then ignore the door:
                 let add:boolean = true;
                 if ((o instanceof A4Door) && 
-                    ((this.doorsNotToOpenWhileWalking.indexOf((<A4Door>o).doorID) == -1 &&
-                      (this.character.hasKey((<A4Door>o).doorID) ||
-                      this.character.hasKey("MASTERKEY"))) ||    
+                    this.doorsNotToOpenWhileWalking.indexOf((<A4Door>o).doorID) == -1 &&
+                    ((<A4Door>o).canOpen(this.character, game) ||    
                      (<A4Door>o).automatic)) add = false;
 
                 if (add) {
