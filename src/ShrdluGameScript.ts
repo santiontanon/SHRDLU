@@ -38,6 +38,7 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_after_crash_site();
 			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
+			//this.skip_to_tardis8_computer_room();
 		//}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -270,7 +271,7 @@ class ShrdluGameScript {
 		this.act = "3";
 		this.act_3_state = 0;
 
-		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("power-cord", this.game, false, false));
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("extension-cord", this.game, false, false));
 
 		//this.game.currentPlayer.warp(35*8, 29*8, this.game.maps[7]);	// trantor crater
 		//this.game.shrdluAI.robot.warp(37*8, 29*8, this.game.maps[7]);	// trantor crater
@@ -278,6 +279,44 @@ class ShrdluGameScript {
 		let shuttle:A4Vehicle = <A4Vehicle>this.game.findObjectByIDJustObject("garage-shuttle");
 		this.game.shrdluAI.robot.embark(shuttle);
 		this.game.takeShuttleToTrantorCrater(shuttle, this.game.currentPlayer);
+	}
+
+	skip_to_tardis8_computer_room()
+	{
+		this.skip_to_tardis8();
+
+		// turn the lights on:
+		this.game.setStoryStateVariable("tardis-8-lights", "on");
+		this.game.turnLightOn("tardis8-corridor-east");
+		this.game.turnLightOn("tardis8-stasis1");
+		this.game.turnLightOn("tardis8-stasis2");
+		this.game.turnLightOn("tardis8-engineering");
+		(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-1")).canBeOpen = true;
+		(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-2")).canBeOpen = true;
+		(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-3")).canBeOpen = true;
+		(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-4")).canBeOpen = true;
+
+		let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-broken-cable");
+        thingToRepairObject.map.removeObject(thingToRepairObject);
+        this.game.requestDeletion(thingToRepairObject);
+		// change the graphic of the cable:
+		let map:A4Map = this.game.getMap("Tardis 8");
+		map.layers[0].tiles[44+16*map.layers[0].width] = 661;
+		map.layers[1].tiles[43+16*map.layers[0].width] = 629;
+		map.layers[0].cacheDrawTiles();
+		map.layers[1].cacheDrawTiles();
+
+		this.game.setStoryStateVariable("tardis-8-lights-west", "on");
+		this.game.turnLightOn("tardis8-corridor-west");
+		this.game.turnLightOn("tardis8-bridge");
+		this.game.turnLightOn("tardis8-computer");
+
+		(<A4Door>this.game.findObjectByIDJustObject("tardis-west-door-1")).canBeOpen = true;
+
+		this.game.currentPlayer.disembark();
+		this.game.currentPlayer.warp(21*8, 17*8, this.game.maps[8]);
+
+		this.act_3_state = 5;
 	}
 
 
@@ -2560,7 +2599,7 @@ class ShrdluGameScript {
 					}
 					break;
 
-			case 5: // waiting to enter the command center:
+			case 5: // waiting to enter the bridge:
 					// ...
 					break;
 		}
@@ -2628,13 +2667,13 @@ class ShrdluGameScript {
 			case 0: if (this.playerAsksShrdluToFix("tardis-broken-cable")) {
 						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-broken-cable");
 						if (this.game.shrdluAI.canSee("tardis-broken-cable")) {
-							if (this.game.shrdluAI.robot.findObjectByName("power cord") != null) {
+							if (this.game.shrdluAI.robot.findObjectByName("extension cord") != null) {
 								this.shrdluSays("perf.ack.ok('david'[#id])");
 								this.act_3_repair_tardis_cable_state = 1;
 							} else if (this.game.shrdluAI.robot.findObjectByName("cable") != null) {
-								this.shrdluSays("perf.inform('david'[#id], #and(verb.need('shrdlu'[#id], X:[power-cord]), big(X)))");
+								this.shrdluSays("perf.inform('david'[#id], #and(verb.need('shrdlu'[#id], X:[extension-cord]), big(X)))");
 							} else {
-								this.shrdluSays("perf.inform('david'[#id], verb.need('shrdlu'[#id], [power-cord]))");
+								this.shrdluSays("perf.inform('david'[#id], verb.need('shrdlu'[#id], [extension-cord]))");
 							}
 						} else {
 							this.shrdluSays("perf.inform('david'[#id], #not(verb.see('shrdlu'[#id], [tardis-broken-cable])))");
@@ -2668,6 +2707,8 @@ class ShrdluGameScript {
 						this.game.turnLightOn("tardis8-corridor-west");
 						this.game.turnLightOn("tardis8-bridge");
 						this.game.turnLightOn("tardis8-computer");
+
+						(<A4Door>this.game.findObjectByIDJustObject("tardis-west-door-1")).canBeOpen = true;
 
 						this.act_3_repair_tardis_cable_state = 3;
 					}

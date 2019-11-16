@@ -749,8 +749,8 @@
     </ObjectClass>
 
 	<ObjectClass class="tardis-horizontal-door" super="door" name="door">
-      <animation name="closed" dx="3" dy="3" period="4" looping="false" file="background.png">876</animation>
-      <animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">879</animation>
+      <animation name="closed" dx="3" dy="3" period="4" looping="false" file="background.png">879,1027,1024,876</animation>
+      <animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">876,1024,1027,879</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
       	<playSound sound="data/sfx/doorOpen.wav"/>
@@ -1612,5 +1612,91 @@
 			<addPerceptionProperty property="property.broken"/>
 		</onStart>
 	</ObjectClass>		
+
+	<ObjectClass class="tardis-chair" super="*chair,obstacle" name="chair">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="false"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">887</animation>		
+		<onStart>
+			<addPerceptionProperty property="purple"/>
+		</onStart>
+	</ObjectClass>
+	<ObjectClass class="tardis-chair-corpse" super="*corpse,obstacle" name="corpse">
+		<attribute name="tallness" value="8"/>
+		<attribute name="interacteable" value="false"/>
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">1032</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="...." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="dead"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="tardis-computer" super="computer,console" name="computer">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">852</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="The tardis control consoles, even if they are powered, they do not seem operative..." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="tardis-computer-corpse" super="*corpse,obstacle" name="corpse">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">1030</animation>		
+		<attribute name="interacteable" value="true"/>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="...." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="dead"/>
+		</onStart>
+	</ObjectClass>	
+
+	<ObjectClass class="tardis-command-display" super="equipment" name="command display">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="4" dy="3" period="4" looping="false" file="background.png">380</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Probably the main tactic display of the ship, it is not operative at the moment..." thought="true"/>
+        </eventRule>
+	</ObjectClass>		
+
+	<ObjectClass class="tardis-computer-door" super="door" name="door">
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">952,950,948,946</animation>
+      <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">946,948,950,952</animation>
+      <attribute name="tallness" value="16"/>
+      <eventRule event="open" once="false">
+      	<playSound sound="data/sfx/doorOpen.wav"/>
+      </eventRule>
+  	  <onStart>
+		<addPerceptionProperty property="blue"/>
+	  </onStart>
+    </ObjectClass>
+
+	<ObjectClass class="tardis-computer-tower" super="computer" name="computer">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">15</animation>		
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="Looks like a computer rack." thought="true"/>
+        </eventRule>
+	</ObjectClass>	
+
+	<ObjectClass class="tardis-floor-corpse" super="corpse" name="corpse">
+		<attribute name="tallness" value="0"/>
+		<attribute name="takeable" value="false"/>
+		<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">874</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="...." thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="dead"/>
+		</onStart>
+	</ObjectClass>    
 
 </Objects>
