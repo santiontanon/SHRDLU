@@ -8,6 +8,7 @@ var CUTSCENE_DATAPAD:number = 7;
 var CUTSCENE_SHUTTLE_TAKEOFF:number = 8;
 var CUTSCENE_SHUTTLE_LAND:number = 9;
 var CUTSCENE_CRATER:number = 10;
+var CUTSCENE_TRON_POSTER:number = 11;
 
 
 class ShrdluCutScenes {
@@ -31,6 +32,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) return this.updateCutSceneShuttleTakeOff();
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) return this.updateCutSceneShuttleLand();
 		if (cutScene == CUTSCENE_CRATER) return this.updateCutSceneCrater();
+		if (cutScene == CUTSCENE_TRON_POSTER) return this.updateCutSceneTronPoster();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -47,6 +49,7 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_SHUTTLE_TAKEOFF) this.drawCutSceneShuttleTakeOff(screen_width, screen_height);
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) this.drawCutSceneShuttleLand(screen_width, screen_height);
 		if (cutScene == CUTSCENE_CRATER) this.drawCutSceneCrater(screen_width, screen_height);
+		if (cutScene == CUTSCENE_TRON_POSTER) this.drawCutSceneTronPoster(screen_width, screen_height);
 	}
 
 
@@ -791,6 +794,66 @@ class ShrdluCutScenes {
 			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
 													 30, fontFamily8px, 6, 8, this.game, null);
 			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}	
+
+
+	updateCutSceneTronPoster() : boolean
+	{
+		switch(this.cutSceneState) {
+			case 0:
+				// showing the image and waiting...
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 1;
+				}
+				break;
+		
+			case 1:
+				// "Wow, someone was a big classic science fiction fan here!"
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					this.cutSceneStateTimer = 0;
+					this.cutSceneState = 2;
+				}
+				break;
+		
+			case 2:
+				this.cutSceneStateTimer++;
+				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+					// add the messages to the console:
+					this.game.addMessageWithColor("(Nice classic science fiction poster!)", MSX_COLOR_GREEN);
+					this.cutSceneState = 0;
+					this.cutSceneStateTimer = 0;
+					this.ESCpressedRecord = false;
+					return true;
+				}
+				break;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneTronPoster(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let img:GLTile = this.game.GLTM.get("data/cutscene-poster2.png");
+		if (img != null) img.draw(0,0);
+
+		switch(this.cutSceneState) {	
+			case 1:
+				let text:A4TextBubble = new A4TextBubble("Nice classic science fiction poster!", 
+														 30, fontFamily8px, 6, 8, this.game, null);
+				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+				break;		
 		}
 
 		ctx.restore();

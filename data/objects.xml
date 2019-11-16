@@ -880,6 +880,15 @@
 		</eventRule>
 	</ObjectClass>	
 
+	<ObjectClass class="tron-poster" super="poster" name="poster">
+		<attribute name="tallness" value="16"/>
+		<animation name="idle" dx="1" dy="3" period="16" looping="true" file="background.png">854</animation>		
+		<attribute name="interacteable" value="true"/>
+		<eventRule event="interact">
+			<cutScene cutscene="11"/>
+		</eventRule>
+	</ObjectClass>	
+
 	<ObjectClass class="microscope-table" super="microscope,table" name="microscope table">
 		<attribute name="tallness" value="8"/>
 		<animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">362</animation>
