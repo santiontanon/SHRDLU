@@ -395,6 +395,10 @@ class POSParser {
       "game protagonist",
       "video game character",
       "video game protagonist",
+      "power cord",
+      "power cords",
+      "extension cord",
+      "extension cords",
 
       "tardis bridge",
       "tardis 8 bridge",
@@ -1096,10 +1100,12 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("computer", "computer", o, multitokens_raw);
     this.addStandardNounPOS("computer table", "computer-table", o, multitokens_raw);
     this.addStandardNounPOS("computer tower", "computer-tower", o, multitokens_raw);
+    this.addStandardNounPOS("console", "console", o, multitokens_raw);
     this.addStandardNounPOS("coordinate", "space.position", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("coordination", "coordination", Term.fromString("noun('coordination'[coordination], [singular])", o), 1.0));
     this.addUncountableNounPOS("copper", "copper", o);
     this.addStandardNounPOS("copper reel", "copper-reel", o, multitokens_raw);
+    this.addStandardNounPOS("cord", "cable", o, multitokens_raw);
     this.addStandardNounPOS("corpse", "corpse", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("correctness", "correctness", Term.fromString("noun('correctness'[correctness], [singular])", o), 1.0));
     this.addStandardNounPOS("corridor", "corridor", o, multitokens_raw);
@@ -1145,6 +1151,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("event", "event", o, multitokens_raw);
     this.addStandardNounPOS("exit", "space.exit", o, multitokens_raw);
     this.addStandardNounPOS("explosive", "explosive", o, multitokens_raw);
+    this.addStandardNounPOS("extension cord", "extension-cord", o, multitokens_raw);
     this.addStandardNounPOS("eye", "eye", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("facility", "facility", Term.fromString("noun('facility'[facility], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("facilities", "facility", Term.fromString("noun('facility'[facility], [plural])", o), 1.0));
@@ -1305,6 +1312,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("position", "space.position", o, multitokens_raw);
     this.addStandardNounPOS("poster", "poster", o, multitokens_raw);
     this.addUncountableNounPOS("powder milk", "powder-milk", o);
+    this.addStandardNounPOS("power cord", "power-cord", o, multitokens_raw);
     this.addStandardNounPOS("power plant", "powerplant.facility", o, multitokens_raw);
     this.addStandardNounPOS("powerplant", "powerplant.facility", o, multitokens_raw);
     this.addStandardNounPOS("problem", "property.problem", o, multitokens_raw);

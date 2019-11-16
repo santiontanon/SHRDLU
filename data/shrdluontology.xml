@@ -288,6 +288,8 @@
     <sort name="rope" super="item"/>
     <sort name="explosive" super="item"/>
     <sort name="cable" super="item"/>
+    <sort name="power-cord" super="cable"/>
+    <sort name="extension-cord" super="cable"/>
     <sort name="report" super="item"/>
     <sort name="ration" super="food"/>
     <sort name="sausage" super="food"/>
@@ -405,6 +407,7 @@
     <sort name="panel" super="object,shape.flat"/>
 
     <sort name="computer" super="equipment,machine"/>
+    <sort name="console" super="equipment,machine"/>
     <sort name="computer-tower" super="computer,tower"/>
     <sort name="printer" super="equipment,machine"/>
     <sort name="3dprinter" super="printer"/>

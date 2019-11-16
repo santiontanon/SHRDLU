@@ -306,6 +306,8 @@ class A4Game {
                                          "screwdriver": ["plastic", "iron"],
                                          "pliers": ["plastic", "iron"],
                                          "wrench": ["plastic", "iron"],
+                                         "cable": ["plastic", "copper"],
+                                         "extension-cord": ["plastic", "copper"],
                                         };
     }
 

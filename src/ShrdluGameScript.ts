@@ -270,8 +270,14 @@ class ShrdluGameScript {
 		this.act = "3";
 		this.act_3_state = 0;
 
-		this.game.currentPlayer.warp(35*8, 29*8, this.game.maps[7]);	// trantor crater
-		this.game.shrdluAI.robot.warp(37*8, 29*8, this.game.maps[7]);	// trantor crater
+		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("power-cord", this.game, false, false));
+
+		//this.game.currentPlayer.warp(35*8, 29*8, this.game.maps[7]);	// trantor crater
+		//this.game.shrdluAI.robot.warp(37*8, 29*8, this.game.maps[7]);	// trantor crater
+
+		let shuttle:A4Vehicle = <A4Vehicle>this.game.findObjectByIDJustObject("garage-shuttle");
+		this.game.shrdluAI.robot.embark(shuttle);
+		this.game.takeShuttleToTrantorCrater(shuttle, this.game.currentPlayer);
 	}
 
 
@@ -2553,6 +2559,10 @@ class ShrdluGameScript {
 						this.act_3_state = 5;
 					}
 					break;
+
+			case 5: // waiting to enter the command center:
+					// ...
+					break;
 		}
 
 		this.qwertyAgendaUpdate();
@@ -2606,11 +2616,67 @@ class ShrdluGameScript {
 					}
 					break;
 		}
-
 		if (previous_state == this.act_3_repair_tardis_console_state) {
 			this.act_3_repair_tardis_console_state_timer++;
 		} else {
 			this.act_3_repair_tardis_console_state_timer = 0;
+		}
+
+
+		previous_state = this.act_3_repair_tardis_cable_state;
+		switch(this.act_3_repair_tardis_cable_state) {
+			case 0: if (this.playerAsksShrdluToFix("tardis-broken-cable")) {
+						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-broken-cable");
+						if (this.game.shrdluAI.canSee("tardis-broken-cable")) {
+							if (this.game.shrdluAI.robot.findObjectByName("power cord") != null) {
+								this.shrdluSays("perf.ack.ok('david'[#id])");
+								this.act_3_repair_tardis_cable_state = 1;
+							} else if (this.game.shrdluAI.robot.findObjectByName("cable") != null) {
+								this.shrdluSays("perf.inform('david'[#id], #and(verb.need('shrdlu'[#id], X:[power-cord]), big(X)))");
+							} else {
+								this.shrdluSays("perf.inform('david'[#id], verb.need('shrdlu'[#id], [power-cord]))");
+							}
+						} else {
+							this.shrdluSays("perf.inform('david'[#id], #not(verb.see('shrdlu'[#id], [tardis-broken-cable])))");
+						}
+					}
+					break;
+
+			case 1:
+					if (this.act_3_repair_tardis_cable_state_timer == 0) {
+						this.shrdluMoves(45*8, 14*8, this.game.maps[8]);
+					} else {
+						if (this.game.shrdluAI.robot.x == 45*8 &&
+							this.game.shrdluAI.robot.y == 14*8) {
+							// arrived:
+							this.act_3_repair_tardis_cable_state = 2;
+						} 
+					}
+					break;
+			case 2:	if (this.act_3_repair_tardis_cable_state_timer >= 100) {
+						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-broken-cable");
+				        thingToRepairObject.map.removeObject(thingToRepairObject);
+				        this.game.requestDeletion(thingToRepairObject);
+						// change the graphic of the cable:
+						let map:A4Map = this.game.getMap("Tardis 8");
+						map.layers[0].tiles[44+16*map.layers[0].width] = 661;
+						map.layers[1].tiles[43+16*map.layers[0].width] = 629;
+						map.layers[0].cacheDrawTiles();
+						map.layers[1].cacheDrawTiles();
+
+						this.game.setStoryStateVariable("tardis-8-lights-west", "on");
+						this.game.turnLightOn("tardis8-corridor-west");
+						this.game.turnLightOn("tardis8-bridge");
+						this.game.turnLightOn("tardis8-computer");
+
+						this.act_3_repair_tardis_cable_state = 3;
+					}
+					break;
+		}
+		if (previous_state == this.act_3_repair_tardis_cable_state) {
+			this.act_3_repair_tardis_cable_state_timer++;
+		} else {
+			this.act_3_repair_tardis_cable_state_timer = 0;
 		}		
 	}
 
@@ -3698,6 +3764,8 @@ class ShrdluGameScript {
         xmlString += "act_3_state_start_time=\""+this.act_3_state_start_time+"\"\n";  
         xmlString += "act_3_repair_tardis_console_state=\""+this.act_3_repair_tardis_console_state+"\"\n";   
         xmlString += "act_3_repair_tardis_console_state_timer=\""+this.act_3_repair_tardis_console_state_timer+"\"\n";   
+        xmlString += "act_3_repair_tardis_cable_state=\""+this.act_3_repair_tardis_cable_state+"\"\n";   
+        xmlString += "act_3_repair_tardis_cable_state_timer=\""+this.act_3_repair_tardis_cable_state_timer+"\"\n";   
 
         xmlString += "qwerty_agenda_state=\""+this.qwerty_agenda_state+"\"\n";   
         xmlString += "qwerty_agenda_state_timer=\""+this.qwerty_agenda_state_timer+"\"\n";   
@@ -3766,6 +3834,8 @@ class ShrdluGameScript {
     	this.act_3_state_start_time = Number(xml.getAttribute("act_3_state_start_time"));
     	this.act_3_repair_tardis_console_state = Number(xml.getAttribute("act_3_repair_tardis_console_state"));
     	this.act_3_repair_tardis_console_state_timer = Number(xml.getAttribute("act_3_repair_tardis_console_state_timer"));
+    	this.act_3_repair_tardis_cable_state = Number(xml.getAttribute("act_3_repair_tardis_cable_state"));
+    	this.act_3_repair_tardis_cable_state_timer = Number(xml.getAttribute("act_3_repair_tardis_cable_state_timer"));
 
     	this.qwerty_agenda_state = Number(xml.getAttribute("qwerty_agenda_state"));
     	this.qwerty_agenda_state_timer = Number(xml.getAttribute("qwerty_agenda_state_timer"));
@@ -3848,6 +3918,9 @@ class ShrdluGameScript {
 
 	act_3_repair_tardis_console_state:number = 0;
 	act_3_repair_tardis_console_state_timer:number = 0;
+
+	act_3_repair_tardis_cable_state:number = 0;
+	act_3_repair_tardis_cable_state_timer:number = 0;
 
 
 	finding_life_side_plot_taken_question:boolean = false;

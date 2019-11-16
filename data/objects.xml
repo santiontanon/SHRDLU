@@ -450,6 +450,16 @@
 		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">347</animation>		
 		<onStart>
 			<addPerceptionProperty property="yellow"/>
+			<addPerceptionProperty property="small"/>
+		</onStart>
+	</ObjectClass>		
+
+	<ObjectClass class="extension-cord" super="cable" name="extension cord">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">630</animation>		
+		<onStart>
+			<addPerceptionProperty property="yellow"/>
+			<addPerceptionProperty property="big"/>
 		</onStart>
 	</ObjectClass>		
 
@@ -852,7 +862,7 @@
         </eventRule>
 	</ObjectClass>	
 
-	<ObjectClass class="wall-computer" super="computer" name="computer">
+	<ObjectClass class="wall-computer" super="computer,console" name="computer">
 		<attribute name="tallness" value="16"/>
 		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">156,450</animation>		
 		<attribute name="interacteable" value="true"/>
@@ -1565,7 +1575,7 @@
 		</onStart>
 	</ObjectClass>	
 
-	<ObjectClass class="tardis-wall-computer" super="computer" name="computer">
+	<ObjectClass class="tardis-wall-computer" super="computer,console" name="computer">
 		<attribute name="tallness" value="16"/>
 		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">156,450</animation>		
 		<attribute name="interacteable" value="true"/>
@@ -1590,4 +1600,17 @@
         	<talkOther text="This seems like it was a metal 3d printer. It is ruined now..." thought="true"/>
         </eventRule>
 	</ObjectClass>		
+
+	<ObjectClass class="tardis-broken-cable" super="*power-cord,obstacle" name="broken power cord">
+		<attribute name="tallness" value="8"/>
+		<animation name="idle" dx="1" dy="2" period="4" looping="false" file="background.png">883</animation>
+		<attribute name="interacteable" value="true"/>
+        <eventRule event="interact">
+        	<talkOther text="The power cords connecting the front end of the ship are cut here... that's why there is no electricity in the front!" thought="true"/>
+        </eventRule>
+		<onStart>
+			<addPerceptionProperty property="property.broken"/>
+		</onStart>
+	</ObjectClass>		
+
 </Objects>

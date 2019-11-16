@@ -216,6 +216,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 			//   Shrdlu should be able to hear the player from a different visibilityRegion
 			if (map.visibilityRegions[offset] == visibilityRegion ||
 				o instanceof A4Door ||
+				o.ID == "tardis-broken-cable" || 	// exception: since this is inside the wall, they don't see it otherwise!
 			    map.name == "East Cave") {
 				let locationID:string = location.id;
 				if (!occupancyMap[offset]) {
