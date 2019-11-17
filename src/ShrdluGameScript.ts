@@ -39,6 +39,7 @@ class ShrdluGameScript {
 			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
+			//this.skip_to_act_3_back_from_tardis();
 		//}
 
 		if (this.act == "intro") this.update_act_intro();
@@ -281,6 +282,7 @@ class ShrdluGameScript {
 		this.game.takeShuttleToTrantorCrater(shuttle, this.game.currentPlayer);
 	}
 
+
 	skip_to_tardis8_computer_room()
 	{
 		this.skip_to_tardis8();
@@ -317,6 +319,20 @@ class ShrdluGameScript {
 		this.game.currentPlayer.warp(21*8, 17*8, this.game.maps[8]);
 
 		this.act_3_state = 5;
+	}
+
+
+	skip_to_act_3_back_from_tardis()
+	{	
+		this.skip_to_tardis8_computer_room();
+
+		let shuttle:A4Vehicle = <A4Vehicle>this.game.findObjectByIDJustObject("garage-shuttle");
+		this.game.takeShuttleFromTrantorCrater(shuttle);
+		this.act_3_state = 7;
+		let memoryCore:A4Object = this.game.objectFactory.createObject("tardis-memory-core", this.game, false, false);
+		memoryCore.ID = "tardis-memory-core";
+		this.game.currentPlayer.inventory.push(memoryCore);
+		this.game.setStoryStateVariable("tardis-memory-core", "discovered");
 	}
 
 
@@ -2618,7 +2634,96 @@ class ShrdluGameScript {
 					}
 					break;
 
-			case 7: // ...
+			case 7: // waiting for the player to place the memory core in a console:
+					if (this.game.getStoryStateVariable("tardis-memory-core") == "inconsole" &&
+						this.game.currentPlayer.isIdle()) {
+						this.etaoinSays("perf.inform(D:'david'[#id], verb.read('etaoin'[#id], 'tardis-memory-core'[#id]))");
+						this.act_3_state = 8;
+					}
+					break;
+			case 8: if (this.game.etaoinAI.intentions.length == 0 &&
+						this.game.etaoinAI.queuedIntentions.length == 0) {
+						// make sure Etaoin knows about this object, that has disappeared from the game:
+						this.game.etaoinAI.addLongTermTerm(Term.fromString("tardis-memory-core('tardis-memory-core'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.etaoinAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.etaoinAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
+
+						this.game.qwertyAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.qwertyAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
+
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.shrdluAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
+
+						this.game.etaoinAI.allowPlayerIntoEveryWhere();
+						this.game.qwertyAI.allowPlayerIntoEveryWhere();
+						this.game.shrdluAI.allowPlayerIntoEveryWhere();
+
+						this.etaoinSays("perf.inform(D:'david'[#id], name('david'[#id],'david bowman'[symbol]))");
+						this.etaoinSays("perf.inform(D:'david'[#id], role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer]))");
+						this.etaoinSays("perf.inform(D:'david'[#id], #and(X:action.give('qwerty'[#id], [datapad], 'david'[#id]), time.future(X)))");
+						let datapad:A4Object = this.game.objectFactory.createObject("final-datapad", this.game, false, false);
+						datapad.ID = "final-datapad";
+						this.game.qwertyAI.robot.inventory.push(datapad);
+						this.act_3_state = 9;
+					}
+					break;
+					
+			case 9: if (this.game.etaoinAI.intentions.length == 0 &&
+						this.game.etaoinAI.queuedIntentions.length == 0) {
+						// make Qwerty do it:
+						this.game.qwertyAI.intentions = [];
+						this.qwertyIntention("action.give('qwerty'[#id], 'final-datapad'[#id], 'david'[#id])");
+						this.act_3_state = 10;
+					}
+					break;
+
+			case 10: // Qwerty will bring a datapad, and the master key to David:
+					// If nothing has happened for a while, re-ask qwerty to do it ...
+					if (this.game.qwertyAI.robot.findObjectByID("final-datapad") == null) {
+						this.act_3_state = 11;
+					} else if (this.act_3_state_start_time > 500) {
+						this.game.qwertyAI.intentions = [];
+						this.qwertyIntention("action.give('qwerty'[#id], 'final-datapad'[#id], 'david'[#id])");
+					}					
+					break;
+
+			case 11: // give the master key to the player:
+					let key:A4Object = this.game.objectFactory.createObject("master-key", this.game, false, false);
+					key.ID = "david-masterkey";
+					this.game.qwertyAI.robot.inventory.push(key);
+					this.game.qwertyAI.intentions = [];
+					if (!this.contextQwerty.inConversation) {
+						this.qwertyIntention("action.talk('qwerty'[#id], perf.callattention('david'[#id]))");						
+					}
+					this.act_3_state = 12;
+					break;
+
+			case 12:
+					if (this.game.qwertyAI.robot.isIdle() &&
+						this.game.qwertyAI.intentions.length == 0 && 
+						this.game.qwertyAI.queuedIntentions.length == 0) {
+						this.qwertyIntention("action.talk('qwerty'[#id], perf.request.action('david'[#id], action.take('david'[#id], 'david-masterkey'[#id])))");
+						this.act_3_state = 13;
+					}
+
+			case 13:
+					if (this.game.qwertyAI.robot.isIdle() &&
+						this.game.qwertyAI.intentions.length == 0 && 
+						this.game.qwertyAI.queuedIntentions.length == 0) {
+						this.qwertyIntention("action.give('qwerty'[#id], 'david-masterkey'[#id], 'david'[#id])");
+						this.act_3_state = 14;
+					}
+					break;
+
+			case 14:if (this.game.currentPlayer.findObjectByID("david-masterkey") != null) {
+						this.queueThoughtBubble("Wow... so, I was a computer engineer here... I do not remember anything...");
+						this.queueThoughtBubble("After all this work, this is it. This datapad contains the information I wanted... I now just have to read it...");
+						this.queueThoughtBubble("Also, it seems etaoin recognized me now, and I have access to everywhere in the station, which is convenient...");
+						this.act_3_state = 15;
+					}
+					break;
+
+			case 15: // story events are over! now just waiting for the player to finish the game...
 					break;
 		}
 
@@ -2742,7 +2847,7 @@ class ShrdluGameScript {
 
 	updateKnowledgeAfterReachingTrantorCrater()
 	{
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.shrdluAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
 		this.game.qwertyAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
 	}

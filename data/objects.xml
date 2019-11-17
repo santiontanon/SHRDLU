@@ -867,7 +867,15 @@
 		<animation name="idle" dx="2" dy="3" period="16" looping="true" file="background.png">156,450</animation>		
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="This is a computer console, probably to interface directly with the stations main computers, I wouldn't know how to use it." thought="true"/>
+        	<if>
+        		<condition><hasItemCheck inventory="memory core"/></condition>
+        		<then>
+        			<loseItem inventory="memory core"/>
+        			<talkOther text="Ok, I placed the memory card on this console's reading slot. Let's see what Etaoin can tell me!" thought="true"/>
+        			<storyState scope="game" variable="tardis-memory-core" value="inconsole"/>
+        		</then>
+        		<else><talkOther text="This is a computer console, probably to interface directly with the stations main computers, I wouldn't know how to use it." thought="true"/></else>
+        	</if>
         </eventRule>
 	</ObjectClass>	
 
@@ -1346,7 +1354,14 @@
 		<attribute name="tallness" value="16"/>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="These are recycling machines for different materials." thought="true"/>
+        	<if>
+        		<condition><hasItemCheck inventory="tardis data"/></condition>
+        		<then>
+        			<talkOther text="Ok, I really do not want to know. I am getting rid of this datapad." thought="true" wait="true"/>
+        			<gameComplete id="destroy-datapad"/>
+        		</then>
+        		<else><talkOther text="These are recycling machines for different materials." thought="true"/></else>
+        	</if>
         </eventRule>
 	</ObjectClass>	
 
@@ -1713,7 +1728,16 @@
 		<animation name="idle" dx="1" dy="3" period="4" looping="false" file="background.png">15</animation>		
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="Looks like a computer rack." thought="true"/>
+        	<if>
+        		<condition><storyStateCheck scope="game" variable="tardis-memory-core" value="undiscovered"/></condition>
+        		<then>
+        			<talkOther text="Aha! These towers are unpowered, but I can easily take one of the memory cores out!" thought="true"/>
+        			<talkOther text="Here! Got one, now I should bring it back to the station for reading it!" thought="true"/>
+        			<gainItem id="tardis-memory-core"><object class="tardis-memory-core"/></gainItem>
+        			<storyState scope="game" variable="tardis-memory-core" value="discovered"/>
+        		</then>
+        		<else><talkOther text="One of the computer towers in the Tardis 8." thought="true"/></else>
+        	</if>
         </eventRule>
 	</ObjectClass>	
 
@@ -1761,5 +1785,56 @@
 		  	<storyState scope="game" variable="sax-diary" value="read"/>
 		</eventRule>
  	</ObjectClass>  
+
+	<ObjectClass class="tardis-memory-core" super="*memory-core,item" name="memory core">
+		<attribute name="tallness" value="0"/>
+		<animation name="idle" dx="1" dy="1" period="4" looping="false" file="background.png">849</animation>		
+		<attribute name="useable" value="true"/>
+		<eventRule event="use">
+			<talkOther text="The memory core I took from the Tardis 8. I should bring it to the station to read it!" thought="true"/>
+		</eventRule>
+	</ObjectClass>
+
+    <ObjectClass class="final-datapad" super="datapad,item" name="tardis data">
+  	  <attribute name="tallness" value="0"/>
+      <animation name="idle" dx="1" dy="1" period="1" looping="false" file="background.png">511</animation>
+  	  <attribute name="useable" value="true"/>
+	  <eventRule event="use">
+	  	<if>
+	  		<condition><storyStateCheck scope="game" variable="times-tardis-datapad-examined" value="0"/></condition>
+	  		<then>
+	  			<talkOther text="This data pad probably contains a lot of information about me..." thought="true"/>	
+	  			<talkOther text="I am having second thoughts about reading it now..." thought="true"/>	
+	  			<storyState scope="game" variable="times-tardis-datapad-examined" value="1"/>
+	  		</then>
+	  		<else>
+			  	<if>
+			  		<condition><storyStateCheck scope="game" variable="times-tardis-datapad-examined" value="1"/></condition>
+			  		<then>
+			  			<talkOther text="On the one hand I need to know who am I..." thought="true"/>	
+			  			<talkOther text="But on the other hand, I do not remember being David Bowman..." thought="true"/>	
+			  			<talkOther text="If I don't have memories of him, am I really him?" thought="true"/>	
+			  			<storyState scope="game" variable="times-tardis-datapad-examined" value="2"/>
+			  		</then>
+			  		<else>
+					  	<if>
+					  		<condition><storyStateCheck scope="game" variable="times-tardis-datapad-examined" value="2"/></condition>
+					  		<then>
+					  			<talkOther text="I could read it..." thought="true"/>	
+					  			<talkOther text="Or I could just go out to the recycling bins and get rid of this datapad..." thought="true"/>	
+					  			<talkOther text="And live a new life as the new person I feel I am..." thought="true"/>	
+					  			<storyState scope="game" variable="times-tardis-datapad-examined" value="3"/>
+					  		</then>
+					  		<else>
+					  			<talkOther text="Ok, I'm reading it..." thought="true" wait="true"/>	
+					  			<gameComplete id="read-datapad"/>
+					  		</else>
+					  	</if>	  						  			
+			  		</else>
+			  	</if>	  			
+	  		</else>
+	  	</if>
+	  </eventRule>
+    </ObjectClass>
 
 </Objects>

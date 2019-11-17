@@ -1228,7 +1228,19 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (this.game.gameScript.actionRequestHandleByScript(actionRequest)) return ACTION_REQUEST_WILL_BE_HANDLED_EXTERNALLY;
 		return super.canSatisfyActionRequest(ir);
 	}
-	
+
+
+	allowPlayerIntoEveryWhere()
+	{
+		for(let location of this.locationsWherePlayerIsNotPermitted) {
+			// remove the long term permission term and add a negated one:
+			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('david'[#id], '"+location+"'[#id])", this.o));
+			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('david'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
+		}
+		this.locationsWherePlayerIsNotPermitted = [];
+		this.doorsPlayerIsNotPermittedToOpen = [];
+	}
+
 
 	allowPlayerInto(location:string, door:string)
 	{

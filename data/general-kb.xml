@@ -240,6 +240,7 @@
 	<sentence provenance="background" sentence="~verb.need(X, verb.help(Y, X, Z)) ; relation.howto(verb.help(Y, X), Z)"/>
 	<sentence provenance="background" sentence="relation.howto(action.print(X), verb.ask(X, 'etaoin'[#id]))"/>
 	<sentence provenance="background" sentence="relation.howto(action.print(X, Y), verb.ask(X, 'etaoin'[#id]))"/>
+	<sentence provenance="background" sentence="relation.howto(verb.read(X, Y), action.put-in(X, Y, [console]))"/>
 
 	<!-- what can things do -->
 	<!--sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/-->

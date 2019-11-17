@@ -379,8 +379,8 @@
   <object id="1432" type="tardis-computer-tower" x="136" y="56" width="8" height="24"/>
   <object id="1433" type="tardis-computer-tower" x="144" y="56" width="8" height="24"/>
   <object id="1434" type="tardis-wall-computer" x="128" y="96" width="16" height="24"/>
-  <object id="735" type="tron-poster" x="72" y="96" width="8" height="24"/>
-  <object id="736" type="tardis-floor-corpse" x="112" y="160" width="16" height="16"/>
+  <object id="1435" type="tron-poster" x="72" y="96" width="8" height="24"/>
+  <object id="1436" type="tardis-floor-corpse" x="112" y="160" width="16" height="16"/>
 
  </objectgroup>
 </map>

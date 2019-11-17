@@ -477,5 +477,7 @@
     	<storyState scope="game" variable="tardis-8-lights-west" value="off"/>
     	<storyState scope="game" variable="sax-diary" value="undiscovered"/>
     	<storyState scope="game" variable="euriclea-diary" value="undiscovered"/>
+    	<storyState scope="game" variable="tardis-memory-core" value="undiscovered"/>
+    	<storyState scope="game" variable="times-tardis-datapad-examined" value="0"/>
 	</onStart>
 </A4Game>

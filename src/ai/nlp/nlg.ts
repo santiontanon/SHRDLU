@@ -966,8 +966,9 @@ class NLGenerator {
 				   	t.functor.name == "action.give" ||
 				   	t.functor.name == "verb.go" ||
 				   	t.functor.name == "verb.guide" ||
-				   	t.functor.name == "verb.take-to"||
-				   	t.functor.name == "verb.bring"||
+				   	t.functor.name == "verb.take-to" ||
+				   	t.functor.name == "action.put-in" ||
+				   	t.functor.name == "verb.bring" ||
 				   	t.functor.name == "verb.help")) {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let object1Str:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, false,
@@ -1002,6 +1003,9 @@ class NLGenerator {
 					// verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
 					verbStr = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], time, negated_t);
 					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
+				} else if (t.functor.name == "action.put-in") {
+					verbStr = this.verbStringWithTime(ai.o.getSort("verb.put"), subjectStr[3], subjectStr[1], time, negated_t);
+					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " in " + object2Str[0];
 				} else {
 					return subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0];
 				}

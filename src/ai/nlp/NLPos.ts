@@ -229,6 +229,8 @@ class POSParser {
       "the milky way",
       "memory bank",
       "memory banks",
+      "memory core",
+      "memory cores",
       "perception system",
       "perception systems",
       "milky way",
@@ -273,6 +275,7 @@ class POSParser {
       "command key",
       "command center key",
       "master key",
+      "master keys",
       "maintenance room",
       "laundry room",
       "storage room",
@@ -399,6 +402,10 @@ class POSParser {
       "power cords",
       "extension cord",
       "extension cords",
+      "computer console",
+      "computer consoles",
+      "computer engineer",
+      "computer engineers",
 
       "tardis bridge",
       "tardis 8 bridge",
@@ -1098,6 +1105,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("communication tower", "communication.tower", o, multitokens_raw);
     this.addStandardNounPOS("communicator", "communicator", o, multitokens_raw);
     this.addStandardNounPOS("computer", "computer", o, multitokens_raw);
+    this.addStandardNounPOS("computer console", "wall-computer", o, multitokens_raw);
+    this.addStandardNounPOS("computer engineer", "computer-engineer", o, multitokens_raw);
     this.addStandardNounPOS("computer table", "computer-table", o, multitokens_raw);
     this.addStandardNounPOS("computer tower", "computer-tower", o, multitokens_raw);
     this.addStandardNounPOS("console", "console", o, multitokens_raw);
@@ -1236,12 +1245,14 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("man", "man", Term.fromString("noun('man'[man], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("men", "man", Term.fromString("noun('man'[man], [plural])", o), 1.0));
     this.addStandardNounPOS("map", "map", o, multitokens_raw);
+    this.addStandardNounPOS("master key", "master-key", o, multitokens_raw);
     this.addStandardNounPOS("material", "material", o, multitokens_raw);
     this.addStandardNounPOS("mathematician", "mathematician", o, multitokens_raw);
     this.addUncountableNounPOS("media", "media", o);
     this.addStandardNounPOS("medic", "medic", o, multitokens_raw);
     this.addStandardNounPOS("memory", "memory-bank", o, multitokens_raw);
     this.addStandardNounPOS("memory bank", "memory-bank", o, multitokens_raw);
+    this.addStandardNounPOS("memory core", "memory-core", o, multitokens_raw);
     this.addStandardNounPOS("metal", "metal", o, multitokens_raw);
     this.addStandardNounPOS("metal 3d printer", "metal-3dprinter", o, multitokens_raw);
     this.addStandardNounPOS("meter", "meter", o, multitokens_raw);
@@ -1642,9 +1653,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
-    this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
+    this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
 
     // adjectives (synonims) (added first, so NLG does not used them):

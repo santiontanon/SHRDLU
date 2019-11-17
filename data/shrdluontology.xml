@@ -402,6 +402,7 @@
     <sort name="can" super="item"/>
     <sort name="system" super="object"/>
     <sort name="memory-bank" super="object"/>
+    <sort name="memory-core" super="memory-bank"/>
     <sort name="perception-system" super="object"/>
 
     <sort name="panel" super="object,shape.flat"/>
@@ -479,6 +480,7 @@
     <sort name="physicist" super="scientist"/>
     <sort name="mathematician" super="scientist"/>
     <sort name="captain" super="profession"/>
+    <sort name="computer-engineer" super="profession"/>
 
     <sort name="game" super="abstract-entity"/>
 
