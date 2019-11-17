@@ -2600,7 +2600,25 @@ class ShrdluGameScript {
 					break;
 
 			case 5: // waiting to enter the bridge:
-					// ...
+					if (this.game.currentPlayer.map.name == "Tardis 8" &&
+						this.game.currentPlayer.x < 18*8) {
+						this.queueThoughtBubble("at last! the bridge! Let's see what can I learn here!");
+						this.queueThoughtBubble("Also, the central computer should be somewhere here, what would its memory contain?!");
+						this.act_3_state = 6;
+					}
+					break;
+
+			case 6: // waiting to enter the computer room:
+					if (this.game.currentPlayer.map.name == "Tardis 8" &&
+						this.game.currentPlayer.x < 18*8 &&
+						this.game.currentPlayer.y < 12*8) {
+						this.queueThoughtBubble("Finally! This is the computer room!");
+						this.queueThoughtBubble("I might be able to take a memory core and bring it to the station for analysis!");
+						this.act_3_state = 7;
+					}
+					break;
+
+			case 7: // ...
 					break;
 		}
 

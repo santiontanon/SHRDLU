@@ -1636,7 +1636,13 @@
 		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">1032</animation>		
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="...." thought="true"/>
+        	<!-- This is Nestor -->
+        	<if>
+        		<condition><storyStateCheck scope="game" variable="euriclea-diary" value="read"/>
+        				   <storyStateCheck scope="game" variable="sax-diary" value="read"/></condition>
+			    <then><talkOther text="I guess this person must be Nestor then..." thought="true"/></then>
+			    <else><talkOther text="I guess this person died when the ship crashed..." thought="true"/></else>
+        	</if>
         </eventRule>
 		<onStart>
 			<addPerceptionProperty property="dead"/>
@@ -1658,7 +1664,23 @@
 		<attribute name="interacteable" value="true"/>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="...." thought="true"/>
+        	<!-- This is Sax -->
+        	<if>
+        		<condition><storyStateCheck scope="game" variable="sax-diary" value="undiscovered"/></condition>
+        		<then>
+		        	<talkOther text="Another victim of the ship crash..." thought="true"/>
+	        		<talkOther text="But wait... he has a personal diary still on his pocket! Let me take it..." thought="true"/>
+	        		<gainItem id="sax-diary"><object class="sax-diary"/></gainItem>
+	        		<storyState scope="game" variable="sax-diary" value="discovered"/>
+        		</then>
+        		<else>
+        			<if>
+        				<condition><storyStateCheck scope="game" variable="sax-diary" value="discovered"/></condition>
+        				<then><talkOther text="Another victim of the ship crash..." thought="true"/></then>
+        				<else><talkOther text="So, this was Sax..." thought="true"/></else>
+        			</if>
+        		</else>
+        	</if>
         </eventRule>
 		<onStart>
 			<addPerceptionProperty property="dead"/>
@@ -1701,11 +1723,43 @@
 		<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">874</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
-        	<talkOther text="...." thought="true"/>
+        	<!-- This is Euriclea -->
+        	<if>
+        		<condition><storyStateCheck scope="game" variable="euriclea-diary" value="undiscovered"/></condition>
+        		<then>
+		        	<talkOther text="Another victim of the ship crash..." thought="true"/>
+	        		<talkOther text="But wait... she has a personal diary still on her pocket! Let me take it..." thought="true"/>
+	        		<gainItem id="euriclea-diary"><object class="euriclea-diary"/></gainItem>
+	        		<storyState scope="game" variable="euriclea-diary" value="discovered"/>
+        		</then>
+        		<else>
+        			<if>
+        				<condition><storyStateCheck scope="game" variable="euriclea-diary" value="discovered"/></condition>
+        				<then><talkOther text="Another victim of the ship crash..." thought="true"/></then>
+        				<else><talkOther text="So, this was Euriclea..." thought="true"/></else>
+        			</if>
+        		</else>
+        	</if>
         </eventRule>
 		<onStart>
 			<addPerceptionProperty property="dead"/>
 		</onStart>
 	</ObjectClass>    
+
+ 	<ObjectClass class="euriclea-diary" super="diary" name="diary 2">
+	  	<attribute name="useable" value="true"/>
+		<eventRule event="use">
+		  	<cutScene cutscene="12"/>
+		  	<storyState scope="game" variable="euriclea-diary" value="read"/>
+		</eventRule>
+ 	</ObjectClass>  
+
+ 	<ObjectClass class="sax-diary" super="diary" name="diary 3">
+	  	<attribute name="useable" value="true"/>
+		<eventRule event="use">
+		  	<cutScene cutscene="13"/>
+		  	<storyState scope="game" variable="sax-diary" value="read"/>
+		</eventRule>
+ 	</ObjectClass>  
 
 </Objects>

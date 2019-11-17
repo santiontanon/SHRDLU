@@ -475,5 +475,7 @@
 		<storyState scope="game" variable="permission-to-take-shrdlu" value="false"/>
     	<storyState scope="game" variable="tardis-8-lights" value="off"/>
     	<storyState scope="game" variable="tardis-8-lights-west" value="off"/>
+    	<storyState scope="game" variable="sax-diary" value="undiscovered"/>
+    	<storyState scope="game" variable="euriclea-diary" value="undiscovered"/>
 	</onStart>
 </A4Game>

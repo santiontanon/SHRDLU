@@ -9,6 +9,8 @@ var CUTSCENE_SHUTTLE_TAKEOFF:number = 8;
 var CUTSCENE_SHUTTLE_LAND:number = 9;
 var CUTSCENE_CRATER:number = 10;
 var CUTSCENE_TRON_POSTER:number = 11;
+var CUTSCENE_EURICLEA_DIARY:number = 12;
+var CUTSCENE_SAX_DIARY:number = 13;
 
 
 class ShrdluCutScenes {
@@ -33,6 +35,8 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) return this.updateCutSceneShuttleLand();
 		if (cutScene == CUTSCENE_CRATER) return this.updateCutSceneCrater();
 		if (cutScene == CUTSCENE_TRON_POSTER) return this.updateCutSceneTronPoster();
+		if (cutScene == CUTSCENE_EURICLEA_DIARY) return this.updateCutSceneEuricleaDiary();
+		if (cutScene == CUTSCENE_SAX_DIARY) return this.updateCutSceneSaxDiary();
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -50,6 +54,8 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_SHUTTLE_LAND) this.drawCutSceneShuttleLand(screen_width, screen_height);
 		if (cutScene == CUTSCENE_CRATER) this.drawCutSceneCrater(screen_width, screen_height);
 		if (cutScene == CUTSCENE_TRON_POSTER) this.drawCutSceneTronPoster(screen_width, screen_height);
+		if (cutScene == CUTSCENE_EURICLEA_DIARY) this.drawCutSceneEuricleaDiary(screen_width, screen_height);
+		if (cutScene == CUTSCENE_SAX_DIARY) this.drawCutSceneSaxDiary(screen_width, screen_height);
 	}
 
 
@@ -854,6 +860,128 @@ class ShrdluCutScenes {
 														 30, fontFamily8px, 6, 8, this.game, null);
 				text.draw((256-text.width)/2, 144, 128, 192, true, 1);
 				break;		
+		}
+
+		ctx.restore();
+	}
+
+
+	updateCutSceneEuricleaDiary() : boolean
+	{
+		let stateTimes:number[] = [600, 600, 600, 600, 100, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("Hmm, so, this Euriclea was responsible for the shuttle crash I found...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("It seems their plan to take the Tardis did not work though...", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneEuricleaDiary(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-euriclea-diary1.png", 
+								  "data/cutscene-euriclea-diary2.png",
+								  "data/cutscene-euriclea-diary2.png",
+								  "data/cutscene-euriclea-diary2.png",
+								  "data/cutscene-euriclea-diary2.png",
+								  null];
+		let stateText:string[] = [null,
+								  null,
+								  "Hmm, so, this Euriclea was responsible for the shuttle crash I found...",
+								  "It seems their plan to take the Tardis did not work though...",
+								  null];						  
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+		}
+
+		ctx.restore();
+	}
+
+
+	updateCutSceneSaxDiary() : boolean
+	{
+		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 100, -1];
+
+		if (stateTimes[this.cutSceneState] == -1) {
+			// add the messages to the console:
+			this.game.addMessageWithColor("Sax Harker... From what I gather, this is the man responsible for all the tragedies I have seen here then...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("So, these three people are Sax, Euriclea and Nestor then... They killed everyone else except for me apparently!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("I really need to access the content of the Tardis memory now, I am so close to figuring it all out!", MSX_COLOR_GREEN);
+			this.cutSceneState = 0;
+			this.cutSceneStateTimer = 0;
+			this.ESCpressedRecord = false;
+			return true;
+		}
+
+		this.cutSceneStateTimer++;
+		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+			this.cutSceneStateTimer = 0;
+			this.cutSceneState++;
+		}
+
+		this.ESCpressedRecord = false;
+
+		return false;
+	}
+
+
+	drawCutSceneSaxDiary(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		let stateImgs:string[] = ["data/cutscene-sax-diary1.png", 
+								  "data/cutscene-sax-diary2.png",
+								  "data/cutscene-sax-diary3.png",
+								  "data/cutscene-sax-diary3.png",
+								  "data/cutscene-sax-diary3.png",
+								  "data/cutscene-sax-diary3.png",
+								  "data/cutscene-sax-diary3.png",
+								  null];
+		let stateText:string[] = [null,
+								  null,
+								  null,
+								  "Sax Harker... From what I gather, this is the man responsible for all the tragedies I have seen here then...",
+								  "So, these three people are Sax, Euriclea and Nestor then... They killed everyone else except for me apparently!",
+								  "I really need to access the content of the Tardis memory now, I am so close to figuring it all out!",
+								  null,
+								  null];						  
+
+		if (stateImgs[this.cutSceneState] != null) {
+			let img:GLTile = this.game.GLTM.get(stateImgs[this.cutSceneState]);
+			if (img != null) img.draw(0,0);
+		}
+
+		if (stateText[this.cutSceneState] != null) {
+			let text:A4TextBubble = new A4TextBubble(stateText[this.cutSceneState], 
+													 30, fontFamily8px, 6, 8, this.game, null);
+			text.draw((256-text.width)/2, 144, 128, 192, true, 1);
 		}
 
 		ctx.restore();
