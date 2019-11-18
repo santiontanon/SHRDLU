@@ -1358,7 +1358,7 @@
         		<condition><hasItemCheck inventory="tardis data"/></condition>
         		<then>
         			<talkOther text="Ok, I really do not want to know. I am getting rid of this datapad." thought="true" wait="true"/>
-        			<gameComplete id="destroy-datapad"/>
+        			<gameComplete/>
         		</then>
         		<else><talkOther text="These are recycling machines for different materials." thought="true"/></else>
         	</if>
@@ -1827,7 +1827,7 @@
 					  		</then>
 					  		<else>
 					  			<talkOther text="Ok, I'm reading it..." thought="true" wait="true"/>	
-					  			<gameComplete id="read-datapad"/>
+					  			<gameComplete/>
 					  		</else>
 					  	</if>	  						  			
 			  		</else>
