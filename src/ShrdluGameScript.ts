@@ -333,6 +333,7 @@ class ShrdluGameScript {
 		memoryCore.ID = "tardis-memory-core";
 		this.game.currentPlayer.inventory.push(memoryCore);
 		this.game.setStoryStateVariable("tardis-memory-core", "discovered");
+		this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
 	}
 
 

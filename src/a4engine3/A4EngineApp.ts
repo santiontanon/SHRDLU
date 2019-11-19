@@ -1051,52 +1051,98 @@ class A4EngineApp {
 
     gamecomplete_cycle(k:KeyboardState) : number
     {
-        /*
-        if (this.state_cycle==0) {
+        // title:
+        if (this.state_cycle == 0) {
+            this.gamecomplete_logoaux = document.createElement('canvas');
+            this.gamecomplete_logoaux.width = 208;
+            this.gamecomplete_logoaux.height = 60;
+            this.gamecomplete_logofader = new FizzleFade(208,60);
             this.gamecomplete_state = 0;
-            BInterface.reset();
-            // create game complete screen
-            BInterface.push();
-            let tmp:string[] = this.game.getGameEnding(this.game.gameComplete_ending_ID);
-            if (tmp==null) {
-                console.error("Cannot find text for game ending with id '" + this.game.gameComplete_ending_ID + "'!!");
-                return A4ENGINE_STATE_GAMECOMPLETE;
-            }
-
-            BInterface.addElement(new BTextFrame(tmp, false, fontFamily8px, 8, 80, 40, app.screen_width-160, app.screen_height-100));
-            BInterface.addElement(new BButton("Keep Playing", fontFamily16px, app.screen_width/2-120, app.screen_height-120, 240, 30, 1, 
-                                         function(arg:any, ID:number) {
-                                            let app = <A4EngineApp>arg;
-                                            BInterface.reset();
-                                            app.game.setGameComplete(false, null);
-                                            app.ingame_menu = 0;
-                                            app.gamecomplete_state = 1;
-                                         }));
-            BInterface.addElement(new BButton("Quit", fontFamily16px, app.screen_width/2-120, app.screen_height-80, 240, 30, 2, 
-                                         function(arg:any, ID:number) {
-                                            let app = <A4EngineApp>arg;
-                                            BInterface.reset();
-                                            app.game.setGameComplete(false, null);
-                                            app.ingame_menu = 0;
-                                            app.gamecomplete_state = 2;
-                                         }));
         }
 
-        if (this.gamecomplete_state == 1) return A4ENGINE_STATE_GAME;
-        if (this.gamecomplete_state == 2) return A4ENGINE_STATE_INTRO;
+
+        switch(this.gamecomplete_state) {
+            case 0:
+                    if (k.key_press(KEY_CODE_SPACE) ||
+                        k.key_press(KEY_CODE_RETURN) ||
+                        k.key_press(KEY_CODE_ESCAPE)) {
+                        this.state_cycle = 600 + 800;
+                    } 
+                    // the end appearninng takes 800 cycles, plus 600 cycles of wait time
+                    if (this.state_cycle > 600 + 800) {
+                        this.gamecomplete_state = 1;
+                    }
+                    break;
+
+            case 1:
+                    this.gamecomplete_state = 2;
+                    let menuItems:string[] = [];
+                    let menuCallbacks:((any, number) => void)[] = [];
+
+                    menuItems.push("Thanks for playing");
+                    menuCallbacks.push(null);
+                    menuItems.push("SHRDLU!");
+                    menuCallbacks.push(null);
+                    menuItems.push("Generate Debug Log");
+                    menuCallbacks.push(
+                        function(arg:any, ID:number) {    
+                            generateDebugLogForDownload(<A4EngineApp>arg);
+                           });
+                    menuItems.push("No thanks");
+                    menuCallbacks.push(
+                        function(arg:any, ID:number) {
+                                 let app = <A4EngineApp>arg;
+                                 app.gamecomplete_state = 3;
+                           });
+                    BInterface.push();
+                    createShrdluMenu(menuItems,menuCallbacks,  
+                                     fontFamily32px,32,this.screen_width/2-10*8*PIXEL_SIZE,96*PIXEL_SIZE,20*8*PIXEL_SIZE,6*8*PIXEL_SIZE,0,1,this.GLTM);
+                    BInterface.getElementByID(1).setEnabled(false);
+                    BInterface.getElementByID(2).setEnabled(false);
+                    break;
+
+            case 2: 
+                    break;
+
+            case 3: return A4ENGINE_STATE_INTRO;
+                    break;
+        }
+
         return A4ENGINE_STATE_GAMECOMPLETE;
-        */
-        return A4ENGINE_STATE_INTRO;
     }
 
 
     gamecomplete_draw()
     {
-        /*
-        this.game.draw(this.screen_width, this.screen_height);
+        switch(this.gamecomplete_state) {
+            case 0:
+                // THE END:
+                ctx.save();
+                ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+                let img_logo:GLTile = this.game.GLTM.get("data/theend.png");
+                if (img_logo != null && this.gamecomplete_logofader != null) {
+                    for(let i:number = 0;i<25;i++) {
+                        let xy:[number,number] = this.gamecomplete_logofader.nextPixelToFizzle();
+                        if (xy != null) {
+                            this.gamecomplete_logoaux.getContext("2d").drawImage(img_logo.src, xy[0],xy[1],1,1,xy[0],xy[1],1,1);
+                        }
+                    }
+                }
+                if (this.gamecomplete_logoaux != null) ctx.drawImage(this.gamecomplete_logoaux, 24, 24);
+                ctx.restore();
+                break;
+
+            default:
+                ctx.save();
+                ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+                let img:GLTile = this.game.GLTM.get("data/theend.png");
+                if (img != null) img.draw(24, 24);
+                ctx.restore();            
+                break;
+        }
 
         BInterface.draw();
-        */
     }
 
 
@@ -1323,12 +1369,15 @@ class A4EngineApp {
     introact_state:number = 0;
     introact_state_timer:number = 0;
 
+    // game complete state:
+    gamecomplete_state:number = 0;
+    gamecomplete_logoaux:HTMLCanvasElement = null;
+    gamecomplete_logofader:FizzleFade = null;
+
+    // game over state:
     gameover_type:number = 0;
     gameover_state:number = 0;
     gameover_state_timer:number = 0;
-
-    // state game complete:
-    gamecomplete_state:number;
 
     // AI debugger:
     SHRDLU_AI_debugger:RuleBasedAIDebugger = new RuleBasedAIDebugger();
