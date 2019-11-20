@@ -1377,6 +1377,8 @@ scriptFunctions[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = function(script:A4Script, 
 scriptFunctions[A4_SCRIPT_CUTSCENE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     game.cutSceneActivated = script.value;
+    game.cutScenes.cutSceneState = 0;
+    game.cutScenes.cutSceneStateTimer = 0;
     return SCRIPT_FINISHED;
 }
 

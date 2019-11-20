@@ -20,6 +20,50 @@ function getTextTile(text:string, font:string, height:number, color:string) : HT
 }
 
 
+function getTextTileWithOutline(text:string, font:string, height:number, color:string, outlineColor:string) : HTMLImageElement
+{
+    // Generate the text tile:
+    var tmpCanvas:HTMLCanvasElement = <HTMLCanvasElement>document.createElement("canvas");
+    var tmpCtx:CanvasRenderingContext2D = tmpCanvas.getContext("2d");
+    tmpCtx.imageSmoothingEnabled = false;
+    tmpCtx.font = font;
+    tmpCanvas.width = tmpCtx.measureText(text).width+2;
+    tmpCanvas.height = height+2;
+
+    tmpCtx.font = font;    // not sure why, but after changing the size, I need to set the font again
+    tmpCtx.textBaseline = "top"; 
+    tmpCtx.textAlign = "left";
+    tmpCtx.fillStyle = color;
+    tmpCtx.fillText(text, 1, 1);
+
+    // Draw an outline:
+    var imageData = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height);
+    var data = imageData.data;
+    tmpCtx.fillStyle = outlineColor;
+    
+    for(let y:number = 1; y<tmpCanvas.height-1; y++) {
+        for(let x:number = 1; x<tmpCanvas.width-1; x++) {
+            var alpha = data[(x+y*tmpCanvas.width)*4 + 3];
+            if (alpha > 200) {
+                if (data[((x-1)+(y-1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x-1, y-1, 1, 1);
+                if (data[( x   +(y-1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x,   y-1, 1, 1);
+                if (data[((x+1)+(y-1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x+1, y-1, 1, 1);
+                if (data[((x-1)+y*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x-1, y, 1, 1);
+                if (data[((x+1)+y*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x+1, y, 1, 1);
+                if (data[((x-1)+(y+1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x-1, y+1, 1, 1);
+                if (data[( x   +(y+1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x,   y+1, 1, 1);
+                if (data[((x+1)+(y+1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x+1, y+1, 1, 1);
+            }                     
+        }
+    }
+
+    var img:HTMLImageElement = document.createElement("img");
+    img.src = tmpCanvas.toDataURL();
+
+    return img;
+}
+
+
 class BInterface {
 
     static push() 

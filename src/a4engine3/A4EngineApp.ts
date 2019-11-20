@@ -618,16 +618,11 @@ class A4EngineApp {
     titlescreen_draw()
     {
         let f1:number = 1;
-//        let f2:number = 1;
         if (this.titlescreen_state == 0) {
-//            f2 = this.titlescreen_timer/SHRDLU_FADEIN_TIME;
-//            if (f2<0) f2 = 0;
-//            if (f2>1) f2 = 1;
         } else if (this.titlescreen_state == 2 || this.titlescreen_state == 3) {
             f1 = 1 - this.titlescreen_timer/SHRDLU_FADEIN_TIME;
             if (f1<0) f1 = 0;
             if (f1>1) f1 = 1;
-//            f2 = f1;
         }
         
         ctx.save();
@@ -639,6 +634,7 @@ class A4EngineApp {
         if (img_logo != null) img_logo.draw(32,32);
         let img_credits:GLTile = this.game.GLTM.get("data/shrdlu-title-credits.png");
         if (img_credits != null) img_credits.draw(32,176);
+
 
         fillTextTopLeft(SHRDLU_VERSION, 1, 1, fontFamily8px, MSX_COLOR_WHITE);
 
@@ -984,7 +980,7 @@ class A4EngineApp {
                     fast_time_direction_command != A4_DIRECTION_NONE) {
                     this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,fast_time_direction_command);
                 }
-                if (!this.game.update()) {
+                if (!this.game.update(k)) {
                     if (!this.game.allowSaveGames) this.game.deleteSaveGame("slot1");
                     return A4ENGINE_STATE_INTRO;
                 }

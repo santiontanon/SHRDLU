@@ -472,6 +472,7 @@
 		<storyState scope="game" variable="act1-corpse" value="undiscovered"/>
 		<storyState scope="game" variable="act" value="act1"/>
 		<storyState scope="game" variable="distress-signals" value="unseen"/>
+		<storyState scope="game" variable="luminiscent-fungi" value="undiscovered"/>
 		<storyState scope="game" variable="permission-to-take-shrdlu" value="false"/>
     	<storyState scope="game" variable="tardis-8-lights" value="off"/>
     	<storyState scope="game" variable="tardis-8-lights-west" value="off"/>

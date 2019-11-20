@@ -1,5 +1,6 @@
 var canvas: HTMLCanvasElement;
 var ctx: CanvasRenderingContext2D;    // current context
+
 var app: A4EngineApp;
 //var audioCtx:AudioContext = new (window.AudioContext || window.webkitAudioContext)();
 var audioCtx:AudioContext = new ((<any>window).AudioContext || (<any>window).webkitAudioContext)();
@@ -49,6 +50,8 @@ window.onload = () => {
     canvas = <HTMLCanvasElement>document.getElementById('cnvs');
     ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
 
     app = new A4EngineApp(WINDOW_WIDTH, WINDOW_HEIGHT);
     k = new KeyboardState(-1);

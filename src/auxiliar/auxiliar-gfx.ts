@@ -36,7 +36,6 @@ function fillTextTopRight(text:string, x:number, y:number, font:string, color:st
 
 
 // Code adapted from here: http://fabiensanglard.net/fizzlefade/index.php
-// This assumes 
 class FizzleFade {
 
     constructor(w:number, h:number)
@@ -73,3 +72,22 @@ class FizzleFade {
     height:number = 192;
 }
 
+
+// Cache to prevent generating them again and again!
+// note: we do not store colors not font, since for this particular game, they are always the same
+var textTilesWithOutline: { [text: string] : HTMLImageElement; } = {};
+
+function fillTextTopLeftWithOutline(text:string, x:number, y:number, font:string, color:string, outlineColor:string)
+{   
+    var img:HTMLImageElement;
+
+    if (textTilesWithOutline[text] != null) {
+        img = textTilesWithOutline[text];
+    } else {
+        img = getTextTileWithOutline(text, font, 8, color, outlineColor);
+        textTilesWithOutline[text] = img;
+    }
+    // draw it:
+    ctx.drawImage(img, 0, 0, img.width, img.height, 
+                       x, y, img.width, img.height);
+}

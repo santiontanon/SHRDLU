@@ -940,7 +940,7 @@ class A4Game {
     }
     
 
-	update() : boolean
+	update(k:KeyboardState) : boolean
     {
         if (this.cycle==0) {
             if (this.eventScripts[A4_EVENT_START] != null) {
@@ -955,7 +955,7 @@ class A4Game {
         }
 
         if (this.cutSceneActivated >= 0) {
-            if (this.cutScenes.update(this.cutSceneActivated)) {
+            if (this.cutScenes.update(this.cutSceneActivated, k)) {
                 this.cutSceneActivated = -1;
             }
             return true;

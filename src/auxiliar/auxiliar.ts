@@ -56,3 +56,39 @@ function numberToStringTwoDigits(n:number) : string
     return ""+n;
 }
 
+
+function splitStringBySpaces(text:string, maxWidth:number) : string[]
+{
+    let buffer:string = "";
+    let last_space:number = 0;
+    let longestLine:number = 0;
+    let lines:string[] = [];
+
+    for(let i:number = 0;i<text.length;i++) {
+        buffer += text.charAt(i);
+        if (text.charAt(i) == ' ') last_space = i;
+        if (buffer.length>=maxWidth) {
+            if (last_space==0) {
+                // a single word doesn't fit, just split it!
+                lines.push(buffer);
+                if (buffer.length>longestLine) longestLine = buffer.length;
+                buffer = "";
+            } else {
+                let backspaces:number = i - last_space;
+                buffer = buffer.substring(0,buffer.length-backspaces);
+                i-=backspaces;
+                lines.push(buffer);
+                if (buffer.length>longestLine) longestLine = buffer.length;
+                buffer = "";
+                last_space = 0;
+            }
+        }
+    }
+
+    if (buffer != "") {
+        lines.push(buffer);
+        if (buffer.length>longestLine) longestLine = buffer.length;
+    }
+
+    return lines;
+}

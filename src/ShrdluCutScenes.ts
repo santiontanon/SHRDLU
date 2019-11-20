@@ -12,6 +12,9 @@ var CUTSCENE_TRON_POSTER:number = 11;
 var CUTSCENE_EURICLEA_DIARY:number = 12;
 var CUTSCENE_SAX_DIARY:number = 13;
 
+var CUTSCENE_ENDING_DESTROY_PAD:number = 14;
+var CUTSCENE_ENDING_READ_PAD:number = 15;
+
 
 class ShrdluCutScenes {
 	constructor(game:A4Game, app:A4EngineApp)
@@ -22,7 +25,7 @@ class ShrdluCutScenes {
 
 
 	// returns true when the cutscene is done
-	update(cutScene:number) : boolean
+	update(cutScene:number, k:KeyboardState) : boolean
 	{
 		if (cutScene == CUTSCENE_CORPSE) return this.updateCutSceneCorpse();
 		if (cutScene == CUTSCENE_DIARY) return this.updateCutSceneDiary();
@@ -37,6 +40,9 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_TRON_POSTER) return this.updateCutSceneTronPoster();
 		if (cutScene == CUTSCENE_EURICLEA_DIARY) return this.updateCutSceneEuricleaDiary();
 		if (cutScene == CUTSCENE_SAX_DIARY) return this.updateCutSceneSaxDiary();
+
+		if (cutScene == CUTSCENE_ENDING_DESTROY_PAD) return this.updateCutSceneEndingDestroyPad(k);
+		if (cutScene == CUTSCENE_ENDING_READ_PAD) return this.updateCutSceneEndingReadPad(k);
 		this.ESCpressedRecord = false;
 		return true;
 	}
@@ -56,6 +62,9 @@ class ShrdluCutScenes {
 		if (cutScene == CUTSCENE_TRON_POSTER) this.drawCutSceneTronPoster(screen_width, screen_height);
 		if (cutScene == CUTSCENE_EURICLEA_DIARY) this.drawCutSceneEuricleaDiary(screen_width, screen_height);
 		if (cutScene == CUTSCENE_SAX_DIARY) this.drawCutSceneSaxDiary(screen_width, screen_height);
+
+		if (cutScene == CUTSCENE_ENDING_DESTROY_PAD) this.drawCutSceneEndingDestroyPad(screen_width, screen_height);
+		if (cutScene == CUTSCENE_ENDING_READ_PAD) this.drawCutSceneEndingReadPad(screen_width, screen_height);
 	}
 
 
@@ -988,8 +997,116 @@ class ShrdluCutScenes {
 	}	
 
 
+	updateCutSceneEndingDestroyPad(k:KeyboardState)
+	{
+		this.cutSceneStateTimer++;
+		if (k.keyboard[KEY_CODE_SPACE] ||
+            k.keyboard[KEY_CODE_RETURN] ||
+            k.keyboard[KEY_CODE_ESCAPE]) {
+			this.cutSceneStateTimer+=7;	// make the text scroll faster
+		}
+
+		if (this.endingDestroyLines == null) {
+			let texts:string[] = [
+				"At the end, before the temptation overpowered you and made you read the datapad, you decided to detroy it. "+
+				"You also asked Etaoin to erase all the newly gained information concerning the past of David Bowman from its memory banks...",
+				"Maybe this body belonged to someone called David Bowman. \"But is that me?\" you thought. \"I do not have his memories. "+
+				"I do not remember being him. What if he was a different person than the person I am right now? When I find out, "+
+				"would that make me become more like him? What is the difference between me taking over his life, "+
+				"and taking over the life of a complete other stranger that happened to look like me? By erasing his memories from my brain, "+
+				"basically the stasis incident killed David Bowman. I am not him. I am a new person, and my new life starts here!\"",
+
+				"So, you decided to slow down and adjust to life in Aurora, with Shrdlu, Qwerty and Etaoin. "+
+				"They will be your new companions from now on. There are plenty of raw materials in the Tardis 8 that can be salvaged. "+
+				"So, it should not be hard to manufacture a spaceship to take a single passenger in stasis to another star system. "+
+				"Maybe one day, when you are ready, you will go back to the Tardis. "+
+				"Retrieve another copy of its memories for the records of history, construct a new ship and leave this planet. "+
+				"But for now, this was it. You needed time to organize your thoughts and plan for a future. "+
+				"Either alone here, or in space, searching for the rest of humankind.",
+				];
+
+			if (this.game.getStoryStateVariable("luminiscent-fungi") == "analyzed") {
+				texts.push("For now, there were too many questions that needed answering still in Aurora! You had found a new life form in a Cave! "+
+					"Was there more life in Aurora? There seemed to be much more than meets the eye in this planet! "+
+					"What if there were other life forms? Was there a civilization here in the past? \"I cannot leave just yet!\" you thought. "+
+					"There is too much work to do here before that! And time is the one thing I have!");
+			}
+
+			texts.push("");
+			texts.push("");
+			texts.push("          Thanks for playing!");
+			texts.push("");
+			texts.push("");
+			texts.push("Please send feedback to santi.ontanon@gmail.com");
+
+			this.endingDestroyLines = [];
+			for(let text of texts) {
+				let lines:string[] = splitStringBySpaces(text, 40);
+				for(let line of lines) {
+					this.endingDestroyLines.push(line);
+				}
+				this.endingDestroyLines.push(" ");
+				this.endingDestroyLines.push(" ");
+			}
+
+		}
+
+		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
+		let lastLineY:number = (200 + this.endingDestroyLines.length*10) - scroll;
+		if (lastLineY < -16) return true;
+		return false;
+	}
+
+
+	drawCutSceneEndingDestroyPad(screen_width:number, screen_height:number)
+	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+		// draw background image:
+		let img:GLTile = this.game.GLTM.get("data/cutscene-travel1.png");
+		if (img != null) img.draw(0,0);
+
+		// scroll text:
+		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
+		let y:number = 200 - scroll;
+
+		if (this.endingDestroyLines != null) {
+			for(let line of this.endingDestroyLines) {
+				fillTextTopLeftWithOutline(line, 8, y, fontFamily8px, MSX_COLOR_WHITE, MSX_COLOR_BLACK);
+				y+=10;
+				if (y > 192) break;
+			}
+		}
+
+		if (this.cutSceneStateTimer < 50) drawFadeInOverlay(1-(this.cutSceneStateTimer/50.0));
+
+		ctx.restore();
+	}
+
+
+	updateCutSceneEndingReadPad(k:KeyboardState)
+	{
+		this.cutSceneStateTimer++;
+		if (this.ESCpressedRecord) {
+			this.cutSceneStateTimer+=3;	// make the text scroll faster
+		}
+		if (this.cutSceneStateTimer > 1000) return true;
+		return false;
+	}
+
+
+	drawCutSceneEndingReadPad(screen_width:number, screen_height:number)
+	{
+
+	}
+
+
 	cutSceneState:number = 0;
 	cutSceneStateTimer:number = 0;
+
+	endingDestroyLines:string[] = null;
+	endingReadLines:string[] = null;
 
 	ESCpressedRecord:boolean = false;
 
