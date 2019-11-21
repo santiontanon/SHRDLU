@@ -27,7 +27,7 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		///if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();

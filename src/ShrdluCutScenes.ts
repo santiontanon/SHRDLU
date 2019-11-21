@@ -1009,19 +1009,17 @@ class ShrdluCutScenes {
 		if (this.endingDestroyLines == null) {
 			let texts:string[] = [
 				"At the end, before the temptation overpowered you and made you read the datapad, you decided to detroy it. "+
-				"You also asked Etaoin to erase all the newly gained information concerning the past of David Bowman from its memory banks...",
+				"Etaoin erased all the newly gained information about David Bowman from its memory banks...",
 				"Maybe this body belonged to someone called David Bowman. \"But is that me?\" you thought. \"I do not have his memories. "+
-				"I do not remember being him. What if he was a different person than the person I am right now? When I find out, "+
-				"would that make me become more like him? What is the difference between me taking over his life, "+
+				"I do not remember being him. What if he was a different person than the person I am right now? "+
+				"What is the difference between me taking over his life, "+
 				"and taking over the life of a complete other stranger that happened to look like me? By erasing his memories from my brain, "+
 				"basically the stasis incident killed David Bowman. I am not him. I am a new person, and my new life starts here!\"",
 
 				"So, you decided to slow down and adjust to life in Aurora, with Shrdlu, Qwerty and Etaoin. "+
-				"They will be your new companions from now on. There are plenty of raw materials in the Tardis 8 that can be salvaged. "+
-				"So, it should not be hard to manufacture a spaceship to take a single passenger in stasis to another star system. "+
-				"Maybe one day, when you are ready, you will go back to the Tardis. "+
-				"Retrieve another copy of its memories for the records of history, construct a new ship and leave this planet. "+
-				"But for now, this was it. You needed time to organize your thoughts and plan for a future. "+
+				"They will be your new companions from now on. Maybe one day, when you are ready, you would go back to the Tardis and "+
+				"Harvest enough raw materials for manufacturing a single passenger spaceship to get you out or Aurora... "+
+				"In the present, you needed time to organize your thoughts and plan for a future. "+
 				"Either alone here, or in space, searching for the rest of humankind.",
 				];
 
@@ -1037,7 +1035,8 @@ class ShrdluCutScenes {
 			texts.push("          Thanks for playing!");
 			texts.push("");
 			texts.push("");
-			texts.push("Please send feedback to santi.ontanon@gmail.com");
+			texts.push("        Please send feedback to"+
+					   "        santi.ontanon@gmail.com");
 
 			this.endingDestroyLines = [];
 			for(let text of texts) {
@@ -1088,17 +1087,97 @@ class ShrdluCutScenes {
 	updateCutSceneEndingReadPad(k:KeyboardState)
 	{
 		this.cutSceneStateTimer++;
-		if (this.ESCpressedRecord) {
-			this.cutSceneStateTimer+=3;	// make the text scroll faster
+		if (k.keyboard[KEY_CODE_SPACE] ||
+            k.keyboard[KEY_CODE_RETURN] ||
+            k.keyboard[KEY_CODE_ESCAPE]) {
+			this.cutSceneStateTimer+=7;	// make the text scroll faster
 		}
-		if (this.cutSceneStateTimer > 1000) return true;
+
+		if (this.endingReadLines == null) {
+			let texts:string[] = [
+				"As expected, the Tardis 8 contained detailed logs of all events happened since it departed Earth, including "+
+				"detailed biographies of all the crew members... like you, David Bowman. As you read on about yourself you "+
+				"could not avoid having a strange sensation, as if you were reading about a stranger. \"Was that really me?\" "+
+				"you thought. ",
+
+				"You decided to first read about the events that led to your memory loss experience.",
+
+				"Many images and clips in the datapad showed how 12 people awoke from stasis shortly after landing in Aurora. "+
+				"It seems the goal of those 12 people was to setup the infrastructure for later awaking the thousands of people "+
+				"still in staiss in the Tardis 8. However, things were not working. A small group of people, led by Sax Harker "+
+				"thought Aurora was not an inhabitable planet and had to be abandoned. Aparently YOU were the main obstacle to "+
+				"that plan, being the main defender of staying in Aurora.",
+
+				"The Tardis 8 still kept some security camera recordings of some of the events during the last days before the "+
+				"incidents. Sax, Euriclea and Nestor had faked some accident and tricked everyone into going to the rescue. "+
+				"However, the shuttle was sabotagged, and they all died. All except two people: David Bowman (you!) and Bruce Alper. "+
+				"Apparently you two stayed to take care of some problem in the station and saved your lifes.",
+
+				"Camera footage shows Sax attacking you and putting you on Stasis pods, before running away from the station. It does "+
+				"not seem that NEstor and Euriclea were aware of this... So that's what happened. Sax wanted to leave and killed all of us, "+
+				"except that I got \"lucky\".",
+
+				"This was all very distressing. The memory loss event had caused a discontinuity in your life. "+
+				"From a subjective point of view, was there any "+
+				"difference at all between dying and getting your memories erased? That person who was you before the incident "+
+				"was no more... You could pretend to be him, but there was really no continuity in your conscious experience "+
+				"to support it...",
+
+				"You were not at ease with taht question in your head. You had to get out of Aurora. There was still a chance to "+
+				"get reunited with the rest of humankind. Maybe human contact would help you. It had to be done! For sure SHRDLU "+
+				"was capable of manufacturing a transport ship to fly away! All hope was not lost! The Tardis 8 had a record of "+
+				"all the other planets humanity had tried to colonize. A new adventure lays ahead!"
+				];
+
+			texts.push("");
+			texts.push("");
+			texts.push("          Thanks for playing!");
+			texts.push("");
+			texts.push("");
+			texts.push("        Please send feedback to"+
+					   "        santi.ontanon@gmail.com");
+
+			this.endingReadLines = [];
+			for(let text of texts) {
+				let lines:string[] = splitStringBySpaces(text, 40);
+				for(let line of lines) {
+					this.endingReadLines.push(line);
+				}
+				this.endingReadLines.push(" ");
+				this.endingReadLines.push(" ");
+			}
+		}
+
+		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
+		let lastLineY:number = (200 + this.endingDestroyLines.length*10) - scroll;
+		if (lastLineY < -16) return true;
 		return false;
 	}
 
 
 	drawCutSceneEndingReadPad(screen_width:number, screen_height:number)
 	{
+		ctx.save();
+		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
+		// draw background images:
+		// ...
+
+		// scroll text:
+		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
+		let y:number = 200 - scroll;
+
+		if (this.endingReadLines != null) {
+			for(let line of this.endingReadLines) {
+				fillTextTopLeftWithOutline(line, 8, y, fontFamily8px, MSX_COLOR_WHITE, MSX_COLOR_BLACK);
+				y+=10;
+				if (y > 192) break;
+			}
+		}
+
+		if (this.cutSceneStateTimer < 50) drawFadeInOverlay(1-(this.cutSceneStateTimer/50.0));
+
+		ctx.restore();
 	}
 
 
