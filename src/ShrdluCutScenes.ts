@@ -1160,9 +1160,30 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		// draw background images:
-		// ...
+		let images:[string,number,number][] = [
+			["data/cutscene-ending-A-1.png", 500, 2000],
+			// ... whole crew + robots after being awaken, maybe in the mess hall with qwerty and shrdlu
+			// ... Euriclea sabotagging the shuttle
+			// ... Sax putting you and Bruce into stasis
+			["data/cutscene-ending-A-1.png", 10000, 12000],
+			// ... an image of aurora from space
+			];
 
+		// draw background images:
+		let img:GLTile = null;
+		let f:number = 0;
+		for(let [img_name,start,end] of images) {
+			if (this.cutSceneStateTimer > start &&
+				this.cutSceneStateTimer < end) {
+				img = this.game.GLTM.get(img_name);
+				if (this.cutSceneStateTimer < start+50) f = 1-((this.cutSceneStateTimer-start)/50.0);
+				if (this.cutSceneStateTimer > end-50) f = (this.cutSceneStateTimer-(end-50))/50.0;
+			}
+		}
+
+		if (img != null) img.draw(0,0);
+		if (f > 0) drawFadeInOverlay(f);
+		
 		// scroll text:
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
 		let y:number = 200 - scroll;
@@ -1174,8 +1195,6 @@ class ShrdluCutScenes {
 				if (y > 192) break;
 			}
 		}
-
-		if (this.cutSceneStateTimer < 50) drawFadeInOverlay(1-(this.cutSceneStateTimer/50.0));
 
 		ctx.restore();
 	}

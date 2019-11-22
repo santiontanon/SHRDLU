@@ -388,6 +388,7 @@ class A4AI {
     {
         // different map, just target the map:
         let targetMapName:string = map.name;
+        if (this.navigationBuffer_map == null) return;
         if (this.map2mapPaths != null) {
             let idx1:number = game.getMapIndex(this.navigationBuffer_map.name);
             let idx2:number = game.getMapIndex(targetMapName);

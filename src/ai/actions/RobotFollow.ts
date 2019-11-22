@@ -20,13 +20,15 @@ class RobotFollow_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+		/*
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
-				let term:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;
-		}		
+		}
+		*/		
 
 		if (!ai.visionActive) {
 			if (requester != null) {
@@ -89,6 +91,22 @@ class RobotFollow_IntentionAction extends IntentionAction {
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
 		var ai:RobotAI = <RobotAI>ai_raw;
+
+		// Check if we need to leave a vehicle:
+		if (ai.robot.isInVehicle()) {
+			if ((this.targetObject instanceof A4Character)) {
+				let target_c:A4Character = <A4Character>this.targetObject;
+				if (target_c.isInVehicle() &&
+					ai.robot.vehicle == target_c.vehicle) {
+					return false;
+				} else {
+					ai.robot.disembark();
+				}
+			} else {
+				ai.robot.disembark();
+			}
+			return false;
+		}
 
 		var destinationMap:A4Map = this.targetObject.map;
 		// if the targt is outside the map, we just wait

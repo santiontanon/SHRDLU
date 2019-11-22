@@ -3,6 +3,7 @@
 	<sentence provenance="background"  sentence="ai('tardis8'[#id])"/>
 	<sentence provenance="background"  sentence="name('tardis8'[#id],'tardis 8'[symbol])"/>
 	<sentence provenance="background"  sentence="name('tardis8'[#id],'the tardis 8'[symbol])"/>
+	<sentence provenance="background"  sentence="name('tardis8'[#id],'the tardis'[symbol])"/>
 
 	<sentence provenance="background" time="41338676700" sentence="verb.leave('tardis8'[#id],'earth'[#id])"/>
 	<sentence provenance="background" time="42895872000" sentence="verb.arrive('tardis8'[#id],'aurora'[#id])"/>

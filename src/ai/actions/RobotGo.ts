@@ -26,11 +26,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
 				return true;				
 			}
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-			}
-			return true;
 		}			
 
 		if (intention.attributes.length==0 ||
@@ -429,7 +424,14 @@ class RobotGo_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
-		if (stepByStepMovement) {
+		if (this.targetMapName == null) {
+			this.targetx = destinationX;
+			this.targety = destinationY;
+			this.targetMapName = destinationMap.name;
+		}
+
+		ai.setNewAction(intention, requester, null, null);
+		if (stepByStepMovement || ai.robot.isInVehicle()) {
 	        ai.setNewAction(intention, requester, null, this);
 			if (!this.executeContinuous(ai)) {
 				this.needsContinuousExecution = true;
@@ -441,7 +443,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, destinationMap.name, null, 0, false, false);
 	        s.x = destinationX;
-	        s.y = destinationY;
+	        s.y = destinationY+ai.robot.tallness;
 	        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
 	        q.scripts.push(s);
 			this.needsContinuousExecution = false;
@@ -454,6 +456,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
 		var ai:RobotAI = <RobotAI>ai_raw;
+
+		if (ai.robot.isInVehicle()) {
+			ai.robot.disembark();
+			return false;
+		}
 
 		let x:number = Math.floor(ai.robot.x/8)*8;
 		let y:number = Math.floor(ai.robot.y/8)*8;
@@ -505,7 +512,19 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	        return false;
 		} else {
-			return true;
+			if (ai.robot.map.name == this.targetMapName) {
+				return true;
+			} else {
+				// go to destination:
+		        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+		        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
+		        s.x = this.targetx;
+		        s.y = this.targety+ai.robot.tallness;
+		        s.stopAfterGoingThroughABridge = false;
+		        q.scripts.push(s);
+		        ai.currentAction_scriptQueue = q;
+		        return false;
+			}
 		}
 
 	}

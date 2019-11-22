@@ -69,11 +69,13 @@ class RobotEnter_IntentionAction extends IntentionAction {
 		let destinationLocation:AILocation = ai.game.getAILocation(this.targetObject);
 		let destinationLocationID:string = null;
 		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+		/*
 		if (this.targetObject instanceof A4Vehicle) {
 			// assume we are going to go far:
 			destinationMap = ai.game.getMap("Spacer Valley South");
 			destinationLocationID = "spacer-valley-south";
 		}
+		*/
 		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
