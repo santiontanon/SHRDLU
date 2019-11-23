@@ -116,7 +116,7 @@ class NLPattern {
 //						console.log("Matching POS "+term2.toString()+" with: " + nextToken.token);
 				for(let POS of nextToken.POS) {
 					let bindings:Bindings = new Bindings();
-					if (POS.term.unify(term2, true, bindings)) {
+					if (POS.term.unify(term2, OCCURS_CHECK, bindings)) {
 						let newParse:NLParseRecord = new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities); 
 //								console.log("POS match with: " + POS.term + "\nBindings: " + newParse.bindings);
 						parses.push(newParse);
@@ -142,7 +142,7 @@ class NLPattern {
 			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, parse.bindings, parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
 			for(let pr of results) {
 				let bindings2:Bindings = new Bindings();
-				if (!pr.result.unify(term2, true, bindings2)) {
+				if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
 					console.error("NLPattern.parsePattern: something went wrong when parsing pattern " + term2.toString() + "\n  It does not unify with: " + pr.result);
 					return null;
 				}
@@ -157,7 +157,7 @@ class NLPattern {
 			for(let rawRule2 of parser.rules) {
 				let rule2:NLPatternRule = rawRule2.clone();
 				let bindings:Bindings = new Bindings();
-				if (rule2.head.unify(term2, true, bindings)) {
+				if (rule2.head.unify(term2, OCCURS_CHECK, bindings)) {
 					// rule to consider!!
 	//						console.log("  considering rule with head: " + rule2.head.toString() + "\n  new bindings: " + bindings);
 					let results:NLParseRecord[] = rule2.parseWithBindings(new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities), false, context, parser, AI);
@@ -165,7 +165,7 @@ class NLPattern {
 					for(let pr of results) {
 	//							console.log("Pattern matched successfully with result: " + t.toString());
 						let bindings2:Bindings = new Bindings();
-						if (!pr.result.unify(term2, true, bindings2)) {
+						if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
 							console.error("NLPattern.parsePattern: something went wrong when parsing pattern " + term2.toString() + "\n  It does not unify with: " + pr.result);
 							return null;
 						}

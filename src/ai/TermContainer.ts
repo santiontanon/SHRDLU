@@ -160,7 +160,7 @@ class TermContainer {
 			this.match_cache_idx++;
 			var bindings:Bindings = new Bindings();
 //			console.log("nextMatch, unifying " + this.match_cache_term + " with " + te2.term);
-			if (this.match_cache_term.unify(te2.term, true, bindings)) {
+			if (this.match_cache_term.unify(te2.term, OCCURS_CHECK, bindings)) {
 				return [te2.term,bindings];
 			}
 //			console.log("failed!");

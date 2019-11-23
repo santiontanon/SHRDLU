@@ -158,6 +158,7 @@
 
     <sort name="nounPhrase" super="grammar-concept"/>    
     <sort name="nounPhraseNoDeterminer" super="grammar-concept"/>    
+    <sort name="nounPhraseNoDeterminerNoProperNoun" super="grammar-concept"/>
     <sort name="properNounCompound" super="grammar-concept"/>    
 
     <sort name="parser-function" super="grammar-concept"/>   
@@ -347,6 +348,7 @@
     <sort name="diary" super="item"/>
 
     <sort name="key-card" super="key,card"/>
+    <sort name="master-key" super="key-card"/>
 
     <sort name="device" super="item"/>
     <sort name="communicator" super="device"/>
@@ -410,6 +412,7 @@
     <sort name="computer" super="equipment,machine"/>
     <sort name="console" super="equipment,machine"/>
     <sort name="computer-tower" super="computer,tower"/>
+    <sort name="wall-computer" super="computer,console"/>
     <sort name="printer" super="equipment,machine"/>
     <sort name="3dprinter" super="printer"/>
     <sort name="metal-3dprinter" super="3dprinter"/>

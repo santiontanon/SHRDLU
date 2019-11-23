@@ -101,6 +101,7 @@ class AILocation {
 					}
 				}
 
+				// calculate the center of the walkable area:
 				let offset:number = 0;
 				for(let y:number = 0;y<this.maps[i].height;y++) {
 					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
@@ -113,12 +114,42 @@ class AILocation {
 						}
 					}
 				}
+
+				if (total == 0) return null;
+				x1 = Math.floor(x1/(total*map.tileWidth))*map.tileWidth;
+				y1 = Math.floor(y1/(total*map.tileHeight))*map.tileHeight;
+
+				// find walkable coordinates outside of a bridge:
+				let half_width:number = character.getPixelWidth()/2;
+				let half_height:number = (character.getPixelHeight()-character.tallness)/2;
+				let best:[number,number] = null;
+				let best_d:number = 0;
+				offset = 0;
+				for(let y:number = 0;y<this.maps[i].height;y++) {
+					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
+						if (this.mapOccupancyMaps[i][offset] &&
+							map.walkable(x*map.tileWidth, y*map.tileHeight+character.tallness,
+										 character.getPixelWidth(), character.getPixelHeight()-character.tallness, character)) {
+                            let bridge:A4MapBridge = map.getBridge(x*map.tileWidth+half_width, 
+                            									   y*map.tileHeight+character.tallness+half_height);
+                            if (bridge==null) {
+								let xtmp:number = x*this.maps[i].tileWidth;
+								let ytmp:number = y*this.maps[i].tileHeight;
+								let d:number = (x1-xtmp)*(x1-xtmp) + (y1-ytmp)*(y1-ytmp);
+								if (best == null || d<best_d) {
+									best_d = d;
+									best = [xtmp, ytmp];
+								}
+							}
+						}
+					}
+				}
+
+				return best;
 			}
 		}
-		if (total == 0) return null;
-		x1 = Math.floor(x1/(total*map.tileWidth))*map.tileWidth;
-		y1 = Math.floor(y1/(total*map.tileHeight))*map.tileHeight;
-		return [x1, y1];
+
+		return null;
 	}
 
 

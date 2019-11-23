@@ -30,6 +30,8 @@ var DEFAULT_QUESTION_PATIENCE_TIMER:number = 1200;
 
 var CONVERSATION_TIMEOUT:number = 60*60;	// 1 minute of real time, which is 1 hour of in-game time
 
+var OCCURS_CHECK:boolean = false;
+
 class InferenceRecord {
 	constructor(ai:RuleBasedAI, additionalSentences_arg:Sentence[], targets:Sentence[][], p:number, a:number, findAllAnswers:boolean, timeTerm:Term, e:InferenceEffect, o:Ontology)
 	{
@@ -652,6 +654,7 @@ class RuleBasedAI {
 	    			// Since now we know they are talking to us, we can unify the LISTENER with ourselves:
 	    			this.terminateConversationAfterThisPerformative = false;
 					let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
+					if (perf2 == null) perf2 = performative;
 					let nIntentions:number = this.intentions.length;
 					let tmp:Term[] = this.reactToPerformative(perf2, t.attributes[1], context);
 					if (tmp!=null) toAdd = toAdd.concat(tmp);
@@ -1778,7 +1781,7 @@ class RuleBasedAI {
 		let s:Sentence = this.longTermMemory.firstSingleTermMatch(q.functor, q.attributes.length, o);
 		while(s != null) {
 			let b:Bindings = new Bindings();
-			if (q.unify(s.terms[0], true, b)) {
+			if (q.unify(s.terms[0], OCCURS_CHECK, b)) {
 				return b;
 			}
 			s = this.longTermMemory.nextSingleTermMatch();
@@ -1908,7 +1911,7 @@ class RuleBasedAI {
 
 		for(let match of this.longTermMemory.allSingleTermMatches(query.functor, query.attributes.length, this.o)) {
 			let t:Term = match.terms[0];
-			if (query.unify(t, true, new Bindings())) {
+			if (query.unify(t, OCCURS_CHECK, new Bindings())) {
 				// if we don't know how to render this, then ignore:
 				let msType:Sort = this.mostSpecificTypeThatCanBeRendered(t.functor);
 				if (msType == null) continue;

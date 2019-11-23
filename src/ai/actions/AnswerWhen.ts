@@ -81,14 +81,14 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 			if (se.sentence.terms.length == 1 &&
 				se.sentence.sign[0]) {
 				let bindings:Bindings = new Bindings();
-				if (event.unify(se.sentence.terms[0], true, bindings)) return se.time;
+				if (event.unify(se.sentence.terms[0], OCCURS_CHECK, bindings)) return se.time;
 			}
 		}
 		for(let se of ai.longTermMemory.previousSentencesWithNoCurrentSentence) {
 			if (se.sentence.terms.length == 1 &&
 				se.sentence.sign[0]) {
 				let bindings:Bindings = new Bindings();
-				if (event.unify(se.sentence.terms[0], true, bindings)) return se.time;
+				if (event.unify(se.sentence.terms[0], OCCURS_CHECK, bindings)) return se.time;
 			}
 		}
 

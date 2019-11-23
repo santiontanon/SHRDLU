@@ -118,11 +118,17 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             return false;
         }
         var parse:NLParseRecord = parser.chooseHighestPriorityParse(parses);
+        // var parse:NLParseRecord = parser.chooseHighestPriorityParseWithListener(parses, listener);
 //        if (parses.length > 1) console.warn("Multiple parses for sentence '" + sentence + "'");
         var expectedResult:Term = Term.fromString(expectedResultStr, o);
         var found:boolean = false;
         //console.log("result BEFORE unifyListener: " + parse.result);
-        parse.result = parser.unifyListener(parse.result, listener);
+        let unifiedResut:Term = parser.unifyListener(parse.result, listener);
+        if (unifiedResut != null) {
+          parse.result = unifiedResut;
+        } else {
+          console.warn("Listener unification failed for: '"+sentence+"'");
+        }
         //console.log("result AFTER unifyListener: " + parse.result);
         if (parse.result.equalsConsideringAndList(expectedResult)) found = true;
         if (!found) {
@@ -1170,6 +1176,16 @@ NLParseTestUnifyingListener("what materials do I need to print a fork?", o.getSo
 NLParseTestUnifyingListener("what is needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V, verb.need-for(X, V, action.print(X, [fork])))");
 NLParseTestUnifyingListener("what materials are needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for(X, V, action.print(X, [fork])))");
 NLParseTestUnifyingListener("print some pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [pliers]))"); 
+
+
+// For version 3.3:
+NLParseTestUnifyingListener("fix this", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
+NLParseTestUnifyingListener("can you fix this?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
+
+NLParseTestUnifyingListener("fix the ship etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("can you fix the ship, etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("fix this etaoin", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
+NLParseTestUnifyingListener("can you fix this etaoin?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

@@ -69,7 +69,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 			// STEP 1: check to see if the term is in the intentionsCausedByRequest list, so we don't need inference:
 			for(let cl of ai.intentionsCausedByRequest) {
 				var b:Bindings = new Bindings();
-				if (cl.action.unify(toExplain, true, b)) {
+				if (cl.action.unify(toExplain, OCCURS_CHECK, b)) {
 					// found!
 					var term:Term = new Term(ai.o.getSort("verb.ask"),[cl.requester,new ConstantTermAttribute(ai.selfID, ai.cache_sort_id)]);
 					var term2:Term = new Term(ai.o.getSort("relation.cause"), [new TermTermAttribute(toExplain), new TermTermAttribute(term)]);

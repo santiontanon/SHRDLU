@@ -39,13 +39,15 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		let destinationMap:A4Map = null;
-		let destinationLocation:AILocation = null;
-		let destinationLocationID:string = null;
-		let destinationX:number = 0;
-		let destinationY:number = 0;
 		let stopAfterGoingThroughABridge:boolean = false;
 		let stepByStepMovement:boolean = false;
+
+		let targetLocation:AILocation = null;
+		let targetLocationID:string = null;
+		let targetMap:A4Map = null;
+		this.targetx = null;
+		this.targety = null;
+		this.targetMapName = null;
 
 		// find the target destination:
 		if (intention.functor.name == "verb.come-back" ||
@@ -61,11 +63,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 				let requesterID:string = (<ConstantTermAttribute>requester).value;
 				let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);
 				if (targetObject != null) {
-					destinationMap = targetObject.map;
-					destinationX = targetObject.x;
-					destinationY = targetObject.y+targetObject.tallness;
-					destinationLocation = ai.game.getAILocation(targetObject);
-					if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+					targetMap = targetObject.map;
+					this.targetx = targetObject.x;
+					this.targety = targetObject.y+targetObject.tallness;
+					targetLocation = ai.game.getAILocation(targetObject);
+					if (targetLocation != null) targetLocationID = targetLocation.id;
 				}
 				if (targetObject == null) {
 					// we should never get here:
@@ -92,28 +94,28 @@ class RobotGo_IntentionAction extends IntentionAction {
 			if (ai.visionActive) {
 				// destination is the second attribute:
 				if (targetObject != null) {
-					destinationMap = targetObject.map;
-					destinationX = targetObject.x;
-					destinationY = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
-					destinationLocation = ai.game.getAILocation(targetObject);
-					if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+					targetMap = targetObject.map;
+					this.targetx = targetObject.x;
+					this.targety = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
+					targetLocation = ai.game.getAILocation(targetObject);
+					if (targetLocation != null) targetLocationID = targetLocation.id;
 				} else {
-					let destinationLocation:AILocation = ai.game.getAILocationByID(targetID);
-					if (destinationLocation != null) {
-						destinationLocationID = destinationLocation.id;
-						let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+					let targetLocation:AILocation = ai.game.getAILocationByID(targetID);
+					if (targetLocation != null) {
+						targetLocationID = targetLocation.id;
+						let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 						if (tmp2 != null) {
-							destinationMap = ai.robot.map;
-							destinationX = tmp2[0];
-							destinationY = tmp2[1];
+							targetMap = ai.robot.map;
+							this.targetx = tmp2[0];
+							this.targety = tmp2[1];
 						} else {
-							if (destinationLocation.maps.length > 0) {
+							if (targetLocation.maps.length > 0) {
 								// we set this so that we can later give the proper reason for why we cannot go
-								let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[0], ai.robot);
+								let tmp3:[number,number] = targetLocation.centerWalkableCoordinatesInMap(targetLocation.maps[0], ai.robot);
 								if (tmp3 != null) {
-									destinationMap = destinationLocation.maps[0];
-									destinationX = tmp3[0];
-									destinationY = tmp3[1];
+									targetMap = targetLocation.maps[0];
+									this.targetx = tmp3[0];
+									this.targety = tmp3[1];
 								}
 							}
 						}
@@ -166,11 +168,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 						}
 					}
 					if (bestX != null) {
-						destinationMap = targetObject.map;
-						destinationX = bestX;
-						destinationY = bestY;
-						destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, destinationX/destinationMap.tileWidth, destinationY/destinationMap.tileHeight);
-						if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+						targetMap = targetObject.map;
+						this.targetx = bestX;
+						this.targety = bestY;
+						targetLocation = ai.game.getAILocationTileCoordinate(targetMap, this.targetx/targetMap.tileWidth, this.targety/targetMap.tileHeight);
+						if (targetLocation != null) targetLocationID = targetLocation.id;
 					} else {
 						targetObject = null;	// to triger the denyrequest message
 					}
@@ -189,33 +191,33 @@ class RobotGo_IntentionAction extends IntentionAction {
 					// Find a nearby location and go there:
 					let startLocation:AILocation = ai.game.getAILocation(ai.robot);
 					if (startLocation != null) {
-						destinationLocation = ai.locationOutsideOf(startLocation);
-						if (destinationLocation != null) {
-							destinationLocationID = destinationLocation.id;
+						targetLocation = ai.locationOutsideOf(startLocation);
+						if (targetLocation != null) {
+							targetLocationID = targetLocation.id;
 
-							let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+							let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 							// ensure that the target location is actually outside of the specified location:
 							let tmp2location:AILocation = null;
 							if (tmp2 != null) tmp2location = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
 							if (tmp2 != null && 
 								tmp2location != startLocation &&									
 								!ai.game.location_in[ai.game.locations.indexOf(tmp2location)][ai.game.locations.indexOf(startLocation)]) {
-								destinationMap = ai.robot.map;
-								destinationX = tmp2[0];
-								destinationY = tmp2[1];
+								targetMap = ai.robot.map;
+								this.targetx = tmp2[0];
+								this.targety = tmp2[1];
 							} else {
-								for(let mapidx:number = 0; mapidx<destinationLocation.maps.length; mapidx++) {
+								for(let mapidx:number = 0; mapidx<targetLocation.maps.length; mapidx++) {
 									// we set this so that we can later give the proper reason for why we cannot go
-									let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[mapidx], ai.robot);
+									let tmp3:[number,number] = targetLocation.centerWalkableCoordinatesInMap(targetLocation.maps[mapidx], ai.robot);
 									// ensure that the target location is actually outside of the specified location:
 									let tmp3location:AILocation = null;
-									if (tmp3 != null) tmp3location = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
+									if (tmp3 != null) tmp3location = ai.game.getAILocationTileCoordinate(targetLocation.maps[mapidx], tmp3[0]/targetLocation.maps[mapidx].tileWidth, tmp3[1]/targetLocation.maps[mapidx].tileHeight);
 									if (tmp3 != null && 
 										tmp3location != startLocation &&
 										!ai.game.location_in[ai.game.locations.indexOf(tmp3location)][ai.game.locations.indexOf(startLocation)]) {
-										destinationMap = destinationLocation.maps[mapidx];
-										destinationX = tmp3[0];
-										destinationY = tmp3[1];
+										targetMap = targetLocation.maps[mapidx];
+										this.targetx = tmp3[0];
+										this.targety = tmp3[1];
 									}
 								}
 							}
@@ -291,12 +293,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 					this.targety = ai.robot.y + movementAmount*8*direction_y_inc[dir];
 				}
 				stepByStepMovement = true;
-				destinationX = this.targetx;
-				destinationY = this.targety+ai.robot.tallness;
-				destinationMap = ai.robot.map;
+				targetMap = ai.robot.map;
 				this.targetx = Math.floor(this.targetx/8)*8;
 				this.targety = Math.floor(this.targety/8)*8;
-				this.targetMapName = destinationMap.name;
 
 				// calculate the first step of the path, to see the map/target location:
 				let x:number = Math.floor(ai.robot.x/8)*8;
@@ -307,8 +306,8 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (y>this.targety) y -= 8;
 				y+=+ai.robot.tallness;
 
-				if (destinationMap != null) destinationLocation = ai.game.getAILocationTileCoordinate(destinationMap, x/destinationMap.tileWidth, y/destinationMap.tileHeight);
-				if (destinationLocation != null) destinationLocationID = destinationLocation.id;
+				if (targetMap != null) targetLocation = ai.game.getAILocationTileCoordinate(targetMap, x/targetMap.tileWidth, y/targetMap.tileHeight);
+				if (targetLocation != null) targetLocationID = targetLocation.id;
 			} else {
 				// we should never get here:
 				if (requester != null) {
@@ -330,31 +329,31 @@ class RobotGo_IntentionAction extends IntentionAction {
 					// Find a nearby location and go there:
 					let startLocation:AILocation = ai.game.getAILocationByID((<ConstantTermAttribute>ooTerm.attributes[0]).value);
 					if (startLocation != null) {
-						destinationLocation = ai.locationOutsideOf(startLocation);
-						if (destinationLocation != null) {
-							destinationLocationID = destinationLocation.id;
-							let tmp2:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
+						targetLocation = ai.locationOutsideOf(startLocation);
+						if (targetLocation != null) {
+							targetLocationID = targetLocation.id;
+							let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 							// ensure that the target location is actually outside of the specified location:
 							let tmp2location:AILocation = ai.game.getAILocationTileCoordinate(ai.robot.map, tmp2[0]/ai.robot.map.tileWidth, tmp2[1]/ai.robot.map.tileHeight);
 							if (tmp2 != null && 
 								tmp2location != startLocation &&
 								!ai.game.location_in[ai.game.locations.indexOf(tmp2location)][ai.game.locations.indexOf(startLocation)]) {
-								destinationMap = ai.robot.map;
-								destinationX = tmp2[0];
-								destinationY = tmp2[1];
+								targetMap = ai.robot.map;
+								this.targetx = tmp2[0];
+								this.targety = tmp2[1];
 							} else {
 
-								for(let mapidx:number = 0; mapidx<destinationLocation.maps.length; mapidx++) {
+								for(let mapidx:number = 0; mapidx<targetLocation.maps.length; mapidx++) {
 									// we set this so that we can later give the proper reason for why we cannot go
-									let tmp3:[number,number] = destinationLocation.centerWalkableCoordinatesInMap(destinationLocation.maps[mapidx], ai.robot);
+									let tmp3:[number,number] = targetLocation.centerWalkableCoordinatesInMap(targetLocation.maps[mapidx], ai.robot);
 									// ensure that the target location is actually outside of the specified location:
-									let tmp3location:AILocation = ai.game.getAILocationTileCoordinate(destinationLocation.maps[mapidx], tmp3[0]/destinationLocation.maps[mapidx].tileWidth, tmp3[1]/destinationLocation.maps[mapidx].tileHeight);
+									let tmp3location:AILocation = ai.game.getAILocationTileCoordinate(targetLocation.maps[mapidx], tmp3[0]/targetLocation.maps[mapidx].tileWidth, tmp3[1]/targetLocation.maps[mapidx].tileHeight);
 									if (tmp3 != null && 
 										tmp3location != startLocation &&
 										!ai.game.location_in[ai.game.locations.indexOf(tmp3location)][ai.game.locations.indexOf(startLocation)]) {
-										destinationMap = destinationLocation.maps[mapidx];
-										destinationX = tmp3[0];
-										destinationY = tmp3[1];
+										targetMap = targetLocation.maps[mapidx];
+										this.targetx = tmp3[0];
+										this.targety = tmp3[1];
 										break;
 									}
 								}
@@ -383,7 +382,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		}
 
 		// If we do not know the destination map:
-		if (destinationMap == null) {
+		if (targetMap == null) {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
@@ -394,8 +393,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
+		this.targetMapName = targetMap.name;
+
 		// Check if the robot can go:
-		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
+		let cannotGoCause:Term = ai.canGoTo(targetMap, targetLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {
 				// deny request:
@@ -424,12 +425,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
-		if (this.targetMapName == null) {
-			this.targetx = destinationX;
-			this.targety = destinationY;
-			this.targetMapName = destinationMap.name;
-		}
-
 		ai.setNewAction(intention, requester, null, null);
 		if (stepByStepMovement || ai.robot.isInVehicle()) {
 	        ai.setNewAction(intention, requester, null, this);
@@ -441,9 +436,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 		} else {
 			// go to destination:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, destinationMap.name, null, 0, false, false);
-	        s.x = destinationX;
-	        s.y = destinationY+ai.robot.tallness;
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, targetMap.name, null, 0, false, false);
+	        s.x = this.targetx;
+	        s.y = this.targety+ai.robot.tallness;
 	        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
 	        q.scripts.push(s);
 			this.needsContinuousExecution = false;
@@ -464,7 +459,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 		let x:number = Math.floor(ai.robot.x/8)*8;
 		let y:number = Math.floor(ai.robot.y/8)*8;
-		if ((x != this.targetx || y != this.targety) && ai.robot.map.name == this.targetMapName) {
+		if (x == this.targetx && y == this.targety && ai.robot.map.name == this.targetMapName) {
+			// we almost made it, done!
+			return true;
+		} else if (ai.robot.map.name == this.targetMapName) {
 			if (x<this.targetx) x += 8;
 			if (x>this.targetx) x -= 8;
 			if (y<this.targety) y += 8;
@@ -512,19 +510,15 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	        return false;
 		} else {
-			if (ai.robot.map.name == this.targetMapName) {
-				return true;
-			} else {
-				// go to destination:
-		        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-		        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
-		        s.x = this.targetx;
-		        s.y = this.targety+ai.robot.tallness;
-		        s.stopAfterGoingThroughABridge = false;
-		        q.scripts.push(s);
-		        ai.currentAction_scriptQueue = q;
-		        return false;
-			}
+			// go to destination:
+	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
+	        s.x = this.targetx;
+	        s.y = this.targety+ai.robot.tallness;
+	        s.stopAfterGoingThroughABridge = false;
+	        q.scripts.push(s);
+	        ai.currentAction_scriptQueue = q;
+	        return false;
 		}
 
 	}

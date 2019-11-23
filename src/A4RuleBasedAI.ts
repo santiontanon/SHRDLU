@@ -215,6 +215,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 			// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
 			//   Shrdlu should be able to hear the player from a different visibilityRegion
 			if (map.visibilityRegions[offset] == visibilityRegion ||
+				(tile_ox>0 && map.visibilityRegions[offset-1] == visibilityRegion) ||
+				(tile_ox<map.width-1 && map.visibilityRegions[offset+1] == visibilityRegion) ||
+				(tile_oy>0 && map.visibilityRegions[offset-map.width] == visibilityRegion) ||
+				(tile_oy<map.height-1 && map.visibilityRegions[offset+map.width] == visibilityRegion) ||
 				o instanceof A4Door ||
 				o.ID == "tardis-broken-cable" || 	// exception: since this is inside the wall, they don't see it otherwise!
 			    map.name == "East Cave") {

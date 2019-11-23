@@ -646,5 +646,4 @@
 	<location_connects l1="spacer-valley-north" l2="location-east-cave"/>
 	<location_connects l1="spacer-valley-north" l2="spacer-valley-south"/>
 	<location_connects l1="spacer-valley-north" l2="spacer-gorge"/>
-
 </locationMap>

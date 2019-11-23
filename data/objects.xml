@@ -1234,7 +1234,7 @@
         </eventRule>
 	</ObjectClass>		
 
-	<ObjectClass class="shuttle-corpse" super="human" name="corpse">
+	<ObjectClass class="shuttle-corpse" super="corpse" name="corpse">
 		<attribute name="tallness" value="0"/>
 		<attribute name="takeable" value="false"/>
 		<animation name="idle-right" dx="2" dy="2" period="4" looping="false" file="background.png">874</animation>

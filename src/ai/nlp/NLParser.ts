@@ -26,8 +26,7 @@ class NLParser {
 			parser.rules.push(rule);
 		}
 
-		for(let sortName of ["nounPhrase","nounPhraseNoDeterminer","properNounCompound","performative","perf.request.action"]) {
-//		for(let sortName of ["nounPhrase","nounPhraseNoDeterminer","properNounCompound","performative"]) {
+		for(let sortName of ["nounPhrase","nounPhraseNoDeterminer","nounPhraseNoDeterminerNoProperNoun","properNounCompound","performative","perf.request.action"]) {
 			var compiled:CompiledNLPatternRules = new CompiledNLPatternRules("compiled-" + sortName, o, speakerVariable, listenerVariable);
 			compiled.populate(o.getSort(sortName), parser);
 
@@ -212,6 +211,29 @@ class NLParser {
 	}
 
 
+	chooseHighestPriorityParseWithListener(parses:NLParseRecord[], listener:string) : NLParseRecord
+	{
+		var bestParse:NLParseRecord = null;
+
+		for(let parse of parses) {
+			let result:Term = this.unifyListener(parse.result, listener);
+			if (result != null) {
+				let unifiedParse:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.ruleNames, parse.priorities);
+				unifiedParse.result = result;
+				if (bestParse == null) {
+					bestParse = unifiedParse;
+				} else {
+					if (unifiedParse.higherPriorityThan(bestParse) == 1) {
+						bestParse = unifiedParse;
+					}
+				}
+			}
+		}
+
+		return bestParse;
+	}
+
+
 	// If "parse" is a performative, unifies the first attribute (which should be the "LISTENER"), with listener
 	unifyListener(parse:Term, listener:string) : Term
 	{
@@ -224,23 +246,24 @@ class NLParser {
 			}
 
 			let bindings:Bindings = new Bindings();
-			if (parse.unify(pattern, true, bindings)) {
+			if (parse.unify(pattern, OCCURS_CHECK, bindings)) {
 				return parse.applyBindings(bindings);
 			} else {
-				console.error("NLParser.unifyListener: parse " + parse + " does not unify with pattern " + pattern);
-				return parse;
+				console.warn("NLParser.unifyListener: parse " + parse + " does not unify with pattern " + pattern);
+				return null;
 			}
 		} else if (parse.functor.name == "#list") {
 			let result:Term = null;
 			for(let perf of NLParser.elementsInList(parse, "#list")) {
 				if (!(perf instanceof TermTermAttribute)) return null;
 				let perf2:Term = this.unifyListener((<TermTermAttribute>perf).term, listener);
-				if (result == null) {
-					result = perf2;
-				} else {
-					result = new Term(this.o.getSort("#list"), [new TermTermAttribute(perf2), 
-												  			    new TermTermAttribute(result)]);
-
+				if (perf2 != null) {
+					if (result == null) {
+						result = perf2;
+					} else {
+						result = new Term(this.o.getSort("#list"), [new TermTermAttribute(perf2), 
+													  			    new TermTermAttribute(result)]);
+					}
 				}
 			}
 			return result;

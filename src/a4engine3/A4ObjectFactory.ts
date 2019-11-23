@@ -87,9 +87,11 @@ class A4ObjectFactory {
         // find base class, and additional definitions to add:
         let classes:Element[] = [];
         let baseClassName:string = null;
+        let dead:boolean = false;
 
         {
             let open:string[] = [xml.getAttribute("class")];
+            //let closed:string[] = [];
 
             while(open.length > 0) {
                 let current:string = open[0];
@@ -98,12 +100,18 @@ class A4ObjectFactory {
                 let loadContent:boolean = true;
                 let current2:string = current;
                 if (current.charAt(0) == '*') {
-                    loadContent = false;
+                    // loadContent = false;
                     current2 = current.substring(1);
+                    if (ontology.getSort(current2).is_a_string("dead")) dead = true;
+                    //closed.push(current2);
                     continue;
+                } else {
+                    if (ontology.getSort(current2).is_a_string("dead")) dead = true;
+                    //closed.push(current2);
                 }
                 let current_xml:Element = this.getObjectType(current2);
                 let found:number = baseClasses.indexOf(current2);
+                
 
                 if (current_xml == null && found >= 0) {
                     if (baseClassName == null) {
@@ -123,6 +131,7 @@ class A4ObjectFactory {
                     }
                 }
             }
+            //console.log("closed: " + closed + ", dead: " + dead);
         }
 
         if (baseClassName == null) {
@@ -151,12 +160,17 @@ class A4ObjectFactory {
             let s:Sort = ontology.getSort(classStr);
             o = new A4Vehicle(o_name,s);
         } else if (baseClassName == "character") {
-            if (isPlayer) {
+            if (dead) {
                 let s:Sort = ontology.getSort(classStr);
-                o = new A4PlayerCharacter(o_name,s);
+                o = new A4Character(o_name, s);
             } else {
-                let s:Sort = ontology.getSort(classStr);
-                o = new A4AICharacter(o_name, s);
+                if (isPlayer) {
+                    let s:Sort = ontology.getSort(classStr);
+                    o = new A4PlayerCharacter(o_name,s);
+                } else {
+                    let s:Sort = ontology.getSort(classStr);
+                    o = new A4AICharacter(o_name, s);
+                }
             }
         } else if (baseClassName == "obstacle") {
             let s:Sort = ontology.getSort(classStr);

@@ -1002,6 +1002,18 @@ class NLContext {
 						}
 
 						if (this_determiner || that_determiner) {
+							// remove both the speaker and listener:
+							let toDelete:NLContextEntity[] = [];
+							for(let e of entities_mpl[1]) {
+								if (e.objectID.value == this.speaker ||
+									e.objectID.value == this.ai.selfID) {
+									toDelete.push(e);
+								}
+							}
+							for(let e of toDelete) {
+								entities_mpl[1].splice(entities_mpl[1].indexOf(e), 1);
+							}
+							
 							// sort!
 							entities_mpl[1].sort((e1:NLContextEntity, e2:NLContextEntity) => 
 								{

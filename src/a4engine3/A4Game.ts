@@ -1812,35 +1812,44 @@ class A4Game {
 	// happening while we are still looping through lists of objects (concurrent modification)
 	// if "map" is 0, then the request is to remove the object from the maps (e.g., when an object is taken)
 	requestWarp(o:A4Object, map:A4Map, x:number, y:number)//, layer:number)
-    {
-        this.warpRequests.push(new WarpRequest(o,map,x,y));
-    }
+  {
+      this.warpRequests.push(new WarpRequest(o,map,x,y));
+  }
+
+
+  requestedWarp(o:A4Object)
+  {
+      for(let request of this.warpRequests) {
+          if (request.o == o) return true;
+      }
+      return false;
+  }
 
 
 	// waits until the end of a cycle, and then deletes o
 	requestDeletion(o:A4Object)
-    {
-        this.deletionRequests.push(o);
-    }
-  
-
-    setStoryStateVariable(variable:string, value:string)
-    {
-        this.storyState[variable] = value;
-        this.lastTimeStoryStateChanged = this.cycle;
-    }
+  {
+      this.deletionRequests.push(o);
+  }
 
 
-    getStoryStateVariable(variable:string) : string
-    {
-        return this.storyState[variable];
-    }
+  setStoryStateVariable(variable:string, value:string)
+  {
+      this.storyState[variable] = value;
+      this.lastTimeStoryStateChanged = this.cycle;
+  }
 
 
-    playSound(sound:string)
-    {
-        this.SFXM.play(sound);
-    }
+  getStoryStateVariable(variable:string) : string
+  {
+      return this.storyState[variable];
+  }
+
+
+  playSound(sound:string)
+  {
+      this.SFXM.play(sound);
+  }
 
 
 	getGraphicFile(file:string) : A4GraphicFile

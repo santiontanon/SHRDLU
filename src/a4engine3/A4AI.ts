@@ -97,6 +97,13 @@ class A4AI {
             // subject = this.character.vehicle;
         }
         if (subject == null) return;
+        if (subject.map != this.navigationBuffer_map ||
+            game.requestedWarp(this.character)) {
+            this.pathfinding_result_x = -1;
+            this.pathfinding_result_y = -1;
+            this.pathfinding_result_priority = 0;
+            return;
+        }
         let command:A4CharacterCommand = null;
         let highest_priority_target:number = -1;
         let highest_priority:number = 0;

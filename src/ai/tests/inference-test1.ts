@@ -193,7 +193,7 @@ for(let pair of term_unification_l) {
     console.log("Term 1: " + term1);
     console.log("Term 2: " + term2);
     var bindings:Bindings = new Bindings();
-    var result:boolean = term1.unify(term2, true, bindings);
+    var result:boolean = term1.unify(term2, OCCURS_CHECK, bindings);
     if (result) {
         console.log("They unify, bindings: " + bindings);
     } else {

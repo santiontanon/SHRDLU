@@ -32,7 +32,7 @@ class Sentence {
 			}
 		}
 		var bindings:Bindings = new Bindings();
-		if (t.unify(negatedTerm, true, bindings)) {
+		if (t.unify(negatedTerm, OCCURS_CHECK, bindings)) {
 			var t2:Term = positiveTerm.applyBindings(bindings);
 			return t2;
 		}

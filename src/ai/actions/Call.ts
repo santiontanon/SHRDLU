@@ -38,8 +38,8 @@ class Call_IntentionAction extends IntentionAction {
 				let pattern2:Term = Term.fromString("perf.q.predicate("+requester+", verb.know($PLAYER,#and(#query(Y), name($PLAYER,Y))))", ai.o);
 				for(let i:number = 0;i<context.expectingAnswerToQuestion_stack.length;i++) {
 					let q:NLContextPerformative = context.expectingAnswerToQuestion_stack[i];
-					if (q.performative.unify(pattern1, true, new Bindings()) ||
-						q.performative.unify(pattern2, true, new Bindings())) {
+					if (q.performative.unify(pattern1, OCCURS_CHECK, new Bindings()) ||
+						q.performative.unify(pattern2, OCCURS_CHECK, new Bindings())) {
 						// pop it from the stack:
 						context.expectingAnswerToQuestion_stack.splice(i,1);
 						context.expectingAnswerToQuestionTimeStamp_stack.splice(i,1);

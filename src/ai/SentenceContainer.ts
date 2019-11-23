@@ -237,7 +237,7 @@ class SentenceContainer {
 				if (se.sentence.terms.length == 1 &&
 					se.sentence.sign[0]) {
 					let bindings:Bindings = new Bindings();
-					if (t.unify(se.sentence.terms[0], true, bindings)) return se;
+					if (t.unify(se.sentence.terms[0], OCCURS_CHECK, bindings)) return se;
 				}
 			}
 		}
