@@ -1163,7 +1163,7 @@ class ShrdluCutScenes {
 		let images:[string,number,number][] = [
 			["data/cutscene-ending-A-1.png", 500, 2000],
 			// ... whole crew + robots after being awaken, maybe in the mess hall with qwerty and shrdlu
-			// ... Euriclea sabotagging the shuttle
+			["data/cutscene-ending-A-3.png", 5000, 7000],
 			// ... Sax putting you and Bruce into stasis
 			["data/cutscene-ending-A-1.png", 9000, 11000],
 			["data/cutscene-ending-A-5.png", 11200, 14000],
