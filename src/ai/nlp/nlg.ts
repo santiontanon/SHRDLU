@@ -434,7 +434,7 @@ class NLGenerator {
 				t2.attributes[0].sort.name == "any") {
 				// special case of an answer of the type "in the bedroom":
 
-				let relationStr:string = this.pos.getRelationString(t2.functor);
+				let relationStr:string = this.pos.getRelationString(t2.functor, true);
 				let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, true, 
 																							         ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
 																							         (<ConstantTermAttribute>(t2.attributes[0])).value:null), true);
@@ -641,7 +641,7 @@ class NLGenerator {
 				typeFunctor = t.attributes[1].sort;	// since this is of the form role(subject, role))
 			}
 			if (typeFunctor.is_a(this.nlg_cache_sort_unique_role)) determiner = "the";
-			// let relationStr:string = this.pos.getRelationString(typeFunctor);
+			// let relationStr:string = this.pos.getRelationString(typeFunctor, true);
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, negated_t);
 			let typeStr:string = this.pos.getTypeString(typeFunctor, subjectStr[3]);
@@ -655,7 +655,9 @@ class NLGenerator {
 
 
 		} else if (t.functor.is_a(this.nlg_cache_sort_propertywithvalue) && t.attributes.length == 2) {
-			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, false);
+			let useNameIfAvailable:boolean = true;
+			if (t.functor.is_a_string("name")) useNameIfAvailable = false;
+			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, useNameIfAvailable);
 			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.be"), 0, 2, 3);
 			let propertyStr:string = this.pos.getNounString(t.functor, 0, true);
 			let propertyStr2:string = null;
@@ -714,7 +716,15 @@ class NLGenerator {
 		} else if (t.functor.is_a(this.nlg_cache_sort_relation) &&
 				   !t.functor.is_a(this.nlg_cache_sort_verb)) {			
 			// console.log("termToEnglish_Inform: relation " + t.functor.name);
-			let subjectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
+			let subjectStr:[string, number, string, number];
+			if (t.functor.is_a(this.o.getSort("relation.howto"))/* ||
+				t.functor.is_a(this.o.getSort("relation.cause"))*/) {
+				// enable the use of variable names:
+				if (this.renderingSentenceVariables == null) this.renderingSentenceVariables = [];
+				subjectStr = this.termToEnglish_RelationOrVerbArgument(t.attributes[0], speakerID, true, context, true, null, true, true);
+			} else {
+				subjectStr = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
+			}
 			let time:Sort = this.nlg_cache_sort_present;
 			if (subjectStr != null) {
 				let relationsAggregateStr:string = "";
@@ -745,19 +755,25 @@ class NLGenerator {
 				   		!t2.functor.is_a(this.nlg_cache_sort_verb)) {
 
 						let typeFunctor:Sort = t2.functor;
-						let relationStr:string = this.pos.getRelationString(typeFunctor);
+						let relationStr:string;
+						if (t.functor.is_a(this.o.getSort("relation.howto"))) {
+							relationStr = "";
+						} else {
+							relationStr = this.pos.getRelationString(typeFunctor, true);
+						}
 						let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, false, 
 																									   	    ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
 																									        (<ConstantTermAttribute>(t2.attributes[0])).value:null), true);
 
 		//				console.log("termToEnglish_Inform: relationStr: " + relationStr);
 		//				console.log("termToEnglish_Inform: objectStr: " + objectStr);
+						if (objectStr == null) return null;
 						if (relationStr == null) {
 							let reverseSortName:string = this.pos.reverseRelations[t2.functor.name];
 							if (reverseSortName != null) {
 								// we cannot render the original relation, but we can render the opposite, so reverse subject and object:
 								let reverseSort:Sort = ai.o.getSort(reverseSortName);
-								relationStr = this.pos.getRelationString(reverseSort)
+								relationStr = this.pos.getRelationString(reverseSort, true)
 								let tmp2:[string, number, string, number] = subjectStr;
 								subjectStr = objectStr;
 								objectStr = tmp2;
@@ -778,6 +794,9 @@ class NLGenerator {
 				if (t.functor.is_a(this.o.getSort("relation.cause"))) {
 					// special case:
 					return subjectStr[0] + " " + relationsAggregateStr;
+				} else if (t.functor.is_a(this.o.getSort("relation.howto"))) {
+					// special case:
+					return "in order for " + subjectStr[0] + ", " + relationsAggregateStr;
 				} else {
 					let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, false);
 					if (verbStr != null && relationsAggregateStr != "") 
@@ -868,13 +887,13 @@ class NLGenerator {
 				(t2.attributes[0] instanceof TermTermAttribute) &&
 				(<TermTermAttribute>(t2.attributes[0])).term == t) {
 				// render the relation as a verb complement:
-				let relationStr:string = this.pos.getRelationString(t2.functor);
+				let relationStr:string = this.pos.getRelationString(t2.functor, true);
 				let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t2.attributes[1], speakerID, true, context, false, 
 																								 ((t.attributes[0] instanceof ConstantTermAttribute) ? 
 																						     	 (<ConstantTermAttribute>(t.attributes[0])).value:null), true);
 				if (relationStr == null &&
 					this.pos.reverseRelations[t2.functor.name] != null) {
-					relationStr = this.pos.getRelationString(ai.o.getSort(this.pos.reverseRelations[t2.functor.name]));
+					relationStr = this.pos.getRelationString(ai.o.getSort(this.pos.reverseRelations[t2.functor.name]), true);
 				}
 
 				if (relationStr == "because" && !this.argumentIsVerb(t2.attributes[1], context)) relationStr = "because of";
@@ -1103,7 +1122,7 @@ class NLGenerator {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[1], speakerID, true, context, true, null, false);
 			let verbStr:string = this.pos.getVerbString(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], 3);
-			let relationStr:string = this.pos.getRelationString(t.functor);
+			let relationStr:string = this.pos.getRelationString(t.functor, true);
 			if (verbStr != null && relationStr != null) {
 				return verbStr + " " + subjectStr[0] + " " + relationStr + " " + objectStr[0] + "?";
 			}
@@ -1175,7 +1194,7 @@ class NLGenerator {
 					(t2.attributes[0] instanceof TermTermAttribute) &&
 					(<TermTermAttribute>(t2.attributes[0])).term == t) {
 					// render the relation as a verb complement:
-					let relationStr:string = this.pos.getRelationString(t2.functor);
+					let relationStr:string = this.pos.getRelationString(t2.functor, true);
 					let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t2.attributes[1], speakerID, true, context, false, listenerID, true);
 
 					if (relationStr == "to" && objectStr[0].indexOf("to")==0) {
@@ -1375,7 +1394,7 @@ class NLGenerator {
 				(t2.attributes[0] instanceof TermTermAttribute) &&
 				(<TermTermAttribute>(t2.attributes[0])).term == t) {
 				// render the relation as a verb complement:
-				let relationStr:string = this.pos.getRelationString(t2.functor);
+				let relationStr:string = this.pos.getRelationString(t2.functor, true);
 				let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t2.attributes[1], speakerID, true, context, false, null, true);
 
 				verbComplements += " " + relationStr + " " + objectStr[0];
@@ -1477,7 +1496,7 @@ class NLGenerator {
 							let propertyStr:string = this.pos.getPropertyString(t2.functor);
 							preComplementsStr += propertyStr + " ";
 						} else if (t2.functor.is_a(this.nlg_cache_sort_relation)) {
-							let relationStr:string = this.pos.getRelationString(t2.functor);
+							let relationStr:string = this.pos.getRelationString(t2.functor, true);
 							let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, false, 
 																										         ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
 																										         (<ConstantTermAttribute>(t2.attributes[0])).value:null), true);
@@ -1513,6 +1532,9 @@ class NLGenerator {
 			let subjectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			let verbStr:string = this.verbStringWithTime(ai.o.getSort("verb.be"), subjectStr[3], subjectStr[1], time, negated_t);
 			let typeStr:string = this.pos.getTypeString(typeFunctor, subjectStr[3]);
+			if (typeStr == null) typeStr = this.pos.getNounString(typeFunctor, 0, false);	// without trying ancestors
+			if (typeStr == null) typeStr = this.pos.getPropertyString(typeFunctor);
+			if (typeStr == null) typeStr = this.pos.getNounString(typeFunctor, 0, true);		// we are despearte, try ancestors
 			if (verbStr != null && typeStr != null) {
 				if (determiner == "a") determiner = this.aVSanArticle(preComplementsStr + typeStr);
 				return subjectPreComplementsStr + subjectStr[0] + subjectPostComplementsStr + " " + verbStr + " " + determiner + " " + preComplementsStr + typeStr + complementsStr;
@@ -1893,7 +1915,7 @@ class NLGenerator {
 
 			let objectStr1:[string, number, string, number] = this.termToEnglish_VerbArgument(att1, speakerID, true, context, false, null, true);
 			let objectStr2:[string, number, string, number] = this.termToEnglish_VerbArgument(att2, speakerID, true, context, false, null, true);
-			let relationStr:string = this.pos.getRelationString((<TermTermAttribute>relation).term.functor);
+			let relationStr:string = this.pos.getRelationString((<TermTermAttribute>relation).term.functor, true);
 			if (objectStr1 == null) return null;
 			if (objectStr2 == null) return null;
 
@@ -2116,7 +2138,7 @@ class NLGenerator {
 					if (t0_entity_idx != -1) {
 						//t_entity = t_term.attributes[0];
 						otherEntity = <ConstantTermAttribute>(t_term.attributes[1]);
-						relationString = this.pos.getRelationString(t_term.functor)
+						relationString = this.pos.getRelationString(t_term.functor, true)
 						t_entity_idx = t0_entity_idx;
 					} else if (t1_entity_idx != -1) {
 						//t_entity = t_term.attributes[1];
@@ -2124,7 +2146,7 @@ class NLGenerator {
 						let reverseSortName:string = this.pos.reverseRelations[t_term.functor.name];
 						if (reverseSortName != null) {
 							let reverseSort:Sort = context.ai.o.getSort(reverseSortName);
-							relationString = this.pos.getRelationString(reverseSort)
+							relationString = this.pos.getRelationString(reverseSort, true)
 						} 
 						t_entity_idx = t1_entity_idx;
 					}
@@ -2370,7 +2392,7 @@ class NLGenerator {
 							if (pr.attributes[1] instanceof ConstantTermAttribute) {
 								otherEntityID = <ConstantTermAttribute>(pr.attributes[1]);
 							}
-							relationString = this.pos.getRelationString(pr.functor)
+							relationString = this.pos.getRelationString(pr.functor, true)
 						} else {
 							if (pr.attributes[0] instanceof ConstantTermAttribute) {
 								otherEntityID = <ConstantTermAttribute>(pr.attributes[0]);
@@ -2378,12 +2400,12 @@ class NLGenerator {
 							let reverseSortName:string = this.pos.reverseRelations[pr.functor.name];
 							if (reverseSortName != null) {
 								let reverseSort:Sort = ai.o.getSort(reverseSortName);
-								relationString = this.pos.getRelationString(reverseSort)
+								relationString = this.pos.getRelationString(reverseSort, true)
 							} 
 						}
 //						console.log("entityID: " + entityID);
 //						console.log("otherEntityID: " + otherEntityID);
-						if (otherEntityID != null) {
+						if (otherEntityID != null && relationString != null) {
 							let otherEntityString:string = this.termToEnglish_Entity(otherEntityID, speakerID, false, context, false, true)[0];
 							if (otherEntityString != null) {
 								let tmpStr:string = relationString + " " + otherEntityString;
@@ -2531,11 +2553,11 @@ class NLGenerator {
 					let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(att1, speakerID, true, context, false, null, true);
 					if (objectStr == null) return null;
 					if (objectStr[0] == "you") {
-						return ["what are you " + this.pos.getRelationString(constraint.functor), 2, undefined, 0];
+						return ["what are you " + this.pos.getRelationString(constraint.functor, true), 2, undefined, 0];
 					} else if (objectStr[0] == "me") {
-						return ["what am I " + this.pos.getRelationString(constraint.functor), 2, undefined, 0];
+						return ["what am I " + this.pos.getRelationString(constraint.functor, true), 2, undefined, 0];
 					} else {
-						return ["what is " + objectStr[0] + this.pos.getRelationString(constraint.functor), 2, undefined, 0];
+						return ["what is " + objectStr[0] + this.pos.getRelationString(constraint.functor, true), 2, undefined, 0];
 					}
 				} else {
 					console.error("termToEnglish_QueryInternal: could not render (variable not found in constraint) " + tl);
@@ -2734,7 +2756,7 @@ class NLGenerator {
 				(t2.attributes[0] instanceof TermTermAttribute) &&
 				(<TermTermAttribute>(t2.attributes[0])).term == t) {
 				// render the relation as a verb complement:
-				let relationStr:string = this.pos.getRelationString(t2.functor);
+				let relationStr:string = this.pos.getRelationString(t2.functor, true);
 				let objectStr:[string, number, string, number] = this.termToEnglish_VerbArgument(t2.attributes[1], speakerID, true, context, false, null, true);
 
 				verbComplements += " " + relationStr + " " + objectStr[0];
@@ -2805,6 +2827,7 @@ class NLGenerator {
 				   	t.functor.name == "verb.go" ||
 				   	t.functor.name == "verb.guide" ||
 				   	t.functor.name == "verb.take-to" ||
+					t.functor.name == "action.put-in" ||
 				   	t.functor.name == "verb.bring" ||
 				   	t.functor.name == "verb.find" ||
 				   	t.functor.name == "verb.help")) {
@@ -2840,17 +2863,21 @@ class NLGenerator {
 					if (obj1 == obj2) {
 						object2Str = this.termToEnglish_VerbArgument(t.attributes[2], speakerID, true, context, false, obj1, true);						
 					}
-					return [subjectStr[0] + verbStr + " " + object1Str[0] + " " + object2Str[0] + verbComplements, 0, undefined, 0];
+					return [subjectStr[0] + " " + verbStr + " " + object1Str[0] + " " + object2Str[0] + verbComplements, 0, undefined, 0];
 				} else if (t.functor.name == "verb.tell" ||
 				   	t.functor.name == "action.talk") { 
-					return [subjectStr[0] + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements, 0, undefined, 0];
+					return [subjectStr[0] + " " + verbStr + " " + object2Str[0] + " " + object1Str[0] + verbComplements, 0, undefined, 0];
 				} else if (t.functor.name == "verb.find") {
-					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " in " + object2Str[0], 0, undefined, 0];
+					return [subjectStr[0] + " " + verbStr + " " + object1Str[0] + verbComplements + " in " + object2Str[0], 0, undefined, 0];
 				} else if (t.functor.name == "verb.take-to"||
 				   		   t.functor.name == "verb.bring") {
 					// verbStr = this.verbStringWithTime(this.o.getSort("action.take"), subjectStr[3], subjectStr[1], time, negated_t);
 					verbStr = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
-					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0], 0, undefined, 0];
+					return [subjectStr[0] + " " + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0], 0, undefined, 0];
+				} else if (t.functor.name == "action.put-in") {
+					let ai:RuleBasedAI = context.ai;
+					verbStr = this.verbStringWithTime(ai.o.getSort("verb.put"), subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
+					return [subjectStr[0] + " " + verbStr + " " + object1Str[0] + verbComplements + " in " + object2Str[0], 0, undefined, 0];
 				} else {
 					return [subjectStr[0] + verbStr + " " + object1Str[0] + verbComplements + " to " + object2Str[0], 0, undefined, 0];
 				}

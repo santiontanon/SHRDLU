@@ -272,54 +272,43 @@ testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora statio
 testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:name(V3:'1'[#id], V4:'david'[symbol]), V5:#and(V6:name(V7:'qwerty'[#id], V8:'qwerty'[symbol]), V9:#and(V10:name(V11:'etaoin'[#id], V12:'etaoin'[symbol]), V13:'etcetera'[etcetera]))))", "etaoin", "your name is david, the robot's name is qwerty, my name is etaoin, ...");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:#not(V3:verb.remember(V4:'1'[#id], V5:'pronoun.anything'[pronoun.anything])), V6:#and(V7:in-stasis(V8:'1'[#id]), V9:time.past(V7))))", "etaoin", "you do not remember anything because of that you were in stasis");
-
 testNLG("perf.inform.answer(V0:'1'[#id], V1:verb.need(V2:'1'[#id], V3:permission-to(V2, verb.enter(V2, V4:'room1'[#id]))))", "etaoin", "you need to have permission to enter the kitchen");
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship malfunctioned");
-
 testNLG("perf.inform('1'[#id], verb.can('etaoin'[#id], verb.switch-on('etaoin'[#id], 'qwerty'[#id])))", "etaoin", "I can switch on qwerty");
-
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(powered.state('s1'[#id], 'powered.off'[powered.off]), verb.switch-off('etaoin'[#id], 's1'[#id])))", "etaoin", "my ship's state is off because I switch off my ship");
-
 testNLG("perf.inform(V0:'1'[#id], #and(V:verb.guide('etaoin'[#id], '1'[#id], 'room2'[#id]), time.future(V)))", "etaoin", "I will guide you to the bedroom");
 testNLG("perf.inform(V0:'1'[#id], #and(V:space.outside.of('1'[#id], 'room1'[#id]), time.future(V)))", "etaoin", "you will be outside of the kitchen");
-
 testNLG("perf.request.action(V0:'1'[#id], verb.bring('1'[#id], 'qwerty'[#id], 'room2'[#id]))", "etaoin", "please, bring qwerty to the bedroom");
 testNLG("perf.request.action(V0:'1'[#id], verb.help('1'[#id], 'etaoin'[#id]))", "etaoin", "please, help me");
-
 testNLG("perf.inform('1'[#id], #and(V:verb.damage('cave-in'[#id], 'etaoin'[#id]), time.past(V)))" ,"etaoin", "the cave in damaged me");
 testNLG("perf.q.action('1'[#id], verb.help('1'[#id], 'etaoin'[#id], verb.go-to('etaoin'[#id], 'room1'[#id])))", "etaoin", "would you please help me to go to the kitchen?");
 testNLG("perf.request.action(V0:'1'[#id], action.give('1'[#id], #and(V:[instruction], plural(V)), 'etaoin'[#id]))", "etaoin", "please, give instructions to me");
-
 testNLG("perf.inform.answer(V0:'1'[#id], V1:#and(V0_0:[body], V3:'k1'[#id]))", "etaoin", "a body and your key card");
-
 testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,'room1'[#id])))", "etaoin", "there is a corpse in the kitchen");
 testNLG("perf.inform('etaoin'[#id], #and(corpse(X), space.at(X,[space.here])))", "etaoin", "there is a corpse here");
 testNLG("perf.inform('etaoin'[#id], #and(X:verb.help('qwerty'[#id], 'etaoin'[#id], verb.see('etaoin'[#id])), time.now(X)))", "etaoin", "qwerty helps me to see now");
-
 testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.past(V2, time.date('0'[number], [time.day]))))", "etaoin", "my ship malfunctioned on Monday, January 1st, year 1000");
 testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:erased(V3:'s1'[#id]), V4:time.past(V2)))", "etaoin", "my ship was erased");
 testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:erased(V3:'s1'[#id]), V4:time.past(V2, time.date('0'[number], [time.day]))))", "etaoin", "my ship was erased on Monday, January 1st, year 1000");
 testNLG("perf.inform(V0:'1'[#id], V1:#and(V2:verb.malfunction(V3:'s1'[#id]), V4:time.subsequently(V2)))", "etaoin", "my ship will malfunction after that");
-
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], V:[distress-signal]))", "etaoin", "I detect a distress signal");
 testNLG("perf.inform('1'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))", "etaoin", "I detect distress signals");
-
 testNLG("perf.inform('1'[#id], verb.need('etaoin'[#id], #and(X:[permission-to], relation.origin(X, 'qwerty'[#id]))))", "etaoin", "I need permission of qwerty");
 testNLG("perf.inform('1'[#id], #and(X:permission-to(V3:'1'[#id], action.take('1'[#id], 'qwerty'[#id])), time.already(X)))", "etaoin", "you have permission to take qwerty already");
-
 testNLG("perf.inform('1'[#id], too-small('c2'[#id]))", "etaoin", "the crate of qwerty is too small");
 testNLG("perf.inform('1'[#id], #and(V:verb.salvage('etaoin'[#id], #and(some(X:'crate'[symbol], [plural]), noun(X, [plural]))), time.past(V)))", "etaoin", "I salvaged some crates");
-
 testNLG("perf.inform('1'[#id], verb.run-out-of('1'[#id], [oxygen]))", "etaoin", "you run out of oxygen");
-
 testNLG("perf.inform('1'[#id], game-protagonist('qwerty'[#id]))", "etaoin", "qwerty is a game protagonist");
-
 testNLG("perf.inform('1'[#id], #not(verb.can('etaoin'[#id], action.give('etaoin'[#id], 's1'[#id], '1'[#id]))))", "etaoin", "I can not give my ship to you");
 testNLG("perf.inform('1'[#id], #not(verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything]) ) )", "etaoin", "I do not ask anything");
 testNLG("perf.inform('1'[#id], #and(#not(X:verb.ask('etaoin'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X)))", "etaoin", "I did not ask anything");
-
 testNLG("perf.inform('1'[#id], #not(X:verb.know-how(E:'etaoin'[#id], action.print(E, [fork]))))", "etaoin", "I do not know how to print a fork");
-
 testNLG("perf.inform('1'[#id], #or(V0:#or(V1:#not(V2:goal(X_0:[any], Y_0:[any])), V5:#not(V6:goal(X_0, Z_0:[any]))), V8:=(Y_0, Z_0)))", "etaoin", "if X1's goal is X2 and X1's goal is X3 then X2 is equal to X3");
-
 testNLG("perf.inform('1'[#id], action.put-in('1'[#id], 'k1'[#id], [console]))", "etaoin", "you put your key card in a console");
+
+// v3.3
+testNLG("perf.inform('1'[#id], disembodied-ai('etaoin'[#id]))", "etaoin", "I am an artificial intelligence");
+testNLG("perf.inform('1'[#id], relation.howto(V0:action.print(X_0:[any]), V2:verb.ask(X_0, V3:'etaoin'[#id])))", "etaoin", "in order for X1 to print, X1 asks me");
+testNLG("perf.inform('1'[#id], relation.howto(V0:verb.read(X_0:[any], Y_0:[any]), V3:action.put-in(X_0, Y_0, V4:[console])))", "etaoin", "in order for X1 to read X2, X1 puts X2 in a console");
+
+

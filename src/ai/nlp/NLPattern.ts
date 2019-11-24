@@ -246,6 +246,10 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let nlprl:NLParseRecord[] = this.specialfunction_completeVerbArgumentsFromContext(parse, term2.attributes[0], term2.attributes[1], context, parser.o);
 			return nlprl;
+		} else if (this.term.functor.name == "#changeConstantSort") {
+			let term2:Term = this.term.applyBindings(parse.bindings);
+			let  nlprl:NLParseRecord[] = this.specialfunction_changeConstantSort(parse, term2.attributes, parser.o);
+			return nlprl;
 		} else if (this.term.functor.name == "#token" && this.term.attributes.length == 1) {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			if (term2.attributes[0] instanceof ConstantTermAttribute) {
@@ -658,8 +662,6 @@ class NLPattern {
 			}
 			*/
 			querySubjectID = new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"));
-		} else if (aDeterminer != null) {
-			queryFunctor = aDeterminer.attributes[0];
 		} else if (ownsRelation!=null) {
 			// case 3: if there is a "verb.own":
 			let ownerVariable:TermAttribute = ownsRelation.attributes[0];
@@ -686,6 +688,8 @@ class NLPattern {
 				return null;
 			}
 			querySubjectID = dereffedOwner[0];
+		} else if (aDeterminer != null) {
+			queryFunctor = aDeterminer.attributes[0];
 		} else if (definiteArticle != null ||
 				   demonstrativeDeterminer != null ||
 				   demonstrativePronoun != null) {
@@ -862,7 +866,7 @@ class NLPattern {
 				}
 			}
 		}
-		if (properNounTerm != null) {
+		if (properNounTerm != null && o.getSort("#id").is_a(queryVariable.sort)) {
 			queryTerms.push(new TermTermAttribute(new Term(o.getSort("name"),[queryVariable,properNounTerm.attributes[0]])));
 		}
 		// list of entities for which we have added a not(queryVariable == entity) term:
@@ -1050,6 +1054,19 @@ class NLPattern {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
 			return null;
 		}
+	}
+
+
+	specialfunction_changeConstantSort(parse:NLParseRecord, args:TermAttribute[], o:Ontology) : NLParseRecord[]
+	{
+		if (args.length != 3) return null;
+		if (!(args[0] instanceof ConstantTermAttribute)) return null;
+		let newValue:TermAttribute = new ConstantTermAttribute((<ConstantTermAttribute>args[0]).value, args[1].sort);
+
+		let bindings:Bindings = new Bindings();
+		if (!Term.unifyAttribute(args[2], newValue, true, bindings)) return null;
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+		return [parse2];
 	}
 
 

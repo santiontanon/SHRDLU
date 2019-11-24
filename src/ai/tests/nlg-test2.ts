@@ -1,16 +1,84 @@
 var o:Ontology = new Ontology();
 Sort.clear();
+
 var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
 xmlhttp.overrideMimeType("text/xml");
 xmlhttp.open("GET", "data/shrdluontology.xml", false);
 xmlhttp.send();
 o.loadSortsFromXML(xmlhttp.responseXML.documentElement);
 
+xmlhttp = new XMLHttpRequest();
+xmlhttp.overrideMimeType("text/xml");
+xmlhttp.open("GET", "data/nlpatternrules.xml", false); 
+xmlhttp.send();
+var g_parser:NLParser = NLParser.fromXML(xmlhttp.responseXML.documentElement, o);
 var g_posParser:POSParser = new POSParser(o);
 var g_nlg:NLGenerator = new NLGenerator(o, g_posParser);
 var g_ai:RuleBasedAI = new RuleBasedAI(o, null, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
 g_ai.selfID = "etaoin";
+var g_ai2:RuleBasedAI = new RuleBasedAI(o, null, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
+g_ai2.selfID = "david";
 var g_context:NLContext = g_ai.contextForSpeaker('david');
+var g_context2:NLContext = g_ai2.contextForSpeaker('etaoin');
+
+
+var successfulTests:number = 0;
+var totalTests:number = 0;
+
+
+function NLGTest2ParseUnifyingListener(sentence:string, s:Sort, context:NLContext, listener:string, expectedResult:Term) : boolean
+{
+	totalTests++;
+    var parses:NLParseRecord[] = g_parser.parse(sentence, s, context, g_ai);
+    if (parses == null || parses.length == 0) {
+        if (expectedResult != null) {
+            console.error("Sentence '" + sentence + "' could not be parsed with sort " + s.name);
+            /*
+            if (g_parser.error_semantic.length > 0) console.error("    semantic error!");
+            if (g_parser.error_deref.length > 0) console.error("    could not deref expressions: " + g_parser.error_deref);
+            if (g_parser.error_unrecognizedTokens.length > 0) console.error("    unrecognized tokens: " + g_parser.error_unrecognizedTokens);
+            if (g_parser.error_grammatical) console.error("    grammatical error!");
+            */
+            return false;
+        } else {
+            console.log(sentence + "\ncorrectly has 0 parses");
+            successfulTests++;
+            return true;
+        }
+    } else {
+	    var parse:NLParseRecord = g_parser.chooseHighestPriorityParse(parses);
+	    var found:boolean = false;
+	    let unifiedResut:Term = g_parser.unifyListener(parse.result, listener);
+	    if (unifiedResut != null) {
+	      parse.result = unifiedResut;
+	    } else {
+	      console.warn("Listener unification failed for: '"+sentence+"'");
+	    }
+	    if (parse.result.equalsConsideringAndList(expectedResult)) found = true;
+	    if (!found) {
+	        console.log(sentence + "\n" + parses.length + " parses:");
+	        for(let p of parses) {
+	          console.log("    parse ("+p.priorities+ " // " +p.ruleNames+ "):\n     " + p.result);
+	        }
+	        console.log("  highest priority parse: " + parse.result);
+	        console.log("  highest priority parse ruleNames: " + parse.ruleNames);
+	        console.log("  highest priority parse bindings: " + parse.bindings);
+	        console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
+	        return false;
+	    } else {
+	        if (context != null) {
+	            var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
+	            for(let parsePerformative of parsePerformatives) {
+	                context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, null, o, g_ai.time_in_seconds);
+	            }
+	            context.ai.time_in_seconds++;
+	        }
+	    }
+	    successfulTests++;
+	    return true;
+	}
+}
+
 
 o.newSortStrings("player-character", ["character"]);
 o.newSortStrings("qwerty", ["robot"]);
@@ -36,6 +104,12 @@ xmlhttp.overrideMimeType("text/xml");
 xmlhttp.open("GET", "data/general-kb.xml", false); 
 xmlhttp.send();
 g_ai.loadLongTermRulesFromXML(xmlhttp.responseXML.documentElement);
+
+xmlhttp = new XMLHttpRequest();
+xmlhttp.overrideMimeType("text/xml");
+xmlhttp.open("GET", "data/general-kb.xml", false); 
+xmlhttp.send();
+g_ai2.loadLongTermRulesFromXML(xmlhttp.responseXML.documentElement);
 
 // additional needed sentences:
 var additionalSentences:string[] = [
@@ -117,18 +191,45 @@ var additionalSentences:string[] = [
 for(let tmp of additionalSentences) {
 	let s:Sentence = Sentence.fromString(tmp, o);
 	g_ai.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
+	g_ai2.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
 }
 
+/*
+let performative:Term = Term.fromString("perf.inform('etaoin'[#id], height(V0:'qwerty'[#id], V1:'1.5'[meter]))", o);
+let out:string = g_nlg.termToEnglish(performative, "david", null, g_context2);
+console.log(out);
+*/
+
+/*
+NLGTest2ParseUnifyingListener("east cave is a cave", o.getSort("performative"),  g_context, 'etaoin', 
+		 						   new Term(o.getSort("perf.inform"),
+							  		   		[new ConstantTermAttribute("etaoin", o.getSort("#id"))]));
+*/
 
 for(let sentence of g_ai.longTermMemory.plainSentenceList) {
-	if (sentence.sentence.terms.length == 1) continue;
+	//if (sentence.sentence.terms.length == 1) continue;
 	let term:Term = Term.sentenceToTerm(sentence.sentence, o);
-	let performative:Term = new Term(o.getSort("perf.inform"), [new ConstantTermAttribute("david", o.getSort("#id")), 
+	let performative:Term = new Term(o.getSort("perf.inform"), [new ConstantTermAttribute("etaoin", o.getSort("#id")), 
 																new TermTermAttribute(term)]);
-	var str:string = g_nlg.termToEnglish(performative, "etaoin", new ConstantTermAttribute("david", o.getSort("#id")), g_context);
-	console.log("----");
+	// var str:string = g_nlg.termToEnglish(performative, "david", new ConstantTermAttribute("etaoin", o.getSort("#id")), g_context2);
+	var str:string = g_nlg.termToEnglish(performative, "david", null, g_context2);
+	console.log("---- " + successfulTests + "/" + totalTests + " ----");
 	console.log("term: " + term.toString());
 	console.log("str: " + str);
-	if (str == null) console.error("Could not render: " + term);
+	if (str == null) {
+		console.error("Could not render: " + term);
+		break;
+	} else if (str.indexOf("null") != -1 || str.indexOf("undefined") != -1) {
+		console.error("Could not render: " + term);
+		break;
+	} else {
+		// Now test if we can parse it:
+		NLGTest2ParseUnifyingListener(str, o.getSort("performative"),  g_context, 'etaoin', 
+				 						   new Term(o.getSort("perf.inform"),
+									  		   		[new ConstantTermAttribute("etaoin", o.getSort("#id")),
+									  		   		 new TermTermAttribute(term)]));
+	}
 }
 
+
+console.log("results: " + successfulTests + "/" + totalTests + "/" + g_ai.longTermMemory.plainSentenceList.length);

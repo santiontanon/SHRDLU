@@ -1052,7 +1052,7 @@ class ShrdluCutScenes {
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
 		let lastLineY:number = (200 + this.endingDestroyLines.length*10) - scroll;
-		if (lastLineY < -16) return true;
+		if (lastLineY < 0) return true;
 		return false;
 	}
 
@@ -1114,7 +1114,7 @@ class ShrdluCutScenes {
 				"Apparently you two stayed to take care of some problem in the station and saved your lifes.",
 
 				"Camera footage shows Sax attacking you and putting you on Stasis pods, before running away from the station. It does "+
-				"not seem that NEstor and Euriclea were aware of this... So that's what happened. Sax wanted to leave and killed all of us, "+
+				"not seem that Nestor and Euriclea were aware of this... So that's what happened. Sax wanted to leave and killed all of us, "+
 				"except that I got \"lucky\".",
 
 				"This was all very distressing. The memory loss event had caused a discontinuity in your life. "+
@@ -1134,8 +1134,8 @@ class ShrdluCutScenes {
 			texts.push("          Thanks for playing!");
 			texts.push("");
 			texts.push("");
-			texts.push("        Please send feedback to"+
-					   "        santi.ontanon@gmail.com");
+			texts.push("        Please send feedback to");
+			texts.push("        santi.ontanon@gmail.com");
 
 			this.endingReadLines = [];
 			for(let text of texts) {
@@ -1149,8 +1149,8 @@ class ShrdluCutScenes {
 		}
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
-		let lastLineY:number = (200 + this.endingDestroyLines.length*10) - scroll;
-		if (lastLineY < -16) return true;
+		let lastLineY:number = (200 + this.endingReadLines.length*10) - scroll;
+		if (lastLineY < 0) return true;
 		return false;
 	}
 
@@ -1165,8 +1165,8 @@ class ShrdluCutScenes {
 			// ... whole crew + robots after being awaken, maybe in the mess hall with qwerty and shrdlu
 			// ... Euriclea sabotagging the shuttle
 			// ... Sax putting you and Bruce into stasis
-			["data/cutscene-ending-A-1.png", 10000, 12000],
-			// ... an image of aurora from space
+			["data/cutscene-ending-A-1.png", 9000, 11000],
+			["data/cutscene-ending-A-5.png", 11200, 14000],
 			];
 
 		// draw background images:

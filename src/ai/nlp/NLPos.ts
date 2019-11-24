@@ -251,6 +251,8 @@ class POSParser {
       "key card",
       "access key",
       "aurora station",
+      "east cave",
+      "west cave",
       "comm tower",
       "comm towers",
       "communication tower",
@@ -1355,7 +1357,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("rover driver", "rover-driver", o, multitokens_raw);
     this.addStandardNounPOS("sausage", "sausage", o, multitokens_raw);
     this.addStandardNounPOS("scifi writer", "scifi-writer", o, multitokens_raw);
-    this.addStandardNounPOS("scientist", "scifi-writer", o, multitokens_raw);
     this.addStandardNounPOS("science fiction writer", "scifi-writer", o, multitokens_raw);
     this.addStandardNounPOS("scientist", "scientist", o, multitokens_raw);
     this.addStandardNounPOS("screen", "screen", o, multitokens_raw);
@@ -2126,7 +2127,16 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
   addMultiToken(mt:string)
   {
-    var tokens:string[] = mt.split(" ");
+    var tokens_tmp:string[] = mt.split(" ");
+    var tokens:string[] = [];
+    for(let token of tokens_tmp) {
+      if (token[token.length-1] == ".") {
+        tokens.push(token.substring(0,token.length-1))
+        tokens.push(".")
+      } else {
+        tokens.push(token)
+      }
+    }
     if (tokens.length == 1) return;  // not a multitoken!
     var key:string = tokens[0];
     var value:string[] = tokens.slice(1);
@@ -2152,6 +2162,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
       var found:boolean = false;
       var longestMultiToken:number = 0;
       var bestTokenization:TokenizationElement = null;
+      // console.log(options);
       if (options!=null) {
         for(let option of options) {
           found = true;
@@ -2163,7 +2174,13 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
           }
           if (found) {
             var newToken:string = tokens[i];
-            for(let t of option) newToken += " " + t;
+            for(let t of option) {
+              if (t == ".") {
+                newToken += t;
+              } else {
+                newToken += " " + t;
+              }
+            }
             if (preferLongerMultiTokens) {
               if (option.length > longestMultiToken) {
                 longestMultiToken = option.length;
@@ -2610,9 +2627,14 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   }
 
 
-  getRelationString(s:Sort) : string
+  getRelationString(s:Sort, consierRelationVerbs:boolean) : string
   {
     var tmp:string = this.relationSortToEnglish[s.name];
+    if (tmp == null && consierRelationVerbs) {
+      if (s.is_a_string("relation-verb")) {
+        return "that " + this.getVerbString(s, 0, 2, 3);
+      }
+    }
     return tmp;
   }
 

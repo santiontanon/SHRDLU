@@ -16,7 +16,7 @@
 	<sentence provenance="background" sentence="name('asimov'[#id],'isaac asimov'[symbol])"/>
 	<sentence provenance="background" sentence="name('asimov'[#id],'asimov'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('asimov'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('asimov'[#id],'scifi-writer'[scifi-writer])"/>
+	<sentence provenance="background" sentence="profession('asimov'[#id],'scifi-writer'[scifi-writer])"/>
 	<sentence provenance="background" sentence="dead('asimov'[#id])"/>
 
 	<sentence provenance="background" sentence="man('clarke'[#id])"/>
@@ -24,21 +24,21 @@
 	<sentence provenance="background" sentence="name('clarke'[#id],'arthur clarke'[symbol])"/>
 	<sentence provenance="background" sentence="name('clarke'[#id],'clarke'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('clarke'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('clarke'[#id],'scifi-writer'[scifi-writer])"/>
+	<sentence provenance="background" sentence="profession('clarke'[#id],'scifi-writer'[scifi-writer])"/>
 	<sentence provenance="background" sentence="dead('clarke'[#id])"/>
 
 	<sentence provenance="background" sentence="man('sagan'[#id])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'carl sagan'[symbol])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'sagan'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('sagan'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('sagan'[#id],'astronomer'[astronomer])"/>
+	<sentence provenance="background" sentence="profession('sagan'[#id],'astronomer'[astronomer])"/>
 	<sentence provenance="background" sentence="dead('sagan'[#id])"/>
 
 	<sentence provenance="background" sentence="man('einstein'[#id])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'albert einstein'[symbol])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'einstein'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('einstein'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('einstein'[#id],'physicist'[physicist])"/>
+	<sentence provenance="background" sentence="profession('einstein'[#id],'physicist'[physicist])"/>
 	<sentence provenance="background" sentence="dead('einstein'[#id])"/>
 
 	<sentence provenance="background" sentence="man('newton'[#id])"/>
@@ -46,37 +46,40 @@
 	<sentence provenance="background" sentence="name('newton'[#id],'sir isaac newton'[symbol])"/>
 	<sentence provenance="background" sentence="name('newton'[#id],'newton'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('newton'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('newton'[#id],'scientist'[scientist])"/>
+	<sentence provenance="background" sentence="profession('newton'[#id],'scientist'[scientist])"/>
 	<sentence provenance="background" sentence="dead('newton'[#id])"/>
 
 	<sentence provenance="background" sentence="man('babbage'[#id])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'charles babbage'[symbol])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'babbage'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('babbage'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('babbage'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="profession('babbage'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('babbage'[#id])"/>
 
 	<sentence provenance="background" sentence="woman('lovelace'[#id])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'ada lovelace'[symbol])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'lovelace'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('lovelace'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('lovelace'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="profession('lovelace'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('lovelace'[#id])"/>
 
 	<sentence provenance="background" sentence="man('turing'[#id])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'alan turing'[symbol])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'turing'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('turing'[#id],'earth'[#id])"/>
-	<sentence provenance="background" sentence="role('turing'[#id],'mathematician'[mathematician])"/>
+	<sentence provenance="background" sentence="profession('turing'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('turing'[#id])"/>
 
 	<!-- general about games and characters -->
-	<sentence provenance="background" sentence="game-protagonist('popolon'[#id])"/>
-	<sentence provenance="background" sentence="game-protagonist('aphrodite'[#id])"/>
+	<sentence provenance="background" sentence="character('popolon'[#id])"/>
 	<sentence provenance="background" sentence="name('popolon'[#id],'popolon'[symbol])"/>
+	<sentence provenance="background" sentence="role('popolon'[#id], 'game-protagonist'[game-protagonist])"/>
+	<sentence provenance="background" sentence="character('aphrodite'[#id])"/>
 	<sentence provenance="background" sentence="name('aphrodite'[#id],'aphrodite'[symbol])"/>
-	<sentence provenance="background" sentence="game-protagonist('guybrush'[#id])"/>
+	<sentence provenance="background" sentence="role('aphrodite'[#id], 'game-protagonist'[game-protagonist])"/>
+	<sentence provenance="background" sentence="character('guybrush'[#id])"/>
 	<sentence provenance="background" sentence="name('guybrush'[#id],'guybrush threepwood'[symbol])"/>
+	<sentence provenance="background" sentence="role('guybrush'[#id], 'game-protagonist'[game-protagonist])"/>
 
 	<!-- general knowledge about locations -->
 	<sentence provenance="background" sentence="universe('universe'[#id])"/>
@@ -148,7 +151,7 @@
 	<sentence provenance="background" sentence="name('etaoin'[#id],'ai'[symbol])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'station ai'[symbol])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'artificial intelligence'[symbol])"/>
-	<sentence provenance="background" sentence="role('etaoin'[#id],'location-aurora-station'[#id],'supervisor'[supervisor])"/>
+	<sentence provenance="background" sentence="profession('etaoin'[#id],'location-aurora-station'[#id],'supervisor'[supervisor])"/>
 	<sentence provenance="background" sentence="space.at('etaoin'[#id],'location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="memory-bank('etaoin-memory'[#id])"/>
 	<sentence provenance="background" sentence="verb.own('etaoin'[#id],'etaoin-memory'[#id])"/>
@@ -162,7 +165,7 @@
 	<sentence provenance="background" sentence="qwerty('qwerty'[#id])"/>
 	<sentence provenance="background" sentence="body('qwerty-body'[#id])"/>
 	<sentence provenance="background" sentence="name('qwerty'[#id],'qwerty'[symbol])"/>
-	<sentence provenance="background" sentence="role('qwerty'[#id],'location-aurora-station'[#id],'medic'[medic])"/>
+	<sentence provenance="background" sentence="profession('qwerty'[#id],'location-aurora-station'[#id],'medic'[medic])"/>
 	<sentence provenance="background" sentence="memory-bank('qwerty-memory'[#id])"/>
 	<sentence provenance="background" sentence="verb.own('qwerty'[#id],'qwerty-memory'[#id])"/>
 	<sentence provenance="background" sentence="perception-system('qwerty-perception'[#id])"/>
@@ -176,7 +179,7 @@
 	<sentence provenance="background" sentence="robot('shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="body('shrdlu-body'[#id])"/>
 	<sentence provenance="background" sentence="name('shrdlu'[#id],'shrdlu'[symbol])"/>
-	<sentence provenance="background" sentence="role('shrdlu'[#id],'location-aurora-station'[#id],'maintenance-robot'[maintenance-robot])"/>
+	<sentence provenance="background" sentence="profession('shrdlu'[#id],'location-aurora-station'[#id],'maintenance-robot'[maintenance-robot])"/>
 	<sentence provenance="background" sentence="memory-bank('shrdlu-memory'[#id])"/>
 	<sentence provenance="background" sentence="verb.own('shrdlu'[#id],'shrdlu-memory'[#id])"/>
 	<sentence provenance="background" sentence="perception-system('shrdlu-perception'[#id])"/>

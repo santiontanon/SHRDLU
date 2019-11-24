@@ -326,7 +326,7 @@ NLParseTest("I am not a man", o.getSort("performative"), context, "perf.inform([
 NLParseTest("I am at the kitchen", o.getSort("performative"), context, "perf.inform([any], space.at('1'[#id], 'room1'[#id]))");
 NLParseTest("etaoin is not in the kitchen", o.getSort("performative"), context, "perf.inform([any], #not(space.at('etaoin'[#id], 'room1'[#id])))");
 NLParseTest("the keys are white", o.getSort("performative"), context, "#list(perf.inform(L:[any], color('6'[#id],W:'white'[white])), perf.inform(L, color('4'[#id],W)))");
-NLParseTestUnifyingListener("I am a medic in aurora station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], role('1'[#id], 'location-aurora-station'[#id], 'medic'[medic]))");
+NLParseTestUnifyingListener("I am a medic in aurora station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('1'[#id], 'location-aurora-station'[#id], 'medic'[medic]))");
 
 // tests with hypothetical dereference:
 NLParseTest("all keys are white", o.getSort("performative"), context, "perf.inform([any], V1:#or(#not(key(X:[#id])),color(X,'white'[white])))");
@@ -1097,8 +1097,8 @@ NLParseTestUnifyingListener("locate the other person?", o.getSort("performative"
 NLParseTestUnifyingListener("tell the crate to go in ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
 NLParseTestUnifyingListener("tell the crate to follow me,etaoin", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.follow(TARGET, '1'[#id]))))"); 
 NLParseTestUnifyingListener("who else is in the station too", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
-NLParseTestUnifyingListener("who else is in the station as well", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
-NLParseTestUnifyingListener("am i a video game protagonist?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], game-protagonist('1'[#id]))"); 
+NLParseTestUnifyingListener("who else is in the station as well", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))")
+NLParseTestUnifyingListener("am i a video game protagonist?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], role('1'[#id], 'game-protagonist'[game-protagonist]))"); 
 NLParseTestUnifyingListener("is this a game?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], game('4'[#id]))");
 NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza])), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), verb.like('1'[#id], X))))");
 NLParseTestUnifyingListener("i do not like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], #not(verb.like('1'[#id], 'pizza':[pizza]))), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), #not(verb.like('1'[#id], X)))))");
@@ -1177,15 +1177,25 @@ NLParseTestUnifyingListener("what is needed to print a fork?", o.getSort("perfor
 NLParseTestUnifyingListener("what materials are needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for(X, V, action.print(X, [fork])))");
 NLParseTestUnifyingListener("print some pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], [pliers]))"); 
 
-
 // For version 3.3:
 NLParseTestUnifyingListener("fix this", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
 NLParseTestUnifyingListener("can you fix this?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
-
 NLParseTestUnifyingListener("fix the ship etaoin", o.getSort("performative"), context, 'etaoin', "perf.request.action('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("can you fix the ship, etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.action('etaoin'[#id], verb.repair(P:'etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("fix this etaoin", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
 NLParseTestUnifyingListener("can you fix this etaoin?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
+NLParseTestUnifyingListener("your name is etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('etaoin'[#id],'etaoin'[symbol]))");
+NLParseTestUnifyingListener("etaoin's name is etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('etaoin'[#id],'etaoin'[symbol]))");
+NLParseTestUnifyingListener("the ai's name is etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('etaoin'[#id],'etaoin'[symbol]))");
+NLParseTestUnifyingListener("etaoin is a medic", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('etaoin'[#id],'medic'[medic]))");
+NLParseTestUnifyingListener("etaoin is a medic in aurora station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('etaoin'[#id], 'location-aurora-station'[#id], 'medic'[medic]))");
+NLParseTestUnifyingListener("who is a game protagonist?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), role(X, 'game-protagonist'[game-protagonist])))");  
+NLParseTest("arthur c. clarke was a man", o.getSort("performative"), context, "#list(perf.inform(L:[any], name(V1:'H-1-8'[#id],'arthur c. clarke'[symbol])), perf.inform(L, man(V1)))");
+NLParseTestUnifyingListener("you are the supervisor in aurora station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('etaoin'[#id], 'location-aurora-station'[#id], 'supervisor'[supervisor]))"); 
+NLParseTestUnifyingListener("you are the supervisor in the station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('etaoin'[#id], 'location-aurora-station'[#id], 'supervisor'[supervisor]))"); 
+NLParseTestUnifyingListener("etaoin's weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
+NLParseTestUnifyingListener("the weight of etaoin is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
+NLParseTestUnifyingListener("your weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
