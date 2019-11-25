@@ -1123,7 +1123,7 @@ class ShrdluCutScenes {
 				"was no more... You could pretend to be him, but there was really no continuity in your conscious experience "+
 				"to support it...",
 
-				"You were not at ease with taht question in your head. You had to get out of Aurora. There was still a chance to "+
+				"You were not at ease with that question in your head. You had to get out of Aurora. There was still a chance to "+
 				"get reunited with the rest of humankind. Maybe human contact would help you. It had to be done! For sure SHRDLU "+
 				"was capable of manufacturing a transport ship to fly away! All hope was not lost! The Tardis 8 had a record of "+
 				"all the other planets humanity had tried to colonize. A new adventure lays ahead!"
@@ -1163,10 +1163,10 @@ class ShrdluCutScenes {
 		let images:[string,number,number][] = [
 			["data/cutscene-ending-A-1.png", 500, 2000],
 			// ... whole crew + robots after being awaken, maybe in the mess hall with qwerty and shrdlu
-			["data/cutscene-ending-A-3.png", 5000, 7000],
-			// ... Sax putting you and Bruce into stasis
-			["data/cutscene-ending-A-1.png", 9000, 11000],
-			["data/cutscene-ending-A-5.png", 11200, 14000],
+			["data/cutscene-ending-A-3.png", 4000, 5600],
+			["data/cutscene-ending-A-4.png", 5800, 7300],
+			["data/cutscene-ending-A-1.png", 7500, 8600],
+			["data/cutscene-ending-A-5.png", 8800, 14000],
 			];
 
 		// draw background images:
