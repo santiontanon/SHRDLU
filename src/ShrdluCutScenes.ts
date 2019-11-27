@@ -1052,7 +1052,10 @@ class ShrdluCutScenes {
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
 		let lastLineY:number = (200 + this.endingDestroyLines.length*10) - scroll;
-		if (lastLineY < 0) return true;
+		if (lastLineY < 0) {
+			this.game.setGameComplete(true, null);
+			return true;
+		}
 		return false;
 	}
 
@@ -1150,7 +1153,10 @@ class ShrdluCutScenes {
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
 		let lastLineY:number = (200 + this.endingReadLines.length*10) - scroll;
-		if (lastLineY < 0) return true;
+		if (lastLineY < 0) {
+			this.game.setGameComplete(true, null);
+			return true;
+		}
 		return false;
 	}
 
@@ -1162,7 +1168,7 @@ class ShrdluCutScenes {
 
 		let images:[string,number,number][] = [
 			["data/cutscene-ending-A-1.png", 500, 2000],
-			// ... whole crew + robots after being awaken, maybe in the mess hall with qwerty and shrdlu
+			["data/cutscene-ending-A-2.png", 2200, 3800],
 			["data/cutscene-ending-A-3.png", 4000, 5600],
 			["data/cutscene-ending-A-4.png", 5800, 7300],
 			["data/cutscene-ending-A-1.png", 7500, 8600],
