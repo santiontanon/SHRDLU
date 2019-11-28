@@ -836,6 +836,7 @@
     <sort name="rover" super="land-vehicle"/>
     <sort name="shuttle" super="flying-vehicle"/>
     <sort name="spaceship" super="ship"/>
+    <sort name="tardis" super="spaceship"/>
     
     <sort name="three-laws-of-robotics" super="abstract-entity"/>
 

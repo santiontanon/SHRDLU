@@ -281,6 +281,8 @@ class EtaoinAI extends A4RuleBasedAI {
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 			term = Term.fromString("verb.can('david'[#id], action.print('david'[#id], '"+item+"'["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+			term = Term.fromString("verb.can('etaoin'[#id], action.print('etaoin'[#id], '"+item+"'["+item+"]))", o);
+			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 
 			for(let material of materials) {
 				term = Term.fromString("verb.need-for(X:[#id], ["+material+"], action.print(X, ["+item+"]))", o);

@@ -37,7 +37,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;
-		}			
+		}
 
 		if (intention.attributes.length==0 ||
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {
@@ -64,18 +64,35 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			return true;
 		}
 
+		// Check if the robot can see it:
+		if (!ai.visionActive) {
+            var x1 = this.targetObject.x + this.targetObject.getPixelWidth() / 2;
+            var y1 = this.targetObject.y + this.targetObject.tallness + (this.targetObject.getPixelHeight() - this.targetObject.tallness) / 2;
+            var x2 = ai.robot.x + ai.robot.getPixelWidth() / 2;
+            var y2 = ai.robot.y + ai.robot.tallness + (ai.robot.getPixelHeight() - ai.robot.tallness) / 2;
+            let d:number = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			if (d>28) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.request.action("+requester+", verb.take-to("+requester+", '"+ai.selfID+"'[#id], '"+this.targetObject.ID+"'[#id])))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				return true;
+			}
+		}
+
 		// Check if the robot can go:
 		let destinationMap:A4Map = this.targetObject.map;
 		let destinationLocation:AILocation = ai.game.getAILocation(this.targetObject);
 		let destinationLocationID:string = null;
 		if (destinationLocation != null) destinationLocationID = destinationLocation.id;
-		/*
-		if (this.targetObject instanceof A4Vehicle) {
-			// assume we are going to go far:
+		
+		if (ai.robot.map.name == "Aurora Station" &&
+			(this.targetObject instanceof A4Vehicle)) {
+			// assume we are going to go out:
 			destinationMap = ai.game.getMap("Spacer Valley South");
 			destinationLocationID = "spacer-valley-south";
 		}
-		*/
+		
 		let cannotGoCause:Term = ai.canGoTo(destinationMap, destinationLocationID, requester);
 		if (cannotGoCause != null) {
 			if (requester != null) {

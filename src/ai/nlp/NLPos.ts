@@ -269,30 +269,41 @@ class POSParser {
       "spacer gorge",
       "trantor crater",
       "maintenance key",
+      "the maintenance key",
       "maintenance room key",
+      "the maintenance room key",
       "garage key",
+      "the garage key",
       "bedroom key",
+      "the bedroom key",
       "lab key",
+      "the lab key",
       "laboratory key",
+      "the laboratory key",
       "command key",
+      "the command key",
       "command center key",
+      "the command center key",
       "master key",
+      "the master key",
       "master keys",
+      "the master keys",
       "maintenance room",
-      "laundry room",
+      "maintenance rooms",
       "storage room",
+      "the storage room",
       "storage rooms",
-      "mess hall",
+      "the storage rooms",
       "space suit",
       "space suits",
       "stasis key",
+      "the stasis key",
       "stasis pod",
       "stasis pods",
       "stasis room",
       "stasis chamber",
       "stasis pod room",
-      "stasis pod room",
-      "command room",
+      "stasis pod chamber",
       "bedroom 1",
       "bedroom 2",
       "bedroom 3",
@@ -318,7 +329,9 @@ class POSParser {
       "room 11",
       "room 12",      
       "main bathroom",
+      "the main bathroom",
       "infirmary bathroom",
+      "the infirmary bathroom",
       "water bottle",
       "milk bottle",
       "jump suit",
@@ -332,7 +345,9 @@ class POSParser {
       "rover batteries",
       "user name",
       "stasis room door",
+      "the stasis room door",
       "stasis door",
+      "the stasis door",
       //"door to the stasis room",
       "door number 1",
       "door 1",
@@ -359,14 +374,23 @@ class POSParser {
       "door number 12",
       "door 12",
       "lab door",
+      "the lab door",
       "laboratory door",
+      "the laboratory door",
       "door to the maintenance room",
+      "the door to the maintenance room",
       "maintenance door",
+      "the maintenance door",
       "garage door",
+      "the garage door",
       "north garage door",
+      "the north garage door",
       "south garage door",
+      "the south garage door",
       "command center door",
+      "the command center door",
       "command door",
+      "the command door",
       "3d printer",
       "metal 3d printer",
       "plastic 3d printer",
@@ -410,7 +434,9 @@ class POSParser {
       "computer engineers",
 
       "tardis bridge",
+      "the tardis bridge",
       "tardis 8 bridge",
+      "the tardis 8 bridge",
 
       // adjectives:
       "in stasis",
@@ -1035,6 +1061,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("way", "facing-direction", o, multitokens_raw);
     this.addStandardNounPOS("way", "cardinal-direction", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("backwards", "backward", Term.fromString("noun('backward'[backward], [singular])", o), 1.0));
+    this.addStandardNounPOS("stasis chamber", "stasis.room", o, multitokens_raw);
+    this.addStandardNounPOS("stasis pod room", "stasis.room", o, multitokens_raw);
+    this.addStandardNounPOS("stasis pod chamber", "stasis.room", o, multitokens_raw);
+    this.addStandardNounPOS("command center", "command.room", o, multitokens_raw);    
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);
@@ -1102,6 +1132,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("colonist", "colonist", o, multitokens_raw);
     this.addStandardNounPOS("color", "color", o, multitokens_raw);
     this.addStandardNounPOS("collision", "collision", o, multitokens_raw);    
+    this.addStandardNounPOS("command room", "command.room", o, multitokens_raw);    
     this.addStandardNounPOS("communication", "communication", o, multitokens_raw);
     this.addStandardNounPOS("comm tower", "communication.tower", o, multitokens_raw);
     this.addStandardNounPOS("communication tower", "communication.tower", o, multitokens_raw);
@@ -1112,6 +1143,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("computer table", "computer-table", o, multitokens_raw);
     this.addStandardNounPOS("computer tower", "computer-tower", o, multitokens_raw);
     this.addStandardNounPOS("console", "console", o, multitokens_raw);
+    this.addStandardNounPOS("container", "container", o, multitokens_raw);
     this.addStandardNounPOS("coordinate", "space.position", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("coordination", "coordination", Term.fromString("noun('coordination'[coordination], [singular])", o), 1.0));
     this.addUncountableNounPOS("copper", "copper", o);
@@ -1244,6 +1276,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("maintenance guy", "maintenance-robot", o, multitokens_raw);
     this.addStandardNounPOS("maintenance person", "maintenance-robot", o, multitokens_raw);
     this.addStandardNounPOS("maintenance robot", "maintenance-robot", o, multitokens_raw);
+    this.addStandardNounPOS("maintenance room", "maintenance.room", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("man", "man", Term.fromString("noun('man'[man], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("men", "man", Term.fromString("noun('man'[man], [plural])", o), 1.0));
     this.addStandardNounPOS("map", "map", o, multitokens_raw);
@@ -1394,6 +1427,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("start", "space.start", o, multitokens_raw);
     this.addStandardNounPOS("start", "time.start", o, multitokens_raw);
     this.addStandardNounPOS("stasis pod", "stasis-pod", o, multitokens_raw);
+    this.addStandardNounPOS("stasis room", "stasis.room", o, multitokens_raw);    
     this.addStandardNounPOS("state", "state", o, multitokens_raw);
     this.addStandardNounPOS("state", "powered.state", o, multitokens_raw);
     this.addStandardNounPOS("station", "station", o, multitokens_raw);
@@ -1405,6 +1439,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("system", "system", o, multitokens_raw);
     this.addStandardNounPOS("t-14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
     this.addStandardNounPOS("table", "table", o, multitokens_raw);
+    this.addStandardNounPOS("tardis", "tardis", o, multitokens_raw);
     this.addStandardNounPOS("tear", "tear", o, multitokens_raw);
     this.addStandardNounPOS("temperature", "temperature", o, multitokens_raw);
     this.addStandardNounPOS("test", "test", o, multitokens_raw);

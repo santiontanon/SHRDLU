@@ -191,6 +191,8 @@ var ce3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin'
 var ce4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('4', o.getSort("#id")),
                                               null, 3, 
                                               [Term.fromString("white-key('4'[#id])",o),
+                                               Term.fromString("name('4'[#id], 'garage key'[symbol])",o),
+                                               Term.fromString("name('4'[#id], 'the garage key'[symbol])",o),
                                                Term.fromString("color('4'[#id],'white'[white])",o),
                                                Term.fromString("relation.belongs('4'[#id],'1'[#id])",o)]);
 var ce5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('5', o.getSort("#id")),
@@ -1196,6 +1198,9 @@ NLParseTestUnifyingListener("you are the supervisor in the station", o.getSort("
 NLParseTestUnifyingListener("etaoin's weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
 NLParseTestUnifyingListener("the weight of etaoin is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
 NLParseTestUnifyingListener("your weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
+NLParseTestUnifyingListener("give me the garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("give me garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("take the garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.take(LISTENER_0, V2:'4'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

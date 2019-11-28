@@ -72,12 +72,12 @@
 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,-,-,-,-,-,-,-,-,-,-,-,-,-,
 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,
 		</data>
-		<location code="1" id="tardis8-bridge" name="bridge" sort="ship-bridge"/>
+		<location code="1" id="tardis8-bridge" sort="ship-bridge"/>
 		<location code="2" id="tardis8-computer" name="computer room" sort="room"/>
 		<location code="7" id="tardis8-corridor-west" name="central corridor" sort="corridor"/>
 		<location code="3" id="tardis8-corridor-east" name="central corridor" sort="corridor"/>
-		<location code="5" id="tardis8-stasis1" name="stasis room" sort="stasis.room"/>
-		<location code="6" id="tardis8-stasis2" name="stasis room" sort="stasis.room"/>
+		<location code="5" id="tardis8-stasis1" sort="stasis.room"/>
+		<location code="6" id="tardis8-stasis2" sort="stasis.room"/>
 		<location code="4" id="tardis8-engineering" name="engineering" sort="room"/>
 	</map>	
 

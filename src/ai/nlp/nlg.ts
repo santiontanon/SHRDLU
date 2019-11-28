@@ -126,11 +126,11 @@ class NLGenerator {
 				return targetString + "?"
 			} else {
 				console.error("termToEnglish_CallAttention: cannot render performative " + t);
-				return t.toString();
+				return null;
 			}
 		} else {
 			console.error("termToEnglish_CallAttention: cannot render performative " + t);
-			return t.toString();
+			return null;
 		}
 	}
 

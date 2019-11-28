@@ -126,7 +126,9 @@
 	<sentence provenance="background" sentence="space.at('solar-system'[#id],'milky-way'[#id])"/>
 
 	<sentence provenance="background" sentence="planet('earth'[#id])"/>
+	<sentence provenance="background" sentence="name('earth'[#id],'planet earth'[symbol])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
+	<sentence provenance="background" sentence="name('earth'[#id],'the earth'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('earth'[#id],'solar-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
 
@@ -266,12 +268,10 @@
 	<sentence provenance="background" sentence="~clothing(Y:[#id]); ~space.at(X:[#id], 'location-as20'[#id]); verb.can(X, verb.clean(X, Y))"/>
 
 	<!-- alternative names for some rooms -->
-	<sentence provenance="background" sentence="name('location-maintenance'[#id],'maintenance room'[symbol])"/>
-	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis chamber'[symbol])"/>
-	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis room'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as26'[#id],'stasis'[symbol])"/>
-	<sentence provenance="background" sentence="name('location-as29'[#id],'command room'[symbol])"/>
-	<sentence provenance="background" sentence="name('location-as29'[#id],'command'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as1'[#id],'the central corridor'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as2'[#id],'the west corridor'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as3'[#id],'the east corridor'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as4'[#id],'room 1'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as5'[#id],'room 2'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as6'[#id],'room 3'[symbol])"/>
@@ -284,6 +284,11 @@
 	<sentence provenance="background" sentence="name('location-as13'[#id],'room 10'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as14'[#id],'room 11'[symbol])"/>
 	<sentence provenance="background" sentence="name('location-as15'[#id],'room 12'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as18'[#id],'the main bathroom'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as19'[#id],'the infirmary bathroom'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as22'[#id],'the main storage'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as23'[#id],'the kitchen storage'[symbol])"/>
+	<sentence provenance="background" sentence="name('location-as24'[#id],'the medical storage'[symbol])"/>
 
 	<!-- door names -->
 	<sentence provenance="background" sentence="door('stasis-door'[#id])"/>
@@ -305,7 +310,9 @@
 	<sentence provenance="background" sentence="door('garage-door-south'[#id])"/>
 	<sentence provenance="background" sentence="door('command-door'[#id])"/>
 	<sentence provenance="background" sentence="name('stasis-door'[#id],'stasis room door'[symbol])"/>
+	<sentence provenance="background" sentence="name('stasis-door'[#id],'the stasis room door'[symbol])"/>
 	<sentence provenance="background" sentence="name('stasis-door'[#id],'stasis door'[symbol])"/>
+	<sentence provenance="background" sentence="name('stasis-door'[#id],'the stasis door'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom1-door'[#id],'door number 1'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom1-door'[#id],'door 1'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom2-door'[#id],'door number 2'[symbol])"/>
@@ -331,15 +338,25 @@
 	<sentence provenance="background" sentence="name('bedroom12-door'[#id],'door number 12'[symbol])"/>
 	<sentence provenance="background" sentence="name('bedroom12-door'[#id],'door 12'[symbol])"/>
 	<sentence provenance="background" sentence="name('science-door'[#id],'lab door'[symbol])"/>
+	<sentence provenance="background" sentence="name('science-door'[#id],'the lab door'[symbol])"/>
 	<sentence provenance="background" sentence="name('science-door'[#id],'laboratory door'[symbol])"/>
+	<sentence provenance="background" sentence="name('science-door'[#id],'the laboratory door'[symbol])"/>
 	<sentence provenance="background" sentence="name('maintenance-door'[#id],'door to the maintenance room'[symbol])"/>
+	<sentence provenance="background" sentence="name('maintenance-door'[#id],'the door to the maintenance room'[symbol])"/>
 	<sentence provenance="background" sentence="name('maintenance-door'[#id],'maintenance door'[symbol])"/>
+	<sentence provenance="background" sentence="name('maintenance-door'[#id],'the maintenance door'[symbol])"/>
 	<sentence provenance="background" sentence="name('garage-door-north'[#id],'north garage door'[symbol])"/>
+	<sentence provenance="background" sentence="name('garage-door-north'[#id],'the north garage door'[symbol])"/>
 	<sentence provenance="background" sentence="name('garage-door-south'[#id],'south garage door'[symbol])"/>
+	<sentence provenance="background" sentence="name('garage-door-south'[#id],'the south garage door'[symbol])"/>
 	<sentence provenance="background" sentence="name('garage-door-north'[#id],'garage door'[symbol])"/>
+	<sentence provenance="background" sentence="name('garage-door-north'[#id],'the garage door'[symbol])"/>
 	<sentence provenance="background" sentence="name('garage-door-south'[#id],'garage door'[symbol])"/>
+	<sentence provenance="background" sentence="name('garage-door-south'[#id],'the garage door'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-door'[#id],'command center door'[symbol])"/>
+	<sentence provenance="background" sentence="name('command-door'[#id],'the command center door'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-door'[#id],'command door'[symbol])"/>
+	<sentence provenance="background" sentence="name('command-door'[#id],'the command door'[symbol])"/>
 
 	<sentence provenance="background" sentence="relation.belongs('stasis-door'[#id],'location-as26'[#id])"/>
 	<sentence provenance="background" sentence="relation.belongs('bedroom1-door'[#id],'location-as4'[#id])"/>
@@ -363,23 +380,34 @@
 	<!-- keys -->
 	<sentence provenance="background" sentence="blue-key('science-key'[#id])"/>
 	<sentence provenance="background" sentence="name('science-key'[#id],'lab key'[symbol])"/>
+	<sentence provenance="background" sentence="name('science-key'[#id],'the lab key'[symbol])"/>
 	<sentence provenance="background" sentence="name('science-key'[#id],'laboratory key'[symbol])"/>
+	<sentence provenance="background" sentence="name('science-key'[#id],'the laboratory key'[symbol])"/>
 	<sentence provenance="background" sentence="maintenanceyellow-key('maintenance-key'[#id])"/>
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance key'[symbol])"/>
+	<sentence provenance="background" sentence="name('maintenance-key'[#id],'the maintenance key'[symbol])"/>
 	<sentence provenance="background" sentence="name('maintenance-key'[#id],'maintenance room key'[symbol])"/>
+	<sentence provenance="background" sentence="name('maintenance-key'[#id],'the maintenance room key'[symbol])"/>
 	<sentence provenance="background" sentence="red-key('command-key'[#id])"/>
 	<sentence provenance="background" sentence="name('command-key'[#id],'command key'[symbol])"/>
+	<sentence provenance="background" sentence="name('command-key'[#id],'the command key'[symbol])"/>
+	<sentence provenance="background" sentence="name('command-key'[#id],'the command center key'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-key'[#id],'command center key'[symbol])"/>
 	<sentence provenance="background" sentence="green-key('stasis-key'[#id])"/>
 	<sentence provenance="background" sentence="name('stasis-key'[#id],'stasis key'[symbol])"/>
+	<sentence provenance="background" sentence="name('stasis-key'[#id],'the stasis key'[symbol])"/>
 	<sentence provenance="background" sentence="garagepurple-key('garage-key'[#id])"/>
 	<sentence provenance="background" sentence="name('garage-key'[#id],'garage key'[symbol])"/>
+	<sentence provenance="background" sentence="name('garage-key'[#id],'the garage key'[symbol])"/>
 	<sentence provenance="background" sentence="white-key('bedroom5-key'[#id])"/>
 	<sentence provenance="background" sentence="name('bedroom5-key'[#id],'bedroom key'[symbol])"/>
+	<sentence provenance="background" sentence="name('bedroom5-key'[#id],'the bedroom key'[symbol])"/>
 	<sentence provenance="background" sentence="master-key('master-key1'[#id])"/>
 	<sentence provenance="background" sentence="name('master-key1'[#id],'master key'[symbol])"/>
+	<sentence provenance="background" sentence="name('master-key1'[#id],'the master key'[symbol])"/>
 	<sentence provenance="background" sentence="master-key('master-key2'[#id])"/>
 	<sentence provenance="background" sentence="name('master-key2'[#id],'master key'[symbol])"/>
+	<sentence provenance="background" sentence="name('master-key2'[#id],'the master key'[symbol])"/>
 	
 
 	<sentence provenance="background" sentence="action.open('science-key'[#id], 'science-door'[#id])"/>

@@ -310,5 +310,6 @@ testNLG("perf.inform('1'[#id], action.put-in('1'[#id], 'k1'[#id], [console]))", 
 testNLG("perf.inform('1'[#id], disembodied-ai('etaoin'[#id]))", "etaoin", "I am an artificial intelligence");
 testNLG("perf.inform('1'[#id], relation.howto(V0:action.print(X_0:[any]), V2:verb.ask(X_0, V3:'etaoin'[#id])))", "etaoin", "in order for X1 to print, X1 asks me");
 testNLG("perf.inform('1'[#id], relation.howto(V0:verb.read(X_0:[any], Y_0:[any]), V3:action.put-in(X_0, Y_0, V4:[console])))", "etaoin", "in order for X1 to read X2, X1 puts X2 in a console");
+testNLG("perf.request.action(V0:'1'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 'room1'[#id]))", "etaoin", "please, guide me to the kitchen");
 
 

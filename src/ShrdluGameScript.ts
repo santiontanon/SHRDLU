@@ -175,7 +175,7 @@ class ShrdluGameScript {
 		// Infirmary:
 		// this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
 		// East cave:
-		this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
+		//this.game.currentPlayer.warp(8*8, 12*8, this.game.maps[4]);
 
 		this.contextShrdlu = this.game.shrdluAI.contextForSpeaker(this.playerID);
 		this.game.setStoryStateVariable("act", "act2");
@@ -209,7 +209,7 @@ class ShrdluGameScript {
 		this.skip_to_act_2_shrdluback_repair_outside();
 		this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 		this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
-		this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");		
+		this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 		this.updateKnowledgeAfterRepairingCommTower();
 		this.act_2_state = 222;
 		this.act_2_shrdlu_agenda_state = 40;
@@ -2848,9 +2848,9 @@ class ShrdluGameScript {
 
 	updateKnowledgeAfterReachingTrantorCrater()
 	{
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-		this.game.shrdluAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
-		this.game.qwertyAI.addLongTermTerm(Term.fromString("space.at('tardis8'[#id], 'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);		
+		this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-trantor.xml");
+		this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-trantor.xml");
+		this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-trantor.xml");
 	}
 
 

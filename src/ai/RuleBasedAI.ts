@@ -15,6 +15,8 @@ var MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY:number = 3;
 
 var ONTOLOGY_PROVENANCE:string = "ontology";
 var BACKGROUND_PROVENANCE:string = "background";
+var BACKGROUND_ADDITIONAL_PROVENANCE:string = "background-additional";	// this is additional background knowledge that is loaded after 
+																		// some events, and thus needs to be saved in savegames.
 var PERCEPTION_PROVENANCE:string = "perception";
 var REACTION_PROVENANCE:string = "reaction";
 var MEMORIZE_PROVENANCE:string = "memorize";
