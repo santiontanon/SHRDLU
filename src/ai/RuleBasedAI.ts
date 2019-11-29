@@ -532,6 +532,18 @@ class RuleBasedAI {
 	{
 		for(let sentence_xml of getElementChildrenByTag(xml,"sentence")) {
 			let rule:Sentence = Sentence.fromString(sentence_xml.getAttribute("sentence"), this.o);
+
+			if (rule.terms.length == 1 &&
+				rule.terms[0].functor.name == "name" &&
+				rule.terms[0].attributes.length == 2 &&
+				(rule.terms[0].attributes[1] instanceof ConstantTermAttribute)) {
+				let name:string = (<ConstantTermAttribute>rule.terms[0].attributes[1]).value;
+				if (name.indexOf(" ") != -1 && 
+					this.naturalLanguageParser.posParser.multitokens_plainlist.indexOf(name) == -1) {
+					console.error("Missing multitoken: " + name);
+				}
+			}
+
 			let provenance:string = sentence_xml.getAttribute("provenance");
 			let time:number = this.time_in_seconds;
 			if (sentence_xml.getAttribute("time") != null) time = Number(sentence_xml.getAttribute("time"));
@@ -1842,7 +1854,8 @@ class RuleBasedAI {
 
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
-		// just return what we know (this function will never be used in SHRDLU anyway, it's only for testing)::
+		/*
+		// just return what we know (this function will never be used in SHRDLU anyway, it's only for testing):
 		let relations:Sort[] = [];
 		let sr_sort:Sort = this.o.getSort("spatial-relation");
 		for(let te of this.shortTermMemory.plainTermList) {
@@ -1856,6 +1869,8 @@ class RuleBasedAI {
 			}
 		}
 		return relations;
+		*/
+		return null;
 	}
 
 

@@ -725,6 +725,7 @@ class NLGenerator {
 			} else {
 				subjectStr = this.termToEnglish_RelationArgument(t.attributes[0], speakerID, true, context, true, null, true);
 			}
+			// console.log("subjectStr: " + subjectStr);
 			let time:Sort = this.nlg_cache_sort_present;
 			if (subjectStr != null) {
 				let relationsAggregateStr:string = "";
@@ -1561,6 +1562,12 @@ class NLGenerator {
 			let entity_tmp = tl[i];
 			if (entity_tmp instanceof TermTermAttribute) {
 				let entityTerm:Term = (<TermTermAttribute>entity_tmp).term;
+				if (entityTerm.functor.name == "#not" &&
+					entityTerm.attributes.length == 1 &&
+					(entityTerm.attributes[0] instanceof TermTermAttribute)) {
+					entity_tmp = entityTerm.attributes[0];
+					entityTerm = (<TermTermAttribute>entityTerm.attributes[0]).term;
+				}
 				if (entityTerm.functor.is_a(context.ai.o.getSort("noun"))) {
 					entity = entity_tmp;
 					break; 
@@ -1574,6 +1581,12 @@ class NLGenerator {
 				let next:boolean = false;
 				if (entity instanceof TermTermAttribute) {
 					let entityTerm:Term = (<TermTermAttribute>entity).term;
+					if (entityTerm.functor.name == "#not" &&
+						entityTerm.attributes.length == 1 &&
+						(entityTerm.attributes[0] instanceof TermTermAttribute)) {
+						entity = entityTerm.attributes[0];
+						entityTerm = (<TermTermAttribute>entityTerm.attributes[0]).term;
+					}
 					if (entityTerm.functor.is_a(context.ai.o.getSort("determiner"))) next = true;
 					if (entityTerm.functor.is_a(context.ai.o.getSort("adjective"))) next = true;
 				}
@@ -1582,7 +1595,8 @@ class NLGenerator {
 		}
 
 		if (entity instanceof TermTermAttribute) {
-			let entity_term:Term = (<TermTermAttribute>tl[0]).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
+			let entity_term:Term = (<TermTermAttribute>entity).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
+			//console.log("argumentIsVerb: " + entity_term.functor.name);
 			if (entity_term.functor.is_a(this.nlg_cache_sort_verb)) return true;
 		}
 
@@ -1661,7 +1675,17 @@ class NLGenerator {
 			} else if (entity.sort.name == "symbol") {
 				return [(<ConstantTermAttribute>entity).value,2,null,0];
 			} else {
-				let nounStr:string = this.pos.getNounString(entity.sort, 0, false);
+				let num:number = 0;
+				for(let t of tl) {
+					if (t == entity) continue;
+					if (t instanceof TermTermAttribute) {
+						let t_term:Term = (<TermTermAttribute>t).term;
+						if (t_term.functor.is_a(context.ai.o.getSort("plural"))) num = 1;
+						else if (t_term.functor.is_a(context.ai.o.getSort("singular"))) num = 0;
+					}
+				}
+
+				let nounStr:string = this.pos.getNounString(entity.sort, num, false);
 				if (nounStr != null) {
 					return [nounStr,2,null,0];
 				} else {
@@ -1951,6 +1975,13 @@ class NLGenerator {
 				}
 				return ["X"+(idx+1), 2, null, 0];
 			}
+		}
+
+		if ((entityRaw instanceof VariableTermAttribute) &&
+			entityRaw.sort.name == "any" ||
+			entityRaw.sort.name == "number" ||
+			entityRaw.sort.name == "#id") {
+			return ["something", 2, null, 0];
 		}
 
 		let tl:TermAttribute[] = [entityRaw];
@@ -3066,6 +3097,8 @@ class NLGenerator {
 		if (trimmedWord.length>2 &&
 			trimmedWord[0] == "u" &&
 			(trimmedWord[1] == "s" || trimmedWord[1] == "n")) {
+			if (trimmedWord == "utensil" ||
+				trimmedWord == "utensils") return "an";
 			return "a";
 		}
 		return "an";

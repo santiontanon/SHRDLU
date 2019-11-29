@@ -15,7 +15,8 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 		let requester:TermAttribute = ir.requester;
 		let toPrintAttribute:TermAttribute = intention.attributes[1];
 
-		if (toPrintAttribute instanceof VariableTermAttribute) {
+		if ((toPrintAttribute instanceof VariableTermAttribute) ||
+			(toPrintAttribute instanceof ConstantTermAttribute)){
 			let toPrint:Sort = toPrintAttribute.sort;
 			let recipe:string[] = null;
 

@@ -632,7 +632,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER,'good'[symbol]))");
 			} else if (this.game.qwertyAI.robot.x == 11*8 &&
 					   this.game.qwertyAI.robot.y == 30*8) {
-				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($QWERTY, verb.test($QWERTY, #and(C:[strength], relation.belongs(C, $PLAYER))))))");
+				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($QWERTY, verb.test($QWERTY, #and(C:[strength], verb.belong(C, $PLAYER))))))");
 				// 512 is the ID of the chair in the infirmary
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.push($PLAYER, '512'[#id])))");
 
@@ -780,7 +780,7 @@ class ShrdluGameScript {
 
 		case 107:
 			if (this.act_intro_state_timer == 0) {
-				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, relation.belongs('location-as8'[#id], $PLAYER)))");
+				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.belong('location-as8'[#id], $PLAYER)))");
 			} else if (this.game.qwertyAI.robot.state == A4CHARACTER_STATE_IDLE) {
 				this.qwertyDropsObject("communicator");
         		this.qwertyMoves(552, 272, this.game.qwertyAI.robot.map);

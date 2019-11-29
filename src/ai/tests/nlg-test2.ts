@@ -14,9 +14,9 @@ xmlhttp.send();
 var g_parser:NLParser = NLParser.fromXML(xmlhttp.responseXML.documentElement, o);
 var g_posParser:POSParser = new POSParser(o);
 var g_nlg:NLGenerator = new NLGenerator(o, g_posParser);
-var g_ai:RuleBasedAI = new RuleBasedAI(o, null, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
+var g_ai:RuleBasedAI = new RuleBasedAI(o, g_parser, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
 g_ai.selfID = "etaoin";
-var g_ai2:RuleBasedAI = new RuleBasedAI(o, null, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
+var g_ai2:RuleBasedAI = new RuleBasedAI(o, g_parser, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
 g_ai2.selfID = "david";
 var g_context:NLContext = g_ai.contextForSpeaker('david');
 var g_context2:NLContext = g_ai2.contextForSpeaker('etaoin');
@@ -201,17 +201,18 @@ console.log(out);
 */
 
 /*
-NLGTest2ParseUnifyingListener("east cave is a cave", o.getSort("performative"),  g_context, 'etaoin', 
+NLGTest2ParseUnifyingListener("the memory bank of shrdlu is a memory bank", o.getSort("performative"),  g_context, 'etaoin', 
 		 						   new Term(o.getSort("perf.inform"),
 							  		   		[new ConstantTermAttribute("etaoin", o.getSort("#id"))]));
 */
 
 for(let sentence of g_ai.longTermMemory.plainSentenceList) {
-	//if (sentence.sentence.terms.length == 1) continue;
+	if (sentence.sentence.terms.length != 1) continue;
+	g_context2.mentions = [];
+	g_context2.performatives = [];
 	let term:Term = Term.sentenceToTerm(sentence.sentence, o);
 	let performative:Term = new Term(o.getSort("perf.inform"), [new ConstantTermAttribute("etaoin", o.getSort("#id")), 
 																new TermTermAttribute(term)]);
-	// var str:string = g_nlg.termToEnglish(performative, "david", new ConstantTermAttribute("etaoin", o.getSort("#id")), g_context2);
 	var str:string = g_nlg.termToEnglish(performative, "david", null, g_context2);
 	console.log("---- " + successfulTests + "/" + totalTests + " ----");
 	console.log("term: " + term.toString());
@@ -224,6 +225,8 @@ for(let sentence of g_ai.longTermMemory.plainSentenceList) {
 		break;
 	} else {
 		// Now test if we can parse it:
+		g_context.mentions = [];
+		g_context.performatives = [];
 		NLGTest2ParseUnifyingListener(str, o.getSort("performative"),  g_context, 'etaoin', 
 				 						   new Term(o.getSort("perf.inform"),
 									  		   		[new ConstantTermAttribute("etaoin", o.getSort("#id")),

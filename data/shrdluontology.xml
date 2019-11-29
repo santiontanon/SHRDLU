@@ -503,12 +503,10 @@
     <sort name="username" super="property-with-value,abstract-entity"/>
     <sort name="password" super="property-with-value,abstract-entity"/>    
 
-    <sort name="relation.belongs" super="relation"/>
     <sort name="relation.cause" super="relation"/>
     <sort name="relation.composition" super="relation"/>
     <sort name="relation.effect" super="relation"/>
     <sort name="relation.origin" super="relation"/>
-    <!--sort name="verb.own" super="relation"/-->
     <sort name="relation.purpose" super="relation"/>
     <sort name="relation.target" super="relation"/>
     <sort name="relation.tool" super="relation"/>
@@ -626,6 +624,8 @@
     <sort name="verb.reproduce-media" super="verb"/>
     <sort name="verb.collide-with" super="relation-verb,#stateSort"/>
     <sort name="verb.suck" super="verb"/>
+    <sort name="verb.belong" super="relation-verb"/>
+
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
@@ -770,10 +770,15 @@
     <sort name="damage" super="abstract-entity"/> 
     <sort name="tear" super="space,object,damage"/>  
 
+    <sort name="size" super="property"/>
+    <sort name="big" super="size"/>
+    <sort name="small" super="size"/>
+    <sort name="too-small" super="small"/>
+    <sort name="size.medium" super="size"/>
+
     <sort name="length" super="property"/>
-    <sort name="short" super="length"/>
-    <sort name="long" super="length"/>
-    <sort name="length.large" super="long"/>
+    <sort name="short" super="length,small"/>
+    <sort name="long" super="length,big"/>
 
     <sort name="length.unit" super="measuring-unit,length"/>
     <sort name="distance.unit" super="measuring-unit,distance"/>
@@ -860,15 +865,14 @@
     <sort name="correct" super="correctness"/>
     <sort name="incorrect" super="correctness"/>
 
-    <sort name="size" super="property"/>
-    <sort name="big" super="size"/>
-    <sort name="small" super="size"/>
-    <sort name="too-small" super="small"/>
-    <sort name="size.medium" super="size"/>
+    <sort name="relative-amount" super="any"/>
+    <sort name="high" super="relative-amount,property,#stateSort"/>
+    <sort name="medium" super="relative-amount,property,#stateSort"/>
+    <sort name="low" super="relative-amount,property,#stateSort"/>
 
     <sort name="gravity" super="property-with-value,abstract-entity"/>
-    <sort name="gravity.low" super="gravity"/>
-    <sort name="gravity.high" super="gravity"/>
+    <!--sort name="low" super="gravity"/>
+    <sort name="gravity.high" super="gravity"/-->
 
     <sort name="radius" super="property-with-value,length"/>
 
@@ -954,14 +958,14 @@
     <sort name="corpse" super="human,dead"/>
 
     <sort name="fill-level" super="#stateSort"/>
-    <sort name="full" super="fill-level,property,#stateSort"/>
-    <sort name="fill.medium" super="fill-level,property,#stateSort"/>
-    <sort name="low" super="fill-level,property,#stateSort"/>
-    <sort name="empty" super="fill-level,property,#stateSort"/>
+    <sort name="full" super="high,fill-level"/>
+    <sort name="empty" super="low,fill-level,property,#stateSort"/>
 
     <sort name="luminiscent" super="property"/>
 
     <sort name="oxygen-level" super="fill-level,property-with-value"/>
 
     <sort name="else" super="property"/>
+
+    <sort name="saxon-genitive" super="verb.own,grammar-concept"/>    
 </ontology>

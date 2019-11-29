@@ -869,6 +869,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let relations:Sort[] = super.spatialRelations(o1ID, o2ID);
 		let o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
 		let o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
+		if (relations == null) relations = [];
 		if (o1 != null && o2 == null) {
 			// try to see if o2ID is a location:
 			let loc1:AILocation = this.game.getAILocation(o1);
@@ -878,7 +879,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 			}
 		}
 
-		if (o1 == null || o2 == null) return relations;
+		if (o1 == null || o2 == null) return null;
 
 		if (o2 instanceof A4Container) {
 			if ((<A4Container>o2).content.indexOf(o1) != -1) relations.push(this.o.getSort("space.inside.of"));

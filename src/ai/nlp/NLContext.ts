@@ -62,9 +62,9 @@ class NLContextEntity {
 
 	relationMatch(relation:Term, o:Ontology, pos:POSParser) : boolean
 	{
+		//console.log("        relationMatch: " + relation + " with " + this.terms);
 		for(let term of this.terms) {
 //			console.log("checking term: " + term + " for relation " + relation);
-//			if (term.equalsNoBindings(relation) == 1) {
 			if (relation.subsumesNoBindings(term) == 1) {
 				// console.log("match! " + relation  + "   subsumes   " + term);
 				return true;
@@ -629,12 +629,19 @@ class NLContext {
 		var determinerTerms:Term[] = [];
 		var relationTerms:Term[][] = [];
 		var otherTerms:Term[] = [];
+		var genitiveTerm:Term = null;
 		for(let tmp of clauseElements) {
 			if (tmp instanceof TermTermAttribute) {
 				let tmp2:Term =(<TermTermAttribute>tmp).term;
 				 NLParser.resolveCons(tmp2, o);
 				if (tmp2.functor.is_a(properNounSort)) {
 					properNounTerms.push(tmp2);
+				} else if (tmp2.functor.name == "saxon-genitive") {
+					if (genitiveTerm != null) {
+						console.warn("two saxon genitives in a noun phrase, not supported!");
+						return null;
+					}
+					genitiveTerm = tmp2;
 				} else if (tmp2.functor.is_a(nounSort)) {
 					nounTerms.push(tmp2);
 				} else if (tmp2.functor.is_a(pronounSort)) {
@@ -652,9 +659,12 @@ class NLContext {
 				console.error("context.deref: clause contains an element that is not a term!");
 			}
 		}
-
-//		console.log("context.deref: \n  PN: " + properNounTerms + "\n  N: " + nounTerms + "\n  P:" + pronounTerms + "\n  A: " + adjectiveTerms + "\n  D: " + determinerTerms + "\n  O: " + otherTerms);
-
+		/*
+		console.log("context.derefInternal: \n  PN: " + properNounTerms + "\n  N: " + nounTerms + 
+					"\n  P:" + pronounTerms + "\n  A: " + adjectiveTerms + "\n  D: " + determinerTerms + 
+					"\n  R:" + relationTerms + "\n  O: " + otherTerms);
+		*/
+		if (genitiveTerm != null) return null;
 		let all_determiner:Term = null;
 		let other_determiner:Term = null;
 		for(let t of determinerTerms) {
@@ -686,8 +696,13 @@ class NLContext {
 			for(let properNounTerm of properNounTerms) {
 				if (properNounTerm.attributes[0] instanceof ConstantTermAttribute) {
 					let name:string = <string>(<ConstantTermAttribute>(properNounTerm.attributes[0])).value;
-					let entity:NLContextEntity = this.findClosestProperNoun(name, o);
-					if (entity != null) output.push(entity.objectID);
+					//let entity:NLContextEntity = this.findClosestProperNoun(name, o);
+					//if (entity != null) output.push(entity.objectID);
+					let entities:NLContextEntity[] = this.findAllProperNoun(name, o);
+					for(let entity of entities) {
+						if (output.indexOf(entity.objectID) == -1) output.push(entity.objectID);
+					}
+					// console.log("Proper noun match ('"+name+"'): " + output);
 				}
 			}
 			return output;
@@ -835,6 +850,8 @@ class NLContext {
 						let this_determiner:boolean = false;
 						let that_determiner:boolean = false;
 
+						// console.log("context.derefInternal: nounTerm = " + nounTerm);
+
 						for(let determinerTerm of determinerTerms) {
 							let determinerNumberSort:Sort = determinerTerm.attributes[1].sort;
 							if (determinerTerm.functor.name == "the") {
@@ -933,9 +950,9 @@ class NLContext {
 						// apply relations:
 						for(let relationTermL of relationTerms) {
 							let relationTerm:Term = relationTermL[0];
+//							console.log("Before " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
 							// check if it's a spatial relation (which are not in the logic representation, to save computation requirements):
 							if (relationTerm.functor.is_a(spatialRelationSort)) {
-//								console.log("Before " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
 								if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   relationTerm.attributes[0]) == 1 &&
 									relationTerm.attributes[1] instanceof ConstantTermAttribute) {
@@ -946,11 +963,21 @@ class NLContext {
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
 	//											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
-											for(let sr of spatialRelations) {
-												if (relationTerm.functor.subsumes(sr)) {
-													results.push(entity);
-													break;
+											if (spatialRelations != null) {
+												//console.log("    spatialRelations != null");
+												for(let sr of spatialRelations) {
+													if (relationTerm.functor.subsumes(sr)) {
+														results.push(entity);
+														break;
+													}
 												}
+											} else {
+												let tmp:TermAttribute = relationTerm.attributes[0];
+												relationTerm.attributes[0] = entity.objectID;
+												//console.log("    spatialRelations == null, checking manually (1) for " + relationTerm);
+												if (results.indexOf(entity) == -1 && 
+													entity.relationMatch(relationTerm, o, pos)) results.push(entity);
+												relationTerm.attributes[0] = tmp;
 											}
 										}
 										results_mpl.push(results);
@@ -966,28 +993,38 @@ class NLContext {
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
 //											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
-											if (spatialRelations.indexOf(relationTerm.functor) != -1) {
-												results.push(entity);
+											if (spatialRelations != null) {
+												console.log("    spatialRelations != null");
+												for(let sr of spatialRelations) {
+													if (relationTerm.functor.subsumes(sr)) {
+														results.push(entity);
+														break;
+													}
+												}
+											} else {
+												let tmp:TermAttribute = relationTerm.attributes[0];
+												relationTerm.attributes[1] = entity.objectID;
+												console.log("    spatialRelations == null, checking manually (2) for " + relationTerm);
+												if (results.indexOf(entity) == -1 && 
+													entity.relationMatch(relationTerm, o, pos)) results.push(entity);
+												relationTerm.attributes[1] = tmp;
 											}
 										}
 										results_mpl.push(results);
 									}
 									entities_mpl = results_mpl;
 								}
-//								console.log("After " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
+								//console.log("After " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
 							} else {
-	//							console.log("Considering relation: " + relationTerm);
 								if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   relationTerm.attributes[0]) == 1 &&
 									relationTerm.attributes[1] instanceof ConstantTermAttribute) {
 	//								console.log("Considering relation (1): " + relationTerm);
-									// entities_mpl = this.filterByRelation1(relationTerm, entities_mpl, o, pos);
 									entities_mpl = this.filterByAtLeastOneRelation1(relationTermL, entities_mpl, o, pos);
 								} else if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   relationTerm.attributes[1]) == 1 &&
 									relationTerm.attributes[0] instanceof ConstantTermAttribute) {
 	//								console.log("Considering relation (2): " + relationTerm);
-									// entities_mpl = this.filterByRelation2(relationTerm, entities_mpl, o, pos);
 									entities_mpl = this.filterByAtLeastOneRelation2(relationTermL, entities_mpl, o, pos);
 								}
 							}
@@ -1162,6 +1199,7 @@ class NLContext {
 				}
 			}
 			if (output.length == 0) this.lastDerefErrorType = DEREF_ERROR_CANNOT_DISAMBIGUATE;
+			//console.log("output: " + output);
 			return output;
 		} else if (nounTerms.length > 1) {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
@@ -1322,6 +1360,36 @@ class NLContext {
 		}
 		return null;
 	}
+
+
+
+	findAllProperNoun(name:string, o:Ontology) : NLContextEntity[]
+	{
+		let matches:NLContextEntity[] = [];
+		for(let entity of this.shortTermMemory) {
+			if (entity.properNounMatch(name)) matches.push(entity);
+		}
+		for(let entity of this.mentions) {
+			if (entity.properNounMatch(name)) matches.push(entity);
+		}
+
+		let nameSort:Sort = o.getSort("name");
+		for(let s of this.ai.longTermMemory.allSingleTermMatches(nameSort, 2, o)) {
+			if (s.terms[0].functor == nameSort && 
+				(s.terms[0].attributes[0] instanceof ConstantTermAttribute) &&
+				(s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
+				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
+				//console.log("    findAllProperNoun: '"+(<ConstantTermAttribute>s.terms[0].attributes[0]).value+"'");
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
+				if (e != null) {
+					matches.push(e);
+				} else {
+					// console.log("    findAllProperNoun: failed to create entity for name '"+name+"'");
+				}
+			}
+		}
+		return matches;
+	}	
 
 
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory

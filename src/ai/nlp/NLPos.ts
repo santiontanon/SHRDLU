@@ -235,12 +235,14 @@ class POSParser {
       "perception systems",
       "milky way",
       "tau ceti",
+      "tau ceti system",
       "the tau ceti system",
       "beta cassini",
       "star system",
       "solar system",
       "the solar system",
       "tau ceti e",
+      "planet earth",
 
       // other nouns:
       "communicator range",
@@ -416,6 +418,10 @@ class POSParser {
       "distress signals",
       "airlock door",
       "airlock doors",
+      "airlock 1",
+      "airlock 2",
+      "airlock 3",
+      "airlock 4",
       "data pad",
       "too small",
       "t-14 hyperdrive generator",
@@ -432,6 +438,14 @@ class POSParser {
       "computer consoles",
       "computer engineer",
       "computer engineers",
+      "central corridor",
+      "the central corridor",
+      "west corridor",
+      "the west corridor",
+      "east corridor",
+      "the east corridor",
+      "main storage",
+      "the main storage",
 
       "tardis bridge",
       "the tardis bridge",
@@ -466,6 +480,18 @@ class POSParser {
       "arthur c. clarke",
       "arthur c clarke",
       "sir isaac newton",
+      "isaac asimov",
+      "arthur clarke",
+      "carl sagan",
+      "albert einstein",
+      "isaac newton",
+      "charles babbage",
+      "ada lovelace",
+      "alan turing",
+      "guybrush threepwood",
+      "the kitchen storage",
+      "the medical storage",
+      "station ai",
 
       "msx computer",
       "vg 8020",
@@ -704,7 +730,7 @@ this.addTokenPOS(new PartOfSpeech("nearest to", "space.nearest-to", Term.fromStr
 //  ["notwithstanding",  "PREP"],
 this.addTokenPOS(new PartOfSpeech("of", "relation.composition", Term.fromString("preposition('relation.composition'[relation.composition])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("of", "relation.origin", Term.fromString("preposition('relation.origin'[relation.origin])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("of", "relation.belongs", Term.fromString("preposition('relation.belongs'[relation.belongs])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("of", "verb.belong", Term.fromString("preposition('verb.belong'[verb.belong])", o), 1.0));
 /*
   ["off",  "PREP"],
   ["onto",  "PREP"],
@@ -1681,6 +1707,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.play", "play","plays","played","played","playing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.run-out-of", "run out of","runs out of","ran out of","run out of","running out of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.collide-with", "collide with","collides with","collided with","collided with","colliding with", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.belong", "belong to","belongs to","belonged to","belonged to","belonging to", false, multitokens_raw, o);
 
     // I only define as phrasal verbs those for which there might be something in between the verb and the preposision, otherwise,
     // they are just regular verbs:
@@ -1747,23 +1774,23 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("gray", "grey", Term.fromString("adjective('grey'[grey])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("heavy", "heavy-weight", Term.fromString("adjective('heavy-weight'[heavy-weight])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("healthy", "healthy", Term.fromString("adjective('healthy'[healthy])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("high", "gravity.high", Term.fromString("adjective('gravity.high'[gravity.high])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("high", "high", Term.fromString("adjective('high'[high])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("hot", "hot", Term.fromString("adjective('hot'[hot])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("huge", "big", Term.fromString("adjective('big'[big])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("human", "human", Term.fromString("adjective('human'[human])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("hungry", "hungry", Term.fromString("adjective('hungry'[hungry])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("in stasis", "in-stasis", Term.fromString("adjective('in-stasis'[in-stasis])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("large", "big", Term.fromString("adjective('big'[big])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("large", "length.large", Term.fromString("adjective('length.large'[length.large])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("large", "long", Term.fromString("adjective('long'[long])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("last", "last", Term.fromString("adjective('last'[last])", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("later", "time.later", Term.fromString("adjective('time.later'[time.later])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("light", "light-weight", Term.fromString("adjective('light-weight'[light-weight])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("long", "long", Term.fromString("adjective('long'[long])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("low", "low", Term.fromString("adjective('low'[low])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("low", "gravity.low", Term.fromString("adjective('gravity.low'[gravity.low])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("low", "low", Term.fromString("adjective('low'[low])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("luminiscent", "luminiscent", Term.fromString("adjective('luminiscent'[luminiscent])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("medium", "size.medium", Term.fromString("adjective('size.medium'[size.medium])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("medium", "fill.medium", Term.fromString("adjective('fill.medium'[fill.medium])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("medium", "medium", Term.fromString("adjective('medium'[medium])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("mortal", "mortal", Term.fromString("adjective('mortal'[mortal])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("nearest", "space.nearest-to", Term.fromString("adjective('space.nearest-to'[space.nearest-to])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("north", "north", Term.fromString("adjective('north'[north])", o), 1.0));
@@ -1841,11 +1868,12 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.generateMultitokenTable(multitokens_raw);
 
     // reverse relations:
-    this.reverseRelations["verb.own"] = "relation.belongs";
-    this.reverseRelations["relation.belongs"] = "verb.own";
+    this.reverseRelations["verb.own"] = "verb.belong";
+    this.reverseRelations["verb.belong"] = "verb.own";
     this.reverseRelations["relation.cause"] = "relation.effect";
     this.reverseRelations["relation.effect"] = "relation.cause";
-    this.reverseRelations["relation.contains"] = "space.inside.of";
+    // this.reverseRelations["relation.contains"] = "space.inside.of";
+    this.reverseRelations["relation.contains"] = "space.at";
     this.reverseRelations["space.at"] = "relation.contains";
     this.reverseRelations["space.inside.of"] = "relation.contains";
 
@@ -2154,6 +2182,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
   generateMultitokenTable(multitokens_raw:string[])
   {
+    this.multitokens_plainlist = multitokens_raw;
     for(let mt of multitokens_raw) {
       this.addMultiToken(mt);
     }
@@ -2722,6 +2751,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   }
 
 
+  multitokens_plainlist:string[] = [];
   multitokens: { [first: string] : string[][]; } = {};
   POS:{[token:string]:PartOfSpeech[];} = {}; 
   POSbySort:{[sort:string]:PartOfSpeech[];} = {};

@@ -35,7 +35,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
         	// see if it's a location with a door (e.g., a bedroom):
         	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
 			let doors:A4Object[] = [];
-        	let belong_l:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("relation.belongs"), 2, ai.o);
+        	let belong_l:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("verb.belong"), 2, ai.o);
         	for(let belong of belong_l) {
     			let t:Term = belong.terms[0];
     			if ((t.attributes[0] instanceof ConstantTermAttribute) &&

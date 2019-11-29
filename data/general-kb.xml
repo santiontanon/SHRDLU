@@ -94,12 +94,12 @@
 	<sentence provenance="background" sentence="space.at('milky-way'[#id],'universe'[#id])"/>
 
 	<sentence provenance="background" sentence="star-system('tau-ceti-system'[#id])"/>
-	<sentence provenance="background" sentence="name('tau-ceti-system'[#id],'tau ceti'[symbol])"/>
+	<sentence provenance="background" sentence="name('tau-ceti-system'[#id],'tau ceti system'[symbol])"/>
+	<sentence provenance="background" sentence="name('tau-ceti-system'[#id],'the tau ceti system'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('tau-ceti-system'[#id],'milky-way'[#id])"/>
 
 	<sentence provenance="background" sentence="star('tau-ceti'[#id])"/>
 	<sentence provenance="background" sentence="name('tau-ceti'[#id],'tau ceti'[symbol])"/>
-	<sentence provenance="background" sentence="name('tau-ceti'[#id],'the tau ceti system'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('tau-ceti'[#id],'tau-ceti-system'[#id])"/>
 
 	<sentence provenance="background" sentence="planet('aurora'[#id])"/>
@@ -128,7 +128,6 @@
 	<sentence provenance="background" sentence="planet('earth'[#id])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'planet earth'[symbol])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
-	<sentence provenance="background" sentence="name('earth'[#id],'the earth'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('earth'[#id],'solar-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
 
@@ -150,9 +149,9 @@
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="disembodied-ai('etaoin'[#id])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'etaoin'[symbol])"/>
-	<sentence provenance="background" sentence="name('etaoin'[#id],'ai'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('etaoin'[#id],'ai'[symbol])"/-->
 	<sentence provenance="background" sentence="name('etaoin'[#id],'station ai'[symbol])"/>
-	<sentence provenance="background" sentence="name('etaoin'[#id],'artificial intelligence'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('etaoin'[#id],'artificial intelligence'[symbol])"/-->
 	<sentence provenance="background" sentence="profession('etaoin'[#id],'location-aurora-station'[#id],'supervisor'[supervisor])"/>
 	<sentence provenance="background" sentence="space.at('etaoin'[#id],'location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="memory-bank('etaoin-memory'[#id])"/>
@@ -197,13 +196,13 @@
 	<sentence provenance="background" time="45154634400" sentence="verb.go-to('shrdlu'[#id],'location-east-cave'[#id])"/>
 
 	<!-- causal knowledge -->
-	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id],'location-aurora-station'[#id]), verb.want('shrdlu'[#id], 'mineral'[mineral]))"/>
-	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id]), verb.want('shrdlu'[#id], 'mineral'[mineral]))"/>
-	<sentence provenance="background" sentence="relation.cause(verb.go-to('shrdlu'[#id],'location-east-cave'[#id]), verb.want('shrdlu'[#id], 'mineral'[mineral]))"/>
+	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id],'location-aurora-station'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
+	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
+	<sentence provenance="background" sentence="relation.cause(verb.go-to('shrdlu'[#id],'location-east-cave'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
 	<sentence provenance="background" sentence="relation.cause(in-stasis(D:'david'[#id]), verb.come-to(D,'aurora'[#id]))"/>
-	<sentence provenance="background" sentence="relation.cause(gravity(X,'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large])); ~space.at(X, 'aurora'[#id])"/>
-	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'gravity.low'[gravity.low]), radius('aurora'[#id],'length.large'[length.large]))"/>
-	<sentence provenance="background" sentence="relation.cause(weight(X,'light-weight'[light-weight]), gravity('aurora'[#id],'gravity.low'[gravity.low])); ~space.at(X, 'aurora'[#id])"/>
+	<sentence provenance="background" sentence="relation.cause(gravity(X,'low'[low]), radius('aurora'[#id],'big'[big])); ~space.at(X, 'aurora'[#id])"/>
+	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'low'[low]), radius('aurora'[#id],'big'[big]))"/>
+	<sentence provenance="background" sentence="relation.cause(weight(X,'light-weight'[light-weight]), gravity('aurora'[#id],'low'[low])); ~space.at(X, 'aurora'[#id])"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.repair(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.go(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], action.take(E,X))), #not(verb.have(E,[body])))"/>
@@ -358,24 +357,24 @@
 	<sentence provenance="background" sentence="name('command-door'[#id],'command door'[symbol])"/>
 	<sentence provenance="background" sentence="name('command-door'[#id],'the command door'[symbol])"/>
 
-	<sentence provenance="background" sentence="relation.belongs('stasis-door'[#id],'location-as26'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom1-door'[#id],'location-as4'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom2-door'[#id],'location-as5'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom3-door'[#id],'location-as6'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom4-door'[#id],'location-as7'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom5-door'[#id],'location-as8'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom6-door'[#id],'location-as9'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom7-door'[#id],'location-as10'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom8-door'[#id],'location-as11'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom9-door'[#id],'location-as12'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom10-door'[#id],'location-as13'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom11-door'[#id],'location-as14'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('bedroom12-door'[#id],'location-as15'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('science-door'[#id],'location-as27'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('maintenance-door'[#id],'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('garage-door-north'[#id],'location-garage'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('garage-door-south'[#id],'location-garage'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('command-door'[#id],'location-as29'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('stasis-door'[#id],'location-as26'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom1-door'[#id],'location-as4'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom2-door'[#id],'location-as5'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom3-door'[#id],'location-as6'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom4-door'[#id],'location-as7'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom5-door'[#id],'location-as8'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom6-door'[#id],'location-as9'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom7-door'[#id],'location-as10'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom8-door'[#id],'location-as11'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom9-door'[#id],'location-as12'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom10-door'[#id],'location-as13'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom11-door'[#id],'location-as14'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('bedroom12-door'[#id],'location-as15'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('science-door'[#id],'location-as27'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('maintenance-door'[#id],'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('garage-door-north'[#id],'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('garage-door-south'[#id],'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('command-door'[#id],'location-as29'[#id])"/>
 
 	<!-- keys -->
 	<sentence provenance="background" sentence="blue-key('science-key'[#id])"/>
@@ -464,9 +463,9 @@
 	<sentence provenance="background" sentence="communicator('communicator'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('david-stasis-pod'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('broken-stasis-pod'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('david-stasis-pod'[#id], 'david'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('david-stasis-pod'[#id], 'david'[#id])"/>
 	<sentence provenance="background" sentence="property.broken('broken-stasis-pod'[#id])"/>
-	<sentence provenance="background" sentence="relation.belongs('location-as8'[#id], 'david'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('location-as8'[#id], 'david'[#id])"/>
 	<sentence provenance="background" sentence="rover('garage-rover'[#id])"/>
 	<sentence provenance="background" sentence="shuttle('garage-shuttle'[#id])"/>
 	<sentence provenance="background" sentence="wrench('wrench'[#id])"/>
@@ -555,8 +554,8 @@
 	<sentence provenance="background" sentence="~small(X:[#id]); ~big(X)"/>	
 	<sentence provenance="background" sentence="weight(X:[#id], 'light-weight'[light-weight]); weight(X, 'heavy-weight'[heavy-weight])"/>
 	<sentence provenance="background" sentence="~weight(X:[#id], 'light-weight'[light-weight]); ~weight(X, 'heavy-weight'[heavy-weight])"/>
-	<sentence provenance="background" sentence="~verb.own(X:[#id],Y:[#id]); relation.belongs(Y,X)"/>
-	<sentence provenance="background" sentence="~relation.belongs(X:[#id],Y:[#id]); verb.own(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.own(X:[#id],Y:[#id]); verb.belong(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.belong(X:[#id],Y:[#id]); verb.own(Y,X)"/>
 	<sentence provenance="background" sentence="~verb.like(X:[#id], Y:[#id]); ~verb.hate(X, Y)"/>	
 	<sentence provenance="background" sentence="good(X:[#id]); bad(X)"/>
 	<sentence provenance="background" sentence="~good(X:[#id]); ~bad(X)"/>	

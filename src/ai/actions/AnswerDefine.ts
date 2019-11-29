@@ -14,7 +14,8 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 
 		if (intention.attributes.length == 2 &&
 			(intention.attributes[0] instanceof ConstantTermAttribute) &&
-			(intention.attributes[1] instanceof VariableTermAttribute) &&
+			((intention.attributes[1] instanceof VariableTermAttribute) ||
+			 (intention.attributes[1] instanceof ConstantTermAttribute)) &&
 			(<ConstantTermAttribute>(intention.attributes[0])).value == ai.selfID) {
 			var sortToDefine:Sort = intention.attributes[1].sort;
 			var definitionAsTerm:TermAttribute = null;

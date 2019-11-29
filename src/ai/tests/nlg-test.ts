@@ -47,7 +47,7 @@ var ceg2:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s1', g
                                               null, 100, 
                                               [Term.fromString("ship('s1'[#id])",g_o),
                                                Term.fromString("color('s1'[#id],'red'[red])",g_o),
-                                               Term.fromString("relation.belongs('s1'[#id],'etaoin'[#id])",g_o)]);
+                                               Term.fromString("verb.belong('s1'[#id],'etaoin'[#id])",g_o)]);
 var ceg3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin', g_o.getSort("#id")),
                                               null, 10, 
                                               [Term.fromString("ai('etaoin'[#id])",g_o),
@@ -61,7 +61,7 @@ var ceg5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k1', g
                                               null, 3, 
                                               [Term.fromString("blue-key('k1'[#id])",g_o),
                                                Term.fromString("color('k1'[#id],'blue'[blue])",g_o),
-                                               Term.fromString("relation.belongs('k1'[#id],'1'[#id])",g_o)]);
+                                               Term.fromString("verb.belong('k1'[#id],'1'[#id])",g_o)]);
 var ceg6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c1', g_o.getSort("#id")),
                                               null, 4, 
                                               [Term.fromString("crate('c1'[#id])",g_o),
@@ -86,7 +86,7 @@ var ceg11:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c2', 
                                               null, 4, 
                                               [Term.fromString("crate('c2'[#id])",g_o),
                                                Term.fromString("property.opened('c2'[#id])",g_o),
-                                               Term.fromString("relation.belongs('c2'[#id],'qwerty'[#id])",g_o)]);
+                                               Term.fromString("verb.belong('c2'[#id],'qwerty'[#id])",g_o)]);
 var ceg12:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room2', g_o.getSort("#id")),
                                               null, 0, 
                                               [Term.fromString("bedroom('room2'[#id])",g_o)]);
@@ -139,7 +139,7 @@ testNLG("perf.inform('1'[#id], crate('s1'[#id]))", "etaoin", "my ship is a crate
 testNLG("perf.inform('1'[#id], color('s1'[#id],'red'[red]))", "etaoin", "my ship's color is red");
 testNLG("perf.inform('1'[#id], space.at('s1'[#id],'room1'[#id]))", "etaoin", "my ship is in the kitchen");
 testNLG("perf.inform('1'[#id], #not(space.at('s1'[#id],'room1'[#id])))", "etaoin", "my ship is not in the kitchen");
-testNLG("perf.inform('1'[#id], relation.belongs('s1'[#id],'etaoin'[#id]))", "etaoin", "my ship is mine");
+testNLG("perf.inform('1'[#id], verb.belong('s1'[#id],'etaoin'[#id]))", "etaoin", "my ship belongs to me");
 testNLG("perf.inform('1'[#id], verb.own('etaoin'[#id],'s1'[#id]))", "etaoin", "I own my ship");
 
 testNLG("perf.inform('1'[#id], awake('1'[#id]))", "etaoin", "you are awake");
@@ -151,7 +151,7 @@ testNLG("perf.inform('1'[#id], name('etaoin'[#id],'etaoin'[symbol]))", "etaoin",
 testNLG("perf.inform('1'[#id], name('qwerty'[#id],'qwerty'[symbol]))", "etaoin", "the robot's name is qwerty");
 testNLG("perf.inform('1'[#id], role('etaoin'[#id], 's1'[#id], 'medic'[medic]))", "etaoin", "I am a medic in my ship");
 testNLG("perf.inform('1'[#id], #and(X:verb.tell('qwerty'[#id], '1'[#id]), time.later(X)))", "etaoin", "qwerty will tell you later");
-testNLG("perf.inform('1'[#id], verb.want('etaoin'[#id], verb.test('etaoin'[#id], #and(C:[coordination], relation.belongs(C, '1'[#id])))))", "etaoin", "I want to test your coordination");
+testNLG("perf.inform('1'[#id], verb.want('etaoin'[#id], verb.test('etaoin'[#id], #and(C:[coordination], verb.belong(C, '1'[#id])))))", "etaoin", "I want to test your coordination");
 
 // Tests with questions:
 testNLG("perf.q.predicate('1'[#id],#and(X:verb.hear('1'[#id],'etaoin'[#id]), time.present(X)))", "etaoin", "do you hear me?");
@@ -216,7 +216,7 @@ testNLG("perf.inform.answer(V0:'1'[#id], V1:'yellow'[yellow])", "etaoin", "yello
 
 testNLG("perf.inform(V0:'1'[#id], verb.be([corpse],[human]))", "etaoin", "a corpse is a human");
 testNLG("perf.inform(V0:'1'[#id], verb.be([corpse],#and([human],[dead])))", "etaoin", "a corpse is a human and something that is dead");
-testNLG("perf.inform(V0:'1'[#id], verb.want(S:'etaoin'[#id], verb.test(S, #and(C:[strength], relation.belongs(C, V0)))))", "etaoin", "I want to test your strength");
+testNLG("perf.inform(V0:'1'[#id], verb.want(S:'etaoin'[#id], verb.test(S, #and(C:[strength], verb.belong(C, V0)))))", "etaoin", "I want to test your strength");
 
 testNLG("perf.inform(V0:'1'[#id], V1:permission-to(V3:'etaoin'[#id], verb.enter(V3)))", "etaoin", "I have permission to enter");
 testNLG("perf.inform(V0:'1'[#id], V1:#not(permission-to(V3:'etaoin'[#id], verb.enter(V3))))", "etaoin", "I do not have permission to enter");
@@ -265,8 +265,8 @@ testNLG("perf.inform('1'[#id], #and(X:verb.can('1'[#id], #and(Y:action.talk('1'[
 testNLG("perf.inform('1'[#id], #and(#and(X:verb.can('1'[#id], #and(Y:action.talk('1'[#id]), relation.target(Y, 'qwerty'[#id]))), relation.tool(X, 'k1'[#id]), time.now(X))))", "etaoin", "you can talk to qwerty with your key card now");
 testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'qwerty'[#id]), V4:action.talk(V3)))", "etaoin", "qwerty walks and talks");
 testNLG("perf.inform.answer('1'[#id], #and(verb.walk(V3:'1'[#id]), V4:action.talk(V3)))", "etaoin", "you walk and talk");
-testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'[#id], V4:'gravity.low'[gravity.low]), V5:radius(V6:'room2'[#id], V7:'length.large'[length.large])))", "etaoin", "the kitchen's gravity is low because of the bedroom's radius is large");
-testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1'[#id], V4:'light-weight'[light-weight]), V5:gravity(V6:'room2'[#id], V7:'gravity.low'[gravity.low])))", "etaoin", "your weight is light because of the bedroom's gravity is low");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:gravity(V3:'room1'[#id], V4:'low'[low]), V5:radius(V6:'room2'[#id], V7:'big'[big])))", "etaoin", "the kitchen's gravity is low because of the bedroom's radius is large");
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:light-weight(V3:'1'[#id], V4:'light-weight'[light-weight]), V5:gravity(V6:'room2'[#id], V7:'low'[low])))", "etaoin", "your weight is light because of the bedroom's gravity is low");
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.understand(V3:'etaoin'[#id], V4:#and(V5:the(V6:'temperature'[temperature], V2_0:[singular]), V8:noun(V6, V2_0)))))", "etaoin", "I do not understand the temperature");
 testNLG("perf.inform.answer(V0:'1'[#id], name(V2:'room1'[#id], V3:'aurora station'[symbol]))", "etaoin", "the kitchen's name is aurora station");
 testNLG("perf.inform(V0:'1'[#id], verb.be([temperature], [property-with-value]))", "etaoin", "a temperature is a property");
@@ -311,5 +311,9 @@ testNLG("perf.inform('1'[#id], disembodied-ai('etaoin'[#id]))", "etaoin", "I am 
 testNLG("perf.inform('1'[#id], relation.howto(V0:action.print(X_0:[any]), V2:verb.ask(X_0, V3:'etaoin'[#id])))", "etaoin", "in order for X1 to print, X1 asks me");
 testNLG("perf.inform('1'[#id], relation.howto(V0:verb.read(X_0:[any], Y_0:[any]), V3:action.put-in(X_0, Y_0, V4:[console])))", "etaoin", "in order for X1 to read X2, X1 puts X2 in a console");
 testNLG("perf.request.action(V0:'1'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 'room1'[#id]))", "etaoin", "please, guide me to the kitchen");
+
+// v3.4:
+testNLG("perf.inform('1'[#id], relation.cause(V0:#not(V1:verb.can(V2:'etaoin'[#id], V3:verb.repair(V2, X_0:[any]))), V5:#not(V6:verb.have(V2, V7:[body]))))", "etaoin", "I can not repair something because I do not have a body")
+testNLG("perf.inform('1'[#id], verb.belong('c2'[#id],'qwerty'[#id]))", "etaoin", "the crate of qwerty belongs to qwerty");
 
 

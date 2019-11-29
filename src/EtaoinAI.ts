@@ -277,15 +277,13 @@ class EtaoinAI extends A4RuleBasedAI {
 		for(let item in game.three_d_printer_recipies) {
 			let materials:string[] = game.three_d_printer_recipies[item];
 
-			let term:Term = Term.fromString("verb.can('"+this.selfID+"'[#id], action.print('"+this.selfID+"'[#id], ["+item+"]))", o);
+			let term:Term = Term.fromString("verb.can('"+this.selfID+"'[#id], action.print('"+this.selfID+"'[#id], '"+item+"'["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 			term = Term.fromString("verb.can('david'[#id], action.print('david'[#id], '"+item+"'["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
-			term = Term.fromString("verb.can('etaoin'[#id], action.print('etaoin'[#id], '"+item+"'["+item+"]))", o);
-			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 
 			for(let material of materials) {
-				term = Term.fromString("verb.need-for(X:[#id], ["+material+"], action.print(X, ["+item+"]))", o);
+				term = Term.fromString("verb.need-for(X:[#id], '"+material+"'["+material+"], action.print(X, '"+item+"'["+item+"]))", o);
 				this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 			}
 		}
