@@ -76,7 +76,6 @@
     <sort name="no" super="particle"/>
     <sort name="particle.on" super="particle"/>
     <sort name="particle.off" super="particle"/>
-    <sort name="nothing" super="particle"/>    
     <!--sort name="unknown" super="particle"/-->
 
     <sort name="determiner" super="part-of-speech"/>  
@@ -125,7 +124,8 @@
     <sort name="pronoun.some" super="indefinite-pronoun"/>   
         
     <sort name="pronoun.something" super="indefinite-pronoun"/>    
-    <sort name="pronoun.anything" super="indefinite-pronoun"/>    
+    <sort name="pronoun.anything" super="indefinite-pronoun"/>
+    <sort name="nothing" super="pronoun"/>    
 
     <sort name="preposition" super="part-of-speech"/>    
     <sort name="numeral" super="part-of-speech"/>    

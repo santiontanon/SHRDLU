@@ -1215,9 +1215,13 @@ NLParseTestUnifyingListener("the room with david's name is foo", o.getSort("perf
 NLParseTestUnifyingListener("the name of the room with david is foo", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('room1'[#id],'foo'[symbol]))");
 NLParseTestUnifyingListener("the room with david is called foo", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('room1'[#id],'foo'[symbol]))");
 NLParseTestUnifyingListener("the ai that owns the ship's name is foo", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('etaoin'[#id],'foo'[symbol]))");
-NLParseTestUnifyingListener("etaoin leaves the station because etaoin wants mineral", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:relation.cause(V2:verb.leave(V3:'etaoin'[#id], V4:'location-aurora-station'[#id]), V5:verb.want(V6:'etaoin'[#id], V7:[mineral])))");
 NLParseTestUnifyingListener("aurora station's radius is large", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], radius('location-aurora-station'[#id],'big'[big]))"); 
 NLParseTestUnifyingListener("aurora station's gravity is low because of aurora station's radius is large", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], relation.cause(gravity('location-aurora-station'[#id],'low'[low]), radius('location-aurora-station'[#id],'big'[big])))");
+NLParseTestUnifyingListener("etaoin leaves the station because etaoin wants mineral", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:relation.cause(V2:verb.leave(V3:'etaoin'[#id], V4:'location-aurora-station'[#id]), V5:verb.want(V6:'etaoin'[#id], V7:[mineral])))");
+NLParseTestUnifyingListener("etaoin leaves because etaoin wants mineral", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:relation.cause(V2:verb.leave(V3:'etaoin'[#id]), V5:verb.want(V6:'etaoin'[#id], V7:[mineral])))");
+NLParseTestUnifyingListener("this crate can talk", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.can('5'[#id], action.talk('5'[#id])))");
+NLParseTestUnifyingListener("this crate does nothing", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.do('5'[#id], 'nothing'[nothing]))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

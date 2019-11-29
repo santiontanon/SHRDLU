@@ -543,7 +543,7 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("and", "#and", Term.fromString("#and()", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("on", "particle.on", Term.fromString("particle.on()", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("off", "particle.off", Term.fromString("particle.off()", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("nothing", "nothing", Term.fromString("nothing()", o), 1.0));
+    
 
     // conjunctions:
     this.addTokenPOS(new PartOfSpeech("but", "conjunction-contrast", Term.fromString("conjunction-contrast()", o), 1.0));
@@ -647,6 +647,8 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("anyone else", "pronoun.anyone.else", Term.fromString("indefinite-pronoun('pronoun.anyone.else'[symbol],[singular],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anybody else", "pronoun.anyone.else", Term.fromString("indefinite-pronoun('pronoun.anyone.else'[symbol],[singular],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("someone else", "pronoun.anyone.else", Term.fromString("indefinite-pronoun('pronoun.anyone.else'[symbol],[grammatical-number],[gender],[third-person])", o), 1.0));
+
+    this.addTokenPOS(new PartOfSpeech("nothing", "nothing", Term.fromString("nothing('nothing'[symbol],[singular],[gender],[third-person])", o), 1.0));
 
     // prepositions:
 /*
@@ -1494,6 +1496,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("user name", "username", o, multitokens_raw);
     this.addStandardNounPOS("username", "username", o, multitokens_raw);
     this.addStandardNounPOS("utensil", "utensil", o, multitokens_raw);
+    this.addStandardNounPOS("valley", "valley", o, multitokens_raw);
     this.addStandardNounPOS("vehicle", "vehicle", o, multitokens_raw);
     this.addStandardNounPOS("video", "video", o, multitokens_raw);
     this.addUncountableNounPOS("video", "video", o);

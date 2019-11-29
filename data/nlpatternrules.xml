@@ -714,6 +714,35 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         noun(X4, N4) ['now'] ('!'|'.')* 
     		         #derefFromContext(C, SUBJECT)"/>
 
+	<NLPattern name="perf.inform-X-can-Y"
+			   head="perf.inform(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 ('!'|'.')*
+			   		 #derefFromContext(C, OBJECT)"/>
+
+	<NLPattern name="perf.inform-X-does-noun"
+			   head="perf.inform(LISTENER, verb.do(OBJECT, NOUN))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'.')*
+			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern name="perf.inform-X-does-nothing"
+			   head="perf.inform(LISTENER, verb.do(OBJECT, 'nothing'[nothing]))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
+			   		 'nothing'
+			   		 ('!'|'.')*
+			   		 #derefFromContext(C, OBJECT)"/>
+
 
 	<!-- Inform performatives for properties with value, without actual values -->
 	<NLPattern head="perf.inform(LISTENER, #cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)))"
@@ -875,7 +904,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('with'|'against') 
 			   		  ('!'|'?')* 
     		   		 #derefFromContext(C1, QUERY_ARG1)"/>
-
 
 	<!-- Patterns for performative "perf.inform.answer" -->
 	<NLPattern name="answer-yes"
@@ -5499,15 +5527,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="'i' 'can' 'not' 'do' 'that' ('.'|'!')*"/>
 
  	<!-- cause explanation patterns --> 
-    <NLPattern name="cause1"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1), CLAUSE2))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
-					 ('because'|'because of')
-		   	   		 perf.inform(LISTENER, CLAUSE2)
-		   	   		 #derefFromContext(C, SUBJECT1)
-		   	   		 #derefFromContext(C2, OBJECT1)"/> 	
     <NLPattern name="cause-saxon"
     		   head="perf.inform(LISTENER, relation.cause(#cons(X2:[property-with-value], OBJECT, X3), CLAUSE2))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -5519,16 +5538,46 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   		 #derefFromContext(C, OBJECT)"/> 
 
     <NLPattern name="cause2"
+    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1), CLAUSE2))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
+					 ('because'|'because of')
+		   	   		 perf.inform(LISTENER, CLAUSE2)
+		   	   		 #derefFromContext(C, SUBJECT1)
+		   	   		 #derefFromContext(C2, OBJECT1)"/> 	
+    <NLPattern name="cause2-simple"
     		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
-					 'because'
-					 nounPhrase(X3, N3, P3, C3)  verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) 
+					 ('because'|'because of')
+					 nounPhrase(X3, N3, P3, C3) verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) 
 					 ('!'|'.')*
 					 #symbolToSort(O2SYMBOL,OBJECT2)
 					 #derefFromContext(C, SUBJECT1)
 					 #derefFromContext(C2, OBJECT1)
+					 #derefFromContext(C3, SUBJECT2)"
+			   priority="200"/>
+
+    <NLPattern name="cause1"
+    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1), CLAUSE2))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+					 nounPhrase(X, N, P, C)  verb(V, N, P, T)
+					 ('because'|'because of')
+		   	   		 perf.inform(LISTENER, CLAUSE2)
+		   	   		 #derefFromContext(C, SUBJECT1)"/>
+    <NLPattern name="cause1-simple"
+    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1), #cons(V3,SUBJECT2,OBJECT2)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+					 nounPhrase(X, N, P, C)  verb(V, N, P, T)
+					 ('because'|'because of')
+					 nounPhrase(X3, N3, P3, C3) verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) 
+					 ('!'|'.')*
+					 #symbolToSort(O2SYMBOL,OBJECT2)
+					 #derefFromContext(C, SUBJECT1)
 					 #derefFromContext(C3, SUBJECT2)"
 			   priority="200"/>
 

@@ -315,5 +315,5 @@ testNLG("perf.request.action(V0:'1'[#id], verb.take-to('1'[#id], 'etaoin'[#id], 
 // v3.4:
 testNLG("perf.inform('1'[#id], relation.cause(V0:#not(V1:verb.can(V2:'etaoin'[#id], V3:verb.repair(V2, X_0:[any]))), V5:#not(V6:verb.have(V2, V7:[body]))))", "etaoin", "I can not repair something because I do not have a body")
 testNLG("perf.inform('1'[#id], verb.belong('c2'[#id],'qwerty'[#id]))", "etaoin", "the crate of qwerty belongs to qwerty");
-
+testNLG("perf.inform('1'[#id], verb.do('1'[#id], 'nothing'[nothing]))", "etaoin", "you do nothing");
 
