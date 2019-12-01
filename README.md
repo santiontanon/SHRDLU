@@ -1,6 +1,6 @@
-# Playable demo v3.3
+# Play on your browser (v3.4)
 
-https://www.cs.drexel.edu/~santi/games/SHRDLU-demo33/shrdlu.html
+https://www.cs.drexel.edu/~santi/games/SHRDLU-demo34/shrdlu.html
 
 
 # SHRDLU
@@ -11,7 +11,7 @@ https://www.cs.drexel.edu/~santi/games/SHRDLU-demo33/shrdlu.html
 
 SHRDLU is an adventure game based around natural language parsing (inspired by Winograd's <a href="https://en.wikipedia.org/wiki/SHRDLU">SHRDLU</a>). It is an experiment, so, I am not expecting the resulting game to be an amazing game, but just an exploration of the posibilities of this type of AI system in a game.
 
-You can play the game here (still work in progress, but it can at least be played beginning to end!): https://www.cs.drexel.edu/~santi/games/SHRDLU-demo33/shrdlu.html
+You can play the game here (still work in progress, but it can already be played beginning to end!): https://www.cs.drexel.edu/~santi/games/SHRDLU-demo34/shrdlu.html
 
 Alternatively, you can view demo videos here:
 - https://youtu.be/8FNBTs2yv4s (version 1.1)
@@ -39,5 +39,5 @@ SHRDLU is by no means the first game to use NLP techniques. Besides the classic 
 
 - Concerning the use of time in the game: I know dates and times in a 24 hour system with Earh years doesn't make any sense in an alien planet with an undisclosed day/night or star revolution cycle. However, I decided to go with Earth time and dates, to keep the AI simple, and not having to create domain knowledge rules to handle time scale conversions, etc. So, this was a small concesion to make time-handling in the AI-side easier.
 
-- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens and every one who played my demo at AIIDE 2018! Thank you one more time! :D
+- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens, Yaqirah Rice, Zuozhi Yang and every one who played my demo at AIIDE 2018 and 2019! Thank you one more time! :D
 	
