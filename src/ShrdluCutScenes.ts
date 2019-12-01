@@ -381,11 +381,11 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("I placed the strange luminiscent dust in the microscope tray, I think it works automatically...", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("Look at that! This is no ordinary dust! It looks like some sort of cell... or machine!!!", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("I don't think I was a biologist here, since I don't understand any of the readings though...", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("But this is crazy! This is clearly not from earth origin!! Is this why we are in this planet?", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("I should ask Etaoin or Shrdlu to see if they have found life in Aurora...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(I placed the strange luminiscent dust in the microscope tray, I think it works automatically...)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Look at that! This is no ordinary dust! It looks like some sort of cell... or machine!!!)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(I don't think I was a biologist here, since I don't understand any of the readings though...)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(But this is crazy! This is clearly not from earth origin!! Is this why we are in this planet?)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(I should ask Etaoin or Shrdlu to see if they have found life in Aurora...)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -470,9 +470,9 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("Look at that! Someone in this station was a retrocomputer fan!! Look at that CRT screen!", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("According to the case, this is a 1983 Philips VG-8020 MSX computer!", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("And it still on! How many years has this machine been on and still working?!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Look at that! Someone in this station was a retrocomputer fan!! Look at that CRT screen!)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(According to the case, this is a 1983 Philips VG-8020 MSX computer!)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(And it still on! How many years has this machine been on and still working?!)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -534,9 +534,9 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("These bodies have totally decomposed. Whatever happened here was a long time ago!", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("And why are they not wearing spacesuits?", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("Oh! There is a personal diary next to this body, maybe it can give me some clues...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(These bodies have totally decomposed. Whatever happened here was a long time ago!)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(And why are they not wearing spacesuits?)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Oh! There is a personal diary next to this body, maybe it can give me some clues...)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -594,8 +594,8 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("Ok, so, it seems the dead people I found were part of the 12 colonists that were constructing Aurora Station...", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("So, am I also one of those 12? And what happened to the Tardis 8?", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Ok, so, it seems the dead people I found were part of the 12 colonists that were constructing Aurora Station...)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(So, am I also one of those 12? And what happened to the Tardis 8?)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -782,8 +782,8 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("Look at that! The distress signal comes from that crashed spaceship, and it is enormous! Is that the Tardis 8?", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("I must go down and investigate!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Look at that! The distress signal comes from that crashed spaceship, and it is enormous! Is that the Tardis 8?)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(I must go down and investigate!)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -902,8 +902,8 @@ class ShrdluCutScenes {
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("Hmm, so, this Euriclea was responsible for the shuttle crash I found...", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("It seems their plan to take the Tardis did not work though...", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Hmm, so, this Euriclea was responsible for the shuttle crash I found...)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(It seems their plan to take the Tardis did not work though...)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -960,13 +960,14 @@ class ShrdluCutScenes {
 
 	updateCutSceneSaxDiary() : boolean
 	{
-		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 100, -1];
+		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 600, 100, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
-			this.game.addMessageWithColor("Sax Harker... From what I gather, this is the man responsible for all the tragedies I have seen here then...", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("So, these three people are Sax, Euriclea and Nestor then... They killed everyone else except for me apparently!", MSX_COLOR_GREEN);
-			this.game.addMessageWithColor("I really need to access the content of the Tardis memory now, I am so close to figuring it all out!", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(Sax Harker... From what I gather, this is the man responsible for all the tragedies I have seen here then...)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(So, these three people are Sax, Euriclea and Nestor then... They killed everyone else except for me apparently!)", MSX_COLOR_GREEN);
+			this.game.addMessageWithColor("(I am not too sorry to see that their plan failed, and the Tardis did not resist a second launch...)", MSX_COLOR_GREEN)
+			this.game.addMessageWithColor("(I really need to access the content of the Tardis memory now, I am so close to figuring it all out!)", MSX_COLOR_GREEN);
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
@@ -1001,12 +1002,14 @@ class ShrdluCutScenes {
 								  "data/cutscene-sax-diary3.png",
 								  "data/cutscene-sax-diary3.png",
 								  "data/cutscene-sax-diary3.png",
+								  "data/cutscene-sax-diary3.png",
 								  null];
 		let stateText:string[] = [null,
 								  null,
 								  null,
 								  "Sax Harker... From what I gather, this is the man responsible for all the tragedies I have seen here then...",
 								  "So, these three people are Sax, Euriclea and Nestor then... They killed everyone else except for me apparently!",
+								  "I am not too sorry to see that their plan failed, and the Tardis did not resist a second launch...",
 								  "I really need to access the content of the Tardis memory now, I am so close to figuring it all out!",
 								  null,
 								  null];						  
