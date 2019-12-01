@@ -425,6 +425,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
+		app.achievement_nlp_all_robot_actions[1] = true;
+		app.trigger_achievement_complete_alert();
+
 		ai.setNewAction(intention, requester, null, null);
 		if (stepByStepMovement || ai.robot.isInVehicle()) {
 	        ai.setNewAction(intention, requester, null, this);

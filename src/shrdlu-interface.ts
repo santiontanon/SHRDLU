@@ -117,10 +117,11 @@ class BShrdluTextFrame extends BShrdluFrame {
 
 
 class BShrdluButton extends BButton {
-    constructor(text:string, font:string, x:number, y:number, width:number, height:number, ID:number, color:string, callback:((any, number) => void))
+    constructor(text:string, font:string, x:number, y:number, width:number, height:number, ID:number, color:string, centered:boolean, callback:((any, number) => void))
     {
         super(text, font, x, y, width, height, ID, callback);
         this.color = color;
+        this.centered = centered;
     }
 
     drawAlpha(alpha:number)
@@ -139,11 +140,17 @@ class BShrdluButton extends BButton {
 
         ctx.font = this.font;
         ctx.textBaseline = "middle"; 
-        ctx.textAlign = "center";
-        ctx.fillText(this.text, this.x+this.width/2, this.y+this.height/2);
+        if (this.centered) {
+            ctx.textAlign = "center";
+            ctx.fillText(this.text, this.x+this.width/2, this.y+this.height/2);
+        } else {
+            ctx.textAlign = "left";
+            ctx.fillText(this.text, this.x, this.y+this.height/2);
+        }
     }
 
     color:string;
+    centered:boolean;
 }
 
 
@@ -155,7 +162,7 @@ function createShrdluMenu(lines:string[], callbacks:((any, number) => void)[],
     BInterface.addElement(new BShrdluFrame(x,y,width,height, GLTM));
     let by:number = y + 8*PIXEL_SIZE;
     for(let i = 0;i<lines.length;i++) {
-        BInterface.addElement(new BShrdluButton(lines[i], font, x, by, width, font_heigth, starting_ID, "white", callbacks[i]));
+        BInterface.addElement(new BShrdluButton(lines[i], font, x, by, width, font_heigth, starting_ID, "white", true, callbacks[i]));
         starting_ID++;
         by += font_heigth + interline_space;
     }
@@ -168,7 +175,7 @@ function getShrdluInstructionsString() : string[]
     instructions.push("");
     instructions.push(" Controls:");
     instructions.push(" - Move with ARROW KEYS");
-    instructions.push(" - ENTER or type to talk");
+    instructions.push(" - Type to talk");
     instructions.push(" - SPACE to take/interact");
     instructions.push(" - SPACE + ARROW KEYS to push/pull");
     instructions.push(" - TAB to toogle inventory");
@@ -176,10 +183,10 @@ function getShrdluInstructionsString() : string[]
     instructions.push(" - U to use items in inventory");
     instructions.push(" - PGUP/PGDOWN to navigate messages");
     instructions.push("   and the inventory");
-    instructions.push(" - Alternatively, use the MOUSE to");
-    instructions.push("   interact with the UI");
+    instructions.push(" - ESC/ENTER to skip text bubbles");
     instructions.push(" - SHIFT to speed up walking");
     instructions.push(" - ESC to pause/load/save/quit");
+    instructions.push(" - You can also use the mouse");
 /*
     instructions.push("- Levers open/close doors or trigger other secrets.");
     if (this.game.allowStats) {

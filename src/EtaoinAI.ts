@@ -82,6 +82,9 @@ class EtaoinAI extends A4RuleBasedAI {
 				this.queueIntention(term2, null, null);
 
 				this.oxygen_message_timer = 50*20;	// do not say anything for 20 seconds
+
+				app.achievement_interact_low_oxygen = true;
+				app.trigger_achievement_complete_alert();
 			}
 			
 		} else {
@@ -249,8 +252,9 @@ class EtaoinAI extends A4RuleBasedAI {
 		if (l == this.baseindoors_location) return true;
 		if (this.game.location_in[this.game.locations.indexOf(l)][this.game.locations.indexOf(this.baseoutdoors_location)]) return true;
 
-		// if it is the comunicator:
-		if (o == this.communicator_object) {
+		// if it is the comunicator (of the object has the communicator):
+		if (o == this.communicator_object ||
+			o.findObjectByID(this.communicator_object.ID) != null) {
 			// once the comm tower is repaired, the communicator can be reached anywhere
 			if (this.game.comm_tower_repaired) return true;
 
@@ -274,8 +278,9 @@ class EtaoinAI extends A4RuleBasedAI {
 
 	add3DPrintingKnowledge(game:A4Game, o:Ontology)
 	{
-		for(let item in game.three_d_printer_recipies) {
-			let materials:string[] = game.three_d_printer_recipies[item];
+		for(let recipe of game.three_d_printer_recipies) {
+			let item:string = recipe[0]
+			let materials:string[] = recipe[1];
 
 			let term:Term = Term.fromString("verb.can('"+this.selfID+"'[#id], action.print('"+this.selfID+"'[#id], '"+item+"'["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);

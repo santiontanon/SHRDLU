@@ -124,6 +124,11 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
+		if (this.guideeObject instanceof A4Character) {
+			app.achievement_nlp_all_robot_actions[2] = true;
+			app.trigger_achievement_complete_alert();
+		}
+
 		this.executeContinuous(ai);
 		return true;
 	}
@@ -133,7 +138,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 	{
 		let ai:RobotAI = <RobotAI>ai_raw;
 
-		if (this.guideeObject instanceof A4Character) {
+		if (this.guideeObject instanceof A4Character) {			
 			if (ai.robot.x == this.destinationX && ai.robot.y == this.destinationY) return true;
 			// check if the character we are guiding is too far:
 			if (this.guideeObject.map != ai.robot.map) {

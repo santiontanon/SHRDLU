@@ -77,6 +77,9 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
+		app.achievement_nlp_all_robot_actions[0] = true;
+		app.trigger_achievement_complete_alert();
+
 		ai.intentionsCausedByRequest.push(ir);
         ai.setNewAction(intention, requester, null, this);
 		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),

@@ -100,6 +100,9 @@ class RobotGive_IntentionAction extends IntentionAction {
 							var term:Term = Term.fromString(tmp, ai.o);
 							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 
+							app.achievement_nlp_all_robot_actions[6] = true;
+							app.trigger_achievement_complete_alert();
+
 					        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, targetCharacter);
 					        q.scripts.push(new A4Script(A4_SCRIPT_GOTO_CHARACTER, targetID, null, 0, false, false));
 					        q.scripts.push(new A4Script(A4_SCRIPT_GIVE, itemToGiveID, null, 0, false, false));

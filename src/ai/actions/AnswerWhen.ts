@@ -13,6 +13,9 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[6] = true;
+    	app.trigger_achievement_complete_alert();
+
 		console.log(ai.selfID + " answer when: " + intention);	
 		var resolution:Sort = null;
 		var target:TermAttribute = null;

@@ -268,6 +268,7 @@ class ShrdluGameScript {
 	skip_to_tardis8()
 	{
 		this.skip_to_end_of_act_2();
+		this.game.loadTardis8LocationKnowledge();
 		this.updateKnowledgeAfterReachingTrantorCrater();
 		this.act = "3";
 		this.act_3_state = 0;
@@ -1143,7 +1144,12 @@ class ShrdluGameScript {
 
 		case 5:
 			// waiting for player to start talking to ETAOIN:
-			if (this.game.etaoinAI.contextForSpeakerWithoutCreatingANewOne(this.playerID) != null) this.act_1_state = 6;
+			if (this.game.etaoinAI.contextForSpeakerWithoutCreatingANewOne(this.playerID) != null) {
+				this.act_1_state = 6;
+				
+				this.app.achievement_complete_tutorial = true;
+				this.app.trigger_achievement_complete_alert();
+			}
 			if (this.act_1_state_timer >= 600) this.act_1_state = 4;
 			break;
 
@@ -1529,6 +1535,8 @@ class ShrdluGameScript {
 			if (this.game.currentPlayer.isIdle() && 
 				this.game.getStoryStateVariable("act") == "act2") {
 				this.game.introact_request = 2;
+		        this.app.achievement_complete_act1 = true;
+		        this.app.trigger_achievement_complete_alert();
 			}
 			break;
 		}
@@ -2236,6 +2244,8 @@ class ShrdluGameScript {
 			if (this.game.currentPlayer.isIdle() && 
 				this.game.getStoryStateVariable("act") == "act3") {
 				this.game.introact_request = 3;
+				this.app.achievement_complete_act2 = true;
+				this.app.trigger_achievement_complete_alert();
 			}
 			break;
 		}

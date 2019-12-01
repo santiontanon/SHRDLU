@@ -130,6 +130,9 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 			if (adverbSort.name == "direction.left") direction = (ai.robot.direction+3)%A4_NDIRECTIONS;
 		}
 
+		app.achievement_nlp_all_robot_actions[10] = true;
+		app.trigger_achievement_complete_alert();
+
 		// perform the action:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = null

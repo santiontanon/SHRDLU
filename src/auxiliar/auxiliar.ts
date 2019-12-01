@@ -92,3 +92,22 @@ function splitStringBySpaces(text:string, maxWidth:number) : string[]
 
     return lines;
 }
+
+
+function allArrayElementsTrue(booleanArray:boolean[]) : boolean
+{
+    for(let i:number = 0; i<booleanArray.length; i++) {
+        if (booleanArray[i] == false) return false;
+    }
+    return true;
+}
+
+
+function nTruesInArray(booleanArray:boolean[]) : number
+{
+    let n:number = 0;
+    for(let i:number = 0; i<booleanArray.length; i++) {
+        if (booleanArray[i]) n++;
+    }
+    return n;    
+}

@@ -50,13 +50,13 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				txt = ai.game.naturalLanguageGenerator.capitalize(txt);
 			}
 		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
+			// this is just a shortcut for the 3 laws of robotics easter egg:
 			txt = (<ConstantTermAttribute>intention.attributes[1]).value;					
 		} else {
 			console.error("RobotAI.executeIntention: malformed performative: " + performative.toString());
 		}
 
 		if (txt != null) {
-//				ai.game.addMessage(ai.selfID + ": " + txt);
 			if (!ai.robot.issueCommandWithString(A4CHARACTER_COMMAND_TALK, txt, 0, ai.game)) {
 				return null;	// not yet!
 			}

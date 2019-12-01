@@ -12,6 +12,9 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[9] = true;
+    	app.trigger_achievement_complete_alert();
+
 		if (intention.attributes.length == 2 &&
 			(intention.attributes[0] instanceof ConstantTermAttribute) &&
 			((intention.attributes[1] instanceof VariableTermAttribute) ||
@@ -28,6 +31,10 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.'[symbol])", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+
+				app.achievement_secret_3_laws_of_robotics = true;
+				app.trigger_achievement_complete_alert();
+
 				return true;
 			}
 

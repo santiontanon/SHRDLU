@@ -1104,6 +1104,8 @@ scriptFunctions[A4_SCRIPT_PULL] = function(script:A4Script, o:A4Object, map:A4Ma
 scriptFunctions[A4_SCRIPT_EATIFHUNGRY] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (otherCharacter.hungerTimer >= script.value) {
+        app.achievement_interact_eat_drink[0] = true;
+        app.trigger_achievement_complete_alert();
         otherCharacter.hungerTimer = 0;
         return SCRIPT_FINISHED;
     } else {
@@ -1115,6 +1117,8 @@ scriptFunctions[A4_SCRIPT_EATIFHUNGRY] = function(script:A4Script, o:A4Object, m
 scriptFunctions[A4_SCRIPT_DRINKIFTHIRSTY] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (otherCharacter.thirstTimer >= script.value) {
+        app.achievement_interact_eat_drink[1] = true;
+        app.trigger_achievement_complete_alert();
         otherCharacter.thirstTimer = 0;
         return SCRIPT_FINISHED;
     } else {

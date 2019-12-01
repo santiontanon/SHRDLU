@@ -12,6 +12,9 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[7] = true;
+    	app.trigger_achievement_complete_alert();
+
 		if (intention.attributes.length == 2) {
 			if (intention.attributes[1] instanceof ConstantTermAttribute) {
 				var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
@@ -39,6 +42,10 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 						for(let causeTerm2 of causeTerms) {
 							var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id], relation.cause([any],"+causeTerm2+")))", ai.o);
 							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, lastPerf.cause.cause, ai.time_in_seconds));
+						}
+						if (lastPerf.cause.causesComeFromInference) {
+							app.achievement_nlp_resolution_explanation = true;
+							app.trigger_achievement_complete_alert();
 						}
 						return true;
 					}

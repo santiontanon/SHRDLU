@@ -13,6 +13,9 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[0] = true;
+    	app.trigger_achievement_complete_alert();
+
 		let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term, ai.o);
 		let additional_sentences:Sentence[] = [];
 		let variablesPresent:boolean = false;

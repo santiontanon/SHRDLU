@@ -13,6 +13,9 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[4] = true;
+    	app.trigger_achievement_complete_alert();
+
 		if (intention.functor == ai.o.getSort("action.answer.query-followup")) {
 	    	if (intention.attributes.length == 3) {
 				// follow up query:

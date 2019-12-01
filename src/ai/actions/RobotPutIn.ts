@@ -127,6 +127,9 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			return true;
 		}
 
+		app.achievement_nlp_all_robot_actions[4] = true;
+		app.trigger_achievement_complete_alert();
+
 		// go to destination:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = null

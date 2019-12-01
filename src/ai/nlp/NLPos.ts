@@ -492,6 +492,11 @@ class POSParser {
       "the kitchen storage",
       "the medical storage",
       "station ai",
+      "bruce alper",
+      "zowie scott",
+      "the computer room",
+      "the engineering room",
+      "the engineering bay",
 
       "msx computer",
       "vg 8020",

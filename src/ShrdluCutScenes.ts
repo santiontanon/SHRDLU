@@ -251,6 +251,10 @@ class ShrdluCutScenes {
 					this.cutSceneState = 0;
 					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
+
+					this.app.achievement_secret_diaries[0] = true;
+					this.app.trigger_achievement_complete_alert();
+
 					return true;
 				}
 				break;
@@ -337,6 +341,9 @@ class ShrdluCutScenes {
 					this.cutSceneState = 0;
 					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
+
+					this.app.achievement_secret_posters[0] = true;
+					this.app.trigger_achievement_complete_alert();
 					return true;
 				}
 				break;
@@ -399,6 +406,9 @@ class ShrdluCutScenes {
 					this.game.shrdluAI.addLongTermTerm(t, PERCEPTION_PROVENANCE);
 				}
 			}
+
+			this.app.achievement_secret_life_in_aurora = true;
+			this.app.trigger_achievement_complete_alert();
 
 			return true;
 		}
@@ -466,6 +476,10 @@ class ShrdluCutScenes {
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
+
+			this.app.achievement_secret_msx = true;
+			this.app.trigger_achievement_complete_alert();
+
 			return true;
 		}
 
@@ -585,6 +599,10 @@ class ShrdluCutScenes {
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
+
+			this.app.achievement_secret_diaries[1] = true;
+			this.app.trigger_achievement_complete_alert();
+
 			return true;
 		}
 
@@ -844,6 +862,9 @@ class ShrdluCutScenes {
 					this.cutSceneState = 0;
 					this.cutSceneStateTimer = 0;
 					this.ESCpressedRecord = false;
+
+					this.app.achievement_secret_posters[1] = true;
+					this.app.trigger_achievement_complete_alert();
 					return true;
 				}
 				break;
@@ -886,6 +907,10 @@ class ShrdluCutScenes {
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
+
+			this.app.achievement_secret_diaries[2] = true;
+			this.app.trigger_achievement_complete_alert();
+
 			return true;
 		}
 
@@ -945,6 +970,10 @@ class ShrdluCutScenes {
 			this.cutSceneState = 0;
 			this.cutSceneStateTimer = 0;
 			this.ESCpressedRecord = false;
+
+			this.app.achievement_secret_diaries[3] = true;
+			this.app.trigger_achievement_complete_alert();
+
 			return true;
 		}
 
@@ -1048,6 +1077,9 @@ class ShrdluCutScenes {
 				this.endingDestroyLines.push(" ");
 			}
 
+			this.app.achievement_complete_act3 = true;
+			this.app.achievement_complete_see_all_endings[0] = true;
+			this.app.trigger_achievement_complete_alert();
 		}
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);
@@ -1149,6 +1181,13 @@ class ShrdluCutScenes {
 				this.endingReadLines.push(" ");
 				this.endingReadLines.push(" ");
 			}
+
+			this.app.achievement_secret_diaries[4] = true;
+			this.app.trigger_achievement_complete_alert();
+
+			this.app.achievement_complete_act3 = true;
+			this.app.achievement_complete_see_all_endings[1] = true;
+			this.app.trigger_achievement_complete_alert();
 		}
 
 		let scroll:number = Math.floor(this.cutSceneStateTimer/12);

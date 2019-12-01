@@ -209,6 +209,7 @@ class CauseRecord {
 	term:Term = null;
 	cause:CauseRecord = null;
 	timeStamp:number = null;
+	causesComeFromInference:boolean = false;
 
 }
 
@@ -325,7 +326,10 @@ abstract class InferenceEffect {
 	                cause = new Term(ai.o.getSort("#and"), [new TermTermAttribute(cause), new TermTermAttribute(s_term)]);
 	            }
 			}
-			return new CauseRecord(cause, null, ai.time_in_seconds)
+
+			let cr:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
+			cr.causesComeFromInference = true;
+			return cr;
 		}
 	}	
 }
@@ -697,6 +701,10 @@ class RuleBasedAI {
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
     		if (this.talkingToUs(context, speakerID, null)) {
+
+		    	app.achievement_nlp_parse_error = true;
+		    	app.trigger_achievement_complete_alert();
+
 	    		// respond!
 	    		if (this.naturalLanguageParser.error_semantic.length > 0) {
 	    			console.log(this.selfID + ": semantic error when parsing a performative from " + speakerID);
@@ -1170,6 +1178,9 @@ class RuleBasedAI {
 
 	reactToMoreResultsPerformative(perf:Term, speaker:TermAttribute, context:NLContext)
 	{
+    	app.achievement_nlp_asked_for_more = true;
+    	app.trigger_achievement_complete_alert();
+		
 		if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
 			let resultsTA:TermAttribute = null;
 			if (context.lastEnumeratedQuestion_answers.length > 

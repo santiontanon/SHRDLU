@@ -19,6 +19,10 @@ class RobotStop_IntentionAction extends IntentionAction {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
+
+			app.achievement_nlp_all_robot_actions[3] = true;
+			app.trigger_achievement_complete_alert();
+
 			ai.clearCurrentAction();
 			ai.addLongTermTerm(Term.fromString("verb.do('"+ai.selfID+"'[#id], 'nothing'[nothing])", ai.o), PERCEPTION_PROVENANCE);
 		} else if (intention.attributes.length == 2 &&
@@ -30,6 +34,10 @@ class RobotStop_IntentionAction extends IntentionAction {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
+
+			app.achievement_nlp_all_robot_actions[3] = true;
+			app.trigger_achievement_complete_alert();
+
 			ai.clearCurrentAction();
 			ai.addLongTermTerm(Term.fromString("verb.do('"+ai.selfID+"'[#id], 'nothing'[nothing])", ai.o), PERCEPTION_PROVENANCE);
 		} else {

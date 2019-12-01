@@ -80,6 +80,10 @@ class RobotDrop_IntentionAction extends IntentionAction {
 										[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 										 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
 			ai.intentionsCausedByRequest.push(ir);
+
+			app.achievement_nlp_all_robot_actions[5] = true;
+			app.trigger_achievement_complete_alert();
+			
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
@@ -143,6 +147,9 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				}
 				return true;
 			}
+
+			app.achievement_nlp_all_robot_actions[5] = true;
+			app.trigger_achievement_complete_alert();
 
 			// go to destination:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);

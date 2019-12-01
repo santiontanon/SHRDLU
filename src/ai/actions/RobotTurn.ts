@@ -153,6 +153,9 @@ class RobotTurn_IntentionAction extends IntentionAction {
 			return true;
 		}		
 
+		app.achievement_nlp_all_robot_actions[9] = true;
+		app.trigger_achievement_complete_alert();
+
 		// go to destination (this is "turn", so it should just be moving one step):
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);

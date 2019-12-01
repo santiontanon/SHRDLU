@@ -18,13 +18,16 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 		if ((toPrintAttribute instanceof VariableTermAttribute) ||
 			(toPrintAttribute instanceof ConstantTermAttribute)){
 			let toPrint:Sort = toPrintAttribute.sort;
+			let recipe_idx:number = -1;
 			let recipe:string[] = null;
 
 			// find a recipe that matches the request:
-			for(let canPrint in ai.game.three_d_printer_recipies) {
+			for(let tmp of ai.game.three_d_printer_recipies) {
+				let canPrint:string = tmp[0];
 				if (ai.o.getSort(canPrint).is_a(toPrint)) {
 					toPrint = ai.o.getSort(canPrint);
-					recipe = ai.game.three_d_printer_recipies[canPrint];
+					recipe = tmp[1];
+					recipe_idx = ai.game.three_d_printer_recipies.indexOf(tmp);
 					break;
 				}
 			}
@@ -97,6 +100,10 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 
 			// force a perception update on the maintenance room, to make sure we can talk about the newly printed object:
 			ai.perceptionFocusedOnObject([obj], obj);
+
+			app.achievement_interact_3d_printed_one_of_each_kind[recipe_idx] = true;
+			app.achievement_nlp_all_etaoin_actions[5] = true;
+			app.trigger_achievement_complete_alert();
 
 		} else {
 			if (requester != null) {

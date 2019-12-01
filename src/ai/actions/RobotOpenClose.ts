@@ -68,12 +68,13 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
             	if ((<A4Door>door).checkForBlockages(true, null, ai.robot.map, ai.game, [])) {
 					// see if player has permission:
 	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf((<A4Door>door).doorID) == -1) {
+
+						app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
+						app.trigger_achievement_complete_alert();
+
 	            		// do it!
 				        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 				        var s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, door.ID, null, 0, false, false);
-	//			        var s:A4Script = new A4Script(A4_SCRIPT_INTERACT, door.map.name, null, 0, false, false);
-	//					s.x = door.x;
-	//					s.y = (door.y+door.tallness)// - ai.robot.tallness;
 				        q.scripts.push(s);
 				        ai.setNewAction(intention, ir.requester, q, null);
 						ai.addLongTermTerm(new Term(intention.functor,
@@ -109,13 +110,12 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
         } else if (door != null && (door instanceof A4ObstacleContainer) &&
         	 	   (<A4ObstacleContainer>door).closeable) {
             if ((<A4ObstacleContainer>door).closed == open) {
-				// see if player has permission:
+				app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
+				app.trigger_achievement_complete_alert();
+
         		// do it!
 		        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 		        var s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, door.ID, null, 0, false, false);
-//			        var s:A4Script = new A4Script(A4_SCRIPT_INTERACT, door.map.name, null, 0, false, false);
-//					s.x = door.x;
-//					s.y = (door.y+door.tallness)// - ai.robot.tallness;
 		        q.scripts.push(s);
 		        ai.setNewAction(intention, ir.requester, q, null);
 				ai.addLongTermTerm(new Term(intention.functor,

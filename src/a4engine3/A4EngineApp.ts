@@ -21,12 +21,15 @@ var A4ENGINE_STATE_ACT1INTRO:number = 5
 var A4ENGINE_STATE_ACT2INTRO:number = 6
 var A4ENGINE_STATE_ACT3INTRO:number = 7
 var A4ENGINE_STATE_GAMEOVER:number = 8
+var A4ENGINE_STATE_ACHIEVEMENTS_MENU:number = 9
+var A4ENGINE_STATE_ACHIEVEMENTS_INGAME:number = 10
 
 var MAX_VOLUME:number = 1.0;
 var DEFAULT_game_path:string = "data";
 var DEFAULT_game_file:string = "shrdlu.xml";
 
 var A4CONFIG_STORAGE_KEY:string = "SHRDLU-configuration";
+var ACHIEVEMENTS_STORAGE_KEY:string = "SHRDLU-achievements";
 var A4SAVEGAME_STORAGE_KEY:string = "SHRDLU-savegame";
 
 var INGAME_MENU:number = 1;
@@ -41,15 +44,17 @@ var INGAME_INSTRUCTIONS_MENU:number = 8;
 var INGAME_TUTORIAL:number = 9;
 
 var QUIT_REQUEST_ACTION_QUIT:number = 0;
-var QUIT_REQUEST_ACTION_LOAD1:number = 1;
-var QUIT_REQUEST_ACTION_LOAD2:number = 2;
-var QUIT_REQUEST_ACTION_LOAD3:number = 3;
-var QUIT_REQUEST_ACTION_LOAD4:number = 4;
+var QUIT_REQUEST_ACTION_ACHIEVEMENTS:number = 1;
+var QUIT_REQUEST_ACTION_LOAD1:number = 2;
+var QUIT_REQUEST_ACTION_LOAD2:number = 3;
+var QUIT_REQUEST_ACTION_LOAD3:number = 4;
+var QUIT_REQUEST_ACTION_LOAD4:number = 5;
 
 
 class A4EngineApp {
     constructor(a_dx:number, a_dy:number) {
         this.loadConfiguration();
+        this.loadAchievements();
 
         this.game = null;
         this.state = A4ENGINE_STATE_INTRO;
@@ -232,7 +237,11 @@ class A4EngineApp {
                                         break;
             case A4ENGINE_STATE_GAMEOVER:   this.state = this.gameover_cycle(k);
                                         break;
-            default:// A4ENGINE_STATE_QUIT:
+            case A4ENGINE_STATE_ACHIEVEMENTS_MENU:    this.state = this.achievements_cycle(k, false);
+                                        break;
+            case A4ENGINE_STATE_ACHIEVEMENTS_INGAME:  this.state = this.achievements_cycle(k, true);
+                                        break;
+            default:
                     return false;
             }
 
@@ -258,6 +267,11 @@ class A4EngineApp {
         }
 
         this.mouse_click_last_frame = false;
+
+        if (this.achievement_alert >= 0) {
+            this.achievement_alert_timer++;
+            if (this.achievement_alert_timer>256) this.achievement_alert = -1;
+        }
 
         return true;
     }
@@ -290,7 +304,10 @@ class A4EngineApp {
                                                 break;
             case A4ENGINE_STATE_ACT3INTRO:      this.actintro_draw(3);
                                                 break;
-            case A4ENGINE_STATE_GAMEOVER:      this.gameover_draw();
+            case A4ENGINE_STATE_GAMEOVER:       this.gameover_draw();
+                                                break;
+            case A4ENGINE_STATE_ACHIEVEMENTS_MENU:
+            case A4ENGINE_STATE_ACHIEVEMENTS_INGAME:  this.achievements_draw();
                                                 break;
             }
         } catch(e) {
@@ -300,6 +317,20 @@ class A4EngineApp {
             this.game.etaoinAI.intentions = [];    // clear the intentions to prevent the error from happening again and again
             this.game.qwertyAI.intentions = [];
             this.game.shrdluAI.intentions = [];
+        }
+
+        if (this.achievement_alert >= 0) {
+            let x:number = 0;
+            let y:number = 184;
+            let text:string = "Achievement: " + this.achievement_names[this.achievement_alert];
+            if (this.achievement_alert_timer<64) {
+                x = 4*(this.achievement_alert_timer-64);
+            } else if (this.achievement_alert_timer>196) {
+                x = 4*(196-this.achievement_alert_timer)
+            }
+            ctx.fillStyle = MSX_COLOR_DARK_BLUE;
+            ctx.fillRect(x*PIXEL_SIZE,(y-1)*PIXEL_SIZE,(text.length*6+1)*PIXEL_SIZE,9*PIXEL_SIZE);
+            fillTextTopLeft(text, x*PIXEL_SIZE,y*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
         }
     }
 
@@ -561,17 +592,25 @@ class A4EngineApp {
                                           false, fontFamily32px, 32, 8*PIXEL_SIZE, 8*PIXEL_SIZE, 240*PIXEL_SIZE, 164*PIXEL_SIZE, app.GLTM));
 
                        BInterface.addElement(new BShrdluButton("Back", fontFamily32px, app.screen_width/2-80, app.screen_height-206, 160, 64, 30, 
-                                                         "white",
+                                                         "white", true,
                                                          function(arg:any, ID:number) {
                                                             BInterface.pop();
                                                          }));
                    });
+            menuItems.push("Achievements");
+            menuCallbacks.push(
+                function(arg:any, ID:number) {    
+                       let app = <A4EngineApp>arg;
+                       if (app.titlescreen_state == 2) return;
+                       app.titlescreen_state = 4;
+                       app.titlescreen_timer = 0;
+                   });            
 //            menuItems.push("configuration");
 //            menuCallbacks.push(createConfigurationMenu);
 
             createShrdluMenu(menuItems,menuCallbacks,  
                              fontFamily32px,32,this.screen_width/2-7*8*PIXEL_SIZE,this.screen_height/2+3*8*PIXEL_SIZE,
-                             14*8*PIXEL_SIZE,(5*8)*PIXEL_SIZE,PIXEL_SIZE,1,this.GLTM);
+                             14*8*PIXEL_SIZE,(6*8)*PIXEL_SIZE,0,1,this.GLTM);
 
             // if there are no savegames, load is disabled:
             let anySaveGame:boolean = false;
@@ -589,10 +628,10 @@ class A4EngineApp {
             this.titlescreen_y = 0;
         }
 
-        if (this.titlescreen_state==0) {
+        if (this.titlescreen_state == 0) {
             this.titlescreen_timer++;
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) this.titlescreen_state = 1;
-        } else if (this.titlescreen_state==2) {
+        } else if (this.titlescreen_state == 2) {
             this.titlescreen_timer++;
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
                 BInterface.reset();
@@ -602,12 +641,19 @@ class A4EngineApp {
 
                 return A4ENGINE_STATE_ACT1INTRO;
             }
-        } else if (this.titlescreen_state==3) {
+        } else if (this.titlescreen_state == 3) {
             this.titlescreen_timer++;
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
                 BInterface.reset();
 
                 return A4ENGINE_STATE_GAME;
+            }
+        } else if (this.titlescreen_state == 4) {
+            this.titlescreen_timer++;
+            if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
+                BInterface.reset();
+
+                return A4ENGINE_STATE_ACHIEVEMENTS_MENU;
             }
         }
 
@@ -619,7 +665,7 @@ class A4EngineApp {
     {
         let f1:number = 1;
         if (this.titlescreen_state == 0) {
-        } else if (this.titlescreen_state == 2 || this.titlescreen_state == 3) {
+        } else if (this.titlescreen_state == 2 || this.titlescreen_state == 3 || this.titlescreen_state == 4) {
             f1 = 1 - this.titlescreen_timer/SHRDLU_FADEIN_TIME;
             if (f1<0) f1 = 0;
             if (f1>1) f1 = 1;
@@ -690,7 +736,15 @@ class A4EngineApp {
                        app.ingame_menu = INGAME_INSTRUCTIONS_MENU;
                    });
 
-//            menuItems.push("Send Debug Log");
+            menuItems.push("Achievements");
+            menuCallbacks.push(
+                function(arg:any, ID:number) {    
+                        let app = <A4EngineApp>arg;
+                        app.quit_request = true;
+                        app.quit_request_cycle = app.state_cycle;
+                        app.quit_request_action = QUIT_REQUEST_ACTION_ACHIEVEMENTS;
+                   });
+
             menuItems.push("Generate Debug Log");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
@@ -720,7 +774,7 @@ class A4EngineApp {
 //            createShrdluMenu(menuItems,menuCallbacks,  
 //                             fontFamily32px,32,this.screen_width/2-8*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,16*8*PIXEL_SIZE,7*8*PIXEL_SIZE,0,1,this.GLTM);
             createShrdluMenu(menuItems,menuCallbacks,  
-                             fontFamily32px,32,this.screen_width/2-8*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,16*8*PIXEL_SIZE,8*8*PIXEL_SIZE,0,1,this.GLTM);
+                             fontFamily32px,32,this.screen_width/2-8*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,16*8*PIXEL_SIZE,9*8*PIXEL_SIZE,0,1,this.GLTM);
             // if there are no savegames, load is disabled:
             let anySaveGame:boolean = false;
             for(let i:number = 0;i<4;i++) {
@@ -856,7 +910,7 @@ class A4EngineApp {
                 if (k.key_press(KEY_CODE_RETURN)) {
                     if (!this.game.skipSpeechBubble()) {
                         //this.game.playerInput_RequestMessageMode();
-                        this.game.textInputRequest();
+                        //this.game.textInputRequest();
                     }
                 }
                 // start text entering mode with any letter key:
@@ -914,6 +968,11 @@ class A4EngineApp {
                             if (k.keyboard[this.key_fast_time]) {
                                 fast_time = true;
                                 fast_time_direction_command = direction;
+
+                                if (!this.achievement_interact_in_a_rush) {
+                                    this.achievement_interact_in_a_rush = true;
+                                    this.trigger_achievement_complete_alert();
+                                }
                             }
                             this.game.playerInput_issueCommand(A4CHARACTER_COMMAND_WALK,0,direction);
                         }
@@ -1005,6 +1064,8 @@ class A4EngineApp {
             this.quit_request = false;
             if (this.quit_request_action == QUIT_REQUEST_ACTION_QUIT) {
                 return A4ENGINE_STATE_INTRO;
+            } else if (this.quit_request_action == QUIT_REQUEST_ACTION_ACHIEVEMENTS) {
+                return A4ENGINE_STATE_ACHIEVEMENTS_INGAME;
             } else {
                 let ID:number = (this.quit_request_action - QUIT_REQUEST_ACTION_LOAD1) + 1;
                 let xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
@@ -1144,7 +1205,6 @@ class A4EngineApp {
 
     actintro_cycle(k:KeyboardState, act:number) : number
     {
-
         switch(this.introact_state) {
             case 0:
                 this.introact_state_timer++;
@@ -1300,6 +1360,401 @@ class A4EngineApp {
     }
 
 
+
+    achievements_cycle(k:KeyboardState, inGame:boolean) : number
+    {
+
+        switch(this.achievements_state) {
+            case 0:
+                if (this.achievements_state_timer == 0) {
+                    BInterface.pushIgnoringCurrent();
+                    BInterface.addElement(new BShrdluButton("Back", fontFamily32px, this.screen_width/2-80, this.screen_height-64, 160, 64, 
+                                                     100, 
+                                                     "white", true,
+                                                     function(arg:any, ID:number) {
+                                                        let app = <A4EngineApp>arg;
+                                                        app.achievements_state = 2;
+                                                     }));
+
+                    for(let i:number = 0; i<this.achievement_names.length; i++) {
+                        BInterface.addElement(new BShrdluButton(this.achievement_names[i], fontFamily32px, 
+                                                                8*PIXEL_SIZE, 8*(i+1)*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
+                                                                "white", false,
+                            function(arg:any, ID:number) {
+                                let app = <A4EngineApp>arg;
+                                BInterface.push();
+                                BInterface.addElement(
+                                    new BShrdluTextFrame(app.achievement_descriptions[ID-101].concat([""]).concat(app.achievement_progress_string(ID-101)), 
+                                                        false, fontFamily32px, 32, 8*PIXEL_SIZE, 8*PIXEL_SIZE, 240*PIXEL_SIZE, 128*PIXEL_SIZE, app.GLTM));
+
+                               BInterface.addElement(new BShrdluButton("Back", fontFamily32px, app.screen_width/2-80, app.screen_height-300, 160, 64, 200, 
+                                                                "white", true,
+                                                                function(arg:any, ID:number) {
+                                                                    BInterface.pop();
+                                                                }));
+
+
+                            }));
+                    }
+                }
+                this.achievements_state_timer++;
+                if (this.achievements_state_timer >= SHRDLU_FADEIN_TIME || 
+                    k.key_press(KEY_CODE_ESCAPE) || k.key_press(KEY_CODE_SPACE) || k.key_press(KEY_CODE_RETURN) ||
+                    this.mouse_click_last_frame) {
+                    this.achievements_state_timer = 0;
+                    this.achievements_state = 1;
+                }
+                break;
+            case 1:
+                // showing achievements
+                break;
+
+            case 2:
+                // request exit
+                BInterface.pop();
+                this.achievements_state = 0;
+                this.achievements_state_timer = 0;
+                if (inGame) {
+                    return A4ENGINE_STATE_GAME;
+                } else {
+                    return A4ENGINE_STATE_TITLESCREEN;
+                }
+
+        }        
+        return this.state;
+    }
+
+
+    achievements_draw()
+    {
+        ctx.save();
+        ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
+
+        for(let i:number = 0; i<this.achievement_names.length; i++) {
+            if (this.achievement_complete(i)) {
+                fillTextTopLeft("COMPLETE!", 196, (i+1)*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
+            } else {
+                fillTextTopLeft(" Pending", 196, (i+1)*8, fontFamily8px, MSX_COLOR_GREY);
+            }
+        }
+
+        ctx.restore();
+        BInterface.draw();    
+
+        if (this.achievements_state == 0 && this.achievements_state_timer<SHRDLU_FADEIN_TIME) {
+            drawFadeInOverlay(1-((this.achievements_state_timer)/SHRDLU_FADEIN_TIME));
+        }
+    }
+
+
+    achievement_complete(idx:number) : boolean
+    {
+        switch(this.achievement_names[idx]) {
+            case "Complete Tutorial":
+                return this.achievement_complete_tutorial;
+                break;
+            case "Complete Act 1":
+                return this.achievement_complete_act1;
+                break;
+            case "Complete Act 2":
+                return this.achievement_complete_act2;
+                break;
+            case "Complete Act 3":
+                return this.achievement_complete_act3;
+                break;
+            case "See both endings":
+                return allArrayElementsTrue(this.achievement_complete_see_all_endings);
+                break;
+
+            case "Hungry and thirsty":
+                return allArrayElementsTrue(this.achievement_interact_eat_drink);
+                break;
+            case "Maker":
+                return allArrayElementsTrue(this.achievement_interact_3d_printed_one_of_each_kind);
+                break;
+            case "Low on oxygen":
+                return this.achievement_interact_low_oxygen;
+                break;
+            case "In a rush":
+                return this.achievement_interact_in_a_rush;
+                break;
+
+            case "Natural language":
+                return this.achievement_nlp_parse_error;
+                break;
+            case "Asky":
+                return allArrayElementsTrue(this.achievement_nlp_all_types_of_questions);
+                break;
+            case "Etaoin at your service":
+                return allArrayElementsTrue(this.achievement_nlp_all_etaoin_actions);
+                break;
+            case "Robots at your service":
+                return allArrayElementsTrue(this.achievement_nlp_all_robot_actions);
+                break;
+            case "Justification":
+                return this.achievement_nlp_resolution_explanation;
+                break;
+            case "Three is not enough":
+                return this.achievement_nlp_asked_for_more;
+
+            case "Posters":
+                return allArrayElementsTrue(this.achievement_secret_posters);
+                break;
+            case "Diaries":
+                return allArrayElementsTrue(this.achievement_secret_diaries);
+                break;
+            case "Asimov":
+                return this.achievement_secret_3_laws_of_robotics;
+                break;
+            case "Vintage computer":
+                return this.achievement_secret_msx;
+                break;
+            case "The secret of Aurora":
+                return this.achievement_secret_life_in_aurora;
+                break;
+        }
+        return false;
+    }
+
+
+    achievement_progress_string(idx:number) : string[]
+    {
+        let lines:string[] = [];
+        switch(this.achievement_names[idx]) {
+            case "See Both Endings":
+                lines = ["Progress: " + nTruesInArray(this.achievement_complete_see_all_endings) + "/" + this.achievement_complete_see_all_endings.length];
+                break;
+
+            case "Hungry and Thirsty":
+                {
+                    let first:boolean[] = [true, true];
+                    let tags:string[] = ["eating", "drinking"];
+                    lines = ["Done: ", "Missing: "];
+
+                    for(let i:number = 0; i<first.length; i++) {
+                        if (this.achievement_interact_eat_drink[i]) {
+                            if (!first[0]) lines[0] += ", ";
+                            lines[0] += tags[i];
+                            first[0] = false;
+                        } else {
+                            if (!first[1]) lines[1] += ", ";
+                            lines[1] += tags[i];
+                            first[1] = false;
+                        }
+                    }
+                }
+                break;
+
+            case "Maker":
+                {
+                    let n:number = 0;
+                    for(let made of this.achievement_interact_3d_printed_one_of_each_kind) {
+                        if (made) n++;
+                    }
+                    lines = ["Progress: " + n + "/" + this.achievement_interact_3d_printed_one_of_each_kind.length];
+                }
+                break;
+
+            case "Asky":
+                {
+                    let first:boolean[] = [true, true, true, true, true, true, true, true, true, true];
+                    let tags:string[] =   ["predicate", "where", "who is", "what is", "query", "how many", "when", "why", "how", "define"];
+                    lines = ["Done: ", "Missing: "];
+
+                    for(let i:number = 0; i<first.length; i++) {
+                        if (this.achievement_nlp_all_types_of_questions[i]) {
+                            if (!first[0]) lines[0] += ", ";
+                            lines[0] += tags[i];
+                            first[0] = false;
+                        } else {
+                            if (!first[1]) lines[1] += ", ";
+                            lines[1] += tags[i];
+                            first[1] = false;
+                        }
+                    }
+                }
+                break;
+            case "Etaoin at your service":
+                {
+                    let first:boolean[] = [true, true, true, true, true, true];
+                    let tags:string[] =   ["connect to", "open", "close", "switch on", "switch off", "3d print"];
+                    lines = ["Done: ", "Missing: "];
+
+                    for(let i:number = 0; i<first.length; i++) {
+                        if (this.achievement_nlp_all_etaoin_actions[i]) {
+                            if (!first[0]) lines[0] += ", ";
+                            lines[0] += tags[i];
+                            first[0] = false;
+                        } else {
+                            if (!first[1]) lines[1] += ", ";
+                            lines[1] += tags[i];
+                            first[1] = false;
+                        }
+                    }
+                }
+                break;
+            case "Robots at your service":
+                {
+                    let first:boolean[] = [true, true, true, true, true, true, true, true, true, true, true, true, true];
+                    let tags:string[] =   ["follow", "move", "guide", "stop", "put in", "drop", "give", "open", "close", "turn", "push", "repair", "take"];
+                    lines = ["Done: ", "Missing: "];
+
+                    for(let i:number = 0; i<first.length; i++) {
+                        if (this.achievement_nlp_all_robot_actions[i]) {
+                            if (!first[0]) lines[0] += ", ";
+                            lines[0] += tags[i];
+                            first[0] = false;
+                        } else {
+                            if (!first[1]) lines[1] += ", ";
+                            lines[1] += tags[i];
+                            first[1] = false;
+                        }
+                    }
+                }
+                break;
+            case "Posters":
+                lines = ["Progress: " + nTruesInArray(this.achievement_secret_posters) + "/" + this.achievement_secret_posters.length];
+                break;
+            case "Diaries":
+                lines = ["Progress: " + nTruesInArray(this.achievement_secret_diaries) + "/" + this.achievement_secret_diaries.length];
+                break;
+
+            default:
+        }
+
+        // split lines that are too long:
+        let lines2:string[] = [];
+        for(let line of lines) {
+            if (line.length > 37) {
+                for(let line2 of splitStringBySpaces(line, 37)) {
+                    lines2.push(line2);
+                }
+            } else {
+                lines2.push(line);
+            } 
+        }
+
+        return lines2;
+    }
+
+
+    trigger_achievement_complete_alert()
+    {
+        for(let i:number = 0; i<this.achievement_completed_alerts_shown.length; i++) {
+            if (!this.achievement_completed_alerts_shown[i] &&
+                this.achievement_complete(i)) {
+                this.achievement_completed_alerts_shown[i] = true;
+                this.achievement_alert = i;
+                this.achievement_alert_timer = 0;
+            }
+        }
+
+        this.saveAchievements();
+    }
+
+
+    loadAchievements()
+    {
+        let ach_xml:Element = null;
+
+        let achString:string = localStorage.getItem(ACHIEVEMENTS_STORAGE_KEY);
+        if (achString != null) {
+            console.log("Found config stored in the browser, loading it...");
+            // if we can find a configuration saved in the browser, load it:
+            let oParser:DOMParser = new DOMParser();
+            ach_xml = oParser.parseFromString(achString, "text/xml").documentElement;
+        }
+        
+        if (ach_xml!=null) {
+            let slot_xml:Element = getFirstElementChildByTag(ach_xml, "achievement_completed_alerts_shown");
+            if (slot_xml != null) this.achievement_completed_alerts_shown = <boolean []>eval(slot_xml.getAttribute("value"));
+
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_tutorial");
+            if (slot_xml != null) this.achievement_complete_tutorial = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_act1");
+            if (slot_xml != null) this.achievement_complete_act1 = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_act2");
+            if (slot_xml != null) this.achievement_complete_act2 = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_act3");
+            if (slot_xml != null) this.achievement_complete_act3 = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_see_all_endings");
+            if (slot_xml != null) this.achievement_complete_see_all_endings = <boolean []>eval(slot_xml.getAttribute("value"));
+
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_interact_eat_drink");
+            if (slot_xml != null) this.achievement_interact_eat_drink = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_interact_3d_printed_one_of_each_kind");
+            if (slot_xml != null) this.achievement_interact_3d_printed_one_of_each_kind = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_interact_low_oxygen");
+            if (slot_xml != null) this.achievement_interact_low_oxygen = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_interact_in_a_rush");
+            if (slot_xml != null) this.achievement_interact_in_a_rush = <boolean>eval(slot_xml.getAttribute("value"));
+
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_parse_error");
+            if (slot_xml != null) this.achievement_nlp_parse_error = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_all_types_of_questions");
+            if (slot_xml != null) this.achievement_nlp_all_types_of_questions = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_all_etaoin_actions");
+            if (slot_xml != null) this.achievement_nlp_all_etaoin_actions = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_all_robot_actions");
+            if (slot_xml != null) this.achievement_nlp_all_robot_actions = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_resolution_explanation");
+            if (slot_xml != null) this.achievement_nlp_resolution_explanation = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_nlp_asked_for_more");
+            if (slot_xml != null) this.achievement_nlp_asked_for_more = <boolean>eval(slot_xml.getAttribute("value"));
+
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_posters");
+            if (slot_xml != null) this.achievement_secret_posters = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_diaries");
+            if (slot_xml != null) this.achievement_secret_diaries = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_life_in_aurora");
+            if (slot_xml != null) this.achievement_secret_life_in_aurora = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_msx");
+            if (slot_xml != null) this.achievement_secret_msx = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_3_laws_of_robotics");
+            if (slot_xml != null) this.achievement_secret_3_laws_of_robotics = <boolean>eval(slot_xml.getAttribute("value"));
+        } else {
+            console.log("No achievement data found!");
+        }
+    }
+
+
+    saveAchievements()
+    {
+        let achString:string = "<achievements>";
+
+        achString += "<achievement_completed_alerts_shown value=\"["+this.achievement_completed_alerts_shown.toString()+"]\"/>"
+
+        achString += "<achievement_complete_tutorial value=\""+this.achievement_complete_tutorial+"\"/>"
+        achString += "<achievement_complete_act1 value=\""+this.achievement_complete_act1+"\"/>"
+        achString += "<achievement_complete_act2 value=\""+this.achievement_complete_act2+"\"/>"
+        achString += "<achievement_complete_act3 value=\""+this.achievement_complete_act3+"\"/>"
+        achString += "<achievement_complete_see_all_endings value=\"["+this.achievement_complete_see_all_endings.toString()+"]\"/>"
+
+        achString += "<achievement_interact_eat_drink value=\"["+this.achievement_interact_eat_drink.toString()+"]\"/>"
+        achString += "<achievement_interact_3d_printed_one_of_each_kind value=\"["+this.achievement_interact_3d_printed_one_of_each_kind.toString()+"]\"/>"
+        achString += "<achievement_interact_low_oxygen value=\""+this.achievement_interact_low_oxygen+"\"/>"
+        achString += "<achievement_interact_in_a_rush value=\""+this.achievement_interact_in_a_rush+"\"/>"
+
+        achString += "<achievement_nlp_parse_error value=\""+this.achievement_nlp_parse_error+"\"/>"
+        achString += "<achievement_nlp_all_types_of_questions value=\"["+this.achievement_nlp_all_types_of_questions.toString()+"]\"/>"
+        achString += "<achievement_nlp_all_etaoin_actions value=\"["+this.achievement_nlp_all_etaoin_actions.toString()+"]\"/>"
+        achString += "<achievement_nlp_all_robot_actions value=\"["+this.achievement_nlp_all_robot_actions.toString()+"]\"/>"
+        achString += "<achievement_nlp_resolution_explanation value=\""+this.achievement_nlp_resolution_explanation+"\"/>"
+        achString += "<achievement_nlp_asked_for_more value=\""+this.achievement_nlp_asked_for_more+"\"/>"
+
+        achString += "<achievement_secret_posters value=\"["+this.achievement_secret_posters.toString()+"]\"/>"
+        achString += "<achievement_secret_diaries value=\"["+this.achievement_secret_diaries.toString()+"]\"/>"
+        achString += "<achievement_secret_life_in_aurora value=\""+this.achievement_secret_life_in_aurora+"\"/>"
+        achString += "<achievement_secret_msx value=\""+this.achievement_secret_msx+"\"/>"
+        achString += "<achievement_secret_3_laws_of_robotics value=\""+this.achievement_secret_3_laws_of_robotics+"\"/>"
+
+        achString += "</achievements>"
+        localStorage.setItem(ACHIEVEMENTS_STORAGE_KEY, achString);
+        console.log("Achievements saved to the browser ... (key: " + ACHIEVEMENTS_STORAGE_KEY + ")");  
+        // console.log("string:\n" + achString);
+    }    
+
+
     GLTM:GLTManager;
     SFXM:SFXManager;
 
@@ -1374,6 +1829,123 @@ class A4EngineApp {
     gameover_type:number = 0;
     gameover_state:number = 0;
     gameover_state_timer:number = 0;
+
+    // achievements data:
+    achievements_state:number = 0;
+    achievements_state_timer:number = 0;
+
+    achievement_names:string[] = [
+        "Complete Tutorial",
+        "Complete Act 1",
+        "Complete Act 2",
+        "Complete Act 3",
+        "See both endings",
+
+        "Hungry and thirsty",
+        "Maker",
+        "Low on oxygen",
+        "In a rush",
+
+        "Natural language",
+        "Asky",
+        "Etaoin at your service",
+        "Robots at your service",
+        "Justification",
+        "Three is not enough",
+
+        "Posters",
+        "Diaries",
+        "Asimov",
+        "Vintage computer",
+        "The secret of Aurora",
+    ];
+
+    achievement_descriptions:string[][] = [
+        ["Obtained when you complete the game",
+         "tutorial."],
+        ["Obtained when you complete Act 1 of",
+         "the game."],
+        ["Obtained when you complete Act 2 of",
+         "the game."],
+        ["Obtained when you complete Act 3 of",
+         "the game."],
+        ["Obtained when you see the different",
+         "endings of the game."],
+
+        ["You just woke up form a long time in",
+         "stasis. Find something to eat and to",
+         "drink, and consume it."],
+        ["Have you seen the 3d printers? Print",
+         "an item of each of the types that",
+         "they can produce."],
+        ["Risk walking with oxygen level so low",
+         "that Etaoin warns you about it."],
+        ["Walking feels too slow? Check the",
+         "instructions for how to walk faster!"],
+
+        ["Say something the AI cannot parse."],
+        ["The AI can understand many different",
+         "types of question. Ask at least one",
+         "question of each of the types it",
+         "knows how to respond to."],
+        ["Etaoin cannot just talk, it controls",
+         "the station. Make it do one of each",
+         "of the actions it can perform."],
+        ["Qwerty and Shrdlu can be very handy,",
+         "make them execute one of each of the",
+         "actions they can perform."],
+        ["Do you believe what the AI said?",
+         "Manage to get it to justify one of",
+         "their answers."],
+        ["Some times the answer of the AI is",
+         "an enumeration. The AI only gives",
+         "the first three answers, followed by",
+         "\"...\". But you can ask for more!"],
+
+        ["Find all the science fiction posters",
+         "in the game."],
+        ["Find and read all the diaries and",
+         "data pads in the game."],
+        ["Do you know the three laws of",
+         "robotics? Make the AI remind you."],
+        ["Someone in the station was a retro-",
+         "computer fan, find his most precious",
+         "possession."],
+        ["Aurora might not be as dead as it",
+         "seems. Can you find evidence of it?"],
+    ];
+
+    achievement_completed_alerts_shown:boolean[] = [
+        false, false, false, false, false,
+        false, false, false,
+        false, false, false, false, false, false,
+        false, false, false, false, false
+    ];
+
+
+    achievement_complete_tutorial:boolean = false;
+    achievement_complete_act1:boolean = false;
+    achievement_complete_act2:boolean = false;
+    achievement_complete_act3:boolean = false;
+    achievement_complete_see_all_endings:boolean[] = [false,false];
+    achievement_interact_eat_drink:boolean[] = [false,false];
+    achievement_interact_3d_printed_one_of_each_kind:boolean[] = [false,false,false,false,false,false,false,false,false,false,false];
+    achievement_interact_low_oxygen:boolean = false;
+    achievement_interact_in_a_rush:boolean = false;
+    achievement_nlp_parse_error:boolean = false;
+    achievement_nlp_all_types_of_questions:boolean[] = [false,false,false,false,false,false,false,false,false,false];
+    achievement_nlp_all_etaoin_actions:boolean[] = [false,false,false,false,false];
+    achievement_nlp_all_robot_actions:boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false,false];
+    achievement_nlp_resolution_explanation:boolean = false;
+    achievement_nlp_asked_for_more:boolean = false;
+    achievement_secret_posters:boolean[] = [false,false];
+    achievement_secret_diaries:boolean[] = [false,false,false,false,false];
+    achievement_secret_life_in_aurora:boolean = false;
+    achievement_secret_msx:boolean = false;
+    achievement_secret_3_laws_of_robotics:boolean = false;
+
+    achievement_alert:number = -1;
+    achievement_alert_timer:number = 0;
 
     // AI debugger:
     SHRDLU_AI_debugger:RuleBasedAIDebugger = new RuleBasedAIDebugger();

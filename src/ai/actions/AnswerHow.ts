@@ -12,6 +12,9 @@ class AnswerHow_IntentionAction extends IntentionAction {
 		var intention:Term = ir.action;
 		var requester:TermAttribute = ir.requester;
 
+    	app.achievement_nlp_all_types_of_questions[8] = true;
+    	app.trigger_achievement_complete_alert();
+
 		if (intention.attributes.length == 2) {
 			if (intention.attributes[1] instanceof ConstantTermAttribute) {
 				var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;

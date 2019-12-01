@@ -79,6 +79,9 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));        			        		
 	        	}
+
+	        	app.achievement_nlp_all_etaoin_actions[2] = true;
+	        	app.trigger_achievement_complete_alert();
 	        } else {
             	// it's already closed
 				if (requester != null) {

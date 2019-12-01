@@ -24,6 +24,9 @@ class EtaoinSwitchOff_IntentionAction extends IntentionAction {
 				let causetext:string = "relation.cause(powered.state('"+targetID+"'[#id], 'powered.off'[powered.off]), verb.switch-off('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))";
 				let causeTerm:Term = Term.fromString(causetext, ai.o);
 				ai.addLongTermTerm(causeTerm, PERCEPTION_PROVENANCE);
+
+	        	app.achievement_nlp_all_etaoin_actions[4] = true;
+	        	app.trigger_achievement_complete_alert();
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);

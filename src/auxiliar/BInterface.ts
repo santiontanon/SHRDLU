@@ -79,8 +79,16 @@ class BInterface {
 
         this.added_since_last_push = [];
         for(let e of this.elements) e.enabled = false;
+        this.ignoreBeforeThisIndexStack.push(this.ignoreBeforeThisIndex)
 
         BInterface.highlightedByKeyboard = -1;
+    }
+
+
+    static pushIgnoringCurrent()
+    {
+        this.push();
+        this.ignoreBeforeThisIndex = this.elements.length;
     }
 
 
@@ -95,6 +103,7 @@ class BInterface {
         for(let i:number = 0; i<this.added_since_last_push.length; i++) {
             this.added_since_last_push[i].setEnabled(enabled_since_last_push[i]);
         }
+        this.ignoreBeforeThisIndex = this.ignoreBeforeThisIndexStack.pop();
 
         BInterface.highlightedByKeyboard = -1;
     }
@@ -131,7 +140,8 @@ class BInterface {
 
     static mouseOverElement(mouse_x:number, mouse_y:number):boolean
     {
-        for(let e of this.elements) {
+        for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
+            let e:BInterfaceElement = this.elements[i];
             if (e.getEnabled() && e.mouseOver(mouse_x, mouse_y)) return true;
         }
     }
@@ -148,7 +158,8 @@ class BInterface {
                 let maxCycles:number = BInterface.elements.length;
                 do{
                     BInterface.highlightedByKeyboard++;
-                    if (BInterface.highlightedByKeyboard >= BInterface.elements.length) BInterface.highlightedByKeyboard = 0;
+                    if (BInterface.highlightedByKeyboard<this.ignoreBeforeThisIndex) BInterface.highlightedByKeyboard = this.ignoreBeforeThisIndex;
+                    if (BInterface.highlightedByKeyboard >= BInterface.elements.length) BInterface.highlightedByKeyboard = this.ignoreBeforeThisIndex;
                     if (BInterface.elements[BInterface.highlightedByKeyboard].enabled &&
                         BInterface.elements[BInterface.highlightedByKeyboard].active &&
                         BInterface.elements[BInterface.highlightedByKeyboard] instanceof BButton) break;
@@ -159,7 +170,7 @@ class BInterface {
                 let maxCycles:number = BInterface.elements.length;
                 do{
                     BInterface.highlightedByKeyboard--;
-                    if (BInterface.highlightedByKeyboard < 0) BInterface.highlightedByKeyboard = BInterface.elements.length-1;
+                    if (BInterface.highlightedByKeyboard < this.ignoreBeforeThisIndex) BInterface.highlightedByKeyboard = BInterface.elements.length-1;
                     if (BInterface.elements[BInterface.highlightedByKeyboard].enabled &&
                         BInterface.elements[BInterface.highlightedByKeyboard].active &&
                         BInterface.elements[BInterface.highlightedByKeyboard] instanceof BButton) break;
@@ -182,7 +193,8 @@ class BInterface {
             modal.update(mouse_x, mouse_y, k, arg);
             if (modal.to_be_deleted) to_delete.push(modal);
         } else {
-            for(let e of this.elements) {
+            for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
+                let e:BInterfaceElement = this.elements[i];
                 e.update(mouse_x, mouse_y, k, arg);
                 if (e.to_be_deleted) to_delete.push(e);
             }
@@ -199,7 +211,8 @@ class BInterface {
     {
         // we need this intermediate list, just in case mouseclick calls cause the creation of more elements
         var l:BInterfaceElement[] = [];
-        for(let e of this.elements) {
+        for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
+            let e:BInterfaceElement = this.elements[i];
             if (e.getEnabled() && e.mouseOver(mouse_x, mouse_y)) l.push(e);
         }
         for(let e of l) e.mouseClick(mouse_x, mouse_y, button, arg);
@@ -220,7 +233,8 @@ class BInterface {
 
     static drawAlpha(alpha:number)
     {
-        for(let e of this.elements) {
+        for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
+            let e:BInterfaceElement = this.elements[i];
             e.drawAlpha(alpha);
         }
     }
@@ -250,6 +264,9 @@ class BInterface {
     static added_since_last_push:BInterfaceElement[] = [];
     static stack:BInterfaceElement[][] = [];
     static enabledStack:boolean[][] = [];
+    static ignoreBeforeThisIndexStack:number[] = [];
+
+    static ignoreBeforeThisIndex:number = 0;
 
     static highlightedByKeyboard:number = -1;
 }

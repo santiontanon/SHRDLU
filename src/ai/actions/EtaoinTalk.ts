@@ -79,8 +79,14 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 					}
 				}
 			}
-//		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
-//			txt = (<ConstantTermAttribute>intention.attributes[1]).value;					
+		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
+			// this is just a shortcut for the 3 laws of robotics easter egg:
+			let txt:string = (<ConstantTermAttribute>intention.attributes[1]).value;					
+			ai.game.addMessage(ai.selfID + ": " + txt);
+			ai.player_object.map.textBubbles.push(
+				[new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null),
+				 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
+				);
 		} else {
 			console.error("EtaoinAI.executeIntention: malformed intention: " + intention.toString());
 		}

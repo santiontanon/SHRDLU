@@ -641,8 +641,10 @@
 	<location_connects l1="location-greenhouse" l2="location-aurora-settlement"/>
 	<location_connects l1="location-powerplant" l2="location-aurora-settlement"/>
 	<location_connects l1="spacer-valley" l2="location-aurora-settlement"/>
-	<location_connects l1="spacer-valley-south" l2="location-aurora-settlement"/>
+	<location_connects l1="spacer-valley" l2="location-west-cave"/>
 	<location_connects l1="spacer-valley" l2="location-east-cave"/>
+	<location_connects l1="spacer-valley-south" l2="location-aurora-settlement"/>
+	<location_connects l1="spacer-valley-north" l2="location-west-cave"/>
 	<location_connects l1="spacer-valley-north" l2="location-east-cave"/>
 	<location_connects l1="spacer-valley-north" l2="spacer-valley-south"/>
 	<location_connects l1="spacer-valley-north" l2="spacer-gorge"/>

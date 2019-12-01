@@ -31,9 +31,15 @@ class QwertyAI extends RobotAI {
 					let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject(thingToRepair_id);
 					if (thingToRepairObject.sort.name == "brokenspacesuit") {
 						// broken space suit:
+						app.achievement_nlp_all_robot_actions[11] = true;
+						app.trigger_achievement_complete_alert();
+
 						return ACTION_REQUEST_CAN_BE_SATISFIED;
 					}
 				} else if (thingToRepair_id == "shuttle-datapad") {
+					app.achievement_nlp_all_robot_actions[11] = true;
+					app.trigger_achievement_complete_alert();
+
 					return ACTION_REQUEST_CAN_BE_SATISFIED;
 				}
 			} else {

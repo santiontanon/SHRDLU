@@ -297,18 +297,18 @@ class A4Game {
                                   "location-garage",
                                   ];
 
-        this.three_d_printer_recipies = {"plastic-cup": ["plastic"],
-                                         "plastic-plate": ["plastic"],
-                                         "plastic-fork": ["plastic"],
-                                         "plastic-spoon": ["plastic"],
-                                         "plastic-knife": ["plastic"],
-                                         "plastic-chopstick": ["plastic"],
-                                         "screwdriver": ["plastic", "iron"],
-                                         "pliers": ["plastic", "iron"],
-                                         "wrench": ["plastic", "iron"],
-                                         "cable": ["plastic", "copper"],
-                                         "extension-cord": ["plastic", "copper"],
-                                        };
+        this.three_d_printer_recipies = [["plastic-cup", ["plastic"]],
+                                         ["plastic-plate", ["plastic"]],
+                                         ["plastic-fork", ["plastic"]],
+                                         ["plastic-spoon", ["plastic"]],
+                                         ["plastic-knife", ["plastic"]],
+                                         ["plastic-chopstick", ["plastic"]],
+                                         ["screwdriver", ["plastic", "iron"]],
+                                         ["pliers", ["plastic", "iron"]],
+                                         ["wrench", ["plastic", "iron"]],
+                                         ["cable", ["plastic", "copper"]],
+                                         ["extension-cord", ["plastic", "copper"]],
+                                        ];
     }
 
 
@@ -2818,7 +2818,7 @@ class A4Game {
     error_messages_for_log:string[][] = [];
     in_game_actions_for_log:string[][] = [];
 
-    three_d_printer_recipies:{ [item: string] : string[]; };
+    three_d_printer_recipies:[string, string[]][];
     //</shrdlu-specific>
 
 }

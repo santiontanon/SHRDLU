@@ -37,6 +37,9 @@ class EtaoinConnectTo_IntentionAction extends IntentionAction {
 				
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #and(#and(X:verb.can("+requester+", #and(Y:action.talk("+requester+"), relation.target(Y, '"+target+"'[#id]))), relation.tool(X, 'communicator'[#id]), time.now(X)))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+
+		        	app.achievement_nlp_all_etaoin_actions[0] = true;
+		        	app.trigger_achievement_complete_alert();
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("#not(verb.can('"+target+"'[#id], action.talk('"+target+"'[#id])))", ai.o);
