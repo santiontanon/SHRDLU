@@ -138,6 +138,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('lol' | 'wow' | 'what' 'the' ('fuck'|'hell'|'heck') | 'wtf') ('!'|'?')*"
 			   priority="150"/>
 
+	<!-- Patterns for performative "perf.changemind" -->
+	<NLPattern name="changemind-1"
+			   head="perf.changemind(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['i'] verb('verb.change'[symbol], [singular], [first-person], T) 'my' 'mind' ('.'|'!')*"/>			   
+
+	<NLPattern name="changemind-1"
+			   head="perf.changemind(LISTENER)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['i'] verb('action.take'[symbol], [singular], [first-person], T) ('it'|'that') 'back' ('.'|'!')*"/>			   
+
 	<!-- Patterns for performative "perf.inform" -->
 	<!-- rules for variants of "my name is david" -->
 	<NLPattern name="inform-myname1"
@@ -723,6 +736,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb(VERB, N2, P2, [infinitive-tense]) 
 			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
+
+	<NLPattern name="perf.inform-X-can-Y-obj"
+			   head="perf.inform(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT,OBJECT3)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'.')*
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefFromContext(C3, OBJECT3)"/>
 
 	<NLPattern name="perf.inform-X-does-noun"
 			   head="perf.inform(LISTENER, verb.do(OBJECT, NOUN))"

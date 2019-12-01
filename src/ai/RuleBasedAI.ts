@@ -701,10 +701,6 @@ class RuleBasedAI {
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
     		if (this.talkingToUs(context, speakerID, null)) {
-
-		    	app.achievement_nlp_parse_error = true;
-		    	app.trigger_achievement_complete_alert();
-
 	    		// respond!
 	    		if (this.naturalLanguageParser.error_semantic.length > 0) {
 	    			console.log(this.selfID + ": semantic error when parsing a performative from " + speakerID);
@@ -1065,6 +1061,8 @@ class RuleBasedAI {
 						this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.time_in_seconds));
 					}
 				}
+			} else if (perf2.functor.name == "perf.changemind") {
+				console.log("RuleBasedAI.reactToPerformative: nothing to do for " + perf2);
 			} else {
 				console.error("RuleBasedAI.reactToPerformative: unknown performative " + perf2);
 			}
@@ -1177,10 +1175,7 @@ class RuleBasedAI {
 
 
 	reactToMoreResultsPerformative(perf:Term, speaker:TermAttribute, context:NLContext)
-	{
-    	app.achievement_nlp_asked_for_more = true;
-    	app.trigger_achievement_complete_alert();
-		
+	{		
 		if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
 			let resultsTA:TermAttribute = null;
 			if (context.lastEnumeratedQuestion_answers.length > 

@@ -1593,6 +1593,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.clean", "clean","cleans","cleaned","cleaned","cleaning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.connect", "connect","connects","connected","connected","connecting", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "charge","charges","charged","charged","charging", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.change", "change","changes","changed","changed","changing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.close", "close","closes","closed","closed","closing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.colonize", "colonize","colonizes","colonized","colonized","colonizing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come", "come","comes","came","come","coming", false, multitokens_raw, o);

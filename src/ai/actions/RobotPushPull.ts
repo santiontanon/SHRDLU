@@ -34,6 +34,8 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 
 		let targetObject:A4Object = null;
 		let adverbSort:Sort = null;
+		let targetDirection:number = -1;
+
 		if (intention.attributes.length >= 2) {
 			if ((intention.attributes[1] instanceof ConstantTermAttribute)) {
 				let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
@@ -64,15 +66,44 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 			adverbSort = intention.attributes[2].sort;
 		}
 
+		if (adverbSort != null) {
+			if (adverbSort.name == "north") targetDirection = A4_DIRECTION_UP;
+			if (adverbSort.name == "east") targetDirection = A4_DIRECTION_RIGHT;
+			if (adverbSort.name == "south") targetDirection = A4_DIRECTION_DOWN;
+			if (adverbSort.name == "west") targetDirection = A4_DIRECTION_LEFT;
+			if (adverbSort.name == "forward") targetDirection = ai.robot.direction;
+			if (adverbSort.name == "backward") targetDirection = (ai.robot.direction+2)%A4_NDIRECTIONS;
+			if (adverbSort.name == "direction.right") targetDirection = (ai.robot.direction+1)%A4_NDIRECTIONS;
+			if (adverbSort.name == "direction.left") targetDirection = (ai.robot.direction+3)%A4_NDIRECTIONS;
+		}		
+
 		if (targetObject == null) {
-			// check if there is an object in front:
-            let collisions:A4Object[] = ai.robot.map.getAllObjectCollisionsWithOffset(ai.robot, direction_x_inc[ai.robot.direction], direction_y_inc[ai.robot.direction]);
-            for(let o of collisions) {
-                if (o.isPushable()) {
-                	targetObject = o;
-                	break;
-                }
-            }
+			// check if there is an object next to the robot that can be pushed 
+			// (preferring one that is in the direction of the push, and otherwise, the one in front):
+			let bestDirection:number = -1;
+			for(let direction:number = 0; direction<4; direction++) {
+	            let collisions:A4Object[] = ai.robot.map.getAllObjectCollisionsWithOffset(ai.robot, direction_x_inc[direction], direction_y_inc[direction]);
+	            for(let o of collisions) {
+	                if (o.isPushable()) {
+	                	if (targetObject == null) {
+	                		targetObject = o;
+	                		bestDirection = direction;
+	                	} else {
+	                		if (direction == targetDirection) {
+	                			// overwrite:
+		                		targetObject = o;
+		                		bestDirection = direction;
+	                		} else if (direction == ai.robot.direction &&
+	                				   bestDirection != targetDirection) {
+	                			// overwrite:
+		                		targetObject = o;
+		                		bestDirection = direction;	                			
+	                		}
+	                	}
+	                	break;
+	                }
+	            }
+	        }
 		}
 		if (targetObject == null) {
 			if (requester != null) {
@@ -82,8 +113,6 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-
-		let direction:number = -1;
 		let destinationMap:A4Map = targetObject.map;
 		let destinationX:number = targetObject.x;
 		let destinationY:number = (targetObject.y+targetObject.tallness);
@@ -119,17 +148,6 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		if (adverbSort != null) {
-			if (adverbSort.name == "north") direction = A4_DIRECTION_UP;
-			if (adverbSort.name == "east") direction = A4_DIRECTION_RIGHT;
-			if (adverbSort.name == "south") direction = A4_DIRECTION_DOWN;
-			if (adverbSort.name == "west") direction = A4_DIRECTION_LEFT;
-			if (adverbSort.name == "forward") direction = ai.robot.direction;
-			if (adverbSort.name == "backward") direction = (ai.robot.direction+2)%A4_NDIRECTIONS;
-			if (adverbSort.name == "direction.right") direction = (ai.robot.direction+1)%A4_NDIRECTIONS;
-			if (adverbSort.name == "direction.left") direction = (ai.robot.direction+3)%A4_NDIRECTIONS;
-		}
-
 		app.achievement_nlp_all_robot_actions[10] = true;
 		app.trigger_achievement_complete_alert();
 
@@ -138,9 +156,9 @@ class RobotPushPull_IntentionAction extends IntentionAction {
         let s:A4Script = null
         
         if (intention.functor.is_a(ai.o.getSort("action.push"))) {
-        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, direction, false, false);
+        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
         } else {
-			s = new A4Script(A4_SCRIPT_PULL, targetObject.ID, null, direction, false, false);
+			s = new A4Script(A4_SCRIPT_PULL, targetObject.ID, null, targetDirection, false, false);
         }
         q.scripts.push(s);
         ai.setNewAction(intention, requester, q, null);

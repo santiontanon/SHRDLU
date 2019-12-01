@@ -228,6 +228,7 @@
     <sort name="perf.q.how" super="perf.question"/>
     <sort name="perf.moreresults" super="performative"/>   <!-- things like "who else?", "anyone else?", "what else?" -->
     <sort name="perf.rephrase.entity" super="performative"/>
+    <sort name="perf.changemind" super="performative"/>
 
     <sort name="object" super="physical-entity"/>
     <sort name="obstacle" super="object"/>
@@ -625,6 +626,7 @@
     <sort name="verb.collide-with" super="relation-verb,#stateSort"/>
     <sort name="verb.suck" super="verb"/>
     <sort name="verb.belong" super="relation-verb"/>
+    <sort name="verb.change" super="verb"/>
 
 
     <sort name="verb.like" super="relation-verb"/>

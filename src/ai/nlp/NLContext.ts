@@ -416,7 +416,8 @@ class NLContext {
 		    perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
 		    perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
 		    perf.functor.is_a(o.getSort("perf.q.whatis.noname")) ||
-			perf.functor.is_a(o.getSort("perf.q.when"))) {
+			perf.functor.is_a(o.getSort("perf.q.when")) ||
+			perf.functor.is_a(o.getSort("perf.changemind"))) {
 			for(let i:number = 0;i<perf.attributes.length;i++) {
 				if (perf.attributes[i] instanceof ConstantTermAttribute) {
 					IDs.push(<ConstantTermAttribute>(perf.attributes[i]));

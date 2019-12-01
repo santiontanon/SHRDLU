@@ -1352,8 +1352,13 @@ class ShrdluGameScript {
 			// player said she will not want to go search for SHRDLU:
 			if (this.act_1_state_timer == 0) {
 				this.etaoinSays("perf.ack.ok('david'[#id])");
-			} else if (this.act_1_state_timer == 60*60) {	// after one minute, try again
+			} else if (this.act_1_state_timer >= 60*60) {	// after one minute, try again
 				this.act_1_state = 15;
+			} else {
+				// we are waiting, and maybe the player will change her mind:
+				if (this.playerChangedHerMindAfterSayingNo("etaoin")) {
+					this.act_1_state = 15;
+				}
 			}
 			break;
 
@@ -1998,6 +2003,11 @@ class ShrdluGameScript {
 		case 102:
 			if (this.act_2_state_timer >= 30*60) {
 				this.act_2_state = 100;
+			} else {
+				// we are waiting, and maybe the player will change her mind:
+				if (this.playerChangedHerMindAfterSayingNo("shrdlu")) {
+					this.act_2_state = 100;
+				}				
 			}
 			break;
 
@@ -3052,7 +3062,37 @@ class ShrdluGameScript {
 	}
 
 
-	playerAsksQwertyToFixSpacesuit() 
+	playerChangedHerMindAfterSayingNo(ai:string) : boolean
+	{
+		let context:NLContext = null;
+		if (ai == "etaoin") context = this.contextEtaoin;
+		if (ai == "shrdlu") context = this.contextShrdlu;
+		if (context != null) {
+			let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
+			if (p1 != null &&
+				p1.timeStamp == this.game.in_game_seconds - 1) {	
+				let perf:Term = p1.performative;
+				if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
+					perf.attributes.length>1 &&
+					perf.attributes[1] instanceof TermTermAttribute) {
+					let argument:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+					let pattern1:Term = Term.fromString("verb.can('david'[#id], verb.help('david'[#id], '"+ai+"'[#id]))", this.game.ontology);
+					let pattern2:Term = Term.fromString("verb.can('david'[#id], verb.help('david'[#id]))", this.game.ontology);
+					let b:Bindings = new Bindings();
+					if (pattern1.subsumes(argument, true, b) ||
+						pattern2.subsumes(argument, true, b)) {
+						return true;
+					}						
+				} else if (perf.functor.is_a(this.game.ontology.getSort("perf.changemind"))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	playerAsksQwertyToFixSpacesuit() : boolean
 	{
 		if (this.contextQwerty != null) {
 			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
@@ -3086,7 +3126,7 @@ class ShrdluGameScript {
 	} 
 
 
-	playerAsksShrdluToFix(objectId:string) 
+	playerAsksShrdluToFix(objectId:string) : boolean
 	{
 		if (this.contextShrdlu != null) {
 			let p1:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);

@@ -1221,6 +1221,9 @@ NLParseTestUnifyingListener("etaoin leaves the station because etaoin wants mine
 NLParseTestUnifyingListener("etaoin leaves because etaoin wants mineral", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], V1:relation.cause(V2:verb.leave(V3:'etaoin'[#id]), V5:verb.want(V6:'etaoin'[#id], V7:[mineral])))");
 NLParseTestUnifyingListener("this crate can talk", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.can('5'[#id], action.talk('5'[#id])))");
 NLParseTestUnifyingListener("this crate does nothing", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.do('5'[#id], 'nothing'[nothing]))");
+NLParseTestUnifyingListener("I can help you", o.getSort("performative"), context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.can('1'[#id], verb.help('1'[#id], 'etaoin'[#id])))");
+NLParseTestUnifyingListener("I changed my mind", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("I take that back", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

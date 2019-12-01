@@ -1227,6 +1227,29 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
+	reactToMoreResultsPerformative(perf:Term, speaker:TermAttribute, context:NLContext)
+	{
+    	app.achievement_nlp_asked_for_more = true;
+    	app.trigger_achievement_complete_alert();
+    	super.reactToMoreResultsPerformative(perf, speaker, context);
+    }
+
+
+	reactiveBehaviorUpdateToParseError(speakerID:string)
+	{
+    	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
+    	if (context != null) {
+    		if (this.talkingToUs(context, speakerID, null)) {
+
+		    	app.achievement_nlp_parse_error = true;
+		    	app.trigger_achievement_complete_alert();
+
+		    	super.reactiveBehaviorUpdateToParseError(speakerID);
+		    }
+		}
+	}
+
+
 	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
 		let actionRequest:Term = ir.action;
