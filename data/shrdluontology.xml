@@ -251,12 +251,14 @@
     <sort name="vehicle" super="walking-object,container"/>
 
     <sort name="wheel" super="object"/>
+    <sort name="tower" super="object"/>
+    <sort name="tank" super="object"/>
 
     <sort name="shape" super="any"/>
     <sort name="shape.flat" super="shape"/>
-    <sort name="box" super="shape"/>
-    <sort name="tower" super="shape"/>
-    <sort name="tank" super="shape"/>
+    <sort name="box" super="shape,object"/>
+    <sort name="pyramid" super="shape,object"/>
+    <sort name="block" super="shape,object"/>
 
     <sort name="body" super="object"/> 
     <sort name="body-part" super="object"/>    
@@ -724,7 +726,8 @@
     <sort name="spatial-relation" super="space,relation,#stateSort"/>
     <sort name="space.at" super="spatial-relation,#stateSort"/>
     <sort name="space.inside.of" super="space.at"/>
-    <sort name="space.on.top.of" super="space.at"/>
+    <sort name="space.directly.on.top.of" super="space.at"/>
+    <sort name="space.on.top.of" super="space.at,space.directly.on.top.of"/>
     <sort name="space.outside" super="space.location"/>
     <sort name="space.outside.of" super="spatial-relation"/>
     <sort name="space.connects" super="spatial-relation,symmetric-relation"/>

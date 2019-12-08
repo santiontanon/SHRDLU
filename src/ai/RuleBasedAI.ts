@@ -608,6 +608,7 @@ class RuleBasedAI {
 
 	addTermToPerception(term:Term)
 	{
+		//console.log(term.toString());
 		this.perceptionBuffer.push(term);
 		this.perceptionToShortMemoryFilter(term);
 	}
@@ -842,7 +843,7 @@ class RuleBasedAI {
 
 		if (!performativeHandled) {
 			if (perf2.functor.name == "perf.callattention") {
-				if (context.speaker == "david") {
+				if (context.speaker != "qwerty" && context.speaker != "shrdlu" && context.speaker != "etaoin") {
 					// we only confirm to the player, since otherwise, the AIs get all confused in loops some times
 					this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id],'yes'[symbol]))", this.o), speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 				}
@@ -1777,7 +1778,6 @@ class RuleBasedAI {
 		// re-add the intention:
 		if (!context.inConversation) {
 			// we are not having a conversation at this point, so, we need to restart it:
-//			this.etaoinSays("perf.callattention('david'[#id])");		
 			let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.callattention('"+context.speaker+"'[#id]))",this.o);
 			this.intentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
 		}

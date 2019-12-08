@@ -682,10 +682,10 @@ this.addTokenPOS(new PartOfSpeech("alone in", "alone-in", Term.fromString("prepo
 this.addTokenPOS(new PartOfSpeech("at", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("at", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("barring", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("on", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("on", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("on", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("atop", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("ontop", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("atop", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("ontop", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 /*
   ["before",  "PREP"],
@@ -911,7 +911,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   "on account of",
   "on behalf of",
   */
-  this.addTokenPOS(new PartOfSpeech("on top of", "space.on.top.of", Term.fromString("preposition('space.on.top.of'[space.on.top.of])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("on top of", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
   /*
   "with regard to",
   "with respect to",
@@ -1134,6 +1134,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("being", "living-being", o, multitokens_raw);
     this.addStandardNounPOS("bench", "bench", o, multitokens_raw);
     this.addStandardNounPOS("biologist", "biologist", o, multitokens_raw);
+    this.addStandardNounPOS("block", "block", o, multitokens_raw);
     this.addStandardNounPOS("body", "body", o, multitokens_raw);
     this.addStandardNounPOS("body part", "body-part", o, multitokens_raw);
     this.addStandardNounPOS("bottle", "bottle", o, multitokens_raw);
@@ -1401,6 +1402,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("property", "property", Term.fromString("noun('property'[property], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("properties", "property", Term.fromString("noun('property'[property], [plural])", o), 1.0));
     this.addStandardNounPOS("protagonist", "protagonist", o, multitokens_raw);
+    this.addStandardNounPOS("pyramid", "pyramid", o, multitokens_raw);
     this.addStandardNounPOS("question", "perf.question", o, multitokens_raw);
     this.addStandardNounPOS("radius", "radius", o, multitokens_raw);    
     this.addStandardNounPOS("ration", "ration", o, multitokens_raw);
@@ -1472,6 +1474,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("system", "system", o, multitokens_raw);
     this.addStandardNounPOS("t-14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
     this.addStandardNounPOS("table", "table", o, multitokens_raw);
+    this.addStandardNounPOS("tank", "tank", o, multitokens_raw);
     this.addStandardNounPOS("tardis", "tardis", o, multitokens_raw);
     this.addStandardNounPOS("tear", "tear", o, multitokens_raw);
     this.addStandardNounPOS("temperature", "temperature", o, multitokens_raw);

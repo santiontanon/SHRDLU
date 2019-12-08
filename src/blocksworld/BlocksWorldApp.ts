@@ -3,7 +3,8 @@
 Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
 - todo:
-    ***- perception
+    ***- reasoning is all OFF, I need to change to FOL...
+    - add "shrdlu is thinking" message
     - I need an action to answer "where" questions that does not depend on the A4Engine.
     - define and implement the actions: take, put down
     - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
@@ -24,7 +25,7 @@ var DEFAULT_game_path:string = "data";
 
 class BlocksWorldApp {
     constructor(a_dx:number, a_dy:number) {
-        this.state = STATE_ACCEPTING_INPUT;
+        this.state = STATE_SHRDLU_ACTING;    // let SHRDLU update its perception at the start
         this.previous_state = this.state;
         this.state_cycle = 0;
 
@@ -50,7 +51,7 @@ class BlocksWorldApp {
         this.world = new ShrdluBlocksWorld();
         this.shrdlu = new BlocksWorldRuleBasedAI(this.ontology, this.naturalLanguageParser, this.naturalLanguageGenerator,
                                                  this.world, this, 1, 0, DEFAULT_QUESTION_PATIENCE_TIMER,
-                                                 ["data/classic-shrdlu-kb.xml"]);
+                                                 ["data/blocksworld-kb.xml"]);
 
         this.addMessageWithColorTime("Welcome to SHRDLU!", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("This is a recreation of the original SHRDLU system by Terry Winograd using the NLP", MSX_COLOR_GREY, this.time);
@@ -124,8 +125,9 @@ class BlocksWorldApp {
         for(let ke of k.keyevents) this.textInputEvent(ke);
 
         if (k.key_press(KEY_CODE_RETURN)) {
-            this.textInputSubmit();
-            return STATE_SHRDLU_ACTING;
+            if (this.textInputSubmit()) {
+                return STATE_SHRDLU_ACTING;
+            }
         }
 
         return STATE_ACCEPTING_INPUT;
@@ -204,7 +206,9 @@ class BlocksWorldApp {
             this.input_buffer_history_position = -1;
             this.text_input_buffer = "";
             this.text_input_cursor = 0;
+            return true;
         }
+        return false;
     }
 
 

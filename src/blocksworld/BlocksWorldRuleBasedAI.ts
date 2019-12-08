@@ -35,9 +35,53 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	}
 
 
-	perception()
+	attentionAndPerception()
 	{
-		// ...
+		this.clearPerception();
+
+		for(let object of this.world.objects) {
+			this.addTermToPerception(Term.fromString(object.type + "('"+object.ID+"'[#id])", this.o));
+			switch(object.color) {
+				case MSX_COLOR_BLACK: this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'black'[black])", this.o));
+									  break;
+				case MSX_COLOR_GREEN: 
+				case MSX_COLOR_LIGHT_GREEN: 
+				case MSX_COLOR_DARK_GREEN: 
+									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'green'[green])", this.o));
+									  break;
+				case MSX_COLOR_BLUE: 
+				case MSX_COLOR_LIGHT_BLUE:
+				case MSX_COLOR_DARK_BLUE: 
+									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'blue'[blue])", this.o));
+									  break;
+				case MSX_COLOR_RED: 
+				case MSX_COLOR_LIGHT_RED:
+				case MSX_COLOR_DARK_RED: 
+									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'red'[red])", this.o));
+									  break;
+				case MSX_COLOR_GREY: 
+									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'grey'[grey])", this.o));
+									  break;
+				case MSX_COLOR_WHITE: 
+									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'white'[white])", this.o));
+									  break;
+			}
+			this.addTermToPerception(Term.fromString(object.size + "('"+object.ID+"'[#id])", this.o));
+
+			if (object.ID != "shrdlu") {
+				for(let object2 of this.world.objects) {
+					if (object != object2) {
+						if (object.isInside(object2)) {
+							this.addTermToPerception(Term.fromString("space.inside.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
+						}
+
+						if (object.inOnTopOf(object2)) {
+							this.addTermToPerception(Term.fromString("space.directly.on.top.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
+						}
+					}
+				}
+			}
+		}
 	}
 
 

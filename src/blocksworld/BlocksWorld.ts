@@ -3,7 +3,9 @@ var SHRDLU_BLOCKTYPE_PYRAMID:string = "pyramid";
 var SHRDLU_BLOCKTYPE_BOX:string = "box";
 var SHRDLU_BLOCKTYPE_TABLE:string = "table";
 
-
+var BW_SIZE_SMALL:string = "small";
+var BW_SIZE_MEDIUM:string = "size.medium";
+var BW_SIZE_LARGE:string = "big";
 
 class SBWLine {
 	constructor(x1:number, y1:number, z1:number,
@@ -33,13 +35,14 @@ class SBWLine {
 class ShrdluBlock {
 	static next_ID:number = 1;
 
-	constructor(type:string, color:string,
+	constructor(type:string, color:string, size:string, 
 				x:number, y:number, z:number, 
 				dx:number, dy:number, dz:number) {
 		this.ID = "block-" + ShrdluBlock.next_ID;
 		ShrdluBlock.next_ID++;
 		this.type = type;
 		this.color = color;
+		this.size = size;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -101,13 +104,61 @@ class ShrdluBlock {
 			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, 	this.x+1,this.y+this.dy,this.z+this.dz-1, this.color));
 			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+this.dz-1, 			this.x+1,this.y+this.dy,this.z+1, this.color));
 			break;
+		case "robot":
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, this.color));
+
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, this.color));
+
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, this.color));
+
+			lines.push(new SBWLine(this.x-1,this.y,this.z-1, 					this.x+this.dx+1,this.y,this.z-1, this.color));
+			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z-1, 			this.x+this.dx+1,this.y,this.z+this.dz+1, this.color));
+			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z+this.dz+1, 	this.x-1,this.y,this.z+this.dz+1, this.color));
+			lines.push(new SBWLine(this.x-1,this.y,this.z+this.dz+1, 			this.x-1,this.y,this.z-1, this.color));
+			break;		
 		}
+	}
+
+
+	isInside(o2:ShrdluBlock): boolean
+	{
+		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
+			this.y+this.dy > o2.y && o2.y+o2.dy > this.y &&
+			this.z+this.dz > o2.z && o2.z+o2.dz > this.z) {
+			// they overlap:
+			if (o2.x <= this.x && o2.z <= this.z) {
+				// this inside o2:
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	inOnTopOf(o2:ShrdluBlock): boolean
+	{
+		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
+			this.y == o2.y+o2.dy &&
+			this.z+this.dz > o2.z && o2.z+o2.dz > this.z) {
+			return true;
+		}
+		return false;		
 	}
 
 
 	ID:string;
 	type:string;
 	color:string;
+	size:string;
 	x:number;
 	y:number;
 	z:number;
@@ -120,35 +171,44 @@ class ShrdluBlock {
 class ShrdluBlocksWorld {
 	constructor() {
 		// original SHRDLU environment:
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_TABLE, MSX_COLOR_GREY,
-									 	  0, 0, 0,
-									 	  32, 4, 32));
+		let shrdlu:ShrdluBlock = new ShrdluBlock("robot", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
+									  	 	    0, 24, 0,
+									 	  		2, 256, 2);
+		shrdlu.ID = "shrdlu";
+		this.objects.push(shrdlu);
 
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED,
+
+		let table:ShrdluBlock = new ShrdluBlock(SHRDLU_BLOCKTYPE_TABLE, MSX_COLOR_GREY, BW_SIZE_LARGE, 
+									  	 	    0, 0, 0,
+									 	  		32, 4, 32);
+		table.ID = "table";
+		this.objects.push(table);
+
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_MEDIUM, 
 										  0, 4, 10,
 										  8, 12, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_SMALL, 
 	 									  4, 4, 4,
 	 									  4, 4, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE, BW_SIZE_MEDIUM, 
 									 	  8, 4, 28,
 									 	  8, 12, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
 									 	  14, 4, 10,
 									 	  8, 8, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
 									 	  12, 4, 0,
 									 	  8, 8, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BOX, MSX_COLOR_WHITE,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BOX, MSX_COLOR_WHITE, BW_SIZE_LARGE, 
 									 	  20, 4, 20,
 									 	  12, 12, 12));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_GREEN,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_GREEN, BW_SIZE_SMALL, 
 									 	  4, 8, 4,
 									 	  4, 4, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_RED,
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_RED, BW_SIZE_MEDIUM, 
 									 	  16, 12, 4,
-									 	  4, 12, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_BLUE,
+									 	  4, 10, 4));
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
 									 	  22, 4, 22,
 									 	  8, 8, 8));
 	}
@@ -160,7 +220,7 @@ class ShrdluBlocksWorld {
         ctx.scale(PIXEL_SIZE*2, PIXEL_SIZE*2);
 
         this.center_x = (vpx + vpw*0.375)/(PIXEL_SIZE*2);
-        this.center_y = (vpy + vph*0.6)/(PIXEL_SIZE*2);
+        this.center_y = (vpy + vph*0.7)/(PIXEL_SIZE*2);
 
 		// draw objects:
 		let lines:SBWLine[] = [];
