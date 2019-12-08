@@ -4,7 +4,7 @@ Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
 - todo:
     ***- perception
-    - I need an actino to answer "where" questions that does not depend on the A4Engine.
+    - I need an action to answer "where" questions that does not depend on the A4Engine.
     - define and implement the actions: take, put down
     - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
         - here there are test sentences (some of them quite complex!): http://boole.stanford.edu/lingol/trysh.test
