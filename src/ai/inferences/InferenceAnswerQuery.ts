@@ -14,7 +14,7 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 		console.log("inf.inferences[0].endResults.length: " + inf.inferences[0].endResults.length);
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("AnswerQuery_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;

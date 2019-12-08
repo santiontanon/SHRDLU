@@ -6,9 +6,9 @@ class RobotAI extends A4RuleBasedAI {
 		console.log("RobotAI.constructor Start...");
 
 		this.robot = robot;
+		this.intentionActionFactory = new A4IntentionActionFactory();
 
 		this.intentionHandlers.push(new RobotFollow_IntentionAction());
-
 		this.intentionHandlers.push(new RobotTalk_IntentionAction());
 		this.intentionHandlers.push(new RobotEnter_IntentionAction());
 		this.intentionHandlers.push(new RobotExit_IntentionAction());
@@ -271,7 +271,6 @@ class RobotAI extends A4RuleBasedAI {
 
 	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
-		let actionRequest:Term = ir.action;
 		let tmp:number = super.canSatisfyActionRequest(ir);
 		if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
 			if (this.time_in_seconds == this.lastActionRequestTime) {
@@ -391,7 +390,7 @@ class RobotAI extends A4RuleBasedAI {
         if (cah_xml != null) {
         	let ah_xml:Element = getFirstElementChildByTag(cah_xml, "IntentionAction");
         	if (ah_xml != null) {
-	        	this.currentActionHandler = IntentionActionFactory.loadFromXML(ah_xml, this);
+	        	this.currentActionHandler = this.intentionActionFactory.loadFromXML(ah_xml, this);
 	        }
         }
 	}
@@ -428,6 +427,7 @@ class RobotAI extends A4RuleBasedAI {
 
 
 	robot:A4AICharacter = null;
+	intentionActionFactory:IntentionActionFactory = null;
 
 	lastActionRequestTime:number = -1;
 

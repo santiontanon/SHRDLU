@@ -7,14 +7,9 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 	}
 
 
-	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
+	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var ai:A4RuleBasedAI = <A4RuleBasedAI>ai_raw;
 		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[6] = true;
-    	app.trigger_achievement_complete_alert();
 
 		console.log(ai.selfID + " answer when: " + intention);	
 		var resolution:Sort = null;
@@ -33,7 +28,7 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 			if (intention.attributes[3].sort.is_a(ai.o.getSort("time.now"))) {
 				var resolution:Sort = intention.attributes[2].sort;
 				console.log("executeIntention answer when: answering what time is it now at resolution " + resolution);	
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+ai.game.in_game_seconds+"'[number],"+intention.attributes[2]+")))", ai.o);
+				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+ai.time_in_seconds+"'[number],"+intention.attributes[2]+")))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
 			} else {
 				console.error("executeIntention answer when: unsupported when question!");	
@@ -50,8 +45,8 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 			} else {
 				if (resolution == null) {
 					// if it's the same day, report minutes, otherwise, report date:
-					if (getCurrentYear(ai.game.in_game_seconds) == getCurrentYear(time) &&
-						getCurrentYearDay(ai.game.in_game_seconds) == getCurrentYearDay(time)) {
+					if (getCurrentYear(ai.time_in_seconds) == getCurrentYear(time) &&
+						getCurrentYearDay(ai.time_in_seconds) == getCurrentYearDay(time)) {
 						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], [time.minute])))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 					} else {

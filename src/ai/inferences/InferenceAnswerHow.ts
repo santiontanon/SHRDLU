@@ -14,11 +14,10 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 		
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("AnswerHow_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var targetID:string = null;
 
 		console.log("query result, answer how (source): " + inf.inferences[0].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
@@ -27,7 +26,6 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 		} else {
 			// get the location ID
 			var how:Term = null;
-			var intention:Term = this.effectParameter;
 			if (inf.inferences[0].endResults.length != 0) {
 				for(let b of inf.inferences[0].endResults[0].bindings.l) {
 					if (b[0].name == "HOW") {

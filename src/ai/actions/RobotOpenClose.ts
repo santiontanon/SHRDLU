@@ -50,14 +50,11 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
         	}
 
     		// we have found at least a door!
-    		let anyNotPermitted:boolean = false;
     		for(let door_tmp of doors) {
 	            if ((<A4Door>door_tmp).closed == open) {
 					// see if player has permission:
 	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf((<A4Door>door_tmp).doorID) == -1) {
 	            		door = door_tmp;
-					} else {
-						anyNotPermitted = true;
 					}
 	            }
 	        }

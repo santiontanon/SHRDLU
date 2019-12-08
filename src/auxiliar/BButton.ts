@@ -25,7 +25,7 @@ class BButton extends BInterfaceElement {
     {
         this.cycle++;
         this.status = BBUTTON_STATE_NORMAL;
-        if (!this.enabled) return;
+        if (!this.enabled) return false;
         if (this.highlighted(mouse_x, mouse_y)) {
             this.status = BBUTTON_STATE_MOUSEOVER;
             if (k.key_press(KEY_CODE_RETURN) || 

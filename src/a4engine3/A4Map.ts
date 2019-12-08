@@ -938,8 +938,6 @@ class A4Map {
 
     walkableConsideringVehicles(x:number, y:number, dx:number, dy:number, subject:A4Object) : boolean
     {
-        let granularityX:number = this.layers[0].tileWidth;
-        let granularityY:number = this.layers[0].tileHeight;
         let rettiles:boolean = true;
         let retobjects:boolean = true;
         for(let i:number = 0;i<this.layers.length;i++) {

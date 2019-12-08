@@ -456,7 +456,7 @@ class A4Object {
     {
         if (this.eventScripts[event] == null) return;
         for(let rule of this.eventScripts[event]) {
-            console.error("eventWithInteger for event "+event+", is undefined");
+            console.error("eventWithInteger for event "+event+" is undefined, cannot execute rule: " + rule);
         }
     }
 

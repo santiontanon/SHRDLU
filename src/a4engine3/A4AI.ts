@@ -80,11 +80,6 @@ class A4AI {
         this.tileWidth = map.getTileWidth();
         this.tileHeight = map.getTileHeight();
 
-        let perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
-        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
-        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
-        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
-
         this.updateAllObjectsCache();
     }
 
@@ -104,7 +99,6 @@ class A4AI {
             this.pathfinding_result_priority = 0;
             return;
         }
-        let command:A4CharacterCommand = null;
         let highest_priority_target:number = -1;
         let highest_priority:number = 0;
 
@@ -135,8 +129,8 @@ class A4AI {
         if (this.pathfinding_result_x!=-1) {
             let pixelx:number = subject.x;
             let pixely:number = subject.y + subject.tallness;
-            let pixelx1:number = subject.x + subject.getPixelWidth();
-            let pixely1:number = subject.y + subject.getPixelHeight();
+            //let pixelx1:number = subject.x + subject.getPixelWidth();
+            //let pixely1:number = subject.y + subject.getPixelHeight();
             let pixel_target_x:number = this.pathfinding_result_x * this.tileWidth;
             let pixel_target_y:number = this.pathfinding_result_y * this.tileHeight;
             this.pathfinding_result_offset_x = pixel_target_x - pixelx;
@@ -602,7 +596,7 @@ class A4AI {
         let dy:number;
 //        let character_x1:number = character_x0 + Math.floor(subject.getPixelWidth()/this.tileWidth)-1;
 //        let character_y1:number = character_y0 + Math.floor((subject.getPixelHeight()-subject.tallness)/this.tileHeight)-1;
-        let x0:number,y0:number,x1:number,y1:number;
+        let x0:number,y0:number; //,x1:number,y1:number;
         
         for(let i:number = 0;i<this.pathfinding_targets.length;i++) {
             if (this.pathfinding_targets[i].flee) {
@@ -693,7 +687,6 @@ class A4AI {
                 }
                 for(let o of game.maps[i].objects) {
                     if (o instanceof ShrdluAirlockDoor) {
-                        let ald:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
                         if (o.targetMap == game.maps[j].name) {
                             linked = true;
                         }

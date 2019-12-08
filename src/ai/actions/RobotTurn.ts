@@ -29,7 +29,6 @@ class RobotTurn_IntentionAction extends IntentionAction {
 		let destinationMap:A4Map = null;
 		let destinationX:number = 0;
 		let destinationY:number = 0;
-		let hasPermission:boolean = true;
 
 		if (intention.attributes.length == 2 && 
 			       (intention.attributes[1] instanceof VariableTermAttribute)) {

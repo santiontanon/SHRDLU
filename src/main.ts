@@ -2,7 +2,6 @@ var canvas: HTMLCanvasElement;
 var ctx: CanvasRenderingContext2D;    // current context
 
 var app: A4EngineApp;
-//var audioCtx:AudioContext = new (window.AudioContext || window.webkitAudioContext)();
 var audioCtx:AudioContext = new ((<any>window).AudioContext || (<any>window).webkitAudioContext)();
 
 var PIXEL_SIZE: number = 4;

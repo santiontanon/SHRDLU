@@ -86,7 +86,7 @@ class InferenceRecord {
 		if (xml.getAttribute("triggeredBySpeaker") != null) tbs = xml.getAttribute("triggeredBySpeaker");
 
 		let effect_xml:Element = getFirstElementChildByTag(xml ,"InferenceEffect");
-		if (effect_xml != null) e = InferenceEffectFactory.loadFromXML(effect_xml, ai, o, variables, variableNames);
+		if (effect_xml != null) e = ai.inferenceEffectFactory.loadFromXML(effect_xml, ai, o, variables, variableNames);
 
 		let additionalSentences:Sentence[] = [];
 		let additionalSentences_xml:Element = getFirstElementChildByTag(xml ,"additionalSentences");
@@ -364,6 +364,8 @@ class RuleBasedAI {
 		this.cache_sort_stateSort = this.o.getSort("#stateSort");
 		this.cache_sort_action_talk = this.o.getSort("action.talk");
 		this.cache_sort_action_follow = this.o.getSort("verb.follow");
+
+		this.inferenceEffectFactory = new InferenceEffectFactory();		
 
 		let ontologySentences:Sentence[] = RuleBasedAI.translateOntologyToSentences(o);
 		console.log("Ontology converted to " + ontologySentences.length + " sentences:");
@@ -1700,7 +1702,7 @@ class RuleBasedAI {
 				continue;
 			}
 
-			if (!ret) console.error("Unsupported intention: " + intention);
+			if (!ret) console.error("Unsuported intention: " + intention.action);
 			toDelete.push(intention);
 		}
 		for(let t of toDelete) {
@@ -2198,6 +2200,8 @@ class RuleBasedAI {
 
 	o:Ontology = null;
 	naturalLanguageParser:NLParser = null;
+	inferenceEffectFactory:InferenceEffectFactory = null;
+
 	perceptionFrequency:number = 10;
 	perceptionFrequencyOffset:number = 0;
 	perceptionMemoryTime:number = 120;

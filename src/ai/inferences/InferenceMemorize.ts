@@ -13,7 +13,7 @@ class Memorize_InferenceEffect extends InferenceEffect {
 		// memorize the target:
 		console.log("Memorize_InferenceEffect");
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("Memorize_InferenceEffect.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		let targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;

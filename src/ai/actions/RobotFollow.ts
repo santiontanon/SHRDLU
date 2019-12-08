@@ -111,10 +111,6 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			return false;
 		}
 
-		var destinationMap:A4Map = this.targetObject.map;
-		// if the targt is outside the map, we just wait
-		// if (destinationMap == null || destinationMap != ai.robot.map) return false;
-
 		var destinationX:number = this.targetObject.x;
 		var destinationY:number = (this.targetObject.y+this.targetObject.tallness);
 

@@ -986,8 +986,6 @@ class ShrdluGameScript {
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
-				let v:TermAttribute = null;
-				let queryTerms:TermAttribute[] = null;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
@@ -1004,8 +1002,6 @@ class ShrdluGameScript {
 			if (p1 != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
-				let v:TermAttribute = null;
-				let queryTerms:TermAttribute[] = null;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
 					perf.attributes.length>=2 && 
 					perf.attributes[1] instanceof TermTermAttribute) {
@@ -2761,7 +2757,6 @@ class ShrdluGameScript {
 		previous_state = this.act_3_repair_tardis_console_state;
 		switch(this.act_3_repair_tardis_console_state) {
 			case 0: if (this.playerAsksShrdluToFix("tardis-wall-computer")) {
-						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-wall-computer");
 						if (this.game.shrdluAI.canSee("tardis-wall-computer")) {
 							this.act_3_repair_tardis_console_state = 1;
 							this.shrdluSays("perf.ack.ok('david'[#id])");
@@ -2783,7 +2778,6 @@ class ShrdluGameScript {
 					}
 					break;
 			case 2:	if (this.act_3_repair_tardis_console_state_timer >= 100) {
-						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-wall-computer");
 						// turn the lights on:
 						this.game.setStoryStateVariable("tardis-8-lights", "on");
 						this.game.turnLightOn("tardis8-corridor-east");
@@ -2809,7 +2803,6 @@ class ShrdluGameScript {
 		previous_state = this.act_3_repair_tardis_cable_state;
 		switch(this.act_3_repair_tardis_cable_state) {
 			case 0: if (this.playerAsksShrdluToFix("tardis-broken-cable")) {
-						let thingToRepairObject:A4Object = this.game.findObjectByIDJustObject("tardis-broken-cable");
 						if (this.game.shrdluAI.canSee("tardis-broken-cable")) {
 							if (this.game.shrdluAI.robot.findObjectByName("extension cord") != null) {
 								this.shrdluSays("perf.ack.ok('david'[#id])");
@@ -3005,10 +2998,8 @@ class ShrdluGameScript {
 
 	questionAboutBeingAlone(perf:Term) : boolean
 	{
-		let v:TermAttribute = null;
 		let queryTerms:TermAttribute[] = null;
 		if (perf.functor.is_a(this.game.ontology.getSort("perf.q.query")) && perf.attributes.length == 3) {
-			v = perf.attributes[1];
 			let query:Term = (<TermTermAttribute>perf.attributes[2]).term;
 			queryTerms = NLParser.elementsInList(query, "#and");
 		} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate")) ||

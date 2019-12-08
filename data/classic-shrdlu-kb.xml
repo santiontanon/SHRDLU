@@ -1,0 +1,127 @@
+<knowledgeBase>
+	<!-- general knowledge about the user -->
+	<sentence provenance="background" sentence="human('user'[#id])"/>
+	<sentence provenance="background" sentence="space.at('user'[#id],'earth'[#id])"/>
+
+	<!-- general knowledge about locations -->
+	<sentence provenance="background" sentence="universe('universe'[#id])"/>
+	<sentence provenance="background" sentence="name('universe'[#id],'the universe'[symbol])"/>
+
+	<sentence provenance="background" sentence="outer-space('space'[#id])"/>
+	<sentence provenance="background" sentence="name('space'[#id],'space'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('space'[#id],'universe'[#id])"/>
+
+	<sentence provenance="background" sentence="galaxy('milky-way'[#id])"/>
+	<sentence provenance="background" sentence="name('milky-way'[#id],'the milky way'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('milky-way'[#id],'universe'[#id])"/>
+
+	<sentence provenance="background" sentence="star-system('solar-system'[#id])"/>
+	<sentence provenance="background" sentence="name('solar-system'[#id],'the solar system'[symbol])"/>
+	<sentence provenance="background" sentence="name('solar-system'[#id],'solar system'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('solar-system'[#id],'milky-way'[#id])"/>
+
+	<sentence provenance="background" sentence="planet('earth'[#id])"/>
+	<sentence provenance="background" sentence="name('earth'[#id],'planet earth'[symbol])"/>
+	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('earth'[#id],'solar-system'[#id])"/>
+	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
+
+	<!-- general knowledge about the robots/ships -->
+	<sentence provenance="background" sentence="robot('shrdlu'[#id])"/>
+	<sentence provenance="background" sentence="name('shrdlu'[#id],'shrdlu'[symbol])"/>
+	<sentence provenance="background" sentence="space.at('shrdlu'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="verb.do('shrdlu'[#id],'nothing'[nothing])"/>
+	<sentence provenance="background" sentence="good('shrdlu'[#id])"/>
+
+	<!-- what can things do -->
+	<sentence provenance="background" sentence="~character(X:[#id]); ~alive(X); verb.can(X, action.talk(X))"/>
+	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.walk(X))"/>
+	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.move(X))"/>
+
+	<!-- other general knowledge -->
+	<!-- 10 most spoken languages according to wikipedia, I thought 10 was enough :), plus Catalan, since I speak it :) -->
+	<sentence provenance="background" sentence="language('english'[#id])"/>
+	<sentence provenance="background" sentence="name('english'[#id],'english'[symbol])"/>
+	<sentence provenance="background" sentence="language('mandarin'[#id])"/>
+	<sentence provenance="background" sentence="name('mandarin'[#id],'mandarin'[symbol])"/>
+	<sentence provenance="background" sentence="language('chinese'[#id])"/>
+	<sentence provenance="background" sentence="name('chinese'[#id],'chinese'[symbol])"/>
+	<sentence provenance="background" sentence="language('spanish'[#id])"/>
+	<sentence provenance="background" sentence="name('spanish'[#id],'spanish'[symbol])"/>
+	<sentence provenance="background" sentence="language('arabic'[#id])"/>
+	<sentence provenance="background" sentence="name('arabic'[#id],'arabic'[symbol])"/>
+	<sentence provenance="background" sentence="language('french'[#id])"/>
+	<sentence provenance="background" sentence="name('french'[#id],'french'[symbol])"/>
+	<sentence provenance="background" sentence="language('russian'[#id])"/>
+	<sentence provenance="background" sentence="name('russian'[#id],'russian'[symbol])"/>
+	<sentence provenance="background" sentence="language('bengali'[#id])"/>
+	<sentence provenance="background" sentence="name('bengali'[#id],'bengali'[symbol])"/>
+	<sentence provenance="background" sentence="language('portuguese'[#id])"/>
+	<sentence provenance="background" sentence="name('portuguese'[#id],'portuguese'[symbol])"/>
+	<sentence provenance="background" sentence="language('catalan'[#id])"/>
+	<sentence provenance="background" sentence="name('catalan'[#id],'catalan'[symbol])"/>
+	<sentence provenance="background" sentence="verb.understand('shrdlu'[#id], 'english'[#id])"/>
+	<sentence provenance="background" sentence="verb.speak('shrdlu'[#id], 'english'[#id])"/>
+
+	<!-- common sense inference rules -->
+	<sentence provenance="background" sentence="~long(X:[#id]); ~short(X)"/>
+	<sentence provenance="background" sentence="~property.sighted(X:[#id]); ~property.blind(X)"/>
+	<sentence provenance="background" sentence="~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])"/>
+	<sentence provenance="background" sentence="~bright(X:[#id]); ~dark(X)"/>
+	<sentence provenance="background" sentence="~character(X:[#id]); ~furniture(X)"/>
+	<sentence provenance="background" sentence="~character(X:[#id]); ~door(X)"/>
+	<sentence provenance="background" sentence="~character(X:[#id]); ~item(X)"/>
+	<sentence provenance="background" sentence="~character(X:[#id]); ~space.location(X)"/>
+	<sentence provenance="background" sentence="~human(X:[#id]); ~machine(X)"/>
+	<sentence provenance="background" sentence="~human(X:[#id]); ~ai(X)"/>
+	<sentence provenance="background" sentence="~alone-in(X:[#id],LOC:[#id]); ~space.at(Y,LOC); ~character(Y); =(X,Y)"/>
+	<sentence provenance="background" sentence="property.opened(X:[#id]); property.closed(X)"/>
+	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/>
+	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>
+	<sentence provenance="background" sentence="~verb.have(C1:[#id],X:[#id]); ~verb.have(C2:[#id],X); =(C1,C2)"/>
+	<sentence provenance="background" sentence="healthy(X:[#id]); sick(X)"/>
+	<sentence provenance="background" sentence="~healthy(X:[#id]); ~sick(X)"/>
+	<sentence provenance="background" sentence="alive(X:[#id]); dead(X)"/>
+	<sentence provenance="background" sentence="~alive(X:[#id]); ~dead(X)"/>
+	<sentence provenance="background" sentence="awake(X:[#id]); asleep(X)"/>
+	<sentence provenance="background" sentence="~awake(X:[#id]); ~asleep(X)"/>
+	<sentence provenance="background" sentence="~verb.sleep(X:[#id]); asleep(X)"/>
+	<sentence provenance="background" sentence="verb.sleep(X:[#id]); ~asleep(X)"/>
+	<sentence provenance="background" sentence="full(X:[#id]); empty(X)"/>
+	<sentence provenance="background" sentence="~full(X:[#id]); ~empty(X)"/>
+	<sentence provenance="background" sentence="~role(X:[#id],Y:[#id],Z); role(X,Z)"/>
+	<sentence provenance="background" sentence="~goal(X,Y); ~goal(X,Z); =(Y,Z)"/>
+	<sentence provenance="background" sentence="powered.state(X:[#id], 'powered.on'[powered.on]); powered.state(X, 'powered.off'[powered.off])"/>
+	<sentence provenance="background" sentence="~powered.state(X:[#id], 'powered.on'[powered.on]); ~powered.state(X, 'powered.off'[powered.off])"/>
+	<sentence provenance="background" sentence="small(X:[#id]); big(X)"/>
+	<sentence provenance="background" sentence="~small(X:[#id]); ~big(X)"/>	
+	<sentence provenance="background" sentence="weight(X:[#id], 'light-weight'[light-weight]); weight(X, 'heavy-weight'[heavy-weight])"/>
+	<sentence provenance="background" sentence="~weight(X:[#id], 'light-weight'[light-weight]); ~weight(X, 'heavy-weight'[heavy-weight])"/>
+	<sentence provenance="background" sentence="~verb.own(X:[#id],Y:[#id]); verb.belong(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.belong(X:[#id],Y:[#id]); verb.own(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.like(X:[#id], Y:[#id]); ~verb.hate(X, Y)"/>	
+	<sentence provenance="background" sentence="good(X:[#id]); bad(X)"/>
+	<sentence provenance="background" sentence="~good(X:[#id]); ~bad(X)"/>	
+	<sentence provenance="background" sentence="~verb.suck(X:[#id]); bad(X)"/>
+
+	<sentence provenance="background" sentence="~relation.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); relation.contains(Y,X)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); space.at(X,Y)"/>
+
+	<sentence provenance="background" sentence="gravity(Y, G); ~space.at(Y, X); ~gravity(X, G)"/>	
+	<sentence provenance="background" sentence="temperature(X, T); ~space.at(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	
+
+	<sentence provenance="background" sentence="verb.find(X, Y); ~verb.find(X, Y, Z)"/>	
+	<sentence provenance="background" sentence="verb.find(X, Y, Z1); ~verb.find(X, Y, Z2); ~space.at(Z2, Z1)"/>	
+
+	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); ~space.far(X, Y)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id], Y:[#id]); space.near(X, Y)"/>
+	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); space.near(Y, X)"/>
+	<sentence provenance="background" sentence="~space.far(X:[#id], Y:[#id]); space.far(Y, X)"/>
+
+	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.need(X, verb.help(Y, X))"/>
+	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.can(Y, verb.help(Y, X, P))"/>
+	<sentence provenance="background" sentence="~verb.can(Y:[#id], verb.help(Y, X, P)); verb.can(Y, verb.help(Y, X))"/>	
+</knowledgeBase>

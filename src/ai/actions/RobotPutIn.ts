@@ -78,8 +78,6 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 
 
 		let destinationMap:A4Map = containerObjectL[0].map;
-		let destinationX:number = containerObjectL[0].x;
-		let destinationY:number = (containerObjectL[0].y+containerObjectL[0].tallness);
 
 		// Check if the robot can go:
 		let destinationLocation:AILocation = ai.game.getAILocation(containerObjectL[0]);

@@ -138,12 +138,13 @@ class BInterface {
     }
 
 
-    static mouseOverElement(mouse_x:number, mouse_y:number):boolean
+    static mouseOverElement(mouse_x:number, mouse_y:number): boolean
     {
         for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
             let e:BInterfaceElement = this.elements[i];
             if (e.getEnabled() && e.mouseOver(mouse_x, mouse_y)) return true;
         }
+        return false;
     }
 
 

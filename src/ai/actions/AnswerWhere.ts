@@ -11,10 +11,6 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
 		let intention:Term = ir.action;
-		let requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[1] = true;
-    	app.trigger_achievement_complete_alert();
 
 //		let where_answer:number = INFERENCE_RECORD_EFFECT_ANSWER_WHEREIS;
 //		if (intention.functor == ai.o.getSort("action.answer.whereto")) where_answer = INFERENCE_RECORD_EFFECT_ANSWER_WHERETO;

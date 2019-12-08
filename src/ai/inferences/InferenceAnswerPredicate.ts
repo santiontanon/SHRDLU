@@ -15,7 +15,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 		}
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("AnswerPredicate_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		var targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
@@ -35,7 +35,8 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				var term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
-				for(let [variable,value] of inf.inferences[0].endResults[0].bindings.l) {
+				for(let tmp of inf.inferences[0].endResults[0].bindings.l) {
+					let value:TermAttribute = tmp[1];
 					if (value instanceof ConstantTermAttribute &&
 						value.sort.name == "#id") {
 						// we need to add this mention to the context entity list:

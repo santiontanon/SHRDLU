@@ -5,19 +5,21 @@ class A4RuleBasedAI extends RuleBasedAI {
 		super(o, nlp, pf, pfoffset, qpt);
 		this.game = game;
 
+		this.inferenceEffectFactory = new A4InferenceEffectFactory();
+
 		this.intentionHandlers.push(new Call_IntentionAction());
     	this.intentionHandlers.push(new Memorize_IntentionAction());
 	    this.intentionHandlers.push(new AnswerPredicate_IntentionAction());
-	    this.intentionHandlers.push(new AnswerWhere_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhoIs_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhatIs_IntentionAction());
 	    this.intentionHandlers.push(new AnswerQuery_IntentionAction());
 	    this.intentionHandlers.push(new AnswerHowMany_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhen_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhy_IntentionAction());
-	    this.intentionHandlers.push(new AnswerHow_IntentionAction());
+	    this.intentionHandlers.push(new A4AnswerHow_IntentionAction());
 	    this.intentionHandlers.push(new AnswerDefine_IntentionAction());
 	    this.intentionHandlers.push(new AnswerHearSee_IntentionAction());
+	    this.intentionHandlers.push(new AnswerWhere_IntentionAction());
 
 		this.locationsWherePlayerIsNotPermitted.push("location-as4");	// bedroom 1
 		this.locationsWherePlayerIsNotPermitted.push("location-as5");	// bedroom 2
@@ -502,7 +504,6 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let context:NLContext = this.contextForSpeaker(speaker);
 		if (context.lastTimeUpdated >= this.time_in_seconds) return context;
 		context.lastTimeUpdated = this.time_in_seconds;
-		let speakerObject:A4Object = this.game.findObjectByIDJustObject(speaker);
 		context.shortTermMemory = [];
 
 //		console.log("updateContext: speaker: " + speakerObject)
@@ -1400,6 +1401,79 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 		return null;
 	}
+
+
+	executeIntention(ir:IntentionRecord) : boolean
+	{
+		let intention:Term = ir.action;
+		for(let ih of this.intentionHandlers) {
+			if (ih.canHandle(intention, this)) {
+				if (ih instanceof AnswerPredicate_IntentionAction) {
+    				app.achievement_nlp_all_types_of_questions[0] = true;
+	    			app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerWhere_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[1] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerWhoIs_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[2] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerWhatIs_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[3] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerQuery_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[4] = true;
+    				app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerHowMany_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[5] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerWhen_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[6] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerWhy_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[7] = true;
+			    	app.trigger_achievement_complete_alert();
+
+					let intention:Term = ir.action;
+					if (intention.attributes.length == 2) {
+						if (intention.attributes[1] instanceof ConstantTermAttribute) {
+							var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+							var context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(targetID);
+							if (context != null) {
+								var lastPerf:NLContextPerformative = context.lastPerformativeBy(this.selfID);
+								if (lastPerf.cause != null) {
+									if (lastPerf.cause.causesComeFromInference) {
+										app.achievement_nlp_resolution_explanation = true;
+										app.trigger_achievement_complete_alert();
+									}
+								}
+							}
+						}
+					}
+				} else if (ih instanceof A4AnswerHow_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[8] = true;
+			    	app.trigger_achievement_complete_alert();
+				} else if (ih instanceof AnswerDefine_IntentionAction) {
+			    	app.achievement_nlp_all_types_of_questions[9] = true;
+    				app.trigger_achievement_complete_alert();
+
+					let intention:Term = ir.action;
+					if (intention.attributes.length == 2 &&
+						(intention.attributes[0] instanceof ConstantTermAttribute) &&
+						((intention.attributes[1] instanceof VariableTermAttribute) ||
+						 (intention.attributes[1] instanceof ConstantTermAttribute)) &&
+						(<ConstantTermAttribute>(intention.attributes[0])).value == this.selfID) {
+						if (intention.attributes[1].sort.name == "three-laws-of-robotics") {
+							app.achievement_secret_3_laws_of_robotics = true;
+							app.trigger_achievement_complete_alert();
+						}
+					}
+				}
+				return ih.execute(ir, this);
+			}
+		}
+
+		return false;
+	}	
 
 
 	restoreFromXML(xml:Element)

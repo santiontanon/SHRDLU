@@ -14,11 +14,10 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 		console.log("inf.inferences[0].endResults: " + inf.inferences[0].endResults);
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("AnswerHowGoto_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var targetID:string = null;
 
 		console.log("query result, answer how goto (source): " + inf.inferences[0].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
@@ -87,7 +86,6 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 
 				// we don't know! Default to a standard query, to see if we can figure it out that way:
 				var action:Term = (<TermTermAttribute>intention.attributes[2]).term;
-				var subject:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[0];
 				console.log(ai.selfID + " answer how: " + intention.attributes[2]);	
 				// we add the sentence with positive sign, to see if it introduces a contradiction
 				var target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("relation.howto"),

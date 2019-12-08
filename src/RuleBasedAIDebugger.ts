@@ -179,8 +179,6 @@ class RuleBasedAIDebugger {
 		let y:number = y0+4;
 
 		for(let context of this.AI.contexts) {
-			let fontWidth:number = 6;
-			let maxTextLength:number = Math.floor(((x1-x0)-8)/fontWidth);
 			fillTextTopLeft("Natural Language Context ("+context.ai.selfID + " -> " + context.speaker+"):", x0+4, y, fontFamily16px, "white");
 			y+= 20;
 

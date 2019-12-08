@@ -8,14 +8,9 @@ class AnswerWhatIs_IntentionAction extends IntentionAction {
 	}
 
 
-	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
+	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var ai:A4RuleBasedAI = <A4RuleBasedAI>ai_raw;
 		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[3] = true;
-    	app.trigger_achievement_complete_alert();
 
 		if (intention.functor == ai.o.getSort("action.answer.whatis.name")) {
 			console.log(ai.selfID + " answer whatis.name: " + intention.attributes[2]);	

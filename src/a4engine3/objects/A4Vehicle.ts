@@ -206,15 +206,12 @@ class A4Vehicle extends A4WalkingObject {
                 let step:number = game.tileWidth;
                 if (this.direction==A4_DIRECTION_UP || this.direction==A4_DIRECTION_DOWN) step = game.tileHeight;
                 //let bridge:A4MapBridge = null;
-                let pixelsMoved:number = 0;
-                let old_x:number = this.x;
-                let old_y:number = this.y;
                 while(this.walkingCounter<=step) {
                     let dir:number = this.direction;
                     this.x += direction_x_inc[dir];
                     this.y += direction_y_inc[dir];
                     this.walkingCounter += this.getWalkSpeed();
-                    pixelsMoved++;
+                    // pixelsMoved++;
                     if ((this.x%game.tileWidth)==0 && (this.y%game.tileHeight)==0) {
                         this.state = A4CHARACTER_STATE_IDLE;
                         this.walkingCounter = 0;

@@ -114,8 +114,6 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 		}
 
 		let destinationMap:A4Map = targetObject.map;
-		let destinationX:number = targetObject.x;
-		let destinationY:number = (targetObject.y+targetObject.tallness);
 
 		// Check if the robot can go:
 		let destinationLocation:AILocation = ai.game.getAILocation(targetObject);

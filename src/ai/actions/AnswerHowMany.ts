@@ -10,10 +10,6 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
 		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[5] = true;
-    	app.trigger_achievement_complete_alert();
 
 		console.log(ai.selfID + " answer howmany: " + intention.attributes[0] + " - " + intention.attributes[1] + " - "  + intention.attributes[2]);
 		if (intention.attributes[2] instanceof TermTermAttribute) {

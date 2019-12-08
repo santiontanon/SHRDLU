@@ -566,7 +566,6 @@ class A4EngineApp {
                         menuItems.push("back");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {
-                                     let app = <A4EngineApp>arg;
                                      BInterface.pop();
                                });
                         BInterface.push();

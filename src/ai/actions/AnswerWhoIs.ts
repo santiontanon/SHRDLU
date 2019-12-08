@@ -8,14 +8,9 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 	}
 
 
-	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
+	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var ai:A4RuleBasedAI = <A4RuleBasedAI>ai_raw;
 		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[2] = true;
-    	app.trigger_achievement_complete_alert();
 
 		if (intention.functor.is_a(ai.o.getSort("action.answer.whois.name"))) {
 			console.log(ai.selfID + " answer whois.name: " + intention.attributes[2]);	
@@ -30,7 +25,6 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 					   intention.attributes[2] instanceof VariableTermAttribute &&
 					   intention.attributes[3] instanceof TermTermAttribute) {
 				var listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
-				var variable:TermAttribute = intention.attributes[2];
 				var query:Term = (<TermTermAttribute>(intention.attributes[3])).term;
 				var query_l:Term[] = [query];
 				if (query.functor.name == "#and") {

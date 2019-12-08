@@ -17,7 +17,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			query_perf = "perf.q.whereto";
 		}
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {
-			console.error("A4RuleBasedAI.executeInferenceEffect: Trying to talk to a character for which we don't know the ID!");
+			console.error("AnswerWhere_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
 		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
@@ -135,7 +135,6 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 				var targetObject_l:A4Object[] = ai.game.findObjectByID(targetID);
 				if (speakerObject != null) {
 					if (targetObject_l.length == 1) {
-						var targetObject:A4Object = targetObject_l[0];
 						var relations:Sort[] = ai.spatialRelations(targetID, speakerCharacterID);
 						if (relations != null && relations.length>0) {
 							var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[relations.length-1].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";

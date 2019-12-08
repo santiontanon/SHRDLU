@@ -9,37 +9,31 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-    	app.achievement_nlp_all_types_of_questions[9] = true;
-    	app.trigger_achievement_complete_alert();
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
 
 		if (intention.attributes.length == 2 &&
 			(intention.attributes[0] instanceof ConstantTermAttribute) &&
 			((intention.attributes[1] instanceof VariableTermAttribute) ||
 			 (intention.attributes[1] instanceof ConstantTermAttribute)) &&
 			(<ConstantTermAttribute>(intention.attributes[0])).value == ai.selfID) {
-			var sortToDefine:Sort = intention.attributes[1].sort;
-			var definitionAsTerm:TermAttribute = null;
+			let sortToDefine:Sort = intention.attributes[1].sort;
+			let definitionAsTerm:TermAttribute = null;
 
 			if (sortToDefine.name == "three-laws-of-robotics") {
 				// easeter egg!
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.'[symbol])", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.'[symbol])", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '2. A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.'[symbol])", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.'[symbol])", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 
-				app.achievement_secret_3_laws_of_robotics = true;
-				app.trigger_achievement_complete_alert();
-
 				return true;
 			}
 
 			for(let i:number = 0;i<sortToDefine.parents.length;i++) {
-				var parentSort:Sort = sortToDefine.parents[i];
+				let parentSort:Sort = sortToDefine.parents[i];
 				if (parentSort.name != "any" && parentSort.name != "abstract-entity") {
 					if (POSParser.sortIsConsideredForTypes(parentSort, ai.o) ||
 						(parentSort.is_a(ai.o.getSort("property")) && parentSort.name != "property")) {
@@ -56,18 +50,18 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 			if (definitionAsTerm == null) {
 				// console.log("Cannot define: " + sortToDefine.name);
 				if (requester != null) {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+", 'verb.define'[symbol]))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+", 'verb.define'[symbol]))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 				}
 			} else {
 				if (requester != null) {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",verb.be(["+sortToDefine.name+"],"+definitionAsTerm+")))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",verb.be(["+sortToDefine.name+"],"+definitionAsTerm+")))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 				}
 			}
 		} else {
 			if (requester != null) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 			}
 		}

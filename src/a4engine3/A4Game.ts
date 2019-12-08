@@ -155,12 +155,12 @@ class A4Game {
 
         this.ontology = new Ontology();
         Sort.clear();
-
         let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
         xmlhttp.overrideMimeType("text/xml");
         xmlhttp.open("GET", "data/shrdluontology.xml", false); 
         xmlhttp.send();
         this.ontology.loadSortsFromXML(xmlhttp.responseXML.documentElement);
+
         this.gameName = xml.getAttribute("name");
         this.gameTitle = xml.getAttribute("title");
         this.gameSubtitle = xml.getAttribute("subtitle");
@@ -326,7 +326,6 @@ class A4Game {
     finishLoadingGame(saveGameXml:Element, app:A4EngineApp)
     {
         let tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
-        let targetwidth:number = Number(tiles_xml.getAttribute("targetwidth"));
         for(let idx:number = 0;idx<tiles_xml.children.length;idx++) {
             let c:Element = tiles_xml.children[idx];
             let file:string = c.getAttribute("file");
@@ -363,12 +362,6 @@ class A4Game {
                     }
                 }
                 console.log("Loaded " + j + " canDigs for image " + gf.name);
-            } else if (c.tagName == "animation") {
-                let a:A4Animation = A4Animation.fromXML(c, this);
-                switch(c.getAttribute("name")) {
-                    default:
-                        console.warn("Unknown animation name in A4Game definition: " + c.getAttribute("name"));
-                }
             } else {
                 console.log("undefined tag inside of the tile definition: " + c.tagName);
             }
@@ -807,7 +800,6 @@ class A4Game {
 
         // players:
         for(let pc of this.players) {
-            let idx:number = 0;
             for(let idx:number = 0;idx<this.maps.length;idx++) {                
                 if (pc.map == this.maps[idx]) {
                     xmlString += pc.saveToXMLForMainFile(this, "player", idx) + "\n";
@@ -987,7 +979,6 @@ class A4Game {
                 !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
             
             if (acceptWarp) {
-                let isCurrentPlayer:boolean = (wr.o == this.currentPlayer);
                 if (m!=null && createRecord) {
                     wr.o.map.addPerceptionBufferObjectWarpedRecord(
                         new PerceptionBufferObjectWarpedRecord(wr.o.ID, wr.o.sort, m.name,
@@ -2508,7 +2499,6 @@ class A4Game {
         }
 
         if (this.currentPlayer.map.textBubbles.length > 0) {
-            let bubble:A4TextBubble = this.currentPlayer.map.textBubbles[0][0];
             this.currentPlayer.map.textBubbles[0][1] = 0;
             return true;
         }

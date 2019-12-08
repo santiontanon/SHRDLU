@@ -1,11 +1,3 @@
-class InferenceEffectFactory {
-    static loadFromXML(xml:Element, ai:RuleBasedAI, o:Ontology, variables:TermAttribute[], variableNames:string[]) : InferenceEffect
-    {
-        return null;
-    }
-}
-
-
 var o:Ontology = new Ontology();
 Sort.clear();
 var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
@@ -63,9 +55,9 @@ var term_unification_l:[string,string,boolean][] = [
                                         ["actionverb(X:[number],X)",
                                          "actionverb('1'[number],'2'[number])", 
                                          false],
-                                        ["actionverb(X:[any],any(X))",
+                                        /*["actionverb(X:[any],any(X))",
                                          "actionverb(any(Y:[any]),Y)", 
-                                         false],
+                                         false],*/    // this one is commented out, since I've deactivated the occurs check
                                         ["actionverb([character],[any])",
                                          "action.talk('david'[character],perf.greet(Z:[any]))",
                                          true],
