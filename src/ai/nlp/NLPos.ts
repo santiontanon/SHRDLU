@@ -177,6 +177,10 @@ class POSParser {
       "southwest of",
       "west of",
       "northwest of",
+      "right of",
+      "left of",
+      "to the right of",
+      "to the left of",
 
       "as far as",
       "as opposed to",
@@ -773,8 +777,9 @@ this.addTokenPOS(new PartOfSpeech("to", "relation.purpose", Term.fromString("pre
 /*
   ["toward",  "PREP"],
   ["towards",  "PREP"],
-*
-NLPAddTokenPOS("under", PartOfSpeech.generatePreposition("under", POS_TYPE_PPREPOSITION_PLACE));
+*/
+this.addTokenPOS(new PartOfSpeech("under", "space.directly.under", Term.fromString("preposition('space.directly.under'[space.directly.under])", o), 1.0));
+ /*
 NLPAddTokenPOS("underneath", PartOfSpeech.generatePreposition("underneath", POS_TYPE_PPREPOSITION_PLACE));
   /*
   ["unlike",  "PREP"],
@@ -810,6 +815,11 @@ this.addTokenPOS(new PartOfSpeech("south of", "space.south.of", Term.fromString(
 this.addTokenPOS(new PartOfSpeech("southwest of", "space.southwest.of", Term.fromString("preposition('space.southwest.of'[space.southwest.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("west of", "space.west.of", Term.fromString("preposition('space.west.of'[space.west.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("northwest of", "space.northwest.of", Term.fromString("preposition('space.northwest.of'[space.northwest.of])", o), 1.0));
+
+this.addTokenPOS(new PartOfSpeech("to the right of", "space.right.of", Term.fromString("preposition('space.right.of'[space.right.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("to the left of", "space.left.of", Term.fromString("preposition('space.left.of'[space.left.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("right of", "space.right.of", Term.fromString("preposition('space.right.of'[space.right.of])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("left of", "space.left.of", Term.fromString("preposition('space.left.of'[space.left.of])", o), 1.0));
 
 /*
   "according to",
@@ -1888,6 +1898,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.reverseRelations["relation.contains"] = "space.at";
     this.reverseRelations["space.at"] = "relation.contains";
     this.reverseRelations["space.inside.of"] = "relation.contains";
+    this.reverseRelations["space.directly.on.top.of"] = "space.directly.under";
+    this.reverseRelations["space.directly.under"] = "space.directly.on.top.of";
 
     // generate the sort to English table
     this.generateTypeSortToEnglishTable(o);

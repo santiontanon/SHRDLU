@@ -28,6 +28,8 @@
 
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="robot('shrdlu'[#id])"/>
+	<sentence provenance="background" sentence="arm('shrdlu-arm'[#id])"/>
+	<sentence provenance="background" sentence="verb.own('shrdlu'[#id],'shrdlu-arm'[#id])"/>
 	<sentence provenance="background" sentence="name('shrdlu'[#id],'shrdlu'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('shrdlu'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="verb.do('shrdlu'[#id],'nothing'[nothing])"/>

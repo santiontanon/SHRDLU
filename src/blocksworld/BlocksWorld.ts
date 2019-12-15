@@ -106,7 +106,7 @@ class ShrdluBlock {
 			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, 	this.x+1,this.y+this.dy,this.z+this.dz-1, this.color));
 			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+this.dz-1, 			this.x+1,this.y+this.dy,this.z+1, this.color));
 			break;
-		case "robot":
+		case "arm":
 			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
 			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
 			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
@@ -182,10 +182,10 @@ class ShrdluBlock {
 class ShrdluBlocksWorld {
 	constructor() {
 		// original SHRDLU environment:
-		this.shrdluArm = new ShrdluBlock("robot", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
+		this.shrdluArm = new ShrdluBlock("arm", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
 									  	 	    0, SHRDLU_ARM_Y_REST_POSITION, 0,
 									 	  		2, 256, 2);
-		this.shrdluArm.ID = "shrdlu";
+		this.shrdluArm.ID = "shrdlu-arm";
 		this.objects.push(this.shrdluArm);
 
 
@@ -366,6 +366,33 @@ class ShrdluBlocksWorld {
 		return positions;
 	}
 
+
+	distanceBetweenObjects(o1:ShrdluBlock, o2:ShrdluBlock)
+	{
+		if (o1 != null && o2 != null) {
+			let dx:number = 0;
+			let dy:number = 0;
+			let dz:number = 0;
+			if (o1.x+o1.dx < o2.x) {
+				dx = o2.x - (o1.x+o1.dx);
+			} else if (o2.x+o2.dx < o1.x) {
+				dx = o1.x - (o2.x+o2.dx);
+			}
+			if (o1.y+o1.dy < o2.y) {
+				dy = o2.y - (o1.y+o1.dy);
+			} else if (o2.y+o2.dy < o1.y) {
+				dy = o1.y - (o2.y+o2.dy);
+			}
+			if (o1.z+o1.dz < o2.z) {
+				dz = o2.z - (o1.z+o1.dz);
+			} else if (o2.z+o2.dz < o1.z) {
+				dx = o1.z - (o2.z+o2.dz);
+			}
+			return Math.sqrt(dx*dx + dy*dy + dz*dz);
+		}
+
+		return null;
+	}
 
 	width:number = 32;
 	depth:number = 32;

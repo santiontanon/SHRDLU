@@ -606,7 +606,7 @@ class RuleBasedAI {
 
 	addTermToPerception(term:Term)
 	{
-		//console.log(term.toString());
+		// console.log("addTermToPerception: " + term.toString());
 		this.perceptionBuffer.push(term);
 		this.perceptionToShortMemoryFilter(term);
 	}
@@ -632,8 +632,14 @@ class RuleBasedAI {
 
 	shortMemoryToLongTermMemoryFilter(term:Term, provenance:string) : boolean
 	{
-		if (this.cache_sort_action_talk.subsumes(term.functor) ||
-			this.cache_sort_space_at.subsumes(term.functor)) {
+		let storeInLongTerm:boolean = false;
+		for(let sort of this.predicatesToStoreInLongTermMemory) {
+			if (sort.subsumes(term.functor)) {
+				storeInLongTerm = true;
+				break;
+			}
+		}
+		if (storeInLongTerm) {
 			this.addLongTermTerm(term, provenance);
 			return true;
 		} else if (term.functor.is_a(this.cache_sort_stateSort)) {
@@ -2196,6 +2202,7 @@ class RuleBasedAI {
 	time_in_seconds:number = 0;
 	questionPatienceTimmer:number = 1200;
 	maximum_answers_to_give_at_once_for_a_query:number = 3;
+	predicatesToStoreInLongTermMemory:Sort[] = [];
 
 	o:Ontology = null;
 	naturalLanguageParser:NLParser = null;

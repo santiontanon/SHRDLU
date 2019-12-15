@@ -65,6 +65,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.cache_sort_powered_on = this.o.getSort("powered.on");
 		this.cache_sort_powered_off = this.o.getSort("powered.off");
 
+		this.predicatesToStoreInLongTermMemory = [];
+		this.predicatesToStoreInLongTermMemory.push(this.cache_sort_action_talk);
+		this.predicatesToStoreInLongTermMemory.push(cache_sort_space_at);
 	}
 
 

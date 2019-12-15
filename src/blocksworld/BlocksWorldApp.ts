@@ -4,16 +4,9 @@ Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
 
 - todo:
-    ***- perceive the object in the hand to be in the hand:
-        ***- why if I take the blue pyramid, and ask where is it, it still thinks it's inside the box?
-        ***- answer "where is it?/what do I have? etc."
-    - finish defining all the necessary functions in BlocksWorldRuleBasedAI:
-        - distanceBetweenIds
-        - checkSpatialRelation
-        - checkSpatialRelationBetweenCoordinates
-        - spatialRelations
-        - getBaseObjectProperties
-    - "take a green block"
+    ***- "what does the box contain?"
+    ***- "what is contained by the box?"
+    ***- "take a green block"
     - planning for requests that require more than one action (I need a planner that can return a causal representation of the plan, to answer questions about it)
     - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
         - here there are test sentences (some of them quite complex!): http://boole.stanford.edu/lingol/trysh.test

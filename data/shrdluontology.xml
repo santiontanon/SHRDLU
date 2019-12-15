@@ -727,6 +727,7 @@
     <sort name="space.at" super="spatial-relation"/>
     <sort name="space.inside.of" super="space.at"/>
     <sort name="space.directly.on.top.of" super="spatial-relation"/>
+    <sort name="space.directly.under" super="spatial-relation"/>
     <sort name="space.on.top.of" super="space.at,space.directly.on.top.of"/>
     <sort name="space.outside" super="space.location"/>
     <sort name="space.outside.of" super="spatial-relation"/>
@@ -744,6 +745,8 @@
     <sort name="space.southwest.of" super="space.south.of,space.west.of"/>
     <sort name="space.in.front.of" super="spatial-relation"/>
     <sort name="space.behind" super="spatial-relation"/>
+    <sort name="space.left.of" super="spatial-relation"/>
+    <sort name="space.right.of" super="spatial-relation"/>
     <sort name="space.bottom" super="space.location"/>
     <sort name="space.top" super="space.location"/>
     <sort name="space.front" super="space.location"/>

@@ -72,7 +72,6 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 					if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "no";
 					var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 					var term:Term = Term.fromString(tmp, ai.o);
-
 					let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[1].originalTarget, inf.inferences[1].endResults[0], ai);
 					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
 				}
