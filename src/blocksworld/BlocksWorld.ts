@@ -7,6 +7,8 @@ var BW_SIZE_SMALL:string = "small";
 var BW_SIZE_MEDIUM:string = "size.medium";
 var BW_SIZE_LARGE:string = "big";
 
+var SHRDLU_ARM_Y_REST_POSITION:number = 28;
+
 class SBWLine {
 	constructor(x1:number, y1:number, z1:number,
 			    x2:number, y2:number, z2:number,
@@ -129,11 +131,20 @@ class ShrdluBlock {
 	}
 
 
-	isInside(o2:ShrdluBlock): boolean
+	collide(o2:ShrdluBlock): boolean
 	{
 		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
 			this.y+this.dy > o2.y && o2.y+o2.dy > this.y &&
 			this.z+this.dz > o2.z && o2.z+o2.dz > this.z) {
+			return true;
+		}
+		return false;
+	}
+
+
+	isInside(o2:ShrdluBlock): boolean
+	{
+		if (this.collide(o2)) {
 			// they overlap:
 			if (o2.x <= this.x && o2.z <= this.z) {
 				// this inside o2:
@@ -144,7 +155,7 @@ class ShrdluBlock {
 	}
 
 
-	inOnTopOf(o2:ShrdluBlock): boolean
+	isOnTopOf(o2:ShrdluBlock): boolean
 	{
 		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
 			this.y == o2.y+o2.dy &&
@@ -171,11 +182,11 @@ class ShrdluBlock {
 class ShrdluBlocksWorld {
 	constructor() {
 		// original SHRDLU environment:
-		let shrdlu:ShrdluBlock = new ShrdluBlock("robot", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
-									  	 	    0, 24, 0,
+		this.shrdluArm = new ShrdluBlock("robot", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
+									  	 	    0, SHRDLU_ARM_Y_REST_POSITION, 0,
 									 	  		2, 256, 2);
-		shrdlu.ID = "shrdlu";
-		this.objects.push(shrdlu);
+		this.shrdluArm.ID = "shrdlu";
+		this.objects.push(this.shrdluArm);
 
 
 		let table:ShrdluBlock = new ShrdluBlock(SHRDLU_BLOCKTYPE_TABLE, MSX_COLOR_GREY, BW_SIZE_LARGE, 
@@ -273,9 +284,94 @@ class ShrdluBlocksWorld {
 	}
 
 
+	getObject(ID:string) : ShrdluBlock
+	{
+		for(let object of this.objects) {
+			if (object.ID == ID) return object;
+		}
+
+		return null;
+	}
+
+
+	objectsOnTop(ID:string) : ShrdluBlock[]
+	{
+		let object:ShrdluBlock = this.getObject(ID);
+		if (object == null) return [];
+		return this.objectsOnTopObject(object);
+	}
+
+
+	objectsOnTopObject(object:ShrdluBlock) : ShrdluBlock[]
+	{
+		let l:ShrdluBlock[] = [];
+		for(let object2 of this.objects) {
+			if (object2 != object && object2.isOnTopOf(object)) {
+				l.push(object2);
+			}
+		}
+		return l;
+	}
+
+
+	objectsInsideObject(object:ShrdluBlock): ShrdluBlock[]
+	{
+		let l:ShrdluBlock[] = [];
+		for(let object2 of this.objects) {
+			if (object2 != object && object2.isInside(object)) {
+				l.push(object2);
+			}
+		}
+		return l;
+	}
+
+
+	positionsToPutObjectOn(o:ShrdluBlock, base:ShrdluBlock) : [number,number,number][]
+	{
+		let positions:[number,number,number][] = [];
+
+		let x1:number = base.x;
+		let y:number = base.y + base.dy;
+		let z1:number = base.z;
+		let x2:number = base.x + base.dx;
+		let z2:number = base.z + base.dz;
+		if (base.type == SHRDLU_BLOCKTYPE_PYRAMID) return positions;
+		if (base.type == SHRDLU_BLOCKTYPE_BOX) {
+			x1 += 1;
+			z1 += 1;
+			x2 -= 1;
+			z2 -= 1;
+			y = base.y +1; 
+		}
+
+		let tmpBlock:ShrdluBlock = new ShrdluBlock(o.type, o.color, o.size, o.x, o.y, o.z, o.dx, o.dy, o.dz);
+		for(let x:number = x1; x <= x2-o.dx; x++) {
+			for(let z:number = z1; z <= z2-o.dz; z++) {
+				let collision:boolean = false;
+				tmpBlock.x = x;
+				tmpBlock.y = y;
+				tmpBlock.z = z;
+				for(let o2 of this.objects) {
+					if (o2 != o && o2 != base && o2.collide(tmpBlock)) {
+						collision = true;
+						break;
+					}
+				}
+				if (!collision) {
+					positions.push([x,y,z]);
+				}
+			}
+		}
+
+		return positions;
+	}
+
+
 	width:number = 32;
 	depth:number = 32;
 	objects:ShrdluBlock[] = [];
+	shrdluArm:ShrdluBlock = null;
+	objectInArm:ShrdluBlock = null;
 
 	center_x:number;
 	center_y:number;

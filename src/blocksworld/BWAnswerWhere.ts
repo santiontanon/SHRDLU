@@ -266,20 +266,7 @@ class BWAnswerWhere_IntentionAction extends IntentionAction {
 												  new TermTermAttribute(perfQuery)]);
 				console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
 				return newIntention;
-			} /*else if (spaceAtVariableTerms.length == 1) {
-				let query:Term = predicate;
-				let variable:TermAttribute = spaceAtVariableTerms[0].attributes[1];
-				let perfQuery:Term = new Term(ai.o.getSort("perf.q.query"),
-											  [nlcp.performative.attributes[0],
-											   variable,
-											   new TermTermAttribute(query)]);
-				let newIntention:Term = new Term(ai.o.getSort("action.answer.query"),
-										 		 [nlcp.performative.attributes[0],
-											 	  new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
-												  new TermTermAttribute(perfQuery)]);
-				console.log("convertPerformativeToWhereQuestionAnswerIntention, newIntention: " + newIntention);
-				return newIntention;
-			}*/
+			}
 
 		} else if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.whereis")) ||
 			       nlcp.performative.functor.is_a(ai.o.getSort("perf.q.whereto"))) {

@@ -724,7 +724,7 @@
     <sort name="space.position" super="space.location"/>
     <sort name="space.area" super="space.location"/>
     <sort name="spatial-relation" super="space,relation,#stateSort"/>
-    <sort name="space.at" super="spatial-relation,#stateSort"/>
+    <sort name="space.at" super="spatial-relation"/>
     <sort name="space.inside.of" super="space.at"/>
     <sort name="space.directly.on.top.of" super="spatial-relation"/>
     <sort name="space.on.top.of" super="space.at,space.directly.on.top.of"/>

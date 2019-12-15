@@ -27,12 +27,15 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		// Blocks world specific:
 		this.intentionHandlers.push(new ShrdluTalk_IntentionAction());
 	    this.intentionHandlers.push(new BWAnswerWhere_IntentionAction());
+	    this.intentionHandlers.push(new BWTake_IntentionAction());
+	    this.intentionHandlers.push(new BWPutIn_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
 			this.loadLongTermRulesFromFile(rulesFileName);
 		}
 		this.maximum_answers_to_give_at_once_for_a_query = 100;
+		this.perceptionMemoryTime = 1;
 	}
 
 
@@ -76,7 +79,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 							this.addTermToPerception(Term.fromString("space.inside.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
 						}
 
-						if (object.inOnTopOf(object2)) {
+						if (object.isOnTopOf(object2)) {
 							this.addTermToPerception(Term.fromString("space.directly.on.top.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
 						}
 					}
@@ -84,6 +87,23 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 		}
 	}
+
+
+	update(timeStamp:number) 
+	{
+		super.update(timeStamp);
+
+		// continuous actions:
+        if (this.currentActionHandler != null &&
+        	this.currentActionHandler.needsContinuousExecution) {
+        	if (this.currentActionHandler.executeContinuous(this)) {
+				this.addLongTermTerm(new Term(this.o.getSort("verb.do"),
+											  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
+											   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
+				this.currentActionHandler = null;		
+        	}
+        }
+	}	
 
 
 	distanceBetweenIds(source:string, target:string)
@@ -745,10 +765,13 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (this.intentions.length > 0) return false;
 		if (this.queuedIntentions.length > 0) return false;
 		if (this.inferenceProcesses.length > 0) return false;
+		if (this.currentActionHandler != null) return false;
 		return true;
 	}
 
 	naturalLanguageGenerator:NLGenerator = null;
 	world:ShrdluBlocksWorld = null;
 	app:BlocksWorldApp = null;	// in order to print messages
+
+	currentActionHandler:IntentionAction = null;
 }
