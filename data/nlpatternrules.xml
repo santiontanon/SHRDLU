@@ -1405,7 +1405,50 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.be'[symbol], NV, P, T) 'there' ('something'|'anything')
 			   		 adjective(ADJ) [('happening'|'going' 'on')]
-			   		 ('!'|'?')*"/>			   		 
+			   		 ('!'|'?')*"/>	
+
+    <NLPattern name="perf.q.predicate-is-preposition-noun"
+    		   head="perf.q.predicate(LISTENER, #and(object(X), #and(#cons(NOUN, Y), #cons(PREPOSITION, X, Y))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'there'
+			   		 ('something'|'anything')
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"/>
+    <NLPattern name="perf.q.predicate-is-preposition-adjective-noun"
+    		   head="perf.q.predicate(LISTENER, #and(object(X), #and(#cons(NOUN, Y), #and(#cons(ADJ, Y), #cons(PREPOSITION, X, Y)))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'there'
+			   		 ('something'|'anything')
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 adjective(ADJ)
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"/>
+    <NLPattern name="perf.q.predicate-is-preposition-adjective-with-value-noun"
+    		   head="perf.q.predicate(LISTENER, #and(object(X), #and(#cons(NOUN, Y), #and(#cons(ADJ_PARENT:[property-with-value], Y, ADJ), #cons(PREPOSITION, X, Y)))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'there'
+			   		 ('something'|'anything')
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 adjective(ADJ) #sortParent(ADJ, ADJ_PARENT)			   		 
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"
+			   priority="150"/>			   		 		   		 
 
 	<!-- e.g.: "can I go to the kitchen?" -->
 	<NLPattern name="perf.q.predicate-can"
@@ -2574,12 +2617,52 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'who' verb(VERB, N, P, [present-tense]) ('!'|'?')* "/>
-    <NLPattern head="perf.q.query(LISTENER, V, QUERY)"	
+    <NLPattern name="perf.q.query-is-query"
+    		   head="perf.q.query(LISTENER, V, QUERY)"	
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefQuery(C, V, QUERY)"/>
+    <NLPattern name="perf.q.query-is-preposition-noun"
+    		   head="perf.q.query(LISTENER, X, #and(object(X), #and(#cons(NOUN, Y), #cons(PREPOSITION, X, Y))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"/>
+    <NLPattern name="perf.q.query-is-preposition-adjective-noun"
+    		   head="perf.q.query(LISTENER, X, #and(object(X), #and(#cons(NOUN, Y), #and(#cons(ADJ, Y), #cons(PREPOSITION, X, Y)))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 adjective(ADJ)
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"/>
+    <NLPattern name="perf.q.query-is-preposition-adjective-with-value-noun"
+    		   head="perf.q.query(LISTENER, X, #and(object(X), #and(#cons(NOUN, Y), #and(#cons(ADJ_PARENT:[property-with-value], Y, ADJ), #cons(PREPOSITION, X, Y)))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION)
+			   		 (indefinite-article('a'[symbol], [singular]) | 
+			   		  indefinite-article('some'[symbol], [plural]) | 
+			   		  indefinite-article('article.any'[symbol], [plural]))
+			   		 adjective(ADJ) #sortParent(ADJ, ADJ_PARENT)			   		 
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*"
+			   priority="150"/>
     <NLPattern head="perf.q.query(LISTENER, V, #cons(V2,QUERY_ARG1,V))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]

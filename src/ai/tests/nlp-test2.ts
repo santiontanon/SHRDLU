@@ -1225,6 +1225,11 @@ NLParseTestUnifyingListener("I can help you", o.getSort("performative"), context
 NLParseTestUnifyingListener("I changed my mind", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("I take that back", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
 
+// For version 3.5:
+NLParseTestUnifyingListener("what is on top of a block?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(block(Y), space.directly.on.top.of(X, Y))))"); 
+NLParseTestUnifyingListener("what is on top of a green block?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(block(Y), #and(color(Y, 'green'[green]), space.directly.on.top.of(X, Y)))))"); 
+NLParseTestUnifyingListener("is there something on top of a block?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(object(X), #and(block(Y), space.directly.on.top.of(X, Y))))"); 
+NLParseTestUnifyingListener("is there something on top of a green block?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(object(X), #and(block(Y), #and(color(Y, 'green'[green]), space.directly.on.top.of(X, Y)))))"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

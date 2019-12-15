@@ -79,6 +79,8 @@
 	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
 	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/>
 	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/>
+	<sentence provenance="background" sentence="~space.directly.on.top.of(X:[#id],Y:[#id]); ~space.directly.on.top.of(Y,Z:[#id]); ~space.directly.on.top.of(X,Z)"/>
+
 	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>
 	<sentence provenance="background" sentence="~verb.have(C1:[#id],X:[#id]); ~verb.have(C2:[#id],X); =(C1,C2)"/>
 	<sentence provenance="background" sentence="healthy(X:[#id]); sick(X)"/>

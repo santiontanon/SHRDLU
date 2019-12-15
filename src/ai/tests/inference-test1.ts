@@ -109,7 +109,7 @@ function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:bo
 // inference test, it checks whether the query_str contradicts KB_str
 function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[], expectedResult:boolean, o:Ontology)
 {
-    DEBUG_resolution = false;
+    DEBUG_resolution = true;
     DEBUG_resolution_detailed = false;
 
     var KB:SentenceContainer = new SentenceContainer();
@@ -178,6 +178,7 @@ function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpe
 }
 
 
+/*
 for(let pair of term_unification_l) {
     var term1:Term = Term.fromString(pair[0], o);
     var term2:Term = Term.fromString(pair[1], o);
@@ -4698,3 +4699,16 @@ resolutionTest2(
     ],
     true,
     o);
+*/
+
+resolutionTest2(
+    ["~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"],
+    ["space.directly.on.top.of(V4:'block-7'[#id], V5:'table'[#id])",
+     "space.directly.on.top.of(V4:'block-10'[#id], V5:'block-7'[#id])"],
+    ["~space.directly.on.top.of(V4:'block-10'[#id], V5:'table'[#id])"],
+    false,    // should contradict
+    o);
+
+
+
+

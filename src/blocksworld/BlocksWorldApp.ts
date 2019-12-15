@@ -2,15 +2,13 @@
 
 Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
+
 - todo:
-    ***- reasoning is all OFF, I need to change to FOL...
-    - add "shrdlu is thinking" message
-    - I need an action to answer "where" questions that does not depend on the A4Engine.
-    - define and implement the actions: take, put down
+    ***- define and implement the actions: take, put down
+    - planning for requests that require more than one action (I need a planner that can return a causal representation of the plan, to answer questions about it)
     - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
         - here there are test sentences (some of them quite complex!): http://boole.stanford.edu/lingol/trysh.test
-    - go through SHRDLU transcripts, and make sure I can recreate all the conversations SHRDLU had
-    - add a way to learn about SHRDLU (maybe a link to the Stanford page)
+    - go through the collected SHRDLU transcripts, and make sure I can recreate all the conversations SHRDLU had
     - integrate it with the game as a bonus
 */
 
@@ -57,6 +55,7 @@ class BlocksWorldApp {
         this.addMessageWithColorTime("This is a recreation of the original SHRDLU system by Terry Winograd using the NLP", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("engine used by the SHRDLU game.", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("(Check https://github.com/santiontanon/SHRDLU for more info about the game)", MSX_COLOR_GREY, this.time);
+        this.addMessageWithColorTime("(Check http://hci.stanford.edu/~winograd/shrdlu/ for more info about the original system)", MSX_COLOR_GREY, this.time);
 
         console.log("ClassicShrdluApp created.");
     }
@@ -114,6 +113,17 @@ class BlocksWorldApp {
             this.world.draw(0, 0,  this.screen_width, split);
 
             this.draw_messages(split, true);
+
+            // when any of the AIs is thinking:
+            if (this.state == STATE_SHRDLU_ACTING && (this.time%32) < 16) {
+                if (this.shrdlu.inferenceProcesses.length > 0) {
+                    // etaoin is thinking:
+                    ctx.fillStyle = MSX_COLOR_BLACK;
+                    ctx.fillRect(0, 0, 130*PIXEL_SIZE, 10*PIXEL_SIZE);
+                    ctx.fillStyle = MSX_COLOR_WHITE;
+                    ctx.fillText("Shrdlu is thinking...", 0, 0);
+                }
+            }            
         } catch(e) {
             console.error(e);
         }

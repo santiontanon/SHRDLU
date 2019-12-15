@@ -57,9 +57,9 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 			console.log("result: " + results);
 			if (results.length > 0) {
 				let resultsTA:TermAttribute = null;
-				if (results.length > MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY) {
+				if (results.length > ai.maximum_answers_to_give_at_once_for_a_query) {
 					resultsTA = new ConstantTermAttribute("etcetera",ai.o.getSort("etcetera"));
-					for(let i:number = 0;i<MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY;i++) {
+					for(let i:number = 0;i<ai.maximum_answers_to_give_at_once_for_a_query;i++) {
 						let result:TermAttribute = results[i];
 						// See if we need to provide results in past tense:
 						if (inf.timeTerm != null && inf.timeTerm.functor.is_a(ai.o.getSort("time.past"))) {
@@ -95,7 +95,7 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 				if (context != null) {
 					context.lastEnumeratedQuestion_answered = this.nlcp;
 					context.lastEnumeratedQuestion_answers = results;
-					context.lastEnumeratedQuestion_next_answer_index = Math.min(results.length, MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY);
+					context.lastEnumeratedQuestion_next_answer_index = Math.min(results.length, ai.maximum_answers_to_give_at_once_for_a_query);
 					ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.time_in_seconds));
 				} else {
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));

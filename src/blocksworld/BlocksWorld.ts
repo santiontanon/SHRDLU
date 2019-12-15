@@ -209,7 +209,7 @@ class ShrdluBlocksWorld {
 									 	  16, 12, 4,
 									 	  4, 10, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
-									 	  22, 4, 22,
+									 	  22, 5, 22,
 									 	  8, 8, 8));
 	}
 

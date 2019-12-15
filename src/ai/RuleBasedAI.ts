@@ -11,8 +11,6 @@ Note (santi):
 
 */
 
-var MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY:number = 3;
-
 var ONTOLOGY_PROVENANCE:string = "ontology";
 var BACKGROUND_PROVENANCE:string = "background";
 var BACKGROUND_ADDITIONAL_PROVENANCE:string = "background-additional";	// this is additional background knowledge that is loaded after 
@@ -1182,9 +1180,9 @@ class RuleBasedAI {
 		if (context.lastEnumeratedQuestion_next_answer_index < context.lastEnumeratedQuestion_answers.length) {
 			let resultsTA:TermAttribute = null;
 			if (context.lastEnumeratedQuestion_answers.length > 
-				context.lastEnumeratedQuestion_next_answer_index + MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY) {
+				context.lastEnumeratedQuestion_next_answer_index + this.maximum_answers_to_give_at_once_for_a_query) {
 				resultsTA = new ConstantTermAttribute("etcetera",this.o.getSort("etcetera"));
-				for(let i:number = 0;i<MAXIMUM_ANSWERS_TO_GIVE_AT_ONCE_FOR_A_QUERY;i++) {
+				for(let i:number = 0;i<this.maximum_answers_to_give_at_once_for_a_query;i++) {
 					resultsTA = new TermTermAttribute(new Term(this.o.getSort("#and"),[context.lastEnumeratedQuestion_answers[context.lastEnumeratedQuestion_next_answer_index], resultsTA]));
 					context.lastEnumeratedQuestion_next_answer_index++;
 				}
@@ -2197,6 +2195,7 @@ class RuleBasedAI {
 
 	time_in_seconds:number = 0;
 	questionPatienceTimmer:number = 1200;
+	maximum_answers_to_give_at_once_for_a_query:number = 3;
 
 	o:Ontology = null;
 	naturalLanguageParser:NLParser = null;

@@ -19,7 +19,6 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new AnswerWhatIs_IntentionAction());
 	    this.intentionHandlers.push(new AnswerHowMany_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhen_IntentionAction());
-	    // this.intentionHandlers.push(new AnswerWhere_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhy_IntentionAction());
 	    this.intentionHandlers.push(new AnswerHow_IntentionAction());
 	    this.intentionHandlers.push(new AnswerDefine_IntentionAction());
@@ -27,11 +26,13 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 		// Blocks world specific:
 		this.intentionHandlers.push(new ShrdluTalk_IntentionAction());
+	    this.intentionHandlers.push(new BWAnswerWhere_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
 			this.loadLongTermRulesFromFile(rulesFileName);
-		}		
+		}
+		this.maximum_answers_to_give_at_once_for_a_query = 100;
 	}
 
 
