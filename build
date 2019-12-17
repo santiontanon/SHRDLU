@@ -10,15 +10,6 @@ mkdir -p built/src/lib
 
 tsc --removeComments --noUnusedLocals src/ai/*.ts src/ai/nlp/*.ts src/ai/actions/*.ts src/ai/inferences/*.ts src/a4engine3/*.ts src/a4engine3/objects/*.ts src/auxiliar/*.ts src/lib/*.ts src/shrdlu/*.ts src/shrdlu/ai/*.ts src/shrdlu/ai/actions/*.ts src/shrdlu/ai/inferences/*.ts
 
-rm built/src/*.js
-rm built/src/a4engine3/*.js
-rm built/src/auxiliar/*.js
-rm built/src/ai/*.js
-rm built/src/ai/nlp/*.js
-rm built/src/ai/actions/*.js
-rm built/src/ai/inferences/*.js
-rm built/src/lib/*.js
-
 mv src/a4engine3/*.js built/src/a4engine3
 mv src/a4engine3/objects/*.js built/src/a4engine3
 mv src/auxiliar/*.js built/src/auxiliar
