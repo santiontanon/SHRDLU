@@ -4,9 +4,8 @@ Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
 
 - todo:
-    ***- "what does the box contain?"
-    ***- "what is contained by the box?"
-    ***- "take a green block"
+    ***- Be able to pass on all the results of inference to the action handler, and not just the first. In case the first cannot be taken, but some of the others can!
+    ***- If I say "pick up a pyramid", and then "put it on the table". It does not know how to disambiguate "it", since the specific pyramid was never on any performative! Add it!
     - planning for requests that require more than one action (I need a planner that can return a causal representation of the plan, to answer questions about it)
     - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
         - here there are test sentences (some of them quite complex!): http://boole.stanford.edu/lingol/trysh.test

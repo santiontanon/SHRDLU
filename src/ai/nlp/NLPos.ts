@@ -798,7 +798,7 @@ NLPAddTokenPOS("via", PartOfSpeech.generatePreposition("via", POS_TYPE_PPREPOSIT
   /*
   ["vice",  "PREP"],
 */
-this.addTokenPOS(new PartOfSpeech("with", "relation.contains", Term.fromString("preposition('relation.contains'[relation.contains])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("with", "verb.contains", Term.fromString("preposition('verb.contains'[verb.contains])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("with", "relation.tool", Term.fromString("preposition('relation.tool'[relation.tool])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("within", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 /*
@@ -1589,7 +1589,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.explore", "scout","scouts","scouted","scouted","scouting", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.print", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
-
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);
@@ -1609,6 +1608,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.change", "change","changes","changed","changed","changing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.close", "close","closes","closed","closed","closing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.colonize", "colonize","colonizes","colonized","colonized","colonizing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.contains", "contain","contains","contained","contained","containing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come", "come","comes","came","come","coming", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-back", "come back","comes back","came back","come back","coming back", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.come-to", "come to","comes to","came to","come to","coming to", false, multitokens_raw, o);
@@ -1894,10 +1894,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.reverseRelations["verb.belong"] = "verb.own";
     this.reverseRelations["relation.cause"] = "relation.effect";
     this.reverseRelations["relation.effect"] = "relation.cause";
-    // this.reverseRelations["relation.contains"] = "space.inside.of";
-    this.reverseRelations["relation.contains"] = "space.at";
-    this.reverseRelations["space.at"] = "relation.contains";
-    this.reverseRelations["space.inside.of"] = "relation.contains";
+    // this.reverseRelations["verb.contains"] = "space.inside.of";
+    this.reverseRelations["verb.contains"] = "space.at";
+    this.reverseRelations["space.at"] = "verb.contains";
+    this.reverseRelations["space.inside.of"] = "verb.contains";
     this.reverseRelations["space.directly.on.top.of"] = "space.directly.under";
     this.reverseRelations["space.directly.under"] = "space.directly.on.top.of";
 

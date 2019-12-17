@@ -226,45 +226,47 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			relation.name == "space.behind" ||
 			relation.name == "space.right.of" ||
 			relation.name == "space.left.of") {
-			let dx:number = (o1.x+o1.dx/2)-(o2.x+o2.dx/2);
-			let dy:number = (o1.y+o1.dy/2)-(o2.y+o2.dy/2);
-			let dz:number = (o1.z+o1.dz/2)-(o2.z+o2.dz/2);
-			return this.checkSpatialRelationBetweenCoordinates(relation, dx, dy, dz);
-		}
-
-		return null;
-	}
-
-
-	checkSpatialRelationBetweenCoordinates(relation:Sort, dx:number, dy:number, dz:number) : boolean
-	{
-		if (Math.abs(dx) >= 1 || Math.abs(dz) >= 1) {
-			let angle:number = Math.atan2(dz,dx);
-
-			if (relation.name == "space.north.of") {
-				return angle>-(7*Math.PI/8) && angle<=-(1*Math.PI/8);
-			} else if (relation.name == "space.east.of" ||
-					   relation.name == "space.right.of") {
-				return angle>-(3*Math.PI/8) && angle<=(3*Math.PI/8);
-			} else if (relation.name == "space.west.of" ||
-					   relation.name == "space.left.of") {
-				return angle<=-(5*Math.PI/8) || angle>(5*Math.PI/8);
-			} else if (relation.name == "space.south.of") {
-				return angle>(1*Math.PI/8) && angle<=(7*Math.PI/8);
-			} else if (relation.name == "space.northeast.of") {
-				return angle>-(3*Math.PI/8) && angle<=-(1*Math.PI/8);
-			} else if (relation.name == "space.northwest.of") {
-				return angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8);
-			} else if (relation.name == "space.southeast.of") {
-				return angle>(1*Math.PI/8) && angle<=(3*Math.PI/8);
-			} else if (relation.name == "space.southwest.of") {
-				return angle>(5*Math.PI/8) && angle<=(7*Math.PI/8);
-			} else if (relation.name == "space.in.front.of") {
-				return dz<0;
-			} else if (relation.name == "space.behind") {
-				return dz>0;
+			let dx_raw:number = (o1.x+o1.dx/2)-(o2.x+o2.dx/2);
+			let dz_raw:number = (o1.z+o1.dz/2)-(o2.z+o2.dz/2);
+			let dx:number = 0;
+			let dz:number = 0;
+			if (o1.x+o1.dx < o2.x) {
+				dx = o2.x - (o1.x+o1.dx);
+			} else if (o2.x+o2.dx < o1.x) {
+				dx = o1.x - (o2.x+o2.dx);
 			}
+			if (o1.z+o1.dz < o2.z) {
+				dz = o2.z - (o1.z+o1.dz);
+			} else if (o2.z+o2.dz < o1.z) {
+				dx = o1.z - (o2.z+o2.dz);
+			}
+			if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
+				let angle:number = Math.atan2(dz_raw,dx_raw);
+
+				if (relation.name == "space.north.of" ||
+					relation.name == "space.behind") {
+					return angle>(1*Math.PI/8) && angle<=(7*Math.PI/8) && dz > 0;
+				} else if (relation.name == "space.east.of" ||
+						   relation.name == "space.right.of") {
+					return angle>-(3*Math.PI/8) && angle<=(3*Math.PI/8) && dx > 0;
+				} else if (relation.name == "space.west.of" ||
+						   relation.name == "space.left.of") {
+					return angle<=-(5*Math.PI/8) || angle>(5*Math.PI/8) && dx > 0;
+				} else if (relation.name == "space.south.of" ||
+						   relation.name == "space.in.front.of") {
+					return angle>-(7*Math.PI/8) && angle<=-(1*Math.PI/8) && dz > 0;
+				} else if (relation.name == "space.northeast.of") {
+					return angle>(1*Math.PI/8) && angle<=(3*Math.PI/8) && (dx > 0 || dz > 0);
+				} else if (relation.name == "space.northwest.of") {
+					return angle>(5*Math.PI/8) && angle<=(7*Math.PI/8) && (dx > 0 || dz > 0);
+				} else if (relation.name == "space.southeast.of") {
+					return angle>-(3*Math.PI/8) && angle<=-(1*Math.PI/8) && (dx > 0 || dz > 0);
+				} else if (relation.name == "space.southwest.of") {
+					return angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8) && (dx > 0 || dz > 0);
+				}
+			}		
 		}
+
 		return null;
 	}
 
@@ -300,35 +302,56 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			relations.push(this.o.getSort("space.at"))
 		}
 
-		let dx:number = (o1.x+o1.dx/2)-(o2.x+o2.dx/2);
-		let dz:number = (o1.z+o1.dz/2)-(o2.z+o2.dz/2);
 		let distance:number = this.world.distanceBetweenObjects(o1, o2);
 		if (distance < SPACE_NEAR_FAR_THRESHOLD) relations.push(this.o.getSort("space.near"));
 		if (distance >= SPACE_NEAR_FAR_THRESHOLD) relations.push(this.o.getSort("space.far"));
 
-		if (Math.abs(dx) >= 1 || Math.abs(dz) >= 1) {
-			let angle:number = Math.atan2(dz,dx);
+
+		let dx_raw:number = (o1.x+o1.dx/2)-(o2.x+o2.dx/2);
+		let dz_raw:number = (o1.z+o1.dz/2)-(o2.z+o2.dz/2);
+		let dx:number = 0;
+		let dz:number = 0;
+		if (o1.x+o1.dx < o2.x) {
+			dx = o2.x - (o1.x+o1.dx);
+		} else if (o2.x+o2.dx < o1.x) {
+			dx = o1.x - (o2.x+o2.dx);
+		}
+		if (o1.z+o1.dz < o2.z) {
+			dz = o2.z - (o1.z+o1.dz);
+		} else if (o2.z+o2.dz < o1.z) {
+			dx = o1.z - (o2.z+o2.dz);
+		}
+		if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
+			let angle:number = Math.atan2(dz_raw,dx_raw);
 //			console.log("angle: " + angle + ", dx: " + dx + ", dy: " + dy);
 			if (angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8)) {
-				relations.push(this.o.getSort("space.northwest.of"));
+				if (dx > 0 || dz > 0) relations.push(this.o.getSort("space.southwest.of"));
 			} else if (angle>-(5*Math.PI/8) && angle<=-(3*Math.PI/8)) {
-				relations.push(this.o.getSort("space.north.of"));
-				relations.push(this.o.getSort("space.behind"));
+				if (dz > 0) {
+					relations.push(this.o.getSort("space.south.of"));
+					relations.push(this.o.getSort("space.in.front.of"));
+				}
 			} else if (angle>-(3*Math.PI/8) && angle<=-(1*Math.PI/8)) {
-				relations.push(this.o.getSort("space.northeast.of"));
+				if (dx > 0 || dz > 0) relations.push(this.o.getSort("space.southeast.of"));
 			} else if (angle>-(1*Math.PI/8) && angle<=(1*Math.PI/8)) {
-				relations.push(this.o.getSort("space.east.of"));
-				relations.push(this.o.getSort("space.right.of"));
+				if (dx > 0) {
+					relations.push(this.o.getSort("space.east.of"));
+					relations.push(this.o.getSort("space.right.of"));
+				}
 			} else if (angle>(1*Math.PI/8) && angle<=(3*Math.PI/8)) {
-				relations.push(this.o.getSort("space.southeast.of"));
+				if (dx > 0 || dz > 0) relations.push(this.o.getSort("space.northeast.of"));
 			} else if (angle>(3*Math.PI/8) && angle<=(5*Math.PI/8)) {
-				relations.push(this.o.getSort("space.south.of"));
-				relations.push(this.o.getSort("space.in.front.of"));
+				if (dz > 0) {
+					relations.push(this.o.getSort("space.north.of"));
+					relations.push(this.o.getSort("space.behind"));
+				}
 			} else if (angle>(5*Math.PI/8) && angle<=(7*Math.PI/8)) {
-				relations.push(this.o.getSort("space.southwest.of"));
+				if (dx > 0 || dz > 0) relations.push(this.o.getSort("space.northwest.of"));
 			} else {
-				relations.push(this.o.getSort("space.west.of"));
-				relations.push(this.o.getSort("space.left.of"));
+				if (dx > 0) {
+					relations.push(this.o.getSort("space.west.of"));
+					relations.push(this.o.getSort("space.left.of"));
+				}
 			}
 		}
 

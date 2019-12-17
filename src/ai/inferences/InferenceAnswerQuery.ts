@@ -96,9 +96,21 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 					context.lastEnumeratedQuestion_answered = this.nlcp;
 					context.lastEnumeratedQuestion_answers = results;
 					context.lastEnumeratedQuestion_next_answer_index = Math.min(results.length, ai.maximum_answers_to_give_at_once_for_a_query);
-					ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.time_in_seconds));
+					if (results.length == 1) {
+						// if we only have one result, record the reason for the result:
+						let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), causeRecord, ai.time_in_seconds));
+					} else {
+						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.time_in_seconds));
+					}
 				} else {
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					if (results.length == 1) {
+						// if we only have one result, record the reason for the result:
+						let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
+						ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					} else {
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					}
 				}
 			} else {
 				console.error("Inference produced a result, but none of the resulting variables is the query variable!");

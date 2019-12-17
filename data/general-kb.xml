@@ -561,8 +561,8 @@
 	<sentence provenance="background" sentence="~good(X:[#id]); ~bad(X)"/>	
 	<sentence provenance="background" sentence="~verb.suck(X:[#id]); bad(X)"/>
 
-	<sentence provenance="background" sentence="~relation.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
-	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); relation.contains(Y,X)"/>
+	<sentence provenance="background" sentence="~verb.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); verb.contains(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); space.at(X,Y)"/>
 
 	<sentence provenance="background" sentence="~permitted-in(X, Y); permission-to(X, Y)"/>

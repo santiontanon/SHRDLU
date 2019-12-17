@@ -294,6 +294,14 @@ abstract class IntentionAction {
 		return true;
 	}
 
+	// Some requests require inference, however, an action  might be able to handle the inference internally.
+	// If that's the case, then this function has to be redefined, and return "true" for those actions that the action handler
+	// can handle inference internally.
+	canHandleWithoutInference(perf:Term) : boolean
+	{
+		return false;
+	}
+
 	needsContinuousExecution:boolean = false;
 }
 
@@ -358,7 +366,7 @@ class RuleBasedAI {
 		this.cache_sort_space_location = this.o.getSort("space.location");
 		this.cache_sort_relation = this.o.getSort("relation");
 		this.cache_sort_verb_have = this.o.getSort("verb.have");
-		this.cache_sort_verb_contains = this.o.getSort("relation.contains");
+		this.cache_sort_verb_contains = this.o.getSort("verb.contains");
 		this.cache_sort_stateSort = this.o.getSort("#stateSort");
 		this.cache_sort_action_talk = this.o.getSort("action.talk");
 		this.cache_sort_action_follow = this.o.getSort("verb.follow");
@@ -1105,30 +1113,46 @@ class RuleBasedAI {
 
 		if (perf2.attributes[1] instanceof TermTermAttribute) {
 			let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
-			if (perf2.attributes.length>=3 &&
+			let needsInference:boolean = false;
+			if (perf2.attributes.length == 3 &&
 				perf2.attributes[2] instanceof TermTermAttribute) {
-				// this means that the action request has a variable and we need to start an inference process:
-				let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
-				let target1Terms:Term[] = [];
-				let target1Signs:boolean[] = [];
-				for(let i:number = 0;i<intention_l.length;i++) {
-					if (intention_l[i].functor.name == "#not") {
-						target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
-						target1Signs.push(true);
-					} else {
-						target1Terms.push(intention_l[i]);
-						target1Signs.push(false);
+				needsInference = true;
+				for(let ih of this.intentionHandlers) {
+					if (ih.canHandle(action, this)) {
+						if (ih.canHandleWithoutInference(perf2)) {
+							needsInference = false;
+							break;
+						}
 					}
 				}
 
-				// 2) start the inference process:
-				let target1:Sentence[] = [];
-				target1.push(new Sentence(target1Terms, target1Signs));
-				let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
-				ir.triggeredBy = perf2;
-				ir.triggeredBySpeaker = context.speaker;
-				this.inferenceProcesses.push(ir);
-			} else if (perf2.attributes.length==2) {
+				if (needsInference) {
+					// this means that the action request has a variable and we need to start an inference process:
+					let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
+					let target1Terms:Term[] = [];
+					let target1Signs:boolean[] = [];
+					for(let i:number = 0;i<intention_l.length;i++) {
+						if (intention_l[i].functor.name == "#not") {
+							target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
+							target1Signs.push(true);
+						} else {
+							target1Terms.push(intention_l[i]);
+							target1Signs.push(false);
+						}
+					}
+
+					// 2) start the inference process:
+					let target1:Sentence[] = [];
+					target1.push(new Sentence(target1Terms, target1Signs));
+					let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
+					ir.triggeredBy = perf2;
+					ir.triggeredBySpeaker = context.speaker;
+					this.inferenceProcesses.push(ir);
+					return;
+				}
+			}
+			if (perf2.attributes.length == 2 ||
+				(perf2.attributes.length == 3 && !needsInference)) {
 				// First check if the actor is us:
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);

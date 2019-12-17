@@ -222,7 +222,7 @@ class NLContext {
 		this.ai = ai;
 		this.mentionMemorySize = mentionMemorySize;
 		this.cache_sort_space_at = this.ai.o.getSort("space.at");
-		this.cache_sort_contains = this.ai.o.getSort("relation.contains");
+		this.cache_sort_contains = this.ai.o.getSort("verb.contains");
 	}
 
 

@@ -8,16 +8,44 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 	}
 
 
+	canHandleWithoutInference(perf:Term) : boolean
+	{
+		if (perf.attributes.length == 3 &&
+			perf.attributes[1] instanceof TermTermAttribute &&
+			perf.attributes[2] instanceof TermTermAttribute) {
+			let action:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+			if (action.attributes.length == 2 && 
+				(action.attributes[0] instanceof ConstantTermAttribute) &&
+				(action.attributes[1] instanceof VariableTermAttribute)) {
+				return true;
+			}
+		}
+		return super.canHandleWithoutInference(perf);
+	}
+
+
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
-		let toPrintAttribute:TermAttribute = intention.attributes[1];
+		let toPrint:Sort = null;
+		if (intention.attributes.length == 2) {
+			let toPrintAttribute:TermAttribute = intention.attributes[1];
+			if ((toPrintAttribute instanceof VariableTermAttribute) ||
+				(toPrintAttribute instanceof ConstantTermAttribute)) {
+				toPrint = toPrintAttribute.sort;
+			}
+			let perf:Term = ir.requestingPerformative.performative;
+			if (perf.attributes.length == 3 &&
+				(perf.attributes[2] instanceof TermTermAttribute) &&
+				(toPrintAttribute instanceof VariableTermAttribute)) {
+				let constraint:Term = (<TermTermAttribute>perf.attributes[2]).term;
+				toPrint = constraint.functor;
+			}
+		}
 
-		if ((toPrintAttribute instanceof VariableTermAttribute) ||
-			(toPrintAttribute instanceof ConstantTermAttribute)){
-			let toPrint:Sort = toPrintAttribute.sort;
+		if (toPrint != null){
 			let recipe_idx:number = -1;
 			let recipe:string[] = null;
 

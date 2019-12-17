@@ -630,7 +630,6 @@
     <sort name="verb.belong" super="relation-verb"/>
     <sort name="verb.change" super="verb"/>
 
-
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
     <sort name="verb.hate" super="relation-verb"/>
@@ -755,12 +754,12 @@
     <sort name="space.end" super="space.location,end"/>
     <sort name="space.exit" super="space.location"/>
     <sort name="distance" super="space,relation-with-value,#stateSort,abstract-entity"/>
-    <sort name="relation.contains" super="spatial-relation"/>
     <sort name="space.near" super="spatial-relation"/>
     <sort name="space.nearest-to" super="spatial-relation,superlative-adjective"/>
     <sort name="space.farthest-from" super="spatial-relation,superlative-adjective"/>
     <sort name="space.far" super="spatial-relation"/>
     <sort name="ground" super="space.location"/>
+    <sort name="verb.contains" super="spatial-relation,relation-verb"/>
 
     <sort name="in-addition" super="adverb"/>
 

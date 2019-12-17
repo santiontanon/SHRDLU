@@ -8,18 +8,29 @@ mkdir -p built/src/ai/actions
 mkdir -p built/src/ai/inferences
 mkdir -p built/src/lib
 
-tsc --removeComments src/ai/*.ts src/ai/nlp/*.ts src/ai/actions/*.ts src/ai/inferences/*.ts src/*.ts src/a4engine3/*.ts src/a4engine3/objects/*.ts src/a4engine3/ai/*.ts src/auxiliar/*.ts src/lib/*.ts
+tsc --removeComments --noUnusedLocals src/ai/*.ts src/ai/nlp/*.ts src/ai/actions/*.ts src/ai/inferences/*.ts src/a4engine3/*.ts src/a4engine3/objects/*.ts src/auxiliar/*.ts src/lib/*.ts src/shrdlu/*.ts src/shrdlu/ai/*.ts src/shrdlu/ai/actions/*.ts src/shrdlu/ai/inferences/*.ts
 
-mv src/*.js built/src
+rm built/src/*.js
+rm built/src/a4engine3/*.js
+rm built/src/auxiliar/*.js
+rm built/src/ai/*.js
+rm built/src/ai/nlp/*.js
+rm built/src/ai/actions/*.js
+rm built/src/ai/inferences/*.js
+rm built/src/lib/*.js
+
 mv src/a4engine3/*.js built/src/a4engine3
 mv src/a4engine3/objects/*.js built/src/a4engine3
-mv src/a4engine3/ai/*.js built/src/a4engine3
 mv src/auxiliar/*.js built/src/auxiliar
 mv src/ai/*.js built/src/ai
 mv src/ai/nlp/*.js built/src/ai/nlp
 mv src/ai/actions/*.js built/src/ai/actions
 mv src/ai/inferences/*.js built/src/ai/inferences
 mv src/lib/*.js built/src/lib
+mv src/shrdlu/*.js built/src
+mv src/shrdlu/ai/*.js built/src/ai
+mv src/shrdlu/ai/actions/*.js built/src/ai/actions
+mv src/shrdlu/ai/inferences/*.js built/src/ai/inferences
 
 cp data/*.* built/data
 cp data/sfx/*.* built/data/sfx

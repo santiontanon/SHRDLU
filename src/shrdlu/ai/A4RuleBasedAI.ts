@@ -67,7 +67,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		this.predicatesToStoreInLongTermMemory = [];
 		this.predicatesToStoreInLongTermMemory.push(this.cache_sort_action_talk);
-		this.predicatesToStoreInLongTermMemory.push(cache_sort_space_at);
+		this.predicatesToStoreInLongTermMemory.push(this.cache_sort_space_at);
 	}
 
 

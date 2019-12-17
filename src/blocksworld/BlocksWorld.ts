@@ -386,7 +386,7 @@ class ShrdluBlocksWorld {
 			if (o1.z+o1.dz < o2.z) {
 				dz = o2.z - (o1.z+o1.dz);
 			} else if (o2.z+o2.dz < o1.z) {
-				dx = o1.z - (o2.z+o2.dz);
+				dz = o1.z - (o2.z+o2.dz);
 			}
 			return Math.sqrt(dx*dx + dy*dy + dz*dz);
 		}
