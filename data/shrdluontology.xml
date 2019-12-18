@@ -103,6 +103,7 @@
     <sort name="every" super="definite-article"/>  
 
     <sort name="determiner.other" super="determiner"/>  
+    <sort name="determiner.another" super="determiner"/>  
 
     <sort name="pronoun" super="part-of-speech"/>   
     <sort name="personal-pronoun" super="pronoun"/>   
@@ -538,7 +539,7 @@
     <sort name="verb.disambiguate" super="verb"/>
     <sort name="verb.get" super="verb"/>
     <sort name="verb.gather" super="verb.get,verb-with-optional-location-3rd-argument"/>
-    <sort name="verb.go" super="verb"/>
+    <sort name="verb.go" super="movementverb"/>
     <sort name="verb.go-to" super="verb.go"/>
     <sort name="verb.guide" super="verb"/>
     <sort name="verb.take-to" super="verb.guide"/>
@@ -588,7 +589,8 @@
     <sort name="verb.look-at" super="verb.see"/>
     <sort name="verb.analyze" super="verb"/>
     <sort name="verb.examine" super="verb.look-at,verb.analyze"/>
-    <sort name="verb.run" super="movementverb"/>
+    <sort name="verb.run" super="verb.go"/>
+    <sort name="verb.run-to" super="verb.go-to,verb.run"/>
     <sort name="verb.send" super="verb"/>
     <sort name="verb.show" super="verb"/>
     <sort name="verb.sleep" super="verb"/>
@@ -599,7 +601,8 @@
     <sort name="verb.stop" super="verb"/>
     <sort name="verb.wait" super="verb.stop"/>
     <sort name="verb.wait-for" super="verb.wait"/>
-    <sort name="verb.walk" super="movementverb"/>
+    <sort name="verb.walk" super="verb.go"/>
+    <sort name="verb.walk-to" super="verb.go-to,verb.walk"/>
     <sort name="verb.want" super="relation-verb,#stateSort"/>
     <sort name="verb.allow" super="verb"/>
     <sort name="verb.build" super="verb-with-optional-location-3rd-argument"/>

@@ -995,6 +995,11 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'i' 'do' 'not' 'think' 'so' ('!'|'?'|'.')*"/>
+	<NLPattern name="answer-no4"
+			   head="perf.inform.answer(LISTENER, 'no'[symbol])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ['no' [',']] 'not' 'really' ('!'|'?'|'.')*"/>
 	<NLPattern name="answer-unknown"
 			   head="perf.inform.answer(LISTENER, 'unknown'[symbol])"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -1343,6 +1348,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C2, OBJECT)
 					 #derefQuery(#and(C, adverb(ADVERB)), V, PREDICATE)"
 			   priority="150"/>
+	<NLPattern name="predicate-is-there-another-noun-in"
+			   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, V), #and(space.at(X, LOCATION), !=(V, REFERENCE_OBJECT))))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.be'[symbol], NV, P, T) 'there' ('another'|'any' 'other')
+			   		 noun(NOUN, [singular])
+			   		 (preposition('space.at'[space.at])|'on')
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(#and(noun(NOUN, [singular]), the(NOUN, [singular])), REFERENCE_OBJECT)
+					 #derefFromContext(C2, LOCATION)"
+			   priority="200"/>			   		 
+
 	<NLPattern head="perf.q.predicate(LISTENER, #and(PREDICATE, #and(#cons(PREPOSITION1, V, OBJECT),#cons(PREPOSITION2, V, OBJECT2))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]

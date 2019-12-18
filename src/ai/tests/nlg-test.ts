@@ -317,3 +317,6 @@ testNLG("perf.inform('1'[#id], relation.cause(V0:#not(V1:verb.can(V2:'etaoin'[#i
 testNLG("perf.inform('1'[#id], verb.belong('c2'[#id],'qwerty'[#id]))", "etaoin", "the crate of qwerty belongs to qwerty");
 testNLG("perf.inform('1'[#id], verb.do('1'[#id], 'nothing'[nothing]))", "etaoin", "you do nothing");
 
+// v3.5:
+testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:[any], V3:#not(V4:permitted-in(V5:'1'[#id], V6:'room1'[#id]))))", "etaoin", "because you are not allowed to enter the kitchen");
+

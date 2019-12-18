@@ -586,6 +586,7 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("that", "far-demonstrative-determiner", Term.fromString("far-demonstrative-determiner('far-demonstrative-determiner'[symbol], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("those", "far-demonstrative-determiner", Term.fromString("far-demonstrative-determiner('far-demonstrative-determiner'[symbol], [plural])", o), 1.0));
 
+    this.addTokenPOS(new PartOfSpeech("another", "determiner.another", Term.fromString("determiner('determiner.another'[symbol], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("other", "determiner.other", Term.fromString("determiner('determiner.other'[symbol], [grammatical-number])", o), 1.0));
 
     // pronouns:
@@ -1589,6 +1590,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.explore", "scout","scouts","scouted","scouted","scouting", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.print", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.walk-to", "walk to","walks to","walked to","walked to","walking to", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.run-to", "run to","runs to","ran to","run to","running to", false, multitokens_raw, o);
+
+
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);

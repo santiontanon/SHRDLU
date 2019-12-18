@@ -1238,6 +1238,9 @@ NLParseTestUnifyingListener("take a green crate", o.getSort("performative"),  co
 NLParseTestUnifyingListener("put etaoin in a crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), crate(X))");
 NLParseTestUnifyingListener("put etaoin in a large crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), big(X)))");
 NLParseTestUnifyingListener("put etaoin in a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])))");
+NLParseTestUnifyingListener("walk to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.walk-to(V0, 'room1'[#id]))"); 
+NLParseTestUnifyingListener("is there another human on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), human(X)), !=(X,'1'[#id])))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

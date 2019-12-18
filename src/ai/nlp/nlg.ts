@@ -438,19 +438,23 @@ class NLGenerator {
 				let objectStr:[string, number, string, number] = this.termToEnglish_RelationArgument(t2.attributes[1], speakerID, true, context, true, 
 																							         ((t2.attributes[0] instanceof ConstantTermAttribute) ? 
 																							         (<ConstantTermAttribute>(t2.attributes[0])).value:null), true);
-				let relationsAggregateStr:string = "";
-				if (relationStr + " " + objectStr[0] == "of I" ||
-					relationStr + " " + objectStr[0] == "of me") {
-					relationsAggregateStr += " " + (negated_t ? "not ":"") + "mine";
-				} else if (relationStr + " " + objectStr[0] == "of you") {
-					relationsAggregateStr += " " + (negated_t ? "not ":"") + "yours";
-				} else {
-					relationsAggregateStr += " " + (negated_t ? "not ":"") + relationStr + " " + objectStr[0];
-				}
-				relationsAggregateStr = relationsAggregateStr.trim();
+				if (objectStr != null) {
+					let relationsAggregateStr:string = "";
+					if (relationStr + " " + objectStr[0] == "of I" ||
+						relationStr + " " + objectStr[0] == "of me") {
+						relationsAggregateStr += " " + (negated_t ? "not ":"") + "mine";
+					} else if (relationStr + " " + objectStr[0] == "of you") {
+						relationsAggregateStr += " " + (negated_t ? "not ":"") + "yours";
+					} else {
+						relationsAggregateStr += " " + (negated_t ? "not ":"") + relationStr + " " + objectStr[0];
+					}
+					relationsAggregateStr = relationsAggregateStr.trim();
 
-				// console.log("subjectStr: " + subjectStr +"\nverbStr: " + verbStr + "\nrelationStr: " + relationStr + "\nobjectStr: " + objectStr);
-				if (relationsAggregateStr != "") return relationsAggregateStr;
+					// console.log("subjectStr: " + subjectStr +"\nverbStr: " + verbStr + "\nrelationStr: " + relationStr + "\nobjectStr: " + objectStr);
+					if (relationsAggregateStr != "") return relationsAggregateStr;
+				} else {
+					console.error("Could not render objectStr: " + t2.attributes[1]);
+				}
 			}
 			return this.termToEnglish_Inform(t, speakerID, context);
 		} else if (t.attributes[1] instanceof VariableTermAttribute) {
@@ -1926,6 +1930,14 @@ class NLGenerator {
 
 	termToEnglish_Relation(propertyRaw:TermAttribute, speakerID:string, context:NLContext) : [string, number, string, number]
 	{
+		let not:boolean = false;
+		if (propertyRaw instanceof TermTermAttribute) {
+			if ((<TermTermAttribute>propertyRaw).term.functor.name == "#not" &&
+				(<TermTermAttribute>propertyRaw).term.attributes.length == 1) {
+				not = true;
+				propertyRaw = (<TermTermAttribute>propertyRaw).term.attributes[0];
+			}
+		}
 		let tl:TermAttribute[] = [propertyRaw];
 		if (propertyRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>propertyRaw).term.functor.name == "#and") {
@@ -1945,11 +1957,19 @@ class NLGenerator {
 
 			if ((<TermTermAttribute>relation).term.functor.name == "relation.howto") {
 				// special case for how to:
-				return ["the way " + objectStr1[0] + " is " + objectStr2[0], 2, null, objectStr1[3]];
+				if (not) {
+					return ["the way " + objectStr1[0] + " is not " + objectStr2[0], 2, null, objectStr1[3]];
+				} else {
+					return ["the way " + objectStr1[0] + " is " + objectStr2[0], 2, null, objectStr1[3]];
+				}
 			}
 			if (relationStr == null) return null;
 			let verbStr:string = this.pos.getVerbString(context.ai.o.getSort("verb.be"), objectStr1[3], objectStr1[1], 3);
-			return [objectStr1[0] + " " + verbStr + " " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
+			if (not) {
+				return [objectStr1[0] + " " + verbStr + " not " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
+			} else {
+				return [objectStr1[0] + " " + verbStr + " " + relationStr + " " + objectStr2[0], 2, null, objectStr1[3]];
+			}
 		}
 
 		console.error("termToEnglish_Property: could not render " + propertyRaw);

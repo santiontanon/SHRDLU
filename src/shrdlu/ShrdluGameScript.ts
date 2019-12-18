@@ -612,9 +612,11 @@ class ShrdluGameScript {
 
 		case 16:
 			if (this.act_intro_state_timer == 0) {
-				this.app.tutorialMessages.push([" To move around, use the *arrow keys*. ",
+				this.app.tutorialMessages.push([" To move around, use the *ARROW KEYS*. ",
 											    " For now, just walk around the room  ",
 											    " and follow Qwerty's instructions.   ",
+											    "",
+											    " You can *hold SHIFT* to move faster.    ",
 											    "",
 											    "  [press *ESC* to close this message]  "]);
 			} else {
