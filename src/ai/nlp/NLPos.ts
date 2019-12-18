@@ -955,14 +955,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal('3'[number])", o), 1.0));
 
     // proper nouns
-    this.addTokenPOS(new PartOfSpeech("tau ceti", "tau ceti", Term.fromString("proper-noun('tau ceti'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("beta cassini", "beta cassini", Term.fromString("proper-noun('beta cassini'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("aurora", "aurora", Term.fromString("proper-noun('aurora'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("space", "outer-space", Term.fromString("proper-noun('space'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("ai", "ai", Term.fromString("proper-noun('ai'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("station ai", "station ai", Term.fromString("proper-noun('station ai'[symbol], [singular])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("artificial intelligence", "ai", Term.fromString("proper-noun('artificial intelligence'[symbol], [singular])", o), 1.0));
-
     var proper_nouns:string[] = [/*
                                  "james", "john", "robert", "michael", "william",
                                  "david", "richard", "charles", "joseph", "thomas",
@@ -1085,7 +1077,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
                                  "socrates","plato","aristotle",
                                  */
                                  "etaoin", "shrdlu", "qwerty", "david",
-                                 "aurora station"];
+                                 "tau ceti", "beta cassini", "aurora", "space", "ai", "station ai", "artificial intelligence",
+                                 "aurora", "aurora station", "earth", "planet earth"];
     for(let proper_noun of proper_nouns) {
       this.addTokenPOS(new PartOfSpeech(proper_noun, "symbol", Term.fromString("proper-noun('"+proper_noun+"'[symbol], [singular])", o), 1.0));
     }

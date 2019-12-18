@@ -28,7 +28,7 @@ var MENTION_MEMORY_SIZE:number = 10;
 
 var DEFAULT_QUESTION_PATIENCE_TIMER:number = 1200;
 
-var CONVERSATION_TIMEOUT:number = 60*60;	// 1 minute of real time, which is 1 hour of in-game time
+var CONVERSATION_TIMEOUT:number = 120*60;	// 2 minute of real time, which is 2 hour of in-game time
 
 var OCCURS_CHECK:boolean = false;
 
