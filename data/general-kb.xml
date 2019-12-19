@@ -354,7 +354,7 @@
 	<sentence provenance="background" sentence="name('science-door'[#id],'laboratory door'[symbol])"/>
 	<!--sentence provenance="background" sentence="name('science-door'[#id],'the laboratory door'[symbol])"/-->
 	<sentence provenance="background" sentence="name('maintenance-door'[#id],'door to the maintenance room'[symbol])"/>
-	<sentence provenance="background" sentence="name('maintenance-door'[#id],'the door to the maintenance room'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('maintenance-door'[#id],'the door to the maintenance room'[symbol])"/-->
 	<sentence provenance="background" sentence="name('maintenance-door'[#id],'maintenance door'[symbol])"/>
 	<!--sentence provenance="background" sentence="name('maintenance-door'[#id],'the maintenance door'[symbol])"/-->
 	<sentence provenance="background" sentence="name('garage-door-north'[#id],'north garage door'[symbol])"/>
@@ -545,7 +545,8 @@
 	<sentence provenance="background" sentence="~alone-in(X:[#id],LOC:[#id]); ~space.at(Y,LOC); ~character(Y); =(X,Y)"/>
 	<sentence provenance="background" sentence="property.opened(X:[#id]); property.closed(X)"/>
 	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
-	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/>
+	<!--sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/-->
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(L1,L2:[#id]); space.inside.of(X,L2)"/>
 	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/>
 	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>
 	<sentence provenance="background" sentence="~verb.have(C1:[#id],X:[#id]); ~verb.have(C2:[#id],X); =(C1,C2)"/>
@@ -576,7 +577,6 @@
 
 	<sentence provenance="background" sentence="~verb.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); verb.contains(Y,X)"/>
-	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); space.at(X,Y)"/>
 
 	<sentence provenance="background" sentence="~permitted-in(X, Y); permission-to(X, Y)"/>
 	<sentence provenance="background" sentence="permitted-in(X, Y); ~permission-to(X, Y)"/>

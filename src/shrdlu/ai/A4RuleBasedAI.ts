@@ -64,6 +64,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.cache_sort_powered_state = this.o.getSort("powered.state");
 		this.cache_sort_powered_on = this.o.getSort("powered.on");
 		this.cache_sort_powered_off = this.o.getSort("powered.off");
+		this.cache_sort_space_iside_of = this.o.getSort("space.inside.of");
 
 		this.predicatesToStoreInLongTermMemory = [];
 		this.predicatesToStoreInLongTermMemory.push(this.cache_sort_action_talk);
@@ -121,8 +122,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 					if (!somethingInBetween) {
-						let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
-						//let term:Term = Term.fromString("space.inside.of('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+						//let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+						let term:Term = Term.fromString("space.inside.of('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						//console.log(term.toString());
 						// this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 						// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
@@ -241,7 +242,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 				// perceived an object!
 				let term1:Term = new Term(o.sort, [new ConstantTermAttribute(o.ID, this.cache_sort_id)]);
-				let term2:Term = new Term(this.cache_sort_space_at, 
+				let term2:Term = new Term(this.cache_sort_space_iside_of, 
 										  [new ConstantTermAttribute(o.ID, this.cache_sort_id),
 										   new ConstantTermAttribute(locationID, this.cache_sort_id)
 //										   new ConstantTermAttribute(tile_ox, this.cache_sort_number),
@@ -261,7 +262,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				if (o instanceof A4Character) {
 					for(let o2 of (<A4Character>o).inventory) {
 						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						let term4:Term = new Term(this.cache_sort_space_at, 
+						let term4:Term = new Term(this.cache_sort_space_iside_of, 
 												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
 												   new ConstantTermAttribute(locationID, this.cache_sort_id)
 												   ]);
@@ -278,7 +279,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				} else if (o instanceof A4Container) {
 					for(let o2 of (<A4Container>o).content) {
 						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						let term4:Term = new Term(this.cache_sort_space_at, 
+						let term4:Term = new Term(this.cache_sort_space_iside_of, 
 												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
 												   new ConstantTermAttribute(locationID, this.cache_sort_id)
 												   ]);
@@ -295,7 +296,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				} else if (o instanceof A4Vehicle) {
 					for(let o2 of (<A4Vehicle>o).load) {
 						let term3:Term = new Term(o2.sort, [new ConstantTermAttribute(o2.ID, this.cache_sort_id)]);
-						let term4:Term = new Term(this.cache_sort_space_at, 
+						let term4:Term = new Term(this.cache_sort_space_iside_of, 
 												  [new ConstantTermAttribute(o2.ID, this.cache_sort_id),
 												   new ConstantTermAttribute(locationID, this.cache_sort_id)
 												   ]);
@@ -1563,4 +1564,5 @@ class A4RuleBasedAI extends RuleBasedAI {
 	cache_sort_powered_state:Sort = null;
 	cache_sort_powered_on:Sort = null;
 	cache_sort_powered_off:Sort = null;
+	cache_sort_space_iside_of:Sort = null;
 }

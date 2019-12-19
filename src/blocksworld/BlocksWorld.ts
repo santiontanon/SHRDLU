@@ -144,6 +144,7 @@ class ShrdluBlock {
 
 	isInside(o2:ShrdluBlock): boolean
 	{
+		if (this == o2) return false;
 		if (this.collide(o2)) {
 			// they overlap:
 			if (o2.x <= this.x && o2.z <= this.z) {
@@ -157,6 +158,7 @@ class ShrdluBlock {
 
 	isOnTopOf(o2:ShrdluBlock): boolean
 	{
+		if (this == o2) return false;
 		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
 			this.y == o2.y+o2.dy &&
 			this.z+this.dz > o2.z && o2.z+o2.dz > this.z) {

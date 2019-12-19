@@ -191,11 +191,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		let o2:ShrdluBlock = this.world.getObject(o2ID);
 		if (o1 == null || o2 == null) return null;
 
-		if (relation.is_a(this.cache_sort_space_at)) {
-			if (o1 == this.world.objectInArm && o1 == this.world.shrdluArm) return true;
-			if (o1.isInside(o2) || o1.isOnTopOf(o2)) return true;
-			return false;
-		} else if (relation.name == "space.outside.of") {
+		if (relation.name == "space.outside.of") {
 			if (!o1.isInside(o2)) return true;
 			return false;
 		} else if (relation.name == "space.inside.of") {			
@@ -264,7 +260,11 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				} else if (relation.name == "space.southwest.of") {
 					return angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8) && (dx > 0 || dz > 0);
 				}
-			}		
+			}
+		} else if (relation.is_a(this.cache_sort_space_at)) {
+			if (o1 == this.world.objectInArm && o1 == this.world.shrdluArm) return true;
+			if (o1.isInside(o2) || o1.isOnTopOf(o2)) return true;
+			return false;
 		}
 
 		return null;
@@ -292,7 +292,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		}
 		if (o1.isOnTopOf(o2)) {
 			relations.push(this.o.getSort("space.directly.on.top.of"))
-		} else if (o1.isOnTopOf(o2)) {
+		} else if (o2.isOnTopOf(o1)) {
 			relations.push(this.o.getSort("space.directly.under"))
 		}
 		if (o1ID == "shrdlu-arm" && o2 == this.world.objectInArm) {

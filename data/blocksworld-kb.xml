@@ -5,18 +5,19 @@
 
 	<!-- general knowledge about locations -->
 	<sentence provenance="background" sentence="universe('universe'[#id])"/>
-	<sentence provenance="background" sentence="name('universe'[#id],'the universe'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('universe'[#id],'the universe'[symbol])"/-->
 
 	<sentence provenance="background" sentence="outer-space('space'[#id])"/>
 	<sentence provenance="background" sentence="name('space'[#id],'space'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('space'[#id],'universe'[#id])"/>
 
 	<sentence provenance="background" sentence="galaxy('milky-way'[#id])"/>
-	<sentence provenance="background" sentence="name('milky-way'[#id],'the milky way'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('milky-way'[#id],'the milky way'[symbol])"/-->
+	<sentence provenance="background" sentence="name('milky-way'[#id],'milky way'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('milky-way'[#id],'universe'[#id])"/>
 
 	<sentence provenance="background" sentence="star-system('solar-system'[#id])"/>
-	<sentence provenance="background" sentence="name('solar-system'[#id],'the solar system'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('solar-system'[#id],'the solar system'[symbol])"/-->
 	<sentence provenance="background" sentence="name('solar-system'[#id],'solar system'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('solar-system'[#id],'milky-way'[#id])"/>
 
@@ -80,7 +81,8 @@
 	<sentence provenance="background" sentence="property.opened(X:[#id]); property.closed(X)"/>
 	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(L1,L2:[#id]); space.inside.of(X,L2)"/>
-	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/>
+	<!--sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/-->
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(L1,L2:[#id]); space.inside.of(X,L2)"/>
 	<sentence provenance="background" sentence="~space.directly.on.top.of(X:[#id],Y:[#id]); ~space.directly.on.top.of(Y,Z:[#id]); ~space.directly.on.top.of(X,Z)"/>
 
 	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>
@@ -112,7 +114,6 @@
 
 	<sentence provenance="background" sentence="~verb.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); verb.contains(Y,X)"/>
-	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); space.at(X,Y)"/>
 
 	<sentence provenance="background" sentence="gravity(Y, G); ~space.at(Y, X); ~gravity(X, G)"/>	
 	<sentence provenance="background" sentence="temperature(X, T); ~space.at(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	

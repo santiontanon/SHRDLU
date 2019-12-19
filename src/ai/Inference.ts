@@ -56,6 +56,12 @@ class InferenceNode
 	}
 
 
+	toString() : string
+	{
+		return "[ sentence: " + this.sentence + ", bindings: " + this.bindings + "]"; 
+	}
+
+
 	sentence:Sentence;
 	bindings:Bindings;
 	parent1:InferenceNode;

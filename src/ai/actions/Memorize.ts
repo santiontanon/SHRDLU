@@ -16,7 +16,7 @@ class Memorize_IntentionAction extends IntentionAction {
 		console.log(ai.selfID + " memorize: " + intention.attributes[2]);	
 		// we add the sentence with positive sign, to see if it introduces a contradiction
 		let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(intention.attributes[2])).term, ai.o);
-		console.log("term to sentences: " + s_l);	
+		console.log("term to sentences (#sentences = " + s_l.length + "): " + s_l);	
 		let variablesPresent:boolean = false;
 		let timeModifierPresent:boolean = false;
 

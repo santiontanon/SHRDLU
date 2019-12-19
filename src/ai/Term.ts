@@ -1040,7 +1040,6 @@ class Term {
                     termTerm.attributes.length == 1 &&
                     termTerm.attributes[0] instanceof TermTermAttribute) {
                     termTerm = (<TermTermAttribute>termTerm.attributes[0]).term;
-                    terms.push(termTerm);
                     sign = false;
                 }
                 // turn "!=" into a negated "="

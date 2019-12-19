@@ -3783,7 +3783,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 verb('verb.enumerate'[symbol], [singular], P, [present-tense]) 
-			   		 noun(NOUN_C:'three-laws-of-robotics'[three-laws-of-robotics], [plural]) #symbolToSort(NOUN_C,NOUN)
+			   		 ['the'] noun(NOUN_C:'three-laws-of-robotics'[three-laws-of-robotics], [plural]) #symbolToSort(NOUN_C,NOUN)
 			   		 [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"

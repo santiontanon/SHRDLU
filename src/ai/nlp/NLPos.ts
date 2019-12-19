@@ -490,8 +490,8 @@ class POSParser {
       "zx spectrum",
       "3 laws of robotics",
       "three laws of robotics",
-      //"the 3 laws of robotics",
-      //"the three laws of robotics",
+      "the 3 laws of robotics",
+      "the three laws of robotics",
 
       "arthur c. clarke",
       "arthur c clarke",
@@ -952,6 +952,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   // these one are here at the end, to overwrite "because of" and "within":
   this.addTokenPOS(new PartOfSpeech("because", "relation.cause", Term.fromString("preposition('relation.cause'[relation.cause])", o), 1.0));  
   this.addTokenPOS(new PartOfSpeech("in", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
+  // this.addTokenPOS(new PartOfSpeech("in", "space.inside.of", Term.fromString("preposition('space.inside.of'[space.inside.of])", o), 1.0));
 
 
 
@@ -1776,6 +1777,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("wrong", "incorrect", Term.fromString("adjective('incorrect'[incorrect])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("closest", "space.nearest-to", Term.fromString("adjective('space.nearest-to'[space.nearest-to])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("furthest", "space.farthest-from", Term.fromString("adjective('space.farthest-from'[space.farthest-from])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("tiny", "small", Term.fromString("adjective('small'[small])", o), 1.0));
 
     // adjectives:    
     this.addTokenPOS(new PartOfSpeech("alive", "alive", Term.fromString("adjective('alive'[alive])", o), 1.0));
@@ -1849,7 +1851,6 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("thirsty", "thirsty", Term.fromString("adjective('thirsty'[thirsty])", o), 1.0));
-    this.addTokenPOS(new PartOfSpeech("tiny", "small", Term.fromString("adjective('small'[small])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("uncharged", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("yellow", "yellow", Term.fromString("adjective('yellow'[yellow])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("warm", "hot", Term.fromString("adjective('hot'[hot])", o), 1.0));
