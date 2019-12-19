@@ -10,12 +10,12 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-		var targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+		let ai:RobotAI = <RobotAI>ai_raw;
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
+		let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 		let door:A4Object = null;
-		var open:boolean = true;
+		let open:boolean = true;
 
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
@@ -57,6 +57,10 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 	            		door = door_tmp;
 					}
 	            }
+	        }
+	        // if we cannot find any with permission, at least find one:
+	        if (door == null && doors.length > 0) {
+	        	door = doors[0];
 	        }
 		}
 

@@ -34,8 +34,6 @@ function testNLG_entity(id:ConstantTermAttribute, speaker:string, result:string)
 	}
 }
 
-g_o.newSortStrings("blue-key", ["key-card"]);
-g_o.newSortStrings("red-key", ["key-card"]);
 
 var idSort:Sort = g_o.getSort("#id");
 var ceg1:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('1', g_o.getSort("#id")), 
@@ -59,7 +57,7 @@ var ceg4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty
                                                Term.fromString("name('qwerty'[#id], 'qwerty'[#id])",g_o)]);
 var ceg5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k1', g_o.getSort("#id")),
                                               null, 3, 
-                                              [Term.fromString("blue-key('k1'[#id])",g_o),
+                                              [Term.fromString("key-card('k1'[#id])",g_o),
                                                Term.fromString("color('k1'[#id],'blue'[blue])",g_o),
                                                Term.fromString("verb.belong('k1'[#id],'1'[#id])",g_o)]);
 var ceg6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c1', g_o.getSort("#id")),
@@ -68,7 +66,7 @@ var ceg6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c1', g
                                                Term.fromString("property.opened('c1'[#id])",g_o)]);
 var ceg7:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k2', g_o.getSort("#id")),
                                               null, 3, 
-                                              [Term.fromString("red-key('k2'[#id])",g_o),
+                                              [Term.fromString("key-card('k2'[#id])",g_o),
                                                Term.fromString("color('k2'[#id],'red'[red])",g_o)]);
 var ceg8:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room1', g_o.getSort("#id")),
                                               null, 0, 
@@ -319,4 +317,7 @@ testNLG("perf.inform('1'[#id], verb.do('1'[#id], 'nothing'[nothing]))", "etaoin"
 
 // v3.5:
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:[any], V3:#not(V4:permitted-in(V5:'1'[#id], V6:'room1'[#id]))))", "etaoin", "because you are not allowed to enter the kitchen");
+testNLG("perf.inform.answer(V0:'david'[#id], relation.cause(#not(verb.can(V4:'etaoin'[#id], action.open(V4, V6:'room1'[#id]))), #not(V8:permission-to(V9:'1'[#id], verb.access(V9, V6)))))", "etaoin", "I can not open the kitchen because of you do not have permission to access the kitchen");
+
+
 

@@ -354,6 +354,12 @@
 
     <sort name="key-card" super="key,card"/>
     <sort name="master-key" super="key-card"/>
+    <sort name="white-key" super="key-card"/>
+    <sort name="green-key" super="key-card"/>
+    <sort name="blue-key" super="key-card"/>
+    <sort name="red-key" super="key-card"/>
+    <sort name="maintenanceyellow-key" super="key-card"/>
+    <sort name="garagepurple-key" super="key-card"/>
 
     <sort name="device" super="item"/>
     <sort name="communicator" super="device"/>

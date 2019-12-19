@@ -1153,6 +1153,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("rover batteries", "rover-battery", Term.fromString("noun('rover-battery'[rover-battery], [plural])", o), 1.0));
     this.addStandardNounPOS("bed", "bed", o, multitokens_raw);
     this.addStandardNounPOS("bedroom", "bedroom", o, multitokens_raw);
+    this.addStandardNounPOS("room key", "white-key", o, multitokens_raw);    
+    this.addStandardNounPOS("bedroom key", "white-key", o, multitokens_raw);    
     this.addStandardNounPOS("being", "living-being", o, multitokens_raw);
     this.addStandardNounPOS("bench", "bench", o, multitokens_raw);
     this.addStandardNounPOS("biologist", "biologist", o, multitokens_raw);
@@ -1188,6 +1190,9 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("colonist", "colonist", o, multitokens_raw);
     this.addStandardNounPOS("color", "color", o, multitokens_raw);
     this.addStandardNounPOS("collision", "collision", o, multitokens_raw);    
+    this.addStandardNounPOS("command room key", "red-key", o, multitokens_raw);    
+    this.addStandardNounPOS("command center key", "red-key", o, multitokens_raw);    
+    this.addStandardNounPOS("command key", "red-key", o, multitokens_raw);    
     this.addStandardNounPOS("command room", "command.room", o, multitokens_raw);    
     this.addStandardNounPOS("communication", "communication", o, multitokens_raw);
     this.addStandardNounPOS("comm tower", "communication.tower", o, multitokens_raw);
@@ -1272,6 +1277,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("game protagonist", "game-protagonist", o, multitokens_raw);
     this.addStandardNounPOS("galaxy", "galaxy", o, multitokens_raw);
     this.addStandardNounPOS("garage", "garage", o, multitokens_raw);
+    this.addStandardNounPOS("garage key", "garagepurple-key", o, multitokens_raw);    
     this.addStandardNounPOS("gas", "gas", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("gas", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("gases", "gas", Term.fromString("noun('gas'[gas], [singular])", o), 1.0));
@@ -1315,6 +1321,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("kitchen", "kitchen", o, multitokens_raw);
     this.addStandardNounPOS("knife", "knife", o, multitokens_raw);
     this.addStandardNounPOS("lab", "lab.room", o, multitokens_raw);
+    this.addStandardNounPOS("lab key", "blue-key", o, multitokens_raw);
+    this.addStandardNounPOS("laboratory key", "blue-key", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("laboratory", "lab.room", Term.fromString("noun('lab.room'[lab.room], [singular])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("laboratories", "lab.room", Term.fromString("noun('lab.room'[lab.room], [plural])", o), 1.0));
     this.addStandardNounPOS("language", "language", o, multitokens_raw);
@@ -1330,6 +1338,8 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("location", "space.location", o, multitokens_raw);
     this.addStandardNounPOS("machine", "machine", o, multitokens_raw);
     this.addStandardNounPOS("maintenance guy", "maintenance-robot", o, multitokens_raw);
+    this.addStandardNounPOS("maintenance room key", "maintenanceyellow-key", o, multitokens_raw);    
+    this.addStandardNounPOS("maintenance key", "maintenanceyellow-key", o, multitokens_raw);    
     this.addStandardNounPOS("maintenance person", "maintenance-robot", o, multitokens_raw);
     this.addStandardNounPOS("maintenance robot", "maintenance-robot", o, multitokens_raw);
     this.addStandardNounPOS("maintenance room", "maintenance.room", o, multitokens_raw);
@@ -1483,6 +1493,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("starship", "spaceship", o, multitokens_raw);
     this.addStandardNounPOS("start", "space.start", o, multitokens_raw);
     this.addStandardNounPOS("start", "time.start", o, multitokens_raw);
+    this.addStandardNounPOS("stasis key", "green-key", o, multitokens_raw);    
     this.addStandardNounPOS("stasis pod", "stasis-pod", o, multitokens_raw);
     this.addStandardNounPOS("stasis room", "stasis.room", o, multitokens_raw);    
     this.addStandardNounPOS("state", "state", o, multitokens_raw);
@@ -1603,7 +1614,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("action.print", "3d print","3d prints","3d printed","3d printed","3d printing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.walk-to", "walk to","walks to","walked to","walked to","walking to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.run-to", "run to","runs to","ran to","run to","running to", false, multitokens_raw, o);
-
+    this.addStandardVerbPOS("action.drop", "put down","puts down","put down","put down","putting down", false, multitokens_raw, o);
 
     this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);

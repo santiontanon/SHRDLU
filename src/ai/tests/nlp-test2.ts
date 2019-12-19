@@ -191,8 +191,7 @@ var ce3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin'
 var ce4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('4', o.getSort("#id")),
                                               null, 3, 
                                               [Term.fromString("white-key('4'[#id])",o),
-                                               Term.fromString("name('4'[#id], 'garage key'[symbol])",o),
-                                               Term.fromString("name('4'[#id], 'the garage key'[symbol])",o),
+                                               Term.fromString("name('4'[#id], 'bedroom key'[symbol])",o),
                                                Term.fromString("color('4'[#id],'white'[white])",o),
                                                Term.fromString("verb.belong('4'[#id],'1'[#id])",o)]);
 var ce5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('5', o.getSort("#id")),
@@ -1201,9 +1200,9 @@ NLParseTestUnifyingListener("you are the supervisor in the station", o.getSort("
 NLParseTestUnifyingListener("etaoin's weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
 NLParseTestUnifyingListener("the weight of etaoin is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
 NLParseTestUnifyingListener("your weight is 120 kilograms", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], weight('etaoin'[#id],'120'[kilogram]))");
-NLParseTestUnifyingListener("give me the garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
-NLParseTestUnifyingListener("give me garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
-NLParseTestUnifyingListener("take the garage key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.take(LISTENER_0, V2:'4'[#id]))");
+NLParseTestUnifyingListener("give me the bedroom key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("give me bedroom key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.give(LISTENER_0, V2:'4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("take the bedroom key", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.take(LISTENER_0, V2:'4'[#id]))");
 
 // For version 3.4:
 context.expectingAnswerToQuestion_stack = [];
@@ -1242,6 +1241,12 @@ NLParseTestUnifyingListener("put etaoin in a large crate", o.getSort("performati
 NLParseTestUnifyingListener("put etaoin in a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])))");
 NLParseTestUnifyingListener("walk to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.walk-to(V0, 'room1'[#id]))"); 
 NLParseTestUnifyingListener("is there another human on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), human(X)), !=(X,'1'[#id])))");
+NLParseTestUnifyingListener("why can you not open the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can(E:'etaoin'[#id], action.open(E, 'room1'[#id]))))");
+NLParseTestUnifyingListener("why can't you open the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can(E:'etaoin'[#id], action.open(E, 'room1'[#id]))))");
+NLParseTestUnifyingListener("is there a bedroom key", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], white-key(X))");
+NLParseTestUnifyingListener("who is dead?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), dead(X)))");
+NLParseTestUnifyingListener("who is alive?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), alive(X)))");
+NLParseTestUnifyingListener("put down the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

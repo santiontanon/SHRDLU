@@ -784,7 +784,8 @@ class NLGenerator {
 								objectStr = tmp2;
 							} 
 						}
-						if (relationStr == "because" && !this.argumentIsVerb(t2.attributes[1], context)) relationStr = "because of";
+						if (relationStr == "because" && 
+							!this.argumentIsVerb(t2.attributes[1], context)) relationStr = "because of";
 						if (relationStr + " " + objectStr[0] == "of I" ||
 							relationStr + " " + objectStr[0] == "of me") {
 							relationsAggregateStr += " " + (negated_t2 ? "not ":"") + "mine" + complementsStr;
@@ -1710,6 +1711,7 @@ class NLGenerator {
 		}	
 
 		if (entity instanceof TermTermAttribute) {
+			let negated_t:boolean = false;
 //			console.log("termToEnglish_RelationOrVerbArgument: TermTermAttribute -> " + entity);
 			for(let tmp_t of tl) {
 				if (!(tmp_t instanceof TermTermAttribute)) {
@@ -1718,7 +1720,10 @@ class NLGenerator {
 				}
 			}
 //		 	entityTerm = (<TermTermAttribute>tl[0]).term;	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
-			if (entityTerm.functor.name == "#not") entityTerm = (<TermTermAttribute>entityTerm.attributes[0]).term;
+			if (entityTerm.functor.name == "#not") {
+				entityTerm = (<TermTermAttribute>entityTerm.attributes[0]).term;
+				negated_t = true;
+			}
 			if (entityTerm.functor.name == "#query" && entityTerm.attributes.length==1) return this.termToEnglish_QueryInternal(entityTerm.attributes[0], tl.slice(1), speakerID, context);
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_verb)) return this.termToEnglish_NestedVerb((<TermTermAttribute>entityRaw).term, speakerID, mainVerbSubjectID, useInfinitives, context);
 			if (entityTerm.functor.is_a(this.nlg_cache_sort_timedate)) return [this.termToEnglish_Date(entityTerm.attributes[0], entityTerm.attributes[1].sort), 2, undefined, 0];
@@ -1766,18 +1771,18 @@ class NLGenerator {
 						objectStr[0] = objectStr[0].substring(3);
 					}					
 					if (infinitive) {
-//						if (negated_t) {
-//							return ["not to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
-//						} else {
+						if (negated_t) {
+							return ["not to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						} else {
 							return ["to " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
-//						}
+						}
 					} else {
-//						if (negated_t) {
-//							verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
-//							return [subjectStr[0] + " " + verbStr + " not have " + propertyStr + " " + objectStr[0], 2, undefined, 0];
-//						} else {
+						if (negated_t) {
+							verbStr = this.pos.getVerbString(context.ai.o.getSort("verb.do"), subjectStr[3], subjectStr[1], 3);
+							return [subjectStr[0] + " " + verbStr + " not have " + propertyStr + " " + objectStr[0], 2, undefined, 0];
+						} else {
 							return [subjectStr[0] + " " + verbStr + " " + propertyStr + " " + objectStr[0], 2, undefined, 0];
-//						}
+						}
 					}
 				}
 				console.warn("termToEnglish_RelationOrVerbArgument: cannot render haveable property with value: " + entityTerm);

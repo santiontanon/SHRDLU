@@ -210,6 +210,11 @@
 	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~dark(X) ; relation.cause(dark(X), powered.state(Y, 'powered.off'[powered.off]))"/>
 	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~bright(X) ; relation.cause(bright(X), powered.state(Y, 'powered.on'[powered.on]))"/>
 
+	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'etaoin'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'qwerty'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'shrdlu'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+
+
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
 	<sentence provenance="background" sentence="space.at(X,'location-as25'[#id]) ; ~spacesuit(Y) ; ~verb.can(X, verb.repair(X,Y))"/>
