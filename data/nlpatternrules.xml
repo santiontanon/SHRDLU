@@ -6096,6 +6096,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="nounphrase-determiner"
 			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), C))"
 			   body="determiner(ART, N) nounPhraseNoDeterminerNoProperNoun(X, N, P, C)"/>
+	<NLPattern name="nounphrase-determiner"
+			   head="nounPhrase(X, N, [third-person], proper-noun(X, N))"
+			   body="'the' proper-noun(X, N)"/>
 	<NLPattern name="nounphrase-determiner-preposition1"
 			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(C,#cons(PREPOSITION, X, O2))))"
 			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C)

@@ -303,6 +303,8 @@ NLParseTest("the ship's name", o.getSort("nounPhrase"), context, "nounPhrase(V0:
 NLParseTest("the key that is red", o.getSort("nounPhrase"), context, "nounPhrase(V0:'key'[key], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:adjective(V0, V6:'red'[red]), V7:noun(V0, V1))))");
 NLParseTest("the key that looks red", o.getSort("nounPhrase"), context, "nounPhrase(V0:'key'[key], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:adjective(V0, V6:'red'[red]), V7:noun(V0, V1))))");
 NLParseTest("anyone else", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pronoun.anyone.else'[symbol], V1:[singular], V2:[third-person], V3:indefinite-pronoun(V0, V1, V4:[gender], V2))");
+NLParseTest("the David", o.getSort("nounPhrase"), context, "nounPhrase(V0:'david'[symbol], V1:[singular], V2:[third-person], V3:proper-noun(V0, V1))");
+
 
 // tests with dereference to context:
 NLParseTest("David", o.getSort("performative"), context, null);  // this one should not work, since you cannot call yourself!

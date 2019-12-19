@@ -242,7 +242,7 @@ class ShrdluCutScenes {
 			case 5:
 				// "This is all very strange... I need to investigate some more..."		}
 				this.cutSceneStateTimer++;
-				if (this.cutSceneStateTimer >= 180 || this.ESCpressedRecord) {
+				if (/*this.cutSceneStateTimer >= 180 || */this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(This is a personal diary of someone called Bruce Alper)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(Still can't remember who is that. It could even be me for all I know!)", MSX_COLOR_GREEN);
@@ -335,7 +335,7 @@ class ShrdluCutScenes {
 		
 			case 2:
 				this.cutSceneStateTimer++;
-				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+				if (/*this.cutSceneStateTimer >= 600 || */this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(Look at these posters! Someone was a classic science fiction fan here!)", MSX_COLOR_GREEN);
 					this.cutSceneState = 0;
@@ -377,7 +377,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneFungi() : boolean
 	{
-		let stateTimes:number[] = [180, 600, 180, 600, 600, 600, 600, 180, -1];
+		let stateTimes:number[] = [180, 600, 180, 600, 600, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -414,7 +414,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -466,7 +466,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneMSX() : boolean
 	{
-		let stateTimes:number[] = [180, 600, 600, 600, 180, -1];
+		let stateTimes:number[] = [180, 600, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -484,7 +484,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -530,7 +530,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneCrashedShuttle() : boolean
 	{
-		let stateTimes:number[] = [180, 600, 600, 600, 180, -1];
+		let stateTimes:number[] = [180, 600, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -544,7 +544,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -590,7 +590,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneDatapad() : boolean
 	{
-		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 600, 100, -1];
+		let stateTimes:number[] = [0, 0, 0, 0, 0, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -607,7 +607,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -776,7 +776,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneCrater() : boolean
 	{
-		let stateTimes:number[] = [300, 600, 600, 600, -1];
+		let stateTimes:number[] = [300, 600, 600, 0, -1];
 
 		this.game.cycles_without_redrawing = 1;	// give the game a cycle after the cutscene before redrawing to avoid some flicker
 
@@ -791,7 +791,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -856,7 +856,7 @@ class ShrdluCutScenes {
 		
 			case 2:
 				this.cutSceneStateTimer++;
-				if (this.cutSceneStateTimer >= 600 || this.ESCpressedRecord) {
+				if (this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(Nice classic science fiction poster!)", MSX_COLOR_GREEN);
 					this.cutSceneState = 0;
@@ -898,7 +898,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneEuricleaDiary() : boolean
 	{
-		let stateTimes:number[] = [600, 600, 600, 600, 100, -1];
+		let stateTimes:number[] = [0, 0, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -915,7 +915,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}
@@ -960,7 +960,7 @@ class ShrdluCutScenes {
 
 	updateCutSceneSaxDiary() : boolean
 	{
-		let stateTimes:number[] = [600, 600, 600, 600, 600, 600, 600, 100, -1];
+		let stateTimes:number[] = [0, 0, 0, 600, 600, 600, 600, 0, -1];
 
 		if (stateTimes[this.cutSceneState] == -1) {
 			// add the messages to the console:
@@ -979,7 +979,7 @@ class ShrdluCutScenes {
 		}
 
 		this.cutSceneStateTimer++;
-		if (this.cutSceneStateTimer >= stateTimes[this.cutSceneState] || this.ESCpressedRecord) {
+		if (stateTimes[this.cutSceneState]>0 && (this.cutSceneStateTimer >= stateTimes[this.cutSceneState]) || this.ESCpressedRecord) {
 			this.cutSceneStateTimer = 0;
 			this.cutSceneState++;
 		}

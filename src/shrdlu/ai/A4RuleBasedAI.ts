@@ -122,6 +122,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 					}
 					if (!somethingInBetween) {
 						let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
+						//let term:Term = Term.fromString("space.inside.of('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						//console.log(term.toString());
 						// this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 						// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
