@@ -39,5 +39,5 @@ SHRDLU is by no means the first game to use NLP techniques. Besides the classic 
 
 - Concerning the use of time in the game: I know dates and times in a 24 hour system with Earh years doesn't make any sense in an alien planet with an undisclosed day/night or star revolution cycle. However, I decided to go with Earth time and dates, to keep the AI simple, and not having to create domain knowledge rules to handle time scale conversions, etc. So, this was a small concesion to make time-handling in the AI-side easier.
 
-- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens, Yaqirah Rice, Zuozhi Yang and every one who played my demo at AIIDE 2018 and 2019! Thank you one more time! :D
+- I would like to thank all the people that helped me betatest the game so far (in chronological order): Jichen Zhu, Josep Valls-Vargas, Jordi Sureda, Sam Snodgrass, Javier Torres, Adam Summerville, Ahmed Khalifa, Sri Krishna, Bayan Mashat, Pavan Kantharaju, Chris Martens, Yaqirah Rice, Zuozhi Yang, Shannen Angell, Robert Gray and every one who played my demo at AIIDE 2018 and 2019! Thank you one more time! :D
 	
