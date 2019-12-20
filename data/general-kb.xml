@@ -107,11 +107,14 @@
 	<sentence provenance="background" sentence="name('aurora'[#id],'tau ceti e'[symbol])"/>
 	<sentence provenance="background" sentence="space.at('aurora'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('aurora'[#id],'0.8'[gravity.unit.g])"/>
+	<sentence provenance="background" sentence="~verb.have('aurora'[#id], 'oxygen'[oxygen])"/>
 
 	<sentence provenance="background" sentence="settlement('location-aurora-settlement'[#id])"/>
 	<sentence provenance="background" sentence="station('location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="space.at('spacer-valley'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('spacer-valley'[#id],'space'[#id])"/>
+	<sentence provenance="background" sentence="verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])"/>
+	<sentence provenance="background" sentence="property.safe('location-aurora-station'[#id])"/>
 
 	<sentence provenance="background" sentence="space.at('spacer-gorge'[#id],'aurora'[#id])"/>
 	<sentence provenance="background" sentence="~space.at('spacer-gorge'[#id],'space'[#id])"/>
@@ -213,7 +216,6 @@
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'etaoin'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'qwerty'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'shrdlu'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
-
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>
@@ -579,6 +581,9 @@
 	<sentence provenance="background" sentence="good(X:[#id]); bad(X)"/>
 	<sentence provenance="background" sentence="~good(X:[#id]); ~bad(X)"/>	
 	<sentence provenance="background" sentence="~verb.suck(X:[#id]); bad(X)"/>
+	<sentence provenance="background" sentence="property.safe(X:[#id]); dangerous(X)"/>
+	<sentence provenance="background" sentence="~property.safe(X:[#id]); ~dangerous(X)"/>
+	<sentence provenance="background" sentence="verb.have(X:[#id], 'oxygen'[oxygen]) ; dangerous(X)"/>
 
 	<sentence provenance="background" sentence="~verb.contains(X:[#id],Y:[#id]); space.inside.of(Y,X)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); verb.contains(Y,X)"/>

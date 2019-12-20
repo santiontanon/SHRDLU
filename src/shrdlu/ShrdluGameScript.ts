@@ -335,6 +335,11 @@ class ShrdluGameScript {
 		this.game.currentPlayer.inventory.push(memoryCore);
 		this.game.setStoryStateVariable("tardis-memory-core", "discovered");
 		this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
+
+		let dust1:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
+		this.game.currentPlayer.inventory.push(dust1);
+		let dust2:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
+		this.game.currentPlayer.inventory.push(dust2);
 	}
 
 

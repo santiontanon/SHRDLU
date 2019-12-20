@@ -450,6 +450,8 @@ class POSParser {
       "power cords",
       "extension cord",
       "extension cords",
+      "extension cable",
+      "extension cables",
       "computer console",
       "computer consoles",
       "computer engineer",
@@ -1255,6 +1257,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("event", "event", o, multitokens_raw);
     this.addStandardNounPOS("exit", "space.exit", o, multitokens_raw);
     this.addStandardNounPOS("explosive", "explosive", o, multitokens_raw);
+    this.addStandardNounPOS("extension cable", "extension-cord", o, multitokens_raw);
     this.addStandardNounPOS("extension cord", "extension-cord", o, multitokens_raw);
     this.addStandardNounPOS("eye", "eye", o, multitokens_raw);
     this.addTokenPOS(new PartOfSpeech("facility", "facility", Term.fromString("noun('facility'[facility], [singular])", o), 1.0));
@@ -1593,6 +1596,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.enter", "board","boards","boarded","boarded","boarding", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.clean", "launder","laundered","laundered","laundered","laundering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.clean", "wash","washes","washed","washed","washing", false, multitokens_raw, o);
     this.addPhrasalVerbPOS("action.talk","to", "talk","talks","talk","talk","talking", false, multitokens_raw, o);
@@ -1807,6 +1811,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("broken", "property.broken", Term.fromString("adjective('property.broken'[property.broken])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("charged", "full", Term.fromString("adjective('full'[full])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("cold", "cold", Term.fromString("adjective('cold'[cold])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("dangerous", "dangerous", Term.fromString("adjective('dangerous'[dangerous])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("dead", "dead", Term.fromString("adjective('dead'[dead])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("depleted", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
@@ -1857,6 +1862,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("too small", "too-small", Term.fromString("adjective('too-small'[too-small])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("safe", "property.safe", Term.fromString("adjective('property.safe'[property.safe])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("south", "south", Term.fromString("adjective('south'[south])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("strange", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));

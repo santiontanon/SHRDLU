@@ -915,7 +915,14 @@ class A4EngineApp {
                 // start text entering mode with any letter key:
                 if (this.game.HUD_state != SHRDLU_HUD_STATE_INVENTORY &&
                     this.game.HUD_state != SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-                    for(let i:number = KEY_CODE_A;i<KEY_CODE_Z;i++) {
+                    for(let i:number = KEY_CODE_A;i<=KEY_CODE_Z;i++) {
+                        if (k.key_press(i)) {
+                            this.game.textInputRequest();
+                            for(let ke of k.keyevents) this.game.textInputEvent(ke, this.SFXM);
+                            break;
+                        }
+                    }
+                    for(let i:number = KEY_CODE_0;i<=KEY_CODE_9;i++) {
                         if (k.key_press(i)) {
                             this.game.textInputRequest();
                             for(let ke of k.keyevents) this.game.textInputEvent(ke, this.SFXM);

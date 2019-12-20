@@ -973,6 +973,9 @@
     <sort name="dead" super="property"/>
     <sort name="corpse" super="human,dead"/>
 
+    <sort name="property.safe" super="property"/>
+    <sort name="dangerous" super="property"/>
+
     <sort name="fill-level" super="#stateSort"/>
     <sort name="full" super="high,fill-level"/>
     <sort name="empty" super="low,fill-level,property,#stateSort"/>

@@ -1247,6 +1247,9 @@ NLParseTestUnifyingListener("is there a bedroom key", o.getSort("performative"),
 NLParseTestUnifyingListener("who is dead?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), dead(X)))");
 NLParseTestUnifyingListener("who is alive?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), alive(X)))");
 NLParseTestUnifyingListener("put down the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("board the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
+NLParseTestUnifyingListener("what is the date?", o.getSort("performative"),  context, 'etaoin', "perf.q.when(V0:'etaoin'[#id], [time.day], [time.now])");
+NLParseTestUnifyingListener("3d print crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), crate(X))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

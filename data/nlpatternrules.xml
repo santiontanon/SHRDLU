@@ -3524,6 +3524,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'what' 'day' 'is' 'today' ('!'|'?')*"/>
+    <NLPattern head="perf.q.when(LISTENER, [time.day], [time.now])"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' 'is' 'the' 'date' ('!'|'?')*"
+			   priority = "200"/>
 
     <!-- Patterns for performative "perf.request.action/perf.q.action", when it's an action.give -->
     <NLPattern name="perf.q.action-can-give"
@@ -4437,6 +4443,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
     		         ('.'|'!')* 
     		         #derefFromContext(CO, OBJECT)"/>
+    <NLPattern name="perf.request.action-3dprint-noun"
+    		   head="perf.request.action(LISTENER, action.print(LISTENER, V), #cons(NOUN, V))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('action.print'[symbol], N2, P2, [infinitive-tense])
+    		         noun(NOUN, N3) 
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"
+    		   priority="150"/>
     <NLPattern name="perf.request.action-verb-np-direction"
     		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, OBJECT, DIRECTION_SORT:[direction]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
