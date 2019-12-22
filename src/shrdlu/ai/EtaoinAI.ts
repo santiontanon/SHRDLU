@@ -38,7 +38,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		}
 
 		this.precalculateLocationKnowledge(game, o);
-		this.add3DPrintingKnowledge(game, o);
+		this.add3DPrintingKnowledge(game, o, "etaoin");
 
 		// get objects the AI cares about:
 		let tmp:A4Object[] = game.findObjectByID("david");
@@ -273,25 +273,6 @@ class EtaoinAI extends A4RuleBasedAI {
 	canHear(objectID:string)
 	{
 		return this.canSee(objectID);
-	}
-
-
-	add3DPrintingKnowledge(game:A4Game, o:Ontology)
-	{
-		for(let recipe of game.three_d_printer_recipies) {
-			let item:string = recipe[0]
-			let materials:string[] = recipe[1];
-
-			let term:Term = Term.fromString("verb.can('"+this.selfID+"'[#id], action.print('"+this.selfID+"'[#id], '"+item+"'["+item+"]))", o);
-			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
-			term = Term.fromString("verb.can('david'[#id], action.print('david'[#id], '"+item+"'["+item+"]))", o);
-			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
-
-			for(let material of materials) {
-				term = Term.fromString("verb.need-for(X:[#id], '"+material+"'["+material+"], action.print(X, '"+item+"'["+item+"]))", o);
-				this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
-			}
-		}
 	}
 
 

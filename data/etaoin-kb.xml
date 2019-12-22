@@ -1,6 +1,6 @@
 <knowledgeBase>
 	<!-- story knowledge -->	
-	<sentence provenance="background"  sentence="space.at('shrdlu'[#id], 'location-east-cave'[#id])"/>
+	<sentence provenance="background"  sentence="space.inside.of('shrdlu'[#id], 'location-east-cave'[#id])"/>
 
 	<sentence provenance="background" time="45186163200" sentence="alone('david'[#id])"/>
 

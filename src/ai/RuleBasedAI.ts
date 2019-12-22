@@ -65,6 +65,8 @@ class InferenceRecord {
 		this.findAllAnswers = findAllAnswers;
 		this.timeTerm = timeTerm;
 		this.effect = e;
+
+		//console.log("InferenceRecord: findAllAnswers = " + this.findAllAnswers);
 	}
 
 
@@ -2198,22 +2200,37 @@ class RuleBasedAI {
 	{
 		let sentences:Sentence[] = []
 
-		// In principle, these are needed for having a complete infernece process, but they make things very slow.
+		// In principle, all of these are needed for having a complete infernece process, but they make things very slow.
 		// So, instead, I have a special case where I use functor subsumption instead of equality in case one of the two
-		// sentences in resolution just has one term...
+		// sentences in resolution just has one term, and only generate a few necessary ones (those for relations):
 		/*
 		for(let s of o.getAllSorts()) {
 			if (s.name[0] == "#" || s.name[0] == "~" || s.name[0] == "=") continue;
 			if (s.is_a_string("grammar-concept")) continue;
 			if (s.is_a_string("performative")) continue;
+			if (!s.is_a_string("relation")) continue;
 			for(let parent of s.parents) {
+				// This is a hack to filter out rules that I know cause troubles, in reality, I should just use regular FOL inference...
 				if (parent.name == "any") continue;	// no need to go all the way there :)
+				if (parent.name == "relation") continue;	// no need to go all the way there :)
+				if (parent.name == "spatial-relation") continue;	// no need to go all the way there :)
+				if (parent.name == "relation-with-value") continue;	// no need to go all the way there :)
+				if (parent.name == "space") continue;	// no need to go all the way there :)
+				if (parent.name == "time") continue;	// no need to go all the way there :)
+				if (parent.name == "distance") continue;	// no need to go all the way there :)
+				if (parent.name == "abstract-entity") continue;	// no need to go all the way there :)
+				if (parent.name == "#stateSort") continue;	// no need to go all the way there :)
+				if (parent.name == "symmetric-relation") continue;	// no need to go all the way there :)
+				if (parent.name == "measuring-unit") continue;	// no need to go all the way there :)
+				
 				if (s.is_a_string("relation")) {
 					let sentence:Sentence = Sentence.fromString("~" + s + "(X, Y);"+parent+"(X, Y)", o);
 					sentences.push(sentence);
+					console.log("    ontology sentence: " + sentence);
 				} else {
 					let sentence:Sentence = Sentence.fromString("~" + s + "(X);"+parent+"(X)", o);
 					sentences.push(sentence);
+					console.log("    ontology sentence: " + sentence);
 				}
 			}
 		}

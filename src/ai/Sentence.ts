@@ -41,6 +41,16 @@ class Sentence {
 	*/
 
 
+	applyBindings(b:Bindings): Sentence
+	{
+		let s:Sentence = new Sentence(this.terms, this.sign);
+		for(let i:number = 0;i<s.terms.length;i++) {
+			s.terms[i] = s.terms[i].applyBindings(b);
+		}
+		return s;
+	}
+
+
 	getAllVariables() : VariableTermAttribute[]
 	{
 		var vs:VariableTermAttribute[] = [];
@@ -214,7 +224,7 @@ class Sentence {
 				tokens.push(token.trim());
 				//console.log("token: " + token);
 			} else {
-				console.error("Sentence.fromString: unfinished sentence!");
+				console.error("Sentence.fromString: unfinished sentence! " + str);
 				return null;
 			}
 		}

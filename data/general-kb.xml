@@ -15,7 +15,7 @@
 	<sentence provenance="background" sentence="man('asimov'[#id])"/>
 	<sentence provenance="background" sentence="name('asimov'[#id],'isaac asimov'[symbol])"/>
 	<sentence provenance="background" sentence="name('asimov'[#id],'asimov'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('asimov'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('asimov'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('asimov'[#id],'scifi-writer'[scifi-writer])"/>
 	<sentence provenance="background" sentence="dead('asimov'[#id])"/>
 
@@ -23,21 +23,21 @@
 	<sentence provenance="background" sentence="name('clarke'[#id],'arthur c. clarke'[symbol])"/>
 	<sentence provenance="background" sentence="name('clarke'[#id],'arthur clarke'[symbol])"/>
 	<sentence provenance="background" sentence="name('clarke'[#id],'clarke'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('clarke'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('clarke'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('clarke'[#id],'scifi-writer'[scifi-writer])"/>
 	<sentence provenance="background" sentence="dead('clarke'[#id])"/>
 
 	<sentence provenance="background" sentence="man('sagan'[#id])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'carl sagan'[symbol])"/>
 	<sentence provenance="background" sentence="name('sagan'[#id],'sagan'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('sagan'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('sagan'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('sagan'[#id],'astronomer'[astronomer])"/>
 	<sentence provenance="background" sentence="dead('sagan'[#id])"/>
 
 	<sentence provenance="background" sentence="man('einstein'[#id])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'albert einstein'[symbol])"/>
 	<sentence provenance="background" sentence="name('einstein'[#id],'einstein'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('einstein'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('einstein'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('einstein'[#id],'physicist'[physicist])"/>
 	<sentence provenance="background" sentence="dead('einstein'[#id])"/>
 
@@ -45,32 +45,32 @@
 	<sentence provenance="background" sentence="name('newton'[#id],'isaac newton'[symbol])"/>
 	<sentence provenance="background" sentence="name('newton'[#id],'sir isaac newton'[symbol])"/>
 	<sentence provenance="background" sentence="name('newton'[#id],'newton'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('newton'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('newton'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('newton'[#id],'scientist'[scientist])"/>
 	<sentence provenance="background" sentence="dead('newton'[#id])"/>
 
 	<sentence provenance="background" sentence="man('babbage'[#id])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'charles babbage'[symbol])"/>
 	<sentence provenance="background" sentence="name('babbage'[#id],'babbage'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('babbage'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('babbage'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('babbage'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('babbage'[#id])"/>
 
 	<sentence provenance="background" sentence="woman('lovelace'[#id])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'ada lovelace'[symbol])"/>
 	<sentence provenance="background" sentence="name('lovelace'[#id],'lovelace'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('lovelace'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('lovelace'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('lovelace'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('lovelace'[#id])"/>
 
 	<sentence provenance="background" sentence="man('turing'[#id])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'alan turing'[symbol])"/>
 	<sentence provenance="background" sentence="name('turing'[#id],'turing'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('turing'[#id],'earth'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('turing'[#id],'earth'[#id])"/>
 	<sentence provenance="background" sentence="profession('turing'[#id],'mathematician'[mathematician])"/>
 	<sentence provenance="background" sentence="dead('turing'[#id])"/>
 
-	<!-- general about games and characters -->
+	<!-- general about games, characters, scifi, etc. -->
 	<sentence provenance="background" sentence="character('popolon'[#id])"/>
 	<sentence provenance="background" sentence="name('popolon'[#id],'popolon'[symbol])"/>
 	<sentence provenance="background" sentence="role('popolon'[#id], 'game-protagonist'[game-protagonist])"/>
@@ -80,6 +80,15 @@
 	<sentence provenance="background" sentence="character('guybrush'[#id])"/>
 	<sentence provenance="background" sentence="name('guybrush'[#id],'guybrush threepwood'[symbol])"/>
 	<sentence provenance="background" sentence="role('guybrush'[#id], 'game-protagonist'[game-protagonist])"/>
+	<sentence provenance="background" sentence="tv-show('startrek'[#id])"/>
+	<sentence provenance="background" sentence="science-fiction('startrek'[#id])"/>
+	<sentence provenance="background" sentence="name('startrek'[#id], 'star trek'[symbol])"/>
+	<sentence provenance="background" sentence="movie('tron'[#id])"/>
+	<sentence provenance="background" sentence="science-fiction('tron'[#id])"/>
+	<sentence provenance="background" sentence="name('tron'[#id], 'tron'[symbol])"/>
+	<sentence provenance="background" sentence="movie('forbidden-planet'[#id])"/>
+	<sentence provenance="background" sentence="science-fiction('forbidden-planet'[#id])"/>
+	<sentence provenance="background" sentence="name('forbidden-planet'[#id], 'forbidden planet'[symbol])"/>
 
 	<!-- general knowledge about locations -->
 	<sentence provenance="background" sentence="universe('universe'[#id])"/>
@@ -87,67 +96,63 @@
 
 	<sentence provenance="background" sentence="outer-space('space'[#id])"/>
 	<sentence provenance="background" sentence="name('space'[#id],'space'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('space'[#id],'universe'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('space'[#id],'universe'[#id])"/>
 
 	<sentence provenance="background" sentence="galaxy('milky-way'[#id])"/>
 	<sentence provenance="background" sentence="name('milky-way'[#id],'milky way'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('milky-way'[#id],'universe'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('milky-way'[#id],'universe'[#id])"/>
 
 	<sentence provenance="background" sentence="star-system('tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="name('tau-ceti-system'[#id],'tau ceti system'[symbol])"/>
 	<!--sentence provenance="background" sentence="name('tau-ceti-system'[#id],'the tau ceti system'[symbol])"/-->
-	<sentence provenance="background" sentence="space.at('tau-ceti-system'[#id],'milky-way'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('tau-ceti-system'[#id],'milky-way'[#id])"/>
 
 	<sentence provenance="background" sentence="star('tau-ceti'[#id])"/>
 	<sentence provenance="background" sentence="name('tau-ceti'[#id],'tau ceti'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('tau-ceti'[#id],'tau-ceti-system'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('tau-ceti'[#id],'tau-ceti-system'[#id])"/>
 
 	<sentence provenance="background" sentence="planet('aurora'[#id])"/>
 	<sentence provenance="background" sentence="name('aurora'[#id],'aurora'[symbol])"/>
 	<sentence provenance="background" sentence="name('aurora'[#id],'tau ceti e'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('aurora'[#id],'tau-ceti-system'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('aurora'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('aurora'[#id],'0.8'[gravity.unit.g])"/>
 	<sentence provenance="background" sentence="~verb.have('aurora'[#id], 'oxygen'[oxygen])"/>
 
 	<sentence provenance="background" sentence="settlement('location-aurora-settlement'[#id])"/>
 	<sentence provenance="background" sentence="station('location-aurora-station'[#id])"/>
-	<sentence provenance="background" sentence="space.at('spacer-valley'[#id],'aurora'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('spacer-valley'[#id],'space'[#id])"/>
+	<sentence provenance="background" sentence="~space.inside.of('spacer-valley'[#id],'space'[#id])"/>
 	<sentence provenance="background" sentence="verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])"/>
 	<sentence provenance="background" sentence="property.safe('location-aurora-station'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('spacer-valley'[#id],'aurora'[#id])"/>
 
-	<sentence provenance="background" sentence="space.at('spacer-gorge'[#id],'aurora'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('spacer-gorge'[#id],'space'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('spacer-gorge'[#id],'aurora'[#id])"/>
+	<sentence provenance="background" sentence="~space.inside.of('spacer-gorge'[#id],'space'[#id])"/>
 
 	<sentence provenance="background" sentence="crater('trantor-crater'[#id])"/>
 	<sentence provenance="background" sentence="name('trantor-crater'[#id],'trantor crater'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('trantor-crater'[#id],'aurora'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('trantor-crater'[#id],'aurora'[#id])"/>
 
 	<sentence provenance="background" sentence="star-system('solar-system'[#id])"/>
 	<!--sentence provenance="background" sentence="name('solar-system'[#id],'the solar system'[symbol])"/-->
 	<sentence provenance="background" sentence="name('solar-system'[#id],'solar system'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('solar-system'[#id],'milky-way'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('solar-system'[#id],'milky-way'[#id])"/>
 
 	<sentence provenance="background" sentence="planet('earth'[#id])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'planet earth'[symbol])"/>
 	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
-	<sentence provenance="background" sentence="space.at('earth'[#id],'solar-system'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('earth'[#id],'solar-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
 
-	<sentence provenance="background" sentence="~space.at('solar-system'[#id],'tau-ceti-system'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('tau-ceti-system'[#id],'solar-system'[#id])"/>
+	<sentence provenance="background" sentence="~space.inside.of('solar-system'[#id],'tau-ceti-system'[#id])"/>
+	<sentence provenance="background" sentence="~space.inside.of('tau-ceti-system'[#id],'solar-system'[#id])"/>
 
 	<sentence provenance="background" sentence="space.area('communicator-range'[#id])"/>
 	<sentence provenance="background" sentence="name('communicator-range'[#id],'communicator range'[symbol])"/>
 	<sentence provenance="background" sentence="name('communicator-range'[#id],'communication range'[symbol])"/>
-	<!--sentence provenance="background" sentence="space.at('spacer-valley-south'[#id],'communicator-range'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('spacer-valley-north'[#id],'communicator-range'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('location-east-cave'[#id],'communicator-range'[#id])"/>
-	<sentence provenance="background" sentence="~space.at('location-west-cave'[#id],'communicator-range'[#id])"/-->
-	<sentence provenance="background" sentence="~space.at(X,'spacer-valley-south'[#id]);space.at(X,'communicator-range'[#id])"/>
+	<sentence provenance="background" sentence="~space.inside.of(X,'spacer-valley-south'[#id]);space.inside.of(X,'communicator-range'[#id])"/>
 
 	<sentence provenance="background" sentence="communication.tower('comm-tower'[#id])"/>
-	<sentence provenance="background" sentence="space.at('comm-tower'[#id],'location-aurora-settlement'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('comm-tower'[#id],'location-aurora-settlement'[#id])"/>
 
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="disembodied-ai('etaoin'[#id])"/>
@@ -156,7 +161,7 @@
 	<sentence provenance="background" sentence="name('etaoin'[#id],'station ai'[symbol])"/>
 	<!--sentence provenance="background" sentence="name('etaoin'[#id],'artificial intelligence'[symbol])"/-->
 	<sentence provenance="background" sentence="profession('etaoin'[#id],'location-aurora-station'[#id],'supervisor'[supervisor])"/>
-	<sentence provenance="background" sentence="space.at('etaoin'[#id],'location-aurora-station'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('etaoin'[#id],'location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="memory-bank('etaoin-memory'[#id])"/>
 	<sentence provenance="background" sentence="verb.own('etaoin'[#id],'etaoin-memory'[#id])"/>
 	<sentence provenance="background" sentence="perception-system('etaoin-perception'[#id])"/>
@@ -491,24 +496,24 @@
 	<sentence provenance="background" sentence="wrench('wrench'[#id])"/>
 	<sentence provenance="background" sentence="screwdriver('screwdriver'[#id])"/>
 	<sentence provenance="background" sentence="pliers('pliers'[#id])"/>
-	<sentence provenance="background" sentence="space.at('wrench'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="space.at('screwdriver'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="space.at('pliers'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('wrench'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('screwdriver'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('pliers'[#id], 'location-maintenance'[#id])"/>
 	<sentence provenance="background" sentence="brokenspacesuit('spacesuit'[#id])"/>
-	<sentence provenance="background" sentence="space.at('spacesuit'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('spacesuit'[#id], 'location-garage'[#id])"/>
 	<sentence provenance="background" sentence="toolbox('toolbox'[#id])"/>
-	<sentence provenance="background" sentence="space.at('toolbox'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="space.at('garage-rover'[#id], 'location-garage'[#id])"/>
-	<sentence provenance="background" sentence="space.at('garage-shuttle'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('toolbox'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('garage-rover'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('garage-shuttle'[#id], 'location-garage'[#id])"/>
 	<sentence provenance="background" sentence="microscope-table('521'[#id])"/>
-	<sentence provenance="background" sentence="space.at('521'[#id], 'location-as27'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('521'[#id], 'location-as27'[#id])"/>
 	<sentence provenance="background" sentence="metal-3dprinter('metal3dprinter1'[#id])"/>
 	<sentence provenance="background" sentence="metal-3dprinter('metal3dprinter2'[#id])"/>
 	<sentence provenance="background" sentence="plastic-3dprinter('plastic3dprinter1'[#id])"/>
 	<sentence provenance="background" sentence="plastic-3dprinter('plastic3dprinter2'[#id])"/>
 
 	<sentence provenance="background" sentence="batteryrecharge.facility('batteryrecharge.facility'[#id])"/>
-	<sentence provenance="background" sentence="space.at('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('batteryrecharge.facility'[#id], 'location-powerplant'[#id])"/>
 
 	<!-- 10 most spoken languages according to wikipedia, I thought 10 was enough :), plus Catalan, since I speak it :) -->
 	<sentence provenance="background" sentence="language('english'[#id])"/>
@@ -552,9 +557,8 @@
 	<sentence provenance="background" sentence="~alone-in(X:[#id],LOC:[#id]); ~space.at(Y,LOC); ~character(Y); =(X,Y)"/>
 	<sentence provenance="background" sentence="property.opened(X:[#id]); property.closed(X)"/>
 	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
-	<!--sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/-->
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(L1,L2:[#id]); space.inside.of(X,L2)"/>
-	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(X,L2:[#id]); =(L1,L2); space.inside.of(L1,L2); space.inside.of(L2,L1)"/>
 	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>
 	<sentence provenance="background" sentence="~verb.have(C1:[#id],X:[#id]); ~verb.have(C2:[#id],X); =(C1,C2)"/>
 	<sentence provenance="background" sentence="healthy(X:[#id]); sick(X)"/>
@@ -608,8 +612,8 @@
 	<sentence provenance="background" sentence="~permitted-in(X, Y); verb.can(X, verb.go(X, Y))"/>	
 	<sentence provenance="background" sentence="permitted-in(X, Y); ~verb.can(X, verb.go(X, Y))"/>	
 
-	<sentence provenance="background" sentence="gravity(Y, G); ~space.at(Y, X); ~gravity(X, G)"/>	
-	<sentence provenance="background" sentence="temperature(X, T); ~space.at(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	
+	<sentence provenance="background" sentence="gravity(Y, G); ~space.inside.of(Y, X); ~gravity(X, G)"/>	
+	<sentence provenance="background" sentence="temperature(X, T); ~space.inside.of(X, Y); ~temperature(Y, T); ~indoor.location(Y)"/>	
 
 	<sentence provenance="background" sentence="verb.find(X, Y); ~verb.find(X, Y, Z)"/>	
 	<sentence provenance="background" sentence="verb.find(X, Y, Z1); ~verb.find(X, Y, Z2); ~space.at(Z2, Z1)"/>	
@@ -637,6 +641,9 @@
 	<sentence provenance="background" sentence="~facing-direction(X, 'south'[south]) ; relative-direction(X, 'north'[north], 'backward'[backward])"/>
 	<sentence provenance="background" sentence="~facing-direction(X, 'west'[west]) ; relative-direction(X, 'north'[north], 'direction.right'[direction.right])"/>
 	<sentence provenance="background" sentence="~facing-direction(X, 'north'[north]) ; relative-direction(X, 'north'[north], 'forward'[forward])"/>
+
+	<sentence provenance="background" sentence="~verb.can(X, action.print(X, Y, Z)) ; verb.can(X, verb.make(X, Y, Z))"/>
+	<sentence provenance="background" sentence="~verb.can(X, action.print(X, Y, Z)) ; verb.can(X, verb.create(X, Y, Z))"/>
 
 	<sentence provenance="background" sentence="~space.near(X:[#id], Y:[#id]); ~space.far(X, Y)"/>
 	<sentence provenance="background" sentence="~space.at(X:[#id], Y:[#id]); space.near(X, Y)"/>

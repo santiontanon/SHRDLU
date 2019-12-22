@@ -124,7 +124,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 					if (!somethingInBetween) {
 						//let term:Term = Term.fromString("space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						let term:Term = Term.fromString("space.inside.of('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
-						//console.log(term.toString());
+						//if (this.selfID == "etaoin") console.log(term.toString());
+
 						// this.addLongTermTerm(term, LOCATIONS_PROVENANCE);
 						// if has to be added this way, since otherwise, it's treated like a #StateSort, and it removes the previous
 						// names we might have added!
@@ -143,8 +144,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 					if (mostSpecific) {					
-						let s:Sentence = Sentence.fromString("~space.at('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
-						//console.log(term.toString());
+						let s:Sentence = Sentence.fromString("~space.inside.of('"+l1.id+"'[#id], '"+l2.id+"'[#id])", o);
 						this.addLongTermRuleNow(s, LOCATIONS_PROVENANCE);
 						n_not_space_at++;
 						// debug_text += s + "\n";
@@ -173,6 +173,38 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 		console.log("RuleBasedAI.precalculateLocationKnowledge: " + n_space_at + ", " + n_not_space_at + ", " + n_space_connects);
 		// downloadStringAsFile(debug_text, "location-predicates.txt");
+	}
+
+
+	add3DPrintingKnowledge(game:A4Game, o:Ontology, IDofAIthatCanPrint:string)
+	{
+		for(let recipe of game.three_d_printer_recipies) {
+			let item:string = recipe[0]
+			let materials:string[] = recipe[1];
+
+			let term:Term = Term.fromString("verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"]))", o);
+			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+			term = Term.fromString("verb.can('david'[#id], action.print('david'[#id], ["+item+"]))", o);
+			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+
+			let sentence:Sentence = Sentence.fromString("~metal-3dprinter(X) ; verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"], X))", o);
+			this.addLongTermRuleNow(sentence, BACKGROUND_PROVENANCE);
+			sentence = Sentence.fromString("~metal-3dprinter(X) ; verb.can('david'[#id], action.print('david'[#id], ["+item+"], X))", o);
+			console.log(sentence.toString())
+			this.addLongTermRuleNow(sentence, BACKGROUND_PROVENANCE);
+
+			if (materials.length == 1 && materials[0] == "plastic") {
+				let sentence2:Sentence = Sentence.fromString("~plastic-3dprinter(X) ; verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"], X))", o);
+				this.addLongTermRuleNow(sentence2, BACKGROUND_PROVENANCE);
+				sentence2 = Sentence.fromString("~plastic-3dprinter(X) ; verb.can('david'[#id], action.print('david'[#id], ["+item+"], X))", o);
+				this.addLongTermRuleNow(sentence2, BACKGROUND_PROVENANCE);
+			}
+
+			for(let material of materials) {
+				term = Term.fromString("verb.need-for(X:[#id], ["+material+"], action.print(X, '"+item+"'["+item+"]))", o);
+				this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
+			}
+		}
 	}
 
 
@@ -865,11 +897,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		return null;
 	}
 
-
-	/*
-	Calculates spatial relations (e.g., "space.west.of") of o1 with respect to o2. 
-	E.g.: if "o1 is to the west of o2", this will return [this.o.getSort("space.west.of")]
-	*/
+	
+	// Calculates spatial relations (e.g., "space.west.of") of o1 with respect to o2. 
+	// E.g.: if "o1 is to the west of o2", this will return [this.o.getSort("space.west.of")]
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
 		let relations:Sort[] = super.spatialRelations(o1ID, o2ID);
@@ -941,7 +971,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		return relations;
 	}
-
+	
 
 	spatialRelationsFromLocation(l1:AILocation, o2:A4Object) : Sort[]
 	{

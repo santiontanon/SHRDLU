@@ -2,7 +2,7 @@
 	<!-- story knowledge -->	
 	<previousSentence provenance="background" time="45154648800" sentence="verb.happen('shrdlu'[#id], space.at('east-cave-cave-in'[#id],'location-east-cave'[#id]))"/>
 	<sentence provenance="background" time="45154648800" sentence="cave-in('east-cave-cave-in'[#id])"/>
-	<sentence provenance="background" sentence="space.at('east-cave-cave-in'[#id],'location-east-cave'[#id])"/>
+	<sentence provenance="background" sentence="space.inside.of('east-cave-cave-in'[#id],'location-east-cave'[#id])"/>
 	<sentence provenance="background" time="45154648800" sentence="property.blind('shrdlu'[#id])"/>
 
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->

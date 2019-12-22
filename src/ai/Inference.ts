@@ -19,7 +19,7 @@ var DEBUG_resolution_detailed:boolean = false;
 // search prunning strategies to make inference faster:
 var INFERENCE_maximum_sentence_size:number = 6;
 var INFERENCE_allow_increasing_sentences:boolean = false;
-var INFERENCE_allow_variable_to_variable_substitutions:boolean = false;
+var INFERENCE_allow_variable_to_variable_substitutions:boolean = true;
 
 var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 2500;
 // var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 600000;	// at this point, inference will stop
@@ -78,6 +78,10 @@ class InterruptibleResolution
 
 		this.KB = KB;
 		this.originalTarget = target;
+		// get the bindings in the variables from the target:
+		for(let ts of this.originalTarget) {
+			this.originalTargetVariables = this.originalTargetVariables.concat(ts.getAllVariables());
+		}
 		this.occursCheck = occursCheck;
 		this.reconsiderTarget = reconsiderTarget;
 		this.treatSpatialPredicatesSpecially = treatSpatialPredicatesSpecially;
@@ -171,10 +175,16 @@ class InterruptibleResolution
 			return true;
 		}
 
-	//	if (DEBUG_resolution) 
 		console.log("resolution stepAccumulatingResults: newResolvents.length = " + this.newResolvents.length);
+		if (DEBUG_resolution) {
+			for(let resolvent of this.newResolvents) {
+				console.log("    " + resolvent.sentence + " -> " + resolvent.bindings);
+				//console.log("        " + resolvent.parent1);
+				//console.log("        " + resolvent.parent2);
+			}
+		}
 
-		if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.target);
+		//if (this.reconsiderTarget) this.additionalSentences = this.additionalSentences.concat(this.target);
 		// console.log("this.additionalSentences: " + this.additionalSentences.length);
 
 		let anyNewResolvent:boolean = false;
@@ -185,50 +195,82 @@ class InterruptibleResolution
 			if (r.terms.length == 0) {
 				// we have found a contradiction!
 				if (DEBUG_resolution) console.log("  - contradiction! (CLOSED: " + this.closed.length + ")");
-				// get the bindings in the variables from the target:
-				let variables:VariableTermAttribute[] = [];
-				for(let ts of this.originalTarget) {
-					variables = variables.concat(ts.getAllVariables());
-				}
 //				console.log("Variables: " + variables);
-				let endResult:InferenceNode = new InferenceNode(null, new Bindings(), newResolvent.parent1, newResolvent.parent2);
+				let endResult:InferenceNode = new InferenceNode(r, new Bindings(), newResolvent.parent1, newResolvent.parent2);
 				for(let [v,t] of b.l) {
-					if (variables.indexOf(v)>=0) {
+					if (this.originalTargetVariables.indexOf(v)>=0) {
 						let t2:TermAttribute = t.applyBindings(b);
-						endResult.bindings.l.push([v,t2]);
+						if (endResult.bindings.l.indexOf([v,t2]) == -1) endResult.bindings.l.push([v,t2]);
 					}
 				}
-				this.endResults.push(endResult);
-			} else {
+				
 				let found:boolean = false;
-				// make sure we are not inferring something we already knew:
-				for(let s of this.closed) {
-					if (s.subsetNoBindings(r)) {
+				for(let tmp of this.endResults) {
+					if (tmp.bindings.equals(endResult.bindings)) {
+						//console.log("R: " + endResult + "\n filtered out (from endResults): " + tmp);
 						found = true;
-						//console.log("R: " + r + "\n was a subset of (in closed): " + s);
 						break;
 					}
 				}
 				if (!found) {
+					this.closed.push(endResult);					
+					this.endResults.push(endResult);
+				} else {
+					console.warn("    end result was already there: " + endResult.bindings);
+				}
+			} else {
+				let found:boolean = false;
+				// make sure we are not inferring something we already knew:
+				for(let tmp of this.closed) {
+					if (this.resultCanBeFilteredOut(newResolvent, tmp.sentence, tmp.bindings)) {
+					//if (tmp.sentence.equalsNoBindings(r)) {
+					//if (tmp.sentence.subsetNoBindings(r)) {
+						//if (tmp.bindings.equals(b)) {
+							found = true;
+							//console.log("R: " + newResolvent + "\n filtered out (from closed): " + tmp);
+							break;
+//						} else {
+//							console.log("    same sentence: " + tmp.sentence + ", but different bindings: " + tmp.bindings + " vs " + b);
+						//}
+					}
+				}
+				if (!found) {
+					for(let tmp of this.target) {
+						if (this.resultCanBeFilteredOut(newResolvent, tmp.sentence, tmp.bindings)) {
+						//if (tmp.sentence.equalsNoBindings(r) &&
+						//if (tmp.sentence.subsetNoBindings(r) &&
+							//tmp.bindings.equals(b)) {
+							//console.log("R: " + newResolvent + "\n filtered out (from this.target): " + tmp);
+							found = true;
+							break;
+						}
+					}
+				}
+				if (!found) {
 					for(let tmp of this.additionalSentences) {
-						if (tmp.sentence.subsetNoBindings(r)) {
-							//console.log("R: " + r + "\n was a subset of (in additionalSentences): " + tmp.sentence);
+						if (this.resultCanBeFilteredOut(newResolvent, tmp.sentence, tmp.bindings)) {
+						//if (tmp.sentence.equalsNoBindings(r) &&
+						//if (tmp.sentence.subsetNoBindings(r) &&
+							//tmp.bindings.equals(b)) {
+							//console.log("R: " + newResolvent + "\n filtered out (from additionalSentences): " + tmp);
 							found = true;
 							break;
 						}
 					}
 				}
 				if (!found) {
-					for(let se of this.KB.plainSentenceList) {
-						if (se.sentence.subsetNoBindings(r)) {
-							//console.log("R: " + r + "\n was a subset of (in plainSentenceList): " + se.sentence);
+					for(let tmp of this.KB.plainSentenceList) {
+						if (this.resultCanBeFilteredOut(newResolvent, tmp.sentence, null)) {
+						//if (tmp.sentence.equalsNoBindings(r)) {
+						//if (tmp.sentence.subsetNoBindings(r)) {
+							//console.log("R: " + newResolvent + "\n filtered out (from plainSentenceList): " + tmp);
 							found = true;
 							break;
 						}
 					}
 				}
 				if (!found) {
-					this.closed.push(r);
+					this.closed.push(newResolvent);
 					this.target.push(newResolvent);
 					anyNewResolvent = true;
 				}
@@ -290,8 +332,11 @@ class InterruptibleResolution
 				for(let s2 of relevantSentences) {
 					if (this.firstStep) {
 						if (this.originalTarget.length == 1 &&
-							s2.subsetNoBindings(s1)) {
+							s2.equalsNoBindings(s1)
+							//s2.subsetNoBindings(s1)
+							) {
 							if (DEBUG_resolution) console.log("step_internal: we are done! what we want to proof is in the knowledge base!!!");
+							this.internal_step_state = 1;
 							this.newResolvents = null;
 							return null;
 						}
@@ -307,20 +352,24 @@ class InterruptibleResolution
 						if (r.sentence == null) continue;
 						let found:boolean = false;
 						for(let i:number = 0;i<this.newResolvents.length;i++) {
-							if (this.newResolvents[i].sentence.terms.length > 0 &&
-								this.newResolvents[i].sentence.subsetNoBindings(r.sentence)/* &&
-								this.newResolvents[i].bindings.subset(r.bindings)*/) {
+							if (this.resultCanBeFilteredOut(this.newResolvents[i], r.sentence, r.bindings)) {
+							//if (this.newResolvents[i].sentence.terms.length > 0 &&
+								//this.newResolvents[i].sentence.equalsNoBindings(r.sentence) &&
+								//this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
+								//this.newResolvents[i].bindings.equals(r.bindings)) {
 								found = true;
 //								console.log(" bindings filtered1: " + resolvents[i].bindings);
 //								console.log(" bindings filtered2: " + r.bindings);
 								break;
+							/*
 							} else if (this.newResolvents[i].sentence.terms.length == 0 &&
 								       r.sentence.terms.length == 0 &&
-								       this.newResolvents[i].bindings.subset(r.bindings)) {
+								       this.newResolvents[i].bindings.equals(r.bindings)) {
 								found = true;
 //								console.log(" bindings filtered1: " + resolvents[i].bindings);
 //								console.log(" bindings filtered2: " + r.bindings);
 								break;
+							*/
 							}
 						}
 						if (!found) {
@@ -343,7 +392,8 @@ class InterruptibleResolution
 				let s2:Sentence = n2.sentence;
 				if (this.firstStep) {
 					if (this.originalTarget.length == 1 &&
-						s2.subsetNoBindings(s1)) {
+						s2.equalsNoBindings(s1)) {
+						//s2.subsetNoBindings(s1)) {
 						if (DEBUG_resolution) console.log("step_internal: we are done! what we want to proof is in the knowledge base!!!");
 						this.internal_step_state = 1;
 						this.newResolvents = null;
@@ -361,10 +411,20 @@ class InterruptibleResolution
 
 					let found:boolean = false;
 					for(let i:number = 0;i<this.newResolvents.length;i++) {
-						if (this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
-							this.newResolvents[i].bindings.subset(r.bindings)) {
+						if (this.resultCanBeFilteredOut(this.newResolvents[i], r.sentence, r.bindings)) {
+						//if (this.newResolvents[i].sentence.terms.length > 0 &&
+							//this.newResolvents[i].sentence.equalsNoBindings(r.sentence) &&
+							//this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
+							//this.newResolvents[i].bindings.equals(r.bindings)) {
 							found = true;
 							break;
+							/*
+						} else if (this.newResolvents[i].sentence.terms.length == 0 &&
+							       r.sentence.terms.length == 0 &&
+							       this.newResolvents[i].bindings.equals(r.bindings)) {
+							found = true;
+							break;
+							*/
 						}
 					}
 					if (!found) {
@@ -393,8 +453,10 @@ class InterruptibleResolution
 
 					let found:boolean = false;
 					for(let i:number = 0;i<this.newResolvents.length;i++) {
-						if (this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
-							this.newResolvents[i].bindings.subset(r.bindings)) {
+						if (this.resultCanBeFilteredOut(this.newResolvents[i], r.sentence, r.bindings)) {
+						//if (this.newResolvents[i].sentence.equalsNoBindings(r.sentence) &&
+						//if (this.newResolvents[i].sentence.subsetNoBindings(r.sentence) &&
+							//this.newResolvents[i].bindings.equals(r.bindings)) {
 							found = true;
 							break;
 						}
@@ -528,6 +590,8 @@ class InterruptibleResolution
 
 	// Tries to apply the principle of "Resolution" between two sentences, and
 	// returns all possible resolvents
+	// parent1: is from the query
+	// parent2: is from the KB
 	resolutionBetweenSentencesWithBindings(parent1:InferenceNode, parent2:InferenceNode,
  									       occursCheck:boolean) : InferenceNode[]
 	{
@@ -535,26 +599,65 @@ class InterruptibleResolution
 		let resolvents:InferenceNode[] = [];
 //		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, [], [], new Bindings(), resolvents, occursCheck);
 		this.resolutionBetweenSentencesWithBindings_internal(parent1.sentence, parent2.sentence, parent1, parent2, new Bindings(), resolvents, occursCheck);
+		let resolvents2:InferenceNode[] = [];
 		for(let r of resolvents) {
-			r.bindings = parent1.bindings.concat(parent2.bindings.concat(r.bindings));
+			r.bindings = parent1.bindings.concat(parent2.bindings.concat(r.bindings))
+			if (r.bindings != null) {
+				r.sentence = r.sentence.applyBindings(r.bindings);
+				//r.bindings.removeUselessBindingsSentence(r.sentence, this.originalTargetVariables)
+				r.bindings.removeUselessBindings(this.originalTargetVariables)
+				/*
+				for(let ts of this.originalTarget) {
+					this.originalTargetVariables = this.originalTargetVariables.concat(ts.getAllVariables());
+				}
+				*/
+
+				/*
+				// debug check:
+				for(let i:number = 0; i<r.bindings.l.length; i++) {
+					for(let j:number = i+1; j<r.bindings.l.length; j++) {
+						if (r.bindings.l[i] == r.bindings.l[j]) {
+							console.error("repeated bindings!");
+						}
+					}
+				}
+				*/
+
+				let found:boolean = false;
+				for(let r2 of resolvents2) {
+					if (this.resultCanBeFilteredOut(r, r2.sentence, r2.bindings)) {
+					//if (r2.sentence.equalsNoBindings(r.sentence) &&
+					//if (r2.sentence.subsetNoBindings(r.sentence) &&
+						//r2.bindings.equals(r.bindings)) {
+						//console.log("R: " + r + "\n filtered out (from newResolvents): " + r2);
+						found = true;
+					}
+				}
+				if (!found) resolvents2.push(r);
+			}
 		}
-		return resolvents;
+		return resolvents2;
 	}
 
 
 
+	// s1: is from the query
+	// s2: is from the KB
 	resolutionBetweenSentencesWithBindings_internal(s1:Sentence, s2:Sentence, 
 													parent1:InferenceNode, parent2:InferenceNode,
 												    bindings:Bindings, 
 												    resolvents:InferenceNode[],
 												    occursCheck:boolean) : void
 	{
+		//console.log("s1: " + s1);
+		//console.log("s2: " + s2);
+
 		for(let i:number = 0;i<s1.terms.length;i++) {
 			for(let j:number = 0;j<s2.terms.length;j++) {
 				if (s1.sign[i] == s2.sign[j]) continue;
 				
-				let p:Term = s1.terms[i].applyBindings(bindings);
-				let q:Term = s2.terms[j].applyBindings(bindings);
+				let t1:Term = s1.terms[i].applyBindings(bindings);
+				let t2:Term = s2.terms[j].applyBindings(bindings);
 //				console.log("p: " + p);
 //				console.log("q: " + q);
 				let bindings2:Bindings = new Bindings();
@@ -562,9 +665,18 @@ class InterruptibleResolution
 				// if (!p.unify(q, occursCheck, bindings2)) continue;
 				// special cases, where I can use functor sort subsumption and inference is still sound:
 				// this is so that I don't need all those ontology rules that make everything very slow!
+				if (s1.sign[i]) {
+					if (!t1.functor.is_a(t2.functor)) continue;
+					if (!t1.unifyIgnoringFirstfunctor(t2, occursCheck, bindings2)) continue;					
+				} else {
+					if (!t2.functor.is_a(t1.functor)) continue;
+					if (!t1.unifyIgnoringFirstfunctor(t2, occursCheck, bindings2)) continue;					
+				}
+				/*
 				if (s1.terms.length == 1) {
 					if (s2.terms.length == 1) {
-						if (!p.functor.is_a(q.functor) && !q.functor.is_a(p.functor)) continue;
+						//if (!p.functor.is_a(q.functor) && !q.functor.is_a(p.functor)) continue;
+						if (!p.functor.is_a(q.functor)) continue;
 						if (!p.unifyIgnoringFirstfunctor(q, occursCheck, bindings2)) continue;
 					} else {
 						if (!p.functor.is_a(q.functor)) continue;
@@ -576,6 +688,7 @@ class InterruptibleResolution
 				} else {
 					if (!p.unifySameFunctor(q, occursCheck, bindings2)) continue;
 				}
+				*/
 
 				// only allow steps that replace variables by constants:
 				if (!INFERENCE_allow_variable_to_variable_substitutions) {
@@ -628,6 +741,62 @@ class InterruptibleResolution
 	}
 
 
+	//subsetNoBindings(s:Sentence) : boolean
+	// --> If previousR subset r (the non contained do not have any variables that can affect the final bindings) -> filter
+	resultCanBeFilteredOut(r:InferenceNode, previousSentence:Sentence, previousBindings:Bindings): boolean
+	{
+		if (r.sentence.terms.length < previousSentence.terms.length) return false;
+		if (previousBindings != null && !r.bindings.equals(previousBindings)) return false;
+
+		let anyNotFound:boolean = false;
+		for(let i:number = 0;i<r.sentence.terms.length;i++) {
+			var found:boolean = false;
+			for(let j:number = 0;j<previousSentence.terms.length;j++) {
+				if (r.sentence.sign[i] == previousSentence.sign[j] &&
+					r.sentence.terms[i].equalsNoBindings(previousSentence.terms[j]) == 1) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				return false;
+				/*
+				anyNotFound = true;
+				// check if the new term in the result could potentially change the end result:
+				let vl:VariableTermAttribute[] = r.sentence.terms[i].getAllVariables();
+				let variableFound:boolean = false;
+				for(let binding of r.bindings.l) {
+					if (binding[1] instanceof VariableTermAttribute) {
+						if (vl.indexOf(<VariableTermAttribute>binding[1]) != -1) {
+							variableFound = true;
+							break;
+						}
+					} else if (binding[1] instanceof TermTermAttribute) {
+						let vl2:VariableTermAttribute[] = (<TermTermAttribute>binding[1]).term.getAllVariables();
+						for(let v of vl2) {
+							if (vl.indexOf(v) != -1) {
+								variableFound = true;
+								break;								
+							}
+						}
+						if (variableFound) break;
+					}
+				}
+				if (variableFound) return false;
+				if (previousBindings != null) return true;
+				*/
+			}
+		}
+
+		if (anyNotFound) {
+			if (previousBindings == null) return false;
+			return true;
+		} else {
+			return true;
+		}
+	}
+
+
 	saveToXML() : string
 	{
 		let str:string = "<InterruptibleResolution>\n";
@@ -646,12 +815,13 @@ class InterruptibleResolution
 	additionalSentences:InferenceNode[] = [];
 	target:InferenceNode[] = [];
 	originalTarget:Sentence[] = null;
+	originalTargetVariables:VariableTermAttribute[] = [];
 	ai:RuleBasedAI = null;
 
 	superlativePredicates:Sentence[] = [];
 
 	firstStep:boolean = true;
-	closed:Sentence[] = [];
+	closed:InferenceNode[] = [];
 
 	endResults:InferenceNode[] = [];
 

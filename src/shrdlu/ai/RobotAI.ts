@@ -34,6 +34,7 @@ class RobotAI extends A4RuleBasedAI {
 		}
 
 		this.precalculateLocationKnowledge(game, o);
+		this.add3DPrintingKnowledge(game, o, "etaoin");
 
 		this.robot.AI.doorsNotToOpenWhileWalking = this.doorsPlayerIsNotPermittedToOpen;
 

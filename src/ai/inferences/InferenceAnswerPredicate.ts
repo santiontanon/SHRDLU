@@ -12,6 +12,12 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 		console.log("inf.inferences.length: " + inf.inferences.length);
 		for(let i:number = 0;i<inf.inferences.length;i++) {
 			console.log("inf.inferences["+i+"].endResults.length: " + inf.inferences[i].endResults.length);
+			if (inf.inferences[i].endResults.length > 0) {
+				console.log("    Reasons for first result:");
+				for(let t of inf.inferences[i].endResults[0].getBaseSentences(inf.inferences[i].originalTarget)) {
+					console.log("        " + t)
+				}
+			}
 		}
 
 		if (!(this.effectParameter.attributes[1] instanceof ConstantTermAttribute)) {

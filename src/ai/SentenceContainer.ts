@@ -341,19 +341,20 @@ class SentenceContainer {
 			let sign:boolean = !s.sign[i];
 //			console.log("query " + query + " (" + (i+1) + " / " + s.terms.length + ")");
 			for(let sortName in this.sentenceHash) {
+				//console.log("sortName: " + sortName);
 				let s2:Sort = o.getSort(sortName);
 				if (s2.is_a(query.functor) || query.functor.is_a(s2)) {
 //				if (s2 == query.functor) {
 					let l:SentenceEntry[] = this.sentenceHash[sortName];
 //					console.log(l.length + " sentences for " + sortName);
 					for(let se of l) {
-//						console.log("allPotentialMatchesWithSentenceForResolution, considering (for "+i+"/"+s.terms.length+"): " + se.sentence);
+						//console.log("allPotentialMatchesWithSentenceForResolution, considering (for "+i+"/"+s.terms.length+"): " + se.sentence);
 						if (se.allPotentialMatchesWithSentenceForResolution_counter == this.allPotentialMatchesWithSentenceForResolution_counter) continue;
 						let matches:boolean = false;
 						for(let j:number = 0;j<se.sentence.terms.length;j++) {
 							let t:Term = se.sentence.terms[j];
-//							console.log(t.functor.name + "/" + t.attributes.length + " vs " + query.functor.name + "/" + query.attributes.length)
-							if (t.functor == s2 && 
+							//console.log(t.functor.name + "/" + t.attributes.length + " vs " + query.functor.name + "/" + query.attributes.length + " s2: " + s2)
+							if (t.functor.is_a(query.functor) || query.functor.is_a(t.functor) && 
 								t.attributes.length == query.attributes.length && 
 								se.sentence.sign[j] == sign) {
 								matches = true;
@@ -374,6 +375,7 @@ class SentenceContainer {
 								if (matches) break;
 							}
 						}
+						//console.log("    matches: " + matches);
 						if (matches) {
 							if (potentialMatches.indexOf(se.sentence) == -1) potentialMatches.push(se.sentence);
 						}

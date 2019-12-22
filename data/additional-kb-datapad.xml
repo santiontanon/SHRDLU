@@ -18,7 +18,7 @@
 	<sentence provenance="background-additional" sentence="name('colonist2'[#id],'zowie scott'[symbol])"/>
 	<sentence provenance="background-additional" sentence="name('colonist2'[#id],'zowie'[symbol])"/>
 	<sentence provenance="background-additional" sentence="dead('colonist2'[#id])"/>
-	<sentence provenance="background-additional" sentence="space.at('colonist2'[#id], 'spacer-gorge'[#id])"/>
+	<sentence provenance="background-additional" sentence="space.inside.of('colonist2'[#id], 'spacer-gorge'[#id])"/>
 
 	<sentence provenance="background-additional" sentence="name('colonist3'[#id],'sax'[symbol])"/>
 	<sentence provenance="background-additional" sentence="name('colonist4'[#id],'euriclea'[symbol])"/>

@@ -1,13 +1,13 @@
 <knowledgeBase>
-	<sentence provenance="background-additional"  sentence="space.at('tardis8'[#id], 'trantor-crater'[#id])"/>
-	<sentence provenance="background" sentence="name('tardis8-computer'[#id],'the computer room'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-corridor-west'[#id],'the central corridor'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-corridor-east'[#id],'the central corridor'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-engineering'[#id],'the engineering room'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-engineering'[#id],'the engineering bay'[symbol])"/>
+	<sentence provenance="background-additional"  sentence="space.inside.of('tardis8'[#id], 'trantor-crater'[#id])"/>
+	<!--sentence provenance="background" sentence="name('tardis8-computer'[#id],'the computer room'[symbol])"/-->
+	<!--sentence provenance="background" sentence="name('tardis8-corridor-west'[#id],'the central corridor'[symbol])"/-->
+	<!--sentence provenance="background" sentence="name('tardis8-corridor-east'[#id],'the central corridor'[symbol])"/-->
+	<!--sentence provenance="background" sentence="name('tardis8-engineering'[#id],'the engineering room'[symbol])"/-->
+	<!--sentence provenance="background" sentence="name('tardis8-engineering'[#id],'the engineering bay'[symbol])"/-->
 
 	<sentence provenance="background" sentence="name('tardis8-bridge'[#id],'tardis bridge'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-bridge'[#id],'the tardis bridge'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('tardis8-bridge'[#id],'the tardis bridge'[symbol])"/-->
 	<sentence provenance="background" sentence="name('tardis8-bridge'[#id],'tardis 8 bridge'[symbol])"/>
-	<sentence provenance="background" sentence="name('tardis8-bridge'[#id],'the tardis 8 bridge'[symbol])"/>
+	<!--sentence provenance="background" sentence="name('tardis8-bridge'[#id],'the tardis 8 bridge'[symbol])"/-->
 </knowledgeBase>

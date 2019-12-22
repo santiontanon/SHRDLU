@@ -276,7 +276,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1250,11 +1250,13 @@ NLParseTestUnifyingListener("put down the ship", o.getSort("performative"),  con
 NLParseTestUnifyingListener("board the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 NLParseTestUnifyingListener("what is the date?", o.getSort("performative"),  context, 'etaoin', "perf.q.when(V0:'etaoin'[#id], [time.day], [time.now])");
 NLParseTestUnifyingListener("3d print crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), crate(X))"); 
+*/
+
+NLParseTestUnifyingListener("what can i print with the crate", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.can(D:'1'[#id], action.print(D, X, '5'[#id])))"); 
+NLParseTestUnifyingListener("what can i create with the crate", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.can(D:'1'[#id], verb.create(D, X, '5'[#id])))"); 
+NLParseTestUnifyingListener("can I make a fork with the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(D:'1'[#id], verb.make(D, 'fork'[fork], '5'[#id])))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
-
-
-
 

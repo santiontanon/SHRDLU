@@ -49,6 +49,8 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 			let recipe_idx:number = -1;
 			let recipe:string[] = null;
 
+			if (toPrint.name == "power-cord") toPrint = ai.o.getSort("cable");
+
 			// find a recipe that matches the request:
 			for(let tmp of ai.game.three_d_printer_recipies) {
 				let canPrint:string = tmp[0];

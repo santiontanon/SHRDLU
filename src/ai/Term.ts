@@ -1,8 +1,57 @@
 class Bindings {
     concat(b:Bindings) {
+        if (b == null) return null;
         let result:Bindings = new Bindings();
-        result.l = this.l.concat(b.l);
+        //result.l = this.l.concat(b.l);
+        for(let [variable,value] of this.l) {
+            result.l.push([variable,value.applyBindings(b)]);
+        }
+        for(let binding of b.l) {
+            let found:boolean = false;
+            for(let tmp of result.l) {
+                let variable2:VariableTermAttribute = tmp[0];
+                let value2:TermAttribute = tmp[1];
+                if (binding[0] == variable2) {
+                    let cmp:number = Term.equalsNoBindingsAttribute(binding[1], value2);
+                    if (cmp == 1) {
+                        found = true;
+                    } else if (cmp == -1) {
+                        return null;
+                    } else {
+                        found = true;
+                        tmp[1] = value2;                       
+                    }
+                }
+            }
+            if (!found) result.l.push(binding);
+        }
         return result;   
+    }
+
+
+    removeUselessBindings(variables:VariableTermAttribute[])
+    {
+        let new_l:[VariableTermAttribute,TermAttribute][] = [];
+        for(let [variable,value] of this.l) {
+            if (variables.indexOf(variable) != -1) {
+                new_l.push([variable, value.applyBindings(this)])
+            }
+        }
+        this.l = new_l;
+    }
+
+
+    removeUselessBindingsSentence(s:Sentence, variables:VariableTermAttribute[])
+    {
+        let s_variables:VariableTermAttribute[] = s.getAllVariables();
+        let new_l:[VariableTermAttribute,TermAttribute][] = [];
+        for(let [variable,value] of this.l) {
+            if (s_variables.indexOf(variable) != -1 ||
+                variables.indexOf(variable) != -1) {
+                new_l.push([variable, value.applyBindings(this)])
+            }
+        }
+        this.l = new_l;
     }
 
 

@@ -1490,6 +1490,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(proper-noun(X3, N3), OBJECT)"
 			   priority="200"/>
 
+	<NLPattern name="perf.q.predicate-can-X-verb-a-noun-with-Y"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, NOUN, OBJECT)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.can'[symbol], N, P, T) nounPhrase(X, N, P, C) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   	     (['some'] noun(NOUN, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN, [singular])) 
+			   		 'with' nounPhrase(X4, N4, P4, C4) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C4, OBJECT)"/>
+
 	<!-- this is a special case, where the meaning is clearly to ask permission to take something -->
 	<NLPattern name="perf.q.action-can-take-propernoun"
 			   head="perf.q.action(LISTENER, action.take(SUBJECT, OBJECT))"
@@ -1936,8 +1948,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
 			   		 nounPhrase(X2, [singular], P2, C2)
 			   		 verb('action.print'[symbol], N3, P3, [infinitive-tense]) 
-			   		 ['some']
-			   		 (noun(NOUN, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN, [singular])) 
+			   		 (['some'] noun(NOUN, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN, [singular])) 
 			   		 #symbolToSort(NOUN, NOUN_SORT)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, SUBJECT)"
@@ -3240,6 +3251,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb(VERB, N3, P3, [infinitive-tense])
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, SUBJECT)"/>
+
+    <NLPattern name="perf.q.query-what-can-X-verb-with-Y"
+    		   head="perf.q.query(LISTENER, QUERYV, verb.can(SUBJECT, #cons(VERB, SUBJECT, QUERYV, OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' 
+			   		 verb('verb.can'[symbol], N, P, T)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb(VERB, N3, P3, [infinitive-tense])
+			   		 'with'
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(C4, OBJECT)"/>
 
 	<!-- example: what do you do? --> 
     <NLPattern head="perf.q.query(LISTENER, QUERY, role(OBJECT, QUERY))"			

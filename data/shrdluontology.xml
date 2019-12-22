@@ -496,7 +496,12 @@
     <sort name="captain" super="profession"/>
     <sort name="computer-engineer" super="profession"/>
 
+    <sort name="media-genre" super="abstract-entity"/>
+    <sort name="science-fiction" super="media-genre"/>
     <sort name="game" super="abstract-entity"/>
+    <sort name="television" super="equipment"/>
+    <sort name="show" super="abstract-entity"/>
+    <sort name="tv-show" super="abstract-entity"/>
 
     <sort name="protagonist" super="role,character"/>
     <sort name="game-character" super="role,character"/>
@@ -638,6 +643,8 @@
     <sort name="verb.suck" super="verb"/>
     <sort name="verb.belong" super="relation-verb"/>
     <sort name="verb.change" super="verb"/>
+    <sort name="verb.create" super="verb"/>
+    <sort name="verb.make" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>

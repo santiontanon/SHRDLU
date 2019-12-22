@@ -334,7 +334,8 @@ class ShrdluGameScript {
 		memoryCore.ID = "tardis-memory-core";
 		this.game.currentPlayer.inventory.push(memoryCore);
 		this.game.setStoryStateVariable("tardis-memory-core", "discovered");
-		this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);
+		//this.game.currentPlayer.warp(12*8, 28*8, this.game.maps[0]);	// infirmary
+		this.game.currentPlayer.warp(864, 40, this.game.maps[0]);	// garage
 
 		let dust1:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
 		this.game.currentPlayer.inventory.push(dust1);
@@ -2397,8 +2398,8 @@ class ShrdluGameScript {
 
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal2'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.inside.of('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(Term.fromString("space.inside.of('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal1'[#id],'spacer-gorge'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("verb.come-from('distress-signal2'[#id],'trantor-crater'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("goal(D:'david'[#id], verb.investigate(X, 'distress-signal1'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
