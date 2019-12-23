@@ -2227,6 +2227,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb('verb.need'[symbol], N, P, [present-tense])
 			   		 ['my'] 'help' ('!'|'?')*"/> 
 
+    <NLPattern name="perf.q.predicate-is-np-a-adj-noun?"
+    		   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, SUBJECT), #cons(ADJECTIVE, SUBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, [singular], P2, C2)
+			   		 indefinite-article('a'[symbol], [singular])
+			   		 adjective(ADJECTIVE)
+			   		 noun(NOUN, [singular])
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)"/> 
+
 	<!-- Passive voice question: -->
     <NLPattern name="perf.q.predicate-passive"
     		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
@@ -4262,6 +4275,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] (nounPhraseNoDeterminer(X_L2, [singular], [second-person], C_L2) |
     		           		 nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2)) #derefFromContext(C_L2, LISTENER)]
     		         ('!'|'?')*"/>
+    <NLPattern name="perf.request.action-tell3"
+    		   head="perf.request.action(LISTENER, action.talk(LISTENER, perf.request.action(TARGET, ACTION)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] verb('verb.have'[symbol], N, [second-person], T)
+    		   		 nounPhrase(X2, N2, P2, CO)
+    		   		 #derefFromContext(CO, TARGET)
+    		   		 ['to']
+    		   		 perf.request.action(TARGET, ACTION)
+    		         [[','] 'please']
+    		         [[','] (nounPhraseNoDeterminer(X_L2, [singular], [second-person], C_L2) |
+    		           		 nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2)) #derefFromContext(C_L2, LISTENER)]
+    		          ('.'|'!')*"/>
 
 	<NLPattern name="perf.request.action-i-want"
 			   head="perf.request.action(LISTENER, #cons(VERB, SPEAKER, OBJECT))"

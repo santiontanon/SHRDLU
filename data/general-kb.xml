@@ -652,6 +652,5 @@
 
 	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.need(X, verb.help(Y, X))"/>
 	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.can(Y, verb.help(Y, X, P))"/>
-	<sentence provenance="background" sentence="~verb.can(Y:[#id], verb.help(Y, X, P)); verb.can(Y, verb.help(Y, X))"/>
-	
+	<sentence provenance="background" sentence="~verb.can(Y:[#id], verb.help(Y, X, P)); verb.can(Y, verb.help(Y, X))"/>	
 </knowledgeBase>

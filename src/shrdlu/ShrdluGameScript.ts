@@ -27,7 +27,7 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
@@ -39,8 +39,8 @@ class ShrdluGameScript {
 			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
-			//this.skip_to_act_3_back_from_tardis();
-		//}
+			this.skip_to_act_3_back_from_tardis();
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -2669,15 +2669,9 @@ class ShrdluGameScript {
 			case 8: if (this.game.etaoinAI.intentions.length == 0 &&
 						this.game.etaoinAI.queuedIntentions.length == 0) {
 						// make sure Etaoin knows about this object, that has disappeared from the game:
-						this.game.etaoinAI.addLongTermTerm(Term.fromString("tardis-memory-core('tardis-memory-core'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-						this.game.etaoinAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
-						this.game.etaoinAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
-
-						this.game.qwertyAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
-						this.game.qwertyAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
-
-						this.game.shrdluAI.addLongTermTerm(Term.fromString("name('david'[#id],'david bowman'[symbol])",this.game.ontology), PERCEPTION_PROVENANCE);
-						this.game.shrdluAI.addLongTermTerm(Term.fromString("role('david'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer])",this.game.ontology), PERCEPTION_PROVENANCE);
+						this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
+						this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
+						this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
 
 						this.game.etaoinAI.allowPlayerIntoEveryWhere();
 						this.game.qwertyAI.allowPlayerIntoEveryWhere();

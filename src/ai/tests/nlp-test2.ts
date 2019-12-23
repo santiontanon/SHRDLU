@@ -1264,12 +1264,14 @@ NLParseTestUnifyingListener("do I need plastic to print forks?", o.getSort("perf
 NLParseTestUnifyingListener("is plastic needed to print a fork?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need-for(X, [plastic], action.print(X, [fork])))");
 NLParseTestUnifyingListener("does the crate need plastic?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('5'[#id], [plastic]))");
 NLParseTestUnifyingListener("does the crate have iron?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.have('5'[#id], [iron]))");
-*/
-
 NLParseTestUnifyingListener("who is a human in the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V1:[any], V2:#and(V3:character(V1), V4:#and(V5:human(V1), V6:space.at(V1, V7:'room1'[#id]))))");
 NLParseTestUnifyingListener("what other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 NLParseTestUnifyingListener("what other human was in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), #and(V2:space.at(V,'room1'[#id]), time.past(V2)))))");
 NLParseTestUnifyingListener("what other human was here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), #and(V2:space.at(V,'room1'[#id]), time.past(V2)))))");
+NLParseTestUnifyingListener("is etaoin a dead human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(E:'etaoin'[#id]), dead(E)))");
+NLParseTestUnifyingListener("have the crate get in the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
+*/
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
