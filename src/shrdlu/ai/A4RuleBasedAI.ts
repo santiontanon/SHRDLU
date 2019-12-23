@@ -65,6 +65,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.cache_sort_powered_on = this.o.getSort("powered.on");
 		this.cache_sort_powered_off = this.o.getSort("powered.off");
 		this.cache_sort_space_iside_of = this.o.getSort("space.inside.of");
+		this.cache_sort_have = this.o.getSort("verb.have");
+		this.cache_sort_need = this.o.getSort("verb.need");
 
 		this.predicatesToStoreInLongTermMemory = [];
 		this.predicatesToStoreInLongTermMemory.push(this.cache_sort_action_talk);
@@ -348,6 +350,22 @@ class A4RuleBasedAI extends RuleBasedAI {
 							this.addTermToPerception(new Term(this.cache_sort_powered_state, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new ConstantTermAttribute(this.cache_sort_powered_on.name, this.cache_sort_powered_on)]));
 						} else {
 							this.addTermToPerception(new Term(this.cache_sort_powered_state, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new ConstantTermAttribute(this.cache_sort_powered_off.name, this.cache_sort_powered_off)]));
+						}
+					}
+				} else if (o.sort.is_a_string("plastic-3dprinter")) {
+					for(let material of ["plastic"]) {
+						if (o.getStoryStateVariable(material) == "true") {
+							this.addTermToPerception(new Term(this.cache_sort_have, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new VariableTermAttribute(this.o.getSort(material), null)]));
+						} else {
+							this.addTermToPerception(new Term(this.cache_sort_need, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new VariableTermAttribute(this.o.getSort(material), null)]));
+						}
+					}
+				} else if (o.sort.is_a_string("metal-3dprinter")) {
+					for(let material of ["plastic", "iron", "aluminium", "copper"]) {
+						if (o.getStoryStateVariable(material) == "true") {
+							this.addTermToPerception(new Term(this.cache_sort_have, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new VariableTermAttribute(this.o.getSort(material), null)]));
+						} else {
+							this.addTermToPerception(new Term(this.cache_sort_need, [new ConstantTermAttribute(o.ID, this.cache_sort_id), new VariableTermAttribute(this.o.getSort(material), null)]));
 						}
 					}
 				}
@@ -1595,4 +1613,6 @@ class A4RuleBasedAI extends RuleBasedAI {
 	cache_sort_powered_on:Sort = null;
 	cache_sort_powered_off:Sort = null;
 	cache_sort_space_iside_of:Sort = null;
+	cache_sort_have:Sort = null;
+	cache_sort_need:Sort = null;
 }

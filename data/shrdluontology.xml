@@ -583,7 +583,7 @@
     <sort name="verb.try" super="verb"/>
     <sort name="verb.thank" super="verb"/>
     <sort name="verb.think" super="verb"/>
-    <sort name="verb.have" super="relation-verb"/>
+    <sort name="verb.have" super="relation-verb,#stateSort"/>
     <sort name="verb.heal" super="verb"/>
     <sort name="verb.hear" super="verb"/>
     <sort name="verb.help" super="verb"/>

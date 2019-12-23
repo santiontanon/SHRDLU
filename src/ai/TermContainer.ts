@@ -43,33 +43,36 @@ class TermContainer {
 	{
 		// check if we need to replace some term:
 		var l:TermEntry[] = this.termHash[t.functor.name];
-		var previous_t:TermEntry = null;
+		var previous_t_l:TermEntry[] = [];
 		if (l != null) {
 			for(let te2 of l) {
-				if (TermContainer.termReplacesPreviousStateTerm(t, te2.term)) previous_t = te2;
+				if (TermContainer.termReplacesPreviousStateTerm(t, te2.term)) previous_t_l.push(te2);
 			}
 		}
-		if (previous_t == null) {
+		if (previous_t_l.length == 0) {
 			this.addTerm(t, provenance, activation, time);
 			return true;
 		} else {
 			// check if it's different from the previous:
-			if (t.equalsNoBindings(previous_t.term) != 1) {
-				// replace olf with new, and store old:
-				this.plainPreviousTermList.push(new TermEntry(previous_t.term, previous_t.provenance, previous_t.activation, previous_t.time));
-				if (this.plainPreviousTermList.length > MAXIMUM_MEMORY_OF_PREVIOUS_STATES) this.plainPreviousTermList.splice(0,1);
-				// we just overwrite, since it's easier (no need to modify plain list nor hash table):
-				previous_t.term = t;
-				previous_t.provenance = provenance;
-				previous_t.activation = activation;
-				previous_t.time = time;
-				return true;
-			} else {
-				if (previous_t.activation < activation) {
-					previous_t.activation = activation;
-					previous_t.provenance = provenance;
+			if (previous_t_l.length == 1 &&
+				t.equalsNoBindings(previous_t_l[0].term) == 1) {
+				if (previous_t_l[0].activation < activation) {
+					previous_t_l[0].activation = activation;
+					previous_t_l[0].provenance = provenance;
 					// time is not updated
 				}				
+			} else {
+				// replace old with new, and store old:
+				for(let previous_t of previous_t_l) {
+					// even if it's a state term, if we have multiple of them in the same cycle, we assume they can coexist:
+					if (previous_t.time != time) {
+						this.plainPreviousTermList.push(new TermEntry(previous_t.term, previous_t.provenance, previous_t.activation, previous_t.time));
+						if (this.plainPreviousTermList.length > MAXIMUM_MEMORY_OF_PREVIOUS_STATES) this.plainPreviousTermList.splice(0,1);
+						this.removeInternal(previous_t);
+					}
+				}
+				this.addTerm(t, provenance, activation, time);
+				return true;
 			}
 		}
 		return false;

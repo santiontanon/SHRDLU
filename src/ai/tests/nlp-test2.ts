@@ -276,7 +276,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1259,7 +1259,17 @@ context.expectingAnswerToQuestionTimeStamp_stack = [];
 context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("Gray", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], proper-noun('gray'[symbol], [singular]))"); 
+NLParseTestUnifyingListener("do I need plastic to print a fork?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need-for('1'[#id], [plastic], action.print('1'[#id], [fork])))");
+NLParseTestUnifyingListener("do I need plastic to print forks?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need-for('1'[#id], [plastic], action.print('1'[#id], [fork])))");
+NLParseTestUnifyingListener("is plastic needed to print a fork?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need-for(X, [plastic], action.print(X, [fork])))");
+NLParseTestUnifyingListener("does the crate need plastic?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('5'[#id], [plastic]))");
+NLParseTestUnifyingListener("does the crate have iron?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.have('5'[#id], [iron]))");
+*/
 
+NLParseTestUnifyingListener("who is a human in the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V1:[any], V2:#and(V3:character(V1), V4:#and(V5:human(V1), V6:space.at(V1, V7:'room1'[#id]))))");
+NLParseTestUnifyingListener("what other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
+NLParseTestUnifyingListener("what other human was in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), #and(V2:space.at(V,'room1'[#id]), time.past(V2)))))");
+NLParseTestUnifyingListener("what other human was here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), #and(V2:space.at(V,'room1'[#id]), time.past(V2)))))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
