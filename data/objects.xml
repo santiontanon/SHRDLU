@@ -1509,9 +1509,11 @@
 		<eventRule event="pickup">
 			<if>
 				<condition>
-					<storyStateCheck scope="game" variable="luminiscent-dust" value="taken"/>
+					<storyStateCheck scope="game" variable="luminiscent-fungi" value="taken"/>
 				</condition>
 				<then>
+					<!-- Allow the player to carry only one, to avoid NLP failures -->
+					<loseItem type="luminiscent-dust"/>
 				</then>
 				<else>
 		        	<talkOther text="This is weird... there seems to be a sort of luminiscent dust here..." thought="true"/>

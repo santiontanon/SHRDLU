@@ -1024,6 +1024,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.inform.answer(LISTENER, proper-noun(X, N))"
 			   body="properNounCompound(X, N) ('!'|'?')*"/>
 
+	<NLPattern name="answer-nounPhrase-token"
+			   head="perf.inform.answer(LISTENER, proper-noun(NAME1, [singular]))"
+			   body="#token(NAME1) ('!'|'?')*"
+			   priority="25"/>
+
+	<NLPattern name="answer-nounPhrase-2tokens"
+			   head="perf.inform.answer(LISTENER, proper-noun(NAME_SYMBOL, [singular]))"
+			   body="#token(NAME1)
+			   	     #token(NAME2) ('!'|'?')*
+			   	     #concatenateSymbols(NAME1,' '[symbol],NAME2,NAME_SYMBOL)"
+			   priority="25"/>
 
 	<!-- Patterns for performative "perf.q.predicate" -->
 	<NLPattern name="perf.q.predicate-verb"

@@ -252,23 +252,8 @@ class NLPattern {
 			return nlprl;
 		} else if (this.term.functor.name == "#token" && this.term.attributes.length == 1) {
 			let term2:Term = this.term.applyBindings(parse.bindings);
-			if (term2.attributes[0] instanceof ConstantTermAttribute) {
-				let token:string = (<ConstantTermAttribute>term2.attributes[0]).value;
-				if (parse.nextTokens == null) return null;
-				let parses:NLParseRecord[] = [];
-				for(let nextToken of parse.nextTokens) {
-					if (nextToken.token == null) {
-						let parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), context, rule, parser, AI);
-						if (parses2 != null) parses = parses.concat(parses2);
-					} else if (nextToken.token == token) {
-						// match!
-						parses.push(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities));
-					}
-				}
-				if (parses.length == 0) return null;
-				return parses;
-			}
-			return null;
+			let  nlprl:NLParseRecord[] = this.specialfunction_token(parse, term2.attributes[0], parser.o);
+			return nlprl;
 		} else {
 			console.error("NLPattern.parse: special function "+this.term.functor+" not supported!");
 			return null;
@@ -1068,6 +1053,43 @@ class NLPattern {
 		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
 		return [parse2];
 	}
+
+
+	specialfunction_token(parse:NLParseRecord, arg:TermAttribute, o:Ontology) : NLParseRecord[]
+	{
+		if (parse.nextTokens == null) return null;
+		let parses:NLParseRecord[] = [];
+		for(let nextToken of parse.nextTokens) {
+			if (nextToken.token == null) {
+				let parses2:NLParseRecord[] = this.specialfunction_token(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), arg, o);
+				if (parses2 != null) parses = parses.concat(parses2);
+			} else {
+				let newValue:TermAttribute = new ConstantTermAttribute(nextToken.token, o.getSort("symbol"));
+				let bindings:Bindings = new Bindings();
+				if (!Term.unifyAttribute(arg, newValue, true, bindings)) return null;
+				parses.push(new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities));
+			}
+		}
+		if (parses.length == 0) return null;
+		return parses;
+		/*
+		let concatenation:string = "";
+		for(let i:number = 0;i<args.length-1;i++) {
+			if (args[i] instanceof ConstantTermAttribute) {
+				concatenation += (<ConstantTermAttribute>(args[i])).value;
+			} else {
+				return null;
+			}
+		}
+
+		let bindings:Bindings = new Bindings();
+		if (!Term.unifyAttribute(args[args.length-1], new ConstantTermAttribute(concatenation, o.getSort("symbol")), true, bindings)) {
+			return null;
+		}
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+		return [parse2];
+		*/
+	}	
 
 
 	clone(map:[TermAttribute,TermAttribute][]) : NLPattern
