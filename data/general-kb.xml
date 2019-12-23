@@ -221,6 +221,16 @@
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'etaoin'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'qwerty'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
 	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'shrdlu'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="
+		~action.open(KEY:[#id], DOOR:[#id]) ; 
+		~verb.belong(DOOR,ROOM:[#id]) ; 
+		permitted-in(D:'david'[#id], ROOM) ; 
+		relation.cause(#not(verb.can(E:'qwerty'[#id], action.give(E,D,KEY))), #not(permission-to(D, verb.access(D, ROOM))))"/>
+	<sentence provenance="background" sentence="
+		~action.open(KEY:[#id], DOOR:[#id]) ; 
+		~verb.belong(DOOR,ROOM:[#id]) ; 
+		permitted-in(D:'david'[#id], ROOM) ; 
+		relation.cause(#not(verb.can(E:'shrdlu'[#id], action.give(E,D,KEY))), #not(permission-to(D, verb.access(D, ROOM))))"/>
 
 	<!-- where can things be done -->
 	<sentence provenance="background" sentence="space.at(X,'location-powerplant'[#id]) ; ~battery(Y) ; ~verb.can(X, verb.fill(X,Y))"/>

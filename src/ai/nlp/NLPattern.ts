@@ -574,7 +574,8 @@ class NLPattern {
 					myDeterminer = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.your"))) {
 					yourDeterminer = (<TermTermAttribute>t).term;
-				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.other"))) {
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.other")) ||
+						   (<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.another"))) {
 					otherDeterminerPresent = true;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("a")) ||
 					       (<TermTermAttribute>t).term.functor.is_a(o.getSort("article.any"))) {

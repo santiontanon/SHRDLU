@@ -645,6 +645,7 @@
     <sort name="verb.change" super="verb"/>
     <sort name="verb.create" super="verb"/>
     <sort name="verb.make" super="verb"/>
+    <sort name="verb.eat" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>

@@ -276,7 +276,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1270,7 +1270,13 @@ NLParseTestUnifyingListener("what other human was in the kitchen?", o.getSort("p
 NLParseTestUnifyingListener("what other human was here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), #and(V2:space.at(V,'room1'[#id]), time.past(V2)))))");
 NLParseTestUnifyingListener("is etaoin a dead human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(human(E:'etaoin'[#id]), dead(E)))");
 NLParseTestUnifyingListener("have the crate get in the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
-*/
+NLParseTestUnifyingListener("why can you not give me the white key?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can(E:'etaoin'[#id], action.give('etaoin'[#id], '1'[#id], '4'[#id]))))");
+NLParseTestUnifyingListener("do i need a space suit?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('1'[#id], [spacesuit]))");
+NLParseTestUnifyingListener("do i need to eat", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('1'[#id], verb.eat('1'[#id])))");
+NLParseTestUnifyingListener("who is in stasis?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], Q, #and(character(Q), in-stasis(Q)))");
+
+NLParseTestUnifyingListener("is there more crates?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X, '5'[#id]), crate(X)))");
+NLParseTestUnifyingListener("is there another crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X, '5'[#id]), crate(X)))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
