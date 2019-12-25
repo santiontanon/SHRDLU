@@ -65,8 +65,9 @@ var A4_SCRIPT_REMOVEPERCEPTIONPROPERTY:number = 56;
 var A4_SCRIPT_CUTSCENE:number = 60;
 var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
+var A4_SCRIPT_IN_VEHICLE:number = 14;
 
-var A4_N_SCRIPTS:number = 69;    // #14, #15 and #29 are available
+var A4_N_SCRIPTS:number = 69;    // #15 and #29 are available
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -139,6 +140,7 @@ scriptNames[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = "removePerceptionProperty";
 scriptNames[A4_SCRIPT_CUTSCENE] = "cutScene";
 scriptNames[A4_SCRIPT_REFILLOXYGEN] = "refillOxygen";
 scriptNames[A4_SCRIPT_EMBARK_ON_GARAGE] = "embarkOnGarage"
+scriptNames[A4_SCRIPT_IN_VEHICLE] = "inVehicle";
 
 var scriptFunctions:((A4Script, A4Object, A4Map, A4Game, A4Character) => number)[] = new Array(A4_N_SCRIPTS);
 
@@ -1406,6 +1408,15 @@ scriptFunctions[A4_SCRIPT_EMBARK_ON_GARAGE] = function(script:A4Script, o:A4Obje
 }
 
 
+scriptFunctions[A4_SCRIPT_IN_VEHICLE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    let vehicle:A4Object = game.findObjectByIDJustObject(script.text);
+    if (vehicle == null) return SCRIPT_FAILED;
+    if (vehicle.findObjectByID(script.ID) == null) return SCRIPT_FAILED;
+    return SCRIPT_FINISHED;
+}
+
+
 class A4Script {
 
     constructor(type:number, ID:string, text:string, value:number, thought:boolean, wait:boolean)
@@ -1715,6 +1726,11 @@ class A4Script {
                     case A4_SCRIPT_EMBARK_ON_GARAGE:
                         break;
 
+                    case A4_SCRIPT_IN_VEHICLE:
+                        s.ID = xml.getAttribute("object");
+                        s.text = xml.getAttribute("vehicle");
+                        break;
+
                     default:
                         console.error("No loading code for script type: " + xml.tagName);
                 }
@@ -2008,6 +2024,11 @@ class A4Script {
                 break;
 
             case A4_SCRIPT_EMBARK_ON_GARAGE:
+                break;
+
+            case A4_SCRIPT_IN_VEHICLE:
+                if (this.ID!=null) xmlString += " object=\"" + this.ID + "\"";
+                if (this.text!=null) xmlString += " vehicle=\"" + this.ID + "\"";
                 break;
         }
 

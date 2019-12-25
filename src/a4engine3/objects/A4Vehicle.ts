@@ -188,10 +188,17 @@ class A4Vehicle extends A4WalkingObject {
                         // check if we need to go back to the station with the shuttle:
                         if (this.map.name == "Trantor Crater" &&
                             this.direction == A4_DIRECTION_RIGHT && this.x == 59*this.map.tileWidth) {
-                            if (!game.takeShuttleFromTrantorCrater(this)) {
-                                // we shlud never reach here!
+
+                            // Make sure Shrdlu is in the shuttle, just in case:
+                            if (this.load.indexOf(game.shrdluAI.robot) == -1) {
+                                game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
+                                                         "I cannot leave Shrdlu behind!", A4_DIRECTION_NONE, game);
+                            } else {
+                                if (!game.takeShuttleFromTrantorCrater(this)) {
+                                    // we shlud never reach here!
+                                }
+                                game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                             }
-                            game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                         }
                         break;
                     }

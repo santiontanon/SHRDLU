@@ -1274,10 +1274,12 @@ NLParseTestUnifyingListener("why can you not give me the white key?", o.getSort(
 NLParseTestUnifyingListener("do i need a space suit?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('1'[#id], [spacesuit]))");
 NLParseTestUnifyingListener("do i need to eat", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need('1'[#id], verb.eat('1'[#id])))");
 NLParseTestUnifyingListener("who is in stasis?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], Q, #and(character(Q), in-stasis(Q)))");
-
 NLParseTestUnifyingListener("is there more crates?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X, '5'[#id]), crate(X)))");
 NLParseTestUnifyingListener("is there another crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X, '5'[#id]), crate(X)))");
-
+NLParseTestUnifyingListener("does etaoin work here?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.works-at('etaoin'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("does etaoin work in the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.works-at('etaoin'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("who works here?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.works-at(X, 'room1'[#id])))");
+NLParseTestUnifyingListener("who works in the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), verb.works-at(X, 'room1'[#id])))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

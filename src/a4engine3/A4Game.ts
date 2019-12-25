@@ -2363,6 +2363,7 @@ class A4Game {
         // 1) spawn a new vehicle on the outside
         let newShuttle:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-shuttle", this, true, false);
         if (newShuttle == null) return false;
+
         newShuttle.ID = shuttle.ID;
         newShuttle.direction = A4_DIRECTION_LEFT;
         let map:A4Map = this.getMap("Trantor Crater")

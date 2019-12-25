@@ -1194,18 +1194,28 @@
 				<condition><storyStateCheck scope="game" variable="act2-datapad" value="read"/></condition>
 				<then>
 					<if>
-						<condition><storyStateCheck scope="game" variable="act" value="act2"/></condition>
+						<condition>
+							<inVehicle object="shrdlu" vehicle="garage-shuttle"/>
+						</condition>
 						<then>
-							<talkOther text="Ok! Let's go see that second distress signal!" thought="true" wait="true"/>
-							<storyState scope="game" variable="act" value="act3"/>
-							<delay cycles="1"/> <!-- The delay is to prevent a graphical glitch that shows the rover outside of the garage, before showing ACT 3 for one game frame -->
-							<cutScene cutscene="8"/>
-							<cutScene cutscene="10"/>
-							<embarkOnGarage/>
+							<if>
+								<condition><storyStateCheck scope="game" variable="act" value="act2"/></condition>
+								<then>
+									<talkOther text="Ok! Let's go see that second distress signal!" thought="true" wait="true"/>
+									<storyState scope="game" variable="act" value="act3"/>
+									<delay cycles="1"/> <!-- The delay is to prevent a graphical glitch that shows the rover outside of the garage, before showing ACT 3 for one game frame -->
+									<cutScene cutscene="8"/>
+									<cutScene cutscene="10"/>
+									<embarkOnGarage/>
+								</then>
+								<else>
+									<cutScene cutscene="8"/>
+									<embarkOnGarage/>
+								</else>
+							</if>
 						</then>
 						<else>
-							<cutScene cutscene="8"/>
-							<embarkOnGarage/>
+							<talkOther text="I don't think I should leave without Shrdlu, might come useful!" thought="true" wait="true"/>
 						</else>
 					</if>
 				</then>

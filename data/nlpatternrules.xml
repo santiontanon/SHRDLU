@@ -2278,6 +2278,46 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, SUBJECT)"/> 
 
+    <NLPattern name="perf.q.predicate-work-in-np"
+    		   head="perf.q.predicate(LISTENER, verb.works-at(SUBJECT, LOCATION))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 verb('verb.do'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, [singular], P2, C2)
+			   		 verb('verb.works-at'[symbol], N3, P3, [infinitive-tense])
+			   		 nounPhrase(X4, [singular], P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(C4, LOCATION)"/> 
+
+    <NLPattern name="perf.q.predicate-work-in-here"
+    		   head="perf.q.predicate(LISTENER, verb.works-at(SUBJECT, LOCATION))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 verb('verb.do'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X2, [singular], P2, C2)
+			   		 verb('verb.work'[symbol], N3, P3, [infinitive-tense])
+			   		 [preposition('space.at'[space.at])]
+			   		 'here'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/> 
+
+    <NLPattern name="perf.q.query-work-in-here"
+    		   head="perf.q.query(LISTENER, Q, #and(character(Q), verb.works-at(Q, LOCATION)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 'who'
+			   		 verb('verb.work'[symbol], N3, P3, [present-tense])
+			   		 [preposition('space.at'[space.at])]
+			   		 'here'
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"
+			   priority="150"/> 
+
 	<!-- Passive voice question: -->
     <NLPattern name="perf.q.predicate-passive"
     		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
@@ -2291,7 +2331,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT)
 			   		 #derefFromContext(C4, SUBJECT)"/> 
-
 
 	<NLPattern name="perf.q.action-see"
 			   head="perf.q.action(LISTENER, verb.see(SUBJECT, OBJECT))"
@@ -4717,6 +4756,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
     		         ('.'|'!')*"/>
+    <NLPattern name="perf.request.action-reprodudemedia-noun"
+    		   head="perf.request.action(LISTENER, verb.reproduce-media(LISTENER, X), #cons(NOUN:[media], X))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('verb.reproduce-media'[symbol], N2, P2, [infinitive-tense])
+    		         (['some'] noun(NOUN, [uncountable]) | 
+    		          ['some'] noun(NOUN, [plural]) | 
+    		          indefinite-article('a'[symbol], [singular]) noun(NOUN, [singular])) 
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"
+    		   priority="150"/>    		        
     <NLPattern name="perf.request.action-verb-adjective-noun"
     		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, X), #and(#cons(NOUN, X), #cons(ADJ, X)))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

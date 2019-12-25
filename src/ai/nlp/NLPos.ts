@@ -1649,6 +1649,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.arrive", "arrive","arrives","arrived","arrived","arriving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.arrive-to", "arrive to","arrives to","arrived to","arrived to","arriving to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.ask", "ask","asks","asked","asked","asking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.belong", "belong to","belongs to","belonged to","belonged to","belonging to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.bring", "bring","brings","brought","brought","bringing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.build", "build","builds","built","built","building", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.call", "call","calls","called","called","calling", false, multitokens_raw, o);
@@ -1659,6 +1660,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.create", "create","creates","created","created","creating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "charge","charges","charged","charged","charging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.change", "change","changes","changed","changed","changing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.collide-with", "collide with","collides with","collided with","collided with","colliding with", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.close", "close","closes","closed","closed","closing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.colonize", "colonize","colonizes","colonized","colonized","colonizing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.contains", "contain","contains","contained","contained","containing", false, multitokens_raw, o);
@@ -1675,6 +1677,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.do", "do","does","did","done","doing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.drop", "drop","drops","dropped","dropped","dropping", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.eat", "eat","eats","ate","eaten","eating", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.embark", "embark","embarks","embarked","embarked","embarking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "enumerate","enumerates","enumerated","enumerated","enumerating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enter", "enter","enters","entered","entered","entering", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.erase", "erase","erases","erased","erased","erasing", false, multitokens_raw, o);
@@ -1704,6 +1707,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.go-to", "go to","goes to","went to","gone to","going to", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.guide", "guide","guides","guided","guided","guiding", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.happen", "happen","happens","happened","happened","happening", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.hate", "hate","hates","hated","hated","hating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.have", "have","has","had","had","having", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.heal", "heal","heals","healed","healed","healing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.hear", "hear","hears","heard","heared","hearing", false, multitokens_raw, o);
@@ -1714,8 +1718,10 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.know-how", "know how","knows how","knew how","known how","knowing how", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
-    this.addStandardVerbPOS("action.embark", "embark","embarks","embarked","embarked","embarking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.like", "like","likes","liked","liked","liking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.enumerate", "list","lists","listed","listed","listing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.lock", "lock","locks","locked","locked","locking", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.love", "love","loves","loved","loved","loving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.seem", "look","looks","looked","looked","looking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.look-at", "look at","looks at","looked at","looked at","looking at", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.make", "make","makes","made","made","making", false, multitokens_raw, o);
@@ -1729,6 +1735,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.supervise", "oversee","oversees","oversaw","overseen","overseeing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.parse", "parse","parses","parsed","parsed","parsing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.allow", "permit","permits","permitted","permitted","permitting", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.play", "play","plays","played","played","playing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.print", "print","prints","printed","printed","printing", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.pull", "pull","pulls","pulled","pulled","pulling", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.push", "push","pushes","pushed","pushed","pushing", false, multitokens_raw, o);
@@ -1739,9 +1746,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.remember", "remember","remembers","remembered","remembered","remembering", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.fill", "refill","refills","refilled","refilled","refilling", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.repair", "repair","repairs","repaired","repaired","repairing", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.run-out-of", "run out of","runs out of","ran out of","run out of","running out of", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.save", "save","saves","saved","saved","saving", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.salvage", "salvage","salvages","salvaged","salvaged","salvaging", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.see", "see","sees","saw","seen","seeing", false, multitokens_raw, o);
@@ -1767,6 +1776,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.speak", "speak","speaks","spoke","spoke","speaking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.switch", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.understand", "understand","understands","understood","understood","understanding", false, multitokens_raw, o);
+    this.addStandardVerbPOS("action.unlock", "unlock","unlocks","unlocked","unlocked","unlocking", false, multitokens_raw, o);
     this.addStandardVerbPOS("action.use", "use","uses","used","used","using", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.walk", "walk","walks","walked","walked","walking", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.wait", "wait","waits","waited","waited","waiting", false, multitokens_raw, o);
@@ -1774,17 +1784,11 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardVerbPOS("verb.wear", "wear","wears","wore","worn","wearing", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.will", "will","will","would",null,null, true, multitokens_raw, o);
     this.addStandardVerbPOS("verb.will", "'ll","'ll","'d",null,null, true, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.work", "work","works","worked","worked","working", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.works-at", "work on","works on","worked on","worked on","working on", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.works-at", "work at","works at","worked at","worked at","working at", false, multitokens_raw, o);
+    this.addStandardVerbPOS("verb.works-at", "work in","works in","worked in","worked in","working in", false, multitokens_raw, o);
     this.addStandardVerbPOS("verb.may", "may","may","might",null,null, true, multitokens_raw, o);
-    this.addStandardVerbPOS("action.lock", "lock","locks","locked","locked","locking", false, multitokens_raw, o);
-    this.addStandardVerbPOS("action.unlock", "unlock","unlocks","unlocked","unlocked","unlocking", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.like", "like","likes","liked","liked","liking", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.love", "love","loves","loved","loved","loving", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.hate", "hate","hates","hated","hated","hating", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.play", "play","plays","played","played","playing", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.run-out-of", "run out of","runs out of","ran out of","run out of","running out of", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.collide-with", "collide with","collides with","collided with","collided with","colliding with", false, multitokens_raw, o);
-    this.addStandardVerbPOS("verb.belong", "belong to","belongs to","belonged to","belonged to","belonging to", false, multitokens_raw, o);
 
     // I only define as phrasal verbs those for which there might be something in between the verb and the preposision, otherwise,
     // they are just regular verbs:
