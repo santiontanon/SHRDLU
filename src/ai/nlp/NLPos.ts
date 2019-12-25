@@ -474,6 +474,9 @@ class POSParser {
       //"the tardis bridge",
       "tardis 8 bridge",
       //"the tardis 8 bridge",
+      "strange dust",
+      "weird dust",
+      "luminiscent dust",
 
       // adjectives:
       "in stasis",
@@ -1135,6 +1138,15 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addStandardNounPOS("printer", "3dprinter", o, multitokens_raw);
     this.addStandardNounPOS("plastic printer", "plastic-3dprinter", o, multitokens_raw);
     this.addStandardNounPOS("metal printer", "metal-3dprinter", o, multitokens_raw);
+    this.addTokenPOS(new PartOfSpeech("strange dust", "dust", Term.fromString("noun('dust'[dust], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("strange dust", "dust", Term.fromString("noun('dust'[dust], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("strange dust", "dust", Term.fromString("noun('dust'[dust], [uncountable])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("weird dust", "dust", Term.fromString("noun('dust'[dust], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("weird dust", "dust", Term.fromString("noun('dust'[dust], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("weird dust", "dust", Term.fromString("noun('dust'[dust], [uncountable])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("luminiscent dust", "dust", Term.fromString("noun('dust'[dust], [singular])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("luminiscent dust", "dust", Term.fromString("noun('dust'[dust], [plural])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("luminiscent dust", "dust", Term.fromString("noun('dust'[dust], [uncountable])", o), 1.0));
 
     // nouns:
     this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);

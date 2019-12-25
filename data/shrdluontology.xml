@@ -286,6 +286,7 @@
     <sort name="fungi" super="living-being"/>
 
     <sort name="dust" super="item"/>
+    <sort name="luminiscent-dust" super="dust"/>
     <sort name="mineral" super="item"/>
     <sort name="bottle" super="item"/>
     <sort name="card" super="item"/>

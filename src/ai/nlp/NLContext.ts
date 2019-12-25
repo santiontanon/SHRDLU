@@ -899,7 +899,7 @@ class NLContext {
 								}
 							} else if (determinerTerm.functor.name == "a") {
 //								a_determiner = true;
-								console.log("context.deref: determiner " + determinerTerm + " is invalid in contex dereference!");
+//								console.log("context.deref: determiner " + determinerTerm + " is invalid in contex dereference!");
 								return null;
 							} else {
 								console.log("context.deref: determiner " + determinerTerm + " not yet supported!");
@@ -915,18 +915,6 @@ class NLContext {
 							return null;
 						}
 
-						// if we are asking about "other" things, then we refer to those "other than" those we were just talking about,
-						// thus, remove all matches from short term memory or mentions:
-						if (other_determiner) {
-							for(let e of entities_mpl[0]) {
-								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
-							}
-							for(let e of entities_mpl[1]) {
-								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
-							}
-							entities_mpl[0] = [];
-							entities_mpl[1] = [];
-						}
 						//console.log("entities_mpl: " + entities_mpl);
 						// adjectives:
 						for(let adjectiveTerm of adjectiveTerms) {
@@ -1037,7 +1025,7 @@ class NLContext {
 							entities_mpl[2].length == 0) {
 							this.lastDerefErrorType = DEREF_ERROR_NO_REFERENTS;
 							return null;
-						}
+						}					
 
 						if (this_determiner || that_determiner) {
 							// remove both the speaker and listener:
@@ -1068,6 +1056,21 @@ class NLContext {
 								});
 						}
 
+						/*
+						// if we are asking about "other" things, then we refer to those "other than" those we were just talking about,
+						// thus, remove all matches from short term memory or mentions:
+						if (other_determiner) {
+							for(let e of entities_mpl[0]) {
+								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+							}
+							for(let e of entities_mpl[1]) {
+								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+							}
+							entities_mpl[0] = [];
+							entities_mpl[1] = [];
+						}
+						*/	
+
 //						console.log("Before determiners: \nM: " + entities_mpl[0] + "\nP: " + entities_mpl[1] + "\nL: " + entities_mpl[2]);
 //						if (determinerTerms.length > 0) {
 //							console.log("Context: \nM:" + this.mentions + "\nP:" + this.shortTermMemory);
@@ -1076,7 +1079,53 @@ class NLContext {
 						// If there is no determiners, assume a "the":
 						if (determinerTerms.length == 0) the_determiner = true;
 						let entities:NLContextEntity[] = null;
-						if (the_determiner) {
+						if (other_determiner) {
+							if (the_determiner) {
+								// first easy case: discard the speaker and listener, and see if that leaves already just 1:
+								let candidatesEliminated:boolean = false;
+								let entitiesButListenerAndSpeaker:NLContextEntity[] = [];
+								for(let e_l of entities_mpl) {
+									for(let e of e_l) {
+										if (e.objectID.value == this.speaker ||
+											e.objectID.value == this.ai.selfID) {
+											candidatesEliminated = true;
+										} else {
+											entitiesButListenerAndSpeaker.push(e);
+										}
+									}
+								}
+								if (candidatesEliminated && entitiesButListenerAndSpeaker.length == 1) {
+									entities = entitiesButListenerAndSpeaker;
+								} else {
+									let toDiscard:NLContextEntity[] = this.applySingularTheDeterminer(entities_mpl);
+									if (toDiscard.length > 0) {
+										let e:NLContextEntity = toDiscard[0];
+										if (entities_mpl[0].indexOf(e) != -1) entities_mpl[0].splice(entities_mpl[0].indexOf(e),1);
+										if (entities_mpl[1].indexOf(e) != -1) entities_mpl[1].splice(entities_mpl[1].indexOf(e),1);
+										if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+										if (singular) {
+											entities = this.applySingularTheDeterminer(entities_mpl);
+										} else {
+											entities = entities_mpl[0].concat(entities_mpl[1]).concat(entities_mpl[2]);
+										}
+									}
+								}
+							} else {
+								for(let e of entities_mpl[0]) {
+									if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+								}
+								for(let e of entities_mpl[1]) {
+									if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+								}
+								entities_mpl[0] = [];
+								entities_mpl[1] = [];
+								if (singular) {
+									entities = this.applySingularTheDeterminer(entities_mpl);
+								} else {
+									entities = entities_mpl[2];
+								}
+							}
+						} else if (the_determiner) {
 							if (singular) {
 								entities = this.applySingularTheDeterminer(entities_mpl);
 							} else {
@@ -1176,20 +1225,22 @@ class NLContext {
 							// if there is no determiner, then this should not be a context dereference ...
 							entities = entities_mpl[0].concat(entities_mpl[1]).concat(entities_mpl[2]);
 						}
-						entities = removeListDuplicates(entities);
-						// consider grammatical number:
-						if (entities.length == 1) {
-							output.push(entities[0].objectID);
-						} else if (entities.length > 1) {
-							if (singular) {
-//								 console.log("NLContext.deref noun: more than one entity matches a singular noun constraint ("+nameSort.name+"): " + entities);
-							} else {
-								for(let e of entities) {
-									output.push(e.objectID);
+						if (entities != null) {
+							entities = removeListDuplicates(entities);
+							// consider grammatical number:
+							if (entities.length == 1) {
+								output.push(entities[0].objectID);
+							} else if (entities.length > 1) {
+								if (singular) {
+	//								 console.log("NLContext.deref noun: more than one entity matches a singular noun constraint ("+nameSort.name+"): " + entities);
+								} else {
+									for(let e of entities) {
+										output.push(e.objectID);
+									}
 								}
+							} else {
+	//							console.log("NLContext.deref noun: no entity matches the noun constraint ("+nameSort.name+")");
 							}
-						} else {
-//							console.log("NLContext.deref noun: no entity matches the noun constraint ("+nameSort.name+")");
 						}
 						/*
 						if (determinerTerms.length > 0) {
@@ -1230,7 +1281,31 @@ class NLContext {
 				msl[0][1].mentionTime) {
 				return [msl[0][0]];
 			} else {
-				// the two closest entities were mentioned at the same time, we cannot disambiguate!
+				// the two closest entities were mentioned at the same time, we cannot disambiguate just by time, try to disambiguate by distnace!
+				let best:NLContextEntity = null;
+				let newBest:boolean = false;
+				for(let e of msl[0]) {
+					if (best == null) {
+						best = e;
+					} else {
+						if (e.mentionTime < best.mentionTime) {
+							best = e;
+							newBest = true;
+						} else if (e.mentionTime == best.mentionTime) {
+							if (e.distanceFromSpeaker != null && best.distanceFromSpeaker != null) {
+								if (e.distanceFromSpeaker < best.distanceFromSpeaker) {
+									best = e;
+									newBest = true;
+								} else if (e.distanceFromSpeaker == best.distanceFromSpeaker) {
+									newBest = false;
+								}
+							} else {
+								return [];
+							}
+						}
+					}
+				}
+				if (best != null && newBest) return [best];
 				return [];
 			}
 		} else if (msl[1].length==1) {
@@ -1398,12 +1473,12 @@ class NLContext {
 	{
 		let results_mpl:NLContextEntity[][] = [];
 		let results:NLContextEntity[] = [];
-		let any_match:boolean = false;
+//		let any_match:boolean = false;
 
 		for(let entity of this.mentions) {
 			if (entity.sortMatch(sort)) {
 				results.push(entity);
-				any_match = true;
+				//any_match = true;
 			}
 		}
 		results_mpl.push(results);
@@ -1411,16 +1486,16 @@ class NLContext {
 		for(let entity of this.shortTermMemory) {
 			if (entity.sortMatch(sort)) {
 				results.push(entity);
-				any_match = true;
+//				any_match = true;
 			}
 		}
 		results_mpl.push(results);
 
-		if (any_match) {
+//		if (any_match) {
 			// if we have found something on shortTermMemory or mentions, do not check for long-term memory:
-			results_mpl.push([]);
-			return results_mpl;
-		}
+//			results_mpl.push([]);
+//			return results_mpl;
+//		}
 
 		results = [];
 		for(let s of this.ai.longTermMemory.allSingleTermMatches(sort, 1, o)) {
