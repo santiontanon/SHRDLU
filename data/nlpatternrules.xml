@@ -214,7 +214,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'.')* #derefFromContext(C, SUBJECT)"/>
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' ['very'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'.')* #derefFromContext(C, SUBJECT)"/>
 
 	<NLPattern name="inform-X-is-adj-property-with-value"
 			   head="perf.inform(LISTENER, #cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]))"

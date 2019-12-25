@@ -1130,7 +1130,7 @@ class RuleBasedAI {
 
 				if (needsInference) {
 					// this means that the action request has a variable and we need to start an inference process:
-					let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
+					let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");
 					let target1Terms:Term[] = [];
 					let target1Signs:boolean[] = [];
 					for(let i:number = 0;i<intention_l.length;i++) {

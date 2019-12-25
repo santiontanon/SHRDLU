@@ -1897,6 +1897,7 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
     this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("thirsty", "thirsty", Term.fromString("adjective('thirsty'[thirsty])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("uncharged", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("useful", "useful", Term.fromString("adjective('useful'[useful])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("yellow", "yellow", Term.fromString("adjective('yellow'[yellow])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("warm", "hot", Term.fromString("adjective('hot'[hot])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("west", "west", Term.fromString("adjective('west'[west])", o), 1.0));
@@ -2176,6 +2177,16 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
             tokens.splice(i+1,1);
         }
     }
+
+    for(let i:number = 0;i<tokens.length-2;i++) {
+        if (tokens[i] == "isn" &&
+            tokens[i+1] == "'" &&
+            tokens[i+2] == "t") {
+            tokens[i] = "is";
+            tokens[i+1] = "not";
+            tokens.splice(i+2,1);
+        }
+    }    
 
     for(let i:number = 0;i<tokens.length-2;i++) {
         if (tokens[i] == "don" &&

@@ -597,7 +597,7 @@
     <sort name="verb.repair" super="verb"/>
     <sort name="verb.detect" super="verb"/>
     <sort name="verb.see" super="verb.detect"/>
-    <sort name="verb.look-at" super="verb.see"/>
+    <sort name="verb.look-at" super="verb"/>
     <sort name="verb.analyze" super="verb"/>
     <sort name="verb.examine" super="verb.look-at,verb.analyze"/>
     <sort name="verb.run" super="verb.go"/>
@@ -978,6 +978,7 @@
     <sort name="property.sighted" super="property,#stateSort"/>
     <sort name="colonist" super="property"/>
     <sort name="automatic" super="property"/>
+    <sort name="useful" super="property"/>
 
     <sort name="alive" super="property,#stateSort"/>
     <sort name="dead" super="property"/>

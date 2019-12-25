@@ -339,8 +339,6 @@ class ShrdluGameScript {
 
 		let dust1:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
 		this.game.currentPlayer.inventory.push(dust1);
-		let dust2:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
-		this.game.currentPlayer.inventory.push(dust2);
 	}
 
 

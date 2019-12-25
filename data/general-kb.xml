@@ -157,9 +157,7 @@
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="disembodied-ai('etaoin'[#id])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'etaoin'[symbol])"/>
-	<!--sentence provenance="background" sentence="name('etaoin'[#id],'ai'[symbol])"/-->
 	<sentence provenance="background" sentence="name('etaoin'[#id],'station ai'[symbol])"/>
-	<!--sentence provenance="background" sentence="name('etaoin'[#id],'artificial intelligence'[symbol])"/-->
 	<sentence provenance="background" sentence="profession('etaoin'[#id],'location-aurora-station'[#id],'supervisor'[supervisor])"/>
 	<sentence provenance="background" sentence="space.inside.of('etaoin'[#id],'location-aurora-station'[#id])"/>
 	<sentence provenance="background" sentence="memory-bank('etaoin-memory'[#id])"/>
@@ -170,6 +168,7 @@
 	<sentence provenance="background" sentence="verb.supervise('etaoin'[#id],'shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="verb.do('etaoin'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="good('etaoin'[#id])"/>
+	<sentence provenance="background" sentence="useful('etaoin'[#id])"/>
 
 	<sentence provenance="background" sentence="qwerty('qwerty'[#id])"/>
 	<sentence provenance="background" sentence="body('qwerty-body'[#id])"/>
@@ -184,6 +183,7 @@
 	<sentence provenance="background" sentence="verb.do('qwerty'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="verb.have('qwerty'[#id],'qwerty-body'[#id])"/>
 	<sentence provenance="background" sentence="good('qwerty'[#id])"/>
+	<sentence provenance="background" sentence="useful('qwerty'[#id])"/>
 
 	<sentence provenance="background" sentence="robot('shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="body('shrdlu-body'[#id])"/>
@@ -198,6 +198,7 @@
 	<sentence provenance="background" sentence="verb.do('shrdlu'[#id],'nothing'[nothing])"/>
 	<sentence provenance="background" sentence="verb.have('shrdlu'[#id],'shrdlu-body'[#id])"/>
 	<sentence provenance="background" sentence="good('shrdlu'[#id])"/>
+	<sentence provenance="background" sentence="useful('shrdlu'[#id])"/>
 
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id])"/>
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id],'location-aurora-station'[#id])"/>
@@ -267,6 +268,13 @@
 	<sentence provenance="background" sentence="relation.howto(action.print(X), verb.ask(X, 'etaoin'[#id]))"/>
 	<sentence provenance="background" sentence="relation.howto(action.print(X, Y), verb.ask(X, 'etaoin'[#id]))"/>
 	<sentence provenance="background" sentence="relation.howto(verb.read(X, Y), action.put-in(X, Y, [console]))"/>
+	<sentence provenance="background" sentence="relation.howto(verb.analyze(X, Y), action.put-in(X, Y, [microscope]))"/>
+	<sentence provenance="background" sentence="relation.howto(verb.examine(X, Y), action.put-in(X, Y, [microscope]))"/>
+	<sentence provenance="background" sentence="~shuttle(SS) ; relation.howto(verb.repair(X, SS), verb.tell(X, perf.request.action(Q:'shrdlu'[#id], verb.repair(Q, SS)), Q))"/>
+
+	<sentence provenance="background" sentence="~3dprinter(SS) ; relation.howto(action.use(X, SS), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
+	<sentence provenance="background" sentence="relation.howto(action.use(X, [3dprinter]), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
+
 
 	<!-- what can things do -->
 	<!--sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/-->
