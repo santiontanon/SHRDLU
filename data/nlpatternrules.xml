@@ -1565,7 +1565,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C4, OBJECT)"/>
 
-	<!-- this is a special case, where the meaning is clearly to ask permission to take something -->
 	<NLPattern name="perf.q.action-can-take-propernoun"
 			   head="perf.q.action(LISTENER, action.take(SUBJECT, OBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -3998,6 +3997,22 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         ('.'|'!')*
     		         #derefFromContext(CO2, SUBJECT)
     		         #derefFromContext(CO3, OBJECT)"/>
+
+    <NLPattern name="need-permission-to-np"
+    		   head="perf.request.action(LISTENER, action.give(LISTENER, SUBJECT, permission-to(SUBJECT, #cons(VERB, SUBJECT, LOCATION))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 nounPhrase(X2, N2, P2, CO2)
+    		   		 verb('verb.need'[symbol], N, P, T)
+    		         preposition('permission-to'[permission-to])
+    		         verb(VERB, N4, P4, T4)
+    		         nounPhrase(X3, N3, P3, CO3) 
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*
+    		         #derefFromContext(CO2, SUBJECT)
+    		         #derefFromContext(CO3, LOCATION)"/>
 
     <NLPattern head="perf.q.action(LISTENER, verb.define(LISTENER,NOUN))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

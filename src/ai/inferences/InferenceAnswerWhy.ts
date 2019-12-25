@@ -41,6 +41,24 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
+		} else if (inf.inferences[1].endResults.length != 0) {
+			let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[1].originalTarget, inf.inferences[1].endResults[0], ai);
+			let causeTerm:Term = causeRecord.term;
+			let causeTerms:Term[] = [];
+			if (causeTerm.functor.name == "#and") {
+				let tal:TermAttribute[] = NLParser.elementsInList(causeTerm,"#and");
+				for(let ta of tal) {
+					if (ta instanceof TermTermAttribute) {
+						causeTerms.push((<TermTermAttribute>ta).term);
+					}
+				}
+			} else {
+				causeTerms = [causeTerm];
+			}
+			for(let causeTerm2 of causeTerms) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id], relation.cause([any],"+causeTerm2+")))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
 		} else {
 			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));

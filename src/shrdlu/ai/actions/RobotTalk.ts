@@ -12,6 +12,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
+		let needToSpecifyListener:boolean = false; 
 		let txt:string = null;
 		let performative:Term = (<TermTermAttribute>(intention.attributes[1])).term;
 		let context:NLContext = null;
@@ -34,9 +35,14 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				if (!context.inConversation &&
 					performative.functor.name != "perf.callattention" &&
 					performative.functor.name != "perf.greet") {
-					// we need to greet first:
-					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
-					ai.queueIntentionRecord(ir);
+					needToSpecifyListener = true;
+				}
+
+				for(let c of ai.contexts) {
+					if (c!=context && c.inConversation) {
+						needToSpecifyListener = true;
+						c.inConversation = false;	// terminate the other conversations
+					}
 				}
 
 				if (requester instanceof ConstantTermAttribute &&
@@ -46,7 +52,11 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				}
 
 				console.log(ai.selfID + " trying to say: " + performative);
-				txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, null, context);
+				if (needToSpecifyListener) {
+					txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, <ConstantTermAttribute>performative.attributes[0], context);
+				} else {
+					txt = ai.game.naturalLanguageGenerator.termToEnglish(performative, ai.selfID, null, context);
+				}
 				txt = ai.game.naturalLanguageGenerator.capitalize(txt);
 			}
 		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {

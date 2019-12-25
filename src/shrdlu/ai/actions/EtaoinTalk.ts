@@ -28,15 +28,13 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 				if (!context.inConversation &&
 					performative.functor.name != "perf.callattention" &&
 					performative.functor.name != "perf.greet") {
-					// we need to greet first:
-					performative = Term.fromString("perf.callattention('"+targetID+"'[#id])",ai.o);
-					ai.queueIntentionRecord(ir);
-				} else {
-					for(let c of ai.contexts) {
-						if (c!=context && c.inConversation) {
-							needToSpecifyListener = true;
-							c.inConversation = false;	// terminate the other conversations
-						}
+					needToSpecifyListener = true;
+				}
+
+				for(let c of ai.contexts) {
+					if (c!=context && c.inConversation) {
+						needToSpecifyListener = true;
+						c.inConversation = false;	// terminate the other conversations
 					}
 				}
 

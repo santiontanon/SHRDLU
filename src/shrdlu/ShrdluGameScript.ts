@@ -27,7 +27,7 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		//if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			//this.skip_to_end_of_act_1();
@@ -36,11 +36,11 @@ class ShrdluGameScript {
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
-			this.skip_to_end_of_act_2();
+			//this.skip_to_end_of_act_2();
 			//this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
 			//this.skip_to_act_3_back_from_tardis();
-		}
+		//}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -1259,6 +1259,12 @@ class ShrdluGameScript {
 			if (this.act_1_asked_about_being_alone_to_qwerty &&
 				this.game.etaoinAI.inferenceProcesses.length == 0 &&
 				this.game.qwertyAI.inferenceProcesses.length == 0) this.act_1_state = 13;
+			if (this.act_1_state == 11 && this.act_1_state_timer == 3600) {
+				// after a while, remind the player to actually ask Etaoin about being alone:
+				this.act_1_state_timer = 0;
+				this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
+															   "I still think I should ask Etaoin whether there is any other human in this station...", A4_DIRECTION_NONE, this.game);
+			}
 			break;
 
 		case 12:

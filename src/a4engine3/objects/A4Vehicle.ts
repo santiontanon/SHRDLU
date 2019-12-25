@@ -195,9 +195,10 @@ class A4Vehicle extends A4WalkingObject {
                                                          "I cannot leave Shrdlu behind!", A4_DIRECTION_NONE, game);
                             } else {
                                 if (!game.takeShuttleFromTrantorCrater(this)) {
-                                    // we shlud never reach here!
+                                    game.addMessage("There is something in the garage blocking the parking spot!");
+                                } else {
+                                    game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                                 }
-                                game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                             }
                         }
                         break;

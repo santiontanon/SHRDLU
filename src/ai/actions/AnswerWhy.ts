@@ -87,7 +87,39 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 									   new VariableTermAttribute(ai.o.getSort("any"),"CAUSE")]);
 			// negate the query:
 			let negated_s:Sentence = new Sentence([query],[false]);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, false, null, new AnswerWhy_InferenceEffect(intention), ai.o));
+			let negated_toExplain:Sentence = new Sentence([],[]);
+
+			// Second inference objective (negate "toExplain"):
+			{
+				let s_l:Sentence[] = Term.termToSentences(toExplain, ai.o);
+				let toDelete:Sentence[] = [];
+				//let timeTerm:Term = null;
+				for(let s of s_l) {
+					if (s.terms.length == 1 && 
+						(s.terms[0].functor.is_a(ai.o.getSort("time.past")) ||
+						 s.terms[0].functor.is_a(ai.o.getSort("time.present")) ||
+						 s.terms[0].functor.is_a(ai.o.getSort("time.future")))) {
+						//timeTerm = s.terms[0];	// TODO: for now, we assume there is only one
+						toDelete.push(s);
+					}
+				}
+				for(let s of toDelete) {
+					s_l.splice(s_l.indexOf(s), 1);
+				}
+				
+				for(let s of s_l) {
+					let tmp:Sentence[] = s.negate();
+					if (tmp == null || tmp.length != 1) {
+						console.error("executeIntention answer predicate: cannot negate query!: " + intention);		
+						return true;
+					}
+					negated_toExplain.terms = negated_toExplain.terms.concat(tmp[0].terms);
+					negated_toExplain.sign = negated_toExplain.sign.concat(tmp[0].sign);
+				}
+				console.log("executeIntention answer why: negated_toExplain = " + negated_toExplain);
+			}
+
+			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s],[negated_toExplain]], 1, 0, false, null, new AnswerWhy_InferenceEffect(intention), ai.o));
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);

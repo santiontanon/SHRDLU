@@ -50,10 +50,10 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 								  intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) return true;
 
 		// negate the query:
-		var negated_s:Sentence = new Sentence([],[]);
+		let negated_s:Sentence = new Sentence([],[]);
 		for(let s of s_l) {
 			if (s.getAllVariables().length > 0) variablesPresent = true;
-			var tmp:Sentence[] = s.negate();
+			let tmp:Sentence[] = s.negate();
 			if (tmp == null || tmp.length != 1) {
 				console.error("executeIntention answer predicate: cannot negate query!: " + intention);		
 				return true;
@@ -106,12 +106,12 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 			if (TimeInference.timeMatch(ai.time_in_seconds, kbTime0, kbTime1, timeTerm)) {
 				if (sign == kbSign) {
 					// answer yes
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 					return true;
 				} else {
 					// answer no
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 					return true;
 				}
