@@ -270,6 +270,8 @@
     <sort name="leg" super="body-part"/> 
     <sort name="foot" super="body-part"/> 
 
+    <sort name="match" super="abstract-entity"/> 
+
     <sort name="life" super="abstract-entity"/> 
 
     <sort name="ai" super="character"/>

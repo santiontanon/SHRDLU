@@ -5146,6 +5146,42 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
     		         ('.'|'!')*"/>
 
+    <NLPattern name="perf.request.action-go-direction-far"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], [space.far]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, P2, [infinitive-tense])
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
+    		         adverb('space.far'[space.far])
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"/>
+
+    <NLPattern name="perf.request.action-go-direction-twice"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], '2'[number]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, P2, [infinitive-tense])
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
+    		         'twice'
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"/>
+
+    <NLPattern name="perf.request.action-go-direction-n-times"
+    		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], NUMBER))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb(V2, N2, P2, [infinitive-tense])
+    		         (adverb(LSYMBOL)|[('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular])) #symbolToSort(LSYMBOL,LSORT)
+    		         cardinal(NUMBER) 'times'
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"/>
+
     <NLPattern name="perf.q.action-go-direction"
     		   head="perf.q.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -5381,13 +5417,24 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)"/>
     <NLPattern name="perf.q.howmany-X-are-Y2"
-    		   head="perf.q.howmany(LISTENER, V, #and(#cons(A_PARENT:[property-with-value], V, A:[property-with-value]), QUERY))"			
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(A_PARENT:[property-with-value], V, A:[property-with-value]), QUERY))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
 		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) #sortParent(A, A_PARENT) ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)"
 		   	   priority="200"/>
+    <NLPattern name="perf.q.howmany-X-in-Y"
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(NOUN,V),space.at(V,LOC)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' 
+		   		 	 noun(NOUN,N)
+		   		 	 [verb('verb.be'[symbol], N2, P2, [present-tense]) 'there']
+		   		 	 (preposition('space.at'[space.at])|'on')
+		   		 	 nounPhrase(X3, N3, P3, C3)
+		   		 	 ('!'|'?')* 
+		   		 	 #derefFromContext(C3, LOC)"/>
 
  	<!-- perf.q.when patterns --> 
     <NLPattern name="perf.q.when-action"

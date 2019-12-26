@@ -239,6 +239,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 					(intention.attributes[2] instanceof VariableTermAttribute)) {
 					if (intention.attributes[2].sort.is_a_string("small-amount")) movementAmount = 1;
 					if (intention.attributes[2].sort.is_a_string("large-amount")) movementAmount = 8;
+					if (intention.attributes[2].sort.is_a_string("space.far")) movementAmount = 8;
+				} else if (intention.attributes.length == 3 && 
+						   intention.attributes[2].sort.is_a_string("number") && 
+						   intention.attributes[2] instanceof ConstantTermAttribute) {
+					movementAmount = Number((<ConstantTermAttribute>intention.attributes[2]).value) * 4;
 				}
 				this.targetx = null;
 				this.targety = null;

@@ -1378,6 +1378,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("men", "man", Term.fromString("noun('man'[man], [plural])", o), 1.0));
   this.addStandardNounPOS("map", "map", o, multitokens_raw);
   this.addStandardNounPOS("master key", "master-key", o, multitokens_raw);
+  this.addTokenPOS(new PartOfSpeech("match", "match", Term.fromString("noun('match'[match], [singular])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("matches", "match", Term.fromString("noun('match'[match], [plural])", o), 1.0));
   this.addStandardNounPOS("material", "material", o, multitokens_raw);
   this.addStandardNounPOS("mathematician", "mathematician", o, multitokens_raw);
   this.addUncountableNounPOS("media", "media", o);
@@ -1932,6 +1934,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("there", "space.there", Term.fromString("adverb('space.there'[space.there])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("aside", "space.away", Term.fromString("adverb('space.away'[space.away])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("away", "space.away", Term.fromString("adverb('space.away'[space.away])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("far", "space.far", Term.fromString("adverb('space.far'[space.far])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("forward", "forward", Term.fromString("adverb('forward'[forward])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("straight", "forward", Term.fromString("adverb('forward'[forward])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("backwards", "backward", Term.fromString("adverb('backward'[backward])", o), 1.0));
@@ -1945,6 +1948,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("out of the way", "space.away", Term.fromString("adverb('space.away'[space.away])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("out of here", "space.away", Term.fromString("adverb('space.away'[space.away])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("later", "time.later", Term.fromString("adverb('time.later'[time.later])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("near", "space.near", Term.fromString("adverb('space.near'[space.near])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("never", "time.never", Term.fromString("adverb('time.never'[time.never])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("right now", "time.now", Term.fromString("adverb('time.now'[time.now])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("now", "time.now", Term.fromString("adverb('time.now'[time.now])", o), 1.0));
