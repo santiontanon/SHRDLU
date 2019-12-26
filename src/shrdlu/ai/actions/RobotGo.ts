@@ -3,7 +3,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
 		if ((intention.functor.is_a(ai.o.getSort("verb.go")) ||
-			 intention.functor.is_a(ai.o.getSort("verb.move"))) && 
+			intention.functor.is_a(ai.o.getSort("verb.move-to")) ||
+			 (intention.functor.is_a(ai.o.getSort("verb.move")) &&
+			  intention.attributes.length >= 2 &&
+			  (intention.attributes[1] instanceof VariableTermAttribute))) && 
 			!intention.functor.is_a(ai.o.getSort("verb.leave"))) {
 			return true;
 		}

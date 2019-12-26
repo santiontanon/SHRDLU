@@ -5123,6 +5123,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #symbolToSort(LSYMBOL,LSORT)"
     		   priority="200"/>
 
+    <NLPattern name="perf.request.action-move-to-direction"
+    		   head="perf.request.action(LISTENER, verb.move-to(LISTENER, LSORT:[direction]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         verb('verb.move-to'[symbol], N2, P2, [infinitive-tense])
+    		         (adverb(LSYMBOL)|['the'] noun(LSYMBOL, [singular])) 
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')* 
+    		         #symbolToSort(LSYMBOL,LSORT)"
+    		   priority="250"/>    		   
+
     <NLPattern name="perf.request.action-go-direction-amount"
     		   head="perf.request.action(LISTENER, #cons(V2, LISTENER, LSORT:[direction], ASORT:[amount]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

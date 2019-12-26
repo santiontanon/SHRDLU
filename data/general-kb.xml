@@ -257,7 +257,6 @@
 	<sentence provenance="background" sentence="~light(Y) ; relation.howto(verb.switch-off(X, Y), verb.can(E:'etaoin'[#id], verb.switch-off(E, Y)))"/>
 	<sentence provenance="background" sentence="permitted-in(X, Y) ; relation.howto(verb.access(X, Y), verb.need(X, permission-to(X, verb.access(X, Y))))"/> 
 	<sentence provenance="background" sentence="~permitted-in(X, Y) ; ~action.open(KEY, Y) ; relation.howto(verb.access(X, Y), verb.need(X, KEY))"/>
-	<sentence provenance="background" sentence="~object(Y) ; relation.howto(verb.analyze(X, Y), action.use(X, [microscope]))"/>
 	<sentence provenance="background" sentence="relation.howto(verb.repair(X, SS:[datapad]), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
 	<sentence provenance="background" sentence="~datapad(SS) ; relation.howto(verb.repair(X, SS), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>
 	<sentence provenance="background" sentence="relation.howto(action.talk(X, 'etaoin'[#id]), verb.need(X, 'communicator'[#id]))"/>
@@ -267,10 +266,12 @@
 	<sentence provenance="background" sentence="~verb.need(X, verb.help(Y, X, Z)) ; relation.howto(verb.help(Y, X), Z)"/>
 	<sentence provenance="background" sentence="relation.howto(action.print(X), verb.ask(X, 'etaoin'[#id]))"/>
 	<sentence provenance="background" sentence="relation.howto(action.print(X, Y), verb.ask(X, 'etaoin'[#id]))"/>
-	<sentence provenance="background" sentence="relation.howto(verb.read(X, Y), action.put-in(X, Y, [console]))"/>
-	<sentence provenance="background" sentence="relation.howto(verb.analyze(X, Y), action.put-in(X, Y, [microscope]))"/>
-	<sentence provenance="background" sentence="relation.howto(verb.examine(X, Y), action.put-in(X, Y, [microscope]))"/>
+	<sentence provenance="background" sentence="~dust(Y) ; relation.howto(verb.analyze(X, Y), action.put-in(X, Y, [microscope]))"/>
+	<sentence provenance="background" sentence="~dust(Y) ; relation.howto(verb.examine(X, Y), action.put-in(X, Y, [microscope]))"/>
 	<sentence provenance="background" sentence="~shuttle(SS) ; relation.howto(verb.repair(X, SS), verb.tell(X, perf.request.action(Q:'shrdlu'[#id], verb.repair(Q, SS)), Q))"/>
+	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.read(X, Y), action.put-in(X, Y, [console]))"/>
+	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.analyze(X, Y), action.put-in(X, Y, [console]))"/>
+	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.examine(X, Y), action.put-in(X, Y, [console]))"/>
 
 	<sentence provenance="background" sentence="~3dprinter(SS) ; relation.howto(action.use(X, SS), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
 	<sentence provenance="background" sentence="relation.howto(action.use(X, [3dprinter]), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>

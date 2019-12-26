@@ -1749,6 +1749,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.malfunction", "malfunction","malfunctions","malfunctioned","malfunctioned","malfunctioning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.mean", "mean","means","meant","meant","meaning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.move", "move","moves","moved","moved","moving", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.move-to", "move to","moves to","moved to","moved to","moving to", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.need", "need","needs","needed","needed","needing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "obtain","obtains","obtained","obtained","obtaining", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.open", "open","opens","opened","opened","opening", false, multitokens_raw, o);

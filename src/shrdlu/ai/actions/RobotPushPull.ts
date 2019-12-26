@@ -3,7 +3,10 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.push")) ||
-			intention.functor.is_a(ai.o.getSort("action.pull"))) return true;
+			intention.functor.is_a(ai.o.getSort("action.pull")) ||
+			(intention.functor.is_a(ai.o.getSort("verb.move")) &&
+			  intention.attributes.length >= 2 &&
+			  (intention.attributes[1] instanceof ConstantTermAttribute))) return true;
 		return false;
 	}
 
@@ -153,10 +156,10 @@ class RobotPushPull_IntentionAction extends IntentionAction {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = null
         
-        if (intention.functor.is_a(ai.o.getSort("action.push"))) {
-        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
-        } else {
+        if (intention.functor.is_a(ai.o.getSort("action.pull"))) {
 			s = new A4Script(A4_SCRIPT_PULL, targetObject.ID, null, targetDirection, false, false);
+        } else {
+        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
         }
         q.scripts.push(s);
         ai.setNewAction(intention, requester, q, null);

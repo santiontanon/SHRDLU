@@ -591,6 +591,7 @@
     <sort name="verb.hear" super="verb"/>
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
+    <sort name="verb.move-to" super="verb"/>
     <sort name="verb.need" super="verb,#stateSort"/>
     <sort name="verb.need-for" super="verb"/>
     <sort name="verb.obtain" super="verb"/>

@@ -2,7 +2,9 @@ class EtaoinRead_IntentionAction extends IntentionAction {
 
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
-		if (intention.functor.is_a(ai.o.getSort("verb.read")) &&
+		if ((intention.functor.is_a(ai.o.getSort("verb.analyze")) ||
+			 intention.functor.is_a(ai.o.getSort("verb.examine")) ||
+			 intention.functor.is_a(ai.o.getSort("verb.read"))) &&
 			intention.attributes.length >= 2) {
 			let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 			if (targetID == "tardis-memory-core") {
