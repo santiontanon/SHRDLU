@@ -660,6 +660,7 @@
     <sort name="action.talk" super="actionverb"/>
     <sort name="verb.speak" super="action.talk"/>
     <sort name="verb.tell" super="action.talk"/>
+    <sort name="verb.instruct" super="verb.tell"/>
     <sort name="verb.ask" super="action.talk"/>
     <sort name="action.take" super="actionverb"/>
     <sort name="action.give" super="actionverb"/>

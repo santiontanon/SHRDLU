@@ -2238,6 +2238,9 @@ class NLGenerator {
 			}
 		}
 
+		//console.log("entities: " + entities);
+		//console.log("entity_properties: " + entity_properties);
+
 		let outputNumber:number = 0;
 		let outputText:string = null;
 		for(let entity_idx:number = 0;entity_idx<entities.length;entity_idx++) {
@@ -2249,8 +2252,6 @@ class NLGenerator {
 			let postComplementsStr:string = entity_properties[entity_idx][3];
 			let sort:Sort = entity.sort;
 			let needsArticle:boolean = true;
-
-//			console.log("rendering entity ("+entity_idx+"): " + entities[entity_idx] + " " + entity_properties[entity_idx]);
 
 			if (entity instanceof TermTermAttribute &&
 				(<TermTermAttribute>entity).term.functor.name == "noun") {
@@ -2289,6 +2290,12 @@ class NLGenerator {
 				(sort.name == "property" || sort.name == "property-with-value")) {
 				word = "property";
 			}
+			if (word == null && sort.is_a_string("number")) {
+				word = this.pos.getPOSString(sort, number);
+			}
+
+			//console.log("rendering entity ("+entity_idx+"): " + entities[entity_idx] + " --- " + entity_properties[entity_idx]);
+			//console.log("word: " + word);
 
 			if (word == null) {
 				continue;

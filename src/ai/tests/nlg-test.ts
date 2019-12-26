@@ -317,7 +317,8 @@ testNLG("perf.inform('1'[#id], verb.do('1'[#id], 'nothing'[nothing]))", "etaoin"
 
 // v3.5:
 testNLG("perf.inform.answer(V0:'1'[#id], V1:relation.cause(V2:[any], V3:#not(V4:permitted-in(V5:'1'[#id], V6:'room1'[#id]))))", "etaoin", "because you are not allowed to enter the kitchen");
-testNLG("perf.inform.answer(V0:'david'[#id], relation.cause(#not(verb.can(V4:'etaoin'[#id], action.open(V4, V6:'room1'[#id]))), #not(V8:permission-to(V9:'1'[#id], verb.access(V9, V6)))))", "etaoin", "I can not open the kitchen because of you do not have permission to access the kitchen");
-
+testNLG("perf.inform.answer(V0:'1'[#id], relation.cause(#not(verb.can(V4:'etaoin'[#id], action.open(V4, V6:'room1'[#id]))), #not(V8:permission-to(V9:'1'[#id], verb.access(V9, V6)))))", "etaoin", "I can not open the kitchen because of you do not have permission to access the kitchen");
+testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.see(V3:'etaoin'[#id], V4:#and(V5:the(V6:'number.1'[number.1], V2_0:[singular]), V10:noun(V6, V2_0)))))", "etaoin", "I do not see the ones")
+testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.see(V3:'etaoin'[#id], V4:#and(V5:the(V6:'number.1'[number.1], V2_0:[singular]), V8:#and(V9:determiner.other(V6, V2_0), V10:noun(V6, V2_0))))))", "etaoin", "I do not see the other ones")
 
 

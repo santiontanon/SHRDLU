@@ -1292,6 +1292,11 @@ NLParseTestUnifyingListener("what rooms are there?", o.getSort("performative"), 
 NLParseTestUnifyingListener("what other rooms are there?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, #and(room(X), #and(!=(X,'room1'[#id]), !=(X,'room2'[#id]))))");
 NLParseTestUnifyingListener("who is the other ai?", o.getSort("performative"),  context, 'etaoin', "perf.q.whois.noname('etaoin'[#id], 'qwerty'[#id])");
 NLParseTestUnifyingListener("what is the other ai's name?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('qwerty'[#id],X))");
+NLParseTestUnifyingListener("which rooms are there?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, room(X))");
+NLParseTestUnifyingListener("instruct the crate to enter the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
+NLParseTestUnifyingListener("have the crate board the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
+NLParseTestUnifyingListener("which room is mine?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(S:'etaoin'[#id],X,#and(room(X), verb.own('1'[#id],X)))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
