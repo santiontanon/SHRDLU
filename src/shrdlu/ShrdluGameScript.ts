@@ -2332,6 +2332,11 @@ class ShrdluGameScript {
 			case 1:
 					if (this.act_2_repair_shuttle_state_timer == 0) {
 						this.shrdluMoves(106*8, 26*8, this.game.maps[0]);
+						this.game.shrdluAI.respondToPerformatives = false;
+					} else if (this.act_2_repair_shuttle_state_timer > 60*60) {
+						// if a whole minute has passed, something went wrong, reset!
+						this.act_2_repair_shuttle_state = 0;
+						this.game.shrdluAI.respondToPerformatives = true;
 					} else {
 						if (this.game.shrdluAI.robot.x == 106*8 &&
 							this.game.shrdluAI.robot.y == 26*8) {
@@ -2357,12 +2362,14 @@ class ShrdluGameScript {
 									this.game.playSound("data/sfx/itemPickup.wav")
 									// done:
 									this.act_2_repair_shuttle_state = 2;
+									this.game.shrdluAI.respondToPerformatives = true;
 
 									this.game.shrdluAI.clearCurrentAction();
 								}
 							} else {
 								// something went wrong, reset!
 								this.act_2_repair_shuttle_state = 0;
+								this.game.shrdluAI.respondToPerformatives = true;
 							}
 						} 
 					}

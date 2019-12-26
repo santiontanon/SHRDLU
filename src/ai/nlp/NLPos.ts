@@ -443,7 +443,8 @@ class POSParser {
       "southwest airlock",
       "data pad",
       "too small",
-      "t-14 hyperdrive generator",
+      "t - 14 hyperdrive generator",
+      "t - 14 hyperdrive",
       "chemical element",
       "game character",
       "game protagonist",
@@ -1327,6 +1328,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("helmet", "helmet", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("here", "space.here", Term.fromString("noun('space.here'[space.here], [singular])", o), 1.0));
   this.addUncountableNounPOS("hydrogen", "hydrogen", o);
+  this.addStandardNounPOS("hyperdrive", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("hyperdrive generator", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("hour", "time.hour", o, multitokens_raw);
   this.addStandardNounPOS("human", "human", o, multitokens_raw);
@@ -1540,7 +1542,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("suit", "suit", o, multitokens_raw);
   this.addStandardNounPOS("supervisor", "supervisor", o, multitokens_raw);
   this.addStandardNounPOS("system", "system", o, multitokens_raw);
-  this.addStandardNounPOS("t-14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
+  this.addStandardNounPOS("t - 14 hyperdrive", "shuttle-engine", o, multitokens_raw);
+  this.addStandardNounPOS("t - 14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
   this.addStandardNounPOS("table", "table", o, multitokens_raw);
   this.addStandardNounPOS("tank", "tank", o, multitokens_raw);
   this.addStandardNounPOS("tardis", "tardis", o, multitokens_raw);
@@ -1646,6 +1649,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.collide-with", "run against","runs against","ran against","run against","running against", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "pick up","picks up","picked up","picked up","picking up", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "grab","grabs","grabbed","grabbed","grabbing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("action.take", "carry","carries","carried","carried","carrying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.take-out", "remove","removes","removed","removed","removing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.explore", "scout","scouts","scouted","scouted","scouting", false, multitokens_raw, o);
@@ -1704,6 +1708,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.fill", "fill","fills","filled","filled","filling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.occupy", "occupy","occupies","occupied","occupied","occupying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.repair", "fix","fixes","fixed","fixed","fixing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.fly", "fly","flies","flew","flown","flying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.follow", "follow","follows","followed","followed","following", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.gather", "gather","gathers","gathered","gathered","gathering", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.get", "get","gets","got","gotten","getting", false, multitokens_raw, o);

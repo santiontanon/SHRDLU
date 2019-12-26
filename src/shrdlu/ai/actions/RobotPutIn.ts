@@ -119,6 +119,15 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				}
 				return true;
 			}
+		} else if (ai.selfID == "shrdlu" &&
+				   containerObjectL[0].ID == "garage-shuttle" && item.ID == "shuttle-engine" &&
+				   ai.game.gameScript.act_2_repair_shuttle_state == 0) {
+			// special case of repairing the shuttle:
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.game.gameScript.act_2_repair_shuttle_state = 1;
+			ai.game.gameScript.act_2_repair_shuttle_state_timer = 0;
+			return true;
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
@@ -140,8 +149,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 									 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
 		ai.intentionsCausedByRequest.push(ir);
 		if (requester != null) {
-			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
-			let term:Term = Term.fromString(tmp, ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 

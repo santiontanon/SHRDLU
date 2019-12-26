@@ -649,6 +649,7 @@
     <sort name="verb.eat" super="verb"/>
     <sort name="verb.work" super="verb"/>
     <sort name="verb.works-at" super="verb"/>
+    <sort name="verb.fly" super="verb.go"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
