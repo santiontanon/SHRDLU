@@ -478,6 +478,8 @@ class POSParser {
       "strange dust",
       "weird dust",
       "luminiscent dust",
+      "command display",
+      "tactic display",
 
       // adjectives:
       "in stasis",
@@ -755,6 +757,8 @@ NLPAddTokenPOS("during", PartOfSpeech.generatePreposition("during", POS_TYPE_PPR
 */
 this.addTokenPOS(new PartOfSpeech("except", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("for", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("friend with", "relation.friend", Term.fromString("preposition('relation.friend'[relation.friend])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("friends with", "relation.friend", Term.fromString("preposition('relation.friend'[relation.friend])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("from", "relation.origin", Term.fromString("preposition('relation.origin'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("farthest to", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
@@ -1149,6 +1153,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("luminiscent dust", "dust", Term.fromString("noun('dust'[dust], [plural])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("luminiscent dust", "dust", Term.fromString("noun('dust'[dust], [uncountable])", o), 1.0));
   this.addStandardNounPOS("login", "username", o, multitokens_raw);
+  this.addStandardNounPOS("tactic display", "command-display", o, multitokens_raw);    
+  this.addStandardNounPOS("generator", "hyperdrive-generator", o, multitokens_raw);
+  this.addStandardNounPOS("hyperdrive", "hyperdrive-generator", o, multitokens_raw);
 
   // nouns:
   this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);
@@ -1223,6 +1230,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("command center key", "red-key", o, multitokens_raw);    
   this.addStandardNounPOS("command key", "red-key", o, multitokens_raw);    
   this.addStandardNounPOS("command room", "command.room", o, multitokens_raw);    
+  this.addStandardNounPOS("command display", "command-display", o, multitokens_raw);    
   this.addStandardNounPOS("communication", "communication", o, multitokens_raw);
   this.addStandardNounPOS("comm tower", "communication.tower", o, multitokens_raw);
   this.addStandardNounPOS("communication tower", "communication.tower", o, multitokens_raw);
@@ -1296,6 +1304,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("fork", "fork", o, multitokens_raw);    
   this.addTokenPOS(new PartOfSpeech("forward", "forward", Term.fromString("noun('forward'[forward], [singular])", o), 1.0));
   this.addStandardNounPOS("fridge", "fridge", o, multitokens_raw);
+  this.addStandardNounPOS("friend", "relation.friend", o, multitokens_raw);
   this.addStandardNounPOS("front", "space.front", o, multitokens_raw);
   this.addStandardNounPOS("functionality", "role", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("fungus", "fungi", Term.fromString("noun('fungi'[fungi], [singular])", o), 1.0));
@@ -1328,7 +1337,6 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("helmet", "helmet", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("here", "space.here", Term.fromString("noun('space.here'[space.here], [singular])", o), 1.0));
   this.addUncountableNounPOS("hydrogen", "hydrogen", o);
-  this.addStandardNounPOS("hyperdrive", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("hyperdrive generator", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("hour", "time.hour", o, multitokens_raw);
   this.addStandardNounPOS("human", "human", o, multitokens_raw);
@@ -1549,6 +1557,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("table", "table", o, multitokens_raw);
   this.addStandardNounPOS("tank", "tank", o, multitokens_raw);
   this.addStandardNounPOS("tardis", "tardis", o, multitokens_raw);
+  this.addStandardNounPOS("tardis memory", "tardis-memory-core", o, multitokens_raw);
+  this.addStandardNounPOS("tardis memory core", "tardis-memory-core", o, multitokens_raw);
   this.addStandardNounPOS("tear", "tear", o, multitokens_raw);
   this.addStandardNounPOS("temperature", "temperature", o, multitokens_raw);
   this.addStandardNounPOS("test", "test", o, multitokens_raw);
@@ -1735,11 +1745,13 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.injure", "injure","injures","injured","injured","injuring", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.instruct", "instruct","instructs","instructed","instructed","instructing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.investigate", "investigate","investigates","investigated","investigated","investigating", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.join", "join","joins","joined","joined","joining", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.keep", "keep","keeps","kept","kept","keeping", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.know-how", "know how","knows how","knew how","known how","knowing how", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.like", "like","likes","liked","liked","liking", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.lives", "live","lives","lived","lived","living", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enumerate", "list","lists","listed","listed","listing", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.lock", "lock","locks","locked","locked","locking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.love", "love","loves","loved","loved","loving", false, multitokens_raw, o);

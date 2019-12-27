@@ -182,6 +182,7 @@
     <sort name="haveable-property" super="property"/>
     <sort name="haveable-property-with-value" super="haveable-property,property-with-value"/>
     <sort name="relation-with-value" super="relation"/>
+    <sort name="haveable-relation" super="relation"/>
     <sort name="symmetric-relation" super="relation"/>
 
     <sort name="relation.cause" super="relation"/>
@@ -419,6 +420,7 @@
     <sort name="system" super="object"/>
     <sort name="memory-bank" super="object"/>
     <sort name="memory-core" super="memory-bank"/>
+    <sort name="tardis-memory-core" super="memory-core,item"/>
     <sort name="perception-system" super="object"/>
 
     <sort name="panel" super="object,shape.flat"/>
@@ -517,6 +519,7 @@
     <sort name="alone-in" super="relation,#stateSort"/>
     <sort name="last" super="property,#stateSort"/>
     <sort name="relation.against" super="relation"/>
+    <sort name="relation.friend" super="symmetric-relation,haveable-relation"/>
 
     <sort name="username" super="property-with-value,abstract-entity"/>
     <sort name="password" super="property-with-value,abstract-entity"/>    
@@ -573,6 +576,8 @@
     <sort name="verb.define" super="verb"/>
     <sort name="verb.face" super="verb"/>
     <sort name="verb.feel" super="verb"/>
+    <sort name="verb.join" super="verb"/>
+    <sort name="verb.lives" super="verb"/>
     <sort name="verb.locate" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.find" super="verb.locate"/>
     <sort name="verb.fill" super="verb"/>

@@ -1305,6 +1305,19 @@ NLParseTestUnifyingListener("move west twice", o.getSort("performative"),  conte
 NLParseTestUnifyingListener("move west three times", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move(V0, [west], '3'[number]))");
 NLParseTestUnifyingListener("move the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move(V0, '5'[#id]))");
 NLParseTestUnifyingListener("move to the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, '5'[#id]))");
+NLParseTestUnifyingListener("how many humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, human(X))");
+NLParseTestUnifyingListener("how many dead humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(human(X),dead(X)))");
+NLParseTestUnifyingListener("please join me in the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.go-to(V0, '2'[#id]))");
+NLParseTestUnifyingListener("can you join me in the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.go-to(V0, '2'[#id]))");
+NLParseTestUnifyingListener("who lives in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], X, #and(character(X), verb.lives(X, 'room1'[#id])))");
+NLParseTestUnifyingListener("is qwerty your friend?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], relation.friend('etaoin'[#id], 'qwerty'[#id]))");
+NLParseTestUnifyingListener("do you have any friend?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], relation.friend('etaoin'[#id], X))");
+NLParseTestUnifyingListener("who is your friend?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X), relation.friend('etaoin'[#id], X)))");
+NLParseTestUnifyingListener("are you and qwerty friends?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], relation.friend('etaoin'[#id], 'qwerty'[#id]))");
+NLParseTestUnifyingListener("are you qwerty's friend?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], relation.friend('qwerty'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("you are my friend", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('1'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("you are qwerty's friend", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('qwerty'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("you and I are friends", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('etaoin'[#id], '1'[#id]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

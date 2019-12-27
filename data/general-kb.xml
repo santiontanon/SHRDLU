@@ -10,6 +10,7 @@
 	<!-- general knowledge about the player -->
 	<sentence provenance="background" sentence="awake('david'[#id])"/>
 	<sentence provenance="background" sentence="healthy('david'[#id])"/>
+	<sentence provenance="background" sentence="verb.lives('david'[#id], 'location-as8'[#id])"/>
 
 	<!-- general knowledge about famous people -->
 	<sentence provenance="background" sentence="man('asimov'[#id])"/>
@@ -199,6 +200,10 @@
 	<sentence provenance="background" sentence="verb.have('shrdlu'[#id],'shrdlu-body'[#id])"/>
 	<sentence provenance="background" sentence="good('shrdlu'[#id])"/>
 	<sentence provenance="background" sentence="useful('shrdlu'[#id])"/>
+
+	<sentence provenance="background" sentence="relation.friend('etaoin'[#id],'qwerty'[#id])"/>
+	<sentence provenance="background" sentence="relation.friend('etaoin'[#id],'shrdlu'[#id])"/>
+	<sentence provenance="background" sentence="relation.friend('qwerty'[#id],'shrdlu'[#id])"/>
 
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id])"/>
 	<sentence provenance="background" time="45154634400" sentence="verb.leave('shrdlu'[#id],'location-aurora-station'[#id])"/>
@@ -676,5 +681,7 @@
 	<sentence provenance="background" sentence="~profession(X, L, Z); verb.works-at(X, L)"/>	
 	<sentence provenance="background" sentence="~profession(X, L, Z); ~space.at(L2, L); verb.works-at(X, L2)"/>	
 	<sentence provenance="background" sentence="~profession(X, L, Z); ~space.at(L, L2); verb.works-at(X, L2)"/>	
+	<sentence provenance="background" sentence="~verb.lives(X, Y); ~space.inside.of(Y,Z); verb.lives(X,Z)"/>
+	<sentence provenance="background" sentence="~relation.friend(X, Y); relation.friend(Y, X)"/>
 	
 </knowledgeBase>
