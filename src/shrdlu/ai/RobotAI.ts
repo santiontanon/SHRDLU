@@ -219,7 +219,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.currentAction = null;
 		this.currentAction_requester = null;
 		this.currentAction_scriptQueue = null;
-		this.currentActionHandler = null;		
+		this.currentActionHandler = null;
 	}
 
 
@@ -229,7 +229,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.currentAction = action;
 		this.currentAction_requester = requester;
 		this.currentAction_scriptQueue = scriptQueue;
-		this.currentActionHandler = handler;				
+		this.currentActionHandler = handler;	
 	}
 	
 
@@ -263,6 +263,7 @@ class RobotAI extends A4RuleBasedAI {
                 }
                 break;
             } else if (retval == SCRIPT_FAILED) {
+            	if (this.currentActionHandler != null) this.currentActionHandler.actionScriptsFailed(this, this.currentAction_requester);
             	this.clearCurrentAction();
                 this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
             }

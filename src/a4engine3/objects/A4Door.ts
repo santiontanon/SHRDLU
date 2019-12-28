@@ -152,12 +152,12 @@ class A4Door extends A4Object {
         return null;
     }
 
-    event(a_event:number, character:A4Character, map:A4Map, game:A4Game)
+    event(a_event:number, character:A4Character, map:A4Map, game:A4Game) : boolean
     {
-        super.event(a_event,character,map,game);
+        let retval:boolean = super.event(a_event,character,map,game);
 
         if (a_event == A4_EVENT_INTERACT) {
-            if (this.consumeKey && !this.closed) return;  // if it consumes the key, it cannot be reopened!
+            if (this.consumeKey && !this.closed) return false;  // if it consumes the key, it cannot be reopened!
             if (this.canOpen(character, game)) {
                 if (this.checkForBlockages(!this.closed, character, map, game, [])) {
                     let key:A4Object = this.canOpenKey(character, game);
@@ -168,6 +168,7 @@ class A4Door extends A4Object {
                             character.removeFromInventory(key);
                             game.requestDeletion(key);
                         }
+                        return true;
                     } else {
                         if (game.checkIfDoorGroupStateCanBeChanged(this.doorGroupID, this.closed, character)) {
                             this.changeStateRecursively(!this.closed, character, map, game);
@@ -175,12 +176,15 @@ class A4Door extends A4Object {
                             if (this.consumeKey && key != null) {
                                 character.removeFromInventory(key);
                                 game.requestDeletion(key);
+                                return true;
                             }
                         }
                     }
                 }                
             }
         }
+
+        return retval;
     }
 
 

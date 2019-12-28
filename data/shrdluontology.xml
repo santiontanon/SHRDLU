@@ -965,6 +965,7 @@
     <sort name="direction.right" super="direction,space.location"/>
     <sort name="direction.up" super="direction,space.location"/>
     <sort name="direction.down" super="direction,space.location"/>
+    <sort name="direction.towards" super="direction,space.location"/>
 
     <sort name="property.opened" super="property,#stateSort"/>
     <sort name="property.closed" super="property,#stateSort"/>

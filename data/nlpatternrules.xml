@@ -5406,6 +5406,68 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
 
+    <NLPattern name="perf.request.action-move-to-X"
+    		   head="perf.request.action(LISTENER, verb.move-to(LISTENER, direction.towards(OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         (verb('verb.move'[symbol], N, P, [present-tense])|
+    		          verb('verb.go'[symbol], N, P, [present-tense])|
+    		          verb('verb.walk'[symbol], N, P, [present-tense]))
+    		         preposition('direction.towards'[direction.towards])
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')* 
+    		         #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="perf.request.action-move-to-me"
+    		   head="perf.request.action(LISTENER, verb.move-to(LISTENER, direction.towards(SPEAKER)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		         (verb('verb.move'[symbol], N, P, [present-tense])|
+    		          verb('verb.go'[symbol], N, P, [present-tense])|
+    		          verb('verb.walk'[symbol], N, P, [present-tense]))
+    		         ('this' 'way'|'my' 'way'|['in'] 'this' 'direction'|['in'] 'my' 'direction')
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('.'|'!')*"/>
+
+    <NLPattern name="perf.q.action-move-to-X"
+    		   head="perf.q.action(LISTENER, verb.move-to(LISTENER, direction.towards(OBJECT)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         (verb('verb.move'[symbol], N, P, [present-tense])|
+    		          verb('verb.go'[symbol], N, P, [present-tense])|
+    		          verb('verb.walk'[symbol], N, P, [present-tense]))
+    		         preposition('direction.towards'[direction.towards])
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('!'|'?')* 
+    		         #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="perf.q.action-move-to-me"
+    		   head="perf.q.action(LISTENER, verb.move-to(LISTENER, direction.towards(SPEAKER)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 (verb('verb.can'[symbol], N, [second-person], T) | verb('verb.will'[symbol], N, [second-person], T)) subject-personal-pronoun(X1, N, G, P:[second-person])
+    		   		 ['please']
+    		   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), LISTENER)
+    		         (verb('verb.move'[symbol], N, P, [present-tense])|
+    		          verb('verb.go'[symbol], N, P, [present-tense])|
+    		          verb('verb.walk'[symbol], N, P, [present-tense]))
+    		         ('this' 'way'|'my' 'way'|['in'] 'this' 'direction'|['in'] 'my' 'direction')
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character] ,[singular]), C_L2), LISTENER)]
+    		         ('!'|'?')* "/>
+
     <!-- get out of here / get out, etc. rule -->
     <NLPattern head="perf.request.action(LISTENER, verb.go(LISTENER, [space.away]))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

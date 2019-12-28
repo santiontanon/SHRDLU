@@ -55,9 +55,9 @@ class ShrdluAirlockDoor extends A4Obstacle {
     }
 
 
-    event(event_type:number, character:A4Character, map:A4Map, game:A4Game)
+    event(event_type:number, character:A4Character, map:A4Map, game:A4Game): boolean
     {
-        super.event(event_type, character, map, game);
+        let retval:boolean = super.event(event_type, character, map, game);
         if (event_type == A4_EVENT_INTERACT) {
             if (this.otherDoorID != null) {
                 let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(this.otherDoorID);
@@ -65,7 +65,7 @@ class ShrdluAirlockDoor extends A4Obstacle {
                 if (!otherdoor.closed) {
                     let script:A4Script = new A4Script(A4_SCRIPT_TALK, null, "I need to close the other airlock door first", 0, true, true);
                     character.pushScripttoExecute(script, map, game, null);
-                    return;
+                    return false;
                 }
             }
 
@@ -74,7 +74,7 @@ class ShrdluAirlockDoor extends A4Obstacle {
                 if (suit != "helmet") {
                     let script:A4Script = new A4Script(A4_SCRIPT_TALK, null, "I cannot go through the airlock without a spacesuit!", 0, true, true);
                     character.pushScripttoExecute(script, map, game, null);
-                    return;
+                    return false;
                 }
             }
 
@@ -83,7 +83,10 @@ class ShrdluAirlockDoor extends A4Obstacle {
             if (targetMap != null) {
                 game.requestWarp(character, targetMap, this.targetX, this.targetY-character.tallness);
             }
+            return true;
         }
+
+        return retval;
     }
 
 

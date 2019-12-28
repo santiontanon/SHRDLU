@@ -2,7 +2,9 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
-		if (intention.functor.is_a(ai.o.getSort("action.print")) &&
+		if ((intention.functor.is_a(ai.o.getSort("action.print")) ||
+			 intention.functor.is_a(ai.o.getSort("verb.make")) ||
+			 intention.functor.is_a(ai.o.getSort("verb.create"))) &&
 			intention.attributes.length == 2) return true;
 		return false;
 	}
@@ -130,6 +132,8 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 
 			// force a perception update on the maintenance room, to make sure we can talk about the newly printed object:
 			ai.perceptionFocusedOnObject([obj], obj);
+			// add the object existence to long term memory:
+			ai.addLongTermTerm(Term.fromString(obj.sort.name+"('"+obj.ID+"'[#id])", ai.o), PERCEPTION_PROVENANCE);
 
 			app.achievement_interact_3d_printed_one_of_each_kind[recipe_idx] = true;
 			app.achievement_nlp_all_etaoin_actions[5] = true;

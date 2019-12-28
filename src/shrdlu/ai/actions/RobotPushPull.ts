@@ -162,7 +162,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
         	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
         }
         q.scripts.push(s);
-        ai.setNewAction(intention, requester, q, null);
+        ai.setNewAction(intention, requester, q, this);
 		ai.addLongTermTerm(new Term(intention.functor,
 									[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 									 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
@@ -175,6 +175,14 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 		}
 
 		return true;
+	}
+
+
+	actionScriptsFailed(ai:RuleBasedAI, requester:TermAttribute) 
+	{
+		let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.move('"+ai.selfID+"'[#id], object-personal-pronoun('object-personal-pronoun.it'[symbol], [singular], [gender-neutral], [third-person]))))))";
+		let term:Term = Term.fromString(tmp, ai.o);
+		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));		
 	}
 
 

@@ -412,12 +412,14 @@ class A4Object {
 
 
     // this executes all the A4EventRules with the given event:
-    event(event:number, otherCharacter:A4Character, map:A4Map, game:A4Game)
+    event(event:number, otherCharacter:A4Character, map:A4Map, game:A4Game) : boolean
     {
-        if (this.eventScripts[event] == null) return;
+        if (this.eventScripts[event] == null) return false;
         for(let rule of this.eventScripts[event]) {
             rule.executeEffects(this, map, game, otherCharacter);
         }
+
+        return true;
     }
 
 

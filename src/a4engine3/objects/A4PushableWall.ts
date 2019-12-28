@@ -19,9 +19,9 @@ class A4PushableWall extends A4Object {
 	}
 
 
-	event(a_event:number, character:A4Character, map:A4Map, game:A4Game)
+	event(a_event:number, character:A4Character, map:A4Map, game:A4Game): boolean
 	{
-		super.event(a_event, character, map, game);
+		let retval:boolean = super.event(a_event, character, map, game);
 
 		if (a_event == A4_EVENT_PUSH && 
 			character.canMoveIgnoringObject(character.direction, true, this) &&
@@ -30,7 +30,9 @@ class A4PushableWall extends A4Object {
 			this.x += direction_x_inc[d]*map.tileWidth;
 			this.y += direction_y_inc[d]*map.tileHeight;
 	        if (character != null) map.reevaluateVisibilityRequest();
+	        return true;
 		}
+		return retval;
 	}
 
 

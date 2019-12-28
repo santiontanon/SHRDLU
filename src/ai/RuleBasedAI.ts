@@ -304,6 +304,12 @@ abstract class IntentionAction {
 		return false;
 	}
 
+	// This will be called if the script associated with the action fails:
+	actionScriptsFailed(ai:RuleBasedAI, requester:TermAttribute) 
+	{		
+	}
+
+
 	needsContinuousExecution:boolean = false;
 }
 

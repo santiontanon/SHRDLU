@@ -813,10 +813,8 @@ NLPAddTokenPOS("through", PartOfSpeech.generatePreposition("through", POS_TYPE_P
 
 this.addTokenPOS(new PartOfSpeech("to", "relation.target", Term.fromString("preposition('relation.target'[relation.target])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("to", "relation.purpose", Term.fromString("preposition('relation.purpose'[relation.purpose])", o), 1.0));
-/*
-  ["toward",  "PREP"],
-  ["towards",  "PREP"],
-*/
+this.addTokenPOS(new PartOfSpeech("toward", "direction.towards", Term.fromString("preposition('direction.towards'[direction.towards])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("towards", "direction.towards", Term.fromString("preposition('direction.towards'[direction.towards])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("under", "space.directly.under", Term.fromString("preposition('space.directly.under'[space.directly.under])", o), 1.0));
  /*
 NLPAddTokenPOS("underneath", PartOfSpeech.generatePreposition("underneath", POS_TYPE_PPREPOSITION_PLACE));

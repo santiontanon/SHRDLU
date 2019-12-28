@@ -277,10 +277,10 @@
 	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.read(X, Y), action.put-in(X, Y, [console]))"/>
 	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.analyze(X, Y), action.put-in(X, Y, [console]))"/>
 	<sentence provenance="background" sentence="~memory-core(Y) ; relation.howto(verb.examine(X, Y), action.put-in(X, Y, [console]))"/>
-
 	<sentence provenance="background" sentence="~3dprinter(SS) ; relation.howto(action.use(X, SS), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
 	<sentence provenance="background" sentence="relation.howto(action.use(X, [3dprinter]), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
-
+	<sentence provenance="background" sentence="~verb.can(Q:'etaoin'[#id], action.print(Q, X)) ; relation.howto(verb.make(Y, X), verb.tell(Y, perf.request.action(Q, action.print(Q, X)), Q))"/>
+	<sentence provenance="background" sentence="~verb.can(Q:'etaoin'[#id], action.print(Q, X)) ; relation.howto(verb.create(Y, X), verb.tell(Y, perf.request.action(Q, action.print(Q, X)), Q))"/>
 
 	<!-- what can things do -->
 	<!--sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/-->

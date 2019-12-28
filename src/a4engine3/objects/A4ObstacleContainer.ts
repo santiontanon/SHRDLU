@@ -61,16 +61,17 @@ class A4ObstacleContainer extends A4Container {
     }
 
 
-    event(a_event:number, character:A4Character, map:A4Map, game:A4Game)
+    event(a_event:number, character:A4Character, map:A4Map, game:A4Game): boolean
     {
-        super.event(a_event,character,map,game);
+        let retval:boolean = super.event(a_event,character,map,game);
 
         if (a_event == A4_EVENT_INTERACT) {
 
         	//console.log(this.name + " receives event interact!");
-            if (this.consumeKey && !this.closed) return;  // if it consumes the key, it cannot be reopened!
+            if (this.consumeKey && !this.closed) return false;  // if it consumes the key, it cannot be reopened!
             if (this.doorID == null) {
             	this.eventWithID(A4_EVENT_OPEN, null, character, map, game);
+                return true;
             } else {
 	            // see if the character has the key:
 	            for(let o of character.inventory) {
@@ -83,12 +84,15 @@ class A4ObstacleContainer extends A4Container {
 	                            character.removeFromInventory(key);
 	                            game.requestDeletion(key);
 	                        }
+                            return true;
 	                        break;
 	                    }
 	                }
 	            }
 	        }
         }
+
+        return retval;
     }
 
 

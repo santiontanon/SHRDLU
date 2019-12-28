@@ -43,9 +43,9 @@ class A4Lever extends A4Object {
     }
 
 
-	event(event_type:number, character:A4Character, map:A4Map, game:A4Game)
+	event(event_type:number, character:A4Character, map:A4Map, game:A4Game): boolean
 	{
-		super.event(event_type, character, map, game);
+		let retval:boolean = super.event(event_type, character, map, game);
 		if (event_type == A4_EVENT_USE) {
 	        var s:A4Script = new A4Script(A4_SCRIPT_OPENDOORS, this.leverID, null, 0, false, false);
 	        s.execute(this, map, game, character);
@@ -58,7 +58,9 @@ class A4Lever extends A4Object {
 			}
 			if (this.leverState) this.currentAnimation = A4_ANIMATION_CLOSED;
 	                        else this.currentAnimation = A4_ANIMATION_OPEN;
+	        return true;
 		}	
+		return retval;
 	}
 
 

@@ -8,9 +8,9 @@ class A4Spade extends A4Item {
 	}
 
 
-	event(a_event:number, otherCharacter:A4Character, map:A4Map, game:A4Game)
+	event(a_event:number, otherCharacter:A4Character, map:A4Map, game:A4Game): boolean
 	{
-		super.event(a_event, otherCharacter, map, game);
+		let retval:boolean = super.event(a_event, otherCharacter, map, game);
 	    
 	    if (a_event == A4_EVENT_USE) {
 	        var o:A4Object = map.getBurrowedObject(otherCharacter.x, otherCharacter.y,
@@ -19,7 +19,10 @@ class A4Spade extends A4Item {
 	            game.addMessage("Nothing to dig here...");
 	        } else {
 	            o.burrowed = false;
+	            return true;
 	        }
 	    }
+
+	    return retval;
 	}
 }

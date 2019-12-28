@@ -1080,7 +1080,7 @@ class A4Character extends A4WalkingObject {
                                                                           o.ID, o.sort, null,
                                                                           null, null,
                                                                           this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-            o.event(A4_EVENT_PUSH,this,this.map,game);
+            if (!o.event(A4_EVENT_PUSH,this,this.map,game)) return false;
             this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
             game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
             return true;

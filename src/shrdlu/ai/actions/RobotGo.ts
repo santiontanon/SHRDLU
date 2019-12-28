@@ -19,6 +19,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
+		let requesterID:string = null;
+		if (requester instanceof ConstantTermAttribute) {
+			requesterID = (<ConstantTermAttribute>requester).value;
+		}
 
 		if (ai.robot.isInVehicle()) {
 			if (intention.attributes.length == 2 && 
@@ -52,6 +56,31 @@ class RobotGo_IntentionAction extends IntentionAction {
 		this.targety = null;
 		this.targetMapName = null;
 
+		// process "direction.towards" (replace by a move-to(self, [cardinal direction]))
+		if (intention.functor.name == "verb.move-to" &&
+			intention.attributes.length == 2 && 
+ 	        (intention.attributes[1] instanceof TermTermAttribute) &&
+ 	        intention.attributes[1].sort.is_a_string("direction.towards")) {
+			let towards:Term = (<TermTermAttribute>intention.attributes[1]).term;
+			if (towards.attributes.length == 1 &&
+				towards.attributes[0] instanceof ConstantTermAttribute) {
+				let targetID:string = (<ConstantTermAttribute>towards.attributes[0]).value;
+				let target_l:A4Object[] = ai.game.findObjectByID(targetID);
+				if (target_l != null && target_l.length>0) {
+					if (target_l[0].map.name == ai.robot.map.name) {
+						if (requesterID == targetID || ai.canSee(targetID)) {
+							let direction:Sort = ai.getDirectionTowardObject(ai.robot, target_l[0]);
+							if (direction != null) {
+								intention = new Term(intention.functor, [intention.attributes[0],
+																		 new VariableTermAttribute(direction, null)]);
+							}
+						}
+					}
+				}
+			}
+		}
+
+
 		// find the target destination:
 		if (intention.functor.name == "verb.come-back" ||
 			intention.functor.name == "verb.come" &&
@@ -63,7 +92,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 			requester instanceof ConstantTermAttribute) {
 			if (ai.visionActive) {
 				// destination is the position of the speaker:
-				let requesterID:string = (<ConstantTermAttribute>requester).value;
 				let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);
 				if (targetObject != null) {
 					targetMap = targetObject.map;
@@ -136,7 +164,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 		} else if (intention.attributes.length >= 2 && 
 			       (intention.attributes[1] instanceof VariableTermAttribute)) {
-			let requesterID:string = (<ConstantTermAttribute>requester).value;
 			let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);
 			if (targetObject == null) {
 				// we should never get here:

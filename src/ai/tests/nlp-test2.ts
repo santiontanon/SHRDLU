@@ -1318,7 +1318,11 @@ NLParseTestUnifyingListener("are you qwerty's friend?", o.getSort("performative"
 NLParseTestUnifyingListener("you are my friend", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('1'[#id], 'etaoin'[#id]))");
 NLParseTestUnifyingListener("you are qwerty's friend", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('qwerty'[#id], 'etaoin'[#id]))");
 NLParseTestUnifyingListener("you and I are friends", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('etaoin'[#id], '1'[#id]))");
-
+NLParseTestUnifyingListener("move toward me", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
+NLParseTestUnifyingListener("walk this way", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
+NLParseTestUnifyingListener("walk in my direction", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
+NLParseTestUnifyingListener("walk this direction", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
+NLParseTestUnifyingListener("can you walk toward me?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

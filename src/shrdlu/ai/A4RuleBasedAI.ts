@@ -1090,6 +1090,36 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
+	getDirectionTowardObject(source:A4Object, target:A4Object): Sort
+	{
+		let dx:number = target.x-source.x;
+		let dy:number = target.y-source.y;
+
+		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+			let angle:number = Math.atan2(dy,dx);
+
+			if (angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8)) {
+				return this.o.getSort("northwest");
+			} else if (angle>-(5*Math.PI/8) && angle<=-(3*Math.PI/8)) {
+				return this.o.getSort("north");
+			} else if (angle>-(3*Math.PI/8) && angle<=-(1*Math.PI/8)) {
+				return this.o.getSort("northeast");
+			} else if (angle>-(1*Math.PI/8) && angle<=(1*Math.PI/8)) {
+				return this.o.getSort("east");
+			} else if (angle>(1*Math.PI/8) && angle<=(3*Math.PI/8)) {
+				return this.o.getSort("southeast");
+			} else if (angle>(3*Math.PI/8) && angle<=(5*Math.PI/8)) {
+				return this.o.getSort("south");
+			} else if (angle>(5*Math.PI/8) && angle<=(7*Math.PI/8)) {
+				return this.o.getSort("southwest");
+			} else {
+				return this.o.getSort("west");
+			}
+		}	
+		return null;	
+	}
+
+
 	processSuperlatives(results:InferenceNode[], superlative:Sentence)
 	{
 		if (superlative.terms.length == 1 &&

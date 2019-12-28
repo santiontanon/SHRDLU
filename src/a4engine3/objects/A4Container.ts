@@ -60,9 +60,9 @@ class A4Container extends A4Item {
     }
 
 
-    event(a_event:number, otherCharacter:A4Character, map:A4Map, game:A4Game)
+    event(a_event:number, otherCharacter:A4Character, map:A4Map, game:A4Game) : boolean
     {
-        super.event(a_event, otherCharacter, map, game);
+        let retval:boolean = super.event(a_event, otherCharacter, map, game);
         
         if (a_event == A4_EVENT_USE) {
             this.event(A4_EVENT_OPEN, otherCharacter, map, game);
@@ -72,7 +72,10 @@ class A4Container extends A4Item {
             }
             this.content = [];
             game.requestDeletion(this);
+            return true;
         }
+
+        return retval;
     }
 
     
