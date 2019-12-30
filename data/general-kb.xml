@@ -117,6 +117,8 @@
 	<sentence provenance="background" sentence="name('aurora'[#id],'tau ceti e'[symbol])"/>
 	<sentence provenance="background" sentence="space.inside.of('aurora'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('aurora'[#id],'0.8'[gravity.unit.g])"/>
+	<sentence provenance="background" sentence="mass('aurora'[#id],'2346996000000000000000000'[ton])"/>
+	<sentence provenance="background" sentence="radius('aurora'[#id],'11504'[kilometer])"/>
 	<sentence provenance="background" sentence="~verb.have('aurora'[#id], 'oxygen'[oxygen])"/>
 
 	<sentence provenance="background" sentence="settlement('location-aurora-settlement'[#id])"/>
@@ -143,6 +145,8 @@
 	<sentence provenance="background" sentence="name('earth'[#id],'earth'[symbol])"/>
 	<sentence provenance="background" sentence="space.inside.of('earth'[#id],'solar-system'[#id])"/>
 	<sentence provenance="background" sentence="gravity('earth'[#id],'1'[gravity.unit.g])"/>
+	<sentence provenance="background" sentence="mass('earth'[#id],'5972000000000000000000'[ton])"/>
+	<sentence provenance="background" sentence="radius('earth'[#id],'6356'[kilometer])"/>
 
 	<sentence provenance="background" sentence="~space.inside.of('solar-system'[#id],'tau-ceti-system'[#id])"/>
 	<sentence provenance="background" sentence="~space.inside.of('tau-ceti-system'[#id],'solar-system'[#id])"/>

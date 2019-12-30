@@ -3321,7 +3321,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
 					 'the' noun(PROPERTY_SYMBOL, [singular]) #symbolToSort(PROPERTY_SYMBOL, PROPERTY:[property-with-value])
-					 ('of'|'in')
+					 ('of'|'in'|'on')
 			   		 nounPhrase(X, N2, P2, C) ('!'|'?')* 
     		   		 #derefFromContext(C, OBJECT)"/>
 

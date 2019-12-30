@@ -660,6 +660,8 @@
     <sort name="verb.works-at" super="verb"/>
     <sort name="verb.fly" super="verb.go"/>
     <sort name="verb.feed" super="verb.go"/>
+    <sort name="verb.lift" super="verb"/>
+    <sort name="verb.maintain" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
@@ -826,11 +828,6 @@
     <sort name="kilometer" super="distance.unit,length.unit"/>
     <sort name="light-year" super="distance.unit,length.unit"/>
 
-    <sort name="mass.unit" super="measuring-unit"/>
-    <sort name="gram" super="mass.unit"/>
-    <sort name="kilogram" super="mass.unit"/>
-    <sort name="ton" super="mass.unit"/>
-
     <sort name="in-the-same-way" super="any"/>
 
     <sort name="map" super="space.location"/>
@@ -910,13 +907,18 @@
     <sort name="low" super="relative-amount,property,#stateSort"/>
 
     <sort name="gravity" super="property-with-value,abstract-entity"/>
-    <!--sort name="low" super="gravity"/>
-    <sort name="gravity.high" super="gravity"/-->
+    
+    <sort name="mass" super="property-with-value,abstract-entity"/>
 
     <sort name="radius" super="property-with-value,length"/>
 
     <sort name="acceleration.unit" super="measuring-unit"/>
     <sort name="gravity.unit.g" super="acceleration.unit,gravity"/>
+
+    <sort name="mass.unit" super="measuring-unit,mass"/>
+    <sort name="gram" super="mass.unit"/>
+    <sort name="kilogram" super="mass.unit"/>
+    <sort name="ton" super="mass.unit"/>
 
     <sort name="temperature" super="property-with-value,#stateSort,abstract-entity"/>
     <sort name="temperature.unit.celsius" super="measuring-unit,temperature"/>

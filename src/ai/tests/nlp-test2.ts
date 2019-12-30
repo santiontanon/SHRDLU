@@ -1329,6 +1329,15 @@ NLParseTestUnifyingListener("how do i get more aluminum?", o.getSort("performati
 NLParseTestUnifyingListener("please stay here", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.stay('etaoin'[#id],[space.here]))");
 NLParseTestUnifyingListener("please stay in this room", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.stay('etaoin'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("can you stay in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.action('etaoin'[#id], action.stay('etaoin'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("can you lift this crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.action('etaoin'[#id], verb.lift('etaoin'[#id], '5'[#id]))");
+NLParseTestUnifyingListener("what does qwerty maintain?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, verb.maintain('qwerty'[#id], Q))");
+NLParseTestUnifyingListener("what is my mission?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, goal('1'[#id], Q))"); 
+NLParseTestUnifyingListener("what is your mission?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, goal('etaoin'[#id], Q))");
+NLParseTestUnifyingListener("what is our mission?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, #and(goal('etaoin'[#id], Q), goal('1'[#id], Q)))");
+NLParseTestUnifyingListener("what is qwerty's mission?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, goal('qwerty'[#id], Q))");
+NLParseTestUnifyingListener("what is the mission of qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, goal('qwerty'[#id], Q))");
+NLParseTestUnifyingListener("what is the gravity on aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], QUERY, gravity('location-aurora-station'[#id], QUERY))");
+NLParseTestUnifyingListener("what is the mass of aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], QUERY, mass('location-aurora-station'[#id], QUERY))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

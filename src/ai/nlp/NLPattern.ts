@@ -553,6 +553,7 @@ class NLPattern {
 		let queryTerm:TermAttribute = null;
 		let terms:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>clause).term, "#and");
 		let myDeterminer:Term = null;
+		let ourDeterminer:Term = null;
 		let yourDeterminer:Term = null;
 		let definiteArticle:Term = null;
 		let aDeterminer:Term = null;
@@ -574,6 +575,8 @@ class NLPattern {
 					myDeterminer = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.your"))) {
 					yourDeterminer = (<TermTermAttribute>t).term;
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.our"))) {
+					ourDeterminer = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.other")) ||
 						   (<TermTermAttribute>t).term.functor.is_a(o.getSort("determiner.another"))) {
 					otherDeterminerPresent = true;
@@ -616,38 +619,30 @@ class NLPattern {
 		let potentialQueryFunctor:TermAttribute = null;
 		let queryFunctor:TermAttribute = null;
 		let queryFunctorSort:Sort = null;
-		let querySubjectID:TermAttribute = null;
+		let querySubjectID_l:TermAttribute[] = null;
 		let queryLocationID:TermAttribute = null;
 		let TermUsedForQueryLocationID:Term = null;
+		let queryTerms:TermAttribute[] = [];
 
 		if (myDeterminer!=null) {
 			queryFunctor = myDeterminer.attributes[0];
 			if (queryFunctor instanceof ConstantTermAttribute) {
 				queryFunctorSort = o.getSortSilent((<ConstantTermAttribute>queryFunctor).value);
 			}
-			/*
-			if (queryFunctorSort!= null && !queryFunctorSort.is_a(o.getSort("property-with-value"))) {
-				// probably not a query, see if I find this case later on
-				// ... handle this for the case "my room"
-				// ...
-				return null;
+			querySubjectID_l = [new ConstantTermAttribute(context.speaker, o.getSort("#id"))];
+		} else if (ourDeterminer!=null) {
+			queryFunctor = ourDeterminer.attributes[0];
+			if (queryFunctor instanceof ConstantTermAttribute) {
+				queryFunctorSort = o.getSortSilent((<ConstantTermAttribute>queryFunctor).value);
 			}
-			*/
-			querySubjectID = new ConstantTermAttribute(context.speaker, o.getSort("#id"));
+			querySubjectID_l = [new ConstantTermAttribute(context.ai.selfID, o.getSort("#id")),
+								new ConstantTermAttribute(context.speaker, o.getSort("#id"))];
 		} else if (yourDeterminer!=null) {
 			queryFunctor = yourDeterminer.attributes[0];
 			if (queryFunctor instanceof ConstantTermAttribute) {
 				queryFunctorSort = o.getSortSilent((<ConstantTermAttribute>queryFunctor).value);
 			}
-			/*
-			if (queryFunctorSort!= null && !queryFunctorSort.is_a(o.getSort("property-with-value"))) {
-				// probably not a query, see if I find this case later on
-				// ... handle this for the case "your room"
-				// ...
-				return null;
-			}
-			*/
-			querySubjectID = new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"));
+			querySubjectID_l = [new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"))];
 		} else if (ownsRelation!=null) {
 			// case 3: if there is a "verb.own":
 			let ownerVariable:TermAttribute = ownsRelation.attributes[0];
@@ -673,7 +668,7 @@ class NLPattern {
 				this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
 				return null;
 			}
-			querySubjectID = dereffedOwner[0];
+			querySubjectID_l = [dereffedOwner[0]];
 		} else if (aDeterminer != null) {
 			queryFunctor = aDeterminer.attributes[0];
 		} else if (definiteArticle != null ||
@@ -695,20 +690,6 @@ class NLPattern {
 				queryFunctorSort = o.getSort("any");
 			}
 		}
-
-/*
-		if (querySubjectID != null &&
-			definiteArticle != null && 
-			(definiteArticle.attributes[0] instanceof ConstantTermAttribute)) {
-			if ((<ConstantTermAttribute>(definiteArticle.attributes[0])).value == querySubjectID) {
-				// the definite article applies to the query, so, this is not a query, but a deref from context!
-				return null;
-			}
-		}
-*/
-
-//		console.log("queryFunctor: " + queryFunctor + " (" + queryFunctorSort + ")");
-//		console.log("querySubjectID: " + querySubjectID);
 
 		if (queryFunctor!=null && 
 			queryFunctor instanceof ConstantTermAttribute) {
@@ -737,11 +718,10 @@ class NLPattern {
 			}
 		}
 
-		let queryTerms:TermAttribute[] = [];
 		let verbOrRelationTerm:TermAttribute = null;	// this is so that if we have an adverb of time, we know which term to qualify
 		if (queryFunctorSort != null) {
 			if (queryLocationID == null) {
-				if (querySubjectID == null ||
+				if (querySubjectID_l == null ||
 					!queryFunctorSort.is_a(o.getSort("property-with-value"))) {
 					if (queryFunctorSort.name != "any") {
 						verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [queryVariable]));
@@ -750,25 +730,31 @@ class NLPattern {
 				} else {
 					// Property-with-value:
 					let property_with_value_functor_sort:Sort = this.getPropertyWithValueFunctorSort(queryFunctorSort, o);
-					verbOrRelationTerm = new TermTermAttribute(new Term(property_with_value_functor_sort, [querySubjectID, queryVariable]));
-					queryTerms.push(verbOrRelationTerm);
+					for(let querySubjectID of querySubjectID_l) {
+						verbOrRelationTerm = new TermTermAttribute(new Term(property_with_value_functor_sort, [querySubjectID, queryVariable]));
+						queryTerms.push(verbOrRelationTerm);
+					}
 				}
 			} else {
-				if (querySubjectID == null) {
+				if (querySubjectID_l == null) {
 					console.warn("specialfunction_derefQuery: case not considered, querySubjectID == null and queryLocationID != null!");
 					return null;
 				} else {
-					verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryLocationID, queryVariable]));
-					queryTerms.push(verbOrRelationTerm);
+					for(let querySubjectID of querySubjectID_l) {
+						verbOrRelationTerm = new TermTermAttribute(new Term(queryFunctorSort, [querySubjectID, queryLocationID, queryVariable]));
+						queryTerms.push(verbOrRelationTerm);
+					}
 					if (otherRelations.indexOf(TermUsedForQueryLocationID) != -1) {
 						otherRelations.splice(otherRelations.indexOf(TermUsedForQueryLocationID), 1);
 					}
 				}
 			}
 		}
-		if (myDeterminer != null && queryFunctorSort != null &&
+		if ((myDeterminer != null || ourDeterminer != null) && queryFunctorSort != null &&
 			!queryFunctorSort.is_a(o.getSort("property-with-value"))) {
-			queryTerms.push(new TermTermAttribute(new Term(o.getSort("verb.own"), [querySubjectID, queryVariable])));
+			for(let querySubjectID of querySubjectID_l) {
+				queryTerms.push(new TermTermAttribute(new Term(o.getSort("verb.own"), [querySubjectID, queryVariable])));
+			}
 		}
 		if (yourDeterminer != null && queryFunctorSort != null &&
 			!queryFunctorSort.is_a(o.getSort("property-with-value"))) {

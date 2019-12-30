@@ -1154,6 +1154,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("tactic display", "command-display", o, multitokens_raw);    
   this.addStandardNounPOS("generator", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("hyperdrive", "hyperdrive-generator", o, multitokens_raw);
+  this.addStandardNounPOS("mission", "goal", o, multitokens_raw);
+  this.addStandardNounPOS("objective", "goal", o, multitokens_raw);
 
   // nouns:
   this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);
@@ -1383,6 +1385,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("man", "man", Term.fromString("noun('man'[man], [singular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("men", "man", Term.fromString("noun('man'[man], [plural])", o), 1.0));
   this.addStandardNounPOS("map", "map", o, multitokens_raw);
+  this.addStandardNounPOS("mass", "mass", o, multitokens_raw);
   this.addStandardNounPOS("master key", "master-key", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("match", "match", Term.fromString("noun('match'[match], [singular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("matches", "match", Term.fromString("noun('match'[match], [plural])", o), 1.0));
@@ -1572,6 +1575,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("tire", "tire", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("today", "time.today", Term.fromString("noun('time.today'[time.today], [singular])", o), 1.0));
   this.addStandardNounPOS("toilet", "toilet", o, multitokens_raw);
+  this.addStandardNounPOS("ton", "ton", o, multitokens_raw);
   this.addStandardNounPOS("tool", "tool", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("toolbox", "toolbox", Term.fromString("noun('toolbox'[toolbox], [singular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("toolboxes", "toolbox", Term.fromString("noun('toolbox'[toolbox], [plural])", o), 1.0));
@@ -1668,6 +1672,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.walk-to", "walk to","walks to","walked to","walked to","walking to", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run-to", "run to","runs to","ran to","run to","running to", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.drop", "put down","puts down","put down","put down","putting down", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.lift", "heave","heaves","heaved","heaved","heaving", false, multitokens_raw, o);
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1750,6 +1755,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.know", "know","knows","knew","known","knowing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.know-how", "know how","knows how","knew how","known how","knowing how", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.leave", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.lift", "lift","lifts","lifted","lifted","lifting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.like", "like","likes","liked","liked","liking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.lives", "live","lives","lived","lived","living", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enumerate", "list","lists","listed","listed","listing", false, multitokens_raw, o);
@@ -1757,6 +1763,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.love", "love","loves","loved","loved","loving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.seem", "look","looks","looked","looked","looking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.look-at", "look at","looks at","looked at","looked at","looking at", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.maintain", "maintain","maintains","maintained","maintained","maintaining", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.make", "make","makes","made","made","making", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.malfunction", "malfunction","malfunctions","malfunctioned","malfunctioned","malfunctioning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.mean", "mean","means","meant","meant","meaning", false, multitokens_raw, o);
