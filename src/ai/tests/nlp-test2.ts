@@ -1323,6 +1323,13 @@ NLParseTestUnifyingListener("walk this way", o.getSort("performative"),  context
 NLParseTestUnifyingListener("walk in my direction", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
 NLParseTestUnifyingListener("walk this direction", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
 NLParseTestUnifyingListener("can you walk toward me?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.move-to(V0, direction.towards('1'[#id])))");
+NLParseTestUnifyingListener("how do i get inside the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.enter('1'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("how do i feed the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.feed('1'[#id],'5'[#id]))");
+NLParseTestUnifyingListener("how do i get more aluminum?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.get('1'[#id],[aluminium]))");
+NLParseTestUnifyingListener("please stay here", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.stay('etaoin'[#id],[space.here]))");
+NLParseTestUnifyingListener("please stay in this room", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.stay('etaoin'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("can you stay in this room?", o.getSort("performative"),  context, 'etaoin', "perf.q.action('etaoin'[#id], action.stay('etaoin'[#id],'room1'[#id]))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

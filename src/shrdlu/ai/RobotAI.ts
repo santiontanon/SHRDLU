@@ -14,6 +14,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new RobotExit_IntentionAction());
 		this.intentionHandlers.push(new RobotGo_IntentionAction());
 		this.intentionHandlers.push(new RobotTakeTo_IntentionAction());
+		this.intentionHandlers.push(new RobotStay_IntentionAction());
 		this.intentionHandlers.push(new RobotStop_IntentionAction());
 		this.intentionHandlers.push(new RobotTake_IntentionAction());
 		this.intentionHandlers.push(new RobotPutIn_IntentionAction());
@@ -245,8 +246,12 @@ class RobotAI extends A4RuleBasedAI {
             if (retval == SCRIPT_FINISHED) {
                 this.currentAction_scriptQueue.scripts.splice(0,1);
                 if (this.currentAction_scriptQueue.scripts.length == 0) {
-                	this.clearCurrentAction();
-                    this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
+                	this.currentAction_scriptQueue = null;
+                	if (this.currentActionHandler == null || 
+                		!this.currentActionHandler.needsContinuousExecution) {
+                		this.clearCurrentAction();
+                    	this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
+                    }
                 }
             } else if (retval == SCRIPT_NOT_FINISHED) {
             	// see if we are stuck in front of a door (and we will not accidentally let the player into a forbidden area):

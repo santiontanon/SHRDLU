@@ -1643,6 +1643,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "get onto","gets onto","got onto","gotten onto","getting onto", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.enter", "get inside","gets inside","got inside","gotten inside","getting inside", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "board","boards","boarded","boarded","boarding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.clean", "launder","laundered","laundered","laundered","laundering", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.clean", "wash","washes","washed","washed","washing", false, multitokens_raw, o);
@@ -1713,6 +1714,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.let", "let","lets","let","let","letting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.feed", "feed","feeds","fed","fed","feeding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.fill", "fill","fills","filled","filled","filling", false, multitokens_raw, o);
@@ -1792,7 +1794,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.show", "show","shows","showed","shown","showing", true, multitokens_raw, o);
   this.addStandardVerbPOS("verb.sleep", "sleep","sleeps","slept","slept","sleeping", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.stand", "stand","stands","stood","stood","standing", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.stop", "stay","stays","stayed","stayed","staying", false, multitokens_raw, o);
+  this.addStandardVerbPOS("action.stay", "stay","stays","stayed","stayed","staying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.stop", "stop","stops","stopped","stopped","stopping", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.suck", "suck","sucks","sucked","sucked","sucking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.supervise", "supervise","supervises","supervised","supervised","supervising", false, multitokens_raw, o);

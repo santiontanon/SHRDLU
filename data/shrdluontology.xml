@@ -619,7 +619,8 @@
     <sort name="verb.understand" super="relation-verb"/>
     <sort name="verb.seem" super="verb"/>
     <sort name="verb.stop" super="verb"/>
-    <sort name="verb.wait" super="verb.stop"/>
+    <sort name="action.stay" super="verb.stop"/>
+    <sort name="verb.wait" super="action.stay"/>
     <sort name="verb.wait-for" super="verb.wait"/>
     <sort name="verb.walk" super="verb.go"/>
     <sort name="verb.walk-to" super="verb.go-to,verb.walk"/>
@@ -658,6 +659,7 @@
     <sort name="verb.work" super="verb"/>
     <sort name="verb.works-at" super="verb"/>
     <sort name="verb.fly" super="verb.go"/>
+    <sort name="verb.feed" super="verb.go"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
