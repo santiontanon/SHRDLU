@@ -1468,6 +1468,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("position", "space.position", o, multitokens_raw);
   this.addStandardNounPOS("poster", "poster", o, multitokens_raw);
   this.addUncountableNounPOS("powder milk", "powder-milk", o);
+  this.addStandardNounPOS("power", "power", o, multitokens_raw);
+  this.addUncountableNounPOS("power", "power", o);
   this.addStandardNounPOS("power cable", "power-cord", o, multitokens_raw);
   this.addStandardNounPOS("power cord", "power-cord", o, multitokens_raw);
   this.addStandardNounPOS("power plant", "powerplant.facility", o, multitokens_raw);
@@ -1625,10 +1627,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("be", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [no-person], [infinitive-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("being", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [no-person], [gerund-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("been", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [no-person], [participle-tense])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("'m", "verb.be", Term.fromString("verb('verb.be'[symbol], [singular], [first-person], [present-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("am", "verb.be", Term.fromString("verb('verb.be'[symbol], [singular], [first-person], [present-tense])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("'re", "verb.be", Term.fromString("verb('verb.be'[symbol], [plural], [first-person], [present-tense])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("'re", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [second-person], [present-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("are", "verb.be", Term.fromString("verb('verb.be'[symbol], [plural], [first-person], [present-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("are", "verb.be", Term.fromString("verb('verb.be'[symbol], [grammatical-number], [second-person], [present-tense])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("'s", "verb.be", Term.fromString("verb('verb.be'[symbol], [singular], [third-person], [present-tense])", o), 1.0));
@@ -1673,6 +1672,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.run-to", "run to","runs to","ran to","run to","running to", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.drop", "put down","puts down","put down","put down","putting down", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.lift", "heave","heaves","heaved","heaved","heaving", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.wait", "hold on","holds on","held on","held on","holding on", false, multitokens_raw, o);
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1824,7 +1824,6 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.want", "want","wants","wanted","wanted","wanting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.wear", "wear","wears","wore","worn","wearing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.will", "will","will","would",null,null, true, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.will", "'ll","'ll","'d",null,null, true, multitokens_raw, o);
   this.addStandardVerbPOS("verb.work", "work","works","worked","worked","working", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.works-at", "work on","works on","worked on","worked on","working on", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.works-at", "work at","works at","worked at","worked at","working at", false, multitokens_raw, o);
@@ -2217,6 +2216,19 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
              tokens[i+2] == "." || tokens[i+2] == "," ||
              tokens[i+2] == "!" || tokens[i+2] == "?")) {            
             tokens[i] = tokens[i] + tokens[i+1];
+
+            if (tokens[i] == "'ll") {
+              tokens[i] = "will";
+            } else if (tokens[i] == "'re") {
+              tokens[i] = "are";
+            } else if (tokens[i] == "'m") {
+              tokens[i] = "am";
+            } else if (tokens[i] == "'ve") {
+              tokens[i] = "have";
+            } else if (tokens[i] == "'d") {
+              tokens[i] = "would";
+            }
+
             tokens.splice(i+1,1);
         }
     }

@@ -489,9 +489,11 @@ class A4RuleBasedAI extends RuleBasedAI {
 				t.functor.is_a(this.cache_sort_object) &&
 				t.attributes.length == 1) {
 				if ((<ConstantTermAttribute>t.attributes[0]).value == source) {
-					sourceObject = this.game.findObjectByIDJustObject(source);
+					let tmp:A4Object[] = this.game.findObjectByID(source);
+					if (tmp != null && tmp.length > 0) sourceObject = tmp[0];
 				} else if ((<ConstantTermAttribute>t.attributes[0]).value == target) {
-					targetObject = this.game.findObjectByIDJustObject(target);
+					let tmp:A4Object[] = this.game.findObjectByID(target);
+					if (tmp != null && tmp.length > 0) targetObject = tmp[0];
 				}
 			}/* else if (te.provenance == PERCEPTION_PROVENANCE &&
 				t.functor.is_a(this.cache_sort_space_location) &&

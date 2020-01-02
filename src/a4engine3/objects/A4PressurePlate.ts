@@ -21,7 +21,7 @@ class A4PressurePlate extends A4Object {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 
 	    if (a_name == "pressurePlateState") {
 	        this.pressurePlateState = false;
@@ -38,7 +38,7 @@ class A4PressurePlate extends A4Object {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("pressureRequired",this.pressureRequired) + "\n";
         xmlString += this.saveObjectAttributeToXML("pressurePlateState",this.pressurePlateState) + "\n";
@@ -51,9 +51,9 @@ class A4PressurePlate extends A4Object {
 	{
 		super.update(game);
 
-		var l:A4Object[] = this.map.getAllObjectCollisions(this);
-		var heaviest:A4Object = null;
-		var pressure:number = 0;
+		let l:A4Object[] = this.map.getAllObjectCollisions(this);
+		let heaviest:A4Object = null;
+		let pressure:number = 0;
 
 		for(let o of l) {
 			if (pressure<TRIGGER_PRESSURE_ITEM) {

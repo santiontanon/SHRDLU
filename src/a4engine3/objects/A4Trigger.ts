@@ -13,7 +13,7 @@ class A4Trigger extends A4Object {
     {
         if (super.loadObjectAttribute(xml)) return true;
 
-        var name:string = xml.getAttribute("name");
+        let name:string = xml.getAttribute("name");
         if (name == "triggerState") {
             this.triggerState = false;
             if (xml.getAttribute("value") == "true") this.triggerState = true;
@@ -35,7 +35,7 @@ class A4Trigger extends A4Object {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("triggerState",this.triggerState) + "\n";
 
@@ -65,9 +65,9 @@ class A4Trigger extends A4Object {
     {
         super.update(game);
         
-        var l:A4Object[] = this.map.getAllObjectCollisions(this);
-        var triggered_by:A4Object = null;
-        var playerOver:boolean = false;
+        let l:A4Object[] = this.map.getAllObjectCollisions(this);
+        let triggered_by:A4Object = null;
+        let playerOver:boolean = false;
         
         for(let o of l) {
             if (o.isPlayer()) {

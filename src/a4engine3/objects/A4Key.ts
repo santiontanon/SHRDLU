@@ -12,7 +12,7 @@ class A4Key extends A4Item {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 
 	    if (a_name == "keyID") {
 	    	this.keyID = attribute_xml.getAttribute("value");
@@ -31,7 +31,7 @@ class A4Key extends A4Item {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("keyID",this.keyID) + "\n";
 

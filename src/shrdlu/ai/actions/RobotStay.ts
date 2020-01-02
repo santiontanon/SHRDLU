@@ -10,9 +10,10 @@ class RobotStay_IntentionAction extends IntentionAction {
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.stay")) &&
-			  intention.attributes.length == 2 &&
-			  ((intention.attributes[1] instanceof VariableTermAttribute) ||
-			   (intention.attributes[1] instanceof ConstantTermAttribute))) {
+		    (intention.attributes.length == 1 ||
+		     (intention.attributes.length == 2 &&
+		 	  ((intention.attributes[1] instanceof VariableTermAttribute) ||
+			   (intention.attributes[1] instanceof ConstantTermAttribute))))) {
 			return true;
 		}
 		return false;
@@ -38,8 +39,9 @@ class RobotStay_IntentionAction extends IntentionAction {
 		this.targetMapName = null;
 
 		// find the target destination:
-		if ((intention.attributes[1] instanceof VariableTermAttribute) &&
-			 intention.attributes[1].sort.is_a(ai.o.getSort("space.here")) &&
+		if ((intention.attributes.length == 1 ||
+			 ((intention.attributes[1] instanceof VariableTermAttribute) &&
+			   intention.attributes[1].sort.is_a(ai.o.getSort("space.here")))) &&
 			requester != null &&
 			requester instanceof ConstantTermAttribute) {
 			let targetObject:A4Object = ai.game.findObjectByIDJustObject(requesterID);

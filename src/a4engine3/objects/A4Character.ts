@@ -68,7 +68,7 @@ class A4Character extends A4WalkingObject {
 
         let items_xml:Element = getFirstElementChildByTag(xml, "items");
         if (items_xml!=null) {
-//            var item_xml_l:NodeListOf<Element> = items_xml.children;
+//            let item_xml_l:NodeListOf<Element> = items_xml.children;
             let item_xml_l:HTMLCollection = items_xml.children;
             for(let i:number = 0;i<item_xml_l.length;i++) {
                 let item_xml:Element = item_xml_l[i];
@@ -117,7 +117,7 @@ class A4Character extends A4WalkingObject {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 
         if (a_name == "vehicle") {
             // this is loaded in "revisitObject"
@@ -144,22 +144,22 @@ class A4Character extends A4WalkingObject {
     {
         super.revisitObject(xml, game);
         
-        var attributes_xml:Element[] = getElementChildrenByTag(xml, "attribute");
+        let attributes_xml:Element[] = getElementChildrenByTag(xml, "attribute");
         for(let attribute_xml of attributes_xml) {
-            var a_name:string = attribute_xml.getAttribute("name");
+            let a_name:string = attribute_xml.getAttribute("name");
             if (a_name == "vehicle") {
-                var o_ID:string = attribute_xml.getAttribute("value");
-                var tmp:A4Object = game.findObjectByIDJustObject(o_ID);
+                let o_ID:string = attribute_xml.getAttribute("value");
+                let tmp:A4Object = game.findObjectByIDJustObject(o_ID);
                 if (tmp==null) {
                     console.error("Revisiting A4Character, and cannot find object with ID " + o_ID);
                 } else {
-                    var o:A4Object = tmp;
+                    let o:A4Object = tmp;
                     this.vehicle = <A4Vehicle>o;
                 }
                 break;
             } else if (a_name == "sleepingInBed") {
-                var o_ID:string = attribute_xml.getAttribute("value");
-                var tmp:A4Object = game.findObjectByIDJustObject(o_ID);
+                let o_ID:string = attribute_xml.getAttribute("value");
+                let tmp:A4Object = game.findObjectByIDJustObject(o_ID);
                 if (tmp==null) {
                     console.error("Revisiting A4Character, and cannot find object with ID " + o_ID);
                 } else {
@@ -174,7 +174,7 @@ class A4Character extends A4WalkingObject {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         if (this.vehicle!=null) xmlString += this.saveObjectAttributeToXML("vehicle",this.vehicle.ID) + "\n";
         if (this.sleepingInBed!=null) xmlString += this.saveObjectAttributeToXML("sleepingInBed",this.sleepingInBed.ID) + "\n";
@@ -195,7 +195,7 @@ class A4Character extends A4WalkingObject {
 
     update(game:A4Game) : boolean
     {
-        var ret:boolean = super.update(game);
+        let ret:boolean = super.update(game);
 
         this.hungerTimer++;
         this.thirstTimer++;
@@ -205,7 +205,7 @@ class A4Character extends A4WalkingObject {
             o.update(game);
         }
 
-        var max_movement_pixels_requested:number = 0;
+        let max_movement_pixels_requested:number = 0;
         
         // direction control:
         for(let i:number = 0;i<A4_NDIRECTIONS;i++) {
@@ -216,8 +216,8 @@ class A4Character extends A4WalkingObject {
             }
         }
         if (this.state == A4CHARACTER_STATE_IDLE) {
-            var most_recent_viable_walk_command:number = A4_DIRECTION_NONE;
-            var timer:number = 0;
+            let most_recent_viable_walk_command:number = A4_DIRECTION_NONE;
+            let timer:number = 0;
             for(let i:number = 0;i<A4_NDIRECTIONS;i++) {
                 if (this.direction_command_received_this_cycle[i]) {//} && this.canMove(i, false)) {
                     if (most_recent_viable_walk_command==A4_DIRECTION_NONE ||
@@ -284,7 +284,7 @@ class A4Character extends A4WalkingObject {
                         if (bridge == null) bridge = this.checkIfPushingAgainstMapEdgeBridge(this.direction)
                         if (bridge != null) {
                             // teleport!
-                            var target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
+                            let target:[number, number] = bridge.linkedTo.findAvailableTargetLocation(this, this.map.tileWidth, this.map.tileHeight);
                             if (target!=null) {
                                 if (game.checkPermissionToWarp(this, bridge.linkedTo.map)) {
                                     game.requestWarp(this,bridge.linkedTo.map, target[0], target[1]);
@@ -637,24 +637,24 @@ class A4Character extends A4WalkingObject {
     {
         if (this.talkingBubble!=null && 
             this.stateCycle < this.talkingBubbleDuration-15) {
-            var focus:A4Object = this;
+            let focus:A4Object = this;
             if (this.sleepingInBed != null) focus = this.sleepingInBed;
-            var px:number = Math.floor(focus.x + offsetx + focus.getPixelWidth()/2);
-            var bx:number = Math.floor(px - this.talkingBubble.width/2);
+            let px:number = Math.floor(focus.x + offsetx + focus.getPixelWidth()/2);
+            let bx:number = Math.floor(px - this.talkingBubble.width/2);
             if (bx<0) bx = 0;
             if (bx+this.talkingBubble.width>=screenWidth) bx = screenWidth - this.talkingBubble.width;
-            var py:number = (focus.y + offsety);
-            var by:number = py - (8 + this.talkingBubble.height);
+            let py:number = (focus.y + offsety);
+            let by:number = py - (8 + this.talkingBubble.height);
 //            console.log("drawTextBubbles: " + by + " vs " + screenHeight);
             if (by<0 || py<screenHeight/3) {
                 py = focus.y + offsety + focus.getPixelHeight();
                 by = py + 8;
             }
             
-            var f:number = 1;
-            var fade_speed:number = 15;
+            let f:number = 1;
+            let fade_speed:number = 15;
             if (this.stateCycle<fade_speed) f = this.stateCycle/fade_speed;
-            var limit:number = Math.floor(this.talkingBubbleDuration);
+            let limit:number = Math.floor(this.talkingBubbleDuration);
             if (this.stateCycle>limit-fade_speed) f = (limit - this.stateCycle)/fade_speed;
             if (f<0) f = 0;
             if (f>1) f = 1;
@@ -836,7 +836,7 @@ class A4Character extends A4WalkingObject {
                                 if (!this.useAction(game)) {
                                     /*
                                     // see if there is a vehicle:
-                                    var v:A4Object = this.map.getVehicleObject(this.x + this.getPixelWidth()/2 - 1, this.y + this.getPixelHeight()/2 - 1, 2, 2);
+                                    let v:A4Object = this.map.getVehicleObject(this.x + this.getPixelWidth()/2 - 1, this.y + this.getPixelHeight()/2 - 1, 2, 2);
                                     if (v!=null) {
                                         this.embark(<A4Vehicle>v);
                                         this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("embark", this.ID, this.sort, 
@@ -857,7 +857,7 @@ class A4Character extends A4WalkingObject {
                 break;
             case A4CHARACTER_COMMAND_DROP:
                 {
-                    var o:A4Object = this.inventory[argument];
+                    let o:A4Object = this.inventory[argument];
                     if (o!=null) {
                         if ((<A4Item>o).droppable) {
                             // drop:
@@ -877,7 +877,7 @@ class A4Character extends A4WalkingObject {
                 break;
             case A4CHARACTER_COMMAND_USE:
                 {
-                    var o:A4Object = this.inventory[argument];
+                    let o:A4Object = this.inventory[argument];
                     if (o!=null) {
                         if (o.usable) {
                             o.event(A4_EVENT_USE, this, this.map, game);
@@ -890,7 +890,7 @@ class A4Character extends A4WalkingObject {
             case A4CHARACTER_COMMAND_INTERACT:
                 {
                     // get the object to interact with:
-                    var collisions:A4Object[] = this.map.getAllObjectCollisionsOnlyWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
+                    let collisions:A4Object[] = this.map.getAllObjectCollisionsOnlyWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
                     if (collisions == null || collisions.length == 0) collisions = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[direction], direction_y_inc[direction]);
 //                    console.log("Character received the interact command for direction " + direction + " resulting in " + collisions.length + " collisions");
                     for(let o of collisions) {
@@ -976,95 +976,6 @@ class A4Character extends A4WalkingObject {
                     }
                 }
                 break;
-/*
-            case A4CHARACTER_COMMAND_SELL:
-                {
-                    var item_to_give:A4Object = this.inventory[argument];
-                    if (item_to_give==null) {
-                        // error!
-                        console.error("Character "+this.name+" trying to sell item "+argument+", which it does not have...");
-                    } else {
-                        var x2:number = target.x + target.getPixelWidth()/2;
-                        var y2:number = target.y + target.getPixelHeight()/2;
-                        var dx:number = Math.floor((this.x + this.getPixelWidth()/2) - x2);
-                        var dy:number = Math.floor((this.y + this.getPixelHeight()/2) - y2);
-                        var d:number = dx*dx + dy*dy;
-                        var maxd:number = Math.max(game.tileWidth, game.tileHeight)*5;
-                        if (d>maxd*maxd) {
-                            // too far!
-                            console.log("Character "+this.name+" trying to sell item "+argument+" to a character that is too far...");
-                            if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "I need to get closer!");
-                        } else {
-                            var target_c:A4Character = <A4Character>target;
-                            if (target_c.inventory.length>=A4_INVENTORY_SIZE) {
-                                if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "The other's inventory is full!");
-                            } else {
-                                if (target_c.gold<item_to_give.gold) {
-                                    if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "not enough gold!");
-                                } else {
-                                    // sell!
-                                    this.inventory.splice(argument,1);
-                                    target_c.addObjectToInventory(item_to_give, game);
-                                    if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "Thanks!");
-                                    target_c.gold -= item_to_give.gold;
-                                    this.gold += item_to_give.gold;
-                                    this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("buy", target_c.ID, target_c.sort,
-                                            this.ID, this.sort, null,
-                                            item_to_give.ID, item_to_give.sort,
-                                            this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                                    target_c.eventWithObject(A4_EVENT_RECEIVE, this, item_to_give, this.map, game);
-                                    this.eventWithObject(A4_EVENT_ACTION_SELL, target_c, item_to_give, this.map, game);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case A4CHARACTER_COMMAND_BUY:
-                {
-                    var target_c:A4Character = <A4Character>target;
-                    var item_to_give:A4Object = target_c.inventory[argument];
-                    if (item_to_give==null) {
-                        // error!
-                        console.error("Character "+this.name+" trying to buy item "+argument+" from "+target_c.name+", which it does not have...");
-                    } else {
-                        var x2:number = target.x + target.getPixelWidth()/2;
-                        var y2:number = target.y + target.getPixelHeight()/2;
-                        var dx:number = Math.floor((this.x + this.getPixelWidth()/2) - x2);
-                        var dy:number = Math.floor((this.y + this.getPixelHeight()/2) - y2);
-                        var d:number = dx*dx + dy*dy;
-                        var maxd:number = Math.max(game.tileWidth, game.tileHeight)*5;
-                        if (d>maxd*maxd) {
-                            // too far!
-                            console.log("Character "+this.name+" trying to buy item "+argument+" from a character that is too far...");
-                            if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "I need to get closer!");
-                        } else {
-                            if (this.inventory.length>=A4_INVENTORY_SIZE) {
-                                if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "My inventory is full!");
-                            } else {
-                                if (this.gold<item_to_give.gold) {
-                                    if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "not enough gold!");
-                                } else {
-                                    // buy!
-                                    target_c.inventory.splice(argument,1);
-                                    this.addObjectToInventory(item_to_give, game);
-                                    if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "Thanks!");
-                                    this.gold -= item_to_give.gold;
-                                    target_c.gold += item_to_give.gold;
-                                    this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("buy", this.ID, this.sort,
-                                                                                                   target_c.ID, target_c.sort, null, 
-                                                                                                   item_to_give.ID, item_to_give.sort,
-                                                                                                   this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                                    this.eventWithObject(A4_EVENT_RECEIVE, target_c, item_to_give, this.map, game);
-                                    this.eventWithObject(A4_EVENT_ACTION_BUY, target_c, item_to_give, this.map, game);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-    */
         }
     }
 
@@ -1097,11 +1008,11 @@ class A4Character extends A4WalkingObject {
 
     takeAction(game:A4Game) : boolean 
     {
-        var item:A4Object = this.map.getTakeableObject(this.x + this.getPixelWidth()/2 - 1, 
+        let item:A4Object = this.map.getTakeableObject(this.x + this.getPixelWidth()/2 - 1, 
                                                        this.y + this.tallness + (this.getPixelHeight()-this.tallness)/2 - 1, 2, 2);
         if (item == null) {
             // no item under the player, check to see if there is something right in front:
-            var collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[this.direction], direction_y_inc[this.direction]);
+            let collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[this.direction], direction_y_inc[this.direction]);
             for(let o of collisions) {
                 if (o.takeable) {
                     item = o;
@@ -1140,7 +1051,7 @@ class A4Character extends A4WalkingObject {
 
     useAction(game:A4Game) : boolean
     {
-        var object:A4Object = this.map.getUsableObject(this.x + this.getPixelWidth()/2 - 1, 
+        let object:A4Object = this.map.getUsableObject(this.x + this.getPixelWidth()/2 - 1, 
                                                        this.y + this.tallness + (this.getPixelHeight()-this.tallness)/2 - 1, 2, 2);
         if (object!=null) {
             //console.log("useAction on " + object.name);
@@ -1248,7 +1159,7 @@ class A4Character extends A4WalkingObject {
         if (this.inventory.length>=A4_INVENTORY_SIZE) {
             game.requestWarp(o, this.map, this.x, this.y);//, A4_LAYER_FG);
             o.event(A4_EVENT_DROP, this, this.map, game);
-            var pbr:PerceptionBufferRecord = new PerceptionBufferRecord("drop", this.ID, this.sort, 
+            let pbr:PerceptionBufferRecord = new PerceptionBufferRecord("drop", this.ID, this.sort, 
                                                                         null, null, null,
                                                                         null, null,
                                                                         this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight());
@@ -1263,7 +1174,7 @@ class A4Character extends A4WalkingObject {
 
 	removeFromInventory(o:A4Object) 
     {
-        var idx:number = this.inventory.indexOf(o);
+        let idx:number = this.inventory.indexOf(o);
         if (idx>=0) this.inventory.splice(idx, 1);
     }
 
@@ -1290,7 +1201,7 @@ class A4Character extends A4WalkingObject {
     {
         for(let o of this.inventory) {
             if (o.name == name) return [o];
-            var o2:A4Object[] = o.findObjectByName(name);
+            let o2:A4Object[] = o.findObjectByName(name);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
@@ -1301,7 +1212,7 @@ class A4Character extends A4WalkingObject {
     {
         for(let o of this.inventory) {
             if (o.ID == ID) return [o];
-            var o2:A4Object[] = o.findObjectByID(ID);
+            let o2:A4Object[] = o.findObjectByID(ID);
             if (o2!=null) return [o].concat(o2);
         }
         return null;

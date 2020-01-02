@@ -13,7 +13,7 @@ class A4Spade extends A4Item {
 		let retval:boolean = super.event(a_event, otherCharacter, map, game);
 	    
 	    if (a_event == A4_EVENT_USE) {
-	        var o:A4Object = map.getBurrowedObject(otherCharacter.x, otherCharacter.y,
+	        let o:A4Object = map.getBurrowedObject(otherCharacter.x, otherCharacter.y,
 	                                              otherCharacter.getPixelWidth(), otherCharacter.getPixelHeight());
 	        if (o==null) {
 	            game.addMessage("Nothing to dig here...");

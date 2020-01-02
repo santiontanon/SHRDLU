@@ -14,7 +14,7 @@ class Sort {
     is_a(s:Sort):boolean
     {
         if (Sort.s_precomputedIsA != null) {
-            var offs:number = this.ID + s.ID*Sort.s_next_ID;
+            let offs:number = this.ID + s.ID*Sort.s_next_ID;
             if (Sort.s_precomputedIsA[offs] == undefined) {
                 Sort.s_precomputedIsA[offs] = this.is_a_internal(s);
             }
@@ -66,11 +66,11 @@ class Sort {
 
     getAncestors() : Sort[]
     {
-        var closed:Sort[] = [];
-        var open:Sort[] = [];
+        let closed:Sort[] = [];
+        let open:Sort[] = [];
         open = open.concat(this.parents);
         while(open.length > 0) {
-            var s:Sort = open[0];
+            let s:Sort = open[0];
             open.splice(0,1);
             if (closed.indexOf(s)==-1) closed.push(s);
             open = open.concat(s.parents);

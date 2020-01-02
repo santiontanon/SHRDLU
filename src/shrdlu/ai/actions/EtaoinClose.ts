@@ -9,89 +9,97 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:EtaoinAI = <EtaoinAI>ai_raw;
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
-
-		let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+		let ai:EtaoinAI = <EtaoinAI>ai_raw;
+		let requester:TermAttribute = ir.requester;
+		let alternative_actions:Term[] = ir.alternative_actions;
+		if (alternative_actions == null) alternative_actions = [ir.action];
+		let denyrequestCause:Term = null;
+		let anySuccessful:boolean = false;
 		let doors:A4Door[] = [];
+		let lights:A4Object[] = [];
 
-		// check if it's a door:
-		let door_tmp:A4Object = ai.game.findObjectByIDJustObject(targetID);
-		if (door_tmp != null && (door_tmp instanceof A4Door)) {
-			doors.push(door_tmp);
-		} else if (door_tmp == null) {
-        	// see if it's a location with a door (e.g., a bedroom):
-        	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
-        	let belong_l:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("verb.belong"), 2, ai.o);
-        	for(let belong of belong_l) {
-    			let t:Term = belong.terms[0];
-    			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
-    				(t.attributes[1] instanceof ConstantTermAttribute)) {
-    				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
-    					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
-    					if (door != null && (door instanceof A4Door)) {
-    						doors.push(door);
-    					}
-    				}
-    			}
-        	}
-		} else if (door_tmp.sort.is_a(ai.o.getSort("light"))) {
-			// if it's a light, redirect to switch.on:
-			let term2:Term = new Term(ai.o.getSort("verb.switch-off"), intention.attributes);
-			ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
-			return true;							
+		for(let intention of alternative_actions) {
+			let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+
+			// check if it's a door:
+			let door_tmp:A4Object = ai.game.findObjectByIDJustObject(targetID);
+			if (door_tmp != null) {
+				if (door_tmp instanceof A4Door) {
+					doors.push(door_tmp);
+				} else if (door_tmp.sort.is_a(ai.o.getSort("light"))) {
+					lights.push(door_tmp);
+				} else {
+					denyrequestCause = Term.fromString("#not(door('"+targetID+"'[#id]))", ai.o);
+				}
+			} else if (door_tmp == null) {
+	        	// see if it's a location with a door (e.g., a bedroom):
+	        	// We don't launch a whole inference here, as these facts are directly on the knowledge base:
+	        	let belong_l:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("verb.belong"), 2, ai.o);
+	        	for(let belong of belong_l) {
+	    			let t:Term = belong.terms[0];
+	    			if ((t.attributes[0] instanceof ConstantTermAttribute) &&
+	    				(t.attributes[1] instanceof ConstantTermAttribute)) {
+	    				if ((<ConstantTermAttribute>t.attributes[1]).value == targetID) {
+	    					let door:A4Object = ai.game.findObjectByIDJustObject((<ConstantTermAttribute>t.attributes[0]).value);
+	    					if (door != null && (door instanceof A4Door)) {
+	    						doors.push(door);
+	    					}
+	    				}
+	    			}
+	        	}
+			}
 		}
 
-		if (doors.length == 0) {
-			// not a door!
-			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let cause:Term = Term.fromString("#not(door('"+targetID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+		let numberConstraint:number = this.resolveNumberConstraint(ir.numberConstraint, doors.length + lights.length);
+
+		if (lights.length > 0) {
+			for(let light of lights) {
+				let room:AILocation = ai.game.getAILocation(light);
+				if (ai.game.turnLightOff(room.id)) {
+            		anySuccessful = true;
+            		numberConstraint --;
+            		if (numberConstraint <= 0) break;
+				} else {
+					denyrequestCause = Term.fromString("powered.state('"+light.ID+"'[#id], 'powered.off'[powered.off])", ai.o);
+				}
 			}
-		} else {
+		}
+		if (doors.length > 0) {
     		// we have found at least a door!
-    		let anyNotPermitted:boolean = false;
-    		let doorsToClose:A4Door[] = [];
     		for(let door of doors) {
 	            if (!door.closed) {
 					// see if player has permission:
 	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf(door.doorID) == -1) {
-	            		doorsToClose.push(door);
+	            		door.eventWithID(A4_EVENT_CLOSE, door.doorID, null, door.map, ai.game);
+	            		anySuccessful = true;
+	            		numberConstraint --;
+	            		if (numberConstraint <= 0) break;
 					} else {
-						anyNotPermitted = true;
+						denyrequestCause = Term.fromString("#not(verb.have("+requester+",[permission-to]))", ai.o);
 					}
+	            } else {
+	            	denyrequestCause = Term.fromString("property.closed('"+door.ID+"'[#id])", ai.o);
 	            }
 	        }
+	    }
 
-	        if (anyNotPermitted) {
-				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.have("+requester+",[permission-to]))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
-				return true;	        	
-	        }
+	    if (anySuccessful) {
+        	if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));        			        		
+        	}
 
-	        if (doorsToClose.length > 0) {
-	        	for(let door of doorsToClose) {
-	        		door.eventWithID(A4_EVENT_CLOSE, door.doorID, null, door.map, ai.game);
-	        	}
-	        	if (requester != null) {
-					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));        			        		
-	        	}
+        	app.achievement_nlp_all_etaoin_actions[1] = true;
+        	app.trigger_achievement_complete_alert();
 
-	        	app.achievement_nlp_all_etaoin_actions[2] = true;
-	        	app.trigger_achievement_complete_alert();
-	        } else {
-            	// it's already closed
-				if (requester != null) {
-					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",property.closed('"+targetID+"'[#id])))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-				}
-
-	        }
+	    } else {
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+			if (denyrequestCause == null) {
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			} else {
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+			}
 		}
-
 		return true;
 	}
 

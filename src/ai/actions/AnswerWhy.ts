@@ -160,9 +160,15 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 			if (request == null) return null;
 			console.log("convertPerformativeToWhyQuestionAnswerIntention: perf.ack.denyrequest with request: " + request.performative);
 			let requestedAction:TermAttribute = request.performative.attributes[1];
-			let term:Term = new Term(ai.o.getSort("#not"),[new TermTermAttribute(new Term(ai.o.getSort("verb.can"), 
+			let term1:Term = new Term(ai.o.getSort("#not"),[new TermTermAttribute(new Term(ai.o.getSort("verb.can"), 
 																						  [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
 																						   requestedAction]))]);
+			let term:Term = null;
+			if (request.performative.attributes.length >= 3) {
+				term = new Term(ai.o.getSort("#and"),[new TermTermAttribute(term1), request.performative.attributes[2]]);
+			} else {
+				term = term1;
+			}
 			let newIntention:Term = new Term(ai.o.getSort("action.answer.why"),
 											 [new ConstantTermAttribute(nlcp.speaker, ai.o.getSort("#id")),
 											  nlcp.performative.attributes[0],

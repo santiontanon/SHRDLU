@@ -20,7 +20,7 @@ class A4ObstacleContainer extends A4Container {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
         
         if (a_name == "doorID") {
             this.doorID = attribute_xml.getAttribute("value");
@@ -50,7 +50,7 @@ class A4ObstacleContainer extends A4Container {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         if (this.doorID!=null) xmlString += this.saveObjectAttributeToXML("doorID",this.doorID) + "\n";
         xmlString += this.saveObjectAttributeToXML("closed",this.closed) + "\n";
@@ -76,7 +76,7 @@ class A4ObstacleContainer extends A4Container {
 	            // see if the character has the key:
 	            for(let o of character.inventory) {
 	                if (o.isKey()) {
-	                    var key:A4Key = <A4Key>o;
+	                    let key:A4Key = <A4Key>o;
 	                    if (key.keyID == this.doorID) {
 	                        // the player has the proper key!
 	                        this.eventWithID(A4_EVENT_OPEN, key.keyID, character, map, game);

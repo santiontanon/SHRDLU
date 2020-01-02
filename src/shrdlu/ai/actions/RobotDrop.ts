@@ -10,8 +10,13 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
 		let ai:RobotAI = <RobotAI>ai_raw;
-		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
+		let alternative_actions:Term[] = ir.alternative_actions;
+		if (alternative_actions == null) alternative_actions = [ir.action];
+		let denyrequestCause:Term = null;
+		let numberConstraint:number = this.resolveNumberConstraint(ir.numberConstraint, alternative_actions.length);
+		let itemID_l:string[] = [];
+		let locationID_l:string[] = [];
 
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
@@ -21,30 +26,33 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			return true;
 		}			
 
-		let itemID:string = null
-		let locationID:string = null;
+		for(let intention of alternative_actions) {
+			if (intention.attributes.length == 2 && 
+				(intention.attributes[0] instanceof ConstantTermAttribute) &&
+				(intention.attributes[1] instanceof ConstantTermAttribute)) {
+				let id:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+				if (id != null && itemID_l.indexOf(id) == -1) itemID_l.push(id);
+			}
+			if (intention.attributes.length == 3 && 
+				(intention.attributes[0] instanceof ConstantTermAttribute) &&
+				(intention.attributes[1] instanceof ConstantTermAttribute) &&
+				(intention.attributes[2] instanceof ConstantTermAttribute)) {
+				let id:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+				let id2:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
+				if (id != null && itemID_l.indexOf(id) == -1) itemID_l.push(id);
+				if (id2 != null && locationID_l.indexOf(id2) == -1) locationID_l.push(id2);
+			}
+			if (intention.attributes.length == 3 && 
+				(intention.attributes[0] instanceof ConstantTermAttribute) &&
+				(intention.attributes[1] instanceof ConstantTermAttribute) &&
+				(intention.attributes[2] instanceof VariableTermAttribute) &&
+				intention.attributes[2].sort.is_a(ai.o.getSort("space.here"))) {
+				let id:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+				if (id != null && itemID_l.indexOf(id) == -1) itemID_l.push(id);
+			}
+		}
 
-		if (intention.attributes.length == 2 && 
-			(intention.attributes[0] instanceof ConstantTermAttribute) &&
-			(intention.attributes[1] instanceof ConstantTermAttribute)) {
-			itemID = (<ConstantTermAttribute>(intention.attributes[1])).value;
-		}
-		if (intention.attributes.length == 3 && 
-			(intention.attributes[0] instanceof ConstantTermAttribute) &&
-			(intention.attributes[1] instanceof ConstantTermAttribute) &&
-			(intention.attributes[2] instanceof ConstantTermAttribute)) {
-			itemID = (<ConstantTermAttribute>(intention.attributes[1])).value;
-			locationID = (<ConstantTermAttribute>(intention.attributes[2])).value;
-		}
-		if (intention.attributes.length == 3 && 
-			(intention.attributes[0] instanceof ConstantTermAttribute) &&
-			(intention.attributes[1] instanceof ConstantTermAttribute) &&
-			(intention.attributes[2] instanceof VariableTermAttribute) &&
-			intention.attributes[2].sort.is_a(ai.o.getSort("space.here"))) {
-			itemID = (<ConstantTermAttribute>(intention.attributes[1])).value;
-		}
-
-		if (itemID == null) {
+		if (itemID_l.length == 0 || locationID_l.length > 1) {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
@@ -53,32 +61,43 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		let item:A4Object = null;
+		let item_l:A4Object[] = [];
 		for(let o of ai.robot.inventory) {
-			if (o.ID == itemID) {
-				item = o;
-				break;
+			if (itemID_l.indexOf(o.ID) != -1) {
+				if (ai.objectsNotAllowedToGive.indexOf(o.ID) == -1) {
+					item_l.push(o);
+				} else {
+					denyrequestCause = Term.fromString("#not(verb.can('"+ai.selfID+"'[#id], action.give('"+ai.selfID+"'[#id], '"+o.ID+"'[#id], "+requester+")))", ai.o);
+				}
 			}
 		}
-		if (item == null) {
+		if (item_l.length == 0) {
 			if (requester != null) {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+itemID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				if (denyrequestCause != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+				} else {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				}
 			}
 			return true;
 		}
 
-		if (locationID == null) {
-			// just drop the object:
+		if (locationID_l.length == 0) {
+			// just drop the objects:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = null
-	    	s = new A4Script(A4_SCRIPT_DROP, itemID, null, 0, false, false);
-	        q.scripts.push(s);
-	        ai.setNewAction(intention, requester, q, null);
-			ai.addLongTermTerm(new Term(intention.functor,
-										[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-										 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+	        for(let item of item_l) {
+	    		let s:A4Script = new A4Script(A4_SCRIPT_DROP, item.ID, null, 0, false, false);
+	        	q.scripts.push(s);
+				ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
+											  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+											   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
+	        	numberConstraint--;
+	        	if (numberConstraint <= 0) break;
+	        }
+	        ai.setNewAction(alternative_actions[0], requester, q, null);
 			ai.intentionsCausedByRequest.push(ir);
 
 			app.achievement_nlp_all_robot_actions[5] = true;
@@ -91,17 +110,25 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			}
 
 		} else {
-			let targetLocation:AILocation = ai.game.getAILocationByID(locationID);
+			let targetLocation:AILocation = ai.game.getAILocationByID(locationID_l[0]);
 			let destinationMap:A4Map = null;
 			let destinationX:number;
 			let destinationY:number;
 			if (targetLocation == null) {
 				// check if it's an object, and redirect to put-in!
-				let containerObjectL:A4Object[] = ai.game.findObjectByID(locationID);
+				let containerObjectL:A4Object[] = ai.game.findObjectByID(locationID_l[0]);
 				if (containerObjectL != null && containerObjectL.length > 0) {
-					let term2:Term = intention.clone([]);
+					let term2:Term = alternative_actions[0].clone([]);
 					term2.functor = ai.o.getSort("action.put-in");
-					ai.intentions.push(new IntentionRecord(term2, null, null, null, ai.time_in_seconds));
+					let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.time_in_seconds);
+					ir2.alternative_actions = [];
+					for(let aa of ir.alternative_actions) {
+						let aa2:Term = aa.clone([]);
+						aa2.functor = ai.o.getSort("action.put-in");
+						ir2.alternative_actions.push(aa2);
+					}
+					ir2.numberConstraint = ir.numberConstraint;
+					ai.intentions.push(ir2);
 					return true;
 				}
 			} else {
@@ -120,7 +147,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			}
 
 			// Check if the robot can go:
-			let cannotGoCause:Term = ai.canGoTo(destinationMap, locationID, requester);
+			let cannotGoCause:Term = ai.canGoTo(destinationMap, locationID_l[0], requester);
 			if (cannotGoCause != null) {
 				if (requester != null) {
 					// deny request:
@@ -158,12 +185,17 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        s.x = destinationX;
 	        s.y = destinationY;
 	        q.scripts.push(s);
-	        s = new A4Script(A4_SCRIPT_DROP, itemID, null, 0, false, false);
-	        q.scripts.push(s);
-			ai.setNewAction(intention, requester, q, null);
-			ai.addLongTermTerm(new Term(intention.functor,
-										[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-										 new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+	        for(let item of item_l) {
+	    		s = new A4Script(A4_SCRIPT_DROP, item.ID, null, 0, false, false);
+	        	q.scripts.push(s);
+
+	        	numberConstraint--;
+	        	if (numberConstraint <= 0) break;
+	        }
+			ai.setNewAction(alternative_actions[0], requester, q, null);
+			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
+										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+										   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
 			ai.intentionsCausedByRequest.push(ir);
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";

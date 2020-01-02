@@ -34,7 +34,7 @@ Just a small log of the performatives the game is using and what are the paramet
 </ul>
 <ul>
 	<li><b>perf.request.action(listener, action)</b></li>
-	<li><b>perf.request.action(listener, action, constraint)</b>: like the previous one, but where "action" contains a variable, and inference will be launched to resolve it based on "constraint".</li>
+	<li><b>perf.request.action(listener, action, constraint, number-constraint)</b>: like the previous one, but where "action" contains a variable, and inference will be launched to resolve it based on "constraint". The numeric constraint specifies how many of the possible matches by inference should be acted upon. E.g., "take a green block" will have a "number.1", and "switch on all the lights" will have a "all". Other values are possible.</li>
 	<li><b>perf.request.stopaction(listener, action)</b></li>
 	<li><b>perf.request.repeataction(listener)</b></li>
 	<li><b>perf.request.repeataction(listener, action)</b></li>
@@ -60,7 +60,8 @@ Most of the following performatives could just be defined as perf.q.query, but i
 	<li><b>perf.q.whatis.noname(listener, ...)</b>: ...</li>
 </ul>
 <ul>
-	<li><b>perf.q.action(listener, ...)</b>: ...</li>
+	<li><b>perf.q.action(listener, action)</b></li>
+	<li><b>perf.q.action(listener, action, constraint, number-constraint)</b>: like the previous one, but where "action" contains a variable, and inference will be launched to resolve it based on "constraint". The numeric constraint specifies how many of the possible matches by inference should be acted upon. E.g., "take a green block" will have a "number.1", and "switch on all the lights" will have a "all". Other values are possible.</li>
 	<li><b>perf.q.when(listener, ...)</b>: ...</li>
 	<li><b>perf.q.howmany(listener, ...)</b>: ...</li>
 	<li><b>perf.q.why(listener, ...)</b>: ...</li>

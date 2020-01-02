@@ -60,8 +60,9 @@ class SentenceContainer {
 	}
 
 
-	previousStateSentenceToReplace(t:Term, sign:boolean) : Sentence
+	previousStateSentencesToReplace(t:Term, sign:boolean) : Sentence[]
 	{
+		let results:Sentence[] = [];
 		let l:SentenceEntry[] = this.sentenceHash[t.functor.name];
 		if (l != null) {
 			for(let se2 of l) {
@@ -70,11 +71,11 @@ class SentenceContainer {
 					  TermContainer.termReplacesPreviousStateTerm(t, se2.sentence.terms[0])) ||
 					 (se2.sentence.sign[0] != sign &&
 					  t.equalsNoBindings(se2.sentence.terms[0]) == 1))) {
-					return se2.sentence;
+					results.push(se2.sentence);
 				}
 			}
 		}		
-		return null;
+		return results;
 	}
 
 

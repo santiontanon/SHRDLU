@@ -12,7 +12,7 @@ class A4Item extends A4Object {
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
         
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
         
         if (a_name == "useUponTake") {
             this.useUponTake = false;
@@ -32,7 +32,7 @@ class A4Item extends A4Object {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("useUponTake",this.useUponTake) + "\n";
         xmlString += this.saveObjectAttributeToXML("droppable",this.droppable) + "\n";

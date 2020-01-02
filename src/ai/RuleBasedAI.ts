@@ -246,7 +246,17 @@ class IntentionRecord {
 		if (cause_xml != null) {
 			cause = CauseRecord.fromXML(cause_xml, o);
 		}
-		return new IntentionRecord(action, requester, requestingPerformative, cause, timeStamp);
+		let ir:IntentionRecord = new IntentionRecord(action, requester, requestingPerformative, cause, timeStamp);
+
+		let alternative_actions_xml_l:Element[] = getElementChildrenByTag(xml, "alternative_action");
+		if (alternative_actions_xml_l.length > 0) {
+			ir.alternative_actions = [];
+			for(let alternative_actions_xml of alternative_actions_xml_l) {
+				ir.alternative_actions.push(Term.fromStringInternal(alternative_actions_xml.getAttribute("action"), o, variableNames, variables).term);
+			}
+		}
+		if (xml.getAttribute("numberConstraint") != null) ir.numberConstraint = Term.parseAttribute(xml.getAttribute("numberConstraint"), o, variableNames, variables);
+		return ir;
 	}
 
 
@@ -264,23 +274,39 @@ class IntentionRecord {
 										 (context == null ? "":
 										 				    " requestingPerformativeSpeaker=\""+this.requestingPerformative.speaker+"\""+
 										 				    " requestingPerformative=\""+context.performatives.indexOf(this.requestingPerformative)+"\"")+
-										 " timeStamp=\""+this.timeStamp+"\"";										 
-		if (this.cause == null) {
+										 " timeStamp=\""+this.timeStamp+"\""+
+										 (this.numberConstraint == null ? "":
+										 					" numberConstraint=\""+this.numberConstraint.toStringXMLInternal(variables, variableNames)+"\"");
+		if (this.cause == null && this.alternative_actions == null) {
 			xml += "/>";
 		} else {
 			xml += ">\n";
-		    xml += this.cause.saveToXML();
+			if (this.cause != null) xml += this.cause.saveToXML();
+			if (this.alternative_actions != null) {
+				for(let alternative_action of this.alternative_actions) {
+					xml += "<alternative_action action=\"" + alternative_action.toStringXMLInternal(variables, variableNames) + "\"/>";
+				}
+			}
 		    xml +="</IntentionRecord>";
 		}
 		return xml;
 	}
 
 
-	action:Term = null;
+	action:Term = null;	
 	requester:TermAttribute = null;
 	requestingPerformative:NLContextPerformative = null;
-	cause:CauseRecord = null;	// if it had a cause, other than bing requested by "requester", we specify it here
+	cause:CauseRecord = null;	// if it had a cause, other than being requested by "requester", we specify it here
 	timeStamp:number = null;
+
+	alternative_actions:Term[] = null;	// some times, the "action" field comes from having run an inference process and some
+										// variables might have multiple alternative values. This list contains all the possible
+										// values, in case the "action" field (which should be = to alternative_actions[0]) cannot
+										// be executed, but another can! This is used, for example for requests such as:
+										// "take a green block" (where there might be more than one green block, and some might not
+										// be takeable).
+	numberConstraint:TermAttribute = null;	// If a list of alternative_actions is specified, this field specifies how many of
+											// those need to be processed. This could be [number.1], or [all], for example.
 }
 
 
@@ -308,6 +334,31 @@ abstract class IntentionAction {
 	actionScriptsFailed(ai:RuleBasedAI, requester:TermAttribute) 
 	{		
 	}
+
+
+	resolveNumberConstraint(numberConstraint:TermAttribute, max:number):number
+	{
+		if (numberConstraint != null) {
+			if (numberConstraint.sort.is_a_string("all")) return max;
+			if (numberConstraint.sort.is_a_string("number.1")) return 1;
+			if (numberConstraint.sort.is_a_string("number.2")) return 2;
+			if (numberConstraint.sort.is_a_string("number.3")) return 3;
+			if (numberConstraint.sort.is_a_string("number.4")) return 4;
+			if (numberConstraint.sort.is_a_string("number.5")) return 5;
+			if (numberConstraint.sort.is_a_string("number.6")) return 6;
+			if (numberConstraint.sort.is_a_string("number.7")) return 7;
+			if (numberConstraint.sort.is_a_string("number.8")) return 8;
+			if (numberConstraint.sort.is_a_string("number.9")) return 9;
+			if (numberConstraint.sort.is_a_string("number.10")) return 10;
+			if (numberConstraint.sort.is_a_string("number") && 
+				numberConstraint instanceof ConstantTermAttribute) {
+				let value:string = (<ConstantTermAttribute>numberConstraint).value;
+				return Number(value);
+			}
+		}
+		return 1;
+	}
+
 
 
 	needsContinuousExecution:boolean = false;
@@ -659,14 +710,13 @@ class RuleBasedAI {
 			this.addLongTermTerm(term, provenance);
 			return true;
 		} else if (term.functor.is_a(this.cache_sort_stateSort)) {
-			let s:Sentence = this.longTermMemory.previousStateSentenceToReplace(term, true);
-			if (s != null) {
+			// check if we have any contradiction with long term memory, and remove the contradiction:
+			let s_l:Sentence[] = this.longTermMemory.previousStateSentencesToReplace(term, true);
+			for(let s of s_l) {
 				if (term.equalsNoBindings(s.terms[0]) != 1) {
 					// only if the new term is different from the previous one, we need to do any update:
-					this.addLongTermTerm(term, provenance);
-					//console.log("state short term replaces long term: " + term);
+					this.longTermMemory.removeSentence(s);
 				}
-				return true;
 			}
 		}
 
@@ -1122,7 +1172,7 @@ class RuleBasedAI {
 		if (perf2.attributes[1] instanceof TermTermAttribute) {
 			let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
 			let needsInference:boolean = false;
-			if (perf2.attributes.length == 3 &&
+			if (perf2.attributes.length == 4 &&
 				perf2.attributes[2] instanceof TermTermAttribute) {
 				needsInference = true;
 				for(let ih of this.intentionHandlers) {
@@ -1160,7 +1210,7 @@ class RuleBasedAI {
 				}
 			}
 			if (perf2.attributes.length == 2 ||
-				(perf2.attributes.length == 3 && !needsInference)) {
+				(perf2.attributes.length == 4 && !needsInference)) {
 				// First check if the actor is us:
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);

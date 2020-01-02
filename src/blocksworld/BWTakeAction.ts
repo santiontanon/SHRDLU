@@ -19,10 +19,10 @@ class BWTake_IntentionAction extends IntentionAction {
 	{
 		let ai:BlocksWorldRuleBasedAI = <BlocksWorldRuleBasedAI>ai_raw;
 		let world:ShrdluBlocksWorld = ai.world;
-		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
-
-		let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+		let alternative_actions:Term[] = ir.alternative_actions;
+		if (alternative_actions == null) alternative_actions = [ir.action];
+		let denyrequestCause:Term = null;
 
 		// Check if we are already holding something:
 		if (world.objectInArm != null) {
@@ -32,44 +32,50 @@ class BWTake_IntentionAction extends IntentionAction {
 			return true;
 		}
 
-		// Check if it's an object that can be picked up:
-		this.targetObject = world.getObject(targetID);
-		if (this.targetObject == null || 
-			(this.targetObject.type != SHRDLU_BLOCKTYPE_BLOCK &&
-			 this.targetObject.type != SHRDLU_BLOCKTYPE_BOX &&
-			 this.targetObject.type != SHRDLU_BLOCKTYPE_PYRAMID)) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+		for(let intention of alternative_actions) {
+			let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+
+			// Check if it's an object that can be picked up:
+			this.targetObject = world.getObject(targetID);
+			if (this.targetObject == null || 
+				(this.targetObject.type != SHRDLU_BLOCKTYPE_BLOCK &&
+				 this.targetObject.type != SHRDLU_BLOCKTYPE_BOX &&
+				 this.targetObject.type != SHRDLU_BLOCKTYPE_PYRAMID)) {
+				continue;
+			}
+
+			// Check if there is anything on top of it:
+			let objectsOnTop:ShrdluBlock[] = world.objectsOnTopObject(this.targetObject);
+			if (objectsOnTop.length > 0) {
+				denyrequestCause = Term.fromString("space.directly.on.top.of('"+objectsOnTop[0].ID+"'[#id], '"+targetID+"'[#id])", ai.o);
+				continue;
+			}
+			let objectsInside:ShrdluBlock[] = world.objectsInsideObject(this.targetObject);
+			if (objectsInside.length > 0) {
+				denyrequestCause = Term.fromString("space.inside.of('"+objectsInside[0].ID+"'[#id], '"+targetID+"'[#id])", ai.o);
+				continue;
+			}
+
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+
+			// Take it:
+			ai.intentionsCausedByRequest.push(ir);
+			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
+										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+										   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+			ai.currentActionHandler = this;
+			this.executeContinuous(ai);		
 			return true;
 		}
 
-		// Check if there is anything on top of it:
-		let objectsOnTop:ShrdluBlock[] = world.objectsOnTopObject(this.targetObject);
-		if (objectsOnTop.length > 0) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			let cause:Term = Term.fromString("space.directly.on.top.of('"+objectsOnTop[0].ID+"'[#id], '"+targetID+"'[#id])", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			return true;
+		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+		if (denyrequestCause == null) {
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+		} else {
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
 		}
-		let objectsInside:ShrdluBlock[] = world.objectsInsideObject(this.targetObject);
-		if (objectsInside.length > 0) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			let cause:Term = Term.fromString("space.inside.of('"+objectsInside[0].ID+"'[#id], '"+targetID+"'[#id])", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			return true;
-		}
-
-		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-
-		// Take it:
-		ai.intentionsCausedByRequest.push(ir);
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
-		ai.currentActionHandler = this;
-		this.executeContinuous(ai);		
-		return true;
+		return true;		
 	}
 
 

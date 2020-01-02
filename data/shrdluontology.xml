@@ -469,6 +469,8 @@
     <sort name="signal" super="abstract-entity"/>
     <sort name="distress-signal" super="signal"/>
 
+    <sort name="power" super="abstract-entity"/>
+
     <sort name="feeling" super="abstract-entity"/>
 
     <sort name="chemical-element" super="physical-entity"/>

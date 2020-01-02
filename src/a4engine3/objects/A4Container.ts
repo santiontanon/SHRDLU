@@ -12,17 +12,17 @@ class A4Container extends A4Item {
     {
         super.loadObjectAdditionalContent(xml, game, of, objectsToRevisit_xml, objsctsToRevisit_object);
         
-        var items_xml:Element = getFirstElementChildByTag(xml, "items");
+        let items_xml:Element = getFirstElementChildByTag(xml, "items");
         if (items_xml != null) {
-//            var item_xml_l:NodeListOf<Element> = items_xml.children;
-            var item_xml_l:HTMLCollection = items_xml.children;
+//            let item_xml_l:NodeListOf<Element> = items_xml.children;
+            let item_xml_l:HTMLCollection = items_xml.children;
             for(let i:number = 0;i<item_xml_l.length;i++) {
-                var item_xml:Element = item_xml_l[i];
-                var tmp:string = item_xml.getAttribute("probability");
+                let item_xml:Element = item_xml_l[i];
+                let tmp:string = item_xml.getAttribute("probability");
                 if (tmp != null) {
                     if (Math.random() >= Number(tmp)) continue;
                 }
-                var completeRedefinition:boolean = false;
+                let completeRedefinition:boolean = false;
                 if (item_xml.getAttribute("completeRedefinition") == "true") completeRedefinition = true;
                 let item:A4Object = null;
                 if (item_xml.getAttribute("class") != null) {
@@ -31,7 +31,7 @@ class A4Container extends A4Item {
                     // for compatibility with previous formats
                     item = of.createObject(item_xml.getAttribute("type"), game, false, completeRedefinition);
                 }
-                var id:string = item_xml.getAttribute("id");
+                let id:string = item_xml.getAttribute("id");
                 if (id!=null) {
                     item.ID = id;
                     if (!isNaN(Number(id)) &&
@@ -46,7 +46,7 @@ class A4Container extends A4Item {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
         
         if (this.content.length>0) {
             xmlString += "<items>\n";
@@ -108,7 +108,7 @@ class A4Container extends A4Item {
     {
         for(let o of this.content) {
             if (o.name == name) return [o];
-            var o2:A4Object[] = o.findObjectByName(name);
+            let o2:A4Object[] = o.findObjectByName(name);
             if (o2!=null) return [o].concat(o2);
         }
         return null;
@@ -119,7 +119,7 @@ class A4Container extends A4Item {
     {
         for(let o of this.content) {
             if (o.ID == ID) return [o];
-            var o2:A4Object[] = o.findObjectByID(ID);
+            let o2:A4Object[] = o.findObjectByID(ID);
             if (o2!=null) return [o].concat(o2);
         }
         return null;

@@ -10,7 +10,7 @@ class A4PlayerCharacter extends A4Character {
         if (super.loadObjectAttribute(attribute_xml)) return true;
         
         // This function is just so that we can reuse object class definitions between Players and AI characters.
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
         if (a_name == "sightRadius") {
             return true;
         } else if (a_name == "respawn") {

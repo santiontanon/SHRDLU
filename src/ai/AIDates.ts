@@ -40,9 +40,9 @@ function getCurrentDayHour(in_game_seconds:number) : number
 
 function getCurrentYearDay(in_game_seconds:number) : number
 {
-    var days:number = Math.floor(in_game_seconds/(24*60*60)) + start_year_day;
-    var year:number = start_year;
-    var days_in_year:number = 365;
+    let days:number = Math.floor(in_game_seconds/(24*60*60)) + start_year_day;
+    let year:number = start_year;
+    let days_in_year:number = 365;
     if (isLeapYear(year)) days_in_year = 366;
     while(days >= days_in_year) {
         year++;
@@ -57,9 +57,9 @@ function getCurrentYearDay(in_game_seconds:number) : number
 
 function getCurrentYear(in_game_seconds:number) : number
 {
-    var days:number = Math.floor(in_game_seconds/(24*60*60)) + start_year_day;
-    var year:number = start_year;
-    var days_in_year:number = 365;
+    let days:number = Math.floor(in_game_seconds/(24*60*60)) + start_year_day;
+    let year:number = start_year;
+    let days_in_year:number = 365;
     if (isLeapYear(year)) days_in_year = 366;
     while(days >= days_in_year) {
         year++;
@@ -74,12 +74,12 @@ function getCurrentYear(in_game_seconds:number) : number
 
 function getCurrentDayOfTheMonth(in_game_seconds:number) : number
 {
-    var day:number = getCurrentYearDay(in_game_seconds);
-    var year:number = getCurrentYear(in_game_seconds);
-    var monthDays:number[] = [31,28,31,30,31,30,
+    let day:number = getCurrentYearDay(in_game_seconds);
+    let year:number = getCurrentYear(in_game_seconds);
+    let monthDays:number[] = [31,28,31,30,31,30,
                               31,31,30,31,30,31];
     if (isLeapYear(year)) monthDays[1] = 29;
-    var month:number = 0;
+    let month:number = 0;
     while(day>=monthDays[month]) {
         day -= monthDays[month];
         month++;
@@ -90,12 +90,12 @@ function getCurrentDayOfTheMonth(in_game_seconds:number) : number
 
 function getCurrentMonth(in_game_seconds:number) : number
 {
-    var day:number = getCurrentYearDay(in_game_seconds);
-    var year:number = getCurrentYear(in_game_seconds);
-    var monthDays:number[] = [31,28,31,30,31,30,
+    let day:number = getCurrentYearDay(in_game_seconds);
+    let year:number = getCurrentYear(in_game_seconds);
+    let monthDays:number[] = [31,28,31,30,31,30,
                               31,31,30,31,30,31];
     if (isLeapYear(year)) monthDays[1] = 29;
-    var month:number = 0;
+    let month:number = 0;
     while(day>=monthDays[month]) {
         day -= monthDays[month];
         month++;
@@ -106,18 +106,18 @@ function getCurrentMonth(in_game_seconds:number) : number
 
 function getCurrentDayOfTheWeek(in_game_seconds:number) : number
 {
-    var day:number = Math.floor(in_game_seconds/(24*60*60)) + start_day_of_the_week;
+    let day:number = Math.floor(in_game_seconds/(24*60*60)) + start_day_of_the_week;
     return day%7;
 }
 
 
 function getCurrentDateString(in_game_seconds:number) : string
 {
-    var months:string[] = ["January", "February", "March", "April", 
+    let months:string[] = ["January", "February", "March", "April", 
                            "May", "June", "July", "August", 
                            "September", "October", "November", "December"];
-    var days:string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    var d:string = days[getCurrentDayOfTheWeek(in_game_seconds)] + ", " + 
+    let days:string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    let d:string = days[getCurrentDayOfTheWeek(in_game_seconds)] + ", " + 
                    (getCurrentDayOfTheMonth(in_game_seconds)+1) + " of " + 
                    months[getCurrentMonth(in_game_seconds)] + " of " + getCurrentYear(in_game_seconds);
    return d;
@@ -126,7 +126,7 @@ function getCurrentDateString(in_game_seconds:number) : string
 
 function getCurrentTimeString(in_game_seconds:number) : string
 {
-    var t:string = getCurrentDayHour(in_game_seconds) + ":" + (getCurrentDayMinute(in_game_seconds)%60) + ":" + (getCurrentDaySecond(in_game_seconds)%60);
+    let t:string = getCurrentDayHour(in_game_seconds) + ":" + (getCurrentDayMinute(in_game_seconds)%60) + ":" + (getCurrentDaySecond(in_game_seconds)%60);
     return t;
 }
 

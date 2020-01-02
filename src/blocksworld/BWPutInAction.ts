@@ -19,54 +19,60 @@ class BWPutIn_IntentionAction extends IntentionAction {
 	{
 		let ai:BlocksWorldRuleBasedAI = <BlocksWorldRuleBasedAI>ai_raw;
 		let world:ShrdluBlocksWorld = ai.world;
-		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
+		let alternative_actions:Term[] = ir.alternative_actions;
+		if (alternative_actions == null) alternative_actions = [ir.action];
+		let denyrequestCause:Term = null;
 
-		let objectID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
-		let destinationID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
+		for(let intention of alternative_actions) {
+			let objectID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+			let destinationID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
 
-		// Check if we are holding the target object:
-		if (world.objectInArm == null || world.objectInArm.ID != objectID) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+world.objectInArm.ID+"'[#id]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-			return true;
-		}
+			// Check if we are holding the target object:
+			if (world.objectInArm == null || world.objectInArm.ID != objectID) {
+				denyrequestCause = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+world.objectInArm.ID+"'[#id]))", ai.o);
+				continue;
+			}
 
-		// Check if the target is an object that things can be put on:
-		let destinationObject:ShrdluBlock = world.getObject(destinationID);
-		if (destinationObject == null || 
-			(destinationObject.type != SHRDLU_BLOCKTYPE_TABLE &&
-			 destinationObject.type != SHRDLU_BLOCKTYPE_BLOCK &&
-			 destinationObject.type != SHRDLU_BLOCKTYPE_BOX)) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+			// Check if the target is an object that things can be put on:
+			let destinationObject:ShrdluBlock = world.getObject(destinationID);
+			if (destinationObject == null || 
+				(destinationObject.type != SHRDLU_BLOCKTYPE_TABLE &&
+				 destinationObject.type != SHRDLU_BLOCKTYPE_BLOCK &&
+				 destinationObject.type != SHRDLU_BLOCKTYPE_BOX)) {
+				continue;
+			}
+
+			// Check if there is space to put the new object:
+			let positions:[number,number,number][] = world.positionsToPutObjectOn(world.objectInArm, destinationObject);
+			console.log(positions);
+			if (positions.length == 0) {
+				continue;
+			}
+
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+
+			// put it down:
+			this.targetx = positions[0][0];
+			this.targety = positions[0][1];
+			this.targetz = positions[0][2];
+			ai.intentionsCausedByRequest.push(ir);
+			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
+										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+										   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+			ai.currentActionHandler = this;
+			this.executeContinuous(ai);		
 			return true;
 		}
 
-		// Check if there is space to put the new object:
-		let positions:[number,number,number][] = world.positionsToPutObjectOn(world.objectInArm, destinationObject);
-		console.log(positions);
-		if (positions.length == 0) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+		if (denyrequestCause == null) {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-			return true;
+		} else {
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
 		}
-
-		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-
-		// put it down:
-		this.targetx = positions[0][0];
-		this.targety = positions[0][1];
-		this.targetz = positions[0][2];
-		ai.intentionsCausedByRequest.push(ir);
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
-		ai.currentActionHandler = this;
-		this.executeContinuous(ai);		
-		return true;
+		return true;		
 	}
 
 

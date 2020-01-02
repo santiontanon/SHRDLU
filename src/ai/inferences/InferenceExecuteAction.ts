@@ -14,10 +14,15 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 			let speaker:string = inf.triggeredBySpeaker;
 			let context:NLContext = ai.contextForSpeaker(speaker);
 			let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
-			this.action = this.action.applyBindings(inf.inferences[0].endResults[0].bindings);
-			let ir:IntentionRecord = new IntentionRecord(this.action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds);
+			let action:Term = this.action.applyBindings(inf.inferences[0].endResults[0].bindings);
+			let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds);			
 			let tmp:number = ai.canSatisfyActionRequest(ir);
 			if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
+				ir.alternative_actions = [];
+				for(let result of inf.inferences[0].endResults) {
+					ir.alternative_actions.push(this.action.applyBindings(result.bindings));
+				}
+				if (nlcp.performative.attributes.length>=4) ir.numberConstraint = nlcp.performative.attributes[3];
 				ai.intentions.push(ir);
 			} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
@@ -31,9 +36,16 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 				let term:Term = Term.fromString(tmp2, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
-				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
-				let term:Term = Term.fromString(tmp2, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				let speaker:string = inf.triggeredBySpeaker;
+				let context:NLContext = ai.contextForSpeaker(speaker);
+				let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))", ai.o);
+				if (nlcp.performative.attributes.length >= 3) {
+					let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], "+nlcp.performative.attributes[2]+"))", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				} else {
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				}
 			}
 		}		
 	}

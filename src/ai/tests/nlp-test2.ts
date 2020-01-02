@@ -491,8 +491,8 @@ NLParseTestUnifyingListener("can you give me the white key?", o.getSort("perform
 NLParseTestUnifyingListener("give me the white key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("give the white key to me", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("give the white key to the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '5'[#id]))");
-NLParseTestUnifyingListener("do you see a key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), key(X))");
-NLParseTestUnifyingListener("can you see a key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), key(X))");
+NLParseTestUnifyingListener("do you see a key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), key(X), [number.1])");
+NLParseTestUnifyingListener("can you see a key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), key(X), [number.1])");
 NLParseTestUnifyingListener("do you see me?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,'1'[#id]))");
 NLParseTestUnifyingListener("the white key has a tear", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], #and(verb.have('4'[#id], V4:[#id]), tear(V4)))");
 NLParseTestUnifyingListener("can you repair the white key?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
@@ -1098,9 +1098,9 @@ NLParseTestUnifyingListener("was there anyone else here?", o.getSort("performati
 NLParseTestUnifyingListener("was there ever anyone else here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(!=(X,'etaoin'[#id]), #and(!=(X,'1'[#id]), #and(AT:space.at(X,'room1'[#id]), #and(character(X), time.past(AT))))))");
 NLParseTestUnifyingListener("i'm awake?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], awake('1'[#id]))"); 
 NLParseTestUnifyingListener("i'm healthy?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], healthy('1'[#id]))"); 
-NLParseTestUnifyingListener("print money", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), money(X))");
-NLParseTestUnifyingListener("print a key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), key(X))"); 
-NLParseTestUnifyingListener("3d print pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), pliers(X))"); 
+NLParseTestUnifyingListener("print money", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), money(X), [number.1])");
+NLParseTestUnifyingListener("print a key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), key(X), [number.1])"); 
+NLParseTestUnifyingListener("3d print pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), pliers(X), [number.1])"); 
 NLParseTestUnifyingListener("locate the other person?", o.getSort("performative"), context, 'etaoin',  "perf.q.whereis('etaoin'[#id], X, L, #and(human(X), #and(!=(X,'1'[#id]), !=(X,'etaoin'[#id]))))");
 NLParseTestUnifyingListener("tell the crate to go in ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.enter(TARGET, '2'[#id]))))"); 
 NLParseTestUnifyingListener("tell the crate to follow me,etaoin", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'5'[#id], verb.follow(TARGET, '1'[#id]))))"); 
@@ -1112,14 +1112,14 @@ NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 
 NLParseTestUnifyingListener("i do not like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], #not(verb.like('1'[#id], 'pizza':[pizza]))), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), #not(verb.like('1'[#id], X)))))");
 NLParseTestUnifyingListener("do i like pizza?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza]))");
 NLParseTestUnifyingListener("do i like this ship?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], '2':[#id]))");
-NLParseTestUnifyingListener("do you see any rover?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), rover(X))");
-NLParseTestUnifyingListener("do you see wheels?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X:[#id]), wheel(X))");
+NLParseTestUnifyingListener("do you see any rover?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), rover(X), [number.1])");
+NLParseTestUnifyingListener("do you see wheels?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X:[#id]), wheel(X), [number.1])");
 NLParseTestUnifyingListener("How do I take out a battery?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.take-out('1'[#id], [battery]))");
 NLParseTestUnifyingListener("How do I take a battery out?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.take-out('1'[#id], [battery]))");
 NLParseTestUnifyingListener("How do I take out batteries?", o.getSort("performative"),  context, 'etaoin', "perf.q.how('etaoin'[#id], verb.take-out('1'[#id], [battery]))");
-NLParseTestUnifyingListener("play some music please", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.reproduce-media(V0, X), music(X))");
-NLParseTestUnifyingListener("give me everything you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, X:[#id], '1'[#id]), verb.have(V0, X))");  
-NLParseTestUnifyingListener("give me what you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, X:[#id], '1'[#id]), verb.have(V0, X))");
+NLParseTestUnifyingListener("play some music please", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.reproduce-media(V0, X), music(X), [number.1])");
+NLParseTestUnifyingListener("give me everything you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, X:[#id], '1'[#id]), verb.have(V0, X), [all])");
+NLParseTestUnifyingListener("give me what you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, X:[#id], '1'[#id]), verb.have(V0, X), [all])");
 NLParseTestUnifyingListener("no, what is my name?", o.getSort("performative"), context, 'etaoin', "#list(perf.inform.answer('etaoin'[#id], 'no'[symbol]), perf.q.query('etaoin'[#id], X, name('1'[#id],X)))");
 NLParseTestUnifyingListener("I will find etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(X:verb.find('1'[#id], 'etaoin'[#id]), time.future(X)))");
 NLParseTestUnifyingListener("yes I will find etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol], verb.find('1'[#id], 'etaoin'[#id]))");
@@ -1183,7 +1183,7 @@ NLParseTestUnifyingListener("what do I need to print a fork?", o.getSort("perfor
 NLParseTestUnifyingListener("what materials do I need to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for('1'[#id], V, action.print('1'[#id], [fork])))");
 NLParseTestUnifyingListener("what is needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V, verb.need-for(X, V, action.print(X, [fork])))");
 NLParseTestUnifyingListener("what materials are needed to print a fork?", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V:[material], verb.need-for(X, V, action.print(X, [fork])))");
-NLParseTestUnifyingListener("print some pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), pliers(X))");
+NLParseTestUnifyingListener("print some pliers", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), pliers(X), [number.1])"); 
 
 // For version 3.3:
 NLParseTestUnifyingListener("fix this", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.repair('etaoin'[#id], '4'[#id]))");
@@ -1238,12 +1238,12 @@ NLParseTestUnifyingListener("is there something on top of a block?", o.getSort("
 NLParseTestUnifyingListener("is there something on top of a green block?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(object(X), #and(block(Y), #and(color(Y, 'green'[green]), space.directly.on.top.of(X, Y)))))"); 
 NLParseTestUnifyingListener("what is contained by the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.contains('5'[#id], X))");
 NLParseTestUnifyingListener("is etaoin contained by the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.contains('5'[#id], 'etaoin'[#id]))"); 
-NLParseTestUnifyingListener("take a crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), crate(X))");
-NLParseTestUnifyingListener("take a large crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(crate(X), big(X)))");
-NLParseTestUnifyingListener("take a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])))");
-NLParseTestUnifyingListener("put etaoin in a crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), crate(X))");
-NLParseTestUnifyingListener("put etaoin in a large crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), big(X)))");
-NLParseTestUnifyingListener("put etaoin in a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])))");
+NLParseTestUnifyingListener("take a crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), crate(X), [number.1])");
+NLParseTestUnifyingListener("take a large crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(crate(X), big(X)), [number.1])");
+NLParseTestUnifyingListener("take a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])), [number.1])");
+NLParseTestUnifyingListener("put etaoin in a crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), crate(X), [number.1])");
+NLParseTestUnifyingListener("put etaoin in a large crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), big(X)), [number.1])");
+NLParseTestUnifyingListener("put etaoin in a green crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], 'etaoin'[#id], X), #and(crate(X), color(X, 'green'[green])), [number.1])");
 NLParseTestUnifyingListener("walk to the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.walk-to(V0, 'room1'[#id]))"); 
 NLParseTestUnifyingListener("is there another human on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(#and(space.at(X,'room1'[#id]), human(X)), !=(X,'1'[#id])))");
 NLParseTestUnifyingListener("why can you not open the kitchen?", o.getSort("performative"), context, 'etaoin', "perf.q.why(S:'etaoin'[#id],#not(verb.can(E:'etaoin'[#id], action.open(E, 'room1'[#id]))))");
@@ -1254,7 +1254,7 @@ NLParseTestUnifyingListener("who is alive?", o.getSort("performative"), context,
 NLParseTestUnifyingListener("put down the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("board the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 NLParseTestUnifyingListener("what is the date?", o.getSort("performative"),  context, 'etaoin', "perf.q.when(V0:'etaoin'[#id], [time.day], [time.now])");
-NLParseTestUnifyingListener("3d print crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), crate(X))"); 
+NLParseTestUnifyingListener("3d print crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.print('etaoin'[#id], X), crate(X), [number.1])"); 
 NLParseTestUnifyingListener("what can i print with the crate", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.can(D:'1'[#id], action.print(D, X, '5'[#id])))"); 
 NLParseTestUnifyingListener("what can i create with the crate", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.can(D:'1'[#id], verb.create(D, X, '5'[#id])))"); 
 NLParseTestUnifyingListener("can I make a fork with the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(D:'1'[#id], verb.make(D, 'fork'[fork], '5'[#id])))");
@@ -1338,6 +1338,29 @@ NLParseTestUnifyingListener("what is qwerty's mission?", o.getSort("performative
 NLParseTestUnifyingListener("what is the mission of qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, goal('qwerty'[#id], Q))");
 NLParseTestUnifyingListener("what is the gravity on aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], QUERY, gravity('location-aurora-station'[#id], QUERY))");
 NLParseTestUnifyingListener("what is the mass of aurora station?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], QUERY, mass('location-aurora-station'[#id], QUERY))");
+NLParseTestUnifyingListener("please turn on all lights", o.getSort("performative"),  context, 'etaoin', "perf.request.action(S:'etaoin'[#id], verb.switch-on(S,X), light(X), [all])");
+NLParseTestUnifyingListener("please turn on lights in all rooms", o.getSort("performative"),  context, 'etaoin', "perf.request.action(S:'etaoin'[#id], verb.switch-on(S,X), #and(light(X),#and(space.at(X,R),room(R))), [all])");  
+NLParseTestUnifyingListener("can you turn on all lights?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], verb.switch-on(S,X), light(X), [all])");
+NLParseTestUnifyingListener("can you turn on lights in all rooms?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], verb.switch-on(S,X), #and(light(X),#and(space.at(X,R),room(R))), [all])");  
+NLParseTestUnifyingListener("please turn on all the lights", o.getSort("performative"),  context, 'etaoin', "perf.request.action(S:'etaoin'[#id], verb.switch-on(S,X), light(X), [all])");
+NLParseTestUnifyingListener("can you turn on the lights in all rooms?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], verb.switch-on(S,X), #and(light(X),#and(space.at(X,R),room(R))), [all])");  
+NLParseTestUnifyingListener("can you turn the lights in all rooms on?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], verb.switch-on(S,X), #and(light(X),#and(space.at(X,R),room(R))), [all])");  
+NLParseTestUnifyingListener("open all the crates", o.getSort("performative"),  context, 'etaoin', "perf.request.action(S:'etaoin'[#id], action.open(S,X), crate(X), [all])");
+NLParseTestUnifyingListener("can you open all the crates?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], action.open(S,X), crate(X), [all])");
+NLParseTestUnifyingListener("can you open all the crates in the station?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(S:'etaoin'[#id], action.open(S,X), #and(space.at(X,'location-aurora-station'[#id]), crate(X)), [all])");
+NLParseTestUnifyingListener("open all the crates in the station", o.getSort("performative"),  context, 'etaoin', "perf.request.action(S:'etaoin'[#id], action.open(S,X), #and(space.at(X,'location-aurora-station'[#id]), crate(X)), [all])");
+NLParseTestUnifyingListener("hold on", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], verb.wait('etaoin'[#id]))");
+NLParseTestUnifyingListener("hold on, i'll be right back", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], verb.wait('etaoin'[#id]))");
+NLParseTestUnifyingListener("I need qwerty in the ship", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.talk(V0, perf.request.action(TARGET:'qwerty'[#id], verb.enter(TARGET, '2'[#id]))))"); 
+NLParseTestUnifyingListener("will qwerty give me the white key?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(P:action.give('qwerty'[#id], '4'[#id], '1'[#id]), time.future(P)))");
+NLParseTestUnifyingListener("drop what you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id]), verb.have(V0, X), [all])");
+NLParseTestUnifyingListener("drop everything you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id]), verb.have(V0, X), [all])");
+NLParseTestUnifyingListener("drop all the keys you have", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id]), #and(verb.have(V0, X), key(X)), [all])");
+NLParseTestUnifyingListener("drop all the keys in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id], 'room1'[#id]), key(X), [all])");
+NLParseTestUnifyingListener("drop all the keys you have in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id], 'room1'[#id]), #and(verb.have(V0, X), key(X)), [all])");
+NLParseTestUnifyingListener("drop all you have in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.drop(V0, X:[#id], 'room1'[#id]), verb.have(V0, X), [all])");
+NLParseTestUnifyingListener("put all you have in the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in(V0, X:[#id], 'room1'[#id]), verb.have(V0, X), [all])");
+
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

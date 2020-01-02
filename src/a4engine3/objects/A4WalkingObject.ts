@@ -34,7 +34,7 @@ class A4WalkingObject extends A4Object {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 
         if (a_name == "walk_speed") {
             this.walkSpeed = Number(attribute_xml.getAttribute("value"));
@@ -58,7 +58,7 @@ class A4WalkingObject extends A4Object {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
         
         xmlString += this.saveObjectAttributeToXML("previous_direction",this.previousDirection) + "\n";
         xmlString += this.saveObjectAttributeToXML("state",this.state) + "\n";

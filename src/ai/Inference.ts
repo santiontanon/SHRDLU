@@ -750,7 +750,7 @@ class InterruptibleResolution
 
 		let anyNotFound:boolean = false;
 		for(let i:number = 0;i<r.sentence.terms.length;i++) {
-			var found:boolean = false;
+			let found:boolean = false;
 			for(let j:number = 0;j<previousSentence.terms.length;j++) {
 				if (r.sentence.sign[i] == previousSentence.sign[j] &&
 					r.sentence.terms[i].equalsNoBindings(previousSentence.terms[j]) == 1) {

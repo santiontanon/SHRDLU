@@ -154,11 +154,11 @@ class RobotAI extends A4RuleBasedAI {
 			this.addTermToPerception(term2);
 			for(let property of this.getBaseObjectProperties(o)) {
 				this.addTermToPerception(property);
-				this.addTermToPerception(new Term(this.cache_sort_verb_have, 
-												  [new ConstantTermAttribute(this.selfID, this.cache_sort_id),
-												   new ConstantTermAttribute(o.ID, this.cache_sort_id)]
-						  						  ));
 			}
+			this.addTermToPerception(new Term(this.cache_sort_verb_have, 
+											  [new ConstantTermAttribute(this.selfID, this.cache_sort_id),
+											   new ConstantTermAttribute(o.ID, this.cache_sort_id)]
+					  						  ));
 		}
 
 		if (this.visionActive) {

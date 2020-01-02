@@ -16,7 +16,7 @@ class A4Lever extends A4Object {
     loadObjectAttribute(attribute_xml:Element) : boolean
     {
         if (super.loadObjectAttribute(attribute_xml)) return true;
-        var a_name:string = attribute_xml.getAttribute("name");
+        let a_name:string = attribute_xml.getAttribute("name");
 	    
 	    if (a_name == "leverID") {
 	        this.leverID = attribute_xml.getAttribute("value");
@@ -34,7 +34,7 @@ class A4Lever extends A4Object {
 
     savePropertiesToXML(game:A4Game) : string
     {
-        var xmlString:string = super.savePropertiesToXML(game);
+        let xmlString:string = super.savePropertiesToXML(game);
 
         xmlString += this.saveObjectAttributeToXML("leverID",this.leverID) + "\n";
         xmlString += this.saveObjectAttributeToXML("leverState",this.leverState) + "\n";
@@ -47,7 +47,7 @@ class A4Lever extends A4Object {
 	{
 		let retval:boolean = super.event(event_type, character, map, game);
 		if (event_type == A4_EVENT_USE) {
-	        var s:A4Script = new A4Script(A4_SCRIPT_OPENDOORS, this.leverID, null, 0, false, false);
+	        let s:A4Script = new A4Script(A4_SCRIPT_OPENDOORS, this.leverID, null, 0, false, false);
 	        s.execute(this, map, game, character);
 	        
 			this.leverState = (this.leverState ? false:true);

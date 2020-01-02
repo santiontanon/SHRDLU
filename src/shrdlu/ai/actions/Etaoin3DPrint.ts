@@ -12,7 +12,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 
 	canHandleWithoutInference(perf:Term) : boolean
 	{
-		if (perf.attributes.length == 3 &&
+		if (perf.attributes.length == 4 &&
 			perf.attributes[1] instanceof TermTermAttribute &&
 			perf.attributes[2] instanceof TermTermAttribute) {
 			let action:Term = (<TermTermAttribute>(perf.attributes[1])).term;
@@ -39,13 +39,15 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 				toPrint = toPrintAttribute.sort;
 			}
 			let perf:Term = ir.requestingPerformative.performative;
-			if (perf.attributes.length == 3 &&
+			if (perf.attributes.length == 4 &&
 				(perf.attributes[2] instanceof TermTermAttribute) &&
 				(toPrintAttribute instanceof VariableTermAttribute)) {
 				let constraint:Term = (<TermTermAttribute>perf.attributes[2]).term;
 				toPrint = constraint.functor;
 			}
 		}
+
+		console.log("Etaoin3DPrint_IntentionAction, toPrint: " + toPrint);
 
 		if (toPrint != null){
 			let recipe_idx:number = -1;
