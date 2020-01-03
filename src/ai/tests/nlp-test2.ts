@@ -1366,6 +1366,10 @@ NLParseTestUnifyingListener("what day did i leave the kitchen?", o.getSort("perf
 NLParseTestUnifyingListener("what are you looking for?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(E:'etaoin'[#id], Q, verb.search(E, Q))");
 NLParseTestUnifyingListener("please reset qwerty", o.getSort("performative"),  context, 'etaoin', "perf.request.action(E:'etaoin'[#id], verb.reset(E, 'qwerty'[#id]))");
 NLParseTestUnifyingListener("what do i need to go outside", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], Q, verb.need-for('1'[#id], Q, verb.go('1'[#id],[space.outside])))");
+NLParseTestUnifyingListener("why are you looking for minerals?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
+NLParseTestUnifyingListener("why are you searching a mineral?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
+NLParseTestUnifyingListener("why do you search a mineral?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

@@ -205,6 +205,10 @@ class ShrdluGameScript {
 	{
 		this.skip_to_act_2_shrdluback();
 
+		// remove Shrdlu's goal:
+		let s:Sentence = Sentence.fromString("verb.search('shrdlu'[#id],[mineral])", this.game.ontology);
+		this.game.shrdluAI.removeLongTermRule(s);
+
 		let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))",this.game.ontology);
 		this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 
@@ -2086,8 +2090,12 @@ class ShrdluGameScript {
 
 		case 107:
 			// SHRDLU is back!!
-			let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))",this.game.ontology);
+			let term:Term = Term.fromString("goal(D:'david'[#id], verb.wait-for(X, 'shrdlu'[#id]))", this.game.ontology);
 			this.game.etaoinAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
+
+			// remove Shrdlu's goal:
+			let s:Sentence = Sentence.fromString("verb.search('shrdlu'[#id],[mineral])", this.game.ontology);
+			this.game.shrdluAI.removeLongTermRule(s);
 
 			this.contextShrdlu.inConversation = true;	// this is a hack, to prevent it having to say "hello human", etc.
 			this.shrdluSays("perf.thankyou('david'[#id])");
