@@ -1,0 +1,22 @@
+{
+  "name": "shrdlu",
+  "version": "3.5.0",
+  "description": "An adventure game based around natural language parsing (inspired by Winograd's SHRDLU)",
+  "author": "Santiago Ontañón",
+  "license": "Apache-2.0",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santiontanon/SHRDLU.git"
+  },
+  "bugs": {
+    "url": "https://github.com/santiontanon/SHRDLU/issues"
+  },
+  "homepage": "https://github.com/santiontanon/SHRDLU#readme",
+  "devDependencies": {
+    "typescript": "^3.7.4"
+  }
+}
