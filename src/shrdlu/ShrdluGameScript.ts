@@ -58,6 +58,10 @@ class ShrdluGameScript {
 	{
 		if (this.act_intro_state>=101) return;
 		this.game.currentPlayer.getOutOfBed(this.game);
+		let term:Term = Term.fromString("verb.wake-up('david'[#id])",this.game.ontology);
+		this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+		this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+
 		// bedroom:
 		this.game.currentPlayer.x = 560;
 		this.game.currentPlayer.y = 200;
@@ -78,6 +82,12 @@ class ShrdluGameScript {
 	skip_to_act_1()
 	{
 		this.game.currentPlayer.getOutOfBed(this.game);
+		{
+			let term:Term = Term.fromString("verb.wake-up('david'[#id])",this.game.ontology);
+			this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+			this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+		}
+
 		// bedroom:
 		this.game.currentPlayer.x = 560;
 		this.game.currentPlayer.y = 200;
@@ -393,6 +403,10 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, awake($PLAYER)))");
+		
+				let term:Term = Term.fromString("verb.wake-up('david'[#id])",this.game.ontology);
+				this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+				this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 			} else if (this.act_intro_state_timer == 120) {
 				this.game.eyesClosedState = 1;
 				this.game.eyesClosedTimer = 0;
@@ -599,7 +613,7 @@ class ShrdluGameScript {
 
 		case 14: // player stands up
 			if (this.act_intro_state_timer == 0) {
-				this.game.currentPlayer.getOutOfBed(this.game);
+				this.game.currentPlayer.getOutOfBed(this.game);				
 				this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
 															   "Wow! I feel very light, why?! where am I?", A4_DIRECTION_NONE, this.game);
 
@@ -1089,7 +1103,13 @@ class ShrdluGameScript {
 			if (this.act_1_state_timer == 0) {
 				this.game.etaoinAI.respondToPerformatives = true;	// start responding to random questions from the player
 			} else {
-				if (this.game.currentPlayer.state == A4CHARACTER_STATE_IDLE) this.act_1_state = 1;
+				if (this.game.currentPlayer.state == A4CHARACTER_STATE_IDLE) {
+					let term:Term = Term.fromString("verb.wake-up('david'[#id])",this.game.ontology);
+					this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+					this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+
+					this.act_1_state = 1;
+				}
 			}
 			break;
 
@@ -2164,6 +2184,10 @@ class ShrdluGameScript {
 				this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED;
 				this.game.textInputAllowed = true;
 				this.act_2_state = 200;
+				let term:Term = Term.fromString("verb.wake-up('david'[#id])",this.game.ontology);
+				this.game.etaoinAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);				
+				this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
+				this.game.shrdluAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 			}
 			break;
 		

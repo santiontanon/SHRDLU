@@ -6,6 +6,7 @@
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.happen('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="property.strange('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.malfunction('david-stasis-pod'[#id])"/>
+	<previousSentence provenance="background" time="45186163200" sentence="verb.leave('david'[#id], 'location-as26'[#id])"/>
 
 	<!-- general knowledge about the player -->
 	<sentence provenance="background" sentence="awake('david'[#id])"/>
@@ -217,6 +218,9 @@
 	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id],'location-aurora-station'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
 	<sentence provenance="background" sentence="relation.cause(verb.leave('shrdlu'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
 	<sentence provenance="background" sentence="relation.cause(verb.go-to('shrdlu'[#id],'location-east-cave'[#id]), verb.want('shrdlu'[#id], [mineral]))"/>
+	<sentence provenance="background" sentence="relation.cause(verb.search('shrdlu'[#id],[mineral]), verb.want('shrdlu'[#id], verb.feed('shrdlu'[#id], 'metal3dprinter1'[#id])))"/>
+	<sentence provenance="background" sentence="relation.cause(verb.want('shrdlu'[#id], [mineral]), verb.want('shrdlu'[#id], verb.feed('shrdlu'[#id], 'metal3dprinter1'[#id])))"/>
+
 	<sentence provenance="background" sentence="relation.cause(in-stasis(D:'david'[#id]), verb.come-to(D,'aurora'[#id]))"/>
 	<sentence provenance="background" sentence="relation.cause(gravity(X,'low'[low]), radius('aurora'[#id],'big'[big])); ~space.at(X, 'aurora'[#id])"/>
 	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'low'[low]), radius('aurora'[#id],'big'[big]))"/>
@@ -287,6 +291,8 @@
 	<sentence provenance="background" sentence="relation.howto(action.use(X, [3dprinter]), verb.tell(X, perf.request.action(Q:'etaoin'[#id], action.print(Q, [any])), Q))"/>
 	<sentence provenance="background" sentence="~verb.can(Q:'etaoin'[#id], action.print(Q, X)) ; relation.howto(verb.make(Y, X), verb.tell(Y, perf.request.action(Q, action.print(Q, X)), Q))"/>
 	<sentence provenance="background" sentence="~verb.can(Q:'etaoin'[#id], action.print(Q, X)) ; relation.howto(verb.create(Y, X), verb.tell(Y, perf.request.action(Q, action.print(Q, X)), Q))"/>
+
+	<sentence provenance="background" sentence="~human(X); verb.need-for(X, [spacesuit], verb.go(X, [space.outside]))"/>
 
 	<!-- what can things do -->
 	<!--sentence provenance="background" sentence="character(X:[#id]); ~verb.can(X, action.talk(X))"/-->

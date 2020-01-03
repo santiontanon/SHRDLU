@@ -557,6 +557,7 @@
     <sort name="verb.call" super="verb"/>
     <sort name="verb.disambiguate" super="verb"/>
     <sort name="verb.get" super="verb"/>
+    <sort name="verb.get-from" super="verb.get"/>
     <sort name="verb.gather" super="verb.get,verb-with-optional-location-3rd-argument"/>
     <sort name="verb.go" super="movementverb"/>
     <sort name="verb.go-to" super="verb.go"/>
@@ -627,6 +628,7 @@
     <sort name="verb.walk" super="verb.go"/>
     <sort name="verb.walk-to" super="verb.go-to,verb.walk"/>
     <sort name="verb.want" super="relation-verb,#stateSort"/>
+    <sort name="verb.wake-up" super="verb"/>
     <sort name="verb.allow" super="verb"/>
     <sort name="verb.build" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.switch" super="verb"/>
@@ -661,9 +663,11 @@
     <sort name="verb.work" super="verb"/>
     <sort name="verb.works-at" super="verb"/>
     <sort name="verb.fly" super="verb.go"/>
-    <sort name="verb.feed" super="verb.go"/>
+    <sort name="verb.feed" super="verb"/>
     <sort name="verb.lift" super="verb"/>
     <sort name="verb.maintain" super="verb"/>
+    <sort name="verb.search" super="verb"/>
+    <sort name="verb.reset" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>

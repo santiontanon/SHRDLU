@@ -4,6 +4,7 @@
 	<sentence provenance="background" time="45154648800" sentence="cave-in('east-cave-cave-in'[#id])"/>
 	<sentence provenance="background" sentence="space.inside.of('east-cave-cave-in'[#id],'location-east-cave'[#id])"/>
 	<sentence provenance="background" time="45154648800" sentence="property.blind('shrdlu'[#id])"/>
+	<sentence provenance="background" time="45154648800" sentence="verb.search('shrdlu'[#id],[mineral])"/>
 
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->
 	<sentence provenance="background" sentence="verb.know('shrdlu'[#id], name(X, Y)); ~name(X, Y)"/>

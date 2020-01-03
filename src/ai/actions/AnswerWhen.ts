@@ -9,52 +9,52 @@ class AnswerWhen_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var intention:Term = ir.action;
+		let intention:Term = ir.action;
 
 		console.log(ai.selfID + " answer when: " + intention);	
-		var resolution:Sort = null;
-		var target:TermAttribute = null;
+		let resolution:Sort = null;
+		let target:TermAttribute = null;
 
 		if (intention.attributes.length == 4 &&
-			(intention.attributes[2] instanceof VariableTermAttribute || intention.attributes[2] instanceof ConstantTermAttribute)) {
-			resolution = intention.attributes[2].sort;
-			target = intention.attributes[3];
+			(intention.attributes[3] instanceof VariableTermAttribute || intention.attributes[3] instanceof ConstantTermAttribute)) {
+			target = intention.attributes[2];
+			resolution = intention.attributes[3].sort;
 		} else if (intention.attributes.length == 3) {
 			target = intention.attributes[2];
 		}
 
 		if (target instanceof VariableTermAttribute || target instanceof ConstantTermAttribute) {
 			// asking about the time of some time pronoun ("now", "today", etc.):
-			if (intention.attributes[3].sort.is_a(ai.o.getSort("time.now"))) {
-				var resolution:Sort = intention.attributes[2].sort;
+			if (intention.attributes[2].sort.is_a(ai.o.getSort("time.now"))) {
+				let resolution:Sort = intention.attributes[3].sort;
 				console.log("executeIntention answer when: answering what time is it now at resolution " + resolution);	
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+ai.time_in_seconds+"'[number],"+intention.attributes[2]+")))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+ai.time_in_seconds+"'[number],"+intention.attributes[3]+")))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
 			} else {
 				console.error("executeIntention answer when: unsupported when question!");	
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
 			}
 		} else if (target instanceof TermTermAttribute) {
 			// asking about the time of some event:
-			var time:number = this.timeOfEvent(target, ai);
+			let time:number = this.timeOfEvent(target, ai);
 			console.log("executeIntention answer when: answering what time is event " + target + " -> " + time);
 			if (time == null) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
 				if (resolution == null) {
 					// if it's the same day, report minutes, otherwise, report date:
 					if (getCurrentYear(ai.time_in_seconds) == getCurrentYear(time) &&
 						getCurrentYearDay(ai.time_in_seconds) == getCurrentYearDay(time)) {
-						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], [time.minute])))", ai.o);
+						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], [time.minute])))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 					} else {
-						var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], [time.day])))", ai.o);
+						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], [time.day])))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 					}
 				} else {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], ["+resolution.name+"])))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",time.date('"+time+"'[number], ["+resolution.name+"])))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				}
 			}

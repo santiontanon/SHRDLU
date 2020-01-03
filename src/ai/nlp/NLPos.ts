@@ -1673,6 +1673,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("action.drop", "put down","puts down","put down","put down","putting down", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.lift", "heave","heaves","heaved","heaved","heaving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.wait", "hold on","holds on","held on","held on","holding on", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.search", "look for","looks for","looked for","looked for","looking for", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reset", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reset", "restart","restarts","restarted","restarted","restarting", false, multitokens_raw, o);
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1788,12 +1791,14 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.fill", "refill","refills","refilled","refilled","refilling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.repair", "repair","repairs","repaired","repaired","repairing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reset", "reset","resets","reset","reset","resetting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run-out-of", "run out of","runs out of","ran out of","run out of","running out of", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.save", "save","saves","saved","saved","saving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.salvage", "salvage","salvages","salvaged","salvaged","salvaging", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.search", "search","searches","searched","searched","searching", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.see", "see","sees","saw","seen","seeing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.seem", "seem","seems","seemed","seemed","seeming", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.send", "send","sends","sent","sent","sending", false, multitokens_raw, o);
@@ -1841,6 +1846,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("verb.wake-up","up", "wake","wakes","woke","woken","waking", false, multitokens_raw, o);
 
   // adjectives (synonims) (added first, so NLG does not used them):
   this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
