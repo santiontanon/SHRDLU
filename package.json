@@ -1,12 +1,14 @@
 {
-  "name": "shrdlu",
+  "name": "SHRDLU",
   "version": "3.5.0",
   "description": "An adventure game based around natural language parsing (inspired by Winograd's SHRDLU)",
   "author": "Santiago Ontañón",
   "license": "Apache-2.0",
-  "main": "",
+  "main": "./server/app.js",
   "scripts": {
-    "test": ""
+    "start": "node ./server/run.js",
+    "dev": "set DEBUG=shrdlu:* && node ./server/run.js",
+    "debug": "node --inspect ./server/run.js"
   },
   "repository": {
     "type": "git",
@@ -16,6 +18,17 @@
     "url": "https://github.com/santiontanon/SHRDLU/issues"
   },
   "homepage": "https://github.com/santiontanon/SHRDLU#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "http-status": "^1.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.9.1",
+    "uuid": "^3.3.3"
+  },
   "devDependencies": {
     "typescript": "^3.7.4"
   }
