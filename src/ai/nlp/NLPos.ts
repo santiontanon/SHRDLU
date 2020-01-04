@@ -1674,8 +1674,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.lift", "heave","heaves","heaved","heaved","heaving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.wait", "hold on","holds on","held on","held on","holding on", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.search", "look for","looks for","looked for","looked for","looking for", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.reset", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.reset", "restart","restarts","restarted","restarted","restarting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reboot", "reset","resets","reset","reset","resetting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reboot", "restart","restarts","restarted","restarted","restarting", false, multitokens_raw, o);
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1791,7 +1791,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.fill", "refill","refills","refilled","refilled","refilling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.repair", "repair","repairs","repaired","repaired","repairing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.reset", "reset","resets","reset","reset","resetting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.reboot", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);

@@ -1582,8 +1582,8 @@ class A4EngineApp {
                 break;
             case "Etaoin at your service":
                 {
-                    let first:boolean[] = [true, true, true, true, true, true];
-                    let tags:string[] =   ["connect to", "open", "close", "switch on", "switch off", "3d print"];
+                    let first:boolean[] = [true, true, true, true, true, true, true];
+                    let tags:string[] =   ["connect to", "open", "close", "switch on", "switch off", "3d print", "reboot"];
                     lines = ["Done: ", "Missing: "];
 
                     for(let i:number = 0; i<first.length; i++) {
@@ -1601,8 +1601,8 @@ class A4EngineApp {
                 break;
             case "Robots at your service":
                 {
-                    let first:boolean[] = [true, true, true, true, true, true, true, true, true, true, true, true, true, true];
-                    let tags:string[] =   ["follow", "move", "guide", "stop", "put in", "drop", "give", "open", "close", "turn", "push", "repair", "take", "stay"];
+                    let first:boolean[] = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true];
+                    let tags:string[] =   ["follow", "move", "guide", "stop", "put in", "drop", "give", "open", "close", "turn", "push", "repair", "take", "stay", "reboot"];
                     lines = ["Done: ", "Missing: "];
 
                     for(let i:number = 0; i<first.length; i++) {
@@ -1940,8 +1940,8 @@ class A4EngineApp {
     achievement_interact_in_a_rush:boolean = false;
     achievement_nlp_parse_error:boolean = false;
     achievement_nlp_all_types_of_questions:boolean[] = [false,false,false,false,false,false,false,false,false,false];
-    achievement_nlp_all_etaoin_actions:boolean[] = [false,false,false,false,false];
-    achievement_nlp_all_robot_actions:boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+    achievement_nlp_all_etaoin_actions:boolean[] = [false,false,false,false,false,false];
+    achievement_nlp_all_robot_actions:boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
     achievement_nlp_resolution_explanation:boolean = false;
     achievement_nlp_asked_for_more:boolean = false;
     achievement_secret_posters:boolean[] = [false,false];

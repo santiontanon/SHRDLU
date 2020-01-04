@@ -9,14 +9,14 @@ class RobotStop_IntentionAction extends IntentionAction {
 	
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
-		var intention:Term = ir.action;
-		var requester:TermAttribute = ir.requester;
+		let ai:RobotAI = <RobotAI>ai_raw;
+		let intention:Term = ir.action;
+		let requester:TermAttribute = ir.requester;
 
 		if (intention.attributes.length==1) {
 			if (requester != null) {
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
-				var term:Term = Term.fromString(tmp, ai.o);
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
+				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 
@@ -30,8 +30,8 @@ class RobotStop_IntentionAction extends IntentionAction {
 			 		(intention.attributes[1].sort.is_a(ai.o.getSort("space.here")) ||
 			 		 intention.attributes[1].sort.is_a(ai.o.getSort("space.there")))) {
 			if (requester != null) {
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
-				var term:Term = Term.fromString(tmp, ai.o);
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
+				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 
@@ -42,8 +42,8 @@ class RobotStop_IntentionAction extends IntentionAction {
 			ai.addLongTermTerm(Term.fromString("verb.do('"+ai.selfID+"'[#id], 'nothing'[nothing])", ai.o), PERCEPTION_PROVENANCE);
 		} else {
 			if (requester != null) {
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
-				var term:Term = Term.fromString(tmp, ai.o);
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
+				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		}

@@ -344,7 +344,7 @@ class RobotStay_IntentionAction extends IntentionAction {
 
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
+		let ai:RobotAI = <RobotAI>ai_raw;
 
 		if (ai.robot.isInVehicle()) {
 			ai.robot.disembark();

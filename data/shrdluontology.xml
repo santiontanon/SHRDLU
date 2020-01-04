@@ -667,7 +667,7 @@
     <sort name="verb.lift" super="verb"/>
     <sort name="verb.maintain" super="verb"/>
     <sort name="verb.search" super="verb"/>
-    <sort name="verb.reset" super="verb"/>
+    <sort name="verb.reboot" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>

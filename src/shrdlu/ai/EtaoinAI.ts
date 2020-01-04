@@ -31,6 +31,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new EtaoinHelp_IntentionAction());
 		this.intentionHandlers.push(new Etaoin3DPrint_IntentionAction());
 		this.intentionHandlers.push(new EtaoinRead_IntentionAction());
+		this.intentionHandlers.push(new EtaoinReboot_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {

@@ -226,6 +226,17 @@ class NLContext {
 	}
 
 
+	reset()
+	{
+		this.endConversation();
+		this.shortTermMemory = [];
+		this.mentions = [];
+		this.performatives = [];
+		this.lastDerefErrorType = 0;
+		this.lastTimeUpdated = -1;
+	}
+
+
 	endConversation()
 	{
 		this.inConversation = false;

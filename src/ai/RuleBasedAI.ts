@@ -2330,7 +2330,7 @@ class RuleBasedAI {
 	currentEpisodeTerms:string[] = [];	// Terms that are to be remembered or the current "episode" (i.e., while the AI is executing an action),
 										// but that will be erased when a new action is started.
 										// This is a hack, but it is to avoid having to have the concept of "immediate past" and "far past",
-										// since parsince those from text would be hard. 
+										// since parsing those from text would be hard. 
 										// To illustrate the problem, consider this interaction:
 										// - Shrdlu, go north
 										// - There is an obstacle here.
