@@ -228,6 +228,7 @@
     <sort name="perf.q.howmany" super="perf.question"/>
     <sort name="perf.q.why" super="perf.question"/>
     <sort name="perf.q.how" super="perf.question"/>
+    <sort name="perf.q.distance" super="perf.question"/>
     <sort name="perf.moreresults" super="performative"/>   <!-- things like "who else?", "anyone else?", "what else?" -->
     <sort name="perf.rephrase.entity" super="performative"/>
     <sort name="perf.changemind" super="performative"/>
@@ -713,6 +714,7 @@
     <sort name="action.answer.when" super="actionverb"/>
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
+    <sort name="action.answer.distance" super="actionverb"/>
     
     <sort name="verb.bring" super="verb.take-to,action.give"/>
 

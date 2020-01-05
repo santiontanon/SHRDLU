@@ -1369,6 +1369,14 @@ NLParseTestUnifyingListener("what do i need to go outside", o.getSort("performat
 NLParseTestUnifyingListener("why are you looking for minerals?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
 NLParseTestUnifyingListener("why are you searching a mineral?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
 NLParseTestUnifyingListener("why do you search a mineral?", o.getSort("performative"),  context, 'etaoin', "perf.q.why(S:'etaoin'[#id], verb.search(S,'mineral'[mineral]))");
+NLParseTestUnifyingListener("how far away from qwerty am i?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], 'qwerty'[#id], '1'[#id])");
+NLParseTestUnifyingListener("how far away is qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("how far away is qwerty in meters?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
+NLParseTestUnifyingListener("what is the distance to qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("what is the distance between me and qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("what is the distance from me to qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("what is the distance from me to qwerty in meters?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
+NLParseTestUnifyingListener("how many meters away is qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

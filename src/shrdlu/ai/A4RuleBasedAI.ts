@@ -20,6 +20,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new AnswerDefine_IntentionAction());
 	    this.intentionHandlers.push(new AnswerHearSee_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhere_IntentionAction());
+	    this.intentionHandlers.push(new AnswerDistance_IntentionAction());
 
 		this.locationsWherePlayerIsNotPermitted.push("location-as4");	// bedroom 1
 		this.locationsWherePlayerIsNotPermitted.push("location-as5");	// bedroom 2
@@ -33,7 +34,6 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.locationsWherePlayerIsNotPermitted.push("location-as14");	// bedroom 11
 		this.locationsWherePlayerIsNotPermitted.push("location-as15");	// bedroom 12
 		this.locationsWherePlayerIsNotPermitted.push("location-as26");
-		// this.locationsWherePlayerIsNotPermitted.push("location-as27");
 		this.locationsWherePlayerIsNotPermitted.push("location-maintenance");
 		this.locationsWherePlayerIsNotPermitted.push("location-as29");
 		this.locationsWherePlayerIsNotPermitted.push("location-garage");
@@ -50,7 +50,6 @@ class A4RuleBasedAI extends RuleBasedAI {
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM10");
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM11");
 		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM12");
-		// this.doorsPlayerIsNotPermittedToOpen.push("SCIENCE");
 		this.doorsPlayerIsNotPermittedToOpen.push("MAINTENANCE");
 		this.doorsPlayerIsNotPermittedToOpen.push("GARAGE");
 		this.doorsPlayerIsNotPermittedToOpen.push("COMMAND");
@@ -475,6 +474,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
+	// distance in meters (assuming each tile is a meter)
 	distanceBetweenIds(source:string, target:string)
 	{
 		// We assume that unless the AI is seeing an object, it does not know where it is:
@@ -495,51 +495,58 @@ class A4RuleBasedAI extends RuleBasedAI {
 					let tmp:A4Object[] = this.game.findObjectByID(target);
 					if (tmp != null && tmp.length > 0) targetObject = tmp[0];
 				}
-			}/* else if (te.provenance == PERCEPTION_PROVENANCE &&
-				t.functor.is_a(this.cache_sort_space_location) &&
-				t.attributes.length == 1) {
-				if ((<ConstantTermAttribute>t.attributes[0]).value == source) {
-					sourceLocation = this.game.getAILocationByID(source);
-				} else if ((<ConstantTermAttribute>t.attributes[0]).value == target) {
-					targetLocation = this.game.getAILocationByID(target);
-				}
-			}*/
+			}
 		}
 		if (sourceObject != null && targetObject != null) {
-			if (targetObject.map == sourceObject.map) {
-				let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
-				let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
-				let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
-				let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
-				return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-			}
+			let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
+			let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
+			let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
+			let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
+			return this.distanceBetweenCoordinates(x1, y1, targetObject.map, x2, y2, sourceObject.map);
 		}
 		if (sourceObject != null && targetLocation != null) {
 			let mapIdx:number = targetLocation.maps.indexOf(sourceObject.map);
 			if (mapIdx != -1) {
 				return targetLocation.distanceFromObject(sourceObject, mapIdx);
+			} else {
+				let [x1,y1]:[number,number] = targetLocation.centerCoordinatesInMap(targetLocation.maps[0]);
+				let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
+				let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
+				return this.distanceBetweenCoordinates(x1, y1, targetLocation.maps[0], x2, y2, sourceObject.map);
 			}
 		}
 		if (sourceLocation != null && targetObject != null) {
 			let mapIdx:number = sourceLocation.maps.indexOf(targetObject.map);
 			if (mapIdx != -1) {
 				return sourceLocation.distanceFromObject(targetObject, mapIdx);
+			} else {
+				let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
+				let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
+				let [x2,y2]:[number,number] = sourceLocation.centerCoordinatesInMap(sourceLocation.maps[0]);
+				return this.distanceBetweenCoordinates(x1, y1, targetObject.map, x2, y2, sourceLocation.maps[0]);
 			}
 		}
 		if (sourceLocation != null && targetLocation != null) {
-			return sourceLocation.distanceFromLocation(targetLocation, this.game);
+			let d:number = sourceLocation.distanceFromLocation(targetLocation, this.game);
+			if (d != null) {
+				return d;
+			} else {
+				let [x1,y1]:[number,number] = targetLocation.centerCoordinatesInMap(targetLocation.maps[0]);
+				let [x2,y2]:[number,number] = sourceLocation.centerCoordinatesInMap(sourceLocation.maps[0]);
+				return this.distanceBetweenCoordinates(x1, y1, targetLocation.maps[0], x2, y2, sourceLocation.maps[0]);
+			}
 		}
 
 		// special cases:
 		// NOTE: this is bad, I should have these in the KB in some declarative form!
 		if (source == 'earth') {
 			if (targetObject != null || targetLocation != null || target == 'aurora') {
-				return 1.1246e+20;
+				return 1.1263e+17;
 			}
 		}
 		if (target == 'earth') {
 			if (sourceObject != null || sourceLocation != null || source == 'aurora') {
-				return 1.1246e+20;
+				return 1.1263e+17;
 			}
 		}
 		if (source == 'aurora') {
@@ -552,7 +559,62 @@ class A4RuleBasedAI extends RuleBasedAI {
 				return 0;
 			}
 		}
-		return null;
+		return super.distanceBetweenIds(source, target);
+	}
+
+
+	/* using a simple BFS search strategy, and returns results in meters */
+	distanceBetweenCoordinates(x1:number, y1:number, map1:A4Map, 
+							   x2:number, y2:number, map2:A4Map): number
+	{
+		return this.distanceBetweenCoordinates_internal(x1, y1, map1, x2, y2, map2, [map1]);
+	}
+
+
+	distanceBetweenCoordinates_internal(x1:number, y1:number, map1:A4Map, 
+								 	    x2:number, y2:number, map2:A4Map,
+									    path:A4Map[]): number
+	{
+		if (map1 == map2) {
+			return (Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)))/map1.pixelsPerMeter;
+		}
+		let best_d:number = null;
+		for(let bridge of map1.bridges) {
+			if (path.indexOf(bridge.linkedTo.map) == -1) {
+				path.push(bridge.linkedTo.map);
+				let bx:number = bridge.x + bridge.width/2;
+				let by:number = bridge.y + bridge.height/2;
+				let d1:number = this.distanceBetweenCoordinates_internal(bridge.linkedTo.x + bridge.linkedTo.width/2, 
+																		 bridge.linkedTo.y + bridge.linkedTo.height/2, bridge.linkedTo.map,
+																	 	 x2, y2, map2, path);
+				let d2:number = (Math.sqrt((x1-bx)*(x1-bx) + (y1-by)*(y1-by)))/map1.pixelsPerMeter;
+				path.pop();
+				if (d1 != null) {
+					if (best_d == null || (d1+d2) < best_d) best_d = d1+d2;
+				}
+			}
+		}
+		if (map1.name == "Aurora Station" || map1.name == "Aurora Station Outdoors") {
+			for(let o of map1.objects) {
+				if (o instanceof ShrdluAirlockDoor) {
+					let ald:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
+					let targetMap:A4Map = this.game.getMap(ald.targetMap);
+					if (path.indexOf(targetMap) == -1) {
+						path.push(targetMap);
+						let bx:number = ald.x + ald.getPixelWidth()/2;
+						let by:number = ald.y + ald.getPixelHeight()/2;
+						let d1:number = this.distanceBetweenCoordinates_internal(ald.targetX, ald.targetY, targetMap,
+																				 x2, y2, map2, path);
+						let d2:number = (Math.sqrt((x1-bx)*(x1-bx) + (y1-by)*(y1-by)))/map1.pixelsPerMeter;
+						path.pop();
+						if (d1 != null) {
+							if (best_d == null || (d1+d2) < best_d) best_d = d1+d2;
+						}
+					}
+				}
+			}
+		}
+		return best_d;
 	}
 
 

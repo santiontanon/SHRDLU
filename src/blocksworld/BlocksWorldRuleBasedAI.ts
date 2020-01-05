@@ -125,7 +125,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		let o1:ShrdluBlock = this.world.getObject(source);
 		let o2:ShrdluBlock = this.world.getObject(target);
 		if (o1 != null && o2 != null) return this.world.distanceBetweenObjects(o1, o2);
-		return null;
+		return super.distanceBetweenIds(source, target);
 	}
 
 

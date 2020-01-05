@@ -27,7 +27,7 @@ class AILocation {
 					if (closestDistance == null || d<closestDistance) closestDistance = d;
 				}
 			}
-			return closestDistance;
+			return closestDistance/map.pixelsPerMeter;
 		}
 	}
 
@@ -45,7 +45,7 @@ class AILocation {
 					let c1:[number,number] = this.centerCoordinatesInMap(map);
 					let c2:[number,number] = l2.centerCoordinatesInMap(map);
 					if (c1 != null && c2 != null) {
-						return Math.sqrt((c1[0]-c2[0])*(c1[0]-c2[0]) + (c1[1]-c2[1])*(c1[1]-c2[1]));
+						return Math.sqrt((c1[0]-c2[0])*(c1[0]-c2[0]) + (c1[1]-c2[1])*(c1[1]-c2[1])) / map.pixelsPerMeter;
 					}
 				}
 			}

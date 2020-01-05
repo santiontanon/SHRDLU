@@ -1371,6 +1371,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("left", "direction.left", o, multitokens_raw);
   this.addStandardNounPOS("leg", "leg", o, multitokens_raw);
   this.addStandardNounPOS("light", "light", o, multitokens_raw);
+  this.addStandardNounPOS("lightyear", "light-year", o, multitokens_raw);
+  this.addStandardNounPOS("light year", "light-year", o, multitokens_raw);
   this.addStandardNounPOS("life", "life", o, multitokens_raw);
   this.addUncountableNounPOS("life", "living-being", o);
   this.addStandardNounPOS("living being", "living-being", o, multitokens_raw);
