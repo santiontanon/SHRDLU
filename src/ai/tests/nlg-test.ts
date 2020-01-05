@@ -18,7 +18,7 @@ function testNLG(performative:string, speaker:string, result:string)
 	var t:Term = Term.fromString(performative, g_o);
 	var str:string = g_nlg.termToEnglish(t, speaker, null, g_context);
 	if (str != result) {
-		console.error("NLG output is not what was expected for "+t+"! \n" + str + "\ninstead of:\n" + result);
+		console.error("NLG output is not what was expected for "+t+"! \n'" + str + "'\ninstead of:\n'" + result + "'");
 	} else {
 		console.log(str);
 	}
@@ -28,7 +28,7 @@ function testNLG_entity(id:ConstantTermAttribute, speaker:string, result:string)
 {
 	var str:string = g_nlg.termToEnglish_Entity(id, speaker, true, g_context, true, true)[0];
 	if (str != result) {
-		console.error("NLG output is not what was expected for "+id+"! \n" + str + "\ninstead of:\n" + result);
+    console.error("NLG output is not what was expected for "+id+"! \n'" + str + "'\ninstead of:\n'" + result + "'");
 	} else {
 		console.log(str);
 	}
@@ -321,4 +321,6 @@ testNLG("perf.inform.answer(V0:'1'[#id], relation.cause(#not(verb.can(V4:'etaoin
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.see(V3:'etaoin'[#id], V4:#and(V5:the(V6:'number.1'[number.1], V2_0:[singular]), V10:noun(V6, V2_0)))))", "etaoin", "I do not see the ones")
 testNLG("perf.inform.parseerror(V0:'1'[#id], V1:#not(V2:verb.see(V3:'etaoin'[#id], V4:#and(V5:the(V6:'number.1'[number.1], V2_0:[singular]), V8:#and(V9:determiner.other(V6, V2_0), V10:noun(V6, V2_0))))))", "etaoin", "I do not see the other ones")
 
+testNLG("perf.inform('1'[#id], verb.happen('1'[#id], verb.malfunction('s1'[#id])))", "etaoin", "my ship to malfunction happens to you");
+testNLG("perf.inform.answer('1'[#id], relation.cause([any], verb.happen('1'[#id], verb.malfunction('s1'[#id]))))", "etaoin", "because my ship to malfunction happens to you");
 

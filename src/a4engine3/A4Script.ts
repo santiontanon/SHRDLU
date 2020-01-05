@@ -41,7 +41,6 @@ var A4_SCRIPT_DIE:number = 5;
 var A4_SCRIPT_PENDINGTALK:number = 10;
 var A4_SCRIPT_ADDTOPIC:number = 11;
 var A4_SCRIPT_EVENTRULE:number = 34;
-var A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION:number = 12;
 var A4_SCRIPT_STORYSTATE:number = 13;
 var A4_SCRIPT_STORYSTATECHECK:number = 50;
 var A4_SCRIPT_FAMILIARWITHMAP:number = 31;
@@ -67,7 +66,7 @@ var A4_SCRIPT_REFILLOXYGEN:number = 62;
 var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 var A4_SCRIPT_IN_VEHICLE:number = 14;
 
-var A4_N_SCRIPTS:number = 69;    // #15 and #29 are available
+var A4_N_SCRIPTS:number = 69;    // #12, #15 and #29 are available
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -116,7 +115,6 @@ scriptNames[A4_SCRIPT_DIE] = "die";
 scriptNames[A4_SCRIPT_PENDINGTALK] = "pendingTalk";
 scriptNames[A4_SCRIPT_ADDTOPIC] = "addTopic";
 scriptNames[A4_SCRIPT_EVENTRULE] = "eventRule";
-scriptNames[A4_SCRIPT_UPDATECONVERSATIONGRAPHTRANSITION] = "updateConversationGraphTransition";
 scriptNames[A4_SCRIPT_STORYSTATE] = "storyState";
 scriptNames[A4_SCRIPT_STORYSTATECHECK] = "storyStateCheck";
 scriptNames[A4_SCRIPT_FAMILIARWITHMAP] = "familiarWithMap";

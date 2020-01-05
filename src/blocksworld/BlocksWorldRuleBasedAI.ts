@@ -151,7 +151,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 					if (alreadyUpdatedEntities.indexOf(id) == -1) {
 						alreadyUpdatedEntities.push(id);
 						let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
-						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
+						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o, false);
 						if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 					}
 				}

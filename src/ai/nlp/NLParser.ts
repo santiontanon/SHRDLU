@@ -280,6 +280,7 @@ class NLParser {
 		return this.semanticallyCorrectInternal(parse, context, []);
 	}
 
+
 	semanticallyCorrectInternal(parse:Term, context:NLContext, closed:Term[]) : boolean
 	{
 		if (closed.indexOf(parse) != -1) return true;
@@ -336,6 +337,17 @@ class NLParser {
 				let target:string = (<ConstantTermAttribute>parse.attributes[0]).value;
 				// call attention cannot be to oneself!
 				if (target == context.speaker) return false;
+			}
+		}
+
+		if (parse.functor.is_a(this.o.getSort("performative")) &&
+			parse.attributes.length >= 1 && 
+			parse.attributes[0] instanceof ConstantTermAttribute) {
+			let target:string = (<ConstantTermAttribute>parse.attributes[0]).value;
+			// we should really be only talking to the robots:
+			if (this.talkingTargets != null && this.talkingTargets.indexOf(target) == -1) {
+				console.log("semanticallyCorrectInternal: " + target + " is not in talkingTargets");
+				return false;
 			}
 		}
 
@@ -539,6 +551,8 @@ class NLParser {
 	posParser:POSParser = null;
 	rules:NLPatternRule[] = [];
 	compiledRules:{ [sort: string] : CompiledNLPatternRules; } = {};
+
+	talkingTargets:string[] = null;
 
 	// errors from the last parse:
 	error_semantic:NLParseRecord[] = [];	// stores the parses that were properly parsed, but failed semantic checks

@@ -157,6 +157,7 @@ class NLContextEntity {
 	mentionTime:number = null;
 	distanceFromSpeaker:number = null;
 	terms:Term[] = [];
+	lastUpdateTime:number = -1;
 }
 
 
@@ -230,6 +231,7 @@ class NLContext {
 	{
 		this.endConversation();
 		this.shortTermMemory = [];
+		this.longTermMemory = {};
 		this.mentions = [];
 		this.performatives = [];
 		this.lastDerefErrorType = 0;
@@ -257,9 +259,9 @@ class NLContext {
 	}
 
 
-	newContextEntity(idAtt:ConstantTermAttribute, time:number, distance:number, o:Ontology) : NLContextEntity
+	newContextEntity(idAtt:ConstantTermAttribute, time:number, distance:number, o:Ontology, isFromLongTermMemory:boolean) : NLContextEntity
 	{
-//		console.log("newContextEntity: " + idAtt);
+		//console.log("newContextEntity: " + idAtt);
 
 		let ID:string = idAtt.value;
 		let e:NLContextEntity = this.findByID(ID);
@@ -272,12 +274,27 @@ class NLContext {
 				e.distanceFromSpeaker = distance;
 			}
 			// return e;
-			e.terms = [];		// entities need to be updated every time, otherwise, info is outdated!
 			itsAnExistingOne = true;
 		} else {
-//		console.log("newContextEntity: creating " + ID + " from scratch...");
-			e = new NLContextEntity(idAtt, time, distance, []);
+			if (isFromLongTermMemory && 
+				ID in this.longTermMemory) {
+				e = this.longTermMemory[ID];
+			}
+			//		console.log("newContextEntity: creating " + ID + " from scratch...");
+			if (e == null) {
+				e = new NLContextEntity(idAtt, time, distance, []);
+				if (isFromLongTermMemory) this.longTermMemory[ID] = e;
+			}
 		}
+
+		if (this.ai.time_in_seconds <= e.lastUpdateTime) {
+			// no need to reupdate it...
+			return e;
+		}
+
+		// console.log("newContextEntity: "+this.ai.selfID+" updating " + ID + "(" + e.lastUpdateTime + " -> " + this.ai.time_in_seconds + ")");
+		e.terms = [];		// entities need to be updated every time, otherwise, info is outdated!
+		e.lastUpdateTime = this.ai.time_in_seconds;
 
 		// find everything we can about it:
 		let typeSorts:Sort[] = []
@@ -319,7 +336,9 @@ class NLContext {
 			}
 		}
 		for(let tmp of typeSortsWithArity) {
-			for(let s of this.ai.longTermMemory.allSingleTermMatches(<Sort>(tmp[0]), <number>(tmp[1]), o)) {
+			let s_l:Sentence[] = this.ai.longTermMemory.allSingleTermMatches(<Sort>(tmp[0]), <number>(tmp[1]), o);
+//			console.log("allSingleTermMatches ("+tmp[0]+"): " + s_l.length);
+			for(let s of s_l) {
 //				console.log("NLContext: considering sentence " + s);
 				for(let att of s.terms[0].attributes) {
 					if (att instanceof ConstantTermAttribute &&
@@ -464,7 +483,7 @@ class NLContext {
 //		console.log("NLContext.newPerformative IDs found: " + IDs);
 
 		for(let id of IDs) {
-			let ce:NLContextEntity = this.newContextEntity(id, this.ai.time_in_seconds, null, o);			
+			let ce:NLContextEntity = this.newContextEntity(id, this.ai.time_in_seconds, null, o, false);			
 			if (ce != null) {
 				let idx:number = this.mentions.indexOf(ce);
 				if (idx != -1) this.mentions.splice(idx,1);
@@ -1442,7 +1461,7 @@ class NLContext {
 			if (s.terms[0].functor == nameSort && 
 				s.terms[0].attributes[1] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
 				if (e != null) return e;
 			}
 		}
@@ -1468,7 +1487,7 @@ class NLContext {
 				(s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
 				//console.log("    findAllProperNoun: '"+(<ConstantTermAttribute>s.terms[0].attributes[0]).value+"'");
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
 				if (e != null) {
 					matches.push(e);
 				} else {
@@ -1513,7 +1532,7 @@ class NLContext {
 		for(let s of this.ai.longTermMemory.allSingleTermMatches(sort, 1, o)) {
 			if (s.terms[0].functor.is_a(sort) &&
 				s.terms[0].attributes[0] instanceof ConstantTermAttribute) {
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
 				if (e != null) results.push(e);
 			}
 		}
@@ -1863,6 +1882,7 @@ class NLContext {
 	speaker:string = null;
 	ai:RuleBasedAI = null;
 	shortTermMemory:NLContextEntity[] = [];
+	longTermMemory: { [functor: string] : NLContextEntity; } = {};	// a cache for not having to create entities constantly during parsing...
 	mentions:NLContextEntity[] = [];
 	performatives:NLContextPerformative[] = [];
 

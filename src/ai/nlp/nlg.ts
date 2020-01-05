@@ -982,7 +982,12 @@ class NLGenerator {
 				} else {
 					subjectStr[0] += " ";
 				}
-				return verbPreComplements + subjectStr[0] + verbStr + " " + objectStr[0] + verbComplements;
+				if (t.functor.name == "verb.happen") {
+					let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], 2, time, negated_t);
+					return (verbPreComplements + objectStr[0] + " " + verbStr + " to " + subjectStr[0] + verbComplements).trim();
+				} else {
+					return verbPreComplements + subjectStr[0] + verbStr + " " + objectStr[0] + verbComplements;
+				}
 			}
 
 		} else if (t.attributes.length == 3 && 
@@ -2354,7 +2359,7 @@ class NLGenerator {
 		if (entityID == context.speaker) return ["you", 1, undefined, 0];
 
 		// get all the properties of the entity:
-		let ce:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>entity, undefined, undefined, ai.o);
+		let ce:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>entity, undefined, undefined, ai.o, false);
 		let nameTerms:Term[] = [];
 		let typeTerms:Term[] = [];
 		let PRTerms:Term[] = [];
@@ -2873,15 +2878,19 @@ class NLGenerator {
 				objectStr[0][0] == 't' && objectStr[0][1] == 'o' && objectStr[0][2] == ' ' && 
 				t.functor.is_a(this.nlg_cache_sort_modal_verb)) objectStr[0] = objectStr[0].substring(3);
 
-			if (verbsInInfinitive) {
-				let verbStr:string = this.pos.getVerbString(t.functor, 0, 0, 0);
-				return [(subjectStr[0] + (negated_t ? " not":"") + " to "+ verbStr + " " + objectStr[0] + verbComplements).trim(), 0, undefined, 0];
+			if (t.functor.name == "verb.happen") {
+				let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], 2, this.nlg_cache_sort_present, negated_t);
+				return [(objectStr[0] + " " + verbStr + " to " + subjectStr[0] + verbComplements).trim(), 0, undefined, 0];
 			} else {
-				let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
-//				let verbStr:string = this.pos.getVerbString(t.functor, subjectStr[3], subjectStr[1], 3);
-				return [(subjectStr[0] + " " + verbStr + " " + objectStr[0] + verbComplements).trim(), 0, undefined, 0];
+				if (verbsInInfinitive) {
+					let verbStr:string = this.pos.getVerbString(t.functor, 0, 0, 0);
+					return [(subjectStr[0] + (negated_t ? " not":"") + " to "+ verbStr + " " + objectStr[0] + verbComplements).trim(), 0, undefined, 0];
+				} else {
+					let verbStr:string = this.verbStringWithTime(t.functor, subjectStr[3], subjectStr[1], this.nlg_cache_sort_present, negated_t);
+	//				let verbStr:string = this.pos.getVerbString(t.functor, subjectStr[3], subjectStr[1], 3);
+					return [(subjectStr[0] + " " + verbStr + " " + objectStr[0] + verbComplements).trim(), 0, undefined, 0];
+				}
 			}
-
 
 		} else if (t.attributes.length == 3 && 
 				   (t.functor.name == "verb.tell" ||

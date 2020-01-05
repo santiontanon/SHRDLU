@@ -6,7 +6,7 @@
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.happen('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="property.strange('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
 	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.malfunction('david-stasis-pod'[#id])"/>
-	<previousSentence provenance="background" time="45186163200" sentence="verb.leave('david'[#id], 'location-as26'[#id])"/>
+	<previousSentence provenance="background" time="45186163200" timeEnd="45186163200" sentence="verb.leave('david'[#id], 'location-as26'[#id])"/>
 
 	<!-- general knowledge about the player -->
 	<sentence provenance="background" sentence="awake('david'[#id])"/>
@@ -257,6 +257,7 @@
 	<!-- where can things be found -->
 	<sentence provenance="background" sentence="space.at(X,'location-as23'[#id]) ; ~verb.can(X, verb.find(X,'food'[food]))"/>
 	<sentence provenance="background" sentence="space.at(X,'location-as27'[#id]) ; ~verb.can(X, verb.find(X,'microscope'[microscope]))"/>
+	<sentence provenance="background" sentence="space.at(X,'location-as29'[#id]) ; space.at(X,'location-as25'[#id]) ; ~verb.can(X, verb.find(X,'console'[console]))"/>
 
 	<!-- how to do things -->
 	<sentence provenance="background" sentence="relation.howto(verb.repair(X, SS:[spacesuit]), verb.tell(X, perf.request.action(Q:'qwerty'[#id], verb.repair(Q, SS)), Q))"/>

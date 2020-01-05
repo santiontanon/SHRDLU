@@ -21,6 +21,7 @@ xmlhttp.send();
 
 var parser:NLParser = NLParser.fromXML(xmlhttp.responseXML.documentElement, o);
 var posParser:POSParser = parser.posParser;
+parser.talkingTargets = ["1", "4", "5", "6", "etaoin", "qwerty"];
 
 // some concepts for the following sentences:
 o.newSortStrings("white-key", ["key-card"]);
@@ -143,7 +144,9 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
             return false;
         } else {
+            //console.log("  highest priority parse: " + parse.result);
             //console.log("  highest priority parse ruleNames: " + parse.ruleNames);
+            //console.log("  highest priority parse bindings: " + parse.bindings);
             if (context != null) {
                 var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
                 for(let parsePerformative of parsePerformatives) {
@@ -1377,6 +1380,8 @@ NLParseTestUnifyingListener("what is the distance between me and qwerty?", o.get
 NLParseTestUnifyingListener("what is the distance from me to qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id])");
 NLParseTestUnifyingListener("what is the distance from me to qwerty in meters?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
 NLParseTestUnifyingListener("how many meters away is qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
+NLParseTestUnifyingListener("which other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
+NLParseTestUnifyingListener("which other humans are in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

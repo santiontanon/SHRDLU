@@ -48,7 +48,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 						// we need to add this mention to the context entity list:
 						var context:NLContext = ai.contextForSpeaker(targetCharacterID);
 						if (context != null) {
-							var ce:NLContextEntity = context.newContextEntity(value, ai.time_in_seconds, null, ai.o);
+							var ce:NLContextEntity = context.newContextEntity(value, ai.time_in_seconds, null, ai.o, false);
 							if (ce != null) {
 								var idx:number = context.mentions.indexOf(ce);
 								if (idx != -1) context.mentions.splice(idx,1);

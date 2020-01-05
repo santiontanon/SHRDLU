@@ -1515,7 +1515,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   priority="150"/>		   		 
 
 	<NLPattern name="predicate-is-there-another-noun-in"
-			   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, V), #and(space.at(X, LOCATION), !=(V, REFERENCE_OBJECT))))"
+			   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, V), #and(space.at(V, LOCATION), !=(V, REFERENCE_OBJECT))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1534,8 +1534,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [present-tense]) ['there']
 			   		 preposition(PREPOSITION)
 			   		 nounPhrase(X2, N2, P2, C2)
@@ -1547,8 +1547,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [past-tense]) ['there']
 			   		 preposition(PREPOSITION)
 			   		 nounPhrase(X2, N2, P2, C2)
@@ -1560,8 +1560,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [past-tense]) ['there']
 			   		 ['in'] 'here'
 			   		 ('!'|'?')*

@@ -3,15 +3,6 @@
 Note (santi):
 - This is a recreation of the original SHRDLU system by Terry Winograd using the NLP engine used for my game SHRDLU
 
-- todo:
-    ***- If I say "pick up a block", and then "put the block on the table", it does not know I am talking about the block in the arm!
-    ***- If I say "pick up a pyramid", and then "put it on the table". It does not know how to disambiguate "it", since the specific pyramid was never on any performative! Add it!
-    - Look at this file for words I might want to add to the vocab for the block world demo: https://github.com/stuartpb/shrdlu/blob/master/dictio
-    - planning for requests that require more than one action (I need a planner that can return a causal representation of the plan, to answer questions about it)
-    - collect SHRDLU transcripts (one here: http://hci.stanford.edu/~winograd/shrdlu/). Are there more somewhere else?
-        - here there are test sentences (some of them quite complex!): http://boole.stanford.edu/lingol/trysh.test
-    - go through the collected SHRDLU transcripts, and make sure I can recreate all the conversations SHRDLU had
-    - integrate it with the game as a bonus
 */
 
 var STATE_ACCEPTING_INPUT:number = 0
