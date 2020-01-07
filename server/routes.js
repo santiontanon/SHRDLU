@@ -17,6 +17,11 @@ const routes = function(app) {
 		res.sendFile(path.join(__dirname, '..', 'built', 'shrdlu.html'));
 	});
 
+	// environment variables set in .env that the frontend might need
+	app.get('/env.js', (req, res) => {
+		res.status(httpStatus.OK).send('(function(){window.BASE_URL="' + process.env.URL + '";})();');
+	});
+
 	// test API
 	app.get('/test', (req, res) => {
 		res.status(httpStatus.OK).json({message: "API test endpoint"});

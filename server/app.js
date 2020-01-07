@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const httpStatus = require('http-status');
 const path = require('path');
 
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(cors());
 
 // by default, we serve URL requests from the TS build output directory
 app.use(express.static(path.join(__dirname, '..', 'built')));

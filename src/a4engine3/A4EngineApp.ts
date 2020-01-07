@@ -50,6 +50,8 @@ var QUIT_REQUEST_ACTION_LOAD2:number = 3;
 var QUIT_REQUEST_ACTION_LOAD3:number = 4;
 var QUIT_REQUEST_ACTION_LOAD4:number = 5;
 
+// constants from our .env file
+const BASE_URL = (<any>window).BASE_URL;
 
 class A4EngineApp {
     constructor(a_dx:number, a_dy:number) {
@@ -363,6 +365,32 @@ class A4EngineApp {
         return this.game;
     }
 
+    // get a new Session ID in a token and assign it to this game
+    public static assignNewSessionID(game: A4Game) {
+        A4EngineApp.requestTokenFromServer((err, token) => {
+           if (err) {
+               console.log(err);
+           } else if (token && game) {
+               game.setToken(token);
+           }
+        });
+    }
+
+    // requests from the server an authenticated token with a new UUID for this gameplay session
+    static requestTokenFromServer(callback: (err: string, token: string) => void) {
+        const http = ((<any>window).XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        http.onload = function () {
+            if (this.status === 200) {
+                const json = JSON.parse(this.response);
+                if (json.hasOwnProperty('token')) {
+                    return callback(null, json.token);
+                }
+            }
+            return callback('Could not retrieve token', null);
+        };
+        http.open("GET", BASE_URL + 'session');
+        http.send();
+    }
 
     intro_cycle(k:KeyboardState) : number
     {    
@@ -637,6 +665,7 @@ class A4EngineApp {
 
                 app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
                 app.game.finishLoadingGame(null, this);
+                A4EngineApp.assignNewSessionID(app.game);
 
                 return A4ENGINE_STATE_ACT1INTRO;
             }
