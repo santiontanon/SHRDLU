@@ -218,46 +218,53 @@ function drawFadeInOverlay(f:number)
     }
 }
 
+function generateDebugLog(app:A4EngineApp) : string {
+    //let newline:string = "%0a";    // we need this, if we append the text to the page at the end
+    let newline:string = "\n";
+    let tab:string = "\t";
+    let mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
+    mailContent += "Session: " + getIDFromSessionToken(app.getGame().getToken()) + newline + newline;
+    mailContent += "Please email this file to santi.ontanon@gmail.com to help improve this game!" + newline + newline;
+    for(let m of app.game.messages) {
+        mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
+    }
+    mailContent += newline + "In-game Actions:" + newline;
+    for(let m of app.game.in_game_actions_for_log) {
+        mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
+    }
+    mailContent += newline + "Error messages:" + newline;
+    for(let m of app.game.error_messages_for_log) {
+        mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
+    }
+    return mailContent;
+}
 
-function generateDebugLogForDownload(app:A4EngineApp)
-{
-   //let newline:string = "%0a";    // we need this, if we append the text to the page at the end
-   let newline:string = "\n";
-   let tab:string = "\t";
-   let mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
-   mailContent += "Session: " + getIDFromSessionToken(app.getGame().getToken()) + newline + newline;
-   mailContent += "Please email this file to santi.ontanon@gmail.com to help improve this game!" + newline + newline;
-   for(let m of app.game.messages) {
-       mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
-   }
-   mailContent += newline + "In-game Actions:" + newline;
-   for(let m of app.game.in_game_actions_for_log) {
-       mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
-   }
-   mailContent += newline + "Error messages:" + newline;
-   for(let m of app.game.error_messages_for_log) {
-       mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
-   }
-   
-   /*
-   // method 1: mailto
-   let mail = "mailto:santi.ontanon@gmail.com?subject=SHRDLU DEMO 1 log&body=" + mailContent + "";
-   let win = window.open(mail, 'emailWindow');
-   if (win && win.open && !win.closed) win.close();
+function generateDebugLogForDownload(app:A4EngineApp) {
+    const mailContent: string = generateDebugLog(app);
 
-   // method 2: append to the page
-   document.getElementById("log").innerHTML = mailContent.split("%0a").join("<br>");
-   */
+    /*
+    // method 1: mailto
+    let mail = "mailto:santi.ontanon@gmail.com?subject=SHRDLU DEMO 1 log&body=" + mailContent + "";
+    let win = window.open(mail, 'emailWindow');
+    if (win && win.open && !win.closed) win.close();
 
-   // method 3: downloadable file
-   downloadStringAsFile(mailContent, "debug-log.txt")
+    // method 2: append to the page
+    document.getElementById("log").innerHTML = mailContent.split("%0a").join("<br>");
+    */
+
+    // method 3: downloadable file
+    downloadStringAsFile(mailContent, "debug-log.txt")
 }
 
 // extract the Session ID (UUID) from the server-provided authentication token
 function getIDFromSessionToken(token:string) {
-    const decoded = token.split('.')[1].replace('-', '+').replace('_', '/');
-    const json = JSON.parse((<any>window).atob(decoded));
-    return json.sessionID;
+    try {
+        const decoded = token.split('.')[1].replace('-', '+').replace('_', '/');
+        const json = JSON.parse((<any>window).atob(decoded));
+        return json.sessionID;
+    } catch (e) {
+        return '';
+    }
 }
 
 function downloadStringAsFile(s:string, fileName:string) 
