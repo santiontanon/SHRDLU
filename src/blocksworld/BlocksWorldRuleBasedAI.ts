@@ -125,7 +125,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		let o1:ShrdluBlock = this.world.getObject(source);
 		let o2:ShrdluBlock = this.world.getObject(target);
 		if (o1 != null && o2 != null) return this.world.distanceBetweenObjects(o1, o2);
-		return null;
+		return super.distanceBetweenIds(source, target);
 	}
 
 
@@ -151,7 +151,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 					if (alreadyUpdatedEntities.indexOf(id) == -1) {
 						alreadyUpdatedEntities.push(id);
 						let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
-						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o);
+						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o, false);
 						if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 					}
 				}

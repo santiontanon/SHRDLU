@@ -82,7 +82,10 @@ class A4Map {
             if (property.getAttribute("name") == "name") {
                 this.name = property.getAttribute("value");
 //                console.log("Map name is: " + this.name);
+            } else if (property.getAttribute("name") == "pixels_per_meter") {
+                this.pixelsPerMeter = Number(property.getAttribute("value"));
             }
+            
         }
 
         this.visibilityRegions = [];
@@ -271,6 +274,7 @@ class A4Map {
 
          xmlString += "<properties>\n";
          xmlString += "<property name=\"name\" value=\""+this.name+"\"/>\n";
+         xmlString += "<property name=\"pixels_per_meter\" value=\""+this.pixelsPerMeter+"\"/>\n";
          xmlString += "</properties>\n";
          let firstID:number = 1;
         for(let gf of game.graphicFiles) {
@@ -1344,7 +1348,6 @@ class A4Map {
     // this function assumes they are already almost sorted, and thus uses simple shuffle sort:
     sortObjectByYCoordinate()
     {
-//        let anychange:boolean = false;
         let change:boolean = true;
         let tmp:A4Object = null;
 
@@ -1367,7 +1370,6 @@ class A4Map {
             }
             // going down:
             if (change) {
-//                anychange = true;
                 change = false;
                 for(let i:number = this.objects.length-2;i>=0;i--) {
                     let yi1:number = this.objects[i].y   + this.objects[i].getPixelHeight();
@@ -1385,16 +1387,6 @@ class A4Map {
                 }
             }
         }
-/*
-        if (anychange) 
-        {
-            let heights:string[] = [];
-            for(let i:number = 0;i<this.objects.length;i++) {
-                heights.push("("+this.objects[i].name+this.objects[i].y+"+"+this.objects[i].getPixelHeight()+")");
-            }
-            console.log("sorted: " + heights);
-        }
-*/
     }
 
 
@@ -1404,6 +1396,7 @@ class A4Map {
     height:number;
     tileWidth:number = 8;
     tileHeight:number = 8;
+    pixelsPerMeter:number = 8;
 
     layers:A4MapLayer[] = [];
     bridges:A4MapBridge[] = [];

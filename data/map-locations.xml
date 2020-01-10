@@ -537,7 +537,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		</data>
-		<location code="1" id="location-west-cave-dark" name="west cave" sort="cave"/>
+		<location code="1" id="location-west-cave-dark" sort="cave"/>
 	</map>
 	
 

@@ -1031,6 +1031,12 @@ class RuleBasedAI {
 					t2.addAttribute(perf2.attributes[i]);
 				}
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+			} else if (perf2.functor.name == "perf.q.distance") {
+				let t2:Term = Term.fromString("action.answer.distance('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
+				for(let i:number = 1;i<perf2.attributes.length;i++) {
+					t2.addAttribute(perf2.attributes[i]);
+				}
+				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.request.action" || 
 					   perf2.functor.name == "perf.q.action") {
 				this.reactToRequestActionPerformative(perf2, speaker, context);
@@ -2065,6 +2071,12 @@ class RuleBasedAI {
 	}	
 
 
+	distanceBetweenIds(source:string, target:string)
+	{
+		return null;
+	}
+	
+
 	restoreFromXML(xml:Element)
 	{
 		this.time_in_seconds = Number(xml.getAttribute("timeInSeconds"));
@@ -2330,7 +2342,7 @@ class RuleBasedAI {
 	currentEpisodeTerms:string[] = [];	// Terms that are to be remembered or the current "episode" (i.e., while the AI is executing an action),
 										// but that will be erased when a new action is started.
 										// This is a hack, but it is to avoid having to have the concept of "immediate past" and "far past",
-										// since parsince those from text would be hard. 
+										// since parsing those from text would be hard. 
 										// To illustrate the problem, consider this interaction:
 										// - Shrdlu, go north
 										// - There is an obstacle here.

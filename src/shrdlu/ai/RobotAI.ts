@@ -24,6 +24,7 @@ class RobotAI extends A4RuleBasedAI {
 		this.intentionHandlers.push(new RobotHelp_IntentionAction());
 		this.intentionHandlers.push(new RobotTurn_IntentionAction());
 		this.intentionHandlers.push(new RobotPushPull_IntentionAction());
+		this.intentionHandlers.push(new RobotReboot_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
@@ -196,10 +197,27 @@ class RobotAI extends A4RuleBasedAI {
 	}
 
 
+	/* safely clear the current script queues, without erasing certain scripts that should never be removed from there! */
+	clearScriptQueues()
+	{
+		let newQueues:A4ScriptExecutionQueue[] = [];
+		for(let q of this.robot.scriptQueues) {
+			let q2:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(q.object, q.map, q.game, q.otherCharacter);
+			for(let s of q.scripts) {
+				if (s.type == A4_SCRIPT_FAMILIARWITHMAP) {
+					q2.scripts.push(s);
+				}
+			}
+			if (q2.scripts.length > 0) newQueues.push(q2);
+		}
+		this.robot.scriptQueues = newQueues;
+	}
+
+
 	stopAction(actionRequest:Term, requester:string) : boolean
 	{
 		if (super.stopAction(actionRequest, requester)) {
-			this.robot.scriptQueues = [];
+			this.clearScriptQueues();
 			return true;
 		}
 
@@ -216,7 +234,7 @@ class RobotAI extends A4RuleBasedAI {
 
 	clearCurrentAction()
 	{
-		this.robot.scriptQueues = [];
+		this.clearScriptQueues();
 		this.currentAction = null;
 		this.currentAction_requester = null;
 		this.currentAction_scriptQueue = null;
@@ -226,7 +244,7 @@ class RobotAI extends A4RuleBasedAI {
 
 	setNewAction(action:Term, requester:TermAttribute, scriptQueue:A4ScriptExecutionQueue, handler:IntentionAction)
 	{
-		this.robot.scriptQueues = [];
+		this.clearScriptQueues();
 		this.currentAction = action;
 		this.currentAction_requester = requester;
 		this.currentAction_scriptQueue = scriptQueue;
@@ -310,8 +328,10 @@ class RobotAI extends A4RuleBasedAI {
 		let map:A4Map = this.robot.map;
 		// etaoin exception:
 		if (objectID == "etaoin") {
+			if (this.game.comm_tower_repaired) return true;
 			if (map.name == "Aurora Station" ||
-				map.name == "Aurora Station Outdoors") return true;
+				map.name == "Aurora Station Outdoors" ||
+				map.name == "Spacer Valley South") return true;
 		}
 
 		// exception of the player through the communicator:

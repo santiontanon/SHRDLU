@@ -1121,7 +1121,7 @@ class ShrdluGameScript {
 			if (this.act_1_state_timer == 30) {
 				if (this.game.currentPlayer.isIdle()) {
 					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
-																   "I feel better now and gotten used to feeling lighter, but still don't know what is this place...", A4_DIRECTION_NONE, this.game);
+																   "I feel better now and I'm getting used to feeling lighter, but still don't know what is this place...", A4_DIRECTION_NONE, this.game);
 				} else {
 					this.act_1_state_timer--;	// wait until player is idle!
 				}
@@ -2160,7 +2160,7 @@ class ShrdluGameScript {
 				this.act_2_shrdlu_agenda_state = 23;
 				this.act_2_shrdlu_agenda_state_timer = 20*60;
 				this.game.shrdluAI.clearCurrentAction();
-				this.game.shrdluAI.robot.scriptQueues = [];
+				this.game.shrdluAI.clearScriptQueues();
 				this.contextShrdlu.inConversation = false;
 				this.game.requestWarp(this.game.shrdluAI.robot, this.game.qwertyAI.robot.map, 91*8, 20*8);
 				this.game.shrdluAI.robot.x = 91*8;	// we force anyway, since, otehrwise, the agenda doesn't work
@@ -3087,6 +3087,19 @@ class ShrdluGameScript {
 						(t2.attributes[1] instanceof VariableTermAttribute) &&
 						(t2.attributes[0] instanceof ConstantTermAttribute) &&
 						(<ConstantTermAttribute>t2.attributes[0]).value == "david") {
+						differentThanDavidFound = true;
+					}
+				}
+			 	if (t.functor.name=="!=" &&
+					t.attributes.length == 2) {
+					if ((t.attributes[1] instanceof VariableTermAttribute) &&
+						(t.attributes[0] instanceof ConstantTermAttribute) &&
+						(<ConstantTermAttribute>t.attributes[0]).value == "david") {
+						differentThanDavidFound = true;
+					}
+					if ((t.attributes[0] instanceof VariableTermAttribute) &&
+						(t.attributes[1] instanceof ConstantTermAttribute) &&
+						(<ConstantTermAttribute>t.attributes[1]).value == "david") {
 						differentThanDavidFound = true;
 					}
 				}

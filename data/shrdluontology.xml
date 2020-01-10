@@ -228,6 +228,7 @@
     <sort name="perf.q.howmany" super="perf.question"/>
     <sort name="perf.q.why" super="perf.question"/>
     <sort name="perf.q.how" super="perf.question"/>
+    <sort name="perf.q.distance" super="perf.question"/>
     <sort name="perf.moreresults" super="performative"/>   <!-- things like "who else?", "anyone else?", "what else?" -->
     <sort name="perf.rephrase.entity" super="performative"/>
     <sort name="perf.changemind" super="performative"/>
@@ -429,6 +430,7 @@
     <sort name="console" super="equipment,machine"/>
     <sort name="computer-tower" super="computer,tower"/>
     <sort name="wall-computer" super="computer,console"/>
+    <sort name="tardis-wall-computer" super="computer,console"/>
     <sort name="printer" super="equipment,machine"/>
     <sort name="3dprinter" super="printer"/>
     <sort name="metal-3dprinter" super="3dprinter"/>
@@ -667,7 +669,7 @@
     <sort name="verb.lift" super="verb"/>
     <sort name="verb.maintain" super="verb"/>
     <sort name="verb.search" super="verb"/>
-    <sort name="verb.reset" super="verb"/>
+    <sort name="verb.reboot" super="verb"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
@@ -713,6 +715,7 @@
     <sort name="action.answer.when" super="actionverb"/>
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
+    <sort name="action.answer.distance" super="actionverb"/>
     
     <sort name="verb.bring" super="verb.take-to,action.give"/>
 

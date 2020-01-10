@@ -1515,7 +1515,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   priority="150"/>		   		 
 
 	<NLPattern name="predicate-is-there-another-noun-in"
-			   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, V), #and(space.at(X, LOCATION), !=(V, REFERENCE_OBJECT))))"
+			   head="perf.q.predicate(LISTENER, #and(#cons(NOUN, V), #and(space.at(V, LOCATION), !=(V, REFERENCE_OBJECT))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
@@ -1534,8 +1534,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [present-tense]) ['there']
 			   		 preposition(PREPOSITION)
 			   		 nounPhrase(X2, N2, P2, C2)
@@ -1547,8 +1547,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [past-tense]) ['there']
 			   		 preposition(PREPOSITION)
 			   		 nounPhrase(X2, N2, P2, C2)
@@ -1560,8 +1560,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
-			   		 'what' 'other'
-			   		 noun(NOUN, [singular])
+			   		 ('what'|'which') 'other'
+			   		 noun(NOUN, NN)
 			   		 verb('verb.be'[symbol], NV, P, [past-tense]) ['there']
 			   		 ['in'] 'here'
 			   		 ('!'|'?')*
@@ -6765,6 +6765,122 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X3, N3, P3, C3)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C3, OBJECT)"/>
+
+	<!-- perf.q.distance rules -->
+    <NLPattern name="distance-howfar-from-X-is-Y"
+    		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'far' ['away'] 
+			   		 'from'
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT1)
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-howfar-from-X-is-Y-unit"
+    		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2, UNIT:[distance.unit])"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'far' ['away'] 
+			   		 'from'
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 [',']
+			   		 'in' noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT1)
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-howfar-is-X"
+    		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'far' ['away'] 
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-howfar-is-X-unit"
+    		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'far' ['away'] 
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 [','] 'in' noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-what-distance-to-X"
+    		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'what'
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 ['the'] 'distance' 'to'
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-what-distance-to-X-unit"
+    		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'what'
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 ['the'] 'distance' 'to'
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 [','] 'in' noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-what-distance-X-Y"
+    		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'what'
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 ['the'] 'distance'
+			   		 ('between'|'from')
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('and'|'to')
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT1)
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-what-distance-X-Y-unit"
+    		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2, UNIT:[distance.unit])"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'what'
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 ['the'] 'distance'
+			   		 ('between'|'from')
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('and'|'to')
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 [','] 'in' noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT1)
+			   		 #derefFromContext(C3, OBJECT2)"/>
+
+    <NLPattern name="distance-how-many-unit-away-is-X"
+    		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'many'
+			   		 noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
+			   		 ['away']
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT2)"/>
 
 	<!-- e.g.: "I cannot parse the sentence" -->
     <NLPattern name="cannot-verb"
