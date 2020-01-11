@@ -24,6 +24,10 @@ class EtaoinSwitchOn_IntentionAction extends IntentionAction {
 				let room:AILocation = ai.game.getAILocation(light);
 				if (ai.game.turnLightOn(room.id)) {
 					anyTurnedOn = true;
+
+					// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+					if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(light.ID, ai.o);
+					
 					// add a causation record:
 					let causetext:string = "relation.cause(powered.state('"+targetID+"'[#id], 'powered.on'[powered.on]), verb.switch-on('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))";
 					let causeTerm:Term = Term.fromString(causetext, ai.o);

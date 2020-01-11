@@ -162,17 +162,101 @@ class NLContextEntity {
 
 
 class NLContextPerformative {
-	constructor(t:string, speaker:string, p:Term, c:CauseRecord, timeStamp:number)
+	constructor(t:string, speaker:string, p:Term, c:CauseRecord, context:NLContext, timeStamp:number)
 	{
 		this.text = t;
 		this.speaker = speaker;
 		this.performative = p;
 		this.cause = c;
+		this.context = context;
 		this.timeStamp = timeStamp;
+		this.IDs = null;
 	}
 
 
-	static fromXML(xml:Element, o:Ontology) : NLContextPerformative
+	// find all the entities mentioned in the clause:
+	IDsInPerformative(o:Ontology) : ConstantTermAttribute[]
+	{
+		let perf:Term = this.performative;
+
+		if (this.IDs != null) return this.IDs;
+		this.IDs = [];
+		if (perf.functor.is_a(o.getSort("perf.callattention")) ||
+			perf.functor.is_a(o.getSort("perf.greet")) ||
+			perf.functor.is_a(o.getSort("perf.nicetomeetyou")) ||
+			perf.functor.is_a(o.getSort("perf.nicetomeetyoutoo")) ||
+			perf.functor.is_a(o.getSort("perf.farewell")) ||
+			perf.functor.is_a(o.getSort("perf.ack.ok")) ||
+			perf.functor.is_a(o.getSort("perf.ack.unsure")) ||
+			perf.functor.is_a(o.getSort("perf.ack.contradict")) ||
+			perf.functor.is_a(o.getSort("perf.ack.invalidanswer")) ||
+			perf.functor.is_a(o.getSort("perf.ack.denyrequest")) ||
+			perf.functor.is_a(o.getSort("perf.ackresponse")) ||
+			perf.functor.is_a(o.getSort("perf.thankyou")) ||
+			perf.functor.is_a(o.getSort("perf.youarewelcome")) ||
+			perf.functor.is_a(o.getSort("perf.sentiment")) ||
+			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
+			perf.functor.is_a(o.getSort("perf.moreresults")) ||
+			perf.functor.is_a(o.getSort("perf.request.repeataction")) ||
+			perf.functor.is_a(o.getSort("perf.inform")) ||
+		    perf.functor.is_a(o.getSort("perf.q.predicate")) ||
+		    perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
+		    perf.functor.is_a(o.getSort("perf.request.action")) ||
+		    perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
+		    perf.functor.is_a(o.getSort("perf.q.action")) ||
+		    perf.functor.is_a(o.getSort("perf.q.why")) ||
+		    perf.functor.is_a(o.getSort("perf.q.how")) ||
+			perf.functor.is_a(o.getSort("perf.q.query")) ||
+	 	    perf.functor.is_a(o.getSort("perf.q.howmany")) ||
+			perf.functor.is_a(o.getSort("perf.rephrase.entity")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whereis")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whereto")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whois.name")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
+		    perf.functor.is_a(o.getSort("perf.q.whatis.noname")) ||
+			perf.functor.is_a(o.getSort("perf.q.when")) ||
+			perf.functor.is_a(o.getSort("perf.q.distance")) ||
+			perf.functor.is_a(o.getSort("perf.changemind"))) {
+			for(let i:number = 0;i<perf.attributes.length;i++) {
+				if (perf.attributes[i] instanceof ConstantTermAttribute) {
+					this.IDs.push(<ConstantTermAttribute>(perf.attributes[i]));
+				} else if (perf.attributes[i] instanceof TermTermAttribute) {
+					NLContext.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, this.IDs, o);
+				}
+			}
+		} else {
+			console.error("NLContext.newPerformative: unsupported performative " + perf.functor.name);
+		}
+		return this.IDs;
+	}	
+
+
+	addMentionToPerformative(id:string, o:Ontology)
+	{
+		if (id == null) return;
+		this.IDsInPerformative(o);
+		for(let id2 of this.IDs) {
+			if ((id2 instanceof ConstantTermAttribute) &&
+				(<ConstantTermAttribute>id2).value == id) {
+				// already mentioned:
+				return;
+			}
+		}
+
+		let newID:ConstantTermAttribute = new ConstantTermAttribute(id, o.getSort("#id"));
+		this.IDs.push(newID);
+
+		let ce:NLContextEntity = this.context.newContextEntity(newID, this.timeStamp, null, o, false);			
+		if (ce != null) {
+			let idx:number = this.context.mentions.indexOf(ce);
+			if (idx != -1) this.context.mentions.splice(idx,1);
+			this.context.mentions.unshift(ce);
+		}
+	}
+
+
+	static fromXML(xml:Element, context:NLContext, o:Ontology) : NLContextPerformative
 	{
 		var cause:CauseRecord = null;
 		var p_xml = getFirstElementChildByTag(xml, "cause");
@@ -183,6 +267,7 @@ class NLContextPerformative {
 										 xml.getAttribute("speaker"),
 										 Term.fromString(xml.getAttribute("performative"), o),
 										 cause,
+										 context,
 										 Number(xml.getAttribute("timeStamp")));
 	}
 
@@ -211,8 +296,10 @@ class NLContextPerformative {
 	text:string = null;
 	speaker:string = null;
 	performative:Term = null;
-	cause:CauseRecord = null;	// the cause of having said this performative
-	timeStamp:number = 0;	// cycle when it was recorded
+	cause:CauseRecord = null;			// the cause of having said this performative
+	context:NLContext = null;
+	timeStamp:number = 0;				// cycle when it was recorded
+	IDs:ConstantTermAttribute[] = null;	// the IDs of the objects mentioned in this performative
 }
 
 
@@ -407,61 +494,6 @@ class NLContext {
 		}
 	}
 
-
-	// find all the entities mentioned in the clause:
-	IDsInPerformative(perf:Term, o:Ontology)
-	{
-		let IDs:ConstantTermAttribute[] = [];
-		if (perf.functor.is_a(o.getSort("perf.callattention")) ||
-			perf.functor.is_a(o.getSort("perf.greet")) ||
-			perf.functor.is_a(o.getSort("perf.nicetomeetyou")) ||
-			perf.functor.is_a(o.getSort("perf.nicetomeetyoutoo")) ||
-			perf.functor.is_a(o.getSort("perf.farewell")) ||
-			perf.functor.is_a(o.getSort("perf.ack.ok")) ||
-			perf.functor.is_a(o.getSort("perf.ack.unsure")) ||
-			perf.functor.is_a(o.getSort("perf.ack.contradict")) ||
-			perf.functor.is_a(o.getSort("perf.ack.invalidanswer")) ||
-			perf.functor.is_a(o.getSort("perf.ack.denyrequest")) ||
-			perf.functor.is_a(o.getSort("perf.ackresponse")) ||
-			perf.functor.is_a(o.getSort("perf.thankyou")) ||
-			perf.functor.is_a(o.getSort("perf.youarewelcome")) ||
-			perf.functor.is_a(o.getSort("perf.sentiment")) ||
-			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
-			perf.functor.is_a(o.getSort("perf.moreresults")) ||
-			perf.functor.is_a(o.getSort("perf.request.repeataction")) ||
-			perf.functor.is_a(o.getSort("perf.inform")) ||
-		    perf.functor.is_a(o.getSort("perf.q.predicate")) ||
-		    perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
-		    perf.functor.is_a(o.getSort("perf.request.action")) ||
-		    perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
-		    perf.functor.is_a(o.getSort("perf.q.action")) ||
-		    perf.functor.is_a(o.getSort("perf.q.why")) ||
-		    perf.functor.is_a(o.getSort("perf.q.how")) ||
-			perf.functor.is_a(o.getSort("perf.q.query")) ||
-	 	    perf.functor.is_a(o.getSort("perf.q.howmany")) ||
-			perf.functor.is_a(o.getSort("perf.rephrase.entity")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whereis")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whereto")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whois.name")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whatis.noname")) ||
-			perf.functor.is_a(o.getSort("perf.q.when")) ||
-			perf.functor.is_a(o.getSort("perf.q.distance")) ||
-			perf.functor.is_a(o.getSort("perf.changemind"))) {
-			for(let i:number = 0;i<perf.attributes.length;i++) {
-				if (perf.attributes[i] instanceof ConstantTermAttribute) {
-					IDs.push(<ConstantTermAttribute>(perf.attributes[i]));
-				} else if (perf.attributes[i] instanceof TermTermAttribute) {
-					NLContext.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, IDs, o);
-				}
-			}
-		} else {
-			console.error("NLContext.newPerformative: unsupported performative " + perf.functor.name);
-		}
-		return IDs;
-	}	
-
 	
 	newPerformative(speakerID:string, perfText:string, perf:Term, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
 	{
@@ -478,12 +510,12 @@ class NLContext {
 
 //		console.log("NLContext.newPerformative: " + perf);
 
-		var cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, timeStamp);
-		let IDs:ConstantTermAttribute[] = this.IDsInPerformative(perf, o);
+		var cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, this, timeStamp);
+		let IDs:ConstantTermAttribute[] = cp.IDsInPerformative(o);
 //		console.log("NLContext.newPerformative IDs found: " + IDs);
 
 		for(let id of IDs) {
-			let ce:NLContextEntity = this.newContextEntity(id, this.ai.time_in_seconds, null, o, false);			
+			let ce:NLContextEntity = this.newContextEntity(id, timeStamp, null, o, false);			
 			if (ce != null) {
 				let idx:number = this.mentions.indexOf(ce);
 				if (idx != -1) this.mentions.splice(idx,1);
@@ -534,13 +566,13 @@ class NLContext {
 					// no need to push anything to the stack here
 				} else {
 					this.expectingAnswerToQuestion_stack.push(cp);
-					this.expectingAnswerToQuestionTimeStamp_stack.push(this.ai.time_in_seconds);
+					this.expectingAnswerToQuestionTimeStamp_stack.push(timeStamp);
 				}
 			}
 
 			if (perf.functor.is_a(this.ai.o.getSort("perf.request.action"))) {
 				this.expectingConfirmationToRequest_stack.push(cp);
-				this.expectingConfirmationToRequestTimeStamp_stack.push(this.ai.time_in_seconds);
+				this.expectingConfirmationToRequestTimeStamp_stack.push(timeStamp);
 			} else {
 				// For now, just clear these stacks if we move on in the conversation, since requests do not necessarily need an answer
 				this.expectingConfirmationToRequest_stack = [];
@@ -1716,7 +1748,7 @@ class NLContext {
 				if (nAttributes == 1) {
 					// we are missing the destination, see if in the last performative, we mentioned a location:
 					for(let perf of performativesToConsider) {
-						let IDs:ConstantTermAttribute[] = this.IDsInPerformative(perf.performative, o);
+						let IDs:ConstantTermAttribute[] = perf.IDsInPerformative(o);
 						for(let ID of IDs) {
 							let e:NLContextEntity = this.findByID(ID.value);
 							if (e != null && e.sortMatch(o.getSort("space.location"))) {
@@ -1771,7 +1803,7 @@ class NLContext {
 		let pf_xml:Element = getFirstElementChildByTag(xml, "performatives");
 		if (pf_xml != null) {
 			for(let cp_xml of getElementChildrenByTag(pf_xml, "NLContextPerformative")) {
-				let cp:NLContextPerformative = NLContextPerformative.fromXML(cp_xml, o);
+				let cp:NLContextPerformative = NLContextPerformative.fromXML(cp_xml, c, o);
 				if (cp != null) c.performatives.push(cp);
 			}
 		}

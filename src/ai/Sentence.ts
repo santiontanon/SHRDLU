@@ -18,8 +18,8 @@ class Sentence {
 	// - Otherwise, it returns null
 	singleTermForwardChaining(t:Term) : Term
 	{
-		var negatedTerm:Term = null;
-		var positiveTerm:Term = null;
+		let negatedTerm:Term = null;
+		let positiveTerm:Term = null;
 		if (this.terms.length != 2) return null;
 
 		for(let i:number = 0;i<this.terms.length;i++) {
@@ -31,9 +31,9 @@ class Sentence {
 				positiveTerm = this.terms[i];
 			}
 		}
-		var bindings:Bindings = new Bindings();
+		let bindings:Bindings = new Bindings();
 		if (t.unify(negatedTerm, OCCURS_CHECK, bindings)) {
-			var t2:Term = positiveTerm.applyBindings(bindings);
+			let t2:Term = positiveTerm.applyBindings(bindings);
 			return t2;
 		}
 		return null;
@@ -53,7 +53,7 @@ class Sentence {
 
 	getAllVariables() : VariableTermAttribute[]
 	{
-		var vs:VariableTermAttribute[] = [];
+		let vs:VariableTermAttribute[] = [];
 		for(let t of this.terms) {
 			let tvs:VariableTermAttribute[] = t.getAllVariables();
 //			console.log("Sentence.getAllVariables(t): " + tvs);
@@ -82,7 +82,7 @@ class Sentence {
 	{
 		if (this.terms.length > s.terms.length) return false;
 		for(let i:number = 0;i<this.terms.length;i++) {
-			var found:boolean = false;
+			let found:boolean = false;
 			for(let j:number = 0;j<s.terms.length;j++) {
 				if (this.sign[i] == s.sign[j] &&
 					this.terms[i].equalsNoBindings(s.terms[j]) == 1) {
@@ -111,12 +111,12 @@ class Sentence {
 
 	toString() : string
 	{
-		var variables:TermAttribute[] = [];
-		var variableNames:string[] = [];
-		var str:string = "";
-		var first:boolean = true;
+		let variables:TermAttribute[] = [];
+		let variableNames:string[] = [];
+		let str:string = "";
+		let first:boolean = true;
 		for(let i:number = 0;i<this.terms.length;i++) {
-			var t:Term = this.terms[i];
+			let t:Term = this.terms[i];
 			if (first) {
 				if (!this.sign[i]) str += "~";
 				str += t.toStringInternal(variables, variableNames);
@@ -139,10 +139,10 @@ class Sentence {
 
 	toStringXMLInternal(variables:TermAttribute[], variableNames:string[]) : string
 	{
-		var str:string = "";
-		var first:boolean = true;
+		let str:string = "";
+		let first:boolean = true;
 		for(let i:number = 0;i<this.terms.length;i++) {
-			var t:Term = this.terms[i];
+			let t:Term = this.terms[i];
 			if (first) {
 				if (!this.sign[i]) str += "~";
 				str += t.toStringXMLInternal(variables, variableNames);
@@ -165,13 +165,13 @@ class Sentence {
 
 	static fromStringInternal(str:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : Sentence
 	{
-		var tokens:string[] = [];
-		var token:string = "";
-		var c:string;
-		var state:number = 0;	// 0: no token character yet, 1: inside a token
-        var parenthesis:number = 0;
-        var squareBrackets:number = 0;
-        var quotation:boolean = false;
+		let tokens:string[] = [];
+		let token:string = "";
+		let c:string;
+		let state:number = 0;	// 0: no token character yet, 1: inside a token
+        let parenthesis:number = 0;
+        let squareBrackets:number = 0;
+        let quotation:boolean = false;
 
 		// separate the string in tokens:
 		// each token can be: semicolon, ~, or a term
@@ -234,9 +234,9 @@ class Sentence {
 //		}
 
 		// check that the sequence is correct: term [[~]term [; [~]term]*]
-		var s:Sentence = new Sentence([], []);
-		var state:number = 0;
-		var sign:boolean = true;
+		let s:Sentence = new Sentence([], []);
+		let sign:boolean = true;
+		state = 0;
 		for(let i:number = 0;i<tokens.length;i++) {
 			if (state == 0) {
 				if (tokens[i] == "~") {
@@ -260,7 +260,7 @@ class Sentence {
 		            console.error("Error parsing sentence: " + str);
 		            return null;
 		        }
-				var t:Term = ta.term; 
+				let t:Term = ta.term; 
 				if (t == null) return null;
 				s.terms.push(t);
 				s.sign.push(sign);

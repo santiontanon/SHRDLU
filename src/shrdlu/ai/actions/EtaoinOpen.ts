@@ -56,6 +56,10 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
 			for(let light of lights) {
 				let room:AILocation = ai.game.getAILocation(light);
 				if (ai.game.turnLightOn(room.id)) {
+
+					// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+					if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(light.ID, ai.o);
+
             		anySuccessful = true;
             		numberConstraint --;
             		if (numberConstraint <= 0) break;
@@ -71,6 +75,10 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
 					// see if player has permission:
 	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf(door.doorID) == -1) {
 	            		door.eventWithID(A4_EVENT_OPEN, door.doorID, null, door.map, ai.game);
+
+						// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+						if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(door.ID, ai.o);
+	            		
 	            		anySuccessful = true;
 	            		numberConstraint --;
 	            		if (numberConstraint <= 0) break;

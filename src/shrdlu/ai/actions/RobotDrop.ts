@@ -94,6 +94,10 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 											  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
 											   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
+
+				// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+				if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);
+
 	        	numberConstraint--;
 	        	if (numberConstraint <= 0) break;
 	        }
@@ -188,6 +192,9 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        for(let item of item_l) {
 	    		s = new A4Script(A4_SCRIPT_DROP, item.ID, null, 0, false, false);
 	        	q.scripts.push(s);
+
+				// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+				if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);	        	
 
 	        	numberConstraint--;
 	        	if (numberConstraint <= 0) break;

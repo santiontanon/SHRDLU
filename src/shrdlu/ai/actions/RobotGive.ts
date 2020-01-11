@@ -128,6 +128,11 @@ class RobotGive_IntentionAction extends IntentionAction {
 
 		        for(let item of item_l) {
 		        	q.scripts.push(new A4Script(A4_SCRIPT_GIVE, item.ID, null, 0, false, false));
+
+					// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+					if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);
+					if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(targetCharacter.ID, ai.o);
+
 		        	numberConstraint--;
         			if (numberConstraint <= 0) break;
 		        }

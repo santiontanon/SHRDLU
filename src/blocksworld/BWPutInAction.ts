@@ -53,6 +53,11 @@ class BWPutIn_IntentionAction extends IntentionAction {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 
+
+			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(objectID, ai.o);
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(destinationID, ai.o);
+
 			// put it down:
 			this.targetx = positions[0][0];
 			this.targety = positions[0][1];

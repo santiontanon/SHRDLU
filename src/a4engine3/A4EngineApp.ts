@@ -10,7 +10,7 @@ Note (santi):
 
 */
 
-var SHRDLU_VERSION:string = "v3.5"
+var SHRDLU_VERSION:string = "v3.6"
 
 var A4ENGINE_STATE_INTRO:number = 0
 var A4ENGINE_STATE_TITLESCREEN:number = 1

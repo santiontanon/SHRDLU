@@ -168,6 +168,10 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 	        s.ID2 = item.ID;	// the object we want to put in
 	        q.scripts.push(s);
 
+			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(containerObjectL[0].ID, ai.o);
+	        
         	numberConstraint--;
         	if (numberConstraint <= 0) break;
 	    }
