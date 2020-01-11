@@ -4,11 +4,11 @@
   "description": "An adventure game based around natural language parsing (inspired by Winograd's SHRDLU)",
   "author": "Santiago Ontañón",
   "license": "Apache-2.0",
-  "main": "./server/app.js",
+  "main": "./app.js",
   "scripts": {
-    "start": "node ./server/run.js",
-    "dev": "set DEBUG=shrdlu:* && node ./server/run.js",
-    "debug": "node --inspect ./server/run.js"
+    "start": "node ./run.js",
+    "dev": "set DEBUG=shrdlu:* && node ./run.js",
+    "debug": "node --inspect ./run.js"
   },
   "repository": {
     "type": "git",
