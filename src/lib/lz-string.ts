@@ -331,6 +331,7 @@ var LZString = {
 
   _decompress: function (length, resetValue, getNextValue) {
     var dictionary = [],
+        next,
         enlargeIn = 4,
         dictSize = 4,
         numBits = 3,
@@ -360,7 +361,7 @@ var LZString = {
       power <<= 1;
     }
 
-    switch (bits) {
+    switch (next = bits) {
       case 0:
           bits = 0;
           maxpower = Math.pow(2,8);
