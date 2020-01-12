@@ -383,7 +383,7 @@ NLParseTestUnifyingListener("the white key is mine", o.getSort("performative"), 
 NLParseTestUnifyingListener("the ship is yours", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], verb.own('etaoin'[#id],'2'[#id]))");
 NLParseTestUnifyingListener("the ship is etaoin's", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], verb.own('etaoin'[#id],'2'[#id]))");
 
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("yes", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol])");
 NLParseTestUnifyingListener("I will", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol])");
@@ -1067,7 +1067,7 @@ NLParseTestUnifyingListener("can I clean the ship in the kitchen?", o.getSort("p
 NLParseTestUnifyingListener("can I clean the ship here?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(SOMEONE:'hypothetical-character'[#id], verb.clean(SOMEONE, '2'[#id])), space.at('hypothetical-character'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("where can I do laundry?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, #and(verb.can(SOMEONE,verb.clean(SOMEONE, X:'hypothetical-object'[#id])), clothing(X)))");
 NLParseTestUnifyingListener("where can I clean the ship?", o.getSort("performative"),  context, 'etaoin', "perf.q.whereis('etaoin'[#id], SOMEONE:'hypothetical-character'[#id], LOCATION, verb.can(SOMEONE,verb.clean(SOMEONE, '2'[#id])))");
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("No I do not", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
 NLParseTestUnifyingListener("No, I don't", o.getSort("performative"),  context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
@@ -1082,7 +1082,7 @@ NLParseTestUnifyingListener("I wanted to say the whole ship", o.getSort("perform
 
 
 // For version 3.1:
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("no.", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
 NLParseTestUnifyingListener("I don't.", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'no'[symbol])");
@@ -1152,7 +1152,7 @@ NLParseTestUnifyingListener("it's dark in here", o.getSort("performative"),  con
 context.expectingAnswerToQuestion_stack = [];
 context.expectingAnswerToQuestionTimeStamp_stack = [];
 NLParseTestUnifyingListener("the crate", o.getSort("performative"), context, 'etaoin',  null);
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("the crate", o.getSort("performative"), context, 'etaoin',  "perf.inform.answer('etaoin'[#id], '5'[#id])");
 NLParseTestUnifyingListener("you suck", o.getSort("performative"),  context, 'etaoin', "perf.inform(X:'etaoin'[#id], verb.suck(X))");
@@ -1214,7 +1214,7 @@ NLParseTestUnifyingListener("take the bedroom key", o.getSort("performative"), c
 // For version 3.4:
 context.expectingAnswerToQuestion_stack = [];
 context.expectingAnswerToQuestionTimeStamp_stack = [];
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("I have no choice", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], 'yes'[symbol])");
 NLParseTestUnifyingListener("the human in the kitchen's name is david", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('1'[#id],'david'[symbol]))");
@@ -1263,7 +1263,7 @@ NLParseTestUnifyingListener("what can i create with the crate", o.getSort("perfo
 NLParseTestUnifyingListener("can I make a fork with the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(D:'1'[#id], verb.make(D, 'fork'[fork], '5'[#id])))");
 context.expectingAnswerToQuestion_stack = [];
 context.expectingAnswerToQuestionTimeStamp_stack = [];
-context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, 0));
+context.expectingAnswerToQuestion_stack.push(new NLContextPerformative("dummy text so that the next are taken as answers", "1", null, null, context, 0));
 context.expectingAnswerToQuestionTimeStamp_stack.push(0);
 NLParseTestUnifyingListener("Gray", o.getSort("performative"), context, 'etaoin', "perf.inform.answer('etaoin'[#id], proper-noun('gray'[symbol], [singular]))"); 
 NLParseTestUnifyingListener("do I need plastic to print a fork?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.need-for('1'[#id], [plastic], action.print('1'[#id], [fork])))");
@@ -1382,6 +1382,13 @@ NLParseTestUnifyingListener("what is the distance from me to qwerty in meters?",
 NLParseTestUnifyingListener("how many meters away is qwerty?", o.getSort("performative"),  context, 'etaoin', "perf.q.distance('etaoin'[#id], '1'[#id], 'qwerty'[#id], [meter])");
 NLParseTestUnifyingListener("which other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 NLParseTestUnifyingListener("which other humans are in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
+
+// For version 3.6:
+NLParseTestUnifyingListener("what is not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #not(verb.support('5'[#id], V)))"); 
+NLParseTestUnifyingListener("which objects are rectangular?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), shape(V, 'rectangular'[rectangular])))"); 
+NLParseTestUnifyingListener("which objects are not rectangular?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), #not(shape(V, 'rectangular'[rectangular]))))");
+NLParseTestUnifyingListener("which objects are supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), verb.support('5'[#id], V)))"); 
+NLParseTestUnifyingListener("which objects are not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), #not(verb.support('5'[#id], V))))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

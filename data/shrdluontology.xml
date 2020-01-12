@@ -257,11 +257,15 @@
     <sort name="tower" super="object"/>
     <sort name="tank" super="object"/>
 
-    <sort name="shape" super="any"/>
+    <sort name="box" super="object"/>
+    <sort name="pyramid" super="object"/>
+    <sort name="block" super="object"/>
+
+    <sort name="shape" super="property-with-value"/>
     <sort name="shape.flat" super="shape"/>
-    <sort name="box" super="shape,object"/>
-    <sort name="pyramid" super="shape,object"/>
-    <sort name="block" super="shape,object"/>
+    <sort name="rectangular" super="shape"/>
+    <sort name="circular" super="shape"/>
+    <sort name="pointed" super="shape"/>
 
     <sort name="body" super="object"/> 
     <sort name="body-part" super="object"/>    
@@ -670,6 +674,7 @@
     <sort name="verb.maintain" super="verb"/>
     <sort name="verb.search" super="verb"/>
     <sort name="verb.reboot" super="verb"/>
+    <sort name="verb.support" super="relation-verb,#stateSort"/>
 
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>

@@ -37,7 +37,7 @@ class SBWLine {
 class ShrdluBlock {
 	static next_ID:number = 1;
 
-	constructor(type:string, color:string, size:string, 
+	constructor(type:string, color:string, size:string,
 				x:number, y:number, z:number, 
 				dx:number, dy:number, dz:number) {
 		this.ID = "block-" + ShrdluBlock.next_ID;
@@ -45,6 +45,14 @@ class ShrdluBlock {
 		this.type = type;
 		this.color = color;
 		this.size = size;
+		if (type == SHRDLU_BLOCKTYPE_BLOCK ||
+			type == SHRDLU_BLOCKTYPE_BOX) {
+			this.shape = "rectangular";
+		} else if (type == SHRDLU_BLOCKTYPE_PYRAMID) {
+			this.shape = "pointed";
+		} else {
+			this.shape = null;
+		}
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -172,6 +180,7 @@ class ShrdluBlock {
 	type:string;
 	color:string;
 	size:string;
+	shape:string;
 	x:number;
 	y:number;
 	z:number;

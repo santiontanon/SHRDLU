@@ -77,6 +77,9 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 									  break;
 			}
 			this.addTermToPerception(Term.fromString(object.size + "('"+object.ID+"'[#id])", this.o));
+			if (object.shape != null) {
+				this.addTermToPerception(Term.fromString("shape('"+object.ID+"'[#id], '"+object.shape+"'["+object.shape+"])", this.o));
+			}
 
 			if (object.ID != "shrdlu-arm") {
 				for(let object2 of this.world.objects) {
@@ -88,7 +91,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 						if (object.isOnTopOf(object2)) {
 							this.addTermToPerception(Term.fromString("space.directly.on.top.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
 							this.addTermToPerception(Term.fromString("space.directly.under('"+object2.ID+"'[#id], '"+object.ID+"'[#id])", this.o));
-						} 
+						}
 					}
 				}
 			}

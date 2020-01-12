@@ -1812,6 +1812,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("action.stay", "stay","stays","stayed","stayed","staying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.stop", "stop","stops","stopped","stopped","stopping", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.suck", "suck","sucks","sucked","sucked","sucking", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.support", "support","supports","supported","supported","supporting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.supervise", "supervise","supervises","supervised","supervised","supervising", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.switch", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "take","takes","took","taken","taking", false, multitokens_raw, o);
@@ -1888,6 +1889,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("bright", "bright", Term.fromString("adjective('bright'[bright])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("broken", "property.broken", Term.fromString("adjective('property.broken'[property.broken])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("charged", "full", Term.fromString("adjective('full'[full])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("circular", "circular", Term.fromString("adjective('circular'[circular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("cold", "cold", Term.fromString("adjective('cold'[cold])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dangerous", "dangerous", Term.fromString("adjective('dangerous'[dangerous])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));
@@ -1933,7 +1935,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("off", "powered.off", Term.fromString("adjective('powered.off'[powered.off])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("orange", "orange", Term.fromString("adjective('orange'[orange])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("permanent", "time.permanent", Term.fromString("adjective('time.permanent'[time.permanent])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("pointed", "pointed", Term.fromString("adjective('pointed'[pointed])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("purple", "purple", Term.fromString("adjective('purple'[purple])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("rectangular", "rectangular", Term.fromString("adjective('rectangular'[rectangular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("red", "red", Term.fromString("adjective('red'[red])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("short", "short", Term.fromString("adjective('short'[short])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
