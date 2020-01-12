@@ -16,17 +16,17 @@ class StopAction_InferenceEffect extends InferenceEffect {
 			let nlcp:NLContextPerformative = context.getNLContextPerformative(inf.triggeredBy);
 			this.action = this.action.applyBindings(inf.inferences[0].endResults[0].bindings);
 			if (ai.stopAction(this.action, speaker)) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
-				var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
-				var term:Term = Term.fromString(tmp, ai.o);
+				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
+				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds));
 			}
 		} else {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			var cause:Term = Term.fromString("#not("+this.action+")", ai.o);
+			let cause:Term = Term.fromString("#not("+this.action+")", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 		}		
 	}

@@ -15,10 +15,10 @@ class NLParseRecord {
 
 	higherPriorityThan(pr2:NLParseRecord) : number
 	{
-		var idx:number = 0;
+		let idx:number = 0;
 		while(true) {
-			var p1:number = null;
-			var p2:number = null;
+			let p1:number = null;
+			let p2:number = null;
 			if (this.priorities.length >= idx+1) p1 = this.priorities[idx];
 			if (pr2.priorities.length >= idx+1) p2 = pr2.priorities[idx];
 			if (p1 == null) {
@@ -107,17 +107,17 @@ class NLPatternRule extends NLPatternContainer {
 		// parse the sentence:
 //		console.log("NLPatternRule.parse");
 		this.lastDerefErrors = [];
-		var bindings:Bindings = new Bindings();
+		let bindings:Bindings = new Bindings();
 		if (this.speakerVariable != null) {
 //			console.log("Speaker: " + this.speakerVariable);
 			bindings.l.push([(<VariableTermAttribute>this.speakerVariable), 
 							 new ConstantTermAttribute(context.speaker, parser.o.getSort("#id"))]);
 		}
-		var parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], bindings, [], []), context, this, parser, AI);
+		let parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], bindings, [], []), context, this, parser, AI);
 		if (parses == null) return null;
 
 		// if there is any valid parse, generate the corresponding terms:
-		var results:NLParseRecord[] = [];
+		let results:NLParseRecord[] = [];
 		for(let parse of parses) {
 			if (filterPartialParses &&
 				parse.nextTokens != null && parse.nextTokens.length > 0) continue;
@@ -135,8 +135,8 @@ class NLPatternRule extends NLPatternContainer {
 
 	parseWithBindings(parse:NLParseRecord, filterPartialParses:boolean, context:NLContext, parser:NLParser, AI:RuleBasedAI) : NLParseRecord[]
 	{
-		var results:NLParseRecord[] = [];
-		var parses:NLParseRecord[] = this.body.parse(parse, context, this, parser, AI);
+		let results:NLParseRecord[] = [];
+		let parses:NLParseRecord[] = this.body.parse(parse, context, this, parser, AI);
 		if (parses != null) {
 			for(let parse2 of parses) {
 				if (filterPartialParses &&
@@ -157,11 +157,11 @@ class NLPatternRule extends NLPatternContainer {
 
 	clone() : NLPatternRule
 	{
-		var map:[TermAttribute,TermAttribute][] = [];
-		var head:Term = this.head.clone(map);
-		var body:NLPattern = this.body.clone(map);
-//		var rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority);
-		var rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority, this.speakerVariable, this.listenerVariable);
+		let map:[TermAttribute,TermAttribute][] = [];
+		let head:Term = this.head.clone(map);
+		let body:NLPattern = this.body.clone(map);
+//		let rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority);
+		let rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority, this.speakerVariable, this.listenerVariable);
 
 		for(let i:number = 0;i<map.length;i++) {
 			if (map[i][0] instanceof VariableTermAttribute &&
@@ -180,21 +180,21 @@ class NLPatternRule extends NLPatternContainer {
 
 	static fromString(name:string, head:string, body:string, p:number, o:Ontology, sv:VariableTermAttribute, lv:VariableTermAttribute) : NLPatternRule
 	{
-        var variableNames:string[] = [];
-        var variableValues:VariableTermAttribute[] = [];
+        let variableNames:string[] = [];
+        let variableValues:VariableTermAttribute[] = [];
 
-		var h:Term = Term.fromStringInternal(head, o, variableNames, variableValues).term;
+		let h:Term = Term.fromStringInternal(head, o, variableNames, variableValues).term;
 		if (h == null) {
 			console.error("NLPatternRule.fromString: cannot parse head: " + head);
 			return null;
 		}
-		var b:NLPattern = NLPattern.fromString(body, o, variableNames, variableValues);
+		let b:NLPattern = NLPattern.fromString(body, o, variableNames, variableValues);
 		if (b == null) {
 			console.error("NLPatternRule.fromString: cannot parse body: " + body);
 			return null;
 		}
 
-		var rule:NLPatternRule = new NLPatternRule(name, h, b, p, sv, lv);
+		let rule:NLPatternRule = new NLPatternRule(name, h, b, p, sv, lv);
 		for(let i:number = 0;i<variableNames.length;i++) {
 			if (variableNames[i] == "SPEAKER") {
 				rule.speakerVariable = variableValues[i];

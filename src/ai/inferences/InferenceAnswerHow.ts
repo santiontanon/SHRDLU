@@ -17,19 +17,19 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 			console.error("AnswerHow_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
 
 		console.log("query result, answer how (source): " + inf.inferences[0].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		} else {
 			// get the location ID
-			var how:Term = null;
+			let how:Term = null;
 			if (inf.inferences[0].endResults.length != 0) {
 				for(let b of inf.inferences[0].endResults[0].bindings.l) {
 					if (b[0].name == "HOW") {
-						var v:TermAttribute = b[1];
+						let v:TermAttribute = b[1];
 						if (v instanceof TermTermAttribute) {
 							how = (<TermTermAttribute>v).term;
 							break;
@@ -38,11 +38,11 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 				}
 			}
 			if (how == null) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				return;
 			}
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id]))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id]))", ai.o);
 			(<TermTermAttribute>term.attributes[1]).term.attributes.push(new TermTermAttribute(how));
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}	

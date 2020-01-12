@@ -10,13 +10,13 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var intention:Term = ir.action;
+		let intention:Term = ir.action;
 
 		if (intention.functor.is_a(ai.o.getSort("action.answer.whois.name"))) {
 			console.log(ai.selfID + " answer whois.name: " + intention.attributes[2]);	
 			if (intention.attributes[1] instanceof ConstantTermAttribute &&
 				intention.attributes[2] instanceof ConstantTermAttribute) {
-				var listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+				let listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
 				// Don't do any inference for now (we'll see if I need it later on), 
 				// directly call the same function that will be called after the inference in whois.noname:
 				AnswerWho_InferenceEffect.AnswerWhois(null, (<ConstantTermAttribute>intention.attributes[2]).value, listenerID, true, ai);
@@ -24,13 +24,12 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 					   intention.attributes[1] instanceof ConstantTermAttribute &&
 					   intention.attributes[2] instanceof VariableTermAttribute &&
 					   intention.attributes[3] instanceof TermTermAttribute) {
-				var listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
-				var query:Term = (<TermTermAttribute>(intention.attributes[3])).term;
-				var query_l:Term[] = [query];
+				let query:Term = (<TermTermAttribute>(intention.attributes[3])).term;
+				let query_l:Term[] = [query];
 				if (query.functor.name == "#and") {
 					query_l = NLParser.termsInList(query, "#and");
 				}
-				var query_l_signs:boolean[] = [];
+				let query_l_signs:boolean[] = [];
 				for(let i:number = 0;i<query_l.length;i++) {
 					if (query_l[i].functor.name == "#not") {
 						query_l[i] = (<TermTermAttribute>(query_l[i].attributes[0])).term;
@@ -39,7 +38,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 						query_l_signs.push(false);
 					}
 				}
-				var target1:Sentence[] = [new Sentence(query_l,query_l_signs)];
+				let target1:Sentence[] = [new Sentence(query_l,query_l_signs)];
 				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention), ai.o));
 			} else {
 				console.error("executeIntention answer whois.name: case not handled: " + intention);
@@ -53,7 +52,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 				if (intention.attributes[1] instanceof ConstantTermAttribute &&
 					intention.attributes[2] instanceof ConstantTermAttribute) {
 					// target 1: name of the entity:
-					var target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("name"),
+					let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("name"),
 																	[intention.attributes[2],
 																	 new VariableTermAttribute(ai.o.getSort("symbol"), "NAME")])],[false])];
 					ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention), ai.o));

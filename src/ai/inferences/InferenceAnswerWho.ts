@@ -8,10 +8,10 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 
 	execute(inf:InferenceRecord, ai:RuleBasedAI)
 	{
-		var listenerID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var targetIDVariableName:string = null;
-		var targetID:string = null;
-		var targetName:string = null;
+		let listenerID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let targetIDVariableName:string = null;
+		let targetID:string = null;
+		let targetName:string = null;
 		if (this.effectParameter.attributes[2] instanceof ConstantTermAttribute) {
 			targetID = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
 		} else if (this.effectParameter.attributes[2] instanceof VariableTermAttribute) {
@@ -20,14 +20,14 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 		if (inf.inferences[0].endResults.length != 0) {
 			for(let b of inf.inferences[0].endResults[0].bindings.l) {
 				if (b[0].name == "NAME") {
-					var v:TermAttribute = b[1];
+					let v:TermAttribute = b[1];
 					if (v instanceof ConstantTermAttribute) {
 						targetName = (<ConstantTermAttribute>v).value;
 						break;
 					}
 				}
 				if (targetIDVariableName != null && b[0].name == targetIDVariableName) {
-					var v:TermAttribute = b[1];
+					let v:TermAttribute = b[1];
 					if (v instanceof ConstantTermAttribute) {
 						targetID = (<ConstantTermAttribute>v).value;
 						break;
@@ -44,7 +44,7 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 //		console.log("executeInferenceEffect_AnswerWhois: " + name + ", " + whoID);
 		
 		// get the types:
-		var mostSpecificTypes:Term[] = null;
+		let mostSpecificTypes:Term[] = null;
 		for(let typeSortName of POSParser.sortsToConsiderForTypes) {
 			if (mostSpecificTypes == null || mostSpecificTypes.length == 0) mostSpecificTypes = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString(typeSortName+"('"+whoID+"'[#id])", ai.o));	
 		}
@@ -57,8 +57,8 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 //		console.log("executeInferenceEffect_AnswerWhois: mostSpecificTypes: " + mostSpecificTypes);
 
 		// get the role/profession:
-		var mostSpecificRoles1:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("role('"+whoID+"'[#id],[role])", ai.o));
-		var mostSpecificRoles2:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("role('"+whoID+"'[#id],[any],[role])", ai.o));
+		let mostSpecificRoles1:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("role('"+whoID+"'[#id],[role])", ai.o));
+		let mostSpecificRoles2:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("role('"+whoID+"'[#id],[any],[role])", ai.o));
 //		console.log("executeInferenceEffect_AnswerWhois: mostSpecificRoles1: " + mostSpecificRoles1);
 //		console.log("executeInferenceEffect_AnswerWhois: mostSpecificRoles2: " + mostSpecificRoles2);
 

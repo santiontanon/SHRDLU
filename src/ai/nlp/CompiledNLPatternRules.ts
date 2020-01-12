@@ -41,8 +41,8 @@ class CompiledNLPatternRules extends NLPatternContainer {
 
 	cloneForParsing() : CompiledNLPatternRules
 	{
-//		var map:[TermAttribute,TermAttribute][] = [];
-		var c:CompiledNLPatternRules = new CompiledNLPatternRules(this.name, null, this.speakerVariable, this.listenerVariable);
+//		let map:[TermAttribute,TermAttribute][] = [];
+		let c:CompiledNLPatternRules = new CompiledNLPatternRules(this.name, null, this.speakerVariable, this.listenerVariable);
 		c.root = this.root;
 //		this.speakerVariable = new VariableTermAttribute(o.getSort("any"),"SPEAKER");
 //		this.listenerVariable = new VariableTermAttribute(o.getSort("any"),"LISTENER");
@@ -58,19 +58,19 @@ class CompiledNLPatternRules extends NLPatternContainer {
 		// parse the sentence:
 //		console.log("NLPatternRule.parse");
 		this.lastDerefErrors = [];
-		var bindings:Bindings = new Bindings();
+		let bindings:Bindings = new Bindings();
 		if (this.speakerVariable != null) {
 //			console.log("Speaker: " + this.speakerVariable);
 			bindings.l.push([(<VariableTermAttribute>this.speakerVariable), 
 							 new ConstantTermAttribute(context.speaker, parser.o.getSort("#id"))]);
 		}
-		var parses:NLParseRecord[] = this.root.parse(new NLParseRecord([tokenization], bindings, [], []), context, this, parser, AI, filterPartialParses);
+		let parses:NLParseRecord[] = this.root.parse(new NLParseRecord([tokenization], bindings, [], []), context, this, parser, AI, filterPartialParses);
 		if (parses == null) return null;
 
 //		console.log("CompiledNLPatternRules.parse, n parses: " + parses.length);
 
 		// if there is any valid parse, generate the corresponding terms:
-		var results:NLParseRecord[] = [];
+		let results:NLParseRecord[] = [];
 		for(let parse of parses) {
 			if (filterPartialParses &&
 				parse.nextTokens != null && parse.nextTokens.length > 0) continue;
@@ -90,8 +90,8 @@ class CompiledNLPatternRules extends NLPatternContainer {
 
 	parseMatchingWithTerm(parse:NLParseRecord, filterPartialParses:boolean, context:NLContext, parser:NLParser, AI:RuleBasedAI, term:Term) : NLParseRecord[]
 	{
-		var results:NLParseRecord[] = [];
-		var parses:NLParseRecord[] = this.root.parse(parse, context, this, parser, AI, filterPartialParses);
+		let results:NLParseRecord[] = [];
+		let parses:NLParseRecord[] = this.root.parse(parse, context, this, parser, AI, filterPartialParses);
 		if (parses != null) {
 //			console.log("parseMatchingWithTerm completed with parses.length = " + parses.length);
 			for(let parse2 of parses) {
@@ -126,7 +126,7 @@ class CompiledNLPatternState {
 	// this function adds a rule to the current parsing graph, and returns the set of terminal states where this rule ends
 	addRule(rule:NLPatternRule, speakerVariable:TermAttribute, listenerVariable:TermAttribute)
 	{
-		var tmp:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(rule.priority, rule.body, new Bindings(), speakerVariable, listenerVariable);
+		let tmp:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(rule.priority, rule.body, new Bindings(), speakerVariable, listenerVariable);
 		for(let i:number = 0;i<tmp.length;i++) {
 			let s:CompiledNLPatternState = tmp[i][0];
 			let b:Bindings = tmp[i][1];

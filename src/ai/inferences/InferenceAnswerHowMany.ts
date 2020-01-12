@@ -16,19 +16,19 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 			console.error("AnswerHowMany_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var queryPerformative:Term = (<TermTermAttribute>(this.effectParameter.attributes[2])).term;
-		var queryVariable:VariableTermAttribute = <VariableTermAttribute>(queryPerformative.attributes[1]);
-		var queryTerm:Term = null;
+		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let queryPerformative:Term = (<TermTermAttribute>(this.effectParameter.attributes[2])).term;
+		let queryVariable:VariableTermAttribute = <VariableTermAttribute>(queryPerformative.attributes[1]);
+		let queryTerm:Term = null;
 		if (queryPerformative.attributes[2] instanceof TermTermAttribute) {
 			queryTerm = (<TermTermAttribute>(queryPerformative.attributes[2])).term;
 		}
-		var negativeAnswer:string = "'no-matches-found'[symbol]";
+		let negativeAnswer:string = "'no-matches-found'[symbol]";
 		if (queryTerm != null &&
 			(queryTerm.functor.is_a(ai.cache_sort_property_with_value) ||
 			 queryTerm.functor.is_a(ai.cache_sort_relation_with_value))) negativeAnswer = "'unknown'[symbol]";
 		if (inf.inferences[0].endResults.length != 0) {
-			var results:TermAttribute[] = [];
+			let results:TermAttribute[] = [];
 			for(let result of inf.inferences[0].endResults) {
 				for(let [variable, value] of result.bindings.l) {
 					if (variable == queryVariable) {
@@ -48,9 +48,9 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 			}
 			console.log("results: " + results);
 			if (results.length > 0) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'"+results.length+"'[number]))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'"+results.length+"'[number]))", ai.o);
 				// store the state in case there are more answers to be given later using perf.more answers
-				var context:NLContext = ai.contextForSpeaker(speakerCharacterID);
+				let context:NLContext = ai.contextForSpeaker(speakerCharacterID);
 				if (context != null) {
 					ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.time_in_seconds));
 				} else {
@@ -58,11 +58,11 @@ class AnswerHowMany_InferenceEffect extends InferenceEffect {
 				}
 			} else {
 				console.error("Inference produced a result, but none of the resulting variables is the query variable!");
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		} else {
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 	}

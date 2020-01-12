@@ -24,7 +24,7 @@ class GLTile {
 
     drawWithAlpha(x:number, y:number, alpha:number)
     {
-        var tmp:number = ctx.globalAlpha;
+        let tmp:number = ctx.globalAlpha;
         ctx.globalAlpha = alpha;
         ctx.drawImage(this.src, this.x1, this.y1, this.width, this.height,
                                 x, y, this.width, this.height);

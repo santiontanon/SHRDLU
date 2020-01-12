@@ -54,9 +54,9 @@ class FizzleFade {
     nextPixelToFizzle() : [number,number]
     {
         do {
-            var y:number = this.rndval & 0x000FF;
-            var x:number = (this.rndval & 0x1FF00) >> 8;
-            var lsb:number = this.rndval & 1;
+            let y:number = this.rndval & 0x000FF;
+            let x:number = (this.rndval & 0x1FF00) >> 8;
+            let lsb:number = this.rndval & 1;
             this.rndval >>= 1;
             if (lsb != 0) {
                 this.rndval ^= 0x00012000;
@@ -79,7 +79,7 @@ var textTilesWithOutline: { [text: string] : HTMLImageElement; } = {};
 
 function fillTextTopLeftWithOutline(text:string, x:number, y:number, font:string, color:string, outlineColor:string)
 {   
-    var img:HTMLImageElement;
+    let img:HTMLImageElement;
 
     if (textTilesWithOutline[text] != null) {
         img = textTilesWithOutline[text];

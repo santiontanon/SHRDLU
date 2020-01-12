@@ -29,8 +29,8 @@ class BTextInputFrame extends BFrame {
 
         if (this.enabled) {
             if (this.focus) {
-                var pep:number = this.editing_position;
-                var el:number = this.editing.length;
+                let pep:number = this.editing_position;
+                let el:number = this.editing.length;
 
                 this.string_editor_cycle(k, arg);
 
@@ -62,8 +62,8 @@ class BTextInputFrame extends BFrame {
         super.drawAlpha(alpha);
 
         // draw question:
-        var x:number = this.x + this.width/2;
-        var y:number = this.y + 10 + this.fontHeight;
+        let x:number = this.x + this.width/2;
+        let y:number = this.y + 10 + this.fontHeight;
         ctx.fillStyle = "white";
         ctx.font = this.font;
         ctx.textBaseline = "bottom"; 
@@ -79,9 +79,9 @@ class BTextInputFrame extends BFrame {
         ctx.fillText(this.editing, x, y);
 
         // draw cursor:
-        var tdx:number = this.fontWidth*this.editing_position;
-        var cursor_x:number = this.x+8+tdx;
-        var cursor_y:number = y - this.fontHeight;
+        let tdx:number = this.fontWidth*this.editing_position;
+        let cursor_x:number = this.x+8+tdx;
+        let cursor_y:number = y - this.fontHeight;
 
         ctx.fillStyle = generateRGBColor(Math.floor(140+80*Math.sin(this.cycle*0.3)), 0, 0);
         ctx.fillRect(cursor_x, cursor_y, this.cursor_dx, this.cursor_dy);

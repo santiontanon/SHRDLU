@@ -68,10 +68,10 @@ window.onload = () => {
 function checkIfFontsAreLoaded():boolean {
     // This is a trick, since in JavaScript, there is no way to know if a font is loaded
     // I know how wide these images should be once the fonts are loaded, so, I wait for that!
-    var tmp0:HTMLImageElement = getTextTile("TEST64", fontFamily64px, 64, "white");
-    var tmp1:HTMLImageElement = getTextTile("TEST32", fontFamily32px, 32, "white");
-    var tmp2:HTMLImageElement = getTextTile("TEST16", fontFamily16px, 16, "white");
-    var tmp3:HTMLImageElement = getTextTile("TEST8", fontFamily8px, 8, "white");
+    let tmp0:HTMLImageElement = getTextTile("TEST64", fontFamily64px, 64, "white");
+    let tmp1:HTMLImageElement = getTextTile("TEST32", fontFamily32px, 32, "white");
+    let tmp2:HTMLImageElement = getTextTile("TEST16", fontFamily16px, 16, "white");
+    let tmp3:HTMLImageElement = getTextTile("TEST8", fontFamily8px, 8, "white");
 //    console.log("test64: " + tmp0.width);
 //    console.log("test32: " + tmp1.width);
 //    console.log("test16: " + tmp2.width);

@@ -1,7 +1,7 @@
 function getTextTile(text:string, font:string, height:number, color:string) : HTMLImageElement
 {
-    var tmpCanvas:HTMLCanvasElement = <HTMLCanvasElement>document.createElement("canvas");
-    var tmpCtx:CanvasRenderingContext2D = tmpCanvas.getContext("2d");
+    let tmpCanvas:HTMLCanvasElement = <HTMLCanvasElement>document.createElement("canvas");
+    let tmpCtx:CanvasRenderingContext2D = tmpCanvas.getContext("2d");
     tmpCtx.imageSmoothingEnabled = false;
     tmpCtx.font = font;
     tmpCanvas.width = tmpCtx.measureText(text).width;
@@ -13,7 +13,7 @@ function getTextTile(text:string, font:string, height:number, color:string) : HT
     tmpCtx.fillStyle = color;
     tmpCtx.fillText(text, 0, height/2);
 
-    var img:HTMLImageElement = document.createElement("img");
+    let img:HTMLImageElement = document.createElement("img");
     img.src = tmpCanvas.toDataURL();
 
     return img;
@@ -23,8 +23,8 @@ function getTextTile(text:string, font:string, height:number, color:string) : HT
 function getTextTileWithOutline(text:string, font:string, height:number, color:string, outlineColor:string) : HTMLImageElement
 {
     // Generate the text tile:
-    var tmpCanvas:HTMLCanvasElement = <HTMLCanvasElement>document.createElement("canvas");
-    var tmpCtx:CanvasRenderingContext2D = tmpCanvas.getContext("2d");
+    let tmpCanvas:HTMLCanvasElement = <HTMLCanvasElement>document.createElement("canvas");
+    let tmpCtx:CanvasRenderingContext2D = tmpCanvas.getContext("2d");
     tmpCtx.imageSmoothingEnabled = false;
     tmpCtx.font = font;
     tmpCanvas.width = tmpCtx.measureText(text).width+2;
@@ -37,13 +37,13 @@ function getTextTileWithOutline(text:string, font:string, height:number, color:s
     tmpCtx.fillText(text, 1, 1);
 
     // Draw an outline:
-    var imageData = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height);
-    var data = imageData.data;
+    let imageData = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height);
+    let data = imageData.data;
     tmpCtx.fillStyle = outlineColor;
     
     for(let y:number = 1; y<tmpCanvas.height-1; y++) {
         for(let x:number = 1; x<tmpCanvas.width-1; x++) {
-            var alpha = data[(x+y*tmpCanvas.width)*4 + 3];
+            let alpha = data[(x+y*tmpCanvas.width)*4 + 3];
             if (alpha > 200) {
                 if (data[((x-1)+(y-1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x-1, y-1, 1, 1);
                 if (data[( x   +(y-1)*tmpCanvas.width)*4 + 3] < 200) tmpCtx.fillRect( x,   y-1, 1, 1);
@@ -57,7 +57,7 @@ function getTextTileWithOutline(text:string, font:string, height:number, color:s
         }
     }
 
-    var img:HTMLImageElement = document.createElement("img");
+    let img:HTMLImageElement = document.createElement("img");
     img.src = tmpCanvas.toDataURL();
 
     return img;
@@ -70,7 +70,7 @@ class BInterface {
     {
 //        console.log("BInterface.push");
 //        console.log(new Error().stack);
-        var enabled_since_last_push:boolean[] = [];
+        let enabled_since_last_push:boolean[] = [];
         for(let e of this.added_since_last_push) {
             enabled_since_last_push.push(e.getEnabled());
         }
@@ -99,7 +99,7 @@ class BInterface {
         if (this.stack.length == 0) return;
         this.elements.splice(this.elements.length - this.added_since_last_push.length, this.added_since_last_push.length);
         this.added_since_last_push = this.stack.pop();
-        var enabled_since_last_push:boolean[] = this.enabledStack.pop();
+        let enabled_since_last_push:boolean[] = this.enabledStack.pop();
         for(let i:number = 0; i<this.added_since_last_push.length; i++) {
             this.added_since_last_push[i].setEnabled(enabled_since_last_push[i]);
         }
@@ -150,8 +150,8 @@ class BInterface {
 
     static update(mouse_x:number, mouse_y:number, k:KeyboardState, arg:any)
     {
-        var modal:BInterfaceElement = null;
-        var to_delete:BInterfaceElement[] = [];
+        let modal:BInterfaceElement = null;
+        let to_delete:BInterfaceElement[] = [];
         
 
         if (BInterface.elements.length > 0) {
@@ -202,7 +202,7 @@ class BInterface {
         } // if
         
         for(let e of to_delete) {
-            var idx:number = this.elements.indexOf(e);
+            let idx:number = this.elements.indexOf(e);
             this.elements.splice(idx,1);
         } // while
     }
@@ -211,7 +211,7 @@ class BInterface {
     static mouseClick(mouse_x: number, mouse_y: number, button: number, arg:any)
     {
         // we need this intermediate list, just in case mouseclick calls cause the creation of more elements
-        var l:BInterfaceElement[] = [];
+        let l:BInterfaceElement[] = [];
         for(let i:number = this.ignoreBeforeThisIndex; i<this.elements.length; i++) {
             let e:BInterfaceElement = this.elements[i];
             if (e.getEnabled() && e.mouseOver(mouse_x, mouse_y)) l.push(e);
@@ -245,7 +245,7 @@ class BInterface {
                       font:string, font_heigth:number, x:number, y:number, width:number, height:number, interline_space:number, starting_ID:number)
     {
         BInterface.addElement(new BFrame(x,y,width,height));
-        var by:number = y + 10;
+        let by:number = y + 10;
         for(let i = 0;i<lines.length;i++) {
             BInterface.addElement(new BButtonTransparent(lines[i], font, x, by, width, font_heigth, starting_ID, "white", callbacks[i]));
             starting_ID++;

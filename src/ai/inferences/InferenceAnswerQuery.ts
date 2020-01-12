@@ -17,14 +17,14 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 			console.error("AnswerQuery_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var queryPerformative:Term = (<TermTermAttribute>(this.effectParameter.attributes[2])).term;
-		var queryVariable:VariableTermAttribute = <VariableTermAttribute>(queryPerformative.attributes[1]);
-		var queryTerm:Term = null;
+		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let queryPerformative:Term = (<TermTermAttribute>(this.effectParameter.attributes[2])).term;
+		let queryVariable:VariableTermAttribute = <VariableTermAttribute>(queryPerformative.attributes[1]);
+		let queryTerm:Term = null;
 		if (queryPerformative.attributes[2] instanceof TermTermAttribute) {
 			queryTerm = (<TermTermAttribute>(queryPerformative.attributes[2])).term;
 		}
-		var negativeAnswer:string = "'no-matches-found'[symbol]";
+		let negativeAnswer:string = "'no-matches-found'[symbol]";
 		if (queryTerm != null) {
 			if (queryTerm.functor.is_a(ai.cache_sort_property_with_value) ||
 			 	queryTerm.functor.is_a(ai.cache_sort_relation_with_value)) {

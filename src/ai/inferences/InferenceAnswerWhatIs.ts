@@ -8,13 +8,13 @@ class AnswerWhatIs_InferenceEffect extends InferenceEffect {
 
 	execute(inf:InferenceRecord, ai:RuleBasedAI)
 	{
-			var listenerID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-			var targetID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
-			var targetName:string = null;
+			let listenerID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+			let targetID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
+			let targetName:string = null;
 			if (inf.inferences[0].endResults.length != 0) {
 				for(let b of inf.inferences[0].endResults[0].bindings.l) {
 					if (b[0].name == "NAME") {
-						var v:TermAttribute = b[1];
+						let v:TermAttribute = b[1];
 						if (v instanceof ConstantTermAttribute) {
 							targetName = (<ConstantTermAttribute>v).value;
 							break;
@@ -30,7 +30,7 @@ class AnswerWhatIs_InferenceEffect extends InferenceEffect {
 //		console.log("executeInferenceEffect_AnswerWhatis: " + name + ", " + whatID);
 
 		// get the types:
-		var mostSpecificTypes:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("object('"+whatID+"'[#id])", ai.o));
+		let mostSpecificTypes:Term[] = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("object('"+whatID+"'[#id])", ai.o));
 		if (mostSpecificTypes == null || mostSpecificTypes.length == 0) mostSpecificTypes = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("space.location('"+whatID+"'[#id])", ai.o));
 		if (mostSpecificTypes == null || mostSpecificTypes.length == 0) mostSpecificTypes = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("abstract-entity('"+whatID+"'[#id])", ai.o));
 		if (mostSpecificTypes == null || mostSpecificTypes.length == 0) mostSpecificTypes = ai.mostSpecificMatchesFromShortOrLongTermMemoryThatCanBeRendered(Term.fromString("role('"+whatID+"'[#id])", ai.o));

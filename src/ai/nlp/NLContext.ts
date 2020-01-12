@@ -115,11 +115,11 @@ class NLContextEntity {
 
 	static fromXML(xml:Element, o:Ontology) : NLContextEntity
 	{
-		var id:ConstantTermAttribute = new ConstantTermAttribute(xml.getAttribute("id"),
+		let id:ConstantTermAttribute = new ConstantTermAttribute(xml.getAttribute("id"),
 																 o.getSort(xml.getAttribute("sort")));
-		var time:number = null;
-		var distance:number = null;
-		var tl:Term[] = [];
+		let time:number = null;
+		let distance:number = null;
+		let tl:Term[] = [];
 
 		if (xml.getAttribute("mentionTime")!=null) time = Number(xml.getAttribute("mentionTime"));
 		if (xml.getAttribute("distanceFromSpeaker")!=null) distance = Number(xml.getAttribute("distanceFromSpeaker"));
@@ -135,7 +135,7 @@ class NLContextEntity {
 
 	saveToXML() : string
 	{
-		var str = "<NLContextEntity id=\""+this.objectID.value+"\" sort=\""+this.objectID.sort.name+"\"";
+		let str = "<NLContextEntity id=\""+this.objectID.value+"\" sort=\""+this.objectID.sort.name+"\"";
 		if (this.mentionTime != null) str += " mentionTime=\""+this.mentionTime+"\"";
 		if (this.distanceFromSpeaker != null) str += " distanceFromSpeaker=\""+this.distanceFromSpeaker+"\"";
 		str += ">\n";
@@ -258,8 +258,8 @@ class NLContextPerformative {
 
 	static fromXML(xml:Element, context:NLContext, o:Ontology) : NLContextPerformative
 	{
-		var cause:CauseRecord = null;
-		var p_xml = getFirstElementChildByTag(xml, "cause");
+		let cause:CauseRecord = null;
+		let p_xml = getFirstElementChildByTag(xml, "cause");
 		if (p_xml != null) {
 			cause = CauseRecord.fromXML(p_xml, o);
 		}
@@ -510,7 +510,7 @@ class NLContext {
 
 //		console.log("NLContext.newPerformative: " + perf);
 
-		var cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, this, timeStamp);
+		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, this, timeStamp);
 		let IDs:ConstantTermAttribute[] = cp.IDsInPerformative(o);
 //		console.log("NLContext.newPerformative IDs found: " + IDs);
 
@@ -673,27 +673,27 @@ class NLContext {
 	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
 		this.lastDerefErrorType = 0;
-		var properNounSort:Sort = o.getSort("proper-noun");
-		var nounSort:Sort = o.getSort("noun");
-		var pronounSort:Sort = o.getSort("pronoun");
-		var personalPronounSort:Sort = o.getSort("personal-pronoun");
-		var adjectiveSort:Sort = o.getSort("adjective");
-		var determinerSort:Sort = o.getSort("determiner");
-		var possessiveDeterminerSort:Sort = o.getSort("possessive-determiner");
-		var firstPerson:Sort = o.getSort("first-person");
-		var secondPerson:Sort = o.getSort("second-person");
-		var thirdPerson:Sort = o.getSort("third-person");
-		var relationSort:Sort = o.getSort("relation");
-		var spatialRelationSort:Sort = o.getSort("spatial-relation");
+		let properNounSort:Sort = o.getSort("proper-noun");
+		let nounSort:Sort = o.getSort("noun");
+		let pronounSort:Sort = o.getSort("pronoun");
+		let personalPronounSort:Sort = o.getSort("personal-pronoun");
+		let adjectiveSort:Sort = o.getSort("adjective");
+		let determinerSort:Sort = o.getSort("determiner");
+		let possessiveDeterminerSort:Sort = o.getSort("possessive-determiner");
+		let firstPerson:Sort = o.getSort("first-person");
+		let secondPerson:Sort = o.getSort("second-person");
+		let thirdPerson:Sort = o.getSort("third-person");
+		let relationSort:Sort = o.getSort("relation");
+		let spatialRelationSort:Sort = o.getSort("spatial-relation");
 
-		var properNounTerms:Term[] = [];
-		var nounTerms:Term[] = [];
-		var pronounTerms:Term[] = [];
-		var adjectiveTerms:Term[] = [];
-		var determinerTerms:Term[] = [];
-		var relationTerms:Term[][] = [];
-		var otherTerms:Term[] = [];
-		var genitiveTerm:Term = null;
+		let properNounTerms:Term[] = [];
+		let nounTerms:Term[] = [];
+		let pronounTerms:Term[] = [];
+		let adjectiveTerms:Term[] = [];
+		let determinerTerms:Term[] = [];
+		let relationTerms:Term[][] = [];
+		let otherTerms:Term[] = [];
+		let genitiveTerm:Term = null;
 		for(let tmp of clauseElements) {
 			if (tmp instanceof TermTermAttribute) {
 				let tmp2:Term =(<TermTermAttribute>tmp).term;
@@ -935,7 +935,7 @@ class NLContext {
 							} else if (determinerTerm.functor.is_a(possessiveDeterminerSort)) {
 								if (determinerTerm.functor.name == "determiner.my") {
 									// find owner:
-//									var ownerRelation:Term = Term.fromString("verb.own('"+this.speaker+"'[#id])", o);
+//									let ownerRelation:Term = Term.fromString("verb.own('"+this.speaker+"'[#id])", o);
 //									ownerRelation.addAttribute(determinerTerm.attributes[0]);
 //									relationTerms.push(ownerRelation);
 									let belongsRelation:Term = new Term(o.getSort("verb.own"), 
@@ -1577,7 +1577,7 @@ class NLContext {
 	filterByAdjective(adjective:Sort, entities_mpl:NLContextEntity[][], o:Ontology) : NLContextEntity[][]
 	{
 //		console.log("filterByAdjective: " + adjective);
-		var results_mpl:NLContextEntity[][] = [];
+		let results_mpl:NLContextEntity[][] = [];
 		for(let entities of entities_mpl) {
 			let results:NLContextEntity[] = [];
 			for(let entity of entities) {
@@ -1593,7 +1593,7 @@ class NLContext {
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
 	filterByRelation1(relation:Term, entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
 	{
-		var results_mpl:NLContextEntity[][] = [];
+		let results_mpl:NLContextEntity[][] = [];
 		for(let entities of entities_mpl) {
 			let results:NLContextEntity[] = [];
 			for(let entity of entities) {
@@ -1612,7 +1612,7 @@ class NLContext {
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
 	filterByAtLeastOneRelation1(relationL:Term[], entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
 	{
-		var results_mpl:NLContextEntity[][] = [];
+		let results_mpl:NLContextEntity[][] = [];
 		for(let entities of entities_mpl) {
 			let results:NLContextEntity[] = [];
 			for(let entity of entities) {
@@ -1634,7 +1634,7 @@ class NLContext {
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
 	filterByRelation2(relation:Term, entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
 	{
-		var results_mpl:NLContextEntity[][] = [];
+		let results_mpl:NLContextEntity[][] = [];
 		for(let entities of entities_mpl) {
 			let results:NLContextEntity[] = [];
 			for(let entity of entities) {
@@ -1653,7 +1653,7 @@ class NLContext {
 	// returns 3 arrays, containins matches in mentions, shortTermMemory and long-term memory
 	filterByAtLeastOneRelation2(relationL:Term[], entities_mpl:NLContextEntity[][], o:Ontology, pos:POSParser) : NLContextEntity[][]
 	{
-		var results_mpl:NLContextEntity[][] = [];
+		let results_mpl:NLContextEntity[][] = [];
 		for(let entities of entities_mpl) {
 			let results:NLContextEntity[] = [];
 			for(let entity of entities) {
@@ -1867,7 +1867,7 @@ class NLContext {
 
 	saveToXML() : string
 	{
-		var str:string = "<context speaker=\""+this.speaker+"\">\n";
+		let str:string = "<context speaker=\""+this.speaker+"\">\n";
 
 		str += "<shortTermMemory>\n";
 		for(let ce of this.shortTermMemory) str += ce.saveToXML() + "\n";

@@ -1,6 +1,3 @@
-var serverToken
-
-
 // get a new Session ID in a token and assign it to this game
 function assignNewSessionID(game:A4Game) {
     requestTokenFromServer((err:string, token:string) => {

@@ -16,10 +16,10 @@ class GLTManager {
     //          they are called is recommended.
     get(name:string):GLTile
     {
-        var tile:GLTile = this.hash[name];
+        let tile:GLTile = this.hash[name];
         if (tile!=null) return tile;
 
-        var img:HTMLImageElement = this.getImage(name);
+        let img:HTMLImageElement = this.getImage(name);
 
         if (img.width!=0) {
             tile = new GLTile(img, 0, 0, img.width, img.height);
@@ -33,10 +33,10 @@ class GLTManager {
     getPiece(name:string, x:number, y:number, width:number, height:number):GLTile
     {
         let tileName:string = name+"-"+x+"-"+y+"-"+width+"-"+height;
-        var tile:GLTile = this.hash[tileName];
+        let tile:GLTile = this.hash[tileName];
         if (tile!=null) return tile;
 
-        var img:HTMLImageElement = this.getImage(name);
+        let img:HTMLImageElement = this.getImage(name);
 
         if (img.width!=0) {
             tile = new GLTile(img, x, y, width, height);
@@ -50,10 +50,10 @@ class GLTManager {
     getPieceDark(name:string, x:number, y:number, width:number, height:number):GLTile
     {
         let tileName:string = name+"-"+x+"-"+y+"-"+width+"-"+height+"-dark";
-        var tile:GLTile = this.hash[tileName];
+        let tile:GLTile = this.hash[tileName];
         if (tile!=null) return tile;
 
-        var img:HTMLImageElement = this.getImageDark(name);
+        let img:HTMLImageElement = this.getImageDark(name);
 
         if (img.width!=0) {
             tile = new GLTile(img, x, y, width, height);
@@ -68,9 +68,9 @@ class GLTManager {
 
     getImage(name:string):HTMLImageElement
     {
-        var img:HTMLImageElement = this.image_hash[name];
+        let img:HTMLImageElement = this.image_hash[name];
         if (img == null) {
-            var img:HTMLImageElement = document.createElement("img");
+            img = document.createElement("img");
             img.src = name;
             this.image_hash[name] = img;
             console.log("Loading image " + name + "...");
@@ -81,24 +81,24 @@ class GLTManager {
 
     getImageDark(name:string):HTMLImageElement
     {
-        var img:HTMLImageElement = this.darkimage_hash[name];
+        let img:HTMLImageElement = this.darkimage_hash[name];
         if (img == null) {
-            var img:HTMLImageElement = document.createElement("img");
-            var imgOriginal:HTMLImageElement = this.getImage(name);
+            img = document.createElement("img");
+            let imgOriginal:HTMLImageElement = this.getImage(name);
 
             // make it dark:
-            var canvas2:HTMLCanvasElement = document.createElement('canvas');
+            let canvas2:HTMLCanvasElement = document.createElement('canvas');
             canvas2.width = imgOriginal.width;
             canvas2.height = imgOriginal.height;
-            var context2 = canvas2.getContext("2d");
+            let context2 = canvas2.getContext("2d");
             context2.drawImage(imgOriginal, 0, 0);
-            var imageData = context2.getImageData(0, 0, imgOriginal.width, imgOriginal.height);
-            var data = imageData.data;
+            let imageData = context2.getImageData(0, 0, imgOriginal.width, imgOriginal.height);
+            let data = imageData.data;
             for(let i:number = 0;i<imgOriginal.width*imgOriginal.height*4;i+=4) {
-                var red = data[i];
-                var green = data[i + 1];
-                var blue = data[i + 2];
-                var alpha = data[i + 3];
+                let red = data[i];
+                let green = data[i + 1];
+                let blue = data[i + 2];
+                let alpha = data[i + 3];
                 if (alpha>128) {
                     if (red == 0 && green == 0 && blue == 0) {
                         context2.fillStyle = "#4f56f6";

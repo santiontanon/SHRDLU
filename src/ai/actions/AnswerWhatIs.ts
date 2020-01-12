@@ -10,13 +10,13 @@ class AnswerWhatIs_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		var intention:Term = ir.action;
+		let intention:Term = ir.action;
 
 		if (intention.functor == ai.o.getSort("action.answer.whatis.name")) {
 			console.log(ai.selfID + " answer whatis.name: " + intention.attributes[2]);	
 			if (intention.attributes[1] instanceof ConstantTermAttribute &&
 				intention.attributes[2] instanceof ConstantTermAttribute) {
-				var listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+				let listenerID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
 				// Don't do any inference for now (we'll see if I need it later on), 
 				// directly call the same function that will be called after the inference in whatis.noname:
 				AnswerWhatIs_InferenceEffect.executeInferenceEffect_AnswerWhatis(null, (<ConstantTermAttribute>intention.attributes[2]).value, listenerID, ai);
@@ -31,7 +31,7 @@ class AnswerWhatIs_IntentionAction extends IntentionAction {
 			if (intention.attributes[1] instanceof ConstantTermAttribute &&
 				intention.attributes[2] instanceof ConstantTermAttribute) {
 				// target 1: name of the entity:
-				var target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("name"),
+				let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("name"),
 																[intention.attributes[2],
 																 new VariableTermAttribute(ai.o.getSort("symbol"), "NAME")])],[false])];
 				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWhatIs_InferenceEffect(intention), ai.o));

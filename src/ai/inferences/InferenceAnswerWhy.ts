@@ -16,11 +16,11 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 			console.error("AnswerWhy_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var toExplain:TermAttribute = this.effectParameter.attributes[2];
-		var negativeAnswer:string = "'unknown'[symbol]";
+		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let toExplain:TermAttribute = this.effectParameter.attributes[2];
+		let negativeAnswer:string = "'unknown'[symbol]";
 		if (inf.inferences[0].endResults.length != 0) {
-			var results:TermAttribute[] = [];
+			let results:TermAttribute[] = [];
 			for(let result of inf.inferences[0].endResults) {
 				for(let [variable, value] of result.bindings.l) {
 					if (variable.name == "CAUSE" &&
@@ -32,13 +32,13 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 			}
 //				console.log("result: " + result);
 			if (results.length > 0) {
-				var answer:Term = new Term(ai.o.getSort("relation.cause"),[toExplain, results[0]]);
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+answer+"))", ai.o);
+				let answer:Term = new Term(ai.o.getSort("relation.cause"),[toExplain, results[0]]);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+answer+"))", ai.o);
 //					console.log("term: " + term);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			} else {
 				console.error("Inference produced a result, but none of the resulting variables is the query variable!");
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		} else if (inf.inferences[1].endResults.length != 0) {
@@ -60,7 +60,7 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		} else {
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}		
 	}

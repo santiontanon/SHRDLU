@@ -103,7 +103,7 @@ class BText extends BInterfaceElement {
 
     drawAlpha(alpha:number)
     {
-        var color:string = "white";
+        let color:string = "white";
         if (!this.enabled) {
             color = generateRGBColor(80,80,80);
         }

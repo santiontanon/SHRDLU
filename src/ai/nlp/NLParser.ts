@@ -8,17 +8,17 @@ class NLParser {
 
 	static fromXML(xml:Element, o:Ontology) : NLParser
 	{
-		var parser:NLParser = new NLParser(o, Number(xml.getAttribute("defaultPriority")));
+		let parser:NLParser = new NLParser(o, Number(xml.getAttribute("defaultPriority")));
 
 		parser.posParser = new POSParser(o);
 
-		var speakerVariable:VariableTermAttribute = new VariableTermAttribute(o.getSort("any"),"SPEAKER");
-		var listenerVariable:VariableTermAttribute = new VariableTermAttribute(o.getSort("any"),"LISTENER");
+		let speakerVariable:VariableTermAttribute = new VariableTermAttribute(o.getSort("any"),"SPEAKER");
+		let listenerVariable:VariableTermAttribute = new VariableTermAttribute(o.getSort("any"),"LISTENER");
 
 		for(let rulexml of getElementChildrenByTag(xml, "NLPattern")) {
-			var priority:number = parser.defaultPriority;
+			let priority:number = parser.defaultPriority;
 			if (rulexml.getAttribute("priority")!=null) priority = Number(rulexml.getAttribute("priority"));
-			var rule:NLPatternRule = NLPatternRule.fromString(rulexml.getAttribute("name"),
+			let rule:NLPatternRule = NLPatternRule.fromString(rulexml.getAttribute("name"),
 														      rulexml.getAttribute("head"),
 															  rulexml.getAttribute("body"),
 															  priority, o, speakerVariable, listenerVariable);
@@ -27,10 +27,10 @@ class NLParser {
 		}
 
 		for(let sortName of ["nounPhrase","nounPhraseNoDeterminer","nounPhraseNoDeterminerNoProperNoun","properNounCompound","performative","perf.request.action","perf.inform"]) {
-			var compiled:CompiledNLPatternRules = new CompiledNLPatternRules("compiled-" + sortName, o, speakerVariable, listenerVariable);
+			let compiled:CompiledNLPatternRules = new CompiledNLPatternRules("compiled-" + sortName, o, speakerVariable, listenerVariable);
 			compiled.populate(o.getSort(sortName), parser);
 
-			var nstates:number = compiled.root.getAllStatesForDOTString().length;
+			let nstates:number = compiled.root.getAllStatesForDOTString().length;
 			console.log("compiled parse graph for " +sortName+ " has " + nstates + " nodes");
 
 //			console.log(compiled.root.convertToDOTString());
@@ -40,7 +40,7 @@ class NLParser {
 
 /*
 		// list of sorts for which there are rules:
-		var sortList:string[] = [];
+		let sortList:string[] = [];
 		for(let rule of parser.rules) {
 			if (sortList.indexOf(rule.head.functor.name) == -1) sortList.push(rule.head.functor.name);
 		}
@@ -55,12 +55,12 @@ class NLParser {
 	parse(sentence:string, s:Sort, context:NLContext, AI:RuleBasedAI) : NLParseRecord[]
 	{
 		// STEP 1: Tokenization
-		var tokens:string[] = this.posParser.tokenize(sentence);
+		let tokens:string[] = this.posParser.tokenize(sentence);
 		//console.log("Tokenization:\n" + tokens);
 		if (tokens == null || tokens.length == 0) return [];
 
 		// STEP 2: Dictionary-based multi-token word detection (merge tokens)
-		var tokens2:TokenizationElement = this.posParser.identifyMultiTokenWords(tokens);
+		let tokens2:TokenizationElement = this.posParser.identifyMultiTokenWords(tokens);
 		//console.log("Multi-token word identification:\n" + tokens2.toString());
 
 		// STEP 3: Part of Speech Tagging
@@ -73,16 +73,16 @@ class NLParser {
 		this.error_unrecognizedTokens = [];
 		this.error_grammatical = false;
 
-		var results:NLParseRecord[] = [];
-		var derefErrors:NLDerefErrorRecord[] = [];
-		var bestPriorityOfFirstRule:number = 0;
-		var semanticalErrors:NLParseRecord[] = [];
+		let results:NLParseRecord[] = [];
+		let derefErrors:NLDerefErrorRecord[] = [];
+		let bestPriorityOfFirstRule:number = 0;
+		let semanticalErrors:NLParseRecord[] = [];
 
-		var compiled:CompiledNLPatternRules = this.compiledRules[s.name];
+		let compiled:CompiledNLPatternRules = this.compiledRules[s.name];
 		if (compiled != null) {
 			// if we have a compiled tree, use it!
 //			console.log("NLParser.parse: Found a compiled tree for " + s.name + " ...");
-			var results2:NLParseRecord[] = compiled.parse(tokens2, true, context, this, AI);
+			let results2:NLParseRecord[] = compiled.parse(tokens2, true, context, this, AI);
 			if (results2 != null && results2.length > 0) {
 				for(let r of results2) {
 					//console.log("(1) result before resolving the lists:" + r.result);
@@ -105,7 +105,7 @@ class NLParser {
 						// performative
 						if (performativeHead.functor.is_a_string("performative")) {
 							if (compiled.listenerVariable != performativeHead.attributes[0]) {
-								var b2:Bindings = new Bindings();
+								let b2:Bindings = new Bindings();
 								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
 								r.result = r.result.applyBindings(b2);
 							}
@@ -129,8 +129,8 @@ class NLParser {
 			for(let rawRule of this.rules) {
 				if (rawRule.priority <= bestPriorityOfFirstRule) continue;
 				if (!rawRule.head.functor.is_a(s)) continue;
-				var rule:NLPatternRule = rawRule.clone();
-				var results2:NLParseRecord[] = rule.parse(tokens2, true, context, this, AI);
+				let rule:NLPatternRule = rawRule.clone();
+				let results2:NLParseRecord[] = rule.parse(tokens2, true, context, this, AI);
 				if (results2 != null && results2.length > 0) {
 					for(let r of results2) {
 		//					console.log("result! (" + r.priorities[0] + ")");
@@ -138,7 +138,7 @@ class NLParser {
 						// properly resolve the "listener" variable:
 						if (s.name == "performative" && r.result.attributes.length>0) {
 							if (compiled.listenerVariable != r.result.attributes[0]) {
-								var b2:Bindings = new Bindings();
+								let b2:Bindings = new Bindings();
 								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
 								r.result = r.result.applyBindings(b2);
 							}
@@ -159,7 +159,7 @@ class NLParser {
 
 /*
 		// resolve the #list constructs, and ensure parses are semantically sound:
-		var results2:NLParseRecord[] = [];
+		let results2:NLParseRecord[] = [];
 		for(let result of results) {
 			result.result = this.resolveLists(result.result);
 			if (this.semanticallyCorrect(result.result, context)) results2.push(result);
@@ -195,7 +195,7 @@ class NLParser {
 
 	chooseHighestPriorityParse(parses:NLParseRecord[]) : NLParseRecord
 	{
-		var bestParse:NLParseRecord = null;
+		let bestParse:NLParseRecord = null;
 
 		for(let parse of parses) {
 			if (bestParse == null) {
@@ -213,7 +213,7 @@ class NLParser {
 
 	chooseHighestPriorityParseWithListener(parses:NLParseRecord[], listener:string) : NLParseRecord
 	{
-		var bestParse:NLParseRecord = null;
+		let bestParse:NLParseRecord = null;
 
 		for(let parse of parses) {
 			let result:Term = this.unifyListener(parse.result, listener);
@@ -294,7 +294,7 @@ class NLParser {
 
 		if (parse.functor.is_a(this.o.getSort("space.at"))) {
 			if (parse.attributes[1] instanceof ConstantTermAttribute) {
-				var e:NLContextEntity = context.findByID((<ConstantTermAttribute>parse.attributes[1]).value);		
+				let e:NLContextEntity = context.findByID((<ConstantTermAttribute>parse.attributes[1]).value);		
 				if (e!=null) {
 					if (e.sortMatch(this.o.getSort("space.location"))) return true;
 					if (e.sortMatch(this.o.getSort("container"))) return true;
@@ -360,17 +360,17 @@ class NLParser {
 		if (parse.functor.name == "#cons" &&
 			parse.attributes.length>0 &&
 			parse.attributes[0] instanceof ConstantTermAttribute) {
-			var sortName:string = (<ConstantTermAttribute>parse.attributes[0]).value;
+			let sortName:string = (<ConstantTermAttribute>parse.attributes[0]).value;
 			if (sortName[0] == '~') {
 				// negated sort! insert '#not'
-				var sort:Sort = o.getSort(sortName.substring(1));
+				let sort:Sort = o.getSort(sortName.substring(1));
 				if (sort != null) {
-					var tmp:Term = new Term(sort, parse.attributes.slice(1));
+					let tmp:Term = new Term(sort, parse.attributes.slice(1));
 					parse.functor = o.getSort("#not");
 					parse.attributes = [new TermTermAttribute(tmp)];
 				}
 			} else {
-				var sort:Sort = o.getSort(sortName);
+				let sort:Sort = o.getSort(sortName);
 				if (sort != null) {
 					parse.functor = sort;
 					parse.attributes.splice(0, 1);
@@ -412,10 +412,10 @@ class NLParser {
 		// now resolve the outer lists:
 		for(let ii:number = 0;ii<parse.attributes.length;ii++) {
 			if (parse.attributes[ii] instanceof TermTermAttribute) {
-				var childTerm:Term = (<TermTermAttribute>parse.attributes[ii]).term;
+				let childTerm:Term = (<TermTermAttribute>parse.attributes[ii]).term;
 				if (childTerm.functor.name == "#list" && parse.functor.name != "#list") {
-					var l:TermAttribute[] = NLParser.elementsInList(childTerm, "#list");
-					var output:Term = null;
+					let l:TermAttribute[] = NLParser.elementsInList(childTerm, "#list");
+					let output:Term = null;
 //					console.log("resolveListsInternal (elements in list): " + l);
 //					console.log("resolveListsInternal (before resolving the list): " + parse);
 					for(let j:number = l.length-1;j>=0;j--) {
@@ -442,7 +442,7 @@ class NLParser {
 
 	static constructList(elements:TermAttribute[], listFunctor:Sort) : TermAttribute
 	{
-		var result:TermAttribute = null;
+		let result:TermAttribute = null;
 
 		for(let e of elements) {
 			if (result == null) {
@@ -459,7 +459,7 @@ class NLParser {
 
 	static termsInList(list:Term, listFunctor:string) : Term[]
 	{
-		var output:Term[] = [];
+		let output:Term[] = [];
 
 		while(list.functor.name == listFunctor) {
 			if (list.attributes[0] instanceof TermTermAttribute &&
@@ -484,7 +484,7 @@ class NLParser {
 
 	static elementsInList(list:Term, listFunctor:string) : TermAttribute[]
 	{
-		var output:TermAttribute[] = [];
+		let output:TermAttribute[] = [];
 		if (list.functor.name == listFunctor) {
 			for(let i = 0;i<list.attributes.length;i++) {
 				if ((list.attributes[i] instanceof TermTermAttribute) &&
@@ -503,7 +503,7 @@ class NLParser {
 /*
 	static elementsInList(list:Term, listFunctor:string) : TermAttribute[]
 	{
-		var output:TermAttribute[] = [];
+		let output:TermAttribute[] = [];
 
 		while(list.functor.name == listFunctor) {
 			if (list.attributes[0] instanceof TermTermAttribute &&
@@ -528,8 +528,8 @@ class NLParser {
 
 	cloneTermReplacingIthAttribute(term:Term, i:number, replacement:TermAttribute) : Term
 	{
-		var map:[TermAttribute,TermAttribute][] = [];
-		var output:Term = new Term(term.functor, []);
+		let map:[TermAttribute,TermAttribute][] = [];
+		let output:Term = new Term(term.functor, []);
 
 		for(let j:number = 0;j<term.attributes.length;j++) {
 			if (j == i) {

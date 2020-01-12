@@ -10,15 +10,15 @@ class Expression {
 
     static fromStringOffset(str:string, pos:number) : [Expression, number]
     {
-        var pos0:number = pos;
+        let pos0:number = pos;
 
-        var tmp:[string,number] = Expression.nextToken(str, pos);
+        let tmp:[string,number] = Expression.nextToken(str, pos);
         if (tmp==null) return null;
-        var token:string = tmp[0];
+        let token:string = tmp[0];
         pos = tmp[1];
-        var stack:Expression[] = [];
-        var last:Expression = null;
-        var current:Expression = null;
+        let stack:Expression[] = [];
+        let last:Expression = null;
+        let current:Expression = null;
 
         while(token!=null) {
 //            console.log("next token: " + token + ", offset " + pos);
@@ -28,7 +28,7 @@ class Expression {
                 if (current!=null) current.parameters.push(last);
 
                 if (token == "new") {
-                    var tmp2:[Expression,number] = Expression.fromStringOffset(str, pos);
+                    let tmp2:[Expression,number] = Expression.fromStringOffset(str, pos);
                     if (tmp2!=null) {
                         pos = tmp2[1];
                         last.parameters.push(tmp2[0]);
@@ -93,10 +93,10 @@ class Expression {
 
     static listFromStringOffset(str:string, pos:number) : [Expression[], number]
     {
-        var l:Expression[] = [];
+        let l:Expression[] = [];
 
         while(pos<str.length) {
-            var tmp:[Expression,number] = Expression.fromStringOffset(str, pos); 
+            let tmp:[Expression,number] = Expression.fromStringOffset(str, pos); 
             if (tmp!=null) {
                 l.push(tmp[0]);
                 pos = tmp[1];
@@ -111,10 +111,10 @@ class Expression {
 
     static nextToken(str:string, pos:number) : [string, number]
     {
-        var buffer:string = "";
+        let buffer:string = "";
 
         // skip spaces:
-        var c:string = str.charAt(pos);
+        let c:string = str.charAt(pos);
         pos++;
         while(c==' ' || c=='\t') {
             c = str.charAt(pos);
@@ -229,7 +229,7 @@ class Expression {
 
     toString()
     {
-        var s:string = (this.quoted ? "\"" + this.head + "\"":this.head);
+        let s:string = (this.quoted ? "\"" + this.head + "\"":this.head);
         if (this.parameters.length>0) {
             s += "(";
             for(let i:number = 0;i<this.parameters.length;i++) {

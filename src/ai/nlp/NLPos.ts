@@ -57,7 +57,7 @@ class TokenizationElement {
 
   toStringInternal(tabs:number) : string 
   {
-    var s:string = "";
+    let s:string = "";
     if (this.token==null) {
       for(let n of this.next) {
         s += n.toStringInternal(tabs);
@@ -90,7 +90,7 @@ class TokenizationElement {
 class POSParser {
   constructor(o:Ontology) 
   {
-    var multitokens_raw: string[] =
+    let multitokens_raw: string[] =
     [
       // conjunctions
       "as if",
@@ -991,7 +991,7 @@ this.addTokenPOS(new PartOfSpeech("second", "number.2", Term.fromString("ordinal
 this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal('3'[number])", o), 1.0));
 
   // proper nouns
-  var proper_nouns:string[] = [/*
+  let proper_nouns:string[] = [/*
                                "james", "john", "robert", "michael", "william",
                                "david", "richard", "charles", "joseph", "thomas",
                                "christopher", "daniel", "paul", "mark"," donald",
@@ -2030,7 +2030,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.generateAdverbSortToEnglishTable(o);
 
   // count how many POS entries we have:
-  var count:number = 0;
+  let count:number = 0;
   for(let t in this.POS) {
     count += this.POS[t].length;
   }
@@ -2048,7 +2048,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   isCountable(word:string) 
   {
-    var pos_l:PartOfSpeech[] = this.POS[word];
+    let pos_l:PartOfSpeech[] = this.POS[word];
     if (pos_l == null) return true;
     for(let pos of pos_l) {
       if (pos.term.functor.name == "noun" &&
@@ -2064,12 +2064,12 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   addTokenPOS(pos:PartOfSpeech)
   {
     // o.getSort(pos.sortName);  // this is just to check that we have all the sorts!
-    var pos_l:PartOfSpeech[] = this.POS[pos.token];
+    let pos_l:PartOfSpeech[] = this.POS[pos.token];
     if (pos_l == null) pos_l = [];
     pos_l.push(pos);
     this.POS[pos.token] = pos_l;
 
-    var pos_ls:PartOfSpeech[] = this.POSbySort[pos.token];
+    let pos_ls:PartOfSpeech[] = this.POSbySort[pos.token];
     if (pos_ls == null) pos_ls = [];
     pos_ls.push(pos);
     this.POSbySort[pos.sortName] = pos_ls;
@@ -2179,7 +2179,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   tokenize(text:string) : string[]
   {
-    var tokens:string[] = this.basicTokenization(text);
+    let tokens:string[] = this.basicTokenization(text);
     // detect numbers: 
     //    - pattern [number, ".", number]
     for(let i:number = 0;i<tokens.length-2;i++) {
@@ -2301,14 +2301,14 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
             (tokens[i].substring(tokens[i].length-2)=="pm" ||
              tokens[i].substring(tokens[i].length-2)=="am") && 
              !isNaN(Number(tokens[i].substring(0,tokens[i].length-2)))) {
-            var tmp:string = tokens[i];
+            let tmp:string = tokens[i];
             tokens[i] = tmp.substring(0,tmp.length-2);
             tokens.splice(i+1,0,tmp.substring(tmp.length-2, tmp.length));
         }
     }
 
     // Remove spaces
-    var finalTokens:string[] = [];
+    let finalTokens:string[] = [];
     for(let t of tokens) {
         if (t != " ") finalTokens.push(t);
     }
@@ -2318,12 +2318,12 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   basicTokenization(text:string) : string[]
   {
-    var normal:string="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTSUVWXYZ0123456789";
-    var tokenSeparators:string=".,!-;:'\"?()";
-    var ignorableSeparators:string=" \t\n\r";
+    let normal:string="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTSUVWXYZ0123456789";
+    let tokenSeparators:string=".,!-;:'\"?()";
+    let ignorableSeparators:string=" \t\n\r";
     
-    var tokens:string[] = [];
-    var token:string = "";
+    let tokens:string[] = [];
+    let token:string = "";
     for(let i:number = 0;i<text.length;i++) {
         if (normal.indexOf(text.charAt(i))>=0) {
             token += text.charAt(i)
@@ -2356,8 +2356,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   addMultiToken(mt:string)
   {
-    var tokens_tmp:string[] = mt.split(" ");
-    var tokens:string[] = [];
+    let tokens_tmp:string[] = mt.split(" ");
+    let tokens:string[] = [];
     for(let token of tokens_tmp) {
       if (token[token.length-1] == ".") {
         tokens.push(token.substring(0,token.length-1))
@@ -2367,9 +2367,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
       }
     }
     if (tokens.length == 1) return;  // not a multitoken!
-    var key:string = tokens[0];
-    var value:string[] = tokens.slice(1);
-    var values:string[][] = this.multitokens[key];
+    let key:string = tokens[0];
+    let value:string[] = tokens.slice(1);
+    let values:string[][] = this.multitokens[key];
     if (values==null) values = [];
     if(values.indexOf(value) == -1) {
       values.push(value);
@@ -2382,15 +2382,15 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   {
     if (tokens==null) return null;
 
-    var tokenization:TokenizationElement = new TokenizationElement(null);
-    var t:TokenizationElement = tokenization;
-    var preferLongerMultiTokens:boolean = true;  // preference for multitoken words! remove this line if you want all parses to be returned
-//    var preferLongerMultiTokens:boolean = false; 
+    let tokenization:TokenizationElement = new TokenizationElement(null);
+    let t:TokenizationElement = tokenization;
+    let preferLongerMultiTokens:boolean = true;  // preference for multitoken words! remove this line if you want all parses to be returned
+//    let preferLongerMultiTokens:boolean = false; 
     for(let i:number = 0;i<tokens.length;i++) {
-      var options:string[][] = this.multitokens[tokens[i]];
-      var found:boolean = false;
-      var longestMultiToken:number = 0;
-      var bestTokenization:TokenizationElement = null;
+      let options:string[][] = this.multitokens[tokens[i]];
+      let found:boolean = false;
+      let longestMultiToken:number = 0;
+      let bestTokenization:TokenizationElement = null;
       // console.log(options);
       if (options!=null) {
         for(let option of options) {
@@ -2402,7 +2402,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
             }
           }
           if (found) {
-            var newToken:string = tokens[i];
+            let newToken:string = tokens[i];
             for(let t of option) {
               if (t == ".") {
                 newToken += t;
@@ -2417,7 +2417,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
                 bestTokenization.token = newToken;
               }
             } else {
-              var t2:TokenizationElement = this.identifyMultiTokenWords(tokens.slice(i+option.length+1,tokens.length));
+              let t2:TokenizationElement = this.identifyMultiTokenWords(tokens.slice(i+option.length+1,tokens.length));
               t2.token = newToken;
               t.next.push(t2)
             }
@@ -2428,7 +2428,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
             return tokenization;
         }
       }
-      var t2:TokenizationElement = new TokenizationElement(tokens[i]);
+      let t2:TokenizationElement = new TokenizationElement(tokens[i]);
       t.next.push(t2);
       t = t2;
     }
@@ -2439,19 +2439,19 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   tagToken(token:string, o:Ontology) : PartOfSpeech[]
   {
-      var pos_l:PartOfSpeech[] = this.POS[token];
+      let pos_l:PartOfSpeech[] = this.POS[token];
       if (pos_l != null) {
         // we found it!
-        var pos_l2:PartOfSpeech[] = [];
+        let pos_l2:PartOfSpeech[] = [];
         for(let pos of pos_l) {
-          var pos2:PartOfSpeech = PartOfSpeech.fromPartOfSpeech(pos);
+          let pos2:PartOfSpeech = PartOfSpeech.fromPartOfSpeech(pos);
           pos2.token = token;
           pos_l2.push(pos2);
         }
         return pos_l2;
       } else if (!isNaN(Number(token))) {
         // numbers:
-        var pos2:PartOfSpeech = this.generateCardinalNumber(token, o);
+        let pos2:PartOfSpeech = this.generateCardinalNumber(token, o);
 
         pos2.token = token;
         return [pos2];
@@ -2474,7 +2474,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
     this.POSTaggingInternal(tokens, o);
 
     // remove all the paths with a failed tokenization (at least one token not recognized)
-    var failedTokens:string[] = [];
+    let failedTokens:string[] = [];
     if (!this.removeFailedPOSTaggingPaths(tokens, failedTokens)) {
       console.error(failedTokens);
     }
@@ -2493,10 +2493,10 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   POSTaggingArray(tokens:string[], o:Ontology) : PartOfSpeech[][]
   {
-    var l:PartOfSpeech[][] = [];
+    let l:PartOfSpeech[][] = [];
 
     for(let token of tokens) {
-      var pos_l:PartOfSpeech[] = this.tagToken(token, o);
+      let pos_l:PartOfSpeech[] = this.tagToken(token, o);
       l.push(pos_l);
     }
 
@@ -2520,8 +2520,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   //  console.log("token: " + tokens.token + " next: " + tokens.next.length);
 
-    var atLeastOneSucceeds:boolean = false;
-    var toDelete:TokenizationElement[] = [];
+    let atLeastOneSucceeds:boolean = false;
+    let toDelete:TokenizationElement[] = [];
     for(let t of tokens.next) {
       if (this.removeFailedPOSTaggingPaths(t, failedTokens)) {
         atLeastOneSucceeds = true;
@@ -2530,7 +2530,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
       }
     }
     for(let t of toDelete) {
-      var idx:number = tokens.next.indexOf(t);
+      let idx:number = tokens.next.indexOf(t);
       if (idx>=0) tokens.next.splice(idx,1);
     }
     return atLeastOneSucceeds;
@@ -2558,18 +2558,18 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
           continue;
       }
 
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
-        var sort:Sort = o.getSortSilent(POS.sortName);
+        let sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
           if (POS.term.functor.name == "noun" &&
               POSParser.sortIsConsideredForTypes(sort, o))  {
-            var tmp:string[] = this.typeSortToEnglish[POS.sortName];
+            let tmp:string[] = this.typeSortToEnglish[POS.sortName];
             if (tmp==null) {
               tmp = [null,null];
               this.typeSortToEnglish[POS.sortName] = tmp;
             }
-            var number:number = 0;
+            let number:number = 0;
             if (POS.term.attributes[1].sort.name == "plural") number = 1;
             tmp[number] = token;
             //console.log(POS.sortName + "[" + number + "] = " + token);
@@ -2582,12 +2582,12 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   generatePropertySortToEnglishTable(o:Ontology)
   {
-    var propertySort:Sort = o.getSort("property");
-    //var propertyWVSort:Sort = o.getSort("property-with-value");
+    let propertySort:Sort = o.getSort("property");
+    //let propertyWVSort:Sort = o.getSort("property-with-value");
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
-        var sort:Sort = o.getSortSilent(POS.sortName);
+        let sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
           if ((POS.term.functor.name == "adjective" ||
                POS.term.functor.name == "preposition") &&
@@ -2606,11 +2606,11 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   generateRelationSortToEnglishTable(o:Ontology)
   {
-    var relationSort:Sort = o.getSort("relation");
+    let relationSort:Sort = o.getSort("relation");
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
-        var sort:Sort = o.getSortSilent(POS.sortName);
+        let sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
           if (POS.term.functor.name == "preposition" &&
               sort.is_a(relationSort))  {
@@ -2633,15 +2633,15 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
           continue;
       }
 
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
         if (POS.term.functor.name == "noun")  {
-          var tmp:string[] = this.nounSortToEnglish[POS.sortName];
+          let tmp:string[] = this.nounSortToEnglish[POS.sortName];
           if (tmp==null) {
             tmp = [null,null];
             this.nounSortToEnglish[POS.sortName] = tmp;
           }
-          var number:number = 0;
+          let number:number = 0;
           if (POS.term.attributes[1].sort.name == "plural") number = 1;
           tmp[number] = token;
           //console.log(POS.sortName + "[" + number + "] = " + token);
@@ -2654,16 +2654,16 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   generateVerbSortToEnglishTable(o:Ontology)
   {
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
-        var sort:Sort = o.getSortSilent(POS.sortName);
+        let sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
           if (POS.term.functor.name == "verb" ||
               POS.term.functor.name == "phrasal-verb")  {
             // "verb('verb.be'[symbol], [singular], [first-person], [present-tense])
-            var number:number = null;
-            var person:number = null;
-            var tense:number = null;
+            let number:number = null;
+            let person:number = null;
+            let tense:number = null;
             if (POS.term.attributes[1].sort.name == "singular") number = 0;
             if (POS.term.attributes[1].sort.name == "plural") number = 1;
             if (POS.term.attributes[2].sort.name == "first-person") person = 0;
@@ -2676,12 +2676,12 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
             if (POS.term.attributes[3].sort.name == "past-tense") tense = 4;
 
             if (tense != null) {
-              var idxs:number[] = [];
+              let idxs:number[] = [];
               if (tense < 3) {
                 idxs = [tense];
               } else {
                 idxs = [3 + (tense-3)*6];
-                var idxs2:number[] = [];
+                let idxs2:number[] = [];
                 for(let idx of idxs) {
                   if (number == null || number==0) idxs2.push(idx);
                   if (number == null || number==1) idxs2.push(idx+3);
@@ -2694,7 +2694,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
                 }
               }
 
-              var tmp:string[] = this.verbSortToEnglish[POS.sortName];
+              let tmp:string[] = this.verbSortToEnglish[POS.sortName];
               if (tmp==null) {
                 tmp = [null,null,null, 
                        null,null,null,null,null,null, 
@@ -2729,16 +2729,16 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   generatePronounSortToEnglishTable(o:Ontology)
   {
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
         if (POS.term.functor.is_a(o.getSort("pronoun")))  {
-          var tmp:string[][] = this.pronounSortToEnglish[POS.sortName];
+          let tmp:string[][] = this.pronounSortToEnglish[POS.sortName];
           if (tmp==null) {
             tmp = [[null,null,null],[null,null,null]];
             this.pronounSortToEnglish[POS.sortName] = tmp;
           }
-          var numbers:number[] = [];
-          var genders:number[] = [];
+          let numbers:number[] = [];
+          let genders:number[] = [];
 
           if (POS.term.attributes[1].sort.name == "singular") numbers = [0];
           else if (POS.term.attributes[1].sort.name == "plural") numbers = [1];
@@ -2763,10 +2763,10 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   generateDeterminerSortToEnglishTable(o:Ontology)
   {
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
         if (POS.term.functor.is_a(o.getSort("determiner")))  {
-          var tmp:string[] = this.determinerSortToEnglish[POS.sortName];
+          let tmp:string[] = this.determinerSortToEnglish[POS.sortName];
           if (tmp==null) {
             tmp = [null,null];
             this.determinerSortToEnglish[POS.sortName] = tmp;
@@ -2786,9 +2786,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   generateAdverbSortToEnglishTable(o:Ontology)
   {
     for(let token in this.POS) {
-      var POS_l:PartOfSpeech[] = this.POS[token];
+      let POS_l:PartOfSpeech[] = this.POS[token];
       for(let POS of POS_l) {
-        var sort:Sort = o.getSortSilent(POS.sortName);
+        let sort:Sort = o.getSortSilent(POS.sortName);
         if (sort != null) {
           if (POS.term.functor.name == "adverb")  {
             this.adverbSortToEnglish[POS.sortName] = token;
@@ -2802,7 +2802,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   isPhrasalVerb(s:Sort) : PartOfSpeech
   {
-    var l:PartOfSpeech[] = this.POSbySort[s.name];
+    let l:PartOfSpeech[] = this.POSbySort[s.name];
     for(let pos of l) {
       if (pos.term.functor.name == "phrasal-verb") return pos;
     }
@@ -2812,7 +2812,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   sortCanBe(s:Sort, grammaticalFunction:Sort) : boolean
   {
-    var l:PartOfSpeech[] = this.POSbySort[s.name];
+    let l:PartOfSpeech[] = this.POSbySort[s.name];
     if (l!=null) {
       for(let pos of l) {
         if (pos.term.functor.is_a(grammaticalFunction)) return true;
@@ -2825,7 +2825,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   // number: 0 = singular, 1 = plural
   getTypeString(s:Sort, number:number) : string
   {
-    var tmp:string[] = this.typeSortToEnglish[s.name];
+    let tmp:string[] = this.typeSortToEnglish[s.name];
     if (tmp == null) return null;
     return tmp[number];
   }
@@ -2837,7 +2837,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
     let tmp:string[] = this.nounSortToEnglish[s.name];
     if (tmp == null) {
       if (tryAncestors) {
-        var sort_l:Sort[] = s.getAncestors();
+        let sort_l:Sort[] = s.getAncestors();
         for(let ts of sort_l) {
           let word:string = this.getNounString(ts, 0, false);
           if (word != null) return word;
@@ -2851,14 +2851,14 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   getPropertyString(s:Sort) : string
   {
-    var tmp:string = this.propertySortToEnglish[s.name];
+    let tmp:string = this.propertySortToEnglish[s.name];
     return tmp;
   }
 
 
   getRelationString(s:Sort, consierRelationVerbs:boolean) : string
   {
-    var tmp:string = this.relationSortToEnglish[s.name];
+    let tmp:string = this.relationSortToEnglish[s.name];
     if (tmp == null && consierRelationVerbs) {
       if (s.is_a_string("relation-verb")) {
         return "that " + this.getVerbString(s, 0, 2, 3);
@@ -2870,8 +2870,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   getVerbString(s:Sort, number:number, person:number, tense:number) : string
   {
-    var tmp:string[] = this.verbSortToEnglish[s.name];
-    var idx:number = tense;
+    let tmp:string[] = this.verbSortToEnglish[s.name];
+    let idx:number = tense;
     if (tense>=3) {
       idx = 3 + (tense-3)*6 + number*3 + person;
     }
@@ -2886,7 +2886,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   getPronounString(s:Sort, number:number, gender:number) : string
   {
-    var tmp:string[][] = this.pronounSortToEnglish[s.name];
+    let tmp:string[][] = this.pronounSortToEnglish[s.name];
     if (tmp == null) return null;
     return tmp[number][gender];
   }
@@ -2895,7 +2895,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   getPronounStringString(s:string, number:number, gender:number) : string
   {
 //    console.log("s: " + s + ", number: " + number + ", gender: " + gender);
-    var tmp:string[][] = this.pronounSortToEnglish[s];
+    let tmp:string[][] = this.pronounSortToEnglish[s];
     if (tmp == null) return null;
     return tmp[number][gender];
   }
@@ -2903,7 +2903,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   getDeterminerString(s:Sort, number:number) : string
   {
-    var tmp:string[] = this.determinerSortToEnglish[s.name];
+    let tmp:string[] = this.determinerSortToEnglish[s.name];
     if (tmp == null) return null;
     return tmp[number];
   }
@@ -2911,7 +2911,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   getAdverbString(s:Sort) : string
   {
-    var tmp:string = this.adverbSortToEnglish[s.name];
+    let tmp:string = this.adverbSortToEnglish[s.name];
     return tmp;
   }
 

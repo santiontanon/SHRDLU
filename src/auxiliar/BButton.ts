@@ -88,7 +88,7 @@ class BButtonTransparent extends BButton {
     {
         ctx.save();
         if (!this.enabled) alpha /= 3;
-        var f:number = (0.5+0.3*Math.sin((this.cycle)*0.3));
+        let f:number = (0.5+0.3*Math.sin((this.cycle)*0.3));
         ctx.fillStyle = generateRGBColor(192, 192, 192);
         ctx.globalAlpha = alpha;
         switch(this.status) {
