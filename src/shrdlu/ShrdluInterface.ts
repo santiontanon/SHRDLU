@@ -223,7 +223,7 @@ function generateDebugLog(app:A4EngineApp) : string {
     let newline:string = "\n";
     let tab:string = "\t";
     let mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
-    mailContent += "Session: " + getIDFromSessionToken(app.getGame().getToken()) + newline + newline;
+    mailContent += "Session: " + getIDFromSessionToken(app.getGame().serverToken) + newline + newline;
     mailContent += "Please email this file to santi.ontanon@gmail.com to help improve this game!" + newline + newline;
     for(let m of app.game.messages) {
         mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
@@ -240,7 +240,7 @@ function generateDebugLog(app:A4EngineApp) : string {
 }
 
 function generateDebugLogForDownload(app:A4EngineApp) {
-    const mailContent: string = generateDebugLog(app);
+    let mailContent: string = generateDebugLog(app);
 
     /*
     // method 1: mailto
@@ -256,16 +256,6 @@ function generateDebugLogForDownload(app:A4EngineApp) {
     downloadStringAsFile(mailContent, "debug-log.txt")
 }
 
-// extract the Session ID (UUID) from the server-provided authentication token
-function getIDFromSessionToken(token:string) {
-    try {
-        const decoded = token.split('.')[1].replace('-', '+').replace('_', '/');
-        const json = JSON.parse((<any>window).atob(decoded));
-        return json.sessionID;
-    } catch (e) {
-        return '';
-    }
-}
 
 function downloadStringAsFile(s:string, fileName:string) 
 {

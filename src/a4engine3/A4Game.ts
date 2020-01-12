@@ -165,7 +165,7 @@ class A4Game {
         this.gameTitle = xml.getAttribute("title");
         this.gameSubtitle = xml.getAttribute("subtitle");
 
-        this.setToken(xml.getAttribute("token") || '');
+        this.serverToken = xml.getAttribute("serverToken") || '';
 
         console.log("game name: " + this.gameName);
         console.log("game title: " + this.gameTitle);
@@ -729,7 +729,7 @@ class A4Game {
         if (this.gameSubtitle != null) xmlString += " subtitle=\"" + this.gameSubtitle + "\"";
         xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
         xmlString += " cycle=\"" + this.cycle +"\"";
-        xmlString += " token=\"" + this.getToken() + "\"";
+        xmlString += " serverToken=\"" + this.serverToken + "\"";
         xmlString += ">\n";
 
         if (this.gameTitleImage!=null) {
@@ -2709,17 +2709,6 @@ class A4Game {
     gameComplete:boolean = false;
     gameComplete_ending_ID:string = null;
 
-    // token is immutable after initialization
-    private _token: string = '';
-    public getToken(): string {
-        return this._token;
-    }
-    public setToken(value: string) {
-        if (!this._token) {
-            this._token = value;
-        }
-    }
-
   	game_path:string = null;
   	GLTM:GLTManager = null;
   	SFXM:SFXManager = null;
@@ -2825,8 +2814,10 @@ class A4Game {
     in_game_actions_for_log:string[][] = [];
 
     three_d_printer_recipies:[string, string[]][];
-    //</shrdlu-specific>
 
+    // serverToken is immutable after initialization
+    serverToken: string = '';
+    //</shrdlu-specific>
 }
 
 

@@ -362,50 +362,6 @@ class A4EngineApp {
         return this.game;
     }
 
-    // get a new Session ID in a token and assign it to this game
-    private static assignNewSessionID(game: A4Game) {
-        A4EngineApp.requestTokenFromServer((err, token) => {
-           if (err) {
-               console.log(err);
-           } else if (token && game) {
-               game.setToken(token);
-           }
-        });
-    }
-
-    // requests from the server an authenticated token with a new UUID for this gameplay session
-    private static requestTokenFromServer(callback: (err: string, token: string) => void) {
-        const xhr = ((<any>window).XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-        xhr.onload = function () {
-            if (this.status === 200) {
-                const json = JSON.parse(this.response);
-                if (json.hasOwnProperty('token')) {
-                    return callback(null, json.token);
-                }
-            }
-            return callback('Could not retrieve token', null);
-        };
-        xhr.open("GET", 'session');
-        xhr.send();
-    }
-
-    private writeLogToServer() {
-        const token = this.game.getToken();
-        if (!token) {
-            return;
-        }
-        const xhr = ((<any>window).XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-        xhr.onload = function () {
-            if (this.status !== 201) {
-                console.log('Could not record debug log to server');
-            }
-            this.lastServerWrite = (new Date).getTime();
-        };
-        xhr.open("POST", 'session');
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.send('data=' + generateDebugLog(this));
-    }
 
     intro_cycle(k:KeyboardState) : number
     {    
@@ -680,7 +636,7 @@ class A4EngineApp {
 
                 app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
                 app.game.finishLoadingGame(null, this);
-                A4EngineApp.assignNewSessionID(app.game);
+                if (this.writeLogsToServer) assignNewSessionID(app.game);
 
                 return A4ENGINE_STATE_ACT1INTRO;
             }
@@ -950,10 +906,10 @@ class A4EngineApp {
                 //<SHRDLU-specific>
 
                 // write log to server periodically while game is being played
-                if (this.game.getToken()) {
-                    const now = (new Date).getTime();
+                if (this.writeLogsToServer && this.game.serverToken) {
+                    let now:number = (new Date).getTime();
                     if (now - this.lastServerWrite > 600000) { // 10 min
-                        this.writeLogToServer();
+                        writeLogToServer(this.game);
                         this.lastServerWrite = now;
                     }
                 }
@@ -1851,8 +1807,6 @@ class A4EngineApp {
     previous_state:number;
     state_cycle:number;
 
-    lastServerWrite:number = 0;
-
     // intro:
     intro_logoaux:HTMLCanvasElement = null;
     intro_logofader:FizzleFade = null;
@@ -2011,4 +1965,7 @@ class A4EngineApp {
 
     // AI debugger:
     SHRDLU_AI_debugger:RuleBasedAIDebugger = new RuleBasedAIDebugger();
+
+    writeLogsToServer:boolean = false;
+    lastServerWrite:number = 0;
 }
