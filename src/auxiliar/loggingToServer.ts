@@ -40,7 +40,7 @@ function writeLogToServer(game:A4Game) {
     xhr.open("POST", 'session');
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send('data=' + generateDebugLog(this));
+    xhr.send('data=' + generateDebugLog(game, true));
 }
 
 

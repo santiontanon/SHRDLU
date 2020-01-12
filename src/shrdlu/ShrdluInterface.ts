@@ -218,29 +218,31 @@ function drawFadeInOverlay(f:number)
     }
 }
 
-function generateDebugLog(app:A4EngineApp) : string {
+function generateDebugLog(game:A4Game, writeLogsToServer:boolean) : string {
     //let newline:string = "%0a";    // we need this, if we append the text to the page at the end
     let newline:string = "\n";
     let tab:string = "\t";
     let mailContent:string = "SHRDLU "+SHRDLU_VERSION+" log:" + newline;
-    mailContent += "Session: " + getIDFromSessionToken(app.getGame().serverToken) + newline + newline;
+    if (writeLogsToServer) {
+        mailContent += "Session: " + getIDFromSessionToken(game.serverToken) + newline + newline;
+    }
     mailContent += "Please email this file to santi.ontanon@gmail.com to help improve this game!" + newline + newline;
-    for(let m of app.game.messages) {
+    for(let m of game.messages) {
         mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     mailContent += newline + "In-game Actions:" + newline;
-    for(let m of app.game.in_game_actions_for_log) {
+    for(let m of game.in_game_actions_for_log) {
         mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     mailContent += newline + "Error messages:" + newline;
-    for(let m of app.game.error_messages_for_log) {
+    for(let m of game.error_messages_for_log) {
         mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     return mailContent;
 }
 
-function generateDebugLogForDownload(app:A4EngineApp) {
-    let mailContent: string = generateDebugLog(app);
+function generateDebugLogForDownload(game:A4Game) {
+    let mailContent: string = generateDebugLog(game, false);
 
     /*
     // method 1: mailto

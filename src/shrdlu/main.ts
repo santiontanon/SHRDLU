@@ -126,8 +126,8 @@ function mouseMove(event: MouseEvent)
 
 function waitForResourcesLoop(timestamp: number) {
 
-    if (app.getGame().imagesLoaded()) {
-        app.getGame().finishLoadingGame(null, app);
+    if (app.game.imagesLoaded()) {
+        app.game.finishLoadingGame(null, app);
         requestAnimationFrame(gameLoop);
     } else {
         requestAnimationFrame(waitForResourcesLoop);

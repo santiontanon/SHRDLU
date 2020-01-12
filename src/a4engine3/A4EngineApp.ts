@@ -357,12 +357,6 @@ class A4EngineApp {
     }
 
 
-    getGame() : A4Game
-    {
-        return this.game;
-    }
-
-
     intro_cycle(k:KeyboardState) : number
     {    
         let textShowTime:number = 600;
@@ -747,7 +741,7 @@ class A4EngineApp {
             menuItems.push("Generate Debug Log");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                    generateDebugLogForDownload(<A4EngineApp>arg);
+                    generateDebugLogForDownload((<A4EngineApp>arg).game);
                    });
 
             if (this.game.allowSaveGames) {
@@ -1159,7 +1153,7 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
-                            generateDebugLogForDownload(<A4EngineApp>arg);
+                            generateDebugLogForDownload((<A4EngineApp>arg).game);
                            });
                     menuItems.push("No thanks");
                     menuCallbacks.push(
@@ -1251,7 +1245,7 @@ class A4EngineApp {
                         menuItems.push("Generate Debug Log");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {    
-                                generateDebugLogForDownload(<A4EngineApp>arg);
+                                generateDebugLogForDownload((<A4EngineApp>arg).game);
                                });
                         menuItems.push("No thanks");
                         menuCallbacks.push(
@@ -1330,7 +1324,7 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
-                            generateDebugLogForDownload(<A4EngineApp>arg);
+                            generateDebugLogForDownload((<A4EngineApp>arg).game);
                            });
                     menuItems.push("Title Screen");
                     menuCallbacks.push(
