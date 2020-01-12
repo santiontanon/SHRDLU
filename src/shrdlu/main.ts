@@ -48,9 +48,8 @@ window.onload = () => {
     // get the canvas and set double buffering:
     canvas = <HTMLCanvasElement>document.getElementById('cnvs');
     ctx = canvas.getContext("2d");
+    // replaces deprecated: ctx.mozImageSmoothingEnabled and ctx.webkitImageSmoothingEnabled
     ctx.imageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
 
     app = new A4EngineApp(WINDOW_WIDTH, WINDOW_HEIGHT);
     k = new KeyboardState(-1);

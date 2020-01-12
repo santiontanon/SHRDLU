@@ -165,6 +165,8 @@ class A4Game {
         this.gameTitle = xml.getAttribute("title");
         this.gameSubtitle = xml.getAttribute("subtitle");
 
+        this.setToken(xml.getAttribute("token") || '');
+
         console.log("game name: " + this.gameName);
         console.log("game title: " + this.gameTitle);
         console.log("game subtitle: " + this.gameSubtitle);
@@ -727,6 +729,7 @@ class A4Game {
         if (this.gameSubtitle != null) xmlString += " subtitle=\"" + this.gameSubtitle + "\"";
         xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
         xmlString += " cycle=\"" + this.cycle +"\"";
+        xmlString += " token=\"" + this.getToken() + "\"";
         xmlString += ">\n";
 
         if (this.gameTitleImage!=null) {
@@ -2705,6 +2708,17 @@ class A4Game {
     cycles_without_redrawing:number = 0;
     gameComplete:boolean = false;
     gameComplete_ending_ID:string = null;
+
+    // token is immutable after initialization
+    private _token: string = '';
+    public getToken(): string {
+        return this._token;
+    }
+    public setToken(value: string) {
+        if (!this._token) {
+            this._token = value;
+        }
+    }
 
   	game_path:string = null;
   	GLTM:GLTManager = null;

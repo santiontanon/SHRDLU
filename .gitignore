@@ -1,2 +1,18 @@
-.DS_Store
+# OS & Cache Files
+.DS_Store?
+Thumbs.db
+.Trashes
+*.swp
+*~*
+*.env
+!misc/sample.env
 
+# NPM
+node_modules
+package-lock.json
+npm-debug.log
+
+# Build Output and User Logs
+built
+server/logs/**
+.idea
