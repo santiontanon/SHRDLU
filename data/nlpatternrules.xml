@@ -3607,6 +3607,24 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C3, SUBJECT)"/> 
 
+    <NLPattern name="perf.q.query-noun-adj"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #cons(ADJ, X)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 ('what'|'which') noun(NOUN, NOUN_N) verb('verb.be'[symbol], N, P, [present-tense])
+			   		 adjective(ADJ)
+			   		 ('!'|'?')*"/> 
+
+    <NLPattern name="perf.q.query-noun-not-adj"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #not(#cons(ADJ, X))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']] 
+			   		 ('what'|'which') noun(NOUN, NOUN_N) verb('verb.be'[symbol], N, P, [present-tense])
+			   		 'not' adjective(ADJ)
+			   		 ('!'|'?')*"/> 
+
 	<!-- questions where verbs are missing arguments --> 
     <NLPattern name="perf.q.query-verb-missing-argument"
     		   head="perf.q.query(LISTENER, QUERY_V, #and(character(QUERY_V), COMPLETED_VERB))"
@@ -3684,14 +3702,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefQuery(C3, QUERY_V, QUERY)"
 			   priority="200"/>
 
-    <NLPattern head="perf.q.query(LISTENER, QUERYV, relative-direction(SPEAKER, DIRECTION_SORT:[cardinal-direction], QUERYV))"			
+    <NLPattern name="perf.q.query-relative-direction"
+    		   head="perf.q.query(LISTENER, QUERYV, relative-direction(SPEAKER, DIRECTION_SORT:[cardinal-direction], QUERYV))"			
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 'which' ('direction'|'way')
 			   		 verb('verb.be'[symbol], N, P, T)
 			   		 noun(DIRECTION_SYMBOL, [singular]) #symbolToSort(DIRECTION_SYMBOL, DIRECTION_SORT)
-			   		 ('!'|'?')*"/>			   
+			   		 ('!'|'?')*"
+			   priority="150"/>	   
 
     <NLPattern name="perf.q.query-what-can-X-verb"
     		   head="perf.q.query(LISTENER, QUERYV, verb.can(SUBJECT, #cons(VERB, SUBJECT, QUERYV)))"
@@ -3728,7 +3748,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('what'|'which') noun(NOUN, NOUN_N)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
  					 adjective(ADJ) #sortParent(ADJ, ADJ_PARENT)
-					 ('!'|'?')* "/>
+					 ('!'|'?')*"
+			   priority="200"/>
 
     <NLPattern name="perf.q.query-noun-is-not-property-with-value"
     		   head="perf.q.query(LISTENER, V, #and(#cons(NOUN, V), #not(#cons(ADJ_PARENT:[property-with-value], V, ADJ))))"
@@ -3738,7 +3759,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('what'|'which') noun(NOUN, NOUN_N)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'not'
  					 adjective(ADJ) #sortParent(ADJ, ADJ_PARENT)
-					 ('!'|'?')* "/>
+					 ('!'|'?')*"
+			   priority="200"/>
 
 	<!-- example: what do you do? --> 
     <NLPattern head="perf.q.query(LISTENER, QUERY, role(OBJECT, QUERY))"			

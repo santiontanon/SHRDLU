@@ -257,6 +257,8 @@ var ce16:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('door2'
 var ce17:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty', o.getSort("#id")),
                                               null, 30, 
                                               [Term.fromString("robot('qwerty'[#id])",o),
+                                               Term.fromString("small('qwerty'[#id])",o),
+                                               Term.fromString("color('qwerty'[#id], 'white'[white])",o),
                                                Term.fromString("name('qwerty'[#id], 'qwerty'[symbol])",o),
                                                Term.fromString("space.at('etaoin'[#id],'room2'[#id])",o)]);
 
@@ -313,7 +315,7 @@ NLParseTest("the key that is red", o.getSort("nounPhrase"), context, "nounPhrase
 NLParseTest("the key that looks red", o.getSort("nounPhrase"), context, "nounPhrase(V0:'key'[key], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:adjective(V0, V6:'red'[red]), V7:noun(V0, V1))))");
 NLParseTest("anyone else", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pronoun.anyone.else'[symbol], V1:[singular], V2:[third-person], V3:indefinite-pronoun(V0, V1, V4:[gender], V2))");
 NLParseTest("the David", o.getSort("nounPhrase"), context, "nounPhrase(V0:'david'[symbol], V1:[singular], V2:[third-person], V3:proper-noun(V0, V1))");
-
+NLParseTest("the small white robot", o.getSort("nounPhrase"), context, "nounPhrase(V0:'robot'[robot], V1:[singular], [third-person], #and(the(V0, V1), #and(adjective(V0, 'small'[small]), #and(adjective(V0, 'white'[white]), noun(V0, V1)))))");
 
 // tests with dereference to context:
 NLParseTest("David", o.getSort("performative"), context, null);  // this one should not work, since you cannot call yourself!
@@ -1383,13 +1385,15 @@ NLParseTestUnifyingListener("how many meters away is qwerty?", o.getSort("perfor
 NLParseTestUnifyingListener("which other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 NLParseTestUnifyingListener("which other humans are in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 
+
 // For version 3.6:
 NLParseTestUnifyingListener("what is not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #not(verb.support('5'[#id], V)))"); 
 NLParseTestUnifyingListener("which objects are rectangular?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), shape(V, 'rectangular'[rectangular])))"); 
 NLParseTestUnifyingListener("which objects are not rectangular?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), #not(shape(V, 'rectangular'[rectangular]))))");
 NLParseTestUnifyingListener("which objects are supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), verb.support('5'[#id], V)))"); 
 NLParseTestUnifyingListener("which objects are not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), #not(verb.support('5'[#id], V))))"); 
-
+NLParseTestUnifyingListener("which blocks are small?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(block(V), small(V)))"); 
+NLParseTestUnifyingListener("which blocks are not small?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(block(V), #not(small(V))))"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

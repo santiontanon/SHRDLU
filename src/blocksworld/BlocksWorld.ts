@@ -206,13 +206,13 @@ class ShrdluBlocksWorld {
 		table.ID = "table";
 		this.objects.push(table);
 
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_LARGE, 
 										  0, 4, 10,
 										  8, 12, 8));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_SMALL, 
 	 									  4, 4, 4,
 	 									  4, 4, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
 									 	  8, 4, 28,
 									 	  8, 12, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
