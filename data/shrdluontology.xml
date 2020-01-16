@@ -676,6 +676,7 @@
     <sort name="verb.reboot" super="verb"/>
     <sort name="verb.support" super="relation-verb,#stateSort"/>
 
+    <sort name="verb.hold" super="verb.have"/>
     <sort name="verb.like" super="relation-verb"/>
     <sort name="verb.love" super="verb.like"/>
     <sort name="verb.hate" super="relation-verb"/>

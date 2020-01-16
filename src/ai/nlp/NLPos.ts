@@ -1666,6 +1666,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.collide-with", "run against","runs against","ran against","run against","running against", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "pick up","picks up","picked up","picked up","picking up", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "grab","grabs","grabbed","grabbed","grabbing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("action.take", "grasp","grasps","grasped","grasped","grasping", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "carry","carries","carried","carried","carrying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.take-out", "remove","removes","removed","removed","removing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.take-out","out", "take","takes","took","taken","taking", false, multitokens_raw, o);
@@ -1753,6 +1754,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.heal", "heal","heals","healed","healed","healing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.hear", "hear","hears","heard","heared","hearing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.help", "help","helps","helped","helped","helping", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.hold", "hold","holds","held","held","holding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.injure", "injure","injures","injured","injured","injuring", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.instruct", "instruct","instructs","instructed","instructed","instructing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.investigate", "investigate","investigates","investigated","investigated","investigating", false, multitokens_raw, o);

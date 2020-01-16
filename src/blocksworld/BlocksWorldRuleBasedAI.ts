@@ -98,7 +98,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		}
 
 		if (this.world.objectInArm != null) {
-			this.addTermToPerception(Term.fromString("verb.have('"+this.selfID+"'[#id], '"+this.world.objectInArm.ID+"'[#id])", this.o));
+			this.addTermToPerception(Term.fromString("verb.hold('"+this.selfID+"'[#id], '"+this.world.objectInArm.ID+"'[#id])", this.o));
 			this.addTermToPerception(Term.fromString("space.at('"+this.world.objectInArm.ID+"'[#id], '"+this.world.shrdluArm.ID+"'[#id])", this.o));
 		}
 	}

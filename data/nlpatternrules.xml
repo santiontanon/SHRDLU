@@ -3762,6 +3762,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 ('!'|'?')*"
 			   priority="200"/>
 
+    <NLPattern name="perf.q.query-what-is-x-spatial-prep"
+    		   head="perf.q.query(LISTENER, V, #cons(RELATION:[spatial-relation], OBJECT, V))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X2, N2, P2, C2)
+ 					 preposition(RELATION)
+					 ('!'|'?')*
+					 #derefFromContext(C2, OBJECT)"/>
+
 	<!-- example: what do you do? --> 
     <NLPattern head="perf.q.query(LISTENER, QUERY, role(OBJECT, QUERY))"			
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

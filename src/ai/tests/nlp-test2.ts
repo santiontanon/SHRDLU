@@ -1385,7 +1385,6 @@ NLParseTestUnifyingListener("how many meters away is qwerty?", o.getSort("perfor
 NLParseTestUnifyingListener("which other human is in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 NLParseTestUnifyingListener("which other humans are in the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(!=(V, V6:'1'[#id]), #and(human(V), space.at(V,'room1'[#id]))))");
 
-
 // For version 3.6:
 NLParseTestUnifyingListener("what is not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #not(verb.support('5'[#id], V)))"); 
 NLParseTestUnifyingListener("which objects are rectangular?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), shape(V, 'rectangular'[rectangular])))"); 
@@ -1394,6 +1393,8 @@ NLParseTestUnifyingListener("which objects are supported by the crate?", o.getSo
 NLParseTestUnifyingListener("which objects are not supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(object(V), #not(verb.support('5'[#id], V))))"); 
 NLParseTestUnifyingListener("which blocks are small?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(block(V), small(V)))"); 
 NLParseTestUnifyingListener("which blocks are not small?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(block(V), #not(small(V))))"); 
+NLParseTestUnifyingListener("what are you holding?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, verb.hold(X, V))");
+NLParseTestUnifyingListener("what is the crate on?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, space.directly.on.top.of('5'[#id], V))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
