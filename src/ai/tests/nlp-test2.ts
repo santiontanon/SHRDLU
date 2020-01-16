@@ -1395,6 +1395,8 @@ NLParseTestUnifyingListener("which blocks are small?", o.getSort("performative")
 NLParseTestUnifyingListener("which blocks are not small?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, #and(block(V), #not(small(V))))"); 
 NLParseTestUnifyingListener("what are you holding?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, verb.hold(X, V))");
 NLParseTestUnifyingListener("what is the crate on?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, space.directly.on.top.of('5'[#id], V))");
+NLParseTestUnifyingListener("tell me what are you holding", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, verb.hold(X, V))");
+NLParseTestUnifyingListener("tell me what you are holding", o.getSort("performative"),  context, 'etaoin', "perf.q.query(X:'etaoin'[#id], V, verb.hold(X, V))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
