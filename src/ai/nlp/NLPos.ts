@@ -1254,6 +1254,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("course", "path", o, multitokens_raw);
   this.addStandardNounPOS("crate", "crate", o, multitokens_raw);
   this.addStandardNounPOS("crater", "crater", o, multitokens_raw);
+  this.addStandardNounPOS("cube", "cube", o, multitokens_raw);
   this.addStandardNounPOS("cup", "cup", o, multitokens_raw);    
   this.addStandardNounPOS("current time", "time.current", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("damage", "damage", Term.fromString("noun('damage'[damage], [singular])", o), 1.0));
@@ -1797,6 +1798,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.repair", "repair","repairs","repaired","repaired","repairing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reboot", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.rest-on", "rest on","rests on","rested on","rested on","resting on", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
@@ -1854,6 +1856,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.wake-up","up", "wake","wakes","woke","woken","waking", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.take","up", "pick","picks","picked","picked","picking", false, multitokens_raw, o);
 
   // adjectives (synonims) (added first, so NLG does not used them):
   this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));

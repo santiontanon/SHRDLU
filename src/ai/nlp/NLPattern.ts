@@ -561,7 +561,7 @@ class NLPattern {
 		let ownsRelation:Term = null;
 		let otherRelations:Term[] = [];
 		let nounTerm:Term = null;
-		let properNounTerm:Term = null;	
+		//let properNounTerm:Term = null;	
 		let adverbs:Term[] = [];
 		let adjectives:Sort[] = [];	// adjectives are filled later, since we neeed queryFunctor
 		let demonstrativeDeterminer:Term = null;
@@ -602,7 +602,10 @@ class NLPattern {
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("noun"))) {
 					nounTerm = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("proper-noun"))) {
-					properNounTerm = (<TermTermAttribute>t).term;
+					//properNounTerm = (<TermTermAttribute>t).term;
+					// if there is a proper noun, this is probably not a query...
+					this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
+					return null;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("demonstrative-pronoun"))) {
 					demonstrativePronoun = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("relation"))) {
@@ -838,9 +841,11 @@ class NLPattern {
 				}
 			}
 		}
+		/*
 		if (properNounTerm != null && o.getSort("#id").is_a(queryVariable.sort)) {
 			queryTerms.push(new TermTermAttribute(new Term(o.getSort("name"),[queryVariable,properNounTerm.attributes[0]])));
 		}
+		*/
 		// list of entities for which we have added a not(queryVariable == entity) term:
 		let nottedEntities:string[] = [];
 		if (elsePresent) {

@@ -260,6 +260,7 @@
     <sort name="box" super="object"/>
     <sort name="pyramid" super="object"/>
     <sort name="block" super="object"/>
+    <sort name="cube" super="block"/>
 
     <sort name="shape" super="property-with-value"/>
     <sort name="shape.flat" super="shape"/>
@@ -675,6 +676,7 @@
     <sort name="verb.search" super="verb"/>
     <sort name="verb.reboot" super="verb"/>
     <sort name="verb.support" super="relation-verb,#stateSort"/>
+    <sort name="verb.rest-on" super="relation-verb,#stateSort"/>
 
     <sort name="verb.hold" super="verb.have"/>
     <sort name="verb.like" super="relation-verb"/>

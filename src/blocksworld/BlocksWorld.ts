@@ -1,4 +1,5 @@
 var SHRDLU_BLOCKTYPE_BLOCK:string = "block";
+var SHRDLU_BLOCKTYPE_CUBE:string = "cube";	// sub type of block
 var SHRDLU_BLOCKTYPE_PYRAMID:string = "pyramid";
 var SHRDLU_BLOCKTYPE_BOX:string = "box";
 var SHRDLU_BLOCKTYPE_TABLE:string = "table";
@@ -46,6 +47,7 @@ class ShrdluBlock {
 		this.color = color;
 		this.size = size;
 		if (type == SHRDLU_BLOCKTYPE_BLOCK ||
+			type == SHRDLU_BLOCKTYPE_CUBE ||
 			type == SHRDLU_BLOCKTYPE_BOX) {
 			this.shape = "rectangular";
 		} else if (type == SHRDLU_BLOCKTYPE_PYRAMID) {
@@ -66,6 +68,7 @@ class ShrdluBlock {
 	{
 		switch(this.type) {
 		case SHRDLU_BLOCKTYPE_BLOCK:
+		case SHRDLU_BLOCKTYPE_CUBE:
 		case SHRDLU_BLOCKTYPE_TABLE:
 			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
 			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
@@ -209,16 +212,16 @@ class ShrdluBlocksWorld {
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_LARGE, 
 										  0, 4, 10,
 										  8, 12, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_SMALL, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_RED, BW_SIZE_SMALL, 
 	 									  4, 4, 4,
 	 									  4, 4, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
 									 	  8, 4, 28,
 									 	  8, 12, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
 									 	  14, 4, 10,
 									 	  8, 8, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
 									 	  12, 4, 0,
 									 	  8, 8, 8));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BOX, MSX_COLOR_WHITE, BW_SIZE_LARGE, 
