@@ -288,7 +288,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1408,11 +1408,14 @@ NLParseTestUnifyingListener("are any white keys supported by the crate?", o.getS
 NLParseTestUnifyingListener("are any white keys resting on the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(key(X), #and(color(X, 'white'[white]), verb.rest-on(X, '5'[#id]))))");
 NLParseTestUnifyingListener("what is the crate supported by?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, verb.support(V, '5'[#id]))");
 NLParseTestUnifyingListener("how many colors does the crate have?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, color('5'[#id], X))");
-*/
-
 NLParseTestUnifyingListener("is the top of the white key clear?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
 NLParseTestUnifyingListener("the top of the white key is clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
 NLParseTestUnifyingListener("the top of the white key is not clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], #not(top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear])))");
+NLParseTestUnifyingListener("now put the white key in the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
+NLParseTestUnifyingListener("can pyramids roll?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll(HO)), pyramid(HO))");
+NLParseTestUnifyingListener("can a cube roll of the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll-of(HO, '5'[#id])), cube(HO))");
+NLParseTestUnifyingListener("can a table support a pyramid?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can('hypothetical-object1'[#id],verb.support('hypothetical-object1'[#id], 'hypothetical-object2'[#id])), #and(table('hypothetical-object1'[#id]), pyramid('hypothetical-object2'[#id])))");
+
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");

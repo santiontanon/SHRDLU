@@ -261,11 +261,13 @@
     <sort name="pyramid" super="object"/>
     <sort name="block" super="object"/>
     <sort name="cube" super="block"/>
+    <sort name="sphere" super="object"/>
 
     <sort name="shape" super="property-with-value"/>
     <sort name="shape.flat" super="shape"/>
     <sort name="rectangular" super="shape"/>
     <sort name="circular" super="shape"/>
+    <sort name="spherical" super="shape"/>
     <sort name="pointed" super="shape"/>
 
     <sort name="body" super="object"/> 
@@ -650,6 +652,8 @@
     <sort name="verb.damage" super="verb"/>
     <sort name="verb.injure" super="verb.damage"/>
     <sort name="verb.rotate" super="verb"/>
+    <sort name="verb.roll" super="verb.rotate"/>
+    <sort name="verb.roll-of" super="verb.roll"/>
     <sort name="verb.investigate" super="verb"/>
     <sort name="verb.read" super="verb"/>
     <sort name="verb.save" super="verb"/>

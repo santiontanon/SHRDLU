@@ -1542,6 +1542,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("spacesuit", "spacesuit", o, multitokens_raw);
   this.addStandardNounPOS("space suit", "spacesuit", o, multitokens_raw);
   this.addStandardNounPOS("spade", "spade", o, multitokens_raw);
+  this.addStandardNounPOS("sphere", "sphere", o, multitokens_raw);
   this.addStandardNounPOS("star", "star", o, multitokens_raw);
   this.addStandardNounPOS("star system", "star-system", o, multitokens_raw);
   this.addStandardNounPOS("starship", "spaceship", o, multitokens_raw);
@@ -1800,6 +1801,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reboot", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rest-on", "rest on","rests on","rested on","rested on","resting on", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.roll", "roll","rolls","rolled","rolled","rolling", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.roll-of", "roll of","rolls of","rolled of","rolled of","rolling of", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);
@@ -1954,6 +1957,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("too small", "too-small", Term.fromString("adjective('too-small'[too-small])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("safe", "property.safe", Term.fromString("adjective('property.safe'[property.safe])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("south", "south", Term.fromString("adjective('south'[south])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("spherical", "spherical", Term.fromString("adjective('spherical'[spherical])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("strange", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));

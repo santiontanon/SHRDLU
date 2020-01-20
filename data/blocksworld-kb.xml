@@ -144,4 +144,20 @@
 
 	<sentence provenance="background" sentence="~verb.support(X, Y); top-clear-status(X, 'clear-status-not-clear'[clear-status-not-clear])"/>
 
+	<sentence provenance="background" sentence="~block(X); ~object(Y); verb.can(X, verb.support(X, Y))"/>
+	<sentence provenance="background" sentence="~box(X); ~object(Y); verb.can(X, verb.support(X, Y))"/>
+	<sentence provenance="background" sentence="~table(X); ~object(Y); verb.can(X, verb.support(X, Y))"/>
+	<sentence provenance="background" sentence="~pyramid(X); ~object(Y); ~verb.can(X, verb.support(X, Y))"/>
+	<sentence provenance="background" sentence="~sphere(X); ~object(Y); ~verb.can(X, verb.support(X, Y))"/>
+
+	<sentence provenance="background" sentence="~block(X); ~verb.can(X, verb.roll(X))"/>
+	<sentence provenance="background" sentence="~box(X); ~verb.can(X, verb.roll(X))"/>
+	<sentence provenance="background" sentence="~table(X); ~verb.can(X, verb.roll(X))"/>
+	<sentence provenance="background" sentence="~pyramid(X); ~verb.can(X, verb.roll(X))"/>
+	<sentence provenance="background" sentence="~sphere(X); verb.can(X, verb.roll(X))"/>
+
+	<sentence provenance="background" sentence="~verb.can(X, verb.roll(X)); ~object(Y); verb.can(X, verb.roll-of(X, Y))"/>
+	<sentence provenance="background" sentence="verb.can(X, verb.roll(X)); ~object(Y); ~verb.can(X, verb.roll-of(X, Y))"/>
+
+
 </knowledgeBase>
