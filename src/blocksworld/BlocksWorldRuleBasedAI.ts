@@ -82,17 +82,24 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 
 			if (object.ID != "shrdlu-arm") {
+				let clearTop:boolean = true;
 				for(let object2 of this.world.objects) {
 					if (object != object2) {
-						if (object.isInside(object2)) {
-							this.addTermToPerception(Term.fromString("space.inside.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
+						if (object2.isInside(object)) {
+							this.addTermToPerception(Term.fromString("space.inside.of('"+object2.ID+"'[#id], '"+object.ID+"'[#id])", this.o));
 						}
 
-						if (object.isOnTopOf(object2)) {
-							this.addTermToPerception(Term.fromString("space.directly.on.top.of('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
-							this.addTermToPerception(Term.fromString("space.directly.under('"+object2.ID+"'[#id], '"+object.ID+"'[#id])", this.o));
+						if (object2.isOnTopOf(object)) {
+							clearTop = false;
+							this.addTermToPerception(Term.fromString("space.directly.on.top.of('"+object2.ID+"'[#id], '"+object.ID+"'[#id])", this.o));
+							this.addTermToPerception(Term.fromString("space.directly.under('"+object.ID+"'[#id], '"+object2.ID+"'[#id])", this.o));
 						}
 					}
+				}
+				if (clearTop) {
+					this.addTermToPerception(Term.fromString("top-clear-status('"+object.ID+"'[#id], 'clear-status-clear'[clear-status-clear])", this.o));
+				} else {
+					this.addTermToPerception(Term.fromString("top-clear-status('"+object.ID+"'[#id], 'clear-status-not-clear'[clear-status-not-clear])", this.o));
 				}
 			}
 		}

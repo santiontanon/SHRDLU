@@ -30,7 +30,7 @@ class BWPutIn_IntentionAction extends IntentionAction {
 
 			// Check if we are holding the target object:
 			if (world.objectInArm == null || world.objectInArm.ID != objectID) {
-				denyrequestCause = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+world.objectInArm.ID+"'[#id]))", ai.o);
+				denyrequestCause = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+objectID+"'[#id]))", ai.o);
 				continue;
 			}
 

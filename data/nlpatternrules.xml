@@ -610,12 +610,28 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         'the' noun(X2, [singular]) 'of'
 			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X3) ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"/>
+	<NLPattern name="inform-property-with-value-not"
+			   head="perf.inform(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         'the' noun(X2, [singular]) 'of'
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X3) ('!'|'.')* 
+			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-property-with-value-saxon"
 			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		         nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
 			   		 verb('verb.be'[symbol], N, P, T) adjective(X3)
+			   		 ('!'|'.')* 
+			   		 #derefFromContext(C, OBJECT)"
+			   priority="200"/>
+	<NLPattern name="inform-property-with-value-saxon-not"
+			   head="perf.inform(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		         nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
+			   		 verb('verb.be'[symbol], N, P, T) 'not' adjective(X3)
 			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"
 			   priority="200"/>
@@ -1291,6 +1307,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(X2, [singular]) #sortParent(X2, X2_PARENT) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
+	<NLPattern name="perf.q.predicate-property-with-value2"
+			   head="perf.q.predicate(LISTENER, #cons(PROPERTY:[property-with-value], SUBJECT, X3:[property-with-value]))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 'the' noun(PROPERTY, PN) 'of'
+			   		 nounPhrase(X2, N2, P2, C2) 
+			   		 ['not'] 
+			   		 adjective(X3) ('!'|'?')*
+			   		 #derefFromContext(C2, SUBJECT)"/>			   
 	<NLPattern name="perf.q.predicate-role"
 			   head="perf.q.predicate(LISTENER, role(SUBJECT, X2:[role]))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -6227,6 +6254,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 verb('verb.do'[symbol], N2, P2, [present-tense]) nounPhrase(X2, N2, P2, C2) 'have' ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)
 		   		 	 #derefFromContext(C2, OWNER)"/>
+    <NLPattern name="perf.q.howmany-X-Y-haveable-property"
+    		   head="perf.q.howmany(LISTENER, V, #cons(PROPERTY:[property-with-value], OWNER, V))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' noun(PROPERTY, PN)
+		   		 	 verb('verb.do'[symbol], N2, P2, [present-tense]) nounPhrase(X2, N2, P2, C2) 'have' ('!'|'?')* 
+		   		 	 #derefFromContext(C2, OWNER)"
+		   	   priority="200"/>
     <NLPattern name="perf.q.howmany-X-are-Y"
     		   head="perf.q.howmany(LISTENER, V, #and(#cons(A, V), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

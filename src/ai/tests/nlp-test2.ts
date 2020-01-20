@@ -288,7 +288,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1407,6 +1407,19 @@ NLParseTestUnifyingListener("are any white keys on the crate?", o.getSort("perfo
 NLParseTestUnifyingListener("are any white keys supported by the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(key(X), #and(color(X, 'white'[white]), verb.support('5'[#id], X))))");
 NLParseTestUnifyingListener("are any white keys resting on the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(key(X), #and(color(X, 'white'[white]), verb.rest-on(X, '5'[#id]))))");
 NLParseTestUnifyingListener("what is the crate supported by?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], V, verb.support(V, '5'[#id]))");
+NLParseTestUnifyingListener("how many colors does the crate have?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, color('5'[#id], X))");
+*/
+
+NLParseTestUnifyingListener("is the top of the white key clear?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
+NLParseTestUnifyingListener("the top of the white key is clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
+NLParseTestUnifyingListener("the top of the white key is not clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], #not(top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear])))");
+
+// NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

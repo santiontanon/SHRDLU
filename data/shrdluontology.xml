@@ -1024,6 +1024,11 @@
     <sort name="full" super="high,fill-level"/>
     <sort name="empty" super="low,fill-level,property,#stateSort"/>
 
+    <sort name="top-clear-status" super="property-with-value,#stateSort"/>
+
+    <sort name="clear-status-clear" super="property-with-value"/>
+    <sort name="clear-status-not-clear" super="property-with-value"/>
+
     <sort name="luminiscent" super="property"/>
 
     <sort name="oxygen-level" super="fill-level,property-with-value"/>

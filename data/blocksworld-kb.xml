@@ -137,4 +137,11 @@
 	<sentence provenance="background" sentence="~verb.rest-on(X, Y); verb.support(Y, X)"/>
 	<sentence provenance="background" sentence="verb.rest-on(X, Y); ~verb.support(Y, X)"/>
 
+	<sentence provenance="background" sentence="top-clear-status(X, 'clear-status-clear'[clear-status-clear]); 
+												top-clear-status(X, 'clear-status-not-clear'[clear-status-not-clear])"/>
+	<sentence provenance="background" sentence="~top-clear-status(X, 'clear-status-clear'[clear-status-clear]); 
+												~top-clear-status(X, 'clear-status-not-clear'[clear-status-not-clear])"/>
+
+	<sentence provenance="background" sentence="~verb.support(X, Y); top-clear-status(X, 'clear-status-not-clear'[clear-status-not-clear])"/>
+
 </knowledgeBase>

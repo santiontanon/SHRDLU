@@ -1581,6 +1581,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("tire", "tire", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("today", "time.today", Term.fromString("noun('time.today'[time.today], [singular])", o), 1.0));
   this.addStandardNounPOS("toilet", "toilet", o, multitokens_raw);
+  this.addStandardNounPOS("top", "top-clear-status", o, multitokens_raw);
   this.addStandardNounPOS("ton", "ton", o, multitokens_raw);
   this.addStandardNounPOS("tool", "tool", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("toolbox", "toolbox", Term.fromString("noun('toolbox'[toolbox], [singular])", o), 1.0));
@@ -1895,6 +1896,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("broken", "property.broken", Term.fromString("adjective('property.broken'[property.broken])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("charged", "full", Term.fromString("adjective('full'[full])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("circular", "circular", Term.fromString("adjective('circular'[circular])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("clear", "clear-status-clear", Term.fromString("adjective('clear-status-clear'[clear-status-clear])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("not clear", "clear-status-not-clear", Term.fromString("adjective('clear-status-not-clear'[clear-status-not-clear])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("cold", "cold", Term.fromString("adjective('cold'[cold])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dangerous", "dangerous", Term.fromString("adjective('dangerous'[dangerous])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));
