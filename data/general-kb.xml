@@ -696,5 +696,12 @@
 	<sentence provenance="background" sentence="~profession(X, L, Z); ~space.at(L, L2); verb.works-at(X, L2)"/>	
 	<sentence provenance="background" sentence="~verb.lives(X, Y); ~space.inside.of(Y,Z); verb.lives(X,Z)"/>
 	<sentence provenance="background" sentence="~relation.friend(X, Y); relation.friend(Y, X)"/>
+
+	<sentence provenance="background" sentence="~small(X); size(X, 'small'[small])"/>
+	<sentence provenance="background" sentence="~size.medium(X); size(X, 'size.medium'[size.medium])"/>
+	<sentence provenance="background" sentence="~big(X); size(X, 'big'[big])"/>
+
+	<sentence provenance="background" sentence="~short(X); length(X, 'short'[short])"/>
+	<sentence provenance="background" sentence="~long(X); length(X, 'long'[long])"/>
 	
 </knowledgeBase>

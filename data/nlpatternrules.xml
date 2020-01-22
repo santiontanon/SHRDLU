@@ -3964,6 +3964,51 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')* 
     		   		 #derefFromContext(C, OBJECT)"/>
 
+    <NLPattern name="perf.q.query-how-big"
+    		   head="perf.q.query(LISTENER, QUERY, size(OBJECT2, QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['tell' 'me'] 'how' 
+			   		 'big'
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
+    <NLPattern name="perf.q.query-how-big2"
+    		   head="perf.q.query(LISTENER, QUERY, size(OBJECT2, QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['tell' 'me'] 'what' 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 'the' 'size' 'of'
+			   		 nounPhrase(X, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
+    <NLPattern name="perf.q.query-how-long"
+    		   head="perf.q.query(LISTENER, QUERY, length(OBJECT2, QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['tell' 'me'] 'how' 
+			   		 'long'
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 nounPhrase(X, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
+    <NLPattern name="perf.q.query-how-long2"
+    		   head="perf.q.query(LISTENER, QUERY, length(OBJECT2, QUERY))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
+			   		 ['tell' 'me'] 'what' 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 'the' 'length' 'of'
+			   		 nounPhrase(X, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
+
 	<!-- what is needed for question patterns -->
     <NLPattern name="perf.q.query-need-for1"
     		   head="perf.q.query(LISTENER, QUERY, verb.need-for(OBJECT, QUERY, #cons(VERB, OBJECT, NOUN_SORT)))"			
@@ -3972,7 +4017,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and') [',']]
 			   		 ['tell' 'me'] 'what' 
 			   		 verb('verb.do'[symbol], N, P, [present-tense]) 
-			   		 nounPhrase(X, N2, P2, C)		   		 
+			   		 nounPhrase(X, N2, P2, C)
 			   		 verb('verb.need'[symbol], N3, P3, [infinitive-tense]) 
 			   		 'to'
 			   		 verb(VERB, N4, P4, [infinitive-tense]) 

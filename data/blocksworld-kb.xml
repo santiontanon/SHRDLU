@@ -130,6 +130,13 @@
 	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.can(Y, verb.help(Y, X, P))"/>
 	<sentence provenance="background" sentence="~verb.can(Y:[#id], verb.help(Y, X, P)); verb.can(Y, verb.help(Y, X))"/>	
 
+	<sentence provenance="background" sentence="~small(X); size(X, 'small'[small])"/>
+	<sentence provenance="background" sentence="~size.medium(X); size(X, 'size.medium'[size.medium])"/>
+	<sentence provenance="background" sentence="~big(X); size(X, 'big'[big])"/>
+
+	<sentence provenance="background" sentence="~short(X); length(X, 'short'[short])"/>
+	<sentence provenance="background" sentence="~long(X); length(X, 'long'[long])"/>
+	
 	<sentence provenance="background" sentence="~space.directly.on.top.of(X, Y); verb.support(Y, X)"/>
 	<sentence provenance="background" sentence="space.directly.on.top.of(X, Y); ~verb.support(Y, X)"/>
 	<sentence provenance="background" sentence="~shape(X, Y); ~shape(X, Z); =(Y, Z)"/>

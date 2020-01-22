@@ -1419,6 +1419,9 @@ NLParseTestUnifyingListener("put a block on a pyramid", o.getSort("performative"
 NLParseTestUnifyingListener("can you put a block on a pyramid?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(block(X), pyramid(Y)), [number.1])");
 NLParseTestUnifyingListener("put a block on the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, '5'[#id]), block(X), [number.1])");
 NLParseTestUnifyingListener("put the crate on a block", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], X), block(X), [number.1])");
+NLParseTestUnifyingListener("what is the size of the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, size('5'[#id], X))");
+NLParseTestUnifyingListener("how big is the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, size('5'[#id], X))");
+NLParseTestUnifyingListener("how long is the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.query('etaoin'[#id], X, length('5'[#id], X))");
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");

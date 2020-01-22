@@ -1372,6 +1372,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("laundry room", "laundry.room", o, multitokens_raw);
   this.addStandardNounPOS("left", "direction.left", o, multitokens_raw);
   this.addStandardNounPOS("leg", "leg", o, multitokens_raw);
+  this.addStandardNounPOS("length", "length", o, multitokens_raw);
   this.addStandardNounPOS("light", "light", o, multitokens_raw);
   this.addStandardNounPOS("lightyear", "light-year", o, multitokens_raw);
   this.addStandardNounPOS("light year", "light-year", o, multitokens_raw);
@@ -1528,6 +1529,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("signal", "signal", o, multitokens_raw);
   this.addStandardNounPOS("sink", "sink", o, multitokens_raw);
   this.addStandardNounPOS("situation", "situation", o, multitokens_raw);
+  this.addStandardNounPOS("size", "size", o, multitokens_raw);
   this.addStandardNounPOS("soda", "soda", o, multitokens_raw);
   this.addStandardNounPOS("song", "song", o, multitokens_raw);
   this.addStandardNounPOS("solar panel", "solarpanel.facility", o, multitokens_raw);
@@ -1667,6 +1669,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.collide-with", "collide against","collides against","collided against","collided against","colliding against", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.collide-with", "bump against","bumps against","bumped against","bumped against","bumping against", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.collide-with", "run against","runs against","ran against","run against","running against", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.take","up", "pick","picks","picked","picked","picking", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "pick up","picks up","picked up","picked up","picking up", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "grab","grabs","grabbed","grabbed","grabbing", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "grasp","grasps","grasped","grasped","grasping", false, multitokens_raw, o);
@@ -1683,6 +1686,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.search", "look for","looks for","looked for","looked for","looking for", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reboot", "reset","resets","reset","reset","resetting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reboot", "restart","restarts","restarted","restarted","restarting", false, multitokens_raw, o);
+
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
@@ -1860,7 +1864,6 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.wake-up","up", "wake","wakes","woke","woken","waking", false, multitokens_raw, o);
-  this.addPhrasalVerbPOS("action.take","up", "pick","picks","picked","picked","picking", false, multitokens_raw, o);
 
   // adjectives (synonims) (added first, so NLG does not used them):
   this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
