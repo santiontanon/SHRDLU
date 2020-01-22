@@ -40,6 +40,7 @@ class BWTake_IntentionAction extends IntentionAction {
 			if (this.targetObject == null || 
 				(this.targetObject.type != SHRDLU_BLOCKTYPE_BLOCK &&
 				 this.targetObject.type != SHRDLU_BLOCKTYPE_BOX &&
+				 this.targetObject.type != SHRDLU_BLOCKTYPE_CUBE &&
 				 this.targetObject.type != SHRDLU_BLOCKTYPE_PYRAMID)) {
 				continue;
 			}

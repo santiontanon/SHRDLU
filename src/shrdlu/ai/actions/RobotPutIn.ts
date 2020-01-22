@@ -24,7 +24,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 			return true;
-		}			
+		}
 
 		for(let intention of alternative_actions) {
 			if (intention.attributes.length == 3 &&
@@ -38,6 +38,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			}
 		}
 
+		// We force only one possible destination:
 		if (itemID_l.length == 0 || containerID_l.length != 1) {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
@@ -48,15 +49,23 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		}
 
 		let item_l:A4Object[] = [];
-		for(let o of ai.robot.inventory) {
-			if (itemID_l.indexOf(o.ID) != -1) {
-				if (ai.objectsNotAllowedToGive.indexOf(o.ID) == -1) {
-					item_l.push(o);
+		for(let id of itemID_l) {
+			let item:A4Object[] = ai.game.findObjectByID(id);
+			if (item != null) {
+				let itemLocation:AILocation = ai.game.getAILocation(item[0]);
+				let itemLocationID:string = null;
+				if (itemLocation != null) itemLocationID = itemLocation.id;
+				let cannotGoCause:Term = ai.canGoTo(item[0].map, itemLocationID, requester);
+				if (cannotGoCause == null) {
+					item_l.push(item[item.length-1]);
 				} else {
-					denyrequestCause = Term.fromString("#not(verb.can('"+ai.selfID+"'[#id], action.give('"+ai.selfID+"'[#id], '"+o.ID+"'[#id], "+requester+")))", ai.o);
+					denyrequestCause = cannotGoCause;
 				}
+			} else {
+				denyrequestCause = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
 			}
 		}
+
 		if (item_l.length == 0) {
 			if (requester != null) {
 				if (denyrequestCause != null) {
@@ -64,7 +73,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
+					let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
 				}
 			}
@@ -164,6 +173,20 @@ class RobotPutIn_IntentionAction extends IntentionAction {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         
         for(let item of item_l) {
+        	if (ai.robot.inventory.indexOf(item) == -1) {
+        		let item2:A4Object[] = ai.game.findObjectByID(item.ID);
+		        if (item2.length == 1) {
+		        	let s:A4Script = new A4Script(A4_SCRIPT_TAKE, null, null, 0, false, false);
+			        s.x = item2[0].x;
+			        s.y = item2[0].y+item2[0].tallness;
+			        s.ID = item2[0].map.name;
+			        q.scripts.push(s);
+		        } else {
+		        	let s:A4Script = new A4Script(A4_SCRIPT_TAKE_FROM_CONTAINER, item.ID, null, 0, false, false);
+			        s.ID2 = item.ID;	// the object we want to take
+			        q.scripts.push(s);
+		        }
+        	}
 	        let s:A4Script = new A4Script(A4_SCRIPT_PUT_IN_CONTAINER, containerObjectL[0].ID, null, 0, false, false);
 	        s.ID2 = item.ID;	// the object we want to put in
 	        q.scripts.push(s);
