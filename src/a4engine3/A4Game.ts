@@ -1944,6 +1944,11 @@ class A4Game {
 
 	addMessageWithColorTime(text:string, color:string, timeStamp:number)
     {
+        // Prevent an infinite stream of error messages:
+        if (this.messages.length >= 3 &&
+            text.substring(0,7) == "[ERROR:" && 
+            this.messages[this.messages.length-3][0].substring(0,7) == "[ERROR:") return;
+
         // split longer messages into different lines:
         let buffer:string = "";
         let last_space:number = 0;

@@ -260,7 +260,7 @@ class A4EngineApp {
             console.error(e);
             this.game.error_messages_for_log.push(["" + e + "%0a    " + e.stack.split("\n").join("%0a    "),""+this.game.in_game_seconds]);
             this.game.addMessageWithColor("[ERROR: an internal game error occurred, please press ESC and send a debug log to the developer]", "red");
-            this.game.etaoinAI.intentions = [];    // clear the intentions to prevent the error from happening again and again
+            this.game.etaoinAI.intentions = [];    // clear the intentions to prevent the error from happening again and again if possible
             this.game.qwertyAI.intentions = [];
             this.game.shrdluAI.intentions = [];
         }

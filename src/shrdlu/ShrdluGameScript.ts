@@ -52,7 +52,7 @@ class ShrdluGameScript {
 		this.processQueuedThoughtBubbles();
 	}
 
-
+	/*
 	// This is a debug function, remove once the game is complete!
 	skip_to_act_end_of_intro()
 	{
@@ -354,7 +354,7 @@ class ShrdluGameScript {
 		let dust1:A4Object = this.game.objectFactory.createObject("luminiscent-dust", this.game, false, false);
 		this.game.currentPlayer.inventory.push(dust1);
 	}
-
+	*/
 
 	update_act_intro() 
 	{

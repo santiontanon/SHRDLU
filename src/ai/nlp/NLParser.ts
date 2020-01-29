@@ -111,12 +111,13 @@ class NLParser {
 							}
 						}
 					}
-					if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 					if (this.semanticallyCorrect(r.result, context)) {						
+						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 						results.push(r);
 						//console.log("(3) result after applying bindings:" + r.result);
 					} else {
 						semanticalErrors.push(r);
+						for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 					}
 				}
 			} else {
@@ -124,7 +125,7 @@ class NLParser {
 				for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 			}
 		} else {
-//			console.log("NLParser.parse: Using the raw rulws for " + s.name + " ...");
+//			console.log("NLParser.parse: Using the raw rules for " + s.name + " ...");
 			// we don't have a compiled tree, just use the rules...
 			for(let rawRule of this.rules) {
 				if (rawRule.priority <= bestPriorityOfFirstRule) continue;
@@ -133,7 +134,6 @@ class NLParser {
 				let results2:NLParseRecord[] = rule.parse(tokens2, true, context, this, AI);
 				if (results2 != null && results2.length > 0) {
 					for(let r of results2) {
-		//					console.log("result! (" + r.priorities[0] + ")");
 						r.result = this.resolveLists(r.result);
 						// properly resolve the "listener" variable:
 						if (s.name == "performative" && r.result.attributes.length>0) {
@@ -143,15 +143,15 @@ class NLParser {
 								r.result = r.result.applyBindings(b2);
 							}
 						}
-						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 						if (this.semanticallyCorrect(r.result, context)) {
+							if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 							results.push(r);
 						} else {
 							semanticalErrors.push(r);
+							for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 						}
 					}
 				} else {
-		//				console.log("nope...");
 					for(let e of rule.lastDerefErrors) derefErrors.push(e);
 				}
 			}
@@ -170,8 +170,12 @@ class NLParser {
 			// record why couldn't we parse the sentence:
 			if (semanticalErrors.length > 0) {
 				// parse error was due to a semantical error!
-				// only if we cannot parse the sentence in any other way, we return the parses with semantic errors:
+				// only if we cannot parse the sentence in any other way, we return the parses with semantic errors.
+				// However, we still report the deref errors just in case:
 				this.error_semantic = semanticalErrors;
+				if (derefErrors.length > 0) {
+					this.error_deref = derefErrors;
+				}
 			} else if (this.posParser.unrecognizedTokens.length > 0) {
 				// parse error was due to unrecognized words:
 				this.error_unrecognizedTokens = this.posParser.unrecognizedTokens;

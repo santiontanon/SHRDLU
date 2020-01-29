@@ -951,8 +951,10 @@ class RuleBasedAI {
 				t2.addAttribute(perf2.attributes[1]);
 				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
 			} else if (perf2.functor.name == "perf.inform.answer") {
-				let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
-				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				if (!this.reportDereferenceErrorIfNoTokensLeftToParse(context)) {
+					let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
+					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.time_in_seconds));
+				}
 			} else if (perf2.functor.name == "perf.q.predicate") {
 				let t2:Term = Term.fromString("action.answer.predicate('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
 				for(let i:number = 1;i<perf2.attributes.length;i++) {
@@ -1337,16 +1339,55 @@ class RuleBasedAI {
 	}
 
 
+	reportDereferenceErrorIfNoTokensLeftToParse(context:NLContext) : boolean
+	{
+		// If there were any dereference errors, report those instead:
+		let tmp:TermAttribute = null;
+		let errorType:number = 0;
+		for(let e of this.naturalLanguageParser.error_deref) {
+			if (e.tokensLeftToParse > 0) continue;
+			if (e.derefFromContextErrors.length>0) {
+				tmp = e.derefFromContextErrors[0];
+				errorType = e.derefErrorType;
+			} else if (e.derefUniversalErrors.length>0) {
+				tmp = e.derefUniversalErrors[0];
+				errorType = e.derefErrorType;
+			} else if (e.derefHypotheticalErrors.length>0) {
+				tmp = e.derefHypotheticalErrors[0];
+				errorType = e.derefErrorType;
+			} else if (e.derefQueryErrors.length>0) {
+				tmp = e.derefQueryErrors[0];
+				errorType = e.derefErrorType;
+			}
+		}
+
+		if (errorType == DEREF_ERROR_NO_REFERENTS) {
+			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.see('"+this.selfID+"'[#id], "+tmp+"))))", this.o), null, null, null, this.time_in_seconds));
+			return true;
+		} else if (errorType == DEREF_ERROR_CANNOT_DISAMBIGUATE) {
+			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.disambiguate('"+this.selfID+"'[#id], "+tmp+")))))", this.o), null, null, null, this.time_in_seconds));
+			return true;
+		}
+		return false;
+	}
+
+
 	reactToAnswerPerformative(perf:Term, speaker:TermAttribute, context:NLContext) : Term[]
 	{
 		let reaction:Term[] = [];
-		let lastQuestion:NLContextPerformative = context.expectingAnswerToQuestion_stack[context.expectingAnswerToQuestion_stack.length-1];
 
-		if (lastQuestion == null) {
-			let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
-			this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf), null, this.time_in_seconds));
+		if (context.expectingAnswerToQuestion_stack.length == 0 ||
+			context.expectingAnswerToQuestion_stack[context.expectingAnswerToQuestion_stack.length-1] == null) {
+			
+			if (!this.reportDereferenceErrorIfNoTokensLeftToParse(context)) {
+				// Otherwise, just say that we did not ask anything:
+				let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
+				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf), null, this.time_in_seconds));
+			}
 			return reaction;						
 		}
+
+		let lastQuestion:NLContextPerformative = context.expectingAnswerToQuestion_stack[context.expectingAnswerToQuestion_stack.length-1];
 
 		console.log("Checking if " + perf + " is a proper answer to " + lastQuestion.performative);
 		if (lastQuestion.performative.functor.is_a(this.o.getSort("perf.q.predicate"))) {
