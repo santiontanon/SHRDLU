@@ -14,6 +14,22 @@ var MAX_MESSAGE_LENGTH:number = 84
 var DEFAULT_game_path:string = "data";
 
 
+var MSX_COLOR_BLACK:string = generateRGBColor(0,0,0);
+var MSX_COLOR_GREEN:string = generateRGBColor(43,221,81);
+var MSX_COLOR_LIGHT_GREEN:string = generateRGBColor(81,255,118);
+var MSX_COLOR_DARK_BLUE:string = generateRGBColor(81,81,255);
+var MSX_COLOR_BLUE:string = generateRGBColor(118,118,255);
+var MSX_COLOR_DARK_RED:string = generateRGBColor(221,81,81);
+var MSX_COLOR_LIGHT_BLUE:string = generateRGBColor(81,255,255);
+var MSX_COLOR_RED:string = generateRGBColor(255,81,81);
+var MSX_COLOR_LIGHT_RED:string = generateRGBColor(255,118,118);
+
+var MSX_COLOR_DARK_GREEN:string = generateRGBColor(43,187,43);
+
+var MSX_COLOR_GREY:string = generateRGBColor(192,192,192);
+var MSX_COLOR_WHITE:string = generateRGBColor(255,255,255);
+
+
 class BlocksWorldApp {
     constructor(a_dx:number, a_dy:number) {
         this.state = STATE_SHRDLU_ACTING;    // let SHRDLU update its perception at the start

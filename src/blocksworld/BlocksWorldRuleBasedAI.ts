@@ -557,6 +557,27 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		return true;
 	}
 
+
+	getWorldStateForPlanning() : PlanningState
+	{
+		let state:PlanningState = new PlanningState();
+		let predicatesToInclude:string[] = ["color", "shape", 
+											BW_SIZE_SMALL, BW_SIZE_MEDIUM, BW_SIZE_LARGE,
+											SHRDLU_BLOCKTYPE_BLOCK, SHRDLU_BLOCKTYPE_CUBE, SHRDLU_BLOCKTYPE_PYRAMID, SHRDLU_BLOCKTYPE_BOX,
+											SHRDLU_BLOCKTYPE_TABLE, ,"arm",
+											"space.inside.of", "space.directly.on.top.of", "verb.hold"];
+
+		for(let term of this.perceptionBuffer) {
+			if (predicatesToInclude.indexOf(term.functor.name) != -1) {
+				state.sign.push(true);
+				state.predicates.push(term);
+			}
+		}
+
+		return state;
+	}
+
+
 	naturalLanguageGenerator:NLGenerator = null;
 	world:ShrdluBlocksWorld = null;
 	app:BlocksWorldApp = null;	// in order to print messages
