@@ -14,7 +14,7 @@ class Sentence {
 
 	/*
 	// Simple inference procedure that would only work for rules that are of the form ~Term; Term
-	// - If "t" matches with the negated, it returns the positive after applying the resulting bindings
+	// - If "t" matches with the negated, it returns the positive term after applying the resulting bindings
 	// - Otherwise, it returns null
 	singleTermForwardChaining(t:Term) : Term
 	{
