@@ -22,8 +22,8 @@ testAI.selfID = 'shrdlu';
 
 
 var operators:PlanningOperator[] = [];
-operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", "~space.directly.on.top.of(Z:[#id], X)", ["verb.hold('shrdlu':[#id], X)"], ["space.directly.on.top.of(X, Y)"], o));
-operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", "verb.hold('shrdlu':[#id], X), object(Y), ~pyramid(Y)", ["space.directly.on.top.of(X, Y)"], ["verb.hold('shrdlu':[#id], X)"], o));
+operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~space.directly.on.top.of(Z:[#id], X)"], ["verb.hold('shrdlu':[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
+operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu':[#id], X)", "object(Y)", "~pyramid(Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
 for(let operator of operators) {
 	console.log(operator.toString());
 }

@@ -1,22 +1,69 @@
+class PlanningPredicate {
+
+	constructor(t:Term, s:boolean)
+	{
+		this.term = t;
+		this.sign = s;
+	}
+
+
+	unify(p:PlanningPredicate, occursCheck:boolean, bindings:Bindings) : boolean
+	{
+		if (this.sign != p.sign) return false;
+		return this.term.unify(p.term, occursCheck, bindings);
+	}
+
+
+	static fromString(str:string, o:Ontology) : PlanningPredicate
+	{
+		return PlanningPredicate.fromStringInternal(str, o, [], []);
+	}
+
+
+	static fromStringInternal(str:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : PlanningPredicate
+	{
+		let sign:boolean = true;
+		if (str[0] == '~') {
+			sign = false;
+			str = str.substring(1);
+		}
+		return new PlanningPredicate(Term.fromStringInternal(str, o, variableNames, variableValues).term, sign);
+	}	
+
+
+	toString() : string
+	{
+		if (this.sign) {
+			return this.term.toString();
+		} else {
+			return "~" + this.term.toString();
+		}
+	}
+
+
+	term:Term;
+	sign:boolean;
+}
+
+
 
 class PlanningState {
 
 	toString() : string
 	{
 		let str:string = "[ ";
-		for(let i:number = 0; i<this.sign.length; i++) {
-			if (this.sign[i]) {
-				str += this.predicates[i] + ", ";
+		for(let i:number = 0; i<this.predicates.length; i++) {
+			if (this.predicates[i].sign) {
+				str += this.predicates[i].term + ", ";
 			} else {
-				str += "~" + this.predicates[i] + ", ";
+				str += "~" + this.predicates[i].term + ", ";
 			}
 		}
 		return str + "]";
 	}
 
 
-	sign:boolean[] = [];
-	predicates:Term[] = [];	
+	predicates:PlanningPredicate[] = [];	
 }
 
 
@@ -36,19 +83,41 @@ class PlanningCondition {
 				str += "; ";				
 			}
 			for(let j:number = 0;j<this.predicates[i].length;j++) {
-				let t:Term = this.predicates[i][j];
+				let p:PlanningPredicate = this.predicates[i][j];
 				if (first_conjunction) {
-					if (!this.sign[i][j]) str += "~";
-					str += t.toStringInternal(variables, variableNames);
+					if (!p.sign) str += "~";
+					str += p.term.toStringInternal(variables, variableNames);
 					first_conjunction = false;
 				} else {
 					str += ", ";
-					if (!this.sign[i][j]) str += "~";
-					str += t.toStringInternal(variables, variableNames);
+					if (!p.sign) str += "~";
+					str += p.term.toStringInternal(variables, variableNames);
 				}
 			}
 		}
 		return str;
+	}
+
+
+	checkState(state:PlanningState) : PlanningPredicate[][]
+	{
+		let missing_disjunction:PlanningPredicate[][] = [];
+		for(let conjunction of this.predicates) {
+			let missing:PlanningPredicate[] = [];
+			for(let predicate of conjunction) {
+				let match:boolean = false;
+				for(let predicate2 of state.predicates) {
+					if (predicate.unify(predicate2, true, new Bindings())) {
+						match = true;
+						break;
+					}
+				}
+				if (!match) missing.push(predicate);
+			}
+			missing_disjunction.push(missing);
+			if (missing.length == 0) return missing_disjunction;
+		}
+		return missing_disjunction;
 	}
 
 
@@ -130,8 +199,7 @@ class PlanningCondition {
 
 		// check that the sequence is correct: term [[~]term [; [~]term]*]
 		let s:PlanningCondition = new PlanningCondition();
-		let conjunction_terms:Term[] = [];
-		let conjunction_sign:boolean[] = [];
+		let conjunction:PlanningPredicate[] = [];
 		let sign:boolean = true;
 		state = 0;
 		for(let i:number = 0;i<tokens.length;i++) {
@@ -159,8 +227,7 @@ class PlanningCondition {
 		        }
 				let t:Term = ta.term; 
 				if (t == null) return null;
-				conjunction_terms.push(t);
-				conjunction_sign.push(sign);
+				conjunction.push(new PlanningPredicate(t, sign));
 				state = 2;
 				sign = true;
 				continue;
@@ -168,10 +235,8 @@ class PlanningCondition {
 			if (state == 2) {
 				if (tokens[i] == ',') {
 				} else if (tokens[i] == ';') {
-					s.predicates.push(conjunction_terms);
-					s.sign.push(conjunction_sign);
-					conjunction_terms = [];
-					conjunction_sign = [];
+					s.predicates.push(conjunction);
+					conjunction = [];
 				} else {
 					console.error("Sentence.fromString: expected semicolon or colon after term and found: " + tokens[i]);
 					return null;
@@ -181,9 +246,8 @@ class PlanningCondition {
 
 		}
 
-		if (conjunction_terms.length > 0) {
-			s.predicates.push(conjunction_terms);
-			s.sign.push(conjunction_sign);
+		if (conjunction.length > 0) {
+			s.predicates.push(conjunction);
 		}
 
 		return s;
@@ -191,43 +255,40 @@ class PlanningCondition {
 
 
 	// disjunction of conjunctions:
-	sign:boolean[][] = [];	// whether each predicate is positive or negated
-	predicates:Term[][] = [];
+	predicates:PlanningPredicate[][] = [];
+
 }
 
 
 class PlanningOperator {
 
-	constructor(a_s:Term, a_p:PlanningCondition, a_a:Term[], a_d:Term[])
+	constructor(a_s:Term, a_p:PlanningPredicate[], a_e:PlanningPredicate[])
 	{
 		this.signature = a_s;
 		this.precondition = a_p;
-		this.add = a_a;
-		this.delete = a_d;
+		this.effect = a_e;
 	}	
 
 
 	toString() : string
 	{
 		return this.signature.toString() + "\n\tprecondition: " + 
-			   this.precondition.toString() + "\n\tadd: " + 
-			   this.add + "\n\tdelete: " +
-			   this.delete;
+			   this.precondition + "\n\teffect: " + 
+			   this.effect;
 	}
 
 
-	static fromString(signature_str:string, precondition_str:string, add_str_l:string[], delete_str_l:string[], o:Ontology) : PlanningOperator
+	static fromString(signature_str:string, precondition_str_l:string[], effect_str_l:string[], o:Ontology) : PlanningOperator
 	{
 		let variableNames:string[] = [];
 		let variableValues:TermAttribute[] = [];
-		let operator:PlanningOperator = new PlanningOperator(Term.fromStringInternal(signature_str, o, variableNames, variableValues).term, 
-															 PlanningCondition.fromStringInternal(precondition_str, o, variableNames, variableValues),
+		let operator:PlanningOperator = new PlanningOperator(Term.fromStringInternal(signature_str, o, variableNames, variableValues).term,
 															 [], []);
-		for(let add_str of add_str_l) {
-			operator.add.push(Term.fromStringInternal(add_str, o, variableNames, variableValues).term);
+		for(let add_str of precondition_str_l) {
+			operator.precondition.push(PlanningPredicate.fromStringInternal(add_str, o, variableNames, variableValues));
 		}
-		for(let delete_str of delete_str_l) {
-			operator.delete.push(Term.fromStringInternal(delete_str, o, variableNames, variableValues).term);
+		for(let delete_str of effect_str_l) {
+			operator.effect.push(PlanningPredicate.fromStringInternal(delete_str, o, variableNames, variableValues));
 		}
 
 		return operator;
@@ -235,9 +296,8 @@ class PlanningOperator {
 
 
 	signature:Term;
-	precondition:PlanningCondition;
-	add:Term[];
-	delete:Term[];
+	precondition:PlanningPredicate[];
+	effect:PlanningPredicate[]
 }
 
 
@@ -255,7 +315,7 @@ class PlanningAction {
 		let instantiated:Term = this.operator.signature.applyBindings(this.bindings);
 		return instantiated.toString();
 	}
-	
+
 
 	operator:PlanningOperator;
 	bindings:Bindings;
@@ -276,7 +336,7 @@ class PlanningPlan {
 
 
 	actions:PlanningAction[] = [];
-	causalLinks:[number,number,Term][] = [];
+	causalLinks:[number,number,PlanningPredicate][] = [];
 }
 
 
@@ -289,7 +349,22 @@ class PlanningBackwardSearchPlanner {
 
 	plan(s0:PlanningState, goal:PlanningCondition) : PlanningPlan
 	{
-		// ...
+		let targets:PlanningPredicate[][] = goal.checkState(s0);
+		console.log("targets: " + targets);
+		// check if we are done:
+		for(let target of targets) {
+			if (target.length == 0) {
+				// we are done!
+				// ...
+				return null;
+			}
+		}
+
+		//let relevantAndConsistentActions:PlanningAction[] = [];
+		//for(let operator of this.operators) {
+			// get relevant and consistent actions for each predicate in each target:
+			// ...
+		//}
 
 		return null;
 	}
