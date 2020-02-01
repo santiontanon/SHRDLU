@@ -239,3 +239,61 @@ class PlanningOperator {
 	add:Term[];
 	delete:Term[];
 }
+
+
+class PlanningAction {
+
+	constructor(a_o:PlanningOperator, a_b:Bindings)
+	{
+		this.operator = a_o;
+		this.bindings = a_b;
+	}
+
+
+	toString() : string
+	{
+		let instantiated:Term = this.operator.signature.applyBindings(this.bindings);
+		return instantiated.toString();
+	}
+	
+
+	operator:PlanningOperator;
+	bindings:Bindings;
+}
+
+
+class PlanningPlan {
+
+	toString() : string
+	{
+		let str:string = "";
+		for(let action of this.actions) {
+			str += action.toString() + "\n";
+		}
+
+		return str;
+	}
+
+
+	actions:PlanningAction[] = [];
+	causalLinks:[number,number,Term][] = [];
+}
+
+
+class PlanningBackwardSearchPlanner {
+
+	constructor(a_o:PlanningOperator[]) {
+		this.operators = a_o;
+	}
+
+
+	plan(s0:PlanningState, goal:PlanningCondition) : PlanningPlan
+	{
+		// ...
+
+		return null;
+	}
+
+
+	operators:PlanningOperator[];
+}
