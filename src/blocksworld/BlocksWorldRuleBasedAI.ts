@@ -569,7 +569,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 		for(let term of this.perceptionBuffer) {
 			if (predicatesToInclude.indexOf(term.functor.name) != -1) {
-				state.predicates.push(new PlanningPredicate(term, true));
+				state.terms.push(term);
 			}
 		}
 

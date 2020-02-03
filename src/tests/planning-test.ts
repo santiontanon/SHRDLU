@@ -22,15 +22,17 @@ testAI.selfID = 'shrdlu';
 
 
 var operators:PlanningOperator[] = [];
-operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~space.directly.on.top.of(Z:[#id], X)"], ["verb.hold('shrdlu':[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
-operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu':[#id], X)", "object(Y)", "~pyramid(Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
+operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu':[#id], X2)","object(X)","~space.directly.on.top.of(Z:[#id], X)","space.directly.on.top.of(X, Y)"], ["verb.hold('shrdlu':[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
+operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu':[#id], X)", "object(Y)", "~pyramid(Y)", "~arm(Y)", "~space.directly.on.top.of(Z, Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
+operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:'table':[#id])", ["verb.hold('shrdlu':[#id], X)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
 for(let operator of operators) {
 	console.log(operator.toString());
 }
 
-var planner:PlanningBackwardSearchPlanner = new PlanningBackwardSearchPlanner(operators);
+var planner:PlanningForwardSearchPlanner = new PlanningForwardSearchPlanner(operators);
+//var planner:PlanningBackwardSearchPlanner = new PlanningBackwardSearchPlanner(operators);
 
-function planningTest(init:PlanningState, planner:PlanningBackwardSearchPlanner, goal_str:string, expected_length:number) : boolean
+function planningTest(init:PlanningState, planner:PlanningForwardSearchPlanner, goal_str:string, expected_length:number) : boolean
 {
 	let goal:PlanningCondition = PlanningCondition.fromString(goal_str, o);
 
@@ -44,12 +46,20 @@ function planningTest(init:PlanningState, planner:PlanningBackwardSearchPlanner,
 
 	if (plan == null) {
 		console.log("Plan: null");
-		if (expected_length != null) return false;
+		if (expected_length != null) {
+			console.error("No plan found, where a plan of length " + expected_length + " was expected!");
+			return false;
+		}
 		return true;
 	} else {
-		console.log("Plan:");
-		console.log(plan.toString());
-		if (plan.actions.length == expected_length) return true;
+		if (plan.actions.length == expected_length) {
+			console.log("Plan:")
+			console.log(plan.toString())
+			return true;
+		}
+		console.error("The plan found has length " + plan.actions.length + ", but " + expected_length + " was expected!");
+		console.error("Plan:")
+		console.error(plan.toString())
 		return false;
 	}
 }
@@ -60,11 +70,25 @@ testAI.attentionAndPerception();
 var initial_state:PlanningState = testAI.getWorldStateForPlanning();
 
 // 2) Define a set of sample goals:
+
+// have empty hand: -
+
+planningTest(initial_state, planner, "~verb.hold('shrdlu':[#id], X:[#id])", 0);
+
+// take small pyramid: TAKE
+planningTest(initial_state, planner, "verb.hold('shrdlu':[#id], 'block-9'[#id])", 1);
+
 // small pyramid on the table: TAKE - PUT
-planningTest(initial_state, planner, "space.directly.on.top.of('block-9'[#id],'table'[#id])", 1);
+planningTest(initial_state, planner, "space.directly.on.top.of('block-9'[#id],'table'[#id])", 2);
 
 // red pyramid on small block
-planningTest(initial_state, planner, "space.directly.on.top.of('block-10'[#id],'block-4'[#id])", 2);
+planningTest(initial_state, planner, "space.directly.on.top.of('block-10'[#id],'block-4'[#id])", 4);
+
+// anything on blue block
+planningTest(initial_state, planner, "space.directly.on.top.of(X:[#id],'block-5'[#id])", 2);
+
+// small pyramid on small block, on blue block
+planningTest(initial_state, planner, "space.directly.on.top.of('block-9'[#id],'block-4'[#id]), space.directly.on.top.of('block-4'[#id],'block-5'[#id])", 6);
 
 
 // - WILL YOU PLEASE STACK UP BOTH OF THE RED BLOCKS AND EITHER A GREEN CUBE OR A PYRAMID?
