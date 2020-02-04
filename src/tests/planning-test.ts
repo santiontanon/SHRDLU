@@ -22,15 +22,14 @@ testAI.selfID = 'shrdlu';
 
 
 var operators:PlanningOperator[] = [];
-operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu':[#id], X2)","object(X)","~space.directly.on.top.of(Z:[#id], X)","space.directly.on.top.of(X, Y)"], ["verb.hold('shrdlu':[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
+operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu':[#id], X2)","space.directly.on.top.of(X, Y)","~space.directly.on.top.of(Z:[#id], X)"], ["verb.hold('shrdlu':[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
 operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu':[#id], X)", "object(Y)", "~pyramid(Y)", "~arm(Y)", "~space.directly.on.top.of(Z, Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
 operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:'table':[#id])", ["verb.hold('shrdlu':[#id], X)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu':[#id], X)"], o));
 for(let operator of operators) {
 	console.log(operator.toString());
 }
 
-var planner:PlanningForwardSearchPlanner = new PlanningForwardSearchPlanner(operators);
-//var planner:PlanningBackwardSearchPlanner = new PlanningBackwardSearchPlanner(operators);
+var planner:PlanningForwardSearchPlanner = new PlanningForwardSearchPlanner(operators, false);
 
 function planningTest(init:PlanningState, planner:PlanningForwardSearchPlanner, goal_str:string, expected_length:number) : boolean
 {

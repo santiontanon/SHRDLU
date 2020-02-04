@@ -100,7 +100,30 @@ class PlanningCondition {
 	}
 
 
-	checkState(state:PlanningState) : [PlanningPredicate[],PlanningPredicate[]][]
+	checkState(state:PlanningState, occursCheck:boolean) : boolean
+	{
+		for(let conjunction of this.predicates) {
+			let missing:boolean = false;
+			for(let predicate of conjunction) {
+				let match:boolean = false;
+				for(let term of state.terms) {
+					if (predicate.term.unify(term, occursCheck, new Bindings())) {
+						match = true;
+						break;
+					}
+				}
+				if (predicate.sign != match) {
+					missing = true;
+					break;
+				}
+			}
+			if (!missing) return true;
+		}
+		return false;
+	}
+
+
+	checkStateDetailed(state:PlanningState, occursCheck:boolean) : [PlanningPredicate[],PlanningPredicate[]][]
 	{
 		let goalStateMatch:[PlanningPredicate[],PlanningPredicate[]][] = []
 		for(let conjunction of this.predicates) {
@@ -109,7 +132,7 @@ class PlanningCondition {
 			for(let predicate of conjunction) {
 				let match:boolean = false;
 				for(let term of state.terms) {
-					if (predicate.term.unify(term, true, new Bindings())) {
+					if (predicate.term.unify(term, occursCheck, new Bindings())) {
 						match = true;
 						break;
 					}
@@ -297,7 +320,7 @@ class PlanningOperator {
 	}
 
 
-	applyOperator(state:PlanningState) : PlanningState
+	applyOperator(state:PlanningState, occursCheck:boolean) : PlanningState
 	{
 		let state2:PlanningState = new PlanningState();
 
@@ -305,7 +328,7 @@ class PlanningOperator {
 			let toDelete:boolean = false;
 			for(let effect of this.effect) {
 				if (effect.sign) continue;
-				if (term.unify(effect.term, true, new Bindings())) {
+				if (term.unify(effect.term, occursCheck, new Bindings())) {
 					toDelete = true;
 				}
 			}
@@ -370,8 +393,9 @@ class PlanningPlan {
 
 
 class PlanningForwardSearchPlanner {
-	constructor(a_o:PlanningOperator[]) {
+	constructor(a_o:PlanningOperator[], occursCheck:boolean) {
 		this.operators = a_o;
+		this.occursCheck = occursCheck;
 	}
 
 
@@ -386,10 +410,10 @@ class PlanningForwardSearchPlanner {
 		}
 		return null;
 	}
+	
 
 	planInternal(s0:PlanningState, goal:PlanningCondition, plan:PlanningPlan, maxDepth:number) : boolean
 	{
-		// check if we are done:
 		if (this.DEBUG >= 1) {
 			console.log("- planInternal -------- depth left: " + maxDepth + " - ");
 			if (this.DEBUG >= 2) {
@@ -398,27 +422,18 @@ class PlanningForwardSearchPlanner {
 			}
 		}
 	
-
-		let goalStateMatch:[PlanningPredicate[],PlanningPredicate[]][] = goal.checkState(s0);
-		for(let tmp of goalStateMatch) {
-			let target:PlanningPredicate[] = tmp[0];
-			// console.log("    target: " + target);
-			// console.log("    alreadysatisfied: " + alreadysatisfied);
-			if (target.length == 0) {
-				// we are done!
-				return true;
-			}
-		}
-
+		// check if we are done:
+		if (goal.checkState(s0, this.occursCheck)) return true;
 		if (maxDepth <= 0) return false;
 
 		// obtain candidate actions:
 		let children:[PlanningOperator,PlanningState][] = [];
 		for(let operator of this.operators) {
-			let operator_children:[PlanningOperator,PlanningState][] = this.generateChildren(operator, s0);
-			for(let [action,s_next] of operator_children) {
-				children.push([action,s_next])
-				if (this.DEBUG >= 1) console.log("    candidate action: " + action.signature.toString());
+			this.generateChildren(operator, s0, 0, children);
+		}
+		if (this.DEBUG >= 1) {
+			for(let tmp of children) {
+				console.log("    candidate action: " + tmp[0].signature.toString());
 			}
 		}
 
@@ -434,51 +449,42 @@ class PlanningForwardSearchPlanner {
 	}
 
 
-	generateChildren(operator:PlanningOperator, state:PlanningState) : [PlanningOperator,PlanningState][]
-	{
-		return this.generateChildrenInternal(operator, state, 0);
-	}
-
-
-	generateChildrenInternal(operator:PlanningOperator, state:PlanningState, nextPrecondition:number) : [PlanningOperator,PlanningState][]
+	generateChildren(operator:PlanningOperator, state:PlanningState, 
+					 nextPrecondition:number, children:[PlanningOperator,PlanningState][])
 	{
 		if (nextPrecondition >= operator.precondition.length) {
 			// make sure the negated preconditions are also satisfied:
 			for(let precondition of operator.precondition) {
 				if (precondition.sign) continue;
 				for(let term of state.terms) {
-					if (precondition.term.unify(term, true, new Bindings())) {
+					if (precondition.term.unify(term, this.occursCheck, new Bindings())) {
 						// console.log("        Action " + operator.signature.toString() + " removed as precondition " + precondition.toString() + " is not satisfied");
-						return [];
+						return;
 					}
 				}
 			}
 			// apply the operator:
-			let newState:PlanningState = operator.applyOperator(state);
-			if (newState == null) return null;
-			return [[operator, newState]];
+			let newState:PlanningState = operator.applyOperator(state, this.occursCheck);
+			if (newState != null) children.push([operator, newState]);
 		}  else {
 			let precondition:PlanningPredicate = operator.precondition[nextPrecondition];
 			if (precondition.sign) {
-				let children:[PlanningOperator,PlanningState][] = [];
 				for(let term of state.terms) {
 					let b:Bindings = new Bindings();
-					if (precondition.term.subsumes(term, true, b)) {
+					if (precondition.term.subsumes(term, this.occursCheck, b)) {
 						let newOperator:PlanningOperator = operator.instantiate(b);
 						// console.log("        -> precondition: " + precondition.term.toString() + " satisfied");
-						for(let child of this.generateChildrenInternal(newOperator, state, nextPrecondition+1)) {
-							children.push(child);
-						}
+						this.generateChildren(newOperator, state, nextPrecondition+1, children);
 					}
 				}
-				return children;
 			} else {
-				return this.generateChildrenInternal(operator, state, nextPrecondition+1);
+				this.generateChildren(operator, state, nextPrecondition+1, children);
 			}
 		}
 	}
 
 	DEBUG:number = 0;
+	occursCheck:boolean = false;
 	operators:PlanningOperator[];	
 }
 
