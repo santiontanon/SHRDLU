@@ -64,6 +64,24 @@ class PlanningState {
 	}
 
 
+	satisfies(p:PlanningPredicate, occursCheck:boolean) : boolean
+	{
+		let match:boolean = false;
+		for(let t of this.terms) {
+			if (p.term.subsumes(t, occursCheck, new Bindings())) {
+				match = true;
+				break;
+			}
+		}
+
+		if (p.sign) {
+			return match;
+		} else {
+			return !match;
+		}
+	}
+
+
 	terms:Term[] = [];	
 }
 
@@ -387,8 +405,40 @@ class PlanningPlan {
 	}
 
 
+	autoCausalLinks(s0:PlanningState, occursCheck:boolean)
+	{
+		this.causalLinks = [];
+
+		for(let i:number = 0;i<this.actions.length;i++) {
+			for(let precondition of this.actions[i].precondition) {
+				let satisfiedOn:number = null;
+				let s:PlanningState = s0;
+				if (s.satisfies(precondition, occursCheck)) {
+					satisfiedOn = -1;
+				}
+				for(let j:number = 0;j<i;j++) {
+					s = this.actions[j].applyOperator(s, occursCheck);
+					if (s.satisfies(precondition, occursCheck)) {
+						if (satisfiedOn == null) satisfiedOn = j;
+					} else {
+						satisfiedOn = null;
+					}
+				}
+				if (satisfiedOn == null) {
+					console.error("autoCausalLinks: Precondition never satisfied in a plan!");
+				} else {
+					if (satisfiedOn >= 0) {
+						this.causalLinks.push([satisfiedOn, i, precondition]);
+						// console.log("  CL: " + satisfiedOn + " -> " + i + " (" + precondition.toString() + ")");
+					}
+				}
+			}
+		}
+	}
+
+
 	actions:PlanningOperator[] = [];
-	causalLinks:[PlanningOperator,PlanningOperator,PlanningPredicate][] = [];
+	causalLinks:[number,number,PlanningPredicate][] = [];
 }
 
 
@@ -406,11 +456,14 @@ class PlanningForwardSearchPlanner {
 		// iterative deepening:
 		for(let depth:number = 1;depth<=maxDepth;depth++) {
 			if (this.DEBUG >= 1) console.log("- plan -------- max depth: " + depth + " - ");
-			if (this.planInternal(s0, goal, plan, depth)) return plan;
+			if (this.planInternal(s0, goal, plan, depth)) {
+				plan.autoCausalLinks(s0, this.occursCheck);
+				return plan;
+			}
 		}
 		return null;
 	}
-	
+
 
 	planInternal(s0:PlanningState, goal:PlanningCondition, plan:PlanningPlan, maxDepth:number) : boolean
 	{
