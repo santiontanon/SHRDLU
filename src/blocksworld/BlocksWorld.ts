@@ -41,7 +41,14 @@ class ShrdluBlock {
 	constructor(type:string, color:string, size:string,
 				x:number, y:number, z:number, 
 				dx:number, dy:number, dz:number) {
-		this.ID = "block-" + ShrdluBlock.next_ID;
+		if (type == SHRDLU_BLOCKTYPE_BLOCK ||
+			type == SHRDLU_BLOCKTYPE_CUBE ||
+			type == SHRDLU_BLOCKTYPE_PYRAMID ||
+			type == SHRDLU_BLOCKTYPE_BOX) {
+			this.ID = type + "-" + ShrdluBlock.next_ID;
+		} else {
+			this.ID = "sb-" + ShrdluBlock.next_ID;
+		}
 		ShrdluBlock.next_ID++;
 		this.type = type;
 		this.color = color;

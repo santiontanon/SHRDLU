@@ -107,6 +107,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (this.world.objectInArm != null) {
 			this.addTermToPerception(Term.fromString("verb.hold('"+this.selfID+"'[#id], '"+this.world.objectInArm.ID+"'[#id])", this.o));
 			this.addTermToPerception(Term.fromString("space.at('"+this.world.objectInArm.ID+"'[#id], '"+this.world.shrdluArm.ID+"'[#id])", this.o));
+		} else {
+			this.addTermToPerception(Term.fromString("empty('"+this.world.shrdluArm.ID+"'[#id])", this.o));
 		}
 	}
 
@@ -565,11 +567,31 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 											BW_SIZE_SMALL, BW_SIZE_MEDIUM, BW_SIZE_LARGE,
 											SHRDLU_BLOCKTYPE_BLOCK, SHRDLU_BLOCKTYPE_CUBE, SHRDLU_BLOCKTYPE_PYRAMID, SHRDLU_BLOCKTYPE_BOX,
 											SHRDLU_BLOCKTYPE_TABLE, ,"arm",
-											"space.inside.of", "space.directly.on.top.of", "verb.hold"];
+											"space.inside.of", "space.directly.on.top.of", "verb.hold","empty"];
+		let objectPredicates:string[] = [SHRDLU_BLOCKTYPE_BLOCK, SHRDLU_BLOCKTYPE_CUBE, SHRDLU_BLOCKTYPE_PYRAMID, SHRDLU_BLOCKTYPE_BOX];
 
 		for(let term of this.perceptionBuffer) {
 			if (predicatesToInclude.indexOf(term.functor.name) != -1) {
 				state.terms.push(term);
+				if (objectPredicates.indexOf(term.functor.name) != -1 &&
+					term.attributes.length == 1 &&
+					(term.attributes[0] instanceof ConstantTermAttribute)) {
+					// see if their top is clear:
+					let clear:boolean = true;
+					for(let term2 of this.perceptionBuffer) {
+						if ((term2.functor.name == "space.directly.on.top.of" ||
+						     term2.functor.name == "space.inside.of") &&
+							term2.attributes.length == 2 &&
+							(term2.attributes[1] instanceof ConstantTermAttribute) &&
+							(<ConstantTermAttribute>term2.attributes[1]).value == (<ConstantTermAttribute>term.attributes[0]).value) {
+							clear = false;
+						}
+					}
+					if (clear) {
+						state.terms.push(Term.fromString("top-clear-status('"+(<ConstantTermAttribute>term.attributes[0]).value+"'[#id], "+
+														 "'clear-status-clear'[clear-status-clear])", this.o));
+					}
+				}
 			}
 		}
 

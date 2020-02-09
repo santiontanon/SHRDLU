@@ -540,34 +540,47 @@ class Term {
 
     subsumes(t:Term, occursCheck:boolean, bindings:Bindings) : boolean
     {
-        let tl1:TermAttribute[] = [new TermTermAttribute(this)];
-        let tl2:TermAttribute[] = [new TermTermAttribute(t)];
+        if (this.functor.name == "$and" ||
+            t.functor.name == "#and") {
+            let tl1:TermAttribute[];
+            let tl2:TermAttribute[];
 
-        if (this.functor.name == "#and") tl1 = Term.elementsInAndList(this);
-        if (t.functor.name == "#and") tl2 = Term.elementsInAndList(t);
-
-        for(let t1 of tl1) {
-            let found:boolean = false;
-            for(let t2 of tl2) {
-                let bl:number = bindings.l.length;
-                if ((t1 instanceof TermTermAttribute) &&
-                    (t2 instanceof TermTermAttribute)) {
-                    if ((<TermTermAttribute>t1).term.subsumesInternal((<TermTermAttribute>t2).term, occursCheck, bindings)) {
-                        found = true;
-                        break;
-                    }
-                } else {
-                    if (Term.subsumesAttribute(t1, t2, occursCheck, bindings)) {
-                        found = true;
-                        break;
-                    }
-                }
-                bindings.l.length = bl;    // remove all the bindings that were created in the failed subsumption attempt
+            if (this.functor.name == "#and") {
+                tl1 = Term.elementsInAndList(this);
+            } else {
+                tl1 = [new TermTermAttribute(this)];
             }
-            if (!found) return false;
-        }
+            if (t.functor.name == "#and") {
+                tl2 = Term.elementsInAndList(t);
+            } else {
+                tl2 = [new TermTermAttribute(t)];
+            }
 
-        return true;
+            for(let t1 of tl1) {
+                let found:boolean = false;
+                for(let t2 of tl2) {
+                    let bl:number = bindings.l.length;
+                    if ((t1 instanceof TermTermAttribute) &&
+                        (t2 instanceof TermTermAttribute)) {
+                        if ((<TermTermAttribute>t1).term.subsumesInternal((<TermTermAttribute>t2).term, occursCheck, bindings)) {
+                            found = true;
+                            break;
+                        }
+                    } else {
+                        if (Term.subsumesAttribute(t1, t2, occursCheck, bindings)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    bindings.l.length = bl;    // remove all the bindings that were created in the failed subsumption attempt
+                }
+                if (!found) return false;
+            }
+
+            return true;
+        } else {
+            return this.subsumesInternal(t, occursCheck, bindings);
+        }
     }
 
 

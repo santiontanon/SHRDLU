@@ -36,6 +36,7 @@ var totalTests:number = 0;
 
 var nParametersPerPerformative:{ [performative: string] : number[]; } = {};
 
+Sort.precomputeIsA();
 
 function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultStr:string) : boolean
 {
