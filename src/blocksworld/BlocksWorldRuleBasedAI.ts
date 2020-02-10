@@ -2,6 +2,27 @@
 var SPACE_NEAR_FAR_THRESHOLD:number = 8;
 
 
+
+class PlanningRecord {
+	constructor(ai:BlocksWorldRuleBasedAI, goal:PlanningCondition, o:Ontology)
+	{
+		this.planner = new GraphPlanPlanner(ai.operators, false);		
+		this.goal = goal;
+		this.o = o;
+	}
+
+	
+
+
+	planner:PlanningPlanner;
+	goal:PlanningCondition;
+	o:Ontology;
+
+	priority:number = 1;
+	anxiety:number = 0;
+}
+
+
 class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	constructor(o:Ontology, nlp:NLParser, nlg:NLGenerator, world:ShrdluBlocksWorld, app:BlocksWorldApp, 
 				pf:number, pfoffset:number, qpt:number, 
@@ -37,6 +58,10 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		for(let rulesFileName of rulesFileNames) {
 			this.loadLongTermRulesFromFile(rulesFileName);
 		}
+
+		// set up the planner:
+		this.operators = ShrdluBlocksWorld.getPlanningOperators(o);
+
 		this.maximum_answers_to_give_at_once_for_a_query = 100;
 		this.perceptionMemoryTime = 1;
 
@@ -604,4 +629,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	app:BlocksWorldApp = null;	// in order to print messages
 
 	currentActionHandler:IntentionAction = null;
+
+	operators:PlanningOperator[] = null;
+	planningProcesses:PlanningRecord[] = [];	// list of the current planning processes the AI is trying to perform
 }

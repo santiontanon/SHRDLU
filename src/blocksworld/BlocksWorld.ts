@@ -415,6 +415,50 @@ class ShrdluBlocksWorld {
 		return null;
 	}
 
+
+	static getPlanningOperators(o:Ontology) : PlanningOperator[]
+	{
+		let operators:PlanningOperator[] = [];
+
+
+		operators.push(PlanningOperator.fromString(
+			"action.take(X:[#id], Y:[#id])", 
+			["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])",
+			 "~table(Y)"], 
+			["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+		operators.push(PlanningOperator.fromString(
+			"action.take(X:[#id], Y:[#id])", 
+			["empty('shrdlu-arm'[#id])", "space.inside.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
+			["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.inside.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+		operators.push(PlanningOperator.fromString(
+			"action.take(X:[#id], Y:'table'[#id])", 
+			["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
+			["verb.hold('shrdlu'[#id], X)", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+		operators.push(PlanningOperator.fromString(
+			"action.put-in(X:[#id], Y:[#id])", 
+			["verb.hold('shrdlu'[#id], X)", "object(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])",
+			 "~box(Y)", "~pyramid(Y)", "~arm(Y)",], 
+			["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
+		operators.push(PlanningOperator.fromString(
+			"action.put-in(X:[#id], Y:[#id])", 
+			["verb.hold('shrdlu'[#id], X)", "box(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], 
+			["space.inside.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
+		operators.push(PlanningOperator.fromString(
+			"action.put-in(X:[#id], Y:'table'[#id])", 
+			["verb.hold('shrdlu'[#id], X)"], 
+			["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)"], o));
+
+		/*
+		operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.directly.on.top.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
+		operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.inside.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.inside.of(X, Y)"], o));
+		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "object(Y)", "~box(Y)", "~pyramid(Y)", "~arm(Y)", "~space.directly.on.top.of(Z, Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "box(Y)", "~space.inside.of(Z, Y)"], ["space.inside.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:'table'[#id])", ["verb.hold('shrdlu'[#id], X)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+		*/		
+
+		return operators;
+	}
+
 	width:number = 32;
 	depth:number = 32;
 	objects:ShrdluBlock[] = [];
