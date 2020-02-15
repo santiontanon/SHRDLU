@@ -4,6 +4,8 @@ var SHRDLU_BLOCKTYPE_PYRAMID:string = "pyramid";
 var SHRDLU_BLOCKTYPE_BOX:string = "box";
 var SHRDLU_BLOCKTYPE_TABLE:string = "table";
 
+var SHRDLU_BLOCKTYPE_ARM:string = "arm";
+
 var BW_SIZE_SMALL:string = "small";
 var BW_SIZE_MEDIUM:string = "size.medium";
 var BW_SIZE_LARGE:string = "big";
@@ -73,77 +75,86 @@ class ShrdluBlock {
 
 	draw(lines:SBWLine[])	
 	{
+		let color:string = MSX_COLOR_WHITE;
+		switch(this.color) {
+			case "black": color = MSX_COLOR_BLACK; break;
+			case "green": color = MSX_COLOR_GREEN; break;
+			case "blue": color = MSX_COLOR_BLUE; break;
+			case "red": color = MSX_COLOR_RED; break;
+			case "grey": color = MSX_COLOR_GREY; break;
+			case "white": color = MSX_COLOR_WHITE; break;
+		}
 		switch(this.type) {
 		case SHRDLU_BLOCKTYPE_BLOCK:
 		case SHRDLU_BLOCKTYPE_CUBE:
 		case SHRDLU_BLOCKTYPE_TABLE:
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, color));
 
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, color));
 
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, color));
 			break;
 		case SHRDLU_BLOCKTYPE_PYRAMID:
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, color));
 
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x+this.dx/2,this.y+this.dy,this.z+this.dz/2, color));
 			break;
 		case SHRDLU_BLOCKTYPE_BOX:
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, color));
 
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, color));
 
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, color));
 
-			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+1, 					this.x+this.dx-1,this.y+this.dy,this.z+1, this.color));
-			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+1, 			this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, this.color));
-			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, 	this.x+1,this.y+this.dy,this.z+this.dz-1, this.color));
-			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+this.dz-1, 			this.x+1,this.y+this.dy,this.z+1, this.color));
+			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+1, 					this.x+this.dx-1,this.y+this.dy,this.z+1, color));
+			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+1, 			this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, color));
+			lines.push(new SBWLine(this.x+this.dx-1,this.y+this.dy,this.z+this.dz-1, 	this.x+1,this.y+this.dy,this.z+this.dz-1, color));
+			lines.push(new SBWLine(this.x+1,this.y+this.dy,this.z+this.dz-1, 			this.x+1,this.y+this.dy,this.z+1, color));
 			break;
 		case "arm":
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x+this.dx,this.y,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x,this.y,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y,this.z, color));
 
-			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, this.color));
+			lines.push(new SBWLine(this.x,this.y,this.z, 					this.x,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z, 			this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y,this.z+this.dz, 	this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y,this.z+this.dz, 			this.x,this.y+this.dy,this.z+this.dz, color));
 
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, this.color));
-			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, this.color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z, 					this.x+this.dx,this.y+this.dy,this.z, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z, 			this.x+this.dx,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x+this.dx,this.y+this.dy,this.z+this.dz, 	this.x,this.y+this.dy,this.z+this.dz, color));
+			lines.push(new SBWLine(this.x,this.y+this.dy,this.z+this.dz, 			this.x,this.y+this.dy,this.z, color));
 
-			lines.push(new SBWLine(this.x-1,this.y,this.z-1, 					this.x+this.dx+1,this.y,this.z-1, this.color));
-			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z-1, 			this.x+this.dx+1,this.y,this.z+this.dz+1, this.color));
-			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z+this.dz+1, 	this.x-1,this.y,this.z+this.dz+1, this.color));
-			lines.push(new SBWLine(this.x-1,this.y,this.z+this.dz+1, 			this.x-1,this.y,this.z-1, this.color));
+			lines.push(new SBWLine(this.x-1,this.y,this.z-1, 					this.x+this.dx+1,this.y,this.z-1, color));
+			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z-1, 			this.x+this.dx+1,this.y,this.z+this.dz+1, color));
+			lines.push(new SBWLine(this.x+this.dx+1,this.y,this.z+this.dz+1, 	this.x-1,this.y,this.z+this.dz+1, color));
+			lines.push(new SBWLine(this.x-1,this.y,this.z+this.dz+1, 			this.x-1,this.y,this.z-1, color));
 			break;		
 		}
 	}
@@ -203,46 +214,50 @@ class ShrdluBlock {
 class ShrdluBlocksWorld {
 	constructor() {
 		// original SHRDLU environment:
-		this.shrdluArm = new ShrdluBlock("arm", MSX_COLOR_WHITE, BW_SIZE_LARGE, 
+		this.shrdluArm = new ShrdluBlock(SHRDLU_BLOCKTYPE_ARM, "white", BW_SIZE_LARGE, 
 									  	 	    0, SHRDLU_ARM_Y_REST_POSITION, 0,
 									 	  		2, 256, 2);
 		this.shrdluArm.ID = "shrdlu-arm";
 		this.objects.push(this.shrdluArm);
 
 
-		let table:ShrdluBlock = new ShrdluBlock(SHRDLU_BLOCKTYPE_TABLE, MSX_COLOR_GREY, BW_SIZE_LARGE, 
+		let table:ShrdluBlock = new ShrdluBlock(SHRDLU_BLOCKTYPE_TABLE, "grey", BW_SIZE_LARGE, 
 									  	 	    0, 0, 0,
 									 	  		32, 4, 32);
 		table.ID = "table";
 		this.objects.push(table);
 
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_RED, BW_SIZE_LARGE, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "red", BW_SIZE_LARGE, 
 										  0, 4, 10,
 										  8, 12, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_RED, BW_SIZE_SMALL, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "red", BW_SIZE_SMALL, 
 	 									  4, 4, 4,
 	 									  4, 4, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "blue", BW_SIZE_LARGE, 
 									 	  8, 4, 28,
 									 	  8, 12, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
 									 	  14, 4, 10,
 									 	  8, 8, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, MSX_COLOR_GREEN, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
 									 	  12, 4, 0,
 									 	  8, 8, 8));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BOX, MSX_COLOR_WHITE, BW_SIZE_LARGE, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BOX, "white", BW_SIZE_LARGE, 
 									 	  20, 4, 20,
 									 	  12, 12, 12));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_GREEN, BW_SIZE_SMALL, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, "green", BW_SIZE_SMALL, 
 									 	  4, 8, 4,
 									 	  4, 4, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_RED, BW_SIZE_MEDIUM, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, "red", BW_SIZE_MEDIUM, 
 									 	  16, 12, 4,
 									 	  4, 10, 4));
-		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, MSX_COLOR_BLUE, BW_SIZE_LARGE, 
+		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_PYRAMID, "blue", BW_SIZE_LARGE, 
 									 	  22, 5, 22,
 									 	  8, 8, 8));
+
+		for(let i:number = 0; i<this.objects.length; i++) {
+			this.idHash[this.objects[i].ID] = i;
+		}
 	}
 
 
@@ -373,6 +388,8 @@ class ShrdluBlocksWorld {
 				tmpBlock.y = y;
 				tmpBlock.z = z;
 				for(let o2 of this.objects) {
+					if (o2.type == SHRDLU_BLOCKTYPE_BOX &&
+						o2.y < y) continue;	// ignore this collision
 					if (o2 != o && o2 != base && o2.collide(tmpBlock)) {
 						collision = true;
 						break;
@@ -416,45 +433,73 @@ class ShrdluBlocksWorld {
 	}
 
 
-	static getPlanningOperators(o:Ontology) : PlanningOperator[]
+	static getPlanningOperators(o:Ontology, version:string) : PlanningOperator[]
 	{
 		let operators:PlanningOperator[] = [];
 
-
-		operators.push(PlanningOperator.fromString(
-			"action.take(X:[#id], Y:[#id])", 
-			["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])",
-			 "~table(Y)"], 
-			["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
-		operators.push(PlanningOperator.fromString(
-			"action.take(X:[#id], Y:[#id])", 
-			["empty('shrdlu-arm'[#id])", "space.inside.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
-			["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.inside.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
-		operators.push(PlanningOperator.fromString(
-			"action.take(X:[#id], Y:'table'[#id])", 
-			["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
-			["verb.hold('shrdlu'[#id], X)", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
-		operators.push(PlanningOperator.fromString(
-			"action.put-in(X:[#id], Y:[#id])", 
-			["verb.hold('shrdlu'[#id], X)", "object(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])",
-			 "~box(Y)", "~pyramid(Y)", "~arm(Y)",], 
-			["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
-		operators.push(PlanningOperator.fromString(
-			"action.put-in(X:[#id], Y:[#id])", 
-			["verb.hold('shrdlu'[#id], X)", "box(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], 
-			["space.inside.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
-		operators.push(PlanningOperator.fromString(
-			"action.put-in(X:[#id], Y:'table'[#id])", 
-			["verb.hold('shrdlu'[#id], X)"], 
-			["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)"], o));
-
-		/*
-		operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.directly.on.top.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
-		operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.inside.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.inside.of(X, Y)"], o));
-		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "object(Y)", "~box(Y)", "~pyramid(Y)", "~arm(Y)", "~space.directly.on.top.of(Z, Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
-		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "box(Y)", "~space.inside.of(Z, Y)"], ["space.inside.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
-		operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:'table'[#id])", ["verb.hold('shrdlu'[#id], X)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
-		*/		
+		if (version == "graphplan") {
+			// v2: version without negative preconditions that can change with operators
+			operators.push(PlanningOperator.fromString(
+				"action.take(X:[#id], Y:[#id])", 
+				["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])",
+				 "~table(Y)"], 
+				["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.take(X:[#id], Y:[#id])", 
+				["empty('shrdlu-arm'[#id])", "space.inside.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
+				["verb.hold('shrdlu'[#id], X)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.inside.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.take(X:[#id], Y:'table'[#id])", 
+				["empty('shrdlu-arm'[#id])", "space.directly.on.top.of(X, Y)", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])"], 
+				["verb.hold('shrdlu'[#id], X)", "~top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~space.directly.on.top.of(X, Y)", "~empty('shrdlu-arm'[#id])"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.put-in(X:[#id], Y:[#id])", 
+				["verb.hold('shrdlu'[#id], X)", "object(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "verb.can('shrdlu'[#id], action.put-in(X, Y))", 
+				 "~box(Y)"], 
+				["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.put-in(X:[#id], Y:[#id])", 
+				["verb.hold('shrdlu'[#id], X)", "box(Y)", "top-clear-status(Y, 'clear-status-clear'[clear-status-clear])", "verb.can('shrdlu'[#id], action.put-in(X, Y))"], 
+				["space.inside.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)", "~top-clear-status(Y, 'clear-status-clear'[clear-status-clear])"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.put-in(X:[#id], Y:'table'[#id])", 
+				["verb.hold('shrdlu'[#id], X)"], 
+				["space.directly.on.top.of(X, Y)", "empty('shrdlu-arm'[#id])", "top-clear-status(X, 'clear-status-clear'[clear-status-clear])", "~verb.hold('shrdlu'[#id], X)"], o));
+		} else {
+			// v2 for forward planner (better suits the domain, allows placing more than one object on top of another):
+			operators.push(PlanningOperator.fromString(
+				"action.take(X:[#id], Y:[#id])", 
+				["space.directly.on.top.of(X, Y)",
+				 "~verb.hold('shrdlu'[#id], X2)", "~space.directly.on.top.of(Z1:[#id], X)", "~space.inside.of(Z2:[#id], X)"], 
+				["verb.hold('shrdlu'[#id], X)", 
+				 "~space.directly.on.top.of(X, Y)"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.take(X:[#id], Y:[#id])", 
+				["space.inside.of(X, Y)",
+				 "~verb.hold('shrdlu'[#id], X2)", "~space.directly.on.top.of(Z1:[#id], X)", "~space.inside.of(Z2:[#id], X)"], 
+				["verb.hold('shrdlu'[#id], X)",
+				 "~space.inside.of(X, Y)"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.put-in(X:[#id], Y:[#id])", 
+				["verb.hold('shrdlu'[#id], X)", "verb.can('shrdlu'[#id], action.put-in(X, Y))", 
+				 "~verb.hold('shrdlu'[#id], Y)", "~box(Y)"], 
+				["space.directly.on.top.of(X, Y)", 
+				 "~verb.hold('shrdlu'[#id], X)"], o));
+			operators.push(PlanningOperator.fromString(
+				"action.put-in(X:[#id], Y:[#id])", 
+				["verb.hold('shrdlu'[#id], X)", "box(Y)", "verb.can('shrdlu'[#id], action.put-in(X, Y))", 
+				 "~verb.hold('shrdlu'[#id], Y)"], 
+				["space.inside.of(X, Y)",
+				 "~verb.hold('shrdlu'[#id], X)"], o));
+			/*
+			// v1: (problematic, as it has negative preconditions, which are not well supported by graph plan)
+			operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.directly.on.top.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.directly.on.top.of(X, Y)"], o));
+			operators.push(PlanningOperator.fromString("action.take(X:[#id], Y:[#id])", ["~verb.hold('shrdlu'[#id], X2)", "space.inside.of(X, Y)","~space.directly.on.top.of(Z1:[#id], X)","~space.inside.of(Z2:[#id], X)"], ["verb.hold('shrdlu'[#id], X)", "~space.inside.of(X, Y)"], o));
+			operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "object(Y)", "~box(Y)", "~pyramid(Y)", "~arm(Y)", "~space.directly.on.top.of(Z, Y)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+			operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:[#id])", ["verb.hold('shrdlu'[#id], X)", "~verb.hold('shrdlu'[#id], Y)", "box(Y)", "~space.inside.of(Z, Y)"], ["space.inside.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+			operators.push(PlanningOperator.fromString("action.put-in(X:[#id], Y:'table'[#id])", ["verb.hold('shrdlu'[#id], X)"], ["space.directly.on.top.of(X, Y)", "~verb.hold('shrdlu'[#id], X)"], o));
+			*/		
+		}
 
 		return operators;
 	}
@@ -464,6 +509,8 @@ class ShrdluBlocksWorld {
 	objects:ShrdluBlock[] = [];
 	shrdluArm:ShrdluBlock = null;
 	objectInArm:ShrdluBlock = null;
+
+	idHash: { [id: string] : number; } = {};
 
 	center_x:number;
 	center_y:number;

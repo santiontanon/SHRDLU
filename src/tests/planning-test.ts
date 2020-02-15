@@ -20,31 +20,40 @@ var world = new ShrdluBlocksWorld();
 var testAI:BlocksWorldRuleBasedAI = new BlocksWorldRuleBasedAI(o, parser, nlg, world, null, 1, 0, DEFAULT_QUESTION_PATIENCE_TIMER, ["data/blocksworld-kb.xml"]); 
 testAI.selfID = 'shrdlu';
 
-
-var operators:PlanningOperator[] = ShrdluBlocksWorld.getPlanningOperators();
-
-
-for(let operator of operators) {
-	console.log(operator.toString());
-}
-
-//var planner:PlanningPlanner = new PlanningForwardSearchPlanner(operators, false);
-//var planner:PlanningPlanner = new PlanningBackwardSearchPlanner(operators, false);
-var planner:PlanningPlanner = new GraphPlanPlanner(operators, false);
-
 Sort.precomputeIsA();
 
-function planningTest(init:PlanningState, planner:PlanningPlanner, goal_str:string, expected_length:number) : boolean
+testAI.attentionAndPerception();
+
+
+//var operators:PlanningOperator[] = ShrdluBlocksWorld.getPlanningOperators(o, "forward");
+//var planner:PlanningPlanner = new PlanningForwardSearchPlanner(operators, false);
+var initial_state:PlanningState = testAI.getWorldStateForPlanning("forward");
+
+//var operators:PlanningOperator[] = ShrdluBlocksWorld.getPlanningOperators(o, "graphplan");
+//var planner:PlanningPlanner = new GraphPlanPlanner(operators, false);
+//var initial_state:PlanningState = testAI.getWorldStateForPlanning("graphplan");
+
+var planner:BWPlanner = new BWPlanner(world, o);
+
+//for(let operator of operators) {
+//	console.log(operator.toString());
+//}
+
+
+
+//function planningTest(init:PlanningState, planner:PlanningPlanner, goal_str:string, expected_length:number) : boolean
+function planningTest(init:PlanningState, planner:BWPlanner, goal_str:string, expected_length:number) : boolean
 {
 	let goal:PlanningCondition = PlanningCondition.fromString(goal_str, o);
 
 	console.log("--------------------------------");
-	console.log("Initial State:");
-	console.log(initial_state.toString());
+	//console.log("Initial State:");
+	//console.log(init.toString());
 	console.log("Goal:");
 	console.log(goal.toString());
 
-	let plan:PlanningPlan = planner.plan(initial_state, goal, 8);
+	//let plan:PlanningPlan = planner.plan(initial_state, goal, 8);
+	let plan:PlanningPlan = planner.plan(goal, 8);
 
 	if (plan == null) {
 		console.log("Plan: null");
@@ -67,11 +76,8 @@ function planningTest(init:PlanningState, planner:PlanningPlanner, goal_str:stri
 }
 
 
-// 1) Get the world state as a planning state:
-testAI.attentionAndPerception();
-var initial_state:PlanningState = testAI.getWorldStateForPlanning();
 
-// 2) Define a set of sample goals:
+// Define a set of sample goals:
 // have empty hand: -
 planningTest(initial_state, planner, "~verb.hold('shrdlu'[#id], X:[#id])", 0);
 
@@ -90,8 +96,32 @@ planningTest(initial_state, planner, "space.directly.on.top.of(X:[#id],'block-5'
 // small pyramid on small block, on blue block
 planningTest(initial_state, planner, "space.directly.on.top.of('pyramid-9'[#id],'cube-4'[#id]), space.directly.on.top.of('cube-4'[#id],'block-5'[#id])", 6);
 
+// blue pyramid on the box
+planningTest(initial_state, planner, "space.inside.of('pyramid-11'[#id],'box-8'[#id])", 0);
+
+// small pyramid on the box
+planningTest(initial_state, planner, "space.inside.of('pyramid-9'[#id],'box-8'[#id])", 4);
+
+// any pyramid on the table:
+planningTest(initial_state, planner, "space.directly.on.top.of(X:[#id],'table'[#id]), pyramid(X)", 2);
+
+// anything small on the box:
+planningTest(initial_state, planner, "space.inside.of(X:[#id],'box-8'[#id]), small(X)", 4);
+
+// anything green on the box:
+planningTest(initial_state, planner, "space.inside.of(X:[#id],'box-8'[#id]), color(X, 'green'[green])", 4);
+
+// anything rectangular on the box:
+planningTest(initial_state, planner, "space.inside.of(X:[#id],'box-8'[#id]), shape(X, 'rectangular'[rectangular])", 4);
+
+// green and red pyramids in the box:
+planningTest(initial_state, planner, "space.inside.of('pyramid-9'[#id],'box-8'[#id]), space.inside.of('pyramid-10'[#id],'box-8'[#id])", 6);
+
 // something impossible
 planningTest(initial_state, planner, "space.directly.on.top.of('table'[#id],'pyramid-9'[#id])", null);
+
+// blue and red pyramids in the box (impossible)
+planningTest(initial_state, planner, "space.inside.of('pyramid-11'[#id],'box-8'[#id]), space.inside.of('pyramid-10'[#id],'box-8'[#id])", null);
 
 // blue pyramid on the table, and on it's place the small block/pyramid combo
 planningTest(initial_state, planner, "space.directly.on.top.of('pyramid-11'[#id],'table'[#id]), space.directly.on.top.of('pyramid-9'[#id],'cube-4'[#id]), space.inside.of('cube-4'[#id],'box-8'[#id])", 8);

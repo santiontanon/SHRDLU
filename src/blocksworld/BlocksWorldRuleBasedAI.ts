@@ -6,15 +6,16 @@ var SPACE_NEAR_FAR_THRESHOLD:number = 8;
 class PlanningRecord {
 	constructor(ai:BlocksWorldRuleBasedAI, goal:PlanningCondition, o:Ontology)
 	{
-		this.planner = new GraphPlanPlanner(ai.operators, false);		
+		this.planner = new BWPlanner(ai.world, o);		
 		this.goal = goal;
 		this.o = o;
 	}
 
-	
+
+	// ...
 
 
-	planner:PlanningPlanner;
+	planner:BWPlanner;
 	goal:PlanningCondition;
 	o:Ontology;
 
@@ -59,9 +60,6 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			this.loadLongTermRulesFromFile(rulesFileName);
 		}
 
-		// set up the planner:
-		this.operators = ShrdluBlocksWorld.getPlanningOperators(o);
-
 		this.maximum_answers_to_give_at_once_for_a_query = 100;
 		this.perceptionMemoryTime = 1;
 
@@ -76,31 +74,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 		for(let object of this.world.objects) {
 			this.addTermToPerception(Term.fromString(object.type + "('"+object.ID+"'[#id])", this.o));
-			switch(object.color) {
-				case MSX_COLOR_BLACK: this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'black'[black])", this.o));
-									  break;
-				case MSX_COLOR_GREEN: 
-				case MSX_COLOR_LIGHT_GREEN: 
-				case MSX_COLOR_DARK_GREEN: 
-									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'green'[green])", this.o));
-									  break;
-				case MSX_COLOR_BLUE: 
-				case MSX_COLOR_LIGHT_BLUE:
-				case MSX_COLOR_DARK_BLUE: 
-									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'blue'[blue])", this.o));
-									  break;
-				case MSX_COLOR_RED: 
-				case MSX_COLOR_LIGHT_RED:
-				case MSX_COLOR_DARK_RED: 
-									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'red'[red])", this.o));
-									  break;
-				case MSX_COLOR_GREY: 
-									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'grey'[grey])", this.o));
-									  break;
-				case MSX_COLOR_WHITE: 
-									  this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], 'white'[white])", this.o));
-									  break;
-			}
+			this.addTermToPerception(Term.fromString("color('"+object.ID+"'[#id], '"+object.color+"'["+object.color+"])", this.o));
+
 			this.addTermToPerception(Term.fromString(object.size + "('"+object.ID+"'[#id])", this.o));
 			if (object.shape != null) {
 				this.addTermToPerception(Term.fromString("shape('"+object.ID+"'[#id], '"+object.shape+"'["+object.shape+"])", this.o));
@@ -584,8 +559,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		return true;
 	}
 
-
-	getWorldStateForPlanning() : PlanningState
+	/*
+	getWorldStateForPlanning(version:string) : PlanningState
 	{
 		let state:PlanningState = new PlanningState();
 		let predicatesToInclude:string[] = ["color", "shape", 
@@ -612,7 +587,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 							clear = false;
 						}
 					}
-					if (clear) {
+					if (clear && version == "graphplan") {
 						state.terms.push(Term.fromString("top-clear-status('"+(<ConstantTermAttribute>term.attributes[0]).value+"'[#id], "+
 														 "'clear-status-clear'[clear-status-clear])", this.o));
 					}
@@ -620,9 +595,25 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 		}
 
+		for(let object of this.world.objects) {
+			for(let object2 of this.world.objects) {
+				if (object != object2) {
+					if (object2.type == SHRDLU_BLOCKTYPE_BLOCK || 
+						object2.type == SHRDLU_BLOCKTYPE_CUBE ||
+						object2.type == SHRDLU_BLOCKTYPE_BOX ||
+						object2.type == SHRDLU_BLOCKTYPE_TABLE) {
+						if (object.dx <= object2.dx &&
+							object.dz <= object2.dz) {
+							state.terms.push(Term.fromString("verb.can('"+this.selfID+"'[#id], action.put-in('"+object.ID+"'[#id], '"+object2.ID+"'[#id]))", this.o));
+						}
+					}
+				}
+			}
+		}
+
 		return state;
 	}
-
+	*/
 
 	naturalLanguageGenerator:NLGenerator = null;
 	world:ShrdluBlocksWorld = null;
@@ -630,6 +621,5 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 	currentActionHandler:IntentionAction = null;
 
-	operators:PlanningOperator[] = null;
 	planningProcesses:PlanningRecord[] = [];	// list of the current planning processes the AI is trying to perform
 }
