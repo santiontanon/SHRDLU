@@ -293,6 +293,30 @@ class IntentionRecord {
 	}
 
 
+	resolveNumberConstraint(numberConstraint:TermAttribute, max:number):number
+	{
+		if (numberConstraint != null) {
+			if (numberConstraint.sort.is_a_string("all")) return max;
+			if (numberConstraint.sort.is_a_string("number.1")) return 1;
+			if (numberConstraint.sort.is_a_string("number.2")) return 2;
+			if (numberConstraint.sort.is_a_string("number.3")) return 3;
+			if (numberConstraint.sort.is_a_string("number.4")) return 4;
+			if (numberConstraint.sort.is_a_string("number.5")) return 5;
+			if (numberConstraint.sort.is_a_string("number.6")) return 6;
+			if (numberConstraint.sort.is_a_string("number.7")) return 7;
+			if (numberConstraint.sort.is_a_string("number.8")) return 8;
+			if (numberConstraint.sort.is_a_string("number.9")) return 9;
+			if (numberConstraint.sort.is_a_string("number.10")) return 10;
+			if (numberConstraint.sort.is_a_string("number") && 
+				numberConstraint instanceof ConstantTermAttribute) {
+				let value:string = (<ConstantTermAttribute>numberConstraint).value;
+				return Number(value);
+			}
+		}
+		return 1;
+	}	
+
+
 	action:Term = null;	
 	requester:TermAttribute = null;
 	requestingPerformative:NLContextPerformative = null;
@@ -334,31 +358,6 @@ abstract class IntentionAction {
 	actionScriptsFailed(ai:RuleBasedAI, requester:TermAttribute) 
 	{		
 	}
-
-
-	resolveNumberConstraint(numberConstraint:TermAttribute, max:number):number
-	{
-		if (numberConstraint != null) {
-			if (numberConstraint.sort.is_a_string("all")) return max;
-			if (numberConstraint.sort.is_a_string("number.1")) return 1;
-			if (numberConstraint.sort.is_a_string("number.2")) return 2;
-			if (numberConstraint.sort.is_a_string("number.3")) return 3;
-			if (numberConstraint.sort.is_a_string("number.4")) return 4;
-			if (numberConstraint.sort.is_a_string("number.5")) return 5;
-			if (numberConstraint.sort.is_a_string("number.6")) return 6;
-			if (numberConstraint.sort.is_a_string("number.7")) return 7;
-			if (numberConstraint.sort.is_a_string("number.8")) return 8;
-			if (numberConstraint.sort.is_a_string("number.9")) return 9;
-			if (numberConstraint.sort.is_a_string("number.10")) return 10;
-			if (numberConstraint.sort.is_a_string("number") && 
-				numberConstraint instanceof ConstantTermAttribute) {
-				let value:string = (<ConstantTermAttribute>numberConstraint).value;
-				return Number(value);
-			}
-		}
-		return 1;
-	}
-
 
 
 	needsContinuousExecution:boolean = false;
@@ -1223,7 +1222,10 @@ class RuleBasedAI {
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);
 				if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
-					this.intentions.push(ir);
+					// Request for executing an action that can be satisfied. However, maybe we might need to plan for it.
+					// So, invoke the planner (if it exists), before executing the action:
+					this.planForAction(ir);
+
 				} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 					if (action.attributes.length>=1 &&
 						(action.attributes[0] instanceof ConstantTermAttribute) &&
@@ -1869,6 +1871,14 @@ class RuleBasedAI {
 		if (this.queuedIntentions.indexOf(ir) == -1) {
 			this.queuedIntentions.push(ir);
 		}
+	}
+
+
+	// Some AIs extending from this class, might implement a planner, which will be called by redefining this function
+	// In this default one, we just queue the action for execution.
+	planForAction(ir:IntentionRecord)
+	{
+		this.intentions.push(ir);
 	}
 
 

@@ -539,7 +539,8 @@ class BWPlanner {
 					this.bw.objects[idx].type == SHRDLU_BLOCKTYPE_BOX) {
 					let canBeTaken:boolean = true;
 					for(let idx2:number = 0; idx2<state.x.length; idx2++) {
-						if (state.isOnTopOf(idx2, idx)) {
+						if (state.isOnTopOf(idx2, idx) ||
+							state.isInsideOf(idx2, idx)) {
 							canBeTaken = false;
 							break;
 						}

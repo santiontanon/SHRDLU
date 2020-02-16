@@ -27,12 +27,13 @@ testAI.attentionAndPerception();
 
 //var operators:PlanningOperator[] = ShrdluBlocksWorld.getPlanningOperators(o, "forward");
 //var planner:PlanningPlanner = new PlanningForwardSearchPlanner(operators, false);
-var initial_state:PlanningState = testAI.getWorldStateForPlanning("forward");
+//var initial_state:PlanningState = testAI.getWorldStateForPlanning("forward");
 
 //var operators:PlanningOperator[] = ShrdluBlocksWorld.getPlanningOperators(o, "graphplan");
 //var planner:PlanningPlanner = new GraphPlanPlanner(operators, false);
 //var initial_state:PlanningState = testAI.getWorldStateForPlanning("graphplan");
 
+var initial_state:PlanningState = null;
 var planner:BWPlanner = new BWPlanner(world, o);
 
 //for(let operator of operators) {
@@ -52,7 +53,7 @@ function planningTest(init:PlanningState, planner:BWPlanner, goal_str:string, ex
 	console.log("Goal:");
 	console.log(goal.toString());
 
-	//let plan:PlanningPlan = planner.plan(initial_state, goal, 8);
+	//let plan:PlanningPlan = planner.plan(init, goal, 8);
 	let plan:PlanningPlan = planner.plan(goal, 8);
 
 	if (plan == null) {
@@ -89,6 +90,9 @@ planningTest(initial_state, planner, "space.directly.on.top.of('pyramid-9'[#id],
 
 // red pyramid on small block
 planningTest(initial_state, planner, "space.directly.on.top.of('pyramid-10'[#id],'cube-4'[#id])", 4);
+
+// take the box
+planningTest(initial_state, planner, "verb.hold('shrdlu'[#id], 'box-8'[#id])", 3);
 
 // anything on blue block
 planningTest(initial_state, planner, "space.directly.on.top.of(X:[#id],'block-5'[#id])", 2);

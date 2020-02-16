@@ -4,21 +4,37 @@ var SPACE_NEAR_FAR_THRESHOLD:number = 8;
 
 
 class PlanningRecord {
-	constructor(ai:BlocksWorldRuleBasedAI, goal:PlanningCondition, o:Ontology)
+	constructor(ai:BlocksWorldRuleBasedAI, goal:PlanningCondition, o:Ontology, requester:TermAttribute, 
+				requestingPerformative:NLContextPerformative, timeStamp:number)
 	{
 		this.planner = new BWPlanner(ai.world, o);		
 		this.goal = goal;
 		this.o = o;
+		this.requester = requester;
+		this.requestingPerformative = requestingPerformative;
+		this.timeStamp = timeStamp;
 	}
 
 
-	// ...
+	// executes one step of plannning, and returns "true" if planning is over
+	step() : boolean
+	{
+		this.plan = this.planner.plan(this.goal, this.maxDepth)
+		return true;
+	}
 
+
+	requester:TermAttribute = null;
+	requestingPerformative:NLContextPerformative = null;
+	timeStamp:number = null;
 
 	planner:BWPlanner;
 	goal:PlanningCondition;
 	o:Ontology;
+	plan:PlanningPlan = null;
+	planExecutionPointer:number = 0;
 
+	maxDepth:number = 8;
 	priority:number = 1;
 	anxiety:number = 0;
 }
@@ -126,6 +142,54 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 											   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
 				this.currentActionHandler = null;		
         	}
+        }
+
+        // planning:
+        let toDelete:PlanningRecord[] = [];
+        for(let pr of this.planningProcesses) {
+        	if (pr.step()) {
+    			toDelete.push(pr);
+        		
+        		// get the plan and execute it:
+        		if (pr.plan == null) {
+        			// generate error message:
+        			if (pr.requester != null) {
+						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest("+pr.requester+"))", this.o);
+						this.intentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+					}
+        		} else {
+        			if (pr.requester != null) {
+						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok("+pr.requester+"))", this.o);
+						this.intentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+					}
+        			this.plans.push(pr);
+        		}
+        	}
+        }
+        for(let pr of toDelete) {
+        	this.planningProcesses.splice(this.planningProcesses.indexOf(pr), 1);
+        }
+
+        // execute plans:
+        toDelete = [];
+        for(let pr of this.plans) {
+        	let plan:PlanningPlan = pr.plan;
+
+        	// execute the plan:
+        	if (this.isIdleWithoutConsideringPlanExecution()) {
+        		if (pr.planExecutionPointer >= plan.actions.length) {
+        			// we are done!
+        			toDelete.push(pr);
+        		} else {
+        			let action:Term = plan.actions[pr.planExecutionPointer].signature;
+        			pr.planExecutionPointer++;
+        			// we set the requester to null, so that we don't constantly say "ok" after each action
+        			this.intentions.push(new IntentionRecord(action, null, null, null, this.time_in_seconds));
+        		}
+        	}
+        }
+        for(let pr of toDelete) {
+        	this.plans.splice(this.plans.indexOf(pr), 1);
         }
 	}	
 
@@ -556,8 +620,75 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (this.queuedIntentions.length > 0) return false;
 		if (this.inferenceProcesses.length > 0) return false;
 		if (this.currentActionHandler != null) return false;
+		if (this.planningProcesses.length > 0) return false;
+		if (this.plans.length > 0) return false;
 		return true;
 	}
+
+
+	isIdleWithoutConsideringPlanExecution() : boolean
+	{
+		if (this.intentions.length > 0) return false;
+		if (this.queuedIntentions.length > 0) return false;
+		if (this.inferenceProcesses.length > 0) return false;
+		if (this.currentActionHandler != null) return false;
+		if (this.planningProcesses.length > 0) return false;
+		return true;
+	}
+
+
+	planForAction(ir:IntentionRecord)
+	{
+		// 1) Translate the intention to a planning goal:
+		let actions:Term[] = ir.alternative_actions;
+		if (actions == null) actions = [ir.action];
+		
+		let numberConstraint:number = 1;
+		if (ir.numberConstraint != null) {
+			numberConstraint = ir.resolveNumberConstraint(ir.numberConstraint, actions.length);
+		}
+
+		let predicates:PlanningPredicate[] = [];
+		for(let action of actions) {
+			if (action.functor.is_a_string("action.take") && action.attributes.length==2) {
+				let target:TermAttribute = action.attributes[1];
+				predicates.push(new PlanningPredicate(Term.fromString("verb.hold('"+this.selfID+"'[#id], "+target+")", this.o), true));
+			} else if (action.functor.is_a_string("action.put-in") && action.attributes.length==3 &&
+					   (action.attributes[2] instanceof ConstantTermAttribute)) {
+				let o1:TermAttribute = action.attributes[1];
+				let o2:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[2];
+				if (this.world.getObject(o2.value).type == SHRDLU_BLOCKTYPE_BOX) {
+					predicates.push(new PlanningPredicate(Term.fromString("space.inside.of("+o1+","+o2+")", this.o), true));
+				} else {
+					predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+","+o2+")", this.o), true));
+				}
+			} else {
+				// unsupported action, just execute directly without planning:
+				this.intentions.push(ir);
+				return;
+			}
+		}
+
+		let goal:PlanningCondition = new PlanningCondition();
+		if (numberConstraint == 1) {
+			for(let predicate of predicates) {
+				goal.predicates.push([predicate]);
+			}
+		} else if (numberConstraint == actions.length) {
+			goal.predicates.push(predicates);
+		} else {
+			// unsupported number constraint, just execute directly without planning:
+			this.intentions.push(ir);
+			return;
+		}
+
+		// 2) Plan:
+		console.log("planForAction, goal:");
+		console.log(goal);
+
+		this.planningProcesses.push(new PlanningRecord(this, goal, this.o, ir.requester, ir.requestingPerformative, this.time_in_seconds));
+	}
+
 
 	/*
 	getWorldStateForPlanning(version:string) : PlanningState
@@ -622,4 +753,5 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	currentActionHandler:IntentionAction = null;
 
 	planningProcesses:PlanningRecord[] = [];	// list of the current planning processes the AI is trying to perform
+	plans:PlanningRecord[] = [];	// list of plans we are currently executing
 }

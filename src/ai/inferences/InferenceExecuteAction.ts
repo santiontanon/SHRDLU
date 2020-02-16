@@ -23,7 +23,7 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 					ir.alternative_actions.push(this.action.applyBindings(result.bindings));
 				}
 				if (nlcp.performative.attributes.length>=4) ir.numberConstraint = nlcp.performative.attributes[3];
-				ai.intentions.push(ir);
+				ai.planForAction(ir);
 			} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
 				let term:Term = Term.fromString(tmp2, ai.o);
