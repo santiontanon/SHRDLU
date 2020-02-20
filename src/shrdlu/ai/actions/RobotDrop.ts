@@ -14,7 +14,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 		let alternative_actions:Term[] = ir.alternative_actions;
 		if (alternative_actions == null) alternative_actions = [ir.action];
 		let denyrequestCause:Term = null;
-		let numberConstraint:number = this.resolveNumberConstraint(ir.numberConstraint, alternative_actions.length);
+		let numberConstraint:number = ir.resolveNumberConstraint(ir.numberConstraint, alternative_actions.length);
 		let itemID_l:string[] = [];
 		let locationID_l:string[] = [];
 

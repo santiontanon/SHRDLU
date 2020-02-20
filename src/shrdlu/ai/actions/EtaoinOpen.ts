@@ -50,7 +50,7 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
 			}
 		}
 
-		let numberConstraint:number = this.resolveNumberConstraint(ir.numberConstraint, doors.length + lights.length);
+		let numberConstraint:number = ir.resolveNumberConstraint(ir.numberConstraint, doors.length + lights.length);
 
 		if (lights.length > 0) {
 			for(let light of lights) {

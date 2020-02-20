@@ -787,6 +787,7 @@ this.addTokenPOS(new PartOfSpeech("of", "verb.belong", Term.fromString("preposit
   ["opposite",  "PREP"],
 NLPAddTokenPOS("out", PartOfSpeech.generatePreposition("out", POS_TYPE_PPREPOSITION_PLACE));
 */
+this.addTokenPOS(new PartOfSpeech("over", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("over", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
   /*
   ["pace",  "PREP"],
@@ -1858,6 +1859,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","over", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);

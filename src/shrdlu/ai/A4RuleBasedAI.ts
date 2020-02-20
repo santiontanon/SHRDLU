@@ -427,10 +427,11 @@ class A4RuleBasedAI extends RuleBasedAI {
     		       pbr.subjectID != this.selfID) {
     		// assume that this is a "talk" action:
     		let context:NLContext = null;
+    		let speaker:string = pbr.subjectID;
     		for(let actionTerm of actionTerms) {
     			actionTerm.addAttribute(new ConstantTermAttribute(pbr.directObjectSymbol, this.o.getSort("#id")));
     			// update context perception:
-    			context = this.updateContext((<ConstantTermAttribute>actionTerm.attributes[1]).value);
+    			context = this.updateContext(speaker);
     		}
 
 			// parse the text:
@@ -453,13 +454,14 @@ class A4RuleBasedAI extends RuleBasedAI {
 	        		}
         		}
         		actionTerms = actionTerms2;
+        		this.reactToParsedPerformatives(parsePerformatives, pbr.directObjectSymbol, speaker);
 		    } else {
 		    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + pbr.directObjectSymbol);
 		    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
 		    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 		    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
 		    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
-		    	if (this.respondToPerformatives) this.reactiveBehaviorUpdateToParseError(pbr.subjectID);
+		    	if (this.respondToPerformatives) this.reactToParseError(pbr.subjectID);
 		    }
     	}
     	if (pbr.indirectObjectID != null) {
@@ -1383,7 +1385,7 @@ class A4RuleBasedAI extends RuleBasedAI {
     }
 
 
-	reactiveBehaviorUpdateToParseError(speakerID:string)
+	reactToParseError(speakerID:string)
 	{
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
@@ -1392,7 +1394,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		    	app.achievement_nlp_parse_error = true;
 		    	app.trigger_achievement_complete_alert();
 
-		    	super.reactiveBehaviorUpdateToParseError(speakerID);
+		    	super.reactToParseError(speakerID);
 		    }
 		}
 	}

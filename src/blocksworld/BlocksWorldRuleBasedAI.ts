@@ -149,7 +149,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
         for(let pr of this.planningProcesses) {
         	if (pr.step()) {
     			toDelete.push(pr);
-        		
+
         		// get the plan and execute it:
         		if (pr.plan == null) {
         			// generate error message:
@@ -574,11 +574,6 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
     										      "'"+time+"'[number],"+
     											  "'"+speaker+"'[#id])", this.o)];
 
-		// assume that this is a "talk" action:
-		for(let actionTerm of actionTerms) {
-			actionTerm.addAttribute(new ConstantTermAttribute(speaker, this.o.getSort("#id")));
-		}
-
 		// parse the text:
 	    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(text, this.cache_sort_performative, context, this);
 	    if (parses == null || parses.length == 0 && this.naturalLanguageParser.error_semantic.length > 0) {
@@ -598,18 +593,18 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			    	actionTerms2.push(tmp);
         		}
     		}
-    		actionTerms = actionTerms2;
-			for(let actionTerm of actionTerms) {
+			for(let actionTerm of actionTerms2) {
 				// console.log(actionTerm + " added to perception");
 				this.addTermToPerception(actionTerm);
-			}			        		
+			}
+			this.reactToParsedPerformatives(parsePerformatives, text, speaker);
 	    } else {
 	    	console.warn("BlocksWorldRuleBasedAI ("+this.selfID+"): cannot parse sentence: " + text);
 	    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
 	    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 	    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
 	    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
-	    	this.reactiveBehaviorUpdateToParseError(speaker);
+	    	this.reactToParseError(speaker);
 	    }
 	}
 
@@ -635,6 +630,85 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (this.planningProcesses.length > 0) return false;
 		return true;
 	}
+
+
+	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string)
+	{
+		if (speaker != this.selfID && performatives.length > 0) {
+			let context:NLContext = this.contextForSpeaker(speaker);
+			let first_performative:Term = null;
+			let unified_performatives:Term[] = [];
+			let actions:Term[] = [];
+			let allActionRequestsTalkingToUs:boolean = true;	// We are the listener of the performative
+			let anyNeedsInference:boolean = false;
+			let allRequestsForUs:boolean = true;	// We are the performer of the requested action
+			let canSatisfyThemAll:boolean = true;
+			for(let performative_att of performatives) {
+				if (performative_att instanceof TermTermAttribute) {
+					let performative:Term = (<TermTermAttribute>performative_att).term;
+					if (first_performative == null) first_performative = performative;
+					// is it talking to us?
+					if (this.talkingToUs(context, speaker, performative) &&
+						(performative.functor.is_a_string("perf.request.action") || 
+					   	 performative.functor.is_a_string("perf.q.action"))) {
+
+						let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
+						if (perf2 == null) perf2 = performative;
+						unified_performatives.push(perf2);
+
+						let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
+						actions.push(action);
+
+						let needsInference:boolean = false;
+						if (perf2.attributes.length == 4 &&
+							perf2.attributes[2] instanceof TermTermAttribute) {
+							needsInference = true;
+							for(let ih of this.intentionHandlers) {
+								if (ih.canHandle(action, this)) {
+									if (ih.canHandleWithoutInference(perf2)) {
+										needsInference = false;
+										break;
+									}
+								}
+							}
+							if (needsInference) {
+								anyNeedsInference = true;
+								break;
+							}
+						}
+
+						if (action.attributes.length>=1 &&
+							(action.attributes[0] instanceof ConstantTermAttribute)) {
+							if ((<ConstantTermAttribute>action.attributes[0]).value != this.selfID) {
+								allRequestsForUs = false;
+								break;
+							}
+						}
+
+						let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
+						let tmp:number = this.canSatisfyActionRequest(ir);
+						if (tmp != ACTION_REQUEST_CAN_BE_SATISFIED) {
+							canSatisfyThemAll = false;
+							break;
+						}
+
+					} else {
+						allActionRequestsTalkingToUs = false;
+						break;
+					}
+				}
+			}
+			if (allActionRequestsTalkingToUs && allRequestsForUs && canSatisfyThemAll && actions.length>0 && !anyNeedsInference) {
+				// Create an intention record with all the requested actions:
+				let ir:IntentionRecord = new IntentionRecord(actions[0], new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(first_performative), null, this.time_in_seconds)
+				ir.alternative_actions = actions;
+				ir.numberConstraint = new VariableTermAttribute(this.o.getSort("all"), null);
+				this.planForAction(ir);
+			} else {
+				super.reactToParsedPerformatives(performatives, text, speaker);
+			}
+		}
+	}	
 
 
 	planForAction(ir:IntentionRecord)

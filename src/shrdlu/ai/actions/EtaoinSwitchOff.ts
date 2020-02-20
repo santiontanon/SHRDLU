@@ -15,7 +15,7 @@ class EtaoinSwitchOff_IntentionAction extends IntentionAction {
 		if (alternative_actions == null) alternative_actions = [ir.action];
 		let denyrequestCause:Term = null;
 		let anyTurnedOff:boolean = false;
-		let numberConstraint:number = this.resolveNumberConstraint(ir.numberConstraint, alternative_actions.length);
+		let numberConstraint:number = ir.resolveNumberConstraint(ir.numberConstraint, alternative_actions.length);
 
 		for(let intention of alternative_actions) {
 			let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;

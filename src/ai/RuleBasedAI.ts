@@ -725,8 +725,8 @@ class RuleBasedAI {
 
 	reactiveBehaviorUpdate(t:Term)
 	{
+		/*
 		let toAdd:Term[] = [];
-
 		if (t.functor.is_a(this.cache_sort_action_talk) &&
 			t.attributes[3] instanceof TermTermAttribute &&
 			t.attributes[2] instanceof ConstantTermAttribute &&
@@ -765,10 +765,50 @@ class RuleBasedAI {
 			console.log("reactiveBehaviorUpdate.toAdd: " + t2);
 			this.addShortTermTerm(t2, REACTION_PROVENANCE);
 		}
+		*/
 	}
 
 
-	reactiveBehaviorUpdateToParseError(speakerID:string)
+	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string)
+	{
+		let toAdd:Term[] = [];
+		if (speaker != this.selfID) {
+			for(let performative_att of performatives) {
+				if (performative_att instanceof TermTermAttribute) {
+					let performative:Term = (<TermTermAttribute>performative_att).term;
+					// is it talking to us?
+					let context:NLContext = this.contextForSpeaker(speaker);
+
+					if (this.talkingToUs(context, speaker, performative)) {
+		    			// Since now we know they are talking to us, we can unify the LISTENER with ourselves:
+		    			this.terminateConversationAfterThisPerformative = false;
+						let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
+						if (perf2 == null) perf2 = performative;
+						let nIntentions:number = this.intentions.length;
+						let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
+						if (tmp!=null) toAdd = toAdd.concat(tmp);
+						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, null, this.o, this.time_in_seconds);
+						// add this performative to all the new intentions:
+						if (nlcp.length > 0) {
+							for(let i:number = nIntentions;i<this.intentions.length;i++) {
+								if (this.intentions[i].requestingPerformative == null) {
+									this.intentions[i].requestingPerformative = nlcp[0];
+								}
+							}
+						}
+						if (this.terminateConversationAfterThisPerformative) context.endConversation();
+					}
+				}
+			}
+		}
+		for(let t2 of toAdd) {
+			console.log("reactToParsedPerformatives.toAdd: " + t2);
+			this.addShortTermTerm(t2, REACTION_PROVENANCE);
+		}
+	}
+
+
+	reactToParseError(speakerID:string)
 	{
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
