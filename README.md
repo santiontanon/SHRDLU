@@ -1,6 +1,6 @@
 # Play on your browser (v3.5)
 
-https://santiontanon.dev/games/shrdlu/v35/shrdlu.html
+https://braingames.santiontanon.dev/games/shrdlu/v35/shrdlu.html
 
 # SHRDLU
 
@@ -10,7 +10,7 @@ https://santiontanon.dev/games/shrdlu/v35/shrdlu.html
 
 SHRDLU is an adventure game based around natural language parsing (inspired by Winograd's <a href="https://en.wikipedia.org/wiki/SHRDLU">SHRDLU</a>). It is an experiment, so, I am not expecting the resulting game to be an amazing game, but just an exploration of the posibilities of this type of AI system in a game.
 
-You can play the game here (still work in progress, but it can already be played beginning to end!): https://santiontanon.dev/games/shrdlu/v35/shrdlu.html
+You can play the game here (still work in progress, but it can already be played beginning to end!): https://braingames.santiontanon.dev/games/shrdlu/v35/shrdlu.html
 
 Alternatively, you can view demo videos here:
 - https://youtu.be/8FNBTs2yv4s (version 1.1)
