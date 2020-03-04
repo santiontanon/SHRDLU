@@ -77,7 +77,7 @@ function planningTest(init:PlanningState, planner:BWPlanner, goal_str:string, ex
 }
 
 
-
+/*
 // Define a set of sample goals:
 // have empty hand: -
 planningTest(initial_state, planner, "~verb.hold('shrdlu'[#id], X:[#id])", 0);
@@ -129,6 +129,9 @@ planningTest(initial_state, planner, "space.inside.of('pyramid-11'[#id],'box-8'[
 
 // blue pyramid on the table, and on it's place the small block/pyramid combo
 planningTest(initial_state, planner, "space.directly.on.top.of('pyramid-11'[#id],'table'[#id]), space.directly.on.top.of('pyramid-9'[#id],'cube-4'[#id]), space.inside.of('cube-4'[#id],'box-8'[#id])", 8);
+*/
+// two pyramids in the box:
+planningTest(initial_state, planner, "2:space.inside.of('pyramid-9'[#id],'box-8'[#id]); space.inside.of('pyramid-10'[#id],'box-8'[#id]); space.inside.of('pyramid-11'[#id],'box-8'[#id])", 6);
 
 
 // - WILL YOU PLEASE STACK UP BOTH OF THE RED BLOCKS AND EITHER A GREEN CUBE OR A PYRAMID?

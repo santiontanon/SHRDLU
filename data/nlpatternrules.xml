@@ -6296,6 +6296,106 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         ('!'|'?')*"/>
 
 
+    <!-- requests involving numbers -->
+    <NLPattern name="perf.request.action-verb-number-query"
+    		   head="perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, V), QUERY, NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']] 
+    		   		 verb(VERB, N, P, T)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
+    		         ('!'|'.')*
+    		         #derefQuery(C2, V, QUERY)"/>
+
+    <NLPattern name="perf.q.action-verb-number-query"
+    		   head="perf.q.action(LISTENER, #cons(VERB:[symbol], LISTENER, V), QUERY, NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']]  
+    		   		 (verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
+    		   		 subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please']
+    		   		 verb(VERB, VN, VP, VT)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)  		 
+					 [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		         #derefQuery(C2, V, QUERY)"/>
+ 		         
+    <NLPattern name="perf.request.action-phrasal-verb-number-query-object"
+    		   head="perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, V, OBJECT3), QUERY, NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']] 
+		   		 	 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+		   		 	 nounPhrase(X3, N3, P3, C3)
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
+    		         ('!'|'.')*
+    		         #derefQuery(C2, V, QUERY)
+    		         #derefFromContext(C3, OBJECT3)"
+    		   priority="200"/>
+
+    <NLPattern name="perf.q.action-phrasal-verb-number-query-object"
+    		   head="perf.q.action(LISTENER, #cons(VERB:[symbol], LISTENER, V, OBJECT3), QUERY, NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']]  
+    		   		 (verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
+    		   		 subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please']
+		   		 	 phrasal-verb(VERB, VN, VP, VT, PREP)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+		   		 	 nounPhrase(X3, N3, P3, C3)
+					 [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		         #derefQuery(C2, V, QUERY)
+    		         #derefFromContext(C3, OBJECT3)"
+    		   priority="200"/>
+
+    <NLPattern name="perf.request.action-phrasal-verb-number-query-query"
+    		   head="perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, V, V2), #and(QUERY, QUERY2), NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']] 
+		   		 	 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+		   		 	 nounPhrase(X3, N3, P3, C3)
+    		         [[','] 'please'] 
+    		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
+    		         ('!'|'.')*
+    		         #derefQuery(C2, V, QUERY)
+    		         #derefQuery(C3, V2, QUERY2)"/>
+
+    <NLPattern name="perf.q.action-phrasal-verb-number-query-query"
+    		   head="perf.q.action(LISTENER, #cons(VERB:[symbol], LISTENER, V, V2), #and(QUERY, QUERY2), NUMBER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [('please'|'now') [',']]  
+    		   		 (verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
+    		   		 subject-personal-pronoun(X1, N, G, P)
+    		   		 ['please']
+		   		 	 phrasal-verb(VERB, VN, VP, VT, PREP)
+    		   		 cardinal(NUMBER)
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+		   		 	 nounPhrase(X3, N3, P3, C3)
+					 [[','] 'please'] ('!'|'?')* 
+    		         #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
+    		         #derefQuery(C2, V, QUERY)
+    		         #derefQuery(C3, V2, QUERY2)"/>
+
+     <!-- perf.moreresults -->
     <NLPattern head="perf.moreresults(LISTENER)"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -6303,8 +6403,6 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
     		          [[','] 'please'] ('!'|'?')*"
     		   priority="200"/>
-
-     <!-- perf.moreresults -->
     <NLPattern head="perf.moreresults(LISTENER)"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]

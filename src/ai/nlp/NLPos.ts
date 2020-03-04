@@ -976,20 +976,20 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
 
 
 // numerals:
-this.addTokenPOS(new PartOfSpeech("one", "number.1", Term.fromString("cardinal('1'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("two", "number.2", Term.fromString("cardinal('2'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("three", "number.3", Term.fromString("cardinal('3'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("four", "number.4", Term.fromString("cardinal('4'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("five", "number.5", Term.fromString("cardinal('5'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("six", "number.6", Term.fromString("cardinal('6'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("seven", "number.7", Term.fromString("cardinal('7'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("eight", "number.8", Term.fromString("cardinal('8'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("nine", "number.9", Term.fromString("cardinal('9'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("ten", "number.10", Term.fromString("cardinal('10'[number])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("one", "number.1", Term.fromString("cardinal('1'[number.1])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("two", "number.2", Term.fromString("cardinal('2'[number.2])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("three", "number.3", Term.fromString("cardinal('3'[number.3])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("four", "number.4", Term.fromString("cardinal('4'[number.4])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("five", "number.5", Term.fromString("cardinal('5'[number.5])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("six", "number.6", Term.fromString("cardinal('6'[number.6])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("seven", "number.7", Term.fromString("cardinal('7'[number.7])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("eight", "number.8", Term.fromString("cardinal('8'[number.8])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("nine", "number.9", Term.fromString("cardinal('9'[number.9])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("ten", "number.10", Term.fromString("cardinal('10'[number.10])", o), 1.0));
 
-this.addTokenPOS(new PartOfSpeech("first", "number.1", Term.fromString("ordinal('1'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("second", "number.2", Term.fromString("ordinal('2'[number])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal('3'[number])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("first", "number.1", Term.fromString("ordinal('1'[number.1])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("second", "number.2", Term.fromString("ordinal('2'[number.2])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal('3'[number.3])", o), 1.0));
 
   // proper nouns
   let proper_nouns:string[] = [/*

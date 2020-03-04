@@ -110,6 +110,9 @@ class PlanningCondition {
 		let variableNames:string[] = [];
 		let str:string = "";
 		let first_disjunction:boolean = true;
+		if (this.number_constraint != 1) {
+			str += this.number_constraint + ": ";
+		}
 		for(let i:number = 0;i<this.predicates.length;i++) {
 			let first_conjunction:boolean = true;
 			if (first_disjunction) {
@@ -136,6 +139,7 @@ class PlanningCondition {
 
 	checkState(state:PlanningState, occursCheck:boolean) : boolean
 	{
+		let number_satisfied:number = 0;
 		for(let conjunction of this.predicates) {
 			let missing:boolean = false;
 			for(let predicate of conjunction) {
@@ -151,12 +155,15 @@ class PlanningCondition {
 					break;
 				}
 			}
-			if (!missing) return true;
+			if (!missing) {
+				number_satisfied++;
+				if (number_satisfied >= this.number_constraint) return true;
+			}
 		}
 		return false;
 	}
 
-
+	/*
 	// returns [missing, alreadySatisfied][]
 	checkStateDetailed(state:PlanningState, occursCheck:boolean) : [PlanningPredicate[],PlanningPredicate[]][]
 	{
@@ -191,7 +198,7 @@ class PlanningCondition {
 		}
 		return goalStateMatch;
 	}
-
+	*/
 
 	static fromString(str:string, o:Ontology) : PlanningCondition
 	{
@@ -208,6 +215,13 @@ class PlanningCondition {
         let parenthesis:number = 0;
         let squareBrackets:number = 0;
         let quotation:boolean = false;
+        let number_constraint:number = 1;
+
+        if (str[0] >= '0' && str[0] <= '9') {
+        	let idx:number = str.indexOf(':');
+        	number_constraint = Number(str.substring(0, idx))
+        	str = str.substring(idx+1);
+        }
 
 		// separate the string in tokens:
 		// each token can be: semicolon, colon, ~, or a term
@@ -273,6 +287,7 @@ class PlanningCondition {
 		let s:PlanningCondition = new PlanningCondition();
 		let conjunction:PlanningPredicate[] = [];
 		let sign:boolean = true;
+		s.number_constraint = number_constraint;
 		state = 0;
 		for(let i:number = 0;i<tokens.length;i++) {
 			if (state == 0) {
@@ -328,7 +343,7 @@ class PlanningCondition {
 
 	// disjunction of conjunctions:
 	predicates:PlanningPredicate[][] = [];
-
+	number_constraint:number = 1;	// minimum number of disjunctions that need to be true
 }
 
 

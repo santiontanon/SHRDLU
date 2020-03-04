@@ -46,8 +46,12 @@ class BWPlannerState {
 
 	checkGoal(goal:PlanningCondition, o:Ontology) : boolean
 	{
+		let number_satisfied:number = 0;		
 		for(let conjunct of goal.predicates) {
-			if (this.checkConjunct(conjunct, null, 0, o)) return true;
+			if (this.checkConjunct(conjunct, null, 0, o)) {
+				number_satisfied++;
+				if (number_satisfied >= goal.number_constraint) return true;
+			}
 		}
 		return false;
 	}

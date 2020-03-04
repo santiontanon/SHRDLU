@@ -745,11 +745,19 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 		let goal:PlanningCondition = new PlanningCondition();
 		if (numberConstraint == 1) {
+			// make the goal an "or":
 			for(let predicate of predicates) {
 				goal.predicates.push([predicate]);
 			}
 		} else if (numberConstraint == actions.length) {
+			// make the goal a single "and"
 			goal.predicates.push(predicates);
+		} else if (numberConstraint < actions.length) {
+			// We want to execute a subset of the possible actions:
+			for(let predicate of predicates) {
+				goal.predicates.push([predicate]);
+			}
+			goal.number_constraint = numberConstraint;
 		} else {
 			// unsupported number constraint, just execute directly without planning:
 			this.intentions.push(ir);
