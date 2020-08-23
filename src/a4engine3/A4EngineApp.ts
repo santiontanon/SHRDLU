@@ -506,7 +506,7 @@ class A4EngineApp {
             this.titlescreen_timer = 0;
             BInterface.reset();
             let menuItems:string[] = [];
-            let menuCallbacks:((any, number) => void)[] = [];
+            let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
             menuItems.push("Play");
             menuCallbacks.push(
@@ -526,7 +526,7 @@ class A4EngineApp {
                         if (app.titlescreen_state == 2) return;
 
                         let menuItems:string[] = [];
-                        let menuCallbacks:((any, number) => void)[] = [];
+                        let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
                         for(let i:number = 0;i<4;i++) {
                             let saveName:string = app.game.checkSaveGame("slot" + (i+1));
@@ -690,7 +690,7 @@ class A4EngineApp {
         this.ingame_menu = menu;
         if (menu == INGAME_MENU) {
             let menuItems:string[] = [];
-            let menuCallbacks:((any, number) => void)[] = [];
+            let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
             menuItems.push("Play");
             menuCallbacks.push(
@@ -782,7 +782,7 @@ class A4EngineApp {
 //            BInterface.getElementByID(3).setEnabled(false);
         } else if (menu == INGAME_SAVE_MENU) {
             let menuItems:string[] = [];
-            let menuCallbacks:((any, number) => void)[] = [];
+            let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
             for(let i:number = 1;i<=4;i++) {
                 let saveName:string = app.game.checkSaveGame("slot" + i);
@@ -813,7 +813,7 @@ class A4EngineApp {
 
         } else if (menu == INGAME_LOAD_MENU) {
             let menuItems:string[] = [];
-            let menuCallbacks:((any, number) => void)[] = [];
+            let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
             for(let i:number = 1;i<=4;i++) {
                 let saveName:string = app.game.checkSaveGame("slot" + i);
@@ -1144,7 +1144,7 @@ class A4EngineApp {
             case 1:
                     this.gamecomplete_state = 2;
                     let menuItems:string[] = [];
-                    let menuCallbacks:((any, number) => void)[] = [];
+                    let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
                     menuItems.push("Thanks for playing");
                     menuCallbacks.push(null);
@@ -1236,7 +1236,7 @@ class A4EngineApp {
                     if (act == 3) {
                         this.introact_state = 2;
                         let menuItems:string[] = [];
-                        let menuCallbacks:((any, number) => void)[] = [];
+                        let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
                         menuItems.push("You have reached the");
                         menuCallbacks.push(null);
@@ -1319,7 +1319,7 @@ class A4EngineApp {
                     this.gameover_state = 1;
 
                     let menuItems:string[] = [];
-                    let menuCallbacks:((any, number) => void)[] = [];
+                    let menuCallbacks:((arg:any, ID:number) => void)[] = [];
 
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(

@@ -20,12 +20,12 @@ class SFXManager {
 
     play(sfxName:string) 
     {
-        var sfx:SFXManagerNode = this.hash[sfxName];
+        let sfx:SFXManagerNode = this.hash[sfxName];
 
         if (sfx == null) {
             // load it:
-            var SFXM:SFXManager = this;
-            var request:XMLHttpRequest = new XMLHttpRequest();
+            let SFXM:SFXManager = this;
+            let request:XMLHttpRequest = new XMLHttpRequest();
             request.open('GET', sfxName, true);
             request.responseType = 'arraybuffer';
              // Decode asynchronously
@@ -48,7 +48,7 @@ class SFXManager {
         // do not play the same SFX more than one during the same game cycle (to avoid volume issues)
         if (this.already_played.indexOf(sfx)==-1) {
             this.already_played.push(sfx);
-            var source:AudioBufferSourceNode = audioCtx.createBufferSource();
+            let source:AudioBufferSourceNode = audioCtx.createBufferSource();
             source.buffer = sfx.buffer;
             source.connect(audioCtx.destination);
             source.start();        

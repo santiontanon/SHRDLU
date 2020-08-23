@@ -2346,17 +2346,26 @@ class NLGenerator {
 	*/
 	termToEnglish_Entity(entity:TermAttribute, speakerID:string, considerRelations:boolean, context:NLContext, subject:boolean, useNameIfAvailable:boolean) : [string, number, string, number]
 	{
+		return this.termToEnglish_EntityInternal(entity, speakerID, considerRelations, context, subject, useNameIfAvailable, true);
+	}
+
+
+	termToEnglish_EntityInternal(entity:TermAttribute, speakerID:string, considerRelations:boolean, context:NLContext, subject:boolean, useNameIfAvailable:boolean,
+								 userPronounsIfpossible:boolean) : [string, number, string, number]
+	{
 		if (!(entity instanceof ConstantTermAttribute)) return null;
 		let ai:RuleBasedAI = context.ai;
 		let entityID:string = (<ConstantTermAttribute>entity).value;
 
 //		console.log("termToEnglish_Entity, entity: " + entity + ", speakerID: " + speakerID + ", selfID: " + ai.selfID);
 
-		if (entityID == speakerID) {
-			if (subject) return ["I", 0, undefined, 0];
-				    else return ["me", 0, undefined, 0];
+		if (userPronounsIfpossible) {
+			if (entityID == speakerID) {
+				if (subject) return ["I", 0, undefined, 0];
+					    else return ["me", 0, undefined, 0];
+			}
+			if (entityID == context.speaker) return ["you", 1, undefined, 0];
 		}
-		if (entityID == context.speaker) return ["you", 1, undefined, 0];
 
 		// get all the properties of the entity:
 		let ce:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>entity, undefined, undefined, ai.o, false);
