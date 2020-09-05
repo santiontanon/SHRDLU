@@ -345,6 +345,8 @@ NLParseTest("etaoin is not in the kitchen", o.getSort("performative"), context, 
 NLParseTest("the keys are white", o.getSort("performative"), context, "#list(perf.inform(L:[any], color('6'[#id],W:'white'[white])), perf.inform(L, color('4'[#id],W)))");
 NLParseTestUnifyingListener("I am a medic in aurora station", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], profession('1'[#id], 'location-aurora-station'[#id], 'medic'[medic]))");
 
+NLParseTest("Hi there!", o.getSort("performative"), context, "perf.greet(V0)");
+
 // tests with hypothetical dereference:
 NLParseTest("all keys are white", o.getSort("performative"), context, "perf.inform([any], V1:#or(#not(key(X:[#id])),color(X,'white'[white])))");
 NLParseTest("all chairs are small", o.getSort("performative"), context, "perf.inform([any], V1:#or(#not(chair(X:[#id])),small(X)))");
@@ -485,6 +487,10 @@ NLParseTestUnifyingListener("etaoin, where is everyone else?", o.getSort("perfor
 NLParseTestUnifyingListener("etaoin is there anyone?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], character(X))");
 NLParseTestUnifyingListener("etaoin who else is here?", o.getSort("performative"),  context, 'etaoin', "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'room1'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))");
 NLParseTestUnifyingListener("etaoin take the white key", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], '4'[#id]))");
+
+NLParseTestUnifyingListener("ok, my name is david", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('1'[#id],'david'[symbol]))");
+NLParseTestUnifyingListener("alright! my name is david", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('1'[#id],'david'[symbol]))");
+
 NLParseTest("any other human", o.getSort("nounPhrase"), context, "nounPhrase(V0:'human'[human], V1:[singular], V2:[third-person], #and(article.any(V0, V1), #and(determiner.other(V0, V1), V3:noun(V0, V1))))");
 NLParseTestUnifyingListener("is there any other human?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))))");
 NLParseTestUnifyingListener("is there any other humans?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(V0:'etaoin'[#id], V2:#and(!=(V:[any], V6:'1'[#id]), V7:#and(!=(V, V10:'H1'[#id]), V11:human(V))))");

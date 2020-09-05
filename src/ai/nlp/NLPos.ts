@@ -568,6 +568,7 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("hi", "hello", Term.fromString("interjection-noun()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("hey", "hello", Term.fromString("interjection-noun()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("yo", "hello", Term.fromString("interjection-noun()", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("alright", "alright", Term.fromString("interjection-noun()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("ok", "ok", Term.fromString("interjection-noun()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("okay", "ok", Term.fromString("interjection-noun()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("good", "good", Term.fromString("interjection-noun()", o), 1.0));
@@ -1344,7 +1345,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("hour", "time.hour", o, multitokens_raw);
   this.addStandardNounPOS("human", "human", o, multitokens_raw);
   this.addStandardNounPOS("indoor location", "indoor.location", o, multitokens_raw);
-  this.addStandardNounPOS("infirmary", "infirmary", o, multitokens_raw);
+  this.addTokenPOS(new PartOfSpeech("infirmary", "infirmary", Term.fromString("noun('infirmary'[infirmary], [singular])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("infirmaries", "infirmary", Term.fromString("noun('infirmary'[infirmary], [plural])", o), 1.0));
   this.addStandardNounPOS("infirmary bed", "infirmary-bed", o, multitokens_raw);
   this.addStandardNounPOS("instant", "time.location", o, multitokens_raw);
   this.addStandardNounPOS("instruction", "instruction", o, multitokens_raw);
