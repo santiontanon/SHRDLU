@@ -10,47 +10,57 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
-		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
-
+		let best:string = null;
+		let l:Term[] = [ir.action];
 		if (requester == null) return true;
-		if (intention.attributes.length==2 &&
-			(intention.attributes[0] instanceof ConstantTermAttribute) &&
-			(<ConstantTermAttribute>(intention.attributes[0])).value == ai.selfID) {
 
-			if (intention.attributes[1] instanceof ConstantTermAttribute) {
-				// Case where the target is a constant:
-				if (intention.functor.is_a(ai.o.getSort("verb.see"))) {
-					if (ai.canSee((<ConstantTermAttribute>(intention.attributes[1])).value)) {
-						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+		if (ir.alternative_actions != null && ir.alternative_actions.length > 0) l = ir.alternative_actions;
+
+		for(let intention of l) {
+			if (intention.attributes.length==2 &&
+				(intention.attributes[0] instanceof ConstantTermAttribute) &&
+				(<ConstantTermAttribute>(intention.attributes[0])).value == ai.selfID) {
+
+				if (intention.attributes[1] instanceof ConstantTermAttribute) {
+					// Case where the target is a constant:
+					if (intention.functor.is_a(ai.o.getSort("verb.see"))) {
+						if (ai.canSee((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+							return true;
+						} else {
+							if (best == null) best = "no";
+						}				
+					} else if (intention.functor.is_a(ai.o.getSort("verb.hear"))) {
+						if (ai.canHear((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+							return true;
+						} else {
+							if (best == null) best = "no";
+						}				
 					} else {
-						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
-					}				
-				} else if (intention.functor.is_a(ai.o.getSort("verb.hear"))) {
-					if (ai.canHear((<ConstantTermAttribute>(intention.attributes[1])).value)) {
-						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
-					} else {
-						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
-					}				
+						// we should never get here...
+						if (best == null || best=="no") best = "unknown";
+					}
 				} else {
-					// we should never get here...
-					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					if (best == null || best=="no") best = "unknown";
 				}
+				
 			} else {
-				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				if (best == null || best=="no") best = "unknown";
 			}
-			
+		}
+
+		if (best == "no") {
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 		}
-		
+
 		return true;
 	}
 
