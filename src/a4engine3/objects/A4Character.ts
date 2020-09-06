@@ -713,6 +713,9 @@ class A4Character extends A4WalkingObject {
                 this.talkingText = argument;
                 if (this.talkingText != null) {
                     this.talkingBubble = new A4TextBubble(this.talkingText, 24, fontFamily8px, 6, 8, game, this);
+                    if (game.debugTextBubbleLog != null) {
+                        game.debugTextBubbleLog.push([game.cycle, this.ID, this.talkingBubble]);
+                    }
                     if (game.drawTextBubbles) {
                         this.talkingBubbleDuration = TEXT_INITIAL_DELAY+this.talkingText.length*TEXT_SPEED;
                     } else {

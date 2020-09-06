@@ -5,6 +5,7 @@ class A4TextBubble {
         let last_space = 0;
         let longestLine = 0;
 
+        this.text = text;
         this.speaker = speaker;
 
   //      console.log("Creating a text bubble for " + text);
@@ -192,6 +193,7 @@ class A4TextBubble {
     static tiles2:GLTile[] = null;    // for speech that comes through speakers
     static tiles3:GLTile[] = null;    // for thought bubbles
 
+    text:string = null;    // original text, before splitting it into lines
     lines:string[] = [];
     font:string;
     fontHeight:number;

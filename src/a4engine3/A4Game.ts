@@ -1,3 +1,5 @@
+var LOG_ACTIONS_IN_DEBUG_LOG:boolean = false;
+
 var SHRDLU_INVENTORY_DISPLAY_SIZE:number = 12;
 var SHRDLU_HUD_STATE_MESSAGES:number = 0;
 var SHRDLU_HUD_STATE_MESSAGES_INPUT:number = 1;
@@ -552,6 +554,15 @@ class A4Game {
                                       ["data/general-kb.xml","data/qwerty-kb.xml"]);
         this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Shrdlu")[0]), this, 
                                       ["data/general-kb.xml","data/shrdlu-kb.xml"]);
+
+        if (LOG_ACTIONS_IN_DEBUG_LOG) {
+          this.debugActionLog = [];
+          this.debugTextBubbleLog = [];
+          this.etaoinAI.debugActionLog = this.debugActionLog;
+          this.qwertyAI.debugActionLog = this.debugActionLog;
+          this.shrdluAI.debugActionLog = this.debugActionLog;
+        }
+
         if (saveGameXml) {
             let ais_xml:Element[] = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
             this.etaoinAI.restoreFromXML(ais_xml[0]);
@@ -2819,6 +2830,10 @@ class A4Game {
     in_game_actions_for_log:string[][] = [];
 
     three_d_printer_recipies:[string, string[]][];
+
+    // if these are != null, each time an AI executes an action, or a text bubble is created, it will be logged here:
+    debugActionLog:IntentionRecord[] = null;
+    debugTextBubbleLog:[number,string,A4TextBubble][] = null;
 
     // serverToken is immutable after initialization
     serverToken: string = '';

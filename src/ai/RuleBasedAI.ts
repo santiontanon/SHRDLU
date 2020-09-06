@@ -1878,7 +1878,13 @@ class RuleBasedAI {
 				continue;
 			}
 
-			if (!ret) console.error("Unsuported intention: " + intention.action);
+			if (ret) {
+				if (this.debugActionLog != null) {
+					this.debugActionLog.push(intention);
+				}
+			} else {
+				console.error("Unsuported intention: " + intention.action);
+			}
 			toDelete.push(intention);
 		}
 		for(let t of toDelete) {
@@ -1979,7 +1985,6 @@ class RuleBasedAI {
 	{
 		// short term memory:
 		let tmp:[Term, Bindings] = this.shortTermMemory.firstMatch(q);
-//		console.log("noInferenceQuery, stm: " + q + " -> " + tmp);
 		if (tmp!=null) return tmp[1];
 
 		// long term memory:
@@ -1999,36 +2004,12 @@ class RuleBasedAI {
 	noInferenceQueryValue(q:Term, o:Ontology, variableName:string) : TermAttribute
 	{
 		let b:Bindings = this.noInferenceQuery(q, o);
-//		console.log("noInferenceQueryValue b = " + b);
 		if (b == null) return null;
 		for(let tmp of b.l) {
 			if (tmp[0].name == variableName) return tmp[1];
 		}
 		return null;
 	}
-
-
-	/*
-	sentenceContainsSpatialRelations(s:Sentence) : boolean
-	{
-		for(let t of s.terms) {
-			if (this.termContainsSpatialRelations(t)) return true;
-		}
-		return false;
-	}
-
-
-	termContainsSpatialRelations(t:Term) : boolean
-	{
-		if (t.functor.is_a(this.o.getSort("spatial-relation"))) return true;
-		for(let att of t.attributes) {
-			if (att instanceof TermTermAttribute) {
-				if (this.termContainsSpatialRelations((<TermTermAttribute>att).term)) return true;
-			}
-		}
-		return false;
-	}
-	*/
 
 
 	checkSpatialRelation(relation:Sort, o1ID:string, o2ID:string, referenceObject:string) : boolean
@@ -2045,22 +2026,6 @@ class RuleBasedAI {
 
 	spatialRelations(o1ID:string, o2ID:string) : Sort[]
 	{
-		/*
-		// just return what we know (this function will never be used in SHRDLU anyway, it's only for testing):
-		let relations:Sort[] = [];
-		let sr_sort:Sort = this.o.getSort("spatial-relation");
-		for(let te of this.shortTermMemory.plainTermList) {
-			let t:Term = te.term;
-			if (t.functor.is_a(sr_sort) && t.attributes.length == 2 &&
-				(t.attributes[0] instanceof ConstantTermAttribute) &&
-				(t.attributes[1] instanceof ConstantTermAttribute) &&
-				(<ConstantTermAttribute>t.attributes[0]).value == o1ID &&
-				(<ConstantTermAttribute>t.attributes[1]).value == o2ID) {
-				relations.push(t.functor);
-			}
-		}
-		return relations;
-		*/
 		return null;
 	}
 
@@ -2442,6 +2407,9 @@ class RuleBasedAI {
 										// - did you collide with something?
 										// The expected answer is "no", but it would say "yes", as it collided with something in the first command.
 										// So, we add the "collided-with" type of knowledge to the episode terms, and we clear them after each episode.
+
+	// if this is != null, each time the AI executes an action, it will be logged here
+    debugActionLog:IntentionRecord[] = null;
 
 	// Sort cache for perception:
 	cache_sort_name:Sort = null;

@@ -55,10 +55,11 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 
 				if (txt != null) {
 					ai.game.addMessage(ai.selfID + ": " + txt);
-					ai.player_object.map.textBubbles.push(
-						[new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null),
-						 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
-						);
+					let bubble:A4TextBubble = new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null);
+					ai.player_object.map.textBubbles.push([bubble, TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]);
+                    if (ai.game.debugTextBubbleLog != null) {
+                        ai.game.debugTextBubbleLog.push([ai.game.cycle, ai.selfID, bubble]);
+                    }
 
 					// create a perception buffer entry:
 					let targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
@@ -81,10 +82,12 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 			// this is just a shortcut for the 3 laws of robotics easter egg:
 			let txt:string = (<ConstantTermAttribute>intention.attributes[1]).value;					
 			ai.game.addMessage(ai.selfID + ": " + txt);
-			ai.player_object.map.textBubbles.push(
-				[new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null),
-				 TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]
-				);
+			let bubble:A4TextBubble = new A4TextBubble(txt, 32, fontFamily8px, 6, 8, ai.game, null);
+			ai.player_object.map.textBubbles.push([bubble, TEXT_INITIAL_DELAY+txt.length*TEXT_SPEED]);
+            if (ai.game.debugTextBubbleLog != null) {
+                ai.game.debugTextBubbleLog.push([ai.game.cycle, ai.selfID, bubble]);
+            }
+
 		} else {
 			console.error("EtaoinAI.executeIntention: malformed intention: " + intention.toString());
 		}
