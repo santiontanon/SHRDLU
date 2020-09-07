@@ -84,4 +84,89 @@
 		</onStart>
 	</CharacterClass>
 
+	<CharacterClass class="susan" super="woman,player-character">
+		<animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="player.png">0</animation>
+		<animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="player.png">48</animation>
+		<animation name="idle-right" dx="2" dy="3" period="4" looping="false" file="player.png">96</animation>
+		<animation name="idle-left" dx="2" dy="3" period="4" looping="false" file="player.png">144</animation>
+		<animation name="moving-down" dx="2" dy="3" period="8" looping="true" file="player.png">2,4,6,8</animation>
+		<animation name="moving-up" dx="2" dy="3" period="8" looping="true" file="player.png">50,52,54,56</animation>
+		<animation name="moving-right" dx="2" dy="3" period="6" looping="true" file="player.png">98,100,102,104,106,108</animation>
+		<animation name="moving-left" dx="2" dy="3" period="6" looping="true" file="player.png">146,148,150,152,154,156</animation>
+		<animation name="talking-down" dx="2" dy="3" period="6" looping="true" file="player.png">0,10</animation>
+		<animation name="talking-up" dx="2" dy="3" period="6" looping="false" file="player.png">48</animation>
+		<animation name="talking-right" dx="2" dy="3" period="6" looping="true" file="player.png">96,192</animation>
+		<animation name="talking-left" dx="2" dy="3" period="6" looping="true" file="player.png">144,200</animation>
+
+		<attribute name="canSwim" value="false"/>
+		<attribute name="walk_speed" value="16"/>
+		<attribute name="tallness" value="16"/>
+		<!--attribute name="sprite_offs_x" value="4"/>
+		<attribute name="sprite_offs_y" value="0"/>
+		<attribute name="pixel_width" value="8"/>
+		<attribute name="pixel_height" value="24"/-->
+		<attribute name="tallness" value="16"/>
+		<attribute name="direction" value="3"/>
+		<attribute name="strength" value="2"/>
+
+		<eventRule event="story_state" scope="game" variable="spacesuit" value="false">
+			<animation><animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="player.png">0</animation></animation>
+			<animation><animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="player.png">48</animation></animation>
+			<animation><animation name="idle-right" dx="2" dy="3" period="4" looping="false" file="player.png">96</animation></animation>
+			<animation><animation name="idle-left" dx="2" dy="3" period="4" looping="false" file="player.png">144</animation></animation>
+			<animation><animation name="moving-down" dx="2" dy="3" period="8" looping="true" file="player.png">2,4,6,8</animation></animation>
+			<animation><animation name="moving-up" dx="2" dy="3" period="8" looping="true" file="player.png">50,52,54,56</animation></animation>
+			<animation><animation name="moving-right" dx="2" dy="3" period="6" looping="true" file="player.png">98,100,102,104,106,108</animation></animation>
+			<animation><animation name="moving-left" dx="2" dy="3" period="6" looping="true" file="player.png">146,148,150,152,154,156</animation></animation>
+			<animation><animation name="talking-down" dx="2" dy="3" period="6" looping="true" file="player.png">0,10</animation></animation>
+			<animation><animation name="talking-up" dx="2" dy="3" period="6" looping="false" file="player.png">48</animation></animation>
+			<animation><animation name="talking-right" dx="2" dy="3" period="6" looping="true" file="player.png">96,192</animation></animation>
+			<animation><animation name="talking-left" dx="2" dy="3" period="6" looping="true" file="player.png">144,200</animation></animation>
+			<attribute><attribute name="walk_speed" value="16"/></attribute>
+		</eventRule>					
+
+		<eventRule event="story_state" scope="game" variable="spacesuit" value="suit">
+			<animation><animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="player-suit.png">0</animation></animation>
+			<animation><animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="player-suit.png">48</animation></animation>
+			<animation><animation name="idle-right" dx="2" dy="3" period="4" looping="false" file="player-suit.png">96</animation></animation>
+			<animation><animation name="idle-left" dx="2" dy="3" period="4" looping="false" file="player-suit.png">144</animation></animation>
+			<animation><animation name="moving-down" dx="2" dy="3" period="8" looping="true" file="player-suit.png">2,4,6,8</animation></animation>
+			<animation><animation name="moving-up" dx="2" dy="3" period="8" looping="true" file="player-suit.png">50,52,54,56</animation></animation>
+			<animation><animation name="moving-right" dx="2" dy="3" period="6" looping="true" file="player-suit.png">98,100,102,104,106,108</animation></animation>
+			<animation><animation name="moving-left" dx="2" dy="3" period="6" looping="true" file="player-suit.png">146,148,150,152,154,156</animation></animation>
+			<animation><animation name="talking-down" dx="2" dy="3" period="6" looping="true" file="player-suit.png">0,10</animation></animation>
+			<animation><animation name="talking-up" dx="2" dy="3" period="6" looping="false" file="player-suit.png">48</animation></animation>
+			<animation><animation name="talking-right" dx="2" dy="3" period="6" looping="true" file="player-suit.png">96,192</animation></animation>
+			<animation><animation name="talking-left" dx="2" dy="3" period="6" looping="true" file="player-suit.png">144,200</animation></animation>
+			<attribute><attribute name="walk_speed" value="24"/></attribute>
+		</eventRule>
+
+		<eventRule event="story_state" scope="game" variable="spacesuit" value="helmet">
+			<animation><animation name="idle-down" dx="2" dy="3" period="4" looping="false" file="player-suit-helmet.png">0</animation></animation>
+			<animation><animation name="idle-up" dx="2" dy="3" period="4" looping="false" file="player-suit-helmet.png">48</animation></animation>
+			<animation><animation name="idle-right" dx="2" dy="3" period="4" looping="false" file="player-suit-helmet.png">96</animation></animation>
+			<animation><animation name="idle-left" dx="2" dy="3" period="4" looping="false" file="player-suit-helmet.png">144</animation></animation>
+			<animation><animation name="moving-down" dx="2" dy="3" period="8" looping="true" file="player-suit-helmet.png">2,4,6,8</animation></animation>
+			<animation><animation name="moving-up" dx="2" dy="3" period="8" looping="true" file="player-suit-helmet.png">50,52,54,56</animation></animation>
+			<animation><animation name="moving-right" dx="2" dy="3" period="6" looping="true" file="player-suit-helmet.png">98,100,102,104,106,108</animation></animation>
+			<animation><animation name="moving-left" dx="2" dy="3" period="6" looping="true" file="player-suit-helmet.png">146,148,150,152,154,156</animation></animation>
+			<animation><animation name="talking-down" dx="2" dy="3" period="6" looping="true" file="player-suit-helmet.png">0,10</animation></animation>
+			<animation><animation name="talking-up" dx="2" dy="3" period="6" looping="false" file="player-suit-helmet.png">48</animation></animation>
+			<animation><animation name="talking-right" dx="2" dy="3" period="6" looping="true" file="player-suit-helmet.png">96,192</animation></animation>
+			<animation><animation name="talking-left" dx="2" dy="3" period="6" looping="true" file="player-suit-helmet.png">144,200</animation></animation>
+			<attribute><attribute name="walk_speed" value="24"/></attribute>
+		</eventRule>
+
+		<items>
+			<!--object class="white-key" width="8" height="8"/>
+			<object class="blue-key" width="8" height="8"/>
+			<object class="yellow-key" width="8" height="8"/>
+			<object class="red-key" width="8" height="8"/-->
+		</items>
+
+		<onStart>
+			<addPerceptionProperty property="alive"/>
+		</onStart>
+	</CharacterClass>
+
 </Characters>

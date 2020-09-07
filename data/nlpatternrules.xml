@@ -108,7 +108,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			          ['it' 'is' 'a'] 'pleasure') 
 			   		 'to'
 			   		 ('meet' 'you'|'make' 'your' 'acquaintance') 
-			   		 [[','] nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L) #derefFromContext(C_L, LISTENER)]
+			   		 [[','] (nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L) #derefFromContext(C_L, LISTENER) | 'you')]
 			   		 ('!'|'.')*"/>
 
 	<NLPattern name="nicetomeetyoutoo-1"

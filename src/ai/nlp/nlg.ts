@@ -2539,38 +2539,42 @@ class NLGenerator {
 			name instanceof ConstantTermAttribute) return (<ConstantTermAttribute>name).value;
 
 		// otherwise, just see what do we know about this entity:
-		let results:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort("object"),1,ai.o);
+		let sortsToConsider:string[] = ["object", "space.location"];
 		let candidateSorts:Sort[] = [];
-		for(let result of results) {
-//			console.log("result: " + result);
-			if ((result.terms[0].attributes[0] instanceof ConstantTermAttribute) &&
-				(<ConstantTermAttribute>(result.terms[0].attributes[0])).value == targetID) {
-				if (candidateSorts.indexOf(result.terms[0].functor) == -1) {
-					candidateSorts.push(result.terms[0].functor);
-					let ancestors:Sort[] = result.terms[0].functor.getAncestors();
-					for(let s of ancestors) {
-						if (s.is_a(ai.o.getSort("object")) &&
-							candidateSorts.indexOf(s)==-1) candidateSorts.push(s); 
+		for(let sortName of sortsToConsider) {
+			let results:Sentence[] = ai.longTermMemory.allSingleTermMatches(ai.o.getSort(sortName),1,ai.o);
+			for(let result of results) {
+	//			console.log("result: " + result);
+				if ((result.terms[0].attributes[0] instanceof ConstantTermAttribute) &&
+					(<ConstantTermAttribute>(result.terms[0].attributes[0])).value == targetID) {
+					if (candidateSorts.indexOf(result.terms[0].functor) == -1) {
+						candidateSorts.push(result.terms[0].functor);
+						let ancestors:Sort[] = result.terms[0].functor.getAncestors();
+						for(let s of ancestors) {
+							if (s.is_a(ai.o.getSort(sortName)) &&
+								candidateSorts.indexOf(s)==-1) candidateSorts.push(s); 
+						}
 					}
 				}
 			}
-		}
-		let results2:[Term, Bindings][] = ai.shortTermMemory.allMatches(Term.fromString("object('"+targetID+"'[#id])",ai.o));
-//		console.log(results2.length + " out of " + ai.shortTermMemory.plainTermList.length + " match");
-		for(let tmp of results2) {
-			let term:Term = tmp[0];
-//			console.log("result2: " + term);
-			if ((term.attributes[0] instanceof ConstantTermAttribute) &&
-				(<ConstantTermAttribute>(term.attributes[0])).value == targetID) {
-				if (candidateSorts.indexOf(term.functor) == -1) {
-					candidateSorts.push(term.functor);
-					let ancestors:Sort[] = term.functor.getAncestors();
-					for(let s of ancestors) {
-						if (s.is_a(ai.o.getSort("object")) &&
-							candidateSorts.indexOf(s)==-1) candidateSorts.push(s); 
+			let results2:[Term, Bindings][] = ai.shortTermMemory.allMatches(Term.fromString(sortName+"('"+targetID+"'[#id])",ai.o));
+	//		console.log(results2.length + " out of " + ai.shortTermMemory.plainTermList.length + " match");
+			for(let tmp of results2) {
+				let term:Term = tmp[0];
+	//			console.log("result2: " + term);
+				if ((term.attributes[0] instanceof ConstantTermAttribute) &&
+					(<ConstantTermAttribute>(term.attributes[0])).value == targetID) {
+					if (candidateSorts.indexOf(term.functor) == -1) {
+						candidateSorts.push(term.functor);
+						let ancestors:Sort[] = term.functor.getAncestors();
+						for(let s of ancestors) {
+							if (s.is_a(ai.o.getSort("object")) &&
+								candidateSorts.indexOf(s)==-1) candidateSorts.push(s); 
+						}
 					}
 				}
 			}
+			if (candidateSorts.length > 0) break;
 		}
 		let currentName:string = null;
 		let currentSort:Sort = null;

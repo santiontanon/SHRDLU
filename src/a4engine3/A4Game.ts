@@ -710,7 +710,7 @@ class A4Game {
         let compressed = LZString.compressToUTF16(complete_xmlString);
         console.log("Size of compressed sample is: " + compressed.length);
         localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, compressed);
-        // downloadStringAsFile(complete_xmlString, "A4Game-saveGame.xml");
+        downloadStringAsFile(complete_xmlString, "A4Game-saveGame.xml");
 
         // savegame name:
         let seconds:number = Math.floor(this.cycle/60)%60;
