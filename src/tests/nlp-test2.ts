@@ -1416,7 +1416,7 @@ NLParseTestUnifyingListener("what is the crate supported by?", o.getSort("perfor
 NLParseTestUnifyingListener("how many colors does the crate have?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, color('5'[#id], X))");
 NLParseTestUnifyingListener("is the top of the white key clear?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
 NLParseTestUnifyingListener("the top of the white key is clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear]))");
-NLParseTestUnifyingListener("the top of the white key is not clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], #not(top-clear-status('4'[#id], 'clear-status-clear'[clear-status-clear])))");
+NLParseTestUnifyingListener("the top of the white key is not clear", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-not-clear'[clear-status-not-clear]))");
 NLParseTestUnifyingListener("now put the white key in the crate", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
 NLParseTestUnifyingListener("can pyramids roll?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll(HO)), pyramid(HO))");
 NLParseTestUnifyingListener("can a cube roll of the crate?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll-of(HO, '5'[#id])), cube(HO))");
@@ -1442,6 +1442,16 @@ NLParseTestUnifyingListener("can you put two blocks on a pyramid?", o.getSort("p
 // NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
+
+// For dataset generation:
+NLParseTestUnifyingListener("how many crates do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, crate(X))"); 
+NLParseTestUnifyingListener("how many computer consoles in the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(wall-computer(X), space.at(X,'room1'[#id])))"); 
+NLParseTestUnifyingListener("how many blue computer consoles in the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(wall-computer(X), #and(color(X,'blue'[blue]), space.at(X,'room1'[#id]))))"); 
+NLParseTestUnifyingListener("how many closed crates are there?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), property.closed(X)))");
+NLParseTestUnifyingListener("how many not closed crates do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #not(property.closed(X))))"); 
+NLParseTestUnifyingListener("how many crates that do not seem closed are there?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #not(property.closed(X))))"); 
+NLParseTestUnifyingListener("how many hungry closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(property.closed(X), #and(hungry(X), space.inside.of(X, 'room1'[#id])))))"); 
+NLParseTestUnifyingListener("can you see any robot that does not have the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0, X), #and(robot(X), #not(verb.have(X, 'room1'[#id]))), [number.1])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

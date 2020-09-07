@@ -564,6 +564,7 @@ class NLPattern {
 		//let properNounTerm:Term = null;	
 		let adverbs:Term[] = [];
 		let adjectives:Sort[] = [];	// adjectives are filled later, since we neeed queryFunctor
+		let negatedAdjectives:Sort[] = [];	// adjectives are filled later, since we neeed queryFunctor
 		let demonstrativeDeterminer:Term = null;
 		let demonstrativePronoun:Term = null;
 		let otherTerms:Term[] = [];
@@ -589,6 +590,12 @@ class NLPattern {
 					demonstrativeDeterminer = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("verb.own"))) {
 					ownsRelation = (<TermTermAttribute>t).term;
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("#not")) &&
+						   (<TermTermAttribute>t).term.attributes.length == 1 &&
+						   ((<TermTermAttribute>t).term.attributes[0] instanceof TermTermAttribute) &&
+						   (<TermTermAttribute>((<TermTermAttribute>t).term.attributes[0])).term.functor.is_a(o.getSort("verb.own"))) {
+					//ownsRelation = (<TermTermAttribute>t).term;
+					console.error("negated owns relation not yet supported!");
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("indefinite-pronoun"))) {
 					if ((<TermTermAttribute>t).term.attributes.length > 0 &&
 						((<TermTermAttribute>t).term.attributes[0] instanceof ConstantTermAttribute)) {
@@ -609,6 +616,11 @@ class NLPattern {
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("demonstrative-pronoun"))) {
 					demonstrativePronoun = (<TermTermAttribute>t).term;
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("relation"))) {
+					otherRelations.push((<TermTermAttribute>t).term);
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("#not")) &&
+						   (<TermTermAttribute>t).term.attributes.length == 1 &&
+						   ((<TermTermAttribute>t).term.attributes[0] instanceof TermTermAttribute) &&
+						   (<TermTermAttribute>((<TermTermAttribute>t).term.attributes[0])).term.functor.is_a(o.getSort("relation"))) {
 					otherRelations.push((<TermTermAttribute>t).term);
 				} else {
 					otherTerms.push((<TermTermAttribute>t).term);
@@ -711,6 +723,16 @@ class NLPattern {
 						let adjectiveSort:Sort = o.getSort((<ConstantTermAttribute>(t2.attributes[1])).value);
 						if (adjectiveSort != null) adjectives.push(adjectiveSort);
 					}
+				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("#not")) &&
+						   (<TermTermAttribute>t).term.attributes.length == 1 &&
+						   ((<TermTermAttribute>t).term.attributes[0] instanceof TermTermAttribute) &&
+						   (<TermTermAttribute>((<TermTermAttribute>t).term.attributes[0])).term.functor.is_a(o.getSort("adjective"))) {
+					let t2:Term = (<TermTermAttribute>((<TermTermAttribute>t).term.attributes[0])).term;
+					if (t2.attributes[0] == queryFunctor &&
+						t2.attributes[1] instanceof ConstantTermAttribute) {
+						let adjectiveSort:Sort = o.getSort((<ConstantTermAttribute>(t2.attributes[1])).value);
+						if (adjectiveSort != null) negatedAdjectives.push(adjectiveSort);
+					}
 				} else if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("space.at")) &&
 					       queryFunctorSort.is_a(o.getSort("role"))) {
 					queryLocationID = (<TermTermAttribute>t).term.attributes[1];
@@ -775,10 +797,30 @@ class NLPattern {
 				queryTerms.push(new TermTermAttribute(new Term(adjective,[queryVariable])));
 			}
 		}
+		for(let adjective of negatedAdjectives) {
+			if (adjective.is_a(o.getSort("property-with-value"))) {
+				let property_with_value_functor_sort:Sort = this.getPropertyWithValueFunctorSort(adjective, o);
+				if (adjective.is_a(o.getSort("role"))) {
+					queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"),
+										[new TermTermAttribute(new Term(property_with_value_functor_sort, [queryVariable, queryLocationID, new ConstantTermAttribute(adjective.name, adjective)]))])));
+				} else {
+					queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"),
+										[new TermTermAttribute(new Term(property_with_value_functor_sort, [queryVariable, new ConstantTermAttribute(adjective.name, adjective)]))])));
+				}
+			} else {
+				queryTerms.push(new TermTermAttribute(new Term(o.getSort("#not"),
+										[new TermTermAttribute(new Term(adjective,[queryVariable]))])));
+			}
+		}
 		for(let relation of otherRelations) {
 //			console.log("considering relation: " + relation);
 			let atts:TermAttribute[] = [];
+			let negated:boolean = false;
 			let found:boolean = false;
+			if (relation.functor.name == "#not") {
+				negated = true;
+				relation = (<TermTermAttribute>(relation.attributes[0])).term;
+			}
 			for(let i:number = 0;i<relation.attributes.length;i++) {
 				if (relation.attributes[i] == queryFunctor) {
 					atts.push(queryVariable);
@@ -789,6 +831,9 @@ class NLPattern {
 			}
 			if (found) {
 				verbOrRelationTerm = new TermTermAttribute(new Term(relation.functor, atts));
+				if (negated) {
+					verbOrRelationTerm = new TermTermAttribute(new Term(o.getSort("#not"), [verbOrRelationTerm]));
+				}
 				queryTerms.push(verbOrRelationTerm);
 			} else {
 				console.log("specialfunction_derefQuery: otherRelation does not have queryFunctor ("+queryFunctor+") as a parameter: " + relation);

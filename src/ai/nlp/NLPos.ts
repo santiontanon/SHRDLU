@@ -483,6 +483,7 @@ class POSParser {
 
       // adjectives:
       "in stasis",
+      "not clear",
 
       // adverbs:
       "a bit",
@@ -1238,8 +1239,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("communication tower", "communication.tower", o, multitokens_raw);
   this.addStandardNounPOS("communicator", "communicator", o, multitokens_raw);
   this.addStandardNounPOS("computer", "computer", o, multitokens_raw);
-  this.addStandardNounPOS("computer console", "tardis-wall-computer", o, multitokens_raw);
   this.addStandardNounPOS("computer console", "wall-computer", o, multitokens_raw);
+  this.addStandardNounPOS("computer console", "tardis-wall-computer", o, multitokens_raw);
   this.addStandardNounPOS("computer engineer", "computer-engineer", o, multitokens_raw);
   this.addStandardNounPOS("computer table", "computer-table", o, multitokens_raw);
   this.addStandardNounPOS("computer tower", "computer-tower", o, multitokens_raw);
@@ -1908,6 +1909,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("circular", "circular", Term.fromString("adjective('circular'[circular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("clear", "clear-status-clear", Term.fromString("adjective('clear-status-clear'[clear-status-clear])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("not clear", "clear-status-not-clear", Term.fromString("adjective('clear-status-not-clear'[clear-status-not-clear])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("closed", "property.closed", Term.fromString("adjective('property.closed'[property.closed])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("cold", "cold", Term.fromString("adjective('cold'[cold])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dangerous", "dangerous", Term.fromString("adjective('dangerous'[dangerous])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));

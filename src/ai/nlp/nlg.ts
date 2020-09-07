@@ -446,7 +446,15 @@ class NLGenerator {
 					} else if (relationStr + " " + objectStr[0] == "of you") {
 						relationsAggregateStr += " " + (negated_t ? "not ":"") + "yours";
 					} else {
-						relationsAggregateStr += " " + (negated_t ? "not ":"") + relationStr + " " + objectStr[0];
+						if (negated_t) {
+							if (relationStr.substring(0,8) == "that has") {
+								relationsAggregateStr += " that does not have" + relationStr.substring(8) + " " + objectStr[0];
+							} else {
+								relationsAggregateStr += " " + relationStr + " " + objectStr[0];
+							}
+						} else {
+							relationsAggregateStr += " " + (negated_t ? "not ":"") + relationStr + " " + objectStr[0];
+						}
 					}
 					relationsAggregateStr = relationsAggregateStr.trim();
 

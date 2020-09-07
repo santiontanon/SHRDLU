@@ -7826,6 +7826,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="noun(X, N) 
 			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="nounphrase-determiner-preposition3"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(adjective(X, ADJ), #cons(PREPOSITION, X, O2))))"
+			   body="adjective(ADJ) noun(X, N) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="nounphrase-determiner-preposition3-not"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(#not(adjective(X, ADJ)), #cons(PREPOSITION, X, O2))))"
+			   body="('not'|'non') adjective(ADJ) noun(X, N) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="nounphrase-determiner-preposition-adj-adj"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(adjective(X, ADJ1), #and(adjective(X, ADJ2), #cons(PREPOSITION, X, O2)))))"
+			   body="adjective(ADJ1) adjective(ADJ2) noun(X, N) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
 	<NLPattern name="nounphrase-all-of"
 			   head="nounPhrase(X, [plural], P, #and(#cons(DET, X, [plural]), C))"
 			   body="definite-article('all'[symbol], [plural]) ['of'] demonstrative-determiner(DET, [plural]) nounPhraseNoDeterminer(X, [plural], P, C)"/>
@@ -7851,6 +7866,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="nounphrase-indefinite-pronoun-adjective"
 			   head="nounPhrase(X, N, P, #and(indefinite-pronoun(X, N, G, P), adjective(X, ADJ)))"
 			   body="indefinite-pronoun(X, N, G, P) adjective(ADJ)"/>
+	<NLPattern name="nounphrase-indefinite-pronoun-not-adjective"
+			   head="nounPhrase(X, N, P, #and(indefinite-pronoun(X, N, G, P), #not(adjective(X, ADJ))))"
+			   body="indefinite-pronoun(X, N, G, P) ('not'|'non') adjective(ADJ)"/>
 	<NLPattern name="nounphrase-saxon-genitive1"
 			   head="nounPhrase(X2, N2, [third-person], #and(saxon-genitive(X,X2), #and(noun(X2, N2), C)))"
 			   body="nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>
@@ -7866,12 +7884,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 (verb('verb.be'[symbol], N, [third-person], T)|
 			   		  verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
+	<NLPattern name="nounphrase-adjective-phrase-not"
+			   head="nounPhraseNoDeterminer(X, N, [third-person], #and(#not(adjective(X, A)), noun(X, N)))"
+			   body="noun(X, N) ('that'|'who')
+			   		 (verb('verb.be'[symbol], N, [third-person], T) 'not'|
+			   		  verb('verb.do'[symbol], NN, [third-person], TT) 'not' verb('verb.seem'[symbol], N, [third-person], T))
+			   		 adjective(A)"/>
 	<NLPattern name="nounphrase-noun"
 			   head="nounPhraseNoDeterminer(X, N, [third-person], noun(X, N))"
 			   body="noun(X, N)"/>
 	<NLPattern name="nounphrase-adjective"
 			   head="nounPhraseNoDeterminer(X, N, P, #and(adjective(X, A), C))"
 			   body="adjective(A) nounPhraseNoDeterminer(X, N, P, C)"/>
+	<NLPattern name="nounphrase-not-adjective"
+			   head="nounPhraseNoDeterminer(X, N, P, #and(#not(adjective(X, A)), C))"
+			   body="('not'|'non') adjective(A) nounPhraseNoDeterminer(X, N, P, C)"/>
 	<NLPattern name="nounphrase-propernoun"
 			   head="nounPhraseNoDeterminer(X, N, [third-person], proper-noun(X, N))"
 			   body="proper-noun(X, N)"/>
@@ -7885,19 +7912,34 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 (verb('verb.be'[symbol], N, [third-person], T)|
 			   		  verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
+	<NLPattern name="nounphrase-npn-adjective-phrase-not"
+			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#not(adjective(X, A)), noun(X, N)))"
+			   body="noun(X, N) ('that'|'who')
+			   		 (verb('verb.be'[symbol], N, [third-person], T) 'not'|
+			   		  verb('verb.do'[symbol], NN, [third-person], TT) 'not' verb('verb.seem'[symbol], N, [third-person], T))
+			   		 adjective(A)"/>
 	<NLPattern name="nounphrase-npn-noun"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], noun(X, N))"
 			   body="noun(X, N)"/>
 	<NLPattern name="nounphrase-npn-adjective"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, P, #and(adjective(X, A), C))"
 			   body="adjective(A) nounPhraseNoDeterminerNoProperNoun(X, N, P, C)"/>
+	<NLPattern name="nounphrase-npn-adjective-not"
+			   head="nounPhraseNoDeterminerNoProperNoun(X, N, P, #and(#not(adjective(X, A)), C))"
+			   body="('not'|'non') adjective(A) nounPhraseNoDeterminerNoProperNoun(X, N, P, C)"/>
 	<NLPattern name="nounphrase-npn-that-verb-obj-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#cons(VERB, X, O2), noun(X, N)))"
 			   body="noun(X, N) ('that'|'who')
 			   		 verb(VERB, N, [third-person], T) #symbolToSort(VERB, VERB_SORT) #subsumes([relation-verb], VERB_SORT) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
-
+	<NLPattern name="nounphrase-npn-that-not-verb-obj-phrase"
+			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#not(#cons(VERB, X, O2)), noun(X, N)))"
+			   body="noun(X, N) ('that'|'who')
+			   		 verb('verb.do'[symbol], NN, [third-person], TT) 'not'
+			   		 verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT) #subsumes([relation-verb], VERB_SORT) 
+			   		 nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
 	<NLPattern name="propernoun-compound1"
 			   head="properNounCompound(X3, N)"
 			   body="proper-noun(X, N) proper-noun(X2, N) #concatenateSymbols(X,' '[symbol],X2,X3)"/>
