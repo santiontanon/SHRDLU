@@ -1123,7 +1123,7 @@
   <object id="492" type="stasis-pod" x="56" y="96" width="24" height="16"/>
   <object id="493" type="stasis-pod" x="96" y="96" width="24" height="16"/>
   <object id="494" type="stasis-pod" x="16" y="96" width="24" height="16"/>
-  <object id="david-stasis-pod" type="stasis-pod" x="56" y="72" width="24" height="16"/>
+  <object id="player-stasis-pod" type="stasis-pod" x="56" y="72" width="24" height="16"/>
   <object id="496" type="stasis-pod" x="96" y="72" width="24" height="16"/>
   <object id="497" type="stasis-pod" x="16" y="72" width="24" height="16"/>
   <object id="broken-stasis-pod" type="broken-stasis-pod" x="56" y="48" width="24" height="16"/>

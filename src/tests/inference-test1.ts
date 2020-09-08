@@ -88,7 +88,7 @@ for(let str of sentence_text_l) {
 
 /*
 console.log("-------------------------");
-var term1_text:string = "#and(V0:#and(V1:#not(V2:=(V:[any], V4:'etaoin'[#id])), V5:#and(V6:#not(V7:=(V, V8:'david'[#id])), V9:character(V))), V10:space.at(V, V11:'location-aurora-station'[#id]))";
+var term1_text:string = "#and(V0:#and(V1:#not(V2:=(V:[any], V4:'etaoin'[#id])), V5:#and(V6:#not(V7:=(V, V8:'player'[#id])), V9:character(V))), V10:space.at(V, V11:'location-aurora-station'[#id]))";
 var parsed_term1:Term = Term.fromString(term1_text, o);
 var sentences_from_term1:Sentence[] = Term.termToSentences(parsed_term1, o);
 console.log("Term: " + parsed_term1);
@@ -315,34 +315,34 @@ resolutionTest(experimentSentences, ["~space.at('c1'[#id],'room2'[#id])"], false
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
-     "space.at('david'[#id],'room1'[#id])",
+     "space.at('player'[#id],'room1'[#id])",
      ],
-    ["~space.at('david'[#id],'room1'[#id])"],
+    ["~space.at('player'[#id],'room1'[#id])"],
     true, // contradicts
     o);
 
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
-     "space.at('david'[#id],'room1'[#id])",
+     "space.at('player'[#id],'room1'[#id])",
      ],
-    ["space.at('david'[#id],'room1'[#id])"],
+    ["space.at('player'[#id],'room1'[#id])"],
     false, // does not contradict
     o);
 
 
 resolutionTest(
-    ["permitted-in('david'[#id], 'location-garage'[#id])",
+    ["permitted-in('player'[#id], 'location-garage'[#id])",
      "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
      "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
-    ["~permission-to('david'[#id], verb.access('david'[#id], 'location-garage'[#id]))"],
+    ["~permission-to('player'[#id], verb.access('player'[#id], 'location-garage'[#id]))"],
     true,    // contradicts
     o);
 
 resolutionTest(
-    ["permitted-in('david'[#id], 'location-garage'[#id])",
+    ["permitted-in('player'[#id], 'location-garage'[#id])",
      "~permitted-in(X, Y); permission-to(X, verb.access(X,Y))",
      "permitted-in(X, Y); ~permission-to(X, verb.access(X,Y))"],
-    ["permission-to('david'[#id], verb.access('david'[#id], 'location-garage'[#id]))"],
+    ["permission-to('player'[#id], verb.access('player'[#id], 'location-garage'[#id]))"],
     false,    // contradicts
     o);
 
@@ -425,7 +425,7 @@ resolutionQueryTest(
 resolutionQueryTest(
     ["~spacesuit(SS) ; relation.howto(verb.repair(X,SS),verb.tell(X,verb.repair(Q:'qwerty'[#id],SS),Q))",
      "spacesuit('ss'[#id])"],
-    ["~relation.howto(verb.repair('david'[#id],'ss'[#id]),X)"],
+    ["~relation.howto(verb.repair('player'[#id],'ss'[#id]),X)"],
     1,
     o);
 
@@ -433,11 +433,11 @@ resolutionQueryTest(
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
-     "space.at('david'[#id], 'location-garage'[#id])",
+     "space.at('player'[#id], 'location-garage'[#id])",
      "space.at('location-garage'[#id], 'aurora-station'[#id])",
      "space.at('aurora-station'[#id], 'communicator-range'[#id])",
      ],
-    ["~space.at('david'[#id], 'communicator-range'[#id])"],
+    ["~space.at('player'[#id], 'communicator-range'[#id])"],
     true,    // contradicts
     o);
 
@@ -445,8 +445,8 @@ resolutionTest(
 resolutionTest(
     ["~space.inside.of(X, Y); space.at(X, Y)",
      "~space.at(X:[#id], 'earth'[#id]); rock(X)",
-     "space.inside.of('david'[#id], 'earth'[#id])"],
-    ["~rock('david'[#id])"],
+     "space.inside.of('player'[#id], 'earth'[#id])"],
+    ["~rock('player'[#id])"],
     true,    // should contradict
     o);
 
@@ -469,16 +469,16 @@ resolutionQueryTest(
 
 resolutionTest(
     ["~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])",
-     "temperature('david'[#id],'cold'[cold])"],
-    ["hot('david'[#id], 'hot'[hot])"],
+     "temperature('player'[#id],'cold'[cold])"],
+    ["hot('player'[#id], 'hot'[hot])"],
     true,    // should contradict
     o);
 
 
 resolutionTest(
     ["~temperature(X:[#id], 'cold'[cold]); ~temperature(X, 'hot'[hot])",
-     "temperature('david'[#id],'cold'[cold])"],
-    ["temperature('david'[#id], 'hot'[hot])"],
+     "temperature('player'[#id],'cold'[cold])"],
+    ["temperature('player'[#id], 'hot'[hot])"],
     true,    // should contradict
     o);
 
@@ -500,9 +500,9 @@ resolutionTest(
 resolutionTest2(
     ["~clothing(Y:[#id]); ~space.at(X:[#id], 'location-as20'[#id]); verb.can(X, verb.clean(X, Y))",
      "space.at(X:[#id],'location-as20'[#id]) ; ~character(X) ; ~clothing(Y:[#id]); ~verb.can(X, verb.clean(X, Y))"],
-    ["space.at('david'[#id],'location-as20'[#id])",
+    ["space.at('player'[#id],'location-as20'[#id])",
      "clothing('hypothetical-object'[#id])"],
-    ["~verb.can('david'[#id],verb.clean('david'[#id], 'hypothetical-object'[#id]))"],
+    ["~verb.can('player'[#id],verb.clean('player'[#id], 'hypothetical-object'[#id]))"],
     true,    // should contradict
     o);
 
@@ -595,12 +595,12 @@ resolutionQueryTest2(
     "~space.inside.of(X_0:[#id], L1_0:[#id]); ~space.inside.of(L1_0, L2_0:[#id]); space.inside.of(X_0, L2_0)",
     //"~space.inside.of(X_0:[#id], L1_0:[#id]); ~space.inside.of(X_0, L2_0:[#id]); =(L1_0, L2_0); space.inside.of(L1_0, L2_0); space.inside.of(L2_0, L1_0)",
 
-    "david(V0:'david'[#id])",
+    "david(V0:'player'[#id])",
     "robot(V0:'shrdlu'[#id])",
     "qwerty(V0:'qwerty'[#id])",
     "disembodied-ai(V0:'etaoin'[#id])",
 
-    "space.inside.of(V0:'david'[#id], V1:'location-garage'[#id])",
+    "space.inside.of(V0:'player'[#id], V1:'location-garage'[#id])",
     "space.inside.of(V0:'location-garage'[#id], V1:'location-aurora-station'[#id])",
     "space.inside.of(V0:'location-aurora-station'[#id], V1:'location-aurora-settlement'[#id])",
     "space.inside.of(V0:'location-aurora-settlement'[#id], V1:'spacer-valley-south'[#id])",

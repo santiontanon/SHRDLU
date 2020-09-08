@@ -545,7 +545,7 @@ class A4Game {
         xmlhttp.send();
         this.naturalLanguageParser = NLParser.fromXML(xmlhttp.responseXML.documentElement, this.ontology);
         this.naturalLanguageGenerator = new NLGenerator(this.ontology, this.naturalLanguageParser.posParser);
-        this.naturalLanguageParser.talkingTargets = ["david", "shrdlu", "qwerty", "etaoin"];
+        this.naturalLanguageParser.talkingTargets = ["player", "shrdlu", "qwerty", "etaoin"];
 
         // load the AIs:
         this.etaoinAI = new EtaoinAI(this.ontology, this.naturalLanguageParser, [], this, 

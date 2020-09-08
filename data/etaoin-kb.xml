@@ -2,7 +2,7 @@
 	<!-- story knowledge -->	
 	<sentence provenance="background"  sentence="space.inside.of('shrdlu'[#id], 'location-east-cave'[#id])"/>
 
-	<sentence provenance="background" time="45186163200" sentence="alone('david'[#id])"/>
+	<sentence provenance="background" time="45186163200" sentence="alone('player'[#id])"/>
 
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->
 	<sentence provenance="background" sentence="verb.know('etaoin'[#id], name(X, Y)); ~name(X, Y)"/>

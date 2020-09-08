@@ -185,19 +185,19 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 			let term:Term = Term.fromString("verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
-			term = Term.fromString("verb.can('david'[#id], action.print('david'[#id], ["+item+"]))", o);
+			term = Term.fromString("verb.can('player'[#id], action.print('player'[#id], ["+item+"]))", o);
 			this.addLongTermRuleNow(new Sentence([term], [true]), BACKGROUND_PROVENANCE);
 
 			let sentence:Sentence = Sentence.fromString("~metal-3dprinter(X) ; verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"], X))", o);
 			this.addLongTermRuleNow(sentence, BACKGROUND_PROVENANCE);
-			sentence = Sentence.fromString("~metal-3dprinter(X) ; verb.can('david'[#id], action.print('david'[#id], ["+item+"], X))", o);
+			sentence = Sentence.fromString("~metal-3dprinter(X) ; verb.can('player'[#id], action.print('player'[#id], ["+item+"], X))", o);
 			console.log(sentence.toString())
 			this.addLongTermRuleNow(sentence, BACKGROUND_PROVENANCE);
 
 			if (materials.length == 1 && materials[0] == "plastic") {
 				let sentence2:Sentence = Sentence.fromString("~plastic-3dprinter(X) ; verb.can('"+IDofAIthatCanPrint+"'[#id], action.print('"+IDofAIthatCanPrint+"'[#id], ["+item+"], X))", o);
 				this.addLongTermRuleNow(sentence2, BACKGROUND_PROVENANCE);
-				sentence2 = Sentence.fromString("~plastic-3dprinter(X) ; verb.can('david'[#id], action.print('david'[#id], ["+item+"], X))", o);
+				sentence2 = Sentence.fromString("~plastic-3dprinter(X) ; verb.can('player'[#id], action.print('player'[#id], ["+item+"], X))", o);
 				this.addLongTermRuleNow(sentence2, BACKGROUND_PROVENANCE);
 			}
 
@@ -395,7 +395,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 			this.game.currentPlayer.findObjectByID("communicator") != null) {
 			// we can hear david throught the communicator:
 	        for(let pbr of this.game.currentPlayer.map.perceptionBuffer) {
-	        	if (pbr.action == "talk" && pbr.subjectID == "david" &&
+	        	if (pbr.action == "talk" && pbr.subjectID == "player" &&
 	        		this.alreadyProcessedPBRs.indexOf(pbr)==-1) {
 	        		// we can hear it!
 	        		this.perceivePBR(pbr);
@@ -1412,8 +1412,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 	{
 		for(let location of this.locationsWherePlayerIsNotPermitted) {
 			// remove the long term permission term and add a negated one:
-			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('david'[#id], '"+location+"'[#id])", this.o));
-			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('david'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
+			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o));
+			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
 		}
 		this.locationsWherePlayerIsNotPermitted = [];
 		this.doorsPlayerIsNotPermittedToOpen = [];
@@ -1427,8 +1427,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 			this.locationsWherePlayerIsNotPermitted.splice(idx,1);
 
 			// remove the long term permission term and add a negated one:
-			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('david'[#id], '"+location+"'[#id])", this.o));
-			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('david'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
+			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o));
+			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
 		}
 		idx = this.doorsPlayerIsNotPermittedToOpen.indexOf(door);
 		if (idx != -1) this.doorsPlayerIsNotPermittedToOpen.splice(idx,1);

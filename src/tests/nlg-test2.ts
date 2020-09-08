@@ -17,8 +17,8 @@ var g_nlg:NLGenerator = new NLGenerator(o, g_posParser);
 var g_ai:RuleBasedAI = new RuleBasedAI(o, g_parser, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
 g_ai.selfID = "etaoin";
 var g_ai2:RuleBasedAI = new RuleBasedAI(o, g_parser, 10, 0, DEFAULT_QUESTION_PATIENCE_TIMER);
-g_ai2.selfID = "david";
-var g_context:NLContext = g_ai.contextForSpeaker('david');
+g_ai2.selfID = "player";
+var g_context:NLContext = g_ai.contextForSpeaker('player');
 var g_context2:NLContext = g_ai2.contextForSpeaker('etaoin');
 
 
@@ -194,7 +194,7 @@ for(let tmp of additionalSentences) {
 
 /*
 let performative:Term = Term.fromString("perf.inform('etaoin'[#id], height(V0:'qwerty'[#id], V1:'1.5'[meter]))", o);
-let out:string = g_nlg.termToEnglish(performative, "david", null, g_context2);
+let out:string = g_nlg.termToEnglish(performative, "player", null, g_context2);
 console.log(out);
 */
 
@@ -211,7 +211,7 @@ for(let sentence of g_ai.longTermMemory.plainSentenceList) {
 	let term:Term = Term.sentenceToTerm(sentence.sentence, o);
 	let performative:Term = new Term(o.getSort("perf.inform"), [new ConstantTermAttribute("etaoin", o.getSort("#id")), 
 																new TermTermAttribute(term)]);
-	var str:string = g_nlg.termToEnglish(performative, "david", null, g_context2);
+	var str:string = g_nlg.termToEnglish(performative, "player", null, g_context2);
 	console.log("---- " + successfulTests + "/" + totalTests + " ----");
 	console.log("term: " + term.toString());
 	console.log("str: " + str);

@@ -1115,7 +1115,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
                                "socrates","plato","aristotle",
                                */
-                               "etaoin", "shrdlu", "qwerty", "david",
+                               "etaoin", "shrdlu", "qwerty", "david", "susan",
                                "tau ceti", "beta cassini", "aurora", "space", "ai", "station ai", "artificial intelligence",
                                "aurora", "aurora station", "earth", "planet earth"];
   for(let proper_noun of proper_nouns) {

@@ -26,7 +26,7 @@ class NLParser {
 			parser.rules.push(rule);
 		}
 
-		for(let sortName of ["nounPhrase","nounPhraseNoDeterminer","nounPhraseNoDeterminerNoProperNoun","properNounCompound","performative","perf.request.action","perf.inform"]) {
+		for(let sortName of ["maybeNegatedAdjective","nounPhrase","nounPhraseNoDeterminer","nounPhraseNoDeterminerNoProperNoun","properNounCompound","performative","perf.request.action","perf.inform"]) {
 			let compiled:CompiledNLPatternRules = new CompiledNLPatternRules("compiled-" + sortName, o, speakerVariable, listenerVariable);
 			compiled.populate(o.getSort(sortName), parser);
 

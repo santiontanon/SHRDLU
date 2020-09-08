@@ -335,7 +335,7 @@ class RobotAI extends A4RuleBasedAI {
 		}
 
 		// exception of the player through the communicator:
-		if (objectID == "communicator" || objectID == "david") {
+		if (objectID == "communicator" || objectID == "player") {
 			if (this.game.communicatorConnectedTo == this.selfID) return true;
 		}
 
@@ -358,7 +358,7 @@ class RobotAI extends A4RuleBasedAI {
 	canGoTo(map:A4Map, locationID:string, requester:TermAttribute) : Term
 	{
 		if (this.locationsWherePlayerIsNotPermitted.indexOf(locationID) >= 0) {
-			let cause:Term = Term.fromString("#not(verb.have('david'[#id],[permission-to]))", this.o);
+			let cause:Term = Term.fromString("#not(verb.have('player'[#id],[permission-to]))", this.o);
 			return cause;
 		}
 

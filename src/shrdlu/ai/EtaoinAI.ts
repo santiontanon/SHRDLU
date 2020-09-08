@@ -42,12 +42,12 @@ class EtaoinAI extends A4RuleBasedAI {
 		this.add3DPrintingKnowledge(game, o, "etaoin");
 
 		// get objects the AI cares about:
-		let tmp:A4Object[] = game.findObjectByID("david");
+		let tmp:A4Object[] = game.findObjectByID("player");
 		if (tmp!=null) this.player_object = tmp[tmp.length-1];
 		tmp = game.findObjectByName("communicator");
 		if (tmp!=null) this.communicator_object = tmp[tmp.length-1];
 
-		let attention_IDs:string[] = ["david","communicator","shrdlu","qwerty"];
+		let attention_IDs:string[] = ["player","communicator","shrdlu","qwerty"];
 		let attention_priorities:number[] = [5,1,1,1];
 		for(let i:number = 0;i<attention_IDs.length;i++) {
 			let obj_l:A4Object[] = game.findObjectByID(attention_IDs[i]);
@@ -73,13 +73,13 @@ class EtaoinAI extends A4RuleBasedAI {
 				this.withinEtaoinViewRange(this.game.currentPlayer)) {				
 
 				let term2:Term = new Term(this.game.ontology.getSort("action.talk"), 
-										 [new ConstantTermAttribute("david", this.game.ontology.getSort("#id")), 
-										  new TermTermAttribute(Term.fromString("perf.inform(V0:'david'[#id], oxygen-level('david'[#id],'low'[low]))", this.game.ontology))]);
+										 [new ConstantTermAttribute("player", this.game.ontology.getSort("#id")), 
+										  new TermTermAttribute(Term.fromString("perf.inform(V0:'player'[#id], oxygen-level('player'[#id],'low'[low]))", this.game.ontology))]);
 				this.queueIntention(term2, null, null);
 
 				term2 = new Term(this.game.ontology.getSort("action.talk"), 
-								 [new ConstantTermAttribute("david", this.game.ontology.getSort("#id")), 
-								  new TermTermAttribute(Term.fromString("perf.request.action('david'[#id], verb.come-back(E:'david'[#id]))", this.game.ontology))]);
+								 [new ConstantTermAttribute("player", this.game.ontology.getSort("#id")), 
+								  new TermTermAttribute(Term.fromString("perf.request.action('player'[#id], verb.come-back(E:'player'[#id]))", this.game.ontology))]);
 				this.queueIntention(term2, null, null);
 
 				this.oxygen_message_timer = 50*20;	// do not say anything for 20 seconds
@@ -230,7 +230,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		// if the player is talking to us, then we close communicator connections to other characters:
 		if (this.game.communicatorConnectedTo != null && 
 			(speaker instanceof ConstantTermAttribute) &&
-			(<ConstantTermAttribute>speaker).value == "david") {
+			(<ConstantTermAttribute>speaker).value == "player") {
 			this.game.communicatorConnectedTo = null;
 			this.game.communicatorConnectionTime = 0;
 		}

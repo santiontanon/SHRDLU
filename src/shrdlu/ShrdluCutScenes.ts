@@ -394,7 +394,7 @@ class ShrdluCutScenes {
 			let terms:Term[] = [];
 			for(let item of this.game.currentPlayer.inventory) {
 				if (item.is_a_string("luminiscent-dust")) {
-					terms.push(Term.fromString("verb.find('david'[#id], '"+item.ID+"'[#id], 'location-west-cave'[#id])", this.game.ontology));
+					terms.push(Term.fromString("verb.find('player'[#id], '"+item.ID+"'[#id], 'location-west-cave'[#id])", this.game.ontology));
 					terms.push(Term.fromString("fungi('"+item.ID+"'[#id])", this.game.ontology));
 				}
 			}

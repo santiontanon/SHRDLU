@@ -461,7 +461,7 @@
 	<map file="map8-trantor-crater.tmx"/>
 	<map file="map9-tardis-8.tmx"/>
 
-	<player id="david" type="david" x="32" y="224" map="0">
+	<player id="player" type="david" x="32" y="224" map="0">
 		<attribute name="sleepingInBed" value="505"/>
 		<attribute name="state" value="7"/>
 	</player>

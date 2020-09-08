@@ -289,7 +289,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1442,7 +1442,6 @@ NLParseTestUnifyingListener("can you put two blocks on a pyramid?", o.getSort("p
 // NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
-*/
 
 // For dataset generation:
 NLParseTestUnifyingListener("how many crates do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, crate(X))"); 
@@ -1454,6 +1453,8 @@ NLParseTestUnifyingListener("how many crates that do not seem closed are there?"
 NLParseTestUnifyingListener("how many hungry closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(property.closed(X), #and(hungry(X), space.inside.of(X, 'room1'[#id])))))"); 
 NLParseTestUnifyingListener("can you see any robot that does not have the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0, X), #and(robot(X), #not(verb.have(X, 'room1'[#id]))), [number.1])");
 NLParseTestUnifyingListener("delighted to make your acquaintance, you!", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
+NLParseTestUnifyingListener("how many hungry not closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(#not(property.closed(X)), #and(hungry(X), space.inside.of(X, 'room1'[#id])))))"); 
+NLParseTestUnifyingListener("how many not hungry not closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(#not(property.closed(X)), #and(#not(hungry(X)), space.inside.of(X, 'room1'[#id])))))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

@@ -1,17 +1,17 @@
 <knowledgeBase>
-	<sentence provenance="background" time="45186163200" sentence="~in-stasis('david'[#id])">
-		<previousSentence provenance="background" time="41338676700" timeEnd="45186163200" sentence="in-stasis('david'[#id])"/>
+	<sentence provenance="background" time="45186163200" sentence="~in-stasis('player'[#id])">
+		<previousSentence provenance="background" time="41338676700" timeEnd="45186163200" sentence="in-stasis('player'[#id])"/>
 	</sentence>
 
-	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.happen('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
-	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="property.strange('david'[#id], verb.malfunction('david-stasis-pod'[#id]))"/>
-	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.malfunction('david-stasis-pod'[#id])"/>
-	<previousSentence provenance="background" time="45186163200" timeEnd="45186163200" sentence="verb.leave('david'[#id], 'location-as26'[#id])"/>
+	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.happen('player'[#id], verb.malfunction('player-stasis-pod'[#id]))"/>
+	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="property.strange('player'[#id], verb.malfunction('player-stasis-pod'[#id]))"/>
+	<previousSentence provenance="background" time="45186159600" timeEnd="45186163200" sentence="verb.malfunction('player-stasis-pod'[#id])"/>
+	<previousSentence provenance="background" time="45186163200" timeEnd="45186163200" sentence="verb.leave('player'[#id], 'location-as26'[#id])"/>
 
 	<!-- general knowledge about the player -->
-	<sentence provenance="background" sentence="awake('david'[#id])"/>
-	<sentence provenance="background" sentence="healthy('david'[#id])"/>
-	<sentence provenance="background" sentence="verb.lives('david'[#id], 'location-as8'[#id])"/>
+	<sentence provenance="background" sentence="awake('player'[#id])"/>
+	<sentence provenance="background" sentence="healthy('player'[#id])"/>
+	<sentence provenance="background" sentence="verb.lives('player'[#id], 'location-as8'[#id])"/>
 
 	<!-- general knowledge about famous people -->
 	<sentence provenance="background" sentence="man('asimov'[#id])"/>
@@ -221,29 +221,29 @@
 	<sentence provenance="background" sentence="relation.cause(verb.search('shrdlu'[#id],[mineral]), verb.want('shrdlu'[#id], verb.feed('shrdlu'[#id], 'metal3dprinter1'[#id])))"/>
 	<sentence provenance="background" sentence="relation.cause(verb.want('shrdlu'[#id], [mineral]), verb.want('shrdlu'[#id], verb.feed('shrdlu'[#id], 'metal3dprinter1'[#id])))"/>
 
-	<sentence provenance="background" sentence="relation.cause(in-stasis(D:'david'[#id]), verb.come-to(D,'aurora'[#id]))"/>
+	<sentence provenance="background" sentence="relation.cause(in-stasis(D:'player'[#id]), verb.come-to(D,'aurora'[#id]))"/>
 	<sentence provenance="background" sentence="relation.cause(gravity(X,'low'[low]), radius('aurora'[#id],'big'[big])); ~space.at(X, 'aurora'[#id])"/>
 	<sentence provenance="background" sentence="relation.cause(gravity('aurora'[#id],'low'[low]), radius('aurora'[#id],'big'[big]))"/>
 	<sentence provenance="background" sentence="relation.cause(weight(X,'light-weight'[light-weight]), gravity('aurora'[#id],'low'[low])); ~space.at(X, 'aurora'[#id])"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.repair(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], verb.go(E,X))), #not(verb.have(E,[body])))"/>
 	<sentence provenance="background" sentence="relation.cause(#not(verb.can(E:'etaoin'[#id], action.take(E,X))), #not(verb.have(E,[body])))"/>
-	<sentence provenance="background" sentence="relation.cause(#not(verb.remember(E:'david'[#id], 'pronoun.anything'[pronoun.anything])), #and(V:in-stasis('david'[#id]), time.past(V)))"/>
+	<sentence provenance="background" sentence="relation.cause(#not(verb.remember(E:'player'[#id], 'pronoun.anything'[pronoun.anything])), #and(V:in-stasis('player'[#id]), time.past(V)))"/>
 	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~dark(X) ; relation.cause(dark(X), powered.state(Y, 'powered.off'[powered.off]))"/>
 	<sentence provenance="background" sentence="~light(Y:[#id]) ; ~space.at(Y, X:[#id]); ~bright(X) ; relation.cause(bright(X), powered.state(Y, 'powered.on'[powered.on]))"/>
 
-	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'etaoin'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
-	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'qwerty'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
-	<sentence provenance="background" sentence="permitted-in(D:'david'[#id], X) ; relation.cause(#not(verb.can(E:'shrdlu'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="permitted-in(D:'player'[#id], X) ; relation.cause(#not(verb.can(E:'etaoin'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="permitted-in(D:'player'[#id], X) ; relation.cause(#not(verb.can(E:'qwerty'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
+	<sentence provenance="background" sentence="permitted-in(D:'player'[#id], X) ; relation.cause(#not(verb.can(E:'shrdlu'[#id], action.open(E,X))), #not(permission-to(D, verb.access(D, X))))"/>
 	<sentence provenance="background" sentence="
 		~action.open(KEY:[#id], DOOR:[#id]) ; 
 		~verb.belong(DOOR,ROOM:[#id]) ; 
-		permitted-in(D:'david'[#id], ROOM) ; 
+		permitted-in(D:'player'[#id], ROOM) ; 
 		relation.cause(#not(verb.can(E:'qwerty'[#id], action.give(E,D,KEY))), #not(permission-to(D, verb.access(D, ROOM))))"/>
 	<sentence provenance="background" sentence="
 		~action.open(KEY:[#id], DOOR:[#id]) ; 
 		~verb.belong(DOOR,ROOM:[#id]) ; 
-		permitted-in(D:'david'[#id], ROOM) ; 
+		permitted-in(D:'player'[#id], ROOM) ; 
 		relation.cause(#not(verb.can(E:'shrdlu'[#id], action.give(E,D,KEY))), #not(permission-to(D, verb.access(D, ROOM))))"/>
 
 	<!-- where can things be done -->
@@ -486,48 +486,48 @@
 	<sentence provenance="background" sentence="action.open('bedroom5-key'[#id], 'bedroom5-door'[#id])"/>
 
 	<!-- permissions -->
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as1'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as2'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as3'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as4'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as5'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as6'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as7'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as8'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as9'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as10'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as11'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as12'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as13'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as14'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as15'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as16'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as17'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as18'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as19'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as20'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as21'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as22'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as23'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as24'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as25'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as26'[#id])"/>
-	<!--sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as27'[#id])"/-->
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-as29'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('david'[#id], 'location-garage'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as31'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as32'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as33'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('david'[#id], 'location-as34'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as1'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as2'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as3'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as4'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as5'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as6'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as7'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as8'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as9'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as10'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as11'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as12'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as13'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as14'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as15'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as16'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as17'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as18'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as19'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as20'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as21'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as22'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as23'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as24'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as25'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as26'[#id])"/>
+	<!--sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as27'[#id])"/-->
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-maintenance'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as29'[#id])"/>
+	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-garage'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as31'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as32'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as33'[#id])"/>
+	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as34'[#id])"/>
 
 	<!-- other general knowledge -->
 	<sentence provenance="background" sentence="communicator('communicator'[#id])"/>
-	<sentence provenance="background" sentence="stasis-pod('david-stasis-pod'[#id])"/>
+	<sentence provenance="background" sentence="stasis-pod('player-stasis-pod'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('broken-stasis-pod'[#id])"/>
-	<sentence provenance="background" sentence="verb.belong('david-stasis-pod'[#id], 'david'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('player-stasis-pod'[#id], 'player'[#id])"/>
 	<sentence provenance="background" sentence="property.broken('broken-stasis-pod'[#id])"/>
-	<sentence provenance="background" sentence="verb.belong('location-as8'[#id], 'david'[#id])"/>
+	<sentence provenance="background" sentence="verb.belong('location-as8'[#id], 'player'[#id])"/>
 	<sentence provenance="background" sentence="rover('garage-rover'[#id])"/>
 	<sentence provenance="background" sentence="shuttle('garage-shuttle'[#id])"/>
 	<sentence provenance="background" sentence="wrench('wrench'[#id])"/>
