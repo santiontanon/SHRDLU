@@ -1436,13 +1436,6 @@ NLParseTestUnifyingListener("can you put two blocks on the crate?", o.getSort("p
 NLParseTestUnifyingListener("put two blocks on a pyramid", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(block(X), pyramid(Y)), '2'[number.2])");
 NLParseTestUnifyingListener("can you put two blocks on a pyramid?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(block(X), pyramid(Y)), '2'[number.2])");
 
-
-// NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
-// NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");
-// NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
-// NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
-// NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
-
 // For dataset generation:
 NLParseTestUnifyingListener("how many crates do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, crate(X))"); 
 NLParseTestUnifyingListener("how many computer consoles in the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(wall-computer(X), space.at(X,'room1'[#id])))"); 
@@ -1455,6 +1448,17 @@ NLParseTestUnifyingListener("can you see any robot that does not have the kitche
 NLParseTestUnifyingListener("delighted to make your acquaintance, you!", o.getSort("performative"),  context, 'etaoin', "perf.nicetomeetyou(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("how many hungry not closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(#not(property.closed(X)), #and(hungry(X), space.inside.of(X, 'room1'[#id])))))"); 
 NLParseTestUnifyingListener("how many not hungry not closed crates inside of the kitchen do you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(crate(X), #and(#not(property.closed(X)), #and(#not(hungry(X)), space.inside.of(X, 'room1'[#id])))))"); 
+NLParseTestUnifyingListener("how many men that have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), verb.have(X, 'room1'[#id])))"); 
+NLParseTestUnifyingListener("how many men that do not have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), #not(verb.have(X, 'room1'[#id]))))"); 
+NLParseTestUnifyingListener("how many men that does not have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), #not(verb.have(X, 'room1'[#id]))))"); 
+NLParseTestUnifyingListener("how many hungry men that does not have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), #and(hungry(X), #not(verb.have(X, 'room1'[#id])))))"); 
+NLParseTestUnifyingListener("please, hand the white key to me", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
+
+// NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
+// NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

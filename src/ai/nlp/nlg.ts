@@ -51,7 +51,7 @@ class NLGenerator {
 			let targetString:string = this.termToEnglish_EntityName(listenerID, context);
 			if (targetString != null) {
 				// special case to prevent "hello man!", which sounds like "hello dude!"
-				if (targetString == "man") targetString = "human";
+				if (targetString == "man" || targetString == "woman") targetString = "human";
 				listenerPrefix = targetString + ", ";
 			}			
 		}
@@ -122,7 +122,7 @@ class NLGenerator {
 			let targetString:string = this.termToEnglish_EntityName(target, context);
 			if (targetString != null) {
 				// special case to prevent "hello man!", which sounds like "hello dude!"
-				if (targetString == "man") targetString = "human";
+				if (targetString == "man" || targetString == "woman") targetString = "human";
 				return targetString + "?"
 			} else {
 				console.error("termToEnglish_CallAttention: cannot render performative " + t);
@@ -144,7 +144,7 @@ class NLGenerator {
 			let targetString:string = this.termToEnglish_EntityName(target, context);
 			if (targetString != null) {
 				// special case to prevent "hello man!", which sounds like "hello dude!"
-				if (targetString == "man") targetString = "human";
+				if (targetString == "man" || targetString == "woman") targetString = "human";
 				return "Hello " + targetString + "!"
 			} else {
 				return "Hello!";
@@ -164,7 +164,7 @@ class NLGenerator {
 			let targetString:string = this.termToEnglish_EntityName(target, context);
 			if (targetString != null) {
 				// special case to prevent "hello man!", which sounds like "hello dude!"
-				if (targetString == "man") targetString = "human";
+				if (targetString == "man" || targetString == "woman") targetString = "human";
 				return "Farewell " + targetString + "!"
 			} else {
 				return "Farewell!";
