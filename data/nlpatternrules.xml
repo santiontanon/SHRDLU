@@ -7862,25 +7862,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="nounPhrase(X, N, [third-person], proper-noun(X, N))"
 			   body="'the' proper-noun(X, N)"/>
 	<NLPattern name="nounphrase-determiner-preposition1"
-			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(C,#cons(PREPOSITION, X, O2))))"
+			   head="nounPhrase(X, N, P, #and(#cons(ART, X, N), #and(C, PREPOSITION)))"
 			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C)
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
-					 #derefFromContext(C2, O2)"/>
+			   	     maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-determiner-preposition2"
-			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #cons(PREPOSITION, X, O2)))"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), PREPOSITION))"
 			   body="noun(X, N) 
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
-					 #derefFromContext(C2, O2)"/>
+			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-determiner-preposition3"
-			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ, #cons(PREPOSITION, X, O2))))"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ, PREPOSITION)))"
 			   body="maybeNegatedAdjective(X, ADJ) noun(X, N) 
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
-					 #derefFromContext(C2, O2)"/>
+			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-determiner-preposition-adj-adj"
-			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ1, #and(ADJ2, #cons(PREPOSITION, X, O2)))))"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ1, #and(ADJ2, PREPOSITION))))"
 			   body="maybeNegatedAdjective(X, ADJ1) maybeNegatedAdjective(X, ADJ2) noun(X, N) 
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
-					 #derefFromContext(C2, O2)"/>
+			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-all-of"
 			   head="nounPhrase(X, [plural], P, #and(#cons(DET, X, [plural]), C))"
 			   body="definite-article('all'[symbol], [plural]) ['of'] demonstrative-determiner(DET, [plural]) nounPhraseNoDeterminer(X, [plural], P, C)"/>
@@ -7984,5 +7980,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="adjective"
 			   head="maybeNegatedAdjective(X, adjective(X, ADJ))"
 			   body="adjective(ADJ)"/>
+
+	<NLPattern name="negated-prepositional-phrase"
+			   head="maybeNegatedPrepositionalPhrase(X, #not(#cons(PREPOSITION, X, O2)))"
+			   body="'not'
+			   		 preposition(PREPOSITION) 
+			   		 nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="prepositional-phrase"
+			   head="maybeNegatedPrepositionalPhrase(X, #cons(PREPOSITION, X, O2))"
+			   body="preposition(PREPOSITION) 
+			   		 nounPhrase(X2, [singular], P2, C2) 
+					 #derefFromContext(C2, O2)"/>
 
 </NLPatternRules>

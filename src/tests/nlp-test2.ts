@@ -1453,6 +1453,9 @@ NLParseTestUnifyingListener("how many men that do not have the kitchen can you s
 NLParseTestUnifyingListener("how many men that does not have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), #not(verb.have(X, 'room1'[#id]))))"); 
 NLParseTestUnifyingListener("how many hungry men that does not have the kitchen can you see?", o.getSort("performative"),  context, 'etaoin', "perf.q.howmany(V0:'etaoin'[#id], X, #and(man(X), #and(hungry(X), #not(verb.have(X, 'room1'[#id])))))"); 
 NLParseTestUnifyingListener("please, hand the white key to me", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("do you see a robot inside of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), #and(robot(X), space.inside.of(X, 'room1'[#id])), [number.1])");
+NLParseTestUnifyingListener("do you see a robot not inside of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), #and(robot(X), #not(space.inside.of(X, 'room1'[#id]))), [number.1])"); 
+
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");

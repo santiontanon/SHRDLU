@@ -172,6 +172,14 @@ class ConstantTermAttribute extends TermAttribute {
     constructor(value:any, sort:Sort) {
         super(sort);
         this.value = value;
+        // debug:
+        // if (sort.name == "#id") {
+        //     if (typeof value === 'string') {
+        //         // ...
+        //     } else {
+        //         console.error("ID is not a string!");
+        //     }
+        // }
     }
 
 
@@ -1487,7 +1495,7 @@ class Term {
                         console.error("Term.parseAttribute: unknown sort " + tmp2);
                         return null;
                     }
-                    if (tmp.trim()!="" && !isNaN(Number(tmp))) {
+                    if (tmp.trim()!="" && a_sort.name != "#id" && !isNaN(Number(tmp))) {
                         return new ConstantTermAttribute(Number(tmp), a_sort);
                     } else {                            
                         return new ConstantTermAttribute(tmp.replace("\\039","'"), a_sort);
@@ -1556,7 +1564,7 @@ class Term {
                             return null;
                         }
                         let a_term:TermAttribute = null;
-                        if (tmp.trim()!="" && !isNaN(Number(tmp))) {
+                        if (tmp.trim()!="" && a_sort.name != "#id" && !isNaN(Number(tmp))) {
                             a_term = new ConstantTermAttribute(Number(tmp), a_sort);
                         } else {
                             a_term = new ConstantTermAttribute(tmp.replace("\\039","'"), a_sort);

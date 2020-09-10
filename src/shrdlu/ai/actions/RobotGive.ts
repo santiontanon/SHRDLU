@@ -27,7 +27,7 @@ class RobotGive_IntentionAction extends IntentionAction {
 			return true;
 		}			
 
-		for(let intention of alternative_actions) {			
+		for(let intention of alternative_actions) {		
 			let id:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 			if (id != null && itemID_l.indexOf(id) == -1) itemID_l.push(id);
 			if (intention.attributes.length>=3) {

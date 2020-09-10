@@ -9,6 +9,11 @@ class NLContextEntity {
 		this.mentionTime = time;
 		this.distanceFromSpeaker = distance;
 		this.terms = tl;
+	 //    if (typeof id.value === 'string') {
+	 //    	// ...
+	 //    } else {
+		// 	console.error("number ID!");
+		// }
 	}
 
 
@@ -666,7 +671,21 @@ class NLContext {
 
 	deref(clause:Term, listenerVariable:TermAttribute, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
-		return this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, o, pos, AI);
+		// debugging version:
+		// let tmp:TermAttribute[] = this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, o, pos, AI);
+		// for(let t of tmp) {
+		// 	if (t instanceof ConstantTermAttribute) {
+		// 	    if (typeof (<ConstantTermAttribute>t).value === 'string') {
+		// 	    	// ...
+		// 	    } else {
+		// 			console.error("deref: entity ID is not a string!");
+		// 		}
+		// 	} else {
+		// 		console.error("dereffing to a non constant term attribute! " + t);
+		// 	}
+		// }
+		// return tmp;
+		return this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, o, pos, AI);;
 	}
 
 
