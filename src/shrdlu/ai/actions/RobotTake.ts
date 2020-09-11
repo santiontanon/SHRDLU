@@ -43,6 +43,13 @@ class RobotTake_IntentionAction extends IntentionAction {
 			}
 			return true;
 		}
+		if (!targetObjectL[targetObjectL.length-1].takeable) {
+			if (requester != null) {
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			}
+			return true;
+		}
 
 		let destinationMap:A4Map = targetObjectL[0].map;
 		let destinationX:number = targetObjectL[0].x;

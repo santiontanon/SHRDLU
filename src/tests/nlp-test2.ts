@@ -211,7 +211,8 @@ var ce7:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room1',
                                               [Term.fromString("kitchen('room1'[#id])",o),
                                                Term.fromString("space.inside.of('room1'[#id], 'location-aurora-station'[#id])",o),
                                                Term.fromString("verb.belong('door1'[#id], 'room1'[#id])",o),
-                                               Term.fromString("space.at('1'[#id],'room1'[#id])",o)]);
+                                               Term.fromString("space.at('1'[#id],'room1'[#id])",o),
+                                               Term.fromString("space.at('vitamins'[#id],'room1'[#id])",o)]);
 var ce8:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('location-aurora-station', o.getSort("#id")),
                                               null, 0, 
                                               [Term.fromString("station('location-aurora-station'[#id])",o),
@@ -263,6 +264,11 @@ var ce17:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty
                                                Term.fromString("name('qwerty'[#id], 'qwerty'[symbol])",o),
                                                Term.fromString("space.at('etaoin'[#id],'room2'[#id])",o)]);
 
+var ce18:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('vitamins', o.getSort("#id")),
+                                              null, 30, 
+                                              [Term.fromString("vitamins('vitamins'[#id])",o),
+                                               Term.fromString("space.at('vitamins'[#id],'room1'[#id])",o)]);
+
 
 context.shortTermMemory.push(ce1);
 context.shortTermMemory.push(ce2);
@@ -281,6 +287,7 @@ context.shortTermMemory.push(ce14);
 context.shortTermMemory.push(ce15);
 context.shortTermMemory.push(ce16);
 context.shortTermMemory.push(ce17);
+context.shortTermMemory.push(ce18);
 
 // add all the terms to short term memory of the AI
 for(let ce of context.shortTermMemory) {
@@ -1455,6 +1462,11 @@ NLParseTestUnifyingListener("how many hungry men that does not have the kitchen 
 NLParseTestUnifyingListener("please, hand the white key to me", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("do you see a robot inside of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), #and(robot(X), space.inside.of(X, 'room1'[#id])), [number.1])");
 NLParseTestUnifyingListener("do you see a robot not inside of the kitchen?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), #and(robot(X), #not(space.inside.of(X, 'room1'[#id]))), [number.1])"); 
+NLParseTestUnifyingListener("where are the vitamins?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], 'vitamins'[#id])");
+NLParseTestUnifyingListener("please give me a sausage!", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
+NLParseTestUnifyingListener("please give a sausage to me!", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
+NLParseTestUnifyingListener("can you give me a sausage?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
+NLParseTestUnifyingListener("would you give a sausage to me?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
 
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
