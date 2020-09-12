@@ -111,3 +111,20 @@ function nTruesInArray(booleanArray:boolean[]) : number
     }
     return n;    
 }
+
+
+function shuffleList(list:any[]) 
+{
+    for (let i = list.length - 1; i > 0; i--) {
+        let j:number = Math.floor(Math.random() * (i+1));
+        let tmp:any = list[i];
+        list[i] = list[j];
+        list[j] = tmp;
+    }
+}
+
+
+function startsWith(str:string, prefix:string): boolean
+{
+    return str.substring(0, prefix.length) == prefix;
+}

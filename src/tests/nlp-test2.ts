@@ -1467,6 +1467,12 @@ NLParseTestUnifyingListener("please give me a sausage!", o.getSort("performative
 NLParseTestUnifyingListener("please give a sausage to me!", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
 NLParseTestUnifyingListener("can you give me a sausage?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
 NLParseTestUnifyingListener("would you give a sausage to me?", o.getSort("performative"),  context, 'etaoin', "perf.q.action(V0:'etaoin'[#id], action.give('etaoin'[#id], X, '1'[#id]), sausage(X), [number.1])");
+NLParseTestUnifyingListener("open any door!", o.getSort("performative"), context, 'etaoin', "perf.request.action(LISTENER_0:'etaoin'[#id], V1:action.open(LISTENER_0, X), door(X), [number.1])");
+NLParseTestUnifyingListener("could you tell me what is my name?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('1'[#id],X))");
+NLParseTestUnifyingListener("how do people call me?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('1'[#id],X))");
+NLParseTestUnifyingListener("hey! what's my name?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('1'[#id],X))");
+NLParseTestUnifyingListener("could you tell me what's your name?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('etaoin'[#id],X))");
+NLParseTestUnifyingListener("how do they call me?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('1'[#id],X))");
 
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");

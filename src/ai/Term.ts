@@ -1300,63 +1300,18 @@ class Term {
     }
 
 
-    static fromStringInternal(str:string, o:Ontology, 
-                              variableNames:string[], variableValues:TermAttribute[]) : TermTermAttribute
+    static tokenizeStringByAttribute(str:string): string[]
     {
-        let tmp:string = "";
-        let len:number = str.length;
-        let idx:number = 0;
-        let c:string = null;
-        let term:Term = new Term(null,[]);
-        let term_a:TermTermAttribute = new TermTermAttribute(term);
-        let state:number = 0;
-
-        if (str.indexOf("location2") >= 0) console.log("str: " + str);
-
-//        console.log("Term.fromStringInternal: " + str);
-
-        // parse sort string (potentially with variable name):
-        while(idx<len) {
-            c = str.charAt(idx);
-            idx++;
-            if (c==':') {
-                if (state == 1) {
-                    console.error("Term.fromString: two variable names!");
-                    return null;
-                }
-                // there was a variable name!
-                if (tmp == "") {
-                    console.error("Term.fromString: empty variable name!");
-                    return null;
-                }
-                variableNames.push(tmp);
-                variableValues.push(term_a);
-                tmp = "";
-                state = 1;
-            } else if (c=='(') {
-                term.functor = o.getSort(tmp);
-                term_a.sort = term.functor;
-                if (term.functor == null) {
-                    console.error("Term.fromString: unknown sort " + tmp + "!");
-                    return null;
-                }
-                break;
-            } else {
-                tmp += c;
-            }
-        }
-        if (idx==len) {
-            console.error("Term.fromString: reached end of string and found no parenthesis!");
-            return null;
-        }
-
         // separate the strings corresponding to each attribute:
+        let idx:number = 0;
+        let len:number = str.length;
+        let c:string;
         let attributeStrings:string[] = [];
         let parenthesis:number = 0;
         let squareBrackets:number = 0;
         let quotation:boolean = false;
         let expectingAttribute:boolean = false;
-        tmp = "";
+        let tmp:string = "";
         while(idx<len) {
             c = str.charAt(idx);
             idx++;
@@ -1422,6 +1377,62 @@ class Term {
             return null;
         }
 //        console.log("attribute strings("+attributeStrings.length+"): " + attributeStrings);
+        return attributeStrings;
+    }
+
+
+    static fromStringInternal(str:string, o:Ontology, 
+                              variableNames:string[], variableValues:TermAttribute[]) : TermTermAttribute
+    {
+        let tmp:string = "";
+        let len:number = str.length;
+        let idx:number = 0;
+        let c:string = null;
+        let term:Term = new Term(null,[]);
+        let term_a:TermTermAttribute = new TermTermAttribute(term);
+        let state:number = 0;
+
+        // if (str.indexOf("location2") >= 0) console.log("str: " + str);
+
+//        console.log("Term.fromStringInternal: " + str);
+
+        // parse sort string (potentially with variable name):
+        while(idx<len) {
+            c = str.charAt(idx);
+            idx++;
+            if (c==':') {
+                if (state == 1) {
+                    console.error("Term.fromString: two variable names!");
+                    return null;
+                }
+                // there was a variable name!
+                if (tmp == "") {
+                    console.error("Term.fromString: empty variable name!");
+                    return null;
+                }
+                variableNames.push(tmp);
+                variableValues.push(term_a);
+                tmp = "";
+                state = 1;
+            } else if (c=='(') {
+                term.functor = o.getSort(tmp);
+                term_a.sort = term.functor;
+                if (term.functor == null) {
+                    console.error("Term.fromString: unknown sort " + tmp + "!");
+                    return null;
+                }
+                break;
+            } else {
+                tmp += c;
+            }
+        }
+        if (idx==len) {
+            console.error("Term.fromString: reached end of string and found no parenthesis!");
+            return null;
+        }
+
+        let attributeStrings:string[] = Term.tokenizeStringByAttribute(str.substring(idx));
+        if (attributeStrings == null) return null;
 
         for(let attributeString of attributeStrings)
         {
