@@ -946,8 +946,14 @@ class A4Game {
         this.endingTexts.push(endingText);
     }
     
+    
+    update(k:KeyboardState) : boolean
+    {
+        return this.updateInternal(k, true);
+    }
 
-	update(k:KeyboardState) : boolean
+
+  	updateInternal(k:KeyboardState, updateAIs:boolean) : boolean
     {
         if (this.cycle==0) {
             if (this.eventScripts[A4_EVENT_START] != null) {
@@ -1032,9 +1038,11 @@ class A4Game {
 
         this.executeScriptQueues();
 
-        this.etaoinAI.update(this.in_game_seconds);
-        this.qwertyAI.update(this.in_game_seconds);
-        this.shrdluAI.update(this.in_game_seconds);
+        if (updateAIs) {
+          this.etaoinAI.update(this.in_game_seconds);
+          this.qwertyAI.update(this.in_game_seconds);
+          this.shrdluAI.update(this.in_game_seconds);
+        }
 
         switch(this.eyesClosedState) {
         case 0:
