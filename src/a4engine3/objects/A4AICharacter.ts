@@ -12,8 +12,8 @@ class A4AICharacter extends A4Character {
         if (super.loadObjectAttribute(attribute_xml)) return true;
         let a_name:string = attribute_xml.getAttribute("name");
         
-        if (a_name == "sightRadius") {
-            this.sightRadius = Number(attribute_xml.getAttribute("value"));
+        if (a_name == "AI.sightRadius" || a_name == "sightRadius") {
+            this.AI.sightRadius = Number(attribute_xml.getAttribute("value"));
             return true;
         } else if (a_name == "AI.period") {
             this.AI.period = Number(attribute_xml.getAttribute("value"));
@@ -31,8 +31,7 @@ class A4AICharacter extends A4Character {
     {
         let xmlString:string = super.savePropertiesToXML(game);
 
-        xmlString += this.saveObjectAttributeToXML("sightRadius",this.sightRadius) + "\n";
-
+        xmlString += this.saveObjectAttributeToXML("AI.sightRadius",this.AI.sightRadius) + "\n";
         xmlString += this.saveObjectAttributeToXML("AI.period",this.AI.period) + "\n";
         xmlString += this.saveObjectAttributeToXML("AI.cycle",this.AI.cycle) + "\n";
 
@@ -72,9 +71,6 @@ class A4AICharacter extends A4Character {
         this.AI.objectRemoved(o);
     }
 
-
-    // attributes:
-    sightRadius:number = 5;
 
     AI:A4AI = null;
 }

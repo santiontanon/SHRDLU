@@ -31,7 +31,7 @@ class PFTarget {
 
 
 class A4AI {
-    constructor(c:A4AICharacter)
+    constructor(c:A4Character)
     {
         this.character = c;
     }
@@ -59,10 +59,10 @@ class A4AI {
         let map:A4Map = this.character.map;
         let tx:number = Math.floor(this.character.x/this.tileWidth);
         let ty:number = Math.floor((this.character.y+this.character.tallness)/this.tileHeight);
-        let perception_x0:number = this.character.x-this.tileWidth*this.character.sightRadius;
-        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.character.sightRadius;
-        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.character.sightRadius;
-        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.character.sightRadius;
+        let perception_x0:number = this.character.x-this.tileWidth*this.sightRadius;
+        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.sightRadius;
+        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.sightRadius;
+        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.sightRadius;
         
         let region:number = map.visibilityRegion(tx,ty);
         this.object_perception_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(perception_x0, perception_y0,
@@ -207,7 +207,7 @@ class A4AI {
         if (!force && this.navigationBuffer!=null && this.navigationBuffer_lastUpdated > this.cycle-this.period) return;
 
         if (this.navigationBuffer == null) {
-            this.navigationBuffer_size = Math.floor(this.character.sightRadius*2 + subject.getPixelWidth()/subject.map.getTileWidth());
+            this.navigationBuffer_size = Math.floor(this.sightRadius*2 + subject.getPixelWidth()/subject.map.getTileWidth());
             this.navigationBuffer = new Array(this.navigationBuffer_size*this.navigationBuffer_size);
             this.navigationBuffer_bridges = new Array(this.navigationBuffer_size*this.navigationBuffer_size);
         }
@@ -217,8 +217,8 @@ class A4AI {
         this.navigationBuffer_mapWidth = map.width;
         let cx:number = Math.floor((subject.x + subject.getPixelWidth()/2) / this.tileWidth);
         let cy:number = Math.floor((subject.y + subject.tallness + (subject.getPixelHeight() - subject.tallness)/2) / this.tileHeight);
-        this.navigationBuffer_x = cx - Math.floor(this.character.sightRadius + (subject.getPixelWidth()/2)/this.tileWidth);
-        this.navigationBuffer_y = cy - Math.floor(this.character.sightRadius + ((subject.getPixelHeight() - subject.tallness)/2)/this.tileHeight);
+        this.navigationBuffer_x = cx - Math.floor(this.sightRadius + (subject.getPixelWidth()/2)/this.tileWidth);
+        this.navigationBuffer_y = cy - Math.floor(this.sightRadius + ((subject.getPixelHeight() - subject.tallness)/2)/this.tileHeight);
 //        let character_tileWidth:number = subject.getPixelWidth()/this.tileWidth;
 //        let character_tileHeight:number = (subject.getPixelHeight() - subject.tallness)/this.tileHeight;
         
@@ -771,7 +771,8 @@ class A4AI {
 
     period:number = 2;       // the AI will only run once each period cycles
     cycle:number = 0;        // current cycle
-    character:A4AICharacter = null;
+    sightRadius:number = 5;
+    character:A4Character = null;
 
     lastPerceptionCycle:number = -1;
         

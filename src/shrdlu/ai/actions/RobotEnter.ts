@@ -66,10 +66,10 @@ class RobotEnter_IntentionAction extends IntentionAction {
 
 		// Check if the robot can see it:
 		if (!ai.visionActive) {
-            var x1 = this.targetObject.x + this.targetObject.getPixelWidth() / 2;
-            var y1 = this.targetObject.y + this.targetObject.tallness + (this.targetObject.getPixelHeight() - this.targetObject.tallness) / 2;
-            var x2 = ai.robot.x + ai.robot.getPixelWidth() / 2;
-            var y2 = ai.robot.y + ai.robot.tallness + (ai.robot.getPixelHeight() - ai.robot.tallness) / 2;
+            let x1 = this.targetObject.x + this.targetObject.getPixelWidth() / 2;
+            let y1 = this.targetObject.y + this.targetObject.tallness + (this.targetObject.getPixelHeight() - this.targetObject.tallness) / 2;
+            let x2 = ai.robot.x + ai.robot.getPixelWidth() / 2;
+            let y2 = ai.robot.y + ai.robot.tallness + (ai.robot.getPixelHeight() - ai.robot.tallness) / 2;
             let d:number = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 			if (d>28) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
@@ -112,7 +112,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 		}
 
 		if (requester != null) {
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 
@@ -128,8 +128,8 @@ class RobotEnter_IntentionAction extends IntentionAction {
 
 	executeContinuous(ai_raw:RuleBasedAI) : boolean
 	{
-		var ai:RobotAI = <RobotAI>ai_raw;
-		var destinationMap:A4Map = this.targetObject.map;
+		let ai:RobotAI = <RobotAI>ai_raw;
+		let destinationMap:A4Map = this.targetObject.map;
 
 		// if the targt is outside the map, we just wait
 		if (destinationMap == null || destinationMap != ai.robot.map) return false;
@@ -148,8 +148,8 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			return true;
 		} else {
 			// go to destination:
-	        var q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        var s:A4Script = new A4Script(A4_SCRIPT_GOTO_CHARACTER, this.targetObject.ID, null, 0, false, false);
+	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_CHARACTER, this.targetObject.ID, null, 0, false, false);
 	        q.scripts.push(s);
 			ai.currentAction_scriptQueue = q;
 		}

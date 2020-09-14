@@ -1585,10 +1585,10 @@ class A4RuleBasedAI extends RuleBasedAI {
 					let intention:Term = ir.action;
 					if (intention.attributes.length == 2) {
 						if (intention.attributes[1] instanceof ConstantTermAttribute) {
-							var targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
-							var context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(targetID);
+							let targetID:string = (<ConstantTermAttribute>intention.attributes[1]).value;
+							let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(targetID);
 							if (context != null) {
-								var lastPerf:NLContextPerformative = context.lastPerformativeBy(this.selfID);
+								let lastPerf:NLContextPerformative = context.lastPerformativeBy(this.selfID);
 								if (lastPerf.cause != null) {
 									if (lastPerf.cause.causesComeFromInference) {
 										app.achievement_nlp_resolution_explanation = true;

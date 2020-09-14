@@ -9,7 +9,7 @@ class BFrame extends BInterfaceElement {
     {
         ctx.save();
         // background:
-        var color:string = generateRGBColor(40, 40, 40);
+        let color:string = generateRGBColor(40, 40, 40);
         ctx.globalAlpha = 0.8*alpha;
         ctx.fillStyle = color;
         ctx.fillRect(this.x+2, this.y, this.width-4, this.height);
@@ -42,8 +42,8 @@ class BTextFrame extends BFrame {
     {
         super.drawAlpha(alpha);
 
-        var x:number = this.x + 10;
-        var y:number = this.y + 10 + this.fontHeight;
+        let x:number = this.x + 10;
+        let y:number = this.y + 10 + this.fontHeight;
         if (this.centered) {
             x = this.x + this.width/2;
             ctx.textAlign = "center";

@@ -127,7 +127,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 		    obj.y = bestPrinter.y+bestPrinter.getPixelHeight();
 		    map.addObject(obj);
 
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+ir.requester+", space.at('"+obj.ID+"'[#id], 'location-maintenance'[#id])))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));

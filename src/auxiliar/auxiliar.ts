@@ -1,8 +1,8 @@
 function getElementChildrenByTag(xml:Element, tag:string) : Element[]
 {
-    var l:Element[] = [];
+    let l:Element[] = [];
     for(let i:number = 0;i<xml.children.length;i++) {
-        var xml2:Element = xml.children[i];
+        let xml2:Element = xml.children[i];
         if (xml2.tagName == tag) l.push(xml2);
     }
     return l;
@@ -12,7 +12,7 @@ function getElementChildrenByTag(xml:Element, tag:string) : Element[]
 function getFirstElementChildByTag(xml:Element, tag:string) : Element
 {
     for(let i:number = 0;i<xml.children.length;i++) {
-        var xml2:Element = xml.children[i];
+        let xml2:Element = xml.children[i];
         if (xml2.tagName == tag) return xml2;
     }
     return null;
@@ -23,9 +23,9 @@ function getFirstElementChildByTag(xml:Element, tag:string) : Element
 function stringHashFunction(name:string) : number
 {
     let hash:number = 0;
-    var chr:number;
+    let chr:number;
     if (name.length === 0) return hash;
-    for (var i:number = 0; i < name.length; i++) {
+    for (let i:number = 0; i < name.length; i++) {
         chr = name.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
     }
@@ -43,7 +43,7 @@ function stringToHTMLString(s:string) : string
 
 function removeListDuplicates(l:any[]) : any[]
 {
-    var l2:any[] = [];
+    let l2:any[] = [];
     for(let element of l) {
         if (l2.indexOf(element) == -1) l2.push(element);
     }

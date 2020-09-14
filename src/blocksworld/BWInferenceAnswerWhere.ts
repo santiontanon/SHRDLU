@@ -9,8 +9,8 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 
 	execute(inf:InferenceRecord, ai:RuleBasedAI)
 	{
-		var where_preposition:string = null;
-		var query_perf:string = "perf.q.whereis";
+		let where_preposition:string = null;
+		let query_perf:string = "perf.q.whereis";
 		if (this.whereto) {
 			where_preposition = "relation.target";
 			query_perf = "perf.q.whereto";
@@ -19,9 +19,9 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			console.error("AnswerWhere_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		var speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
-		var targetID:string = null;
-		var targetTermString:string = null;
+		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let targetID:string = null;
+		let targetTermString:string = null;
 
 		console.log("query result, answer where space.directly.on.top.of (target): " + inf.inferences[0].endResults);
 		console.log("query result, answer where space.inside.of (target): " + inf.inferences[1].endResults);
@@ -40,13 +40,13 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 
 		if (inf.inferences[0].endResults.length == 0 &&
 			inf.inferences[1].endResults.length == 0) {
-			var term1:Term = null;
+			let term1:Term = null;
 			if (targetID != null) {
 				term1 = Term.fromString("perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol],"+query_perf+"('"+ai.selfID+"'[#id],"+targetTermString+"))", ai.o);
 			} else {
 				term1 = Term.fromString("perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol])", ai.o);
 			}
-			var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id])", ai.o);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id])", ai.o);
 			term.attributes.push(new TermTermAttribute(term1));
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			console.log("new intention: " + term);
@@ -57,7 +57,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			for(let result of inf.inferences[0].endResults) {
 				for(let b of result.bindings.l) {
 					if (b[0].name == "WHERE") {
-						var v:TermAttribute = b[1];
+						let v:TermAttribute = b[1];
 						if (v instanceof ConstantTermAttribute) {
 							targetLocationID = (<ConstantTermAttribute>v).value;
 							selectedBindings = result.bindings;
@@ -70,7 +70,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 				for(let result of inf.inferences[1].endResults) {
 					for(let b of result.bindings.l) {
 						if (b[0].name == "WHERE") {
-							var v:TermAttribute = b[1];
+							let v:TermAttribute = b[1];
 							if (v instanceof ConstantTermAttribute) {
 								targetLocationID = (<ConstantTermAttribute>v).value;
 								selectedBindings = result.bindings;
@@ -99,8 +99,8 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			}
 
 			// otherwise just say where the target is:
-			var tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
-			var term:Term = Term.fromString(tmp, ai.o);
+			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
+			let term:Term = Term.fromString(tmp, ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 		}
 	}

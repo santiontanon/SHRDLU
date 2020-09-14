@@ -71,7 +71,7 @@ class RobotExit_IntentionAction extends IntentionAction {
 			// just exit:
 			ai.robot.disembark();
 			if (requester != null) {
-				var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 			}
 		} else if (intention.attributes.length >= 2 &&
@@ -81,7 +81,7 @@ class RobotExit_IntentionAction extends IntentionAction {
 			if (ai.robot.vehicle.ID == id) {
 				ai.robot.disembark();
 				if (requester != null) {
-					var term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
 				}
 			} else {
