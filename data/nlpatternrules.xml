@@ -198,6 +198,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 proper-noun(NAME, [singular])
 			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SUBJECT)"/>
+	<NLPattern name="inform-i-will-call-x-name"
+			   head="perf.inform(LISTENER, name(OBJECT,NAME))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 'i' 'will' 'call'
+			   		 nounPhrase(X, N, P, C)
+			   		 proper-noun(NAME, [singular])
+			   		 ('!'|'.')*
+			   		 #derefFromContext(C, OBJECT)"/>
 
 	<!-- e.g.: "the crate is closed" -->
 	<NLPattern name="inform-X-is-adj-noun"
@@ -2617,6 +2627,30 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"/>
+
+    <NLPattern name="perf.q.predicate-be-anyone-here-adjective"
+    		   head="perf.q.predicate(LISTENER, #and(character(VARIABLE), #and(space.at(VARIABLE, LOCATION), #cons(ADJ, VARIABLE))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]] 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 ['there'] ('anyone'|'someone')
+			   		 'here'
+			   		 adjective(ADJ)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+
+    <NLPattern name="perf.q.predicate-be-anyone-here-not-adjective"
+    		   head="perf.q.predicate(LISTENER, #and(character(VARIABLE), #and(space.at(VARIABLE, LOCATION), #not(#cons(ADJ, VARIABLE)))))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]] 
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 ['there'] ('anyone'|'someone')
+			   		 'here' 'not'
+			   		 adjective(ADJ)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
 
 	<!-- Passive voice question: -->
     <NLPattern name="perf.q.predicate-passive"

@@ -1475,6 +1475,37 @@ NLParseTestUnifyingListener("could you tell me what's your name?", o.getSort("pe
 NLParseTestUnifyingListener("how do they call me?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, name('1'[#id],X))");
 
 
+// From debug log for 3.6:
+NLParseTestUnifyingListener("I will call you etaoin", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], name('etaoin'[#id],'etaoin'[symbol]))");
+NLParseTestUnifyingListener("is anyone here dead?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(L:'etaoin'[#id], #and(character(X), #and(space.at(X,'room1'[#id]), dead(X))))");
+NLParseTestUnifyingListener("etaoin, is anyone here not dead?", o.getSort("performative"),  context, 'etaoin', "perf.q.predicate(L:'etaoin'[#id], #and(character(X), #and(space.at(X,'room1'[#id]), #not(dead(X)))))");
+
+/*
+  ***- "where are the dirty clothes?"
+  ***- "where is food?"
+  ***- "what is after/beyond this door?"
+  ***- "Eta, open maintenance"
+  ***- "qwerty etaoin is named eta"
+  ***- "what is the purpose of qwerty?"
+  ***- "what is qwerty's job"
+  ***- "you are only named Eta"
+  ***- "who broke the stasis pod?"
+  ***- "why are you lying?"
+  ***- "destroy this rock"
+  ***- "what doors can I open?"
+  ***- "what do I have access to?"
+  ***- "what is this room called?"
+  ***- "what is inside?"
+  ***- "tell qwerty bring me spacesuit"
+  ***- "get the pliers and the screwdriver"
+  ***- "go to maintenance and get the pliers"
+  ***- "where is qwerty going?"
+  ***- "who is in this?"
+  ***- "who was on this station?"
+  ***- "move this rock"
+  ***- "and?" -> as a continuation
+*/
+
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "");
