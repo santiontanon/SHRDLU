@@ -27,6 +27,11 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 
 		if (ir.action.functor.is_a(ai.o.getSort("action.close"))) open = false;
 
+		let closestDoorIntention:Term = null;
+		let closestDoor:A4Door = null;
+		let closestContainerIntention:Term = null;
+		let closestContainer:A4ObstacleContainer = null;
+
 		for(let intention of alternative_actions) {
 			let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 			let door:A4Door = null;
@@ -66,24 +71,11 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 					// see if player has permission:
 	            	if (ai.doorsPlayerIsNotPermittedToOpen.indexOf(door.doorID) == -1) {
 		            	if (door.checkForBlockages(true, null, ai.robot.map, ai.game, [])) {
-							app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
-							app.trigger_achievement_complete_alert();
-
-							// If the object was not mentioned explicitly in the performative, add it to the natural language context:
-							if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(door.ID, ai.o);
-
-		            		// do it!
-					        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-					        let s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, door.ID, null, 0, false, false);
-					        q.scripts.push(s);
-					        ai.setNewAction(intention, ir.requester, q, null);
-							ai.addLongTermTerm(new Term(intention.functor,
-														  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-														   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
-							ai.intentionsCausedByRequest.push(ir);
-							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-							return true;
+							if (closestDoor == null ||
+								closestDoor.pixelDistance(ai.robot) > door.pixelDistance(ai.robot)) {
+								closestDoorIntention = intention;
+								closestDoor = door;
+							}
 						}
 	            	} else {
 						denyrequestCause = Term.fromString("#not(verb.have("+requester+",[permission-to]))", ai.o);
@@ -102,24 +94,12 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		            if (container.closed == open) {
 		            	let containerLocation:AILocation = ai.game.getAILocation(container);
 		            	if (containerLocation == null || ai.locationsWherePlayerIsNotPermitted.indexOf(containerLocation.id) == -1) {
-							app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
-							app.trigger_achievement_complete_alert();
 
-							// If the object was not mentioned explicitly in the performative, add it to the natural language context:
-							if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(container.ID, ai.o);
-
-			        		// do it!
-					        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-					        let s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, container.ID, null, 0, false, false);
-					        q.scripts.push(s);
-					        ai.setNewAction(intention, ir.requester, q, null);
-							ai.addLongTermTerm(new Term(intention.functor,
-														  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-														   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
-							ai.intentionsCausedByRequest.push(ir);
-							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
-							return true;
+							if (closestContainer == null ||
+								closestContainer.pixelDistance(ai.robot) > container.pixelDistance(ai.robot)) {
+								closestContainerIntention = intention;
+								closestContainer = container;
+							}		            		
 						} else {
 							denyrequestCause = Term.fromString("#not(verb.have("+requester+",[permission-to]))", ai.o);
 						}
@@ -133,6 +113,48 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		            }
 				}
 			}
+		}
+
+		if (closestDoor != null) {
+			app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
+			app.trigger_achievement_complete_alert();
+
+			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(closestDoor.ID, ai.o);
+
+    		// do it!
+	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        let s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, closestDoor.ID, null, 0, false, false);
+	        q.scripts.push(s);
+	        ai.setNewAction(closestDoorIntention, ir.requester, q, null);
+			ai.addLongTermTerm(new Term(closestDoorIntention.functor,
+										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+										   new TermTermAttribute(closestDoorIntention)]), PERCEPTION_PROVENANCE);
+			ai.intentionsCausedByRequest.push(ir);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			return true;
+		}
+		if (closestContainer != null) {
+			app.achievement_nlp_all_robot_actions[(open ? 7:8)] = true;
+			app.trigger_achievement_complete_alert();
+
+			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(closestContainer.ID, ai.o);
+
+    		// do it!
+	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        let s:A4Script = new A4Script(A4_SCRIPT_INTERACT_WITH_OBJECT, closestContainer.ID, null, 0, false, false);
+	        q.scripts.push(s);
+	        ai.setNewAction(closestContainerIntention, ir.requester, q, null);
+			ai.addLongTermTerm(new Term(closestContainerIntention.functor,
+										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
+										   new TermTermAttribute(closestContainerIntention)]), PERCEPTION_PROVENANCE);
+			ai.intentionsCausedByRequest.push(ir);
+			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			return true;
+
 		}
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
