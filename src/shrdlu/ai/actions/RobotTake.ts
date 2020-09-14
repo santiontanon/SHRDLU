@@ -101,6 +101,13 @@ class RobotTake_IntentionAction extends IntentionAction {
 					}
 					return true;
 				}
+			} if (targetObjectL[0] instanceof A4Character) {
+				if (requester != null) {
+					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
+					let cause:Term = Term.fromString("verb.have('"+targetObjectL[0].ID+"'[#id], '"+targetObjectL[1].ID+"'[#id])", ai.o);
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				}
+				return true;
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
