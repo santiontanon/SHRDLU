@@ -4,9 +4,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.push")) ||
 			intention.functor.is_a(ai.o.getSort("action.pull")) ||
-			(intention.functor.is_a(ai.o.getSort("verb.move")) &&
-			  intention.attributes.length >= 2 &&
-			  (intention.attributes[1] instanceof ConstantTermAttribute))) return true;
+			intention.functor.is_a(ai.o.getSort("verb.move"))) return true;
 		return false;
 	}
 

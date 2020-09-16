@@ -691,6 +691,7 @@
 	<sentence provenance="background" sentence="~verb.need(X:[#id], verb.help(Y:[#id], X, P)); verb.can(Y, verb.help(Y, X, P))"/>
 	<sentence provenance="background" sentence="~verb.can(Y:[#id], verb.help(Y, X, P)); verb.can(Y, verb.help(Y, X))"/>	
 
+	<sentence provenance="background" sentence="~profession(X, L, Z); profession(X, Z)"/>	
 	<sentence provenance="background" sentence="~profession(X, L, Z); verb.works-at(X, L)"/>	
 	<sentence provenance="background" sentence="~profession(X, L, Z); ~space.at(L2, L); verb.works-at(X, L2)"/>	
 	<sentence provenance="background" sentence="~profession(X, L, Z); ~space.at(L, L2); verb.works-at(X, L2)"/>	

@@ -2,7 +2,8 @@ class RobotTake_IntentionAction extends IntentionAction {
 
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
-		if (intention.functor.is_a(ai.o.getSort("action.take"))) return true;
+		if (intention.functor.is_a(ai.o.getSort("action.take")) ||
+			intention.functor.is_a(ai.o.getSort("verb.get"))) return true;
 		return false;
 	}
 
@@ -101,7 +102,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 					}
 					return true;
 				}
-			} if (targetObjectL[0] instanceof A4Character) {
+			} else if (targetObjectL[0] instanceof A4Character) {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("verb.have('"+targetObjectL[0].ID+"'[#id], '"+targetObjectL[1].ID+"'[#id])", ai.o);

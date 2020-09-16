@@ -580,6 +580,7 @@
     <sort name="verb.come-to" super="verb.come"/>
     <sort name="verb.come-from" super="verb.come"/>
     <sort name="verb.access" super="verb"/>
+    <sort name="verb.break" super="verb"/>
     <sort name="verb.enter" super="verb.go,verb.access"/>
     <sort name="verb.board" super="verb.enter"/>
     <sort name="verb.reach" super="verb.go-to"/>
@@ -591,6 +592,7 @@
     <sort name="verb.face" super="verb"/>
     <sort name="verb.feel" super="verb"/>
     <sort name="verb.join" super="verb"/>
+    <sort name="verb.lie" super="verb"/>
     <sort name="verb.lives" super="verb"/>
     <sort name="verb.locate" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.find" super="verb.locate"/>
@@ -744,6 +746,7 @@
 
     <sort name="time" super="any"/>
     <sort name="time.location" super="time"/>
+    <sort name="time-relation" super="time,relation,#stateSort"/>    
     <sort name="time.current" super="time,property-with-value"/>
     <sort name="time.permanent" super="time,property"/>
     <sort name="time.at" super="time,relation"/>
@@ -752,7 +755,7 @@
     <sort name="time.future" super="time"/>
     <sort name="time.later" super="time.location,time.future"/>
     <sort name="time.now" super="time.location,time.present"/>
-    <sort name="time.subsequently" super="time.later,relation"/>
+    <sort name="time.subsequently" super="time.later,time-relation"/>
     <sort name="time.today" super="time.now"/>
     <sort name="time.yesterday" super="time.past"/>
     <sort name="time.first" super="time"/>
@@ -762,6 +765,8 @@
     <sort name="time.date" super="time"/>
     <sort name="time.already" super="time"/>
     <sort name="time.ever" super="time"/>
+    <sort name="time.before" super="time-relation"/>
+    <sort name="time.after" super="time-relation"/>
 
     <sort name="time.unit" super="time,measuring-unit"/>
     <sort name="time.second" super="time.unit"/>
@@ -1001,6 +1006,9 @@
     <sort name="property.age" super="property-with-value"/>
     <sort name="property.problem" super="property-with-value"/>
     <sort name="property.strange" super="property"/>
+
+    <sort name="clean" super="property"/>
+    <sort name="dirty" super="property"/>
 
     <sort name="awake" super="property"/>
     <sort name="asleep" super="property"/>

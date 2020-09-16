@@ -321,7 +321,7 @@ class NLParser {
 			}
 			console.log("semanticallyCorrect: fail! " + parse);
 			return false;
-		}		
+		}	
 
 		for(let ta of parse.attributes) {
 			if (ta instanceof TermTermAttribute) {

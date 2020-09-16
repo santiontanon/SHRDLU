@@ -706,8 +706,9 @@ NLPAddTokenPOS("about", PartOfSpeech.generatePreposition("about", POS_TYPE_PPREP
 /*
   ["above",  "PREP"],
   ["across",  "PREP"],
-  ["after",  "PREP"],
   */
+//this.addTokenPOS(new PartOfSpeech("after", "time.after", Term.fromString("preposition('time.after'[time.after])", o), 1.0));  
+this.addTokenPOS(new PartOfSpeech("after", "space.behind", Term.fromString("preposition('space.behind'[space.behind])", o), 1.0));  
 this.addTokenPOS(new PartOfSpeech("against", "against", Term.fromString("preposition('relation.against'[relation.against])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("alone in", "alone-in", Term.fromString("preposition('alone-in'[alone-in])", o), 1.0));
   /*
@@ -730,9 +731,10 @@ this.addTokenPOS(new PartOfSpeech("on", "time.at", Term.fromString("preposition(
 this.addTokenPOS(new PartOfSpeech("atop", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("ontop", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
-/*
-  ["before",  "PREP"],
-*/
+
+//this.addTokenPOS(new PartOfSpeech("before", "time.before", Term.fromString("preposition('time.before'[time.before])", o), 1.0));  
+this.addTokenPOS(new PartOfSpeech("before", "space.in.front.of", Term.fromString("preposition('space.in.front.of'[space.in.front.of])", o), 1.0));
+  
 this.addTokenPOS(new PartOfSpeech("behind", "space.behind", Term.fromString("preposition('space.behind'[space.behind])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("behind of", "space.behind", Term.fromString("preposition('space.behind'[space.behind])", o), 1.0));
 /*
@@ -741,13 +743,11 @@ this.addTokenPOS(new PartOfSpeech("behind of", "space.behind", Term.fromString("
   */
 this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("besides", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
-  /*
-  ["between",  "PREP"],
-  ["beyond",  "PREP"],
-  ["but",  "PREP"],
-  *
-NLPAddTokenPOS("by", PartOfSpeech.generatePreposition("by", POS_TYPE_PPREPOSITION_PLACE));
-NLPAddTokenPOS("by", PartOfSpeech.generatePreposition("by", POS_TYPE_PPREPOSITION_ORIGIN));
+//  ["between",  "PREP"],
+this.addTokenPOS(new PartOfSpeech("beyond", "space.behind", Term.fromString("preposition('space.behind'[space.behind])", o), 1.0));
+//  ["but",  "PREP"],
+//  NLPAddTokenPOS("by", PartOfSpeech.generatePreposition("by", POS_TYPE_PPREPOSITION_PLACE));
+//  NLPAddTokenPOS("by", PartOfSpeech.generatePreposition("by", POS_TYPE_PPREPOSITION_ORIGIN));
   /*
   ["chez",  "PREP"],
   ["circa",  "PREP"],
@@ -908,7 +908,7 @@ this.addTokenPOS(new PartOfSpeech("outside of", "space.outside.of", Term.fromStr
   "owing to",
   */
 this.addTokenPOS(new PartOfSpeech("permission to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
-this.addTokenPOS(new PartOfSpeech("access to", "permitted-in", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("access to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go to", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go into", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
@@ -1159,6 +1159,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("hyperdrive", "hyperdrive-generator", o, multitokens_raw);
   this.addStandardNounPOS("mission", "goal", o, multitokens_raw);
   this.addStandardNounPOS("objective", "goal", o, multitokens_raw);
+  this.addTokenPOS(new PartOfSpeech("plyers", "pliers", Term.fromString("noun('pliers'[pliers], [singular])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("plyers", "pliers", Term.fromString("noun('pliers'[pliers], [plural])", o), 1.0));
 
   // nouns:
   this.addStandardNounPOS("3d printer", "3dprinter", o, multitokens_raw);
@@ -1354,6 +1356,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addUncountableNounPOS("iron", "iron", o);
   this.addStandardNounPOS("iron reel", "iron-reel", o, multitokens_raw);
   this.addStandardNounPOS("item", "item", o, multitokens_raw);
+  this.addStandardNounPOS("job", "profession", o, multitokens_raw);
   this.addStandardNounPOS("jumpsuit", "jumpsuit", o, multitokens_raw);
   this.addStandardNounPOS("jump suit", "jumpsuit", o, multitokens_raw);
   this.addStandardNounPOS("key", "key", o, multitokens_raw);
@@ -1701,6 +1704,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.arrive-to", "arrive to","arrives to","arrived to","arrived to","arriving to", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.ask", "ask","asks","asked","asked","asking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.belong", "belong to","belongs to","belonged to","belonged to","belonging to", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.break", "break","breaks","broke","broke","breaking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.bring", "bring","brings","brought","brought","bringing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.build", "build","builds","built","built","building", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.call", "call","calls","called","called","calling", false, multitokens_raw, o);
@@ -1722,6 +1726,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.damage", "damage","damages","damaged","damaged","damaging", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.define", "define","defines","defined","defined","defining", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.detect", "detect","detects","detected","detected","detecting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.break", "destroy","destroys","destroyed","destroyed","destroying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.die", "die","dies","died","died","dying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.disambiguate", "disambiguate","disambiguates","disambiguated","disambiguated","disambiguating", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.disembark", "disembark","disembarks","disembarked","disembarked","disembarking", false, multitokens_raw, o);
@@ -1737,6 +1742,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.face", "face","faces","faced","faced","facing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.leave", "exit","exits","exited","exited","exiting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.let", "let","lets","let","let","letting", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.lie", "lie","lies","lied","lied","lying", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.lift", "heave","heaves","heaved","heaved","heaving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.feed", "feed","feeds","fed","fed","feeding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);
@@ -1907,6 +1914,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("broken", "property.broken", Term.fromString("adjective('property.broken'[property.broken])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("charged", "full", Term.fromString("adjective('full'[full])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("circular", "circular", Term.fromString("adjective('circular'[circular])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("clean", "clean", Term.fromString("adjective('clean'[clean])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("clear", "clear-status-clear", Term.fromString("adjective('clear-status-clear'[clear-status-clear])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("not clear", "clear-status-not-clear", Term.fromString("adjective('clear-status-not-clear'[clear-status-not-clear])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("closed", "property.closed", Term.fromString("adjective('property.closed'[property.closed])", o), 1.0));
@@ -1915,6 +1923,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("dark", "dark", Term.fromString("adjective('dark'[dark])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("dead", "dead", Term.fromString("adjective('dead'[dead])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("depleted", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("dirty", "dirty", Term.fromString("adjective('dirty'[dirty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("east", "east", Term.fromString("adjective('east'[east])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("else", "else", Term.fromString("adjective('else'[else])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("empty", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
