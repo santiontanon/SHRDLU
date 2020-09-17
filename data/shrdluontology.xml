@@ -163,6 +163,7 @@
     <sort name="properNounCompound" super="grammar-concept"/>
     <sort name="maybeNegatedAdjective" super="grammar-concept"/>
     <sort name="maybeNegatedPrepositionalPhrase" super="grammar-concept"/>
+    <sort name="nounPhraseListFromContext" super="grammar-concept"/>
 
     <sort name="parser-function" super="grammar-concept"/>   
     <sort name="#derefFromContext" super="parser-function"/>   <!-- This function tries to find which object from the natural language context are referred to by a given clause -->

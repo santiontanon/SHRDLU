@@ -26,7 +26,8 @@ class NLParser {
 			parser.rules.push(rule);
 		}
 
-		for(let sortName of ["maybeNegatedPrepositionalPhrase",
+		for(let sortName of ["nounPhraseListFromContext",
+							 "maybeNegatedPrepositionalPhrase",
 							 "maybeNegatedAdjective",
 							 "nounPhrase",
 							 "nounPhraseNoDeterminer",
