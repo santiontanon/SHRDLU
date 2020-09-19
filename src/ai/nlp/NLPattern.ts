@@ -235,14 +235,14 @@ class NLPattern {
 		} else if (this.term.functor.name == "#doesnotsubsume") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let listenerBindings:Bindings = new Bindings();
-			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"))]);
+			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, parser.o.getSort("#id"))]);
 			term2 = term2.applyBindings(listenerBindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_doesnotsubsume(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;
 		} else if (this.term.functor.name == "#notequal") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let listenerBindings:Bindings = new Bindings();
-			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"))]);
+			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, parser.o.getSort("#id"))]);
 			term2 = term2.applyBindings(listenerBindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_notequal(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;

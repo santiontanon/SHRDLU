@@ -2607,12 +2607,19 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
               POSParser.sortIsConsideredForTypes(sort, o))  {
             let tmp:string[] = this.typeSortToEnglish[POS.sortName];
             if (tmp==null) {
-              tmp = [null,null];
+              tmp = [null,null,null];
               this.typeSortToEnglish[POS.sortName] = tmp;
             }
-            let number:number = 0;
-            if (POS.term.attributes[1].sort.name == "plural") number = 1;
-            tmp[number] = token;
+            if (POS.term.attributes[1].sort.name == "plural") {
+              tmp[1] = token;
+            } else if (POS.term.attributes[1].sort.name == "uncountable") {
+              tmp[2] = token;
+              tmp[1] = token;  // put it also in plural just in case
+              tmp[0] = token;  // put it also in singular just in case
+            } else {
+              // singular
+              tmp[0] = token;
+            }
             //console.log(POS.sortName + "[" + number + "] = " + token);
           }
         }
@@ -2863,7 +2870,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   }
 
 
-  // number: 0 = singular, 1 = plural
+  // number: 0 = singular, 1 = plural, 2 = uncountable
   getTypeString(s:Sort, number:number) : string
   {
     let tmp:string[] = this.typeSortToEnglish[s.name];
