@@ -146,8 +146,10 @@ class NLPattern {
 					console.error("NLPattern.parsePattern: something went wrong when parsing pattern " + term2.toString() + "\n  It does not unify with: " + pr.result);
 					return null;
 				}
-				// we continue from "pr", but using the bdingins from "parse", since the bindings
+				// we continue from "pr", but using the bindings from "parse", since the bindings
 				// generated during the parsing of the sub-pattern are not relevant
+				// console.log("ruleNames for " + term2.functor.name + ": " + parse.ruleNames);
+				// console.log("    concatenated to: " + pr.ruleNames);
 				let pr2:NLParseRecord = new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities));
 				pr2.result = pr.result;
 				parses_p.push(pr2);				
@@ -232,7 +234,17 @@ class NLPattern {
 			return nlprl;
 		} else if (this.term.functor.name == "#doesnotsubsume") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
+			let listenerBindings:Bindings = new Bindings();
+			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"))]);
+			term2 = term2.applyBindings(listenerBindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_doesnotsubsume(parse, term2.attributes[0], term2.attributes[1], parser.o);
+			return nlprl;
+		} else if (this.term.functor.name == "#notequal") {
+			let term2:Term = this.term.applyBindings(parse.bindings);
+			let listenerBindings:Bindings = new Bindings();
+			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, o.getSort("#id"))]);
+			term2 = term2.applyBindings(listenerBindings);
+			let  nlprl:NLParseRecord[] = this.specialfunction_notequal(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;
 		} else if (this.term.functor.name == "#sortParent") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
@@ -985,6 +997,22 @@ class NLPattern {
 		if (sortAtt instanceof VariableTermAttribute) {
 			let s:Sort = sortAtt.sort
 			if (!att.sort.is_a(s)) return [parse];
+		}
+		return null;
+	}
+
+
+	specialfunction_notequal(parse:NLParseRecord, att1:TermAttribute, att2:TermAttribute, o:Ontology) : NLParseRecord[]
+	{
+		if (att1 instanceof VariableTermAttribute) {
+			if (att1.sort != att2.sort) return [parse];
+			if ((<VariableTermAttribute>att1).name != (<VariableTermAttribute>att2).name) return [parse];
+		} else if (att1 instanceof ConstantTermAttribute) {
+			if (att1.sort != att2.sort) return [parse];
+			if ((<ConstantTermAttribute>att1).value != (<ConstantTermAttribute>att2).value) return [parse];
+		} else {
+			console.error("#notequal among terms not yet supported!");
+			return null;
 		}
 		return null;
 	}

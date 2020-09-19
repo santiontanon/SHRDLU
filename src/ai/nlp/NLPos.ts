@@ -49,6 +49,17 @@ class TokenizationElement {
   }  
 
 
+  toStringSimple() : string 
+  {
+    let str:string = this.token;
+    if (this.next != null && this.next.length > 0) {
+      return str + " " + this.next[0].toStringSimple();
+    } else {
+      return str;
+    }
+  }
+
+
   toString() : string 
   {
     return this.toStringInternal(0);

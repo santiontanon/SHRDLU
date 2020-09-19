@@ -103,7 +103,8 @@ class CompiledNLPatternRules extends NLPatternContainer {
 //				parse2.result = this.head.applyBindings(parse2.bindings);
 				NLParser.resolveCons(parse2.result, parser.o);
 				let bindings:Bindings = new Bindings();
-				if (parse2.result.unify(term, OCCURS_CHECK, bindings)) {
+				// if (parse2.result.unify(term, OCCURS_CHECK, bindings)) {
+				if (term.unify(parse2.result, OCCURS_CHECK, bindings)) {
 					parse2.result = parse2.result.applyBindings(bindings);
 //					console.log("parseMatchingWithTerm completed, result: " + parse2.result);
 					results.push(parse2);
@@ -335,10 +336,19 @@ class CompiledNLPatternState {
 		for(let i:number = 0;i<this.heads.length;i++) {
 			// found a parse!
 //			console.log("parse found with bindings: " + parse.bindings);
-			parse.result = this.heads[i].applyBindings(parse.bindings);
-			parse.ruleNames = [this.ruleNames[i]].concat(parse.ruleNames);
-			parse.priorities = [this.priorities[i]].concat(parse.priorities);
-			parses.push(parse);
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.ruleNames, parse.priorities);
+			parse2.result = this.heads[i].applyBindings(parse2.bindings);
+			parse2.ruleNames = [this.ruleNames[i]].concat(parse2.ruleNames);
+			parse2.priorities = [this.priorities[i]].concat(parse2.priorities);
+			parses.push(parse2);
+			// console.log("HEAD reached with rule names: " + parse.ruleNames);
+			// if (parse2.nextTokens != null && parse2.nextTokens.length > 0) {
+				// console.log("    tokens left: " + parse.nextTokens[0].toStringSimple());
+			// } else {
+			// 	console.log("HEAD reached with rule names: " + parse2.ruleNames);
+				// console.log("    bindings: " + parse.bindings);
+			// 	console.log("    result: " + parse2.result);
+			// }
 //			console.log("result: " + parse.result);
 		}
 
@@ -516,10 +526,15 @@ class CompiledNLPatternTransition {
 			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, new Bindings(), parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
 			for(let pr of results) {
 				let bindings2:Bindings = new Bindings();
-				if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
+				// if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
+				if (!term2.unify(pr.result, OCCURS_CHECK, bindings2)) {
 					console.error("CompiledNLPatternTransition.parsePattern: something went wrong when parsing pattern " + term2.toString() + "\n  It does not unify with: " + pr.result);
 					return null;
 				}
+				// console.log("Succesful unification of:");
+				// console.log("        " + pr.result);
+				// console.log("        " + term2);
+				// console.log("        bindings: " + bindings2);
 				// we continue from "pr", but using the bdingins from "parse", since the bindings
 				// generated during the parsing of the sub-pattern are not relevant
 				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)), context, rule, parser, AI, filterPartialParses);

@@ -34,7 +34,8 @@ class NLParser {
 							 "nounPhraseNoDeterminerNoProperNoun",
 							 "properNounCompound",
 							 "performative",
-							 "perf.request.action",
+							 // "perf.request.action",
+							 "perf.request.action.internal",
 							 "perf.inform"]) {
 			let compiled:CompiledNLPatternRules = new CompiledNLPatternRules("compiled-" + sortName, o, speakerVariable, listenerVariable);
 			compiled.populate(o.getSort(sortName), parser);
@@ -42,8 +43,10 @@ class NLParser {
 			let nstates:number = compiled.root.getAllStatesForDOTString().length;
 			console.log("compiled parse graph for " +sortName+ " has " + nstates + " nodes");
 
-//			console.log(compiled.root.convertToDOTString());
-//			To generate the pdf type: dot -Tpdf grammar-2.4.dot -o grammar-2.4.pdf
+			// To generate the pdf type: dot -Tpdf grammar-2.4.dot -o grammar-2.4.pdf
+			// if (sortName == "perf.request.action.internal") {
+			// 	console.log(compiled.root.convertToDOTString());
+			// }
 			parser.compiledRules[sortName] = compiled;
 		}
 
