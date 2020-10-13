@@ -89,7 +89,7 @@ class A4EngineApp {
         console.log("A4EngineApp created.");
 
         if (this.gameDefinition!=null) {
-            this.game = new A4Game(this.gameDefinition, this.game_path, this.GLTM, this.SFXM, this.SFX_volume);
+            this.game = new A4Game(this.gameDefinition, this.game_path, this.GLTM, this.SFXM, this.SFX_volume, "female");
         }
     }
 
@@ -513,10 +513,37 @@ class A4EngineApp {
                 function(arg:any, ID:number) {
                         let app = <A4EngineApp>arg;
                         if (app.titlescreen_state == 2) return;
-                        app.titlescreen_state = 2;
-                        app.titlescreen_timer = 0;
-                        app.ingame_menu = 0;
-                        app.quit_request = false;
+                       BInterface.push();
+                       BInterface.addElement(
+                           new BShrdluTextFrame(["Do you want to play as a..."], 
+                                          false, fontFamily32px, 32, 40*PIXEL_SIZE, 40*PIXEL_SIZE, 176*PIXEL_SIZE, 72*PIXEL_SIZE, app.GLTM));
+                       BInterface.addElement(new BShrdluButton("female character", fontFamily32px, app.screen_width/2-80, 64*PIXEL_SIZE, 160, 8*PIXEL_SIZE, 41, 
+                                                         "white", true,
+                                                         function(arg:any, ID:number) {
+                                                            app.titlescreen_state = 2;
+                                                            app.titlescreen_timer = 0;
+                                                            app.titlescreen_requested_gender = "female";
+                                                            app.ingame_menu = 0;
+                                                            app.quit_request = false;
+                                                            app.achievement_both_genders[0] = true;
+                                                            app.trigger_achievement_complete_alert();
+                                                         }));
+                       BInterface.addElement(new BShrdluButton("male character", fontFamily32px, app.screen_width/2-80, 72*PIXEL_SIZE, 160, 8*PIXEL_SIZE, 42, 
+                                                         "white", true,
+                                                         function(arg:any, ID:number) {
+                                                            app.titlescreen_state = 2;
+                                                            app.titlescreen_timer = 0;
+                                                            app.titlescreen_requested_gender = "male";
+                                                            app.ingame_menu = 0;
+                                                            app.quit_request = false;
+                                                            app.achievement_both_genders[1] = true;
+                                                            app.trigger_achievement_complete_alert();
+                                                         }));
+                       BInterface.addElement(new BShrdluButton("Back", fontFamily32px, app.screen_width/2-80, 88*PIXEL_SIZE, 160, 64, 43, 
+                                                         "white", true,
+                                                         function(arg:any, ID:number) {
+                                                            BInterface.pop();
+                                                         }));
                    });
             if (this.game.allowSaveGames) {
                 menuItems.push("load");
@@ -548,7 +575,7 @@ class A4EngineApp {
                                             app.titlescreen_timer = 0;
                                             app.ingame_menu = 0;
                                             app.quit_request = false;
-                                            app.game = new A4Game(gamexml, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
+                                            app.game = new A4Game(gamexml, app.game_path, app.GLTM, app.SFXM, app.SFX_volume, "female");
                                             app.game.finishLoadingGame(xml.documentElement, app);
                                        });
                             } else {
@@ -628,7 +655,7 @@ class A4EngineApp {
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
                 BInterface.reset();
 
-                app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume);
+                app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume, this.titlescreen_requested_gender);
                 app.game.finishLoadingGame(null, this);
                 if (this.writeLogsToServer) assignNewSessionID(app.game);
 
@@ -1085,7 +1112,7 @@ class A4EngineApp {
                 let xml:Document = dp.parseFromString(xmlString, "text/xml");
 //                            console.log(xml);
                 let gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
-                this.game = new A4Game(gamexml, this.game_path, this.GLTM, this.SFXM, this.SFX_volume);
+                this.game = new A4Game(gamexml, this.game_path, this.GLTM, this.SFXM, this.SFX_volume, "female");
                 this.game.finishLoadingGame(xml.documentElement, this);
                 BInterface.reset();
                 this.ingame_menu = 0;
@@ -1475,6 +1502,9 @@ class A4EngineApp {
             case "See both endings":
                 return allArrayElementsTrue(this.achievement_complete_see_all_endings);
                 break;
+            case "Both genders":
+                return allArrayElementsTrue(this.achievement_both_genders);
+                break;
 
             case "Hungry and thirsty":
                 return allArrayElementsTrue(this.achievement_interact_eat_drink);
@@ -1629,6 +1659,27 @@ class A4EngineApp {
                 lines = ["Progress: " + nTruesInArray(this.achievement_secret_diaries) + "/" + this.achievement_secret_diaries.length];
                 break;
 
+            case "Both genders":
+                {
+                    let first:boolean[] = [true, true];
+                    let tags:string[] =   ["female", "male"];
+                    lines = ["Done: ", "Missing: "];
+
+                    for(let i:number = 0; i<first.length; i++) {
+                        if (this.achievement_both_genders[i]) {
+                            if (!first[0]) lines[0] += ", ";
+                            lines[0] += tags[i];
+                            first[0] = false;
+                        } else {
+                            if (!first[1]) lines[1] += ", ";
+                            lines[1] += tags[i];
+                            first[1] = false;
+                        }
+                    }
+                }
+                break;
+
+
             default:
         }
 
@@ -1689,6 +1740,8 @@ class A4EngineApp {
             if (slot_xml != null) this.achievement_complete_act3 = <boolean>eval(slot_xml.getAttribute("value"));
             slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_see_all_endings");
             if (slot_xml != null) this.achievement_complete_see_all_endings = <boolean []>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_both_genders");
+            if (slot_xml != null) this.achievement_both_genders = <boolean []>eval(slot_xml.getAttribute("value"));
 
             slot_xml = getFirstElementChildByTag(ach_xml, "achievement_interact_eat_drink");
             if (slot_xml != null) this.achievement_interact_eat_drink = <boolean []>eval(slot_xml.getAttribute("value"));
@@ -1739,6 +1792,7 @@ class A4EngineApp {
         achString += "<achievement_complete_act2 value=\""+this.achievement_complete_act2+"\"/>"
         achString += "<achievement_complete_act3 value=\""+this.achievement_complete_act3+"\"/>"
         achString += "<achievement_complete_see_all_endings value=\"["+this.achievement_complete_see_all_endings.toString()+"]\"/>"
+        achString += "<achievement_both_genders value=\"["+this.achievement_both_genders.toString()+"]\"/>"
 
         achString += "<achievement_interact_eat_drink value=\"["+this.achievement_interact_eat_drink.toString()+"]\"/>"
         achString += "<achievement_interact_3d_printed_one_of_each_kind value=\"["+this.achievement_interact_3d_printed_one_of_each_kind.toString()+"]\"/>"
@@ -1812,6 +1866,7 @@ class A4EngineApp {
     titlescreen_zoom:number;
     titlescreen_x:number;
     titlescreen_y:number;
+    titlescreen_requested_gender:string = null;
 
     // state game:
     ingame_menu:number;
@@ -1850,6 +1905,7 @@ class A4EngineApp {
         "Complete Act 2",
         "Complete Act 3",
         "See both endings",
+        "Both genders",
 
         "Hungry and thirsty",
         "Maker",
@@ -1881,6 +1937,9 @@ class A4EngineApp {
          "the game."],
         ["Obtained when you see the different",
          "endings of the game."],
+        ["Obtained when you play at least once",
+         "with a demale character and once with",
+         "a male character."],
 
         ["You just woke up form a long time in",
          "stasis. Find something to eat and to",
@@ -1929,7 +1988,8 @@ class A4EngineApp {
         false, false, false, false, false,
         false, false, false,
         false, false, false, false, false, false,
-        false, false, false, false, false
+        false, false, false, false, false,
+        false
     ];
 
 
@@ -1938,6 +1998,7 @@ class A4EngineApp {
     achievement_complete_act2:boolean = false;
     achievement_complete_act3:boolean = false;
     achievement_complete_see_all_endings:boolean[] = [false,false];
+    achievement_both_genders:boolean[] = [false,false];
     achievement_interact_eat_drink:boolean[] = [false,false];
     achievement_interact_3d_printed_one_of_each_kind:boolean[] = [false,false,false,false,false,false,false,false,false,false,false];
     achievement_interact_low_oxygen:boolean = false;

@@ -1,0 +1,22 @@
+<knowledgeBase>
+	<sentence provenance="perception" sentence="tardis-memory-core('tardis-memory-core'[#id])"/>
+	<sentence provenance="perception" sentence="name('player'[#id], 'susan calvin'[symbol])"/>
+	<sentence provenance="perception" sentence="role('player'[#id], 'location-aurora-station'[#id], 'computer-engineer'[computer-engineer])"/>
+
+	<sentence provenance="background" sentence="disembodied-ai('tardis8-ai'[#id])"/>
+	<sentence provenance="background" sentence="name('tardis8-ai'[#id],'shirka'[symbol])"/>
+	<sentence provenance="background" sentence="profession('tardis8-ai'[#id],'tardis8'[#id],'supervisor'[supervisor])"/>
+	<sentence provenance="background" sentence="space.inside.of('tardis8-ai'[#id],'tardis8'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.create('tardis8-ai'[#id], 'etaoin'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.create('tardis8-ai'[#id], 'qwerty'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.create('tardis8-ai'[#id], 'shrdlu'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.make('tardis8-ai'[#id], 'etaoin'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.make('tardis8-ai'[#id], 'qwerty'[#id])"/>
+	<sentence provenance="perception" time="42895872000" sentence="verb.make('tardis8-ai'[#id], 'shrdlu'[#id])"/>
+
+	<sentence provenance="perception" sentence="property.age('qwerty'[#id], '72'[number])"/>	
+	<sentence provenance="perception" sentence="property.age('shrdlu'[#id], '72'[number])"/>	
+	<sentence provenance="perception" sentence="property.age('etaoin'[#id], '72'[number])"/>	
+	<sentence provenance="perception" sentence="property.age('player'[#id], '164'[number])"/>
+	<sentence provenance="perception" time="40014093600" sentence="property.born('player'[#id])"/>
+</knowledgeBase>

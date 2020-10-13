@@ -417,7 +417,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
         // perceived an action!
     	let actionTerms:Term[] = [Term.fromString("action."+pbr.action + "("+
-    										      "'"+pbr.time+"'[number],"+
+    										      // "'"+pbr.time+"'[number],"+
     											  "'"+pbr.subjectID+"'[#id])", this.o)];
     	if (pbr.directObjectID != null) {
     		for(let actionTerm of actionTerms) {

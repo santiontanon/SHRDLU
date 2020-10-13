@@ -626,7 +626,7 @@ class ShrdluCutScenes {
 		let stateImgs:string[] = ["data/cutscene-datapad1.png", 
 								  "data/cutscene-datapad2.png",
 								  "data/cutscene-datapad3.png",
-								  "data/cutscene-datapad4.png",
+								  "data/cutscene-datapad4-"+this.game.playerGender+".png",
 								  "data/cutscene-datapad5.png",
 								  "data/cutscene-datapad5.png",
 								  "data/cutscene-datapad5.png",
@@ -931,7 +931,7 @@ class ShrdluCutScenes {
 		ctx.save();
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
-		let stateImgs:string[] = ["data/cutscene-euriclea-diary1.png", 
+		let stateImgs:string[] = ["data/cutscene-euriclea-diary1-"+this.game.playerGender+".png", 
 								  "data/cutscene-euriclea-diary2.png",
 								  "data/cutscene-euriclea-diary2.png",
 								  "data/cutscene-euriclea-diary2.png",
@@ -996,7 +996,7 @@ class ShrdluCutScenes {
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
 		let stateImgs:string[] = ["data/cutscene-sax-diary1.png", 
-								  "data/cutscene-sax-diary2.png",
+								  "data/cutscene-sax-diary2-"+this.game.playerGender+".png",
 								  "data/cutscene-sax-diary3.png",
 								  "data/cutscene-sax-diary3.png",
 								  "data/cutscene-sax-diary3.png",
@@ -1209,10 +1209,10 @@ class ShrdluCutScenes {
 		ctx.scale(PIXEL_SIZE, PIXEL_SIZE);
 
 		let images:[string,number,number][] = [
-			["data/cutscene-ending-A-1.png", 500, 2000],
+			["data/cutscene-ending-A-1-"+this.game.playerGender+".png", 500, 2000],
 			["data/cutscene-ending-A-2.png", 2200, 3800],
 			["data/cutscene-ending-A-3.png", 4000, 5600],
-			["data/cutscene-ending-A-4.png", 5800, 7300],
+			["data/cutscene-ending-A-4-"+this.game.playerGender+".png", 5800, 7300],
 			["data/cutscene-ending-A-1.png", 7500, 8600],
 			["data/cutscene-ending-A-5.png", 8800, 14000],
 			];

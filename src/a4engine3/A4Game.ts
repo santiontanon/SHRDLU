@@ -137,8 +137,9 @@ class WarpRequest {
 
 
 class A4Game {
-    constructor(xml:Element, game_path:string, GLTM:GLTManager, SFXM:SFXManager, a_sfx_volume:number)
+    constructor(xml:Element, game_path:string, GLTM:GLTManager, SFXM:SFXManager, a_sfx_volume:number, gender:string)
     {
+        this.playerGender = gender;
         this.loadContentFromXML(xml, game_path, GLTM, SFXM);
 
 //        console.log(xml.outerHTML);
@@ -166,7 +167,6 @@ class A4Game {
         this.gameName = xml.getAttribute("name");
         this.gameTitle = xml.getAttribute("title");
         this.gameSubtitle = xml.getAttribute("subtitle");
-
         this.serverToken = xml.getAttribute("serverToken") || '';
 
         console.log("game name: " + this.gameName);
@@ -185,6 +185,16 @@ class A4Game {
         if (xml.getAttribute("cycle") != null) {
             this.cycle = Number(xml.getAttribute("cycle"));
         }
+        if (xml.getAttribute("playerGender") != null) {
+          this.playerGender = xml.getAttribute("playerGender");
+        }
+        if (xml.getAttribute("communicatorConnectedTo") != null) {
+          this.communicatorConnectedTo = xml.getAttribute("communicatorConnectedTo");
+        }
+        if (xml.getAttribute("communicatorConnectionTime") != null) {
+          this.communicatorConnectionTime = Number(xml.getAttribute("communicatorConnectionTime"));
+        }
+
 
         let story_xml:Element = getFirstElementChildByTag(xml, "story");
         if (story_xml!=null) {
@@ -490,6 +500,8 @@ class A4Game {
                 let player_xml:Element = players_xml[i];
                 let id:string = player_xml.getAttribute("id");
                 let className:string = player_xml.getAttribute("class");
+                if (this.playerGender == "female") className = "susan";
+                if (this.playerGender == "male") className = "david";
                 if (className == null) className = player_xml.getAttribute("type");
                 let x:number = Number(player_xml.getAttribute("x"));
                 let y:number = Number(player_xml.getAttribute("y"));
@@ -741,6 +753,11 @@ class A4Game {
         xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
         xmlString += " cycle=\"" + this.cycle +"\"";
         xmlString += " serverToken=\"" + this.serverToken + "\"";
+        xmlString += " playerGender=\"" + this.playerGender + "\""
+        if (this.communicatorConnectedTo != null) {
+          xmlString += " communicatorConnectedTo=\"" + this.communicatorConnectedTo + "\""
+          xmlString += " communicatorConnectionTime=\"" + this.communicatorConnectionTime + "\""
+        }
         xmlString += ">\n";
 
         if (this.gameTitleImage!=null) {
@@ -2792,6 +2809,7 @@ class A4Game {
     scriptQueues: A4ScriptExecutionQueue[] = [];
 
     // story state:
+    playerGender: string = null;
     storyState: { [id: string] : string; } = {};
     lastTimeStoryStateChanged:number = 0;
     //    knownSpeechActs:SpeechAct[] = [];

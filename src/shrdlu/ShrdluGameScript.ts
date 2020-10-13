@@ -2712,9 +2712,9 @@ class ShrdluGameScript {
 			case 8: if (this.game.etaoinAI.intentions.length == 0 &&
 						this.game.etaoinAI.queuedIntentions.length == 0) {
 						// make sure Etaoin knows about this object, that has disappeared from the game:
-						this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
-						this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
-						this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-ending.xml");
+						this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
+						this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
+						this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
 
 						this.game.etaoinAI.allowPlayerIntoEveryWhere();
 						this.game.qwertyAI.allowPlayerIntoEveryWhere();
