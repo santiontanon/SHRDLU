@@ -193,6 +193,9 @@ class NLPatternRule extends NLPatternContainer {
 			console.error("NLPatternRule.fromString: cannot parse body: " + body);
 			return null;
 		}
+		if (name == null) {
+			console.error("Rule without a name!");
+		}
 
 		let rule:NLPatternRule = new NLPatternRule(name, h, b, p, sv, lv);
 		for(let i:number = 0;i<variableNames.length;i++) {

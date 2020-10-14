@@ -1511,6 +1511,20 @@ NLParseTestUnifyingListener("give me the white key and this crate", o.getSort("p
 NLParseTestUnifyingListener("go to the kitchen and take the bedroom key", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(LISTENER_0:'etaoin'[#id], verb.go-to(LISTENER_0, 'room1'[#id])),perf.request.action(LISTENER_0, action.take(LISTENER_0, '4'[#id])))");
 
 
+/*
+// NLParseTestUnifyingListener("can you define crate please etaoin?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, character(X))");
+    <!--NLPattern head="perf.q.action(LISTENER, verb.define(LISTENER,NOUN))"
+           body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+                   nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+              [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+              verb('verb.define'[symbol], [singular], P, [present-tense]) 
+              noun(NOUN_C, N) #symbolToSort(NOUN_C,NOUN) 
+              [[','] 'please'] 
+                 [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
+                 ('!'|'?')*"
+         priority="300"/-->
+*/
+
 
 // NLParseTestUnifyingListener("take either a red block or a green block", o.getSort("performative"),  context, 'etaoin', "");
 // NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "");
