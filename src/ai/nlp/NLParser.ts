@@ -23,6 +23,13 @@ class NLParser {
 															  rulexml.getAttribute("body"),
 															  priority, o, speakerVariable, listenerVariable);
 //			console.log("rule loaded with head: " + rule.head);
+
+			// check for repeated names:
+			for(let rule2 of parser.rules) {
+				if (rule.name == rule2.name) {
+					console.error("parse rule has a repeated name: " + rule.name);
+				}
+			}
 			parser.rules.push(rule);
 		}
 
