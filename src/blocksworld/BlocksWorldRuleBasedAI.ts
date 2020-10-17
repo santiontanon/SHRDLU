@@ -184,7 +184,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
         			let action:Term = plan.actions[pr.planExecutionPointer].signature;
         			pr.planExecutionPointer++;
         			// we set the requester to null, so that we don't constantly say "ok" after each action
-        			this.intentions.push(new IntentionRecord(action, null, null, null, this.time_in_seconds));
+        			this.intentions.push(new IntentionRecord(action, null, 
+        													 pr.requestingPerformative, null, this.time_in_seconds));
         		}
         	}
         }
@@ -639,14 +640,13 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			let first_performative:Term = null;
 			let unified_performatives:Term[] = [];
 			let actions:Term[] = [];
-			let allActionRequestsTalkingToUs:boolean = true;	// We are the listener of the performative
+			let allActionRequestsTalkingToUs:boolean = true;  // We are the listener of the performative
 			let anyNeedsInference:boolean = false;
-			let allRequestsForUs:boolean = true;	// We are the performer of the requested action
+			let allRequestsForUs:boolean = true;  // We are the performer of the requested action
 			let canSatisfyThemAll:boolean = true;
 			for(let performative_att of performatives) {
 				if (performative_att instanceof TermTermAttribute) {
 					let performative:Term = (<TermTermAttribute>performative_att).term;
-					if (first_performative == null) first_performative = performative;
 					// is it talking to us?
 					if (this.talkingToUs(context, speaker, performative) &&
 						(performative.functor.is_a_string("perf.request.action") || 
@@ -654,6 +654,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 
 						let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
 						if (perf2 == null) perf2 = performative;
+						if (first_performative == null) first_performative = perf2;
 						unified_performatives.push(perf2);
 
 						let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
@@ -700,7 +701,14 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 			if (allActionRequestsTalkingToUs && allRequestsForUs && canSatisfyThemAll && actions.length>0 && !anyNeedsInference) {
 				// Create an intention record with all the requested actions:
-				let ir:IntentionRecord = new IntentionRecord(actions[0], new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(first_performative), null, this.time_in_seconds)
+				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, null, this.o, this.time_in_seconds);
+				let nlcp:NLContextPerformative = null;
+				if (nlcp_l != null) nlcp = nlcp_l[0];
+				let ir:IntentionRecord = new IntentionRecord(actions[0], 
+															 new ConstantTermAttribute(context.speaker, this.cache_sort_id), 
+															 nlcp, 
+															 null, 
+															 this.time_in_seconds)
 				ir.alternative_actions = actions;
 				ir.numberConstraint = new VariableTermAttribute(this.o.getSort("all"), null);
 				this.planForAction(ir);

@@ -1081,16 +1081,14 @@ class Term {
     }
 
 
-    // Sentences or sets of sentences can be represnted by a single term using the 
+    // Sentences or sets of sentences can be represented by a single term using the 
     // #and, #or and #not functors. This function decodes such notation into a set of sentences:
     static termToSentences(term:Term, o:Ontology) : Sentence[]
     {
         let sentences:Sentence[] = [];
 
-        // We start by bringing the #not inwards:
-        // console.log("before bringNotInwards: " + term);
-        term = Term.bringNotInwards(term, o);
-        // console.log("after bringNotInwards: " + term);
+        // First thing is to convert to CNF, which has 2 steps:
+        term = Term.convertToCNF(term, o);
 
         let sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
   
@@ -1131,6 +1129,18 @@ class Term {
     }
 
 
+    static convertToCNF(term:Term, o:Ontology) : Term
+    {
+        // Step 1: bring the #not inwards:
+        term = Term.bringNotInwards(term, o);
+
+        // Step 2: apply distributive property to turn the expression into a conjunction of disjunctions:
+        term = Term.applyDistributive(term, o);
+
+        return term;
+    }
+
+
     static bringNotInwards(term:Term, o:Ontology) : Term
     {
         if (term.functor.name == "#not" && 
@@ -1142,8 +1152,8 @@ class Term {
                 for(let att of subterm.attributes) {
                     if (att instanceof TermTermAttribute) {
                         term2.attributes.push(new TermTermAttribute(
-                                                new Term(term.functor,
-                                                         [new TermTermAttribute(Term.bringNotInwards((<TermTermAttribute>att).term, o))])));
+                                                Term.bringNotInwards(new Term(term.functor,
+                                                         [new TermTermAttribute((<TermTermAttribute>att).term)]), o)));
                     } else {
                         term2.attributes.push(new TermTermAttribute(new Term(term.functor, [att])));
                     }
@@ -1154,13 +1164,18 @@ class Term {
                 for(let att of subterm.attributes) {
                     if (att instanceof TermTermAttribute) {
                         term2.attributes.push(new TermTermAttribute(
-                                                new Term(term.functor,
-                                                  [new TermTermAttribute(Term.bringNotInwards((<TermTermAttribute>att).term, o))])));
+                                                Term.bringNotInwards(new Term(term.functor,
+                                                  [new TermTermAttribute((<TermTermAttribute>att).term)]), o)));
                     } else {
                         term2.attributes.push(new TermTermAttribute(new Term(term.functor, [att])));
                     }
                 }
                 return term2;
+            } else if (subterm.functor.name == "#not" && 
+                       term.attributes.length == 1 &&
+                       term.attributes[0] instanceof TermTermAttribute) {
+                // Two nots in a row, eliminate them!
+                return Term.bringNotInwards((<TermTermAttribute>(subterm.attributes[0])).term, o);
             } else {
                 return term;
             }
@@ -1176,6 +1191,55 @@ class Term {
             return term2;
         }
     }
+
+
+    // Checks if we need to apply the distributive property to turn a term into CNF:
+    static applyDistributive(term:Term, o:Ontology) : Term
+    {
+        // first make sure all the children are fixed:
+        if (term.functor.name == "#and" || term.functor.name == "#or") {
+            for(let attribute of term.attributes) {
+                if (attribute instanceof TermTermAttribute) {
+                    (<TermTermAttribute>attribute).term = Term.applyDistributive((<TermTermAttribute>attribute).term, o);
+                }
+            }
+        }
+
+        // See if we can apply the distribution pattern:  P v (Q ^ R)  -->  (P v Q) ^ (P v R)
+        if (term.functor.name == "#or" &&
+            term.attributes.length == 2 &&
+            (term.attributes[0] instanceof TermTermAttribute) &&
+            (term.attributes[1] instanceof TermTermAttribute)) {
+            let terma1:Term = (<TermTermAttribute>term.attributes[0]).term;
+            let terma2:Term = (<TermTermAttribute>term.attributes[1]).term;
+            if (terma1.functor.name == "#and" &&
+                terma1.attributes.length == 2) {
+                // apply pattern! (Q ^ R) v P  -->  (Q v P) ^ (R v P)
+                term.functor = o.getSort("#and");
+                term.attributes = [
+                    new TermTermAttribute(new Term(o.getSort("#or"),
+                        [terma1.attributes[0], 
+                         term.attributes[1]])),
+                    new TermTermAttribute(new Term(o.getSort("#or"),
+                        [terma1.attributes[1], 
+                         term.attributes[1]]))];
+                return Term.applyDistributive(term, o);
+            } else if (terma2.functor.name == "#and") {
+                // apply pattern! P v (Q ^ R)  -->  (P v Q) ^ (P v R)
+                term.functor = o.getSort("#and");
+                term.attributes = [
+                    new TermTermAttribute(new Term(o.getSort("#or"),
+                        [term.attributes[0],
+                         terma2.attributes[0]])),
+                    new TermTermAttribute(new Term(o.getSort("#or"),
+                        [term.attributes[0],
+                         terma2.attributes[1]]))];
+                return Term.applyDistributive(term, o);
+            }
+        }
+
+        return term;
+    }    
 
 
     static sentenceToTerm(sentence:Sentence, o:Ontology) : Term

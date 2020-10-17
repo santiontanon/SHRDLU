@@ -45,7 +45,7 @@ class AnswerHow_IntentionAction extends IntentionAction {
 			let action:Term = (<TermTermAttribute>intention.attributes[2]).term;
 
 			console.log(ai.selfID + " answer how: " + intention.attributes[2]);	
-			// we add the sentence with positive sign, to see if it introduces a contradiction
+			// we add the sentence with negative sign, to see if it introduces a contradiction
 			let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("relation.howto"),
 															[new TermTermAttribute(action),
 															 new VariableTermAttribute(ai.o.getSort("any"), "HOW")])],[false])];

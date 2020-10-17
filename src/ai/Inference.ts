@@ -94,10 +94,11 @@ class InterruptibleResolution
 			this.additionalSentences.push(new InferenceNode(s, new Bindings(), null, null));
 		}
 		for(let s of target) {
-			s = this.resolutionEqualityCheck(s);
-			if (s != null && this.treatSpatialPredicatesSpecially) s = this.resolutionSpatialPredicatesCheck(s, true);
-			if (s == null) continue;
-			this.target.push(new InferenceNode(s, new Bindings(), null, null));
+			let r:InferenceNode = new InferenceNode(s, new Bindings(), null, null);
+			this.resolutionEqualityCheck(r);
+			if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, true);
+			if (r.sentence == null) continue;
+			this.target.push(r);
 		}
 
 		/*
@@ -347,7 +348,7 @@ class InterruptibleResolution
 					this.total_resolutions++;
 //					console.log("    tmp: " + tmp.length);
 					for(let r of tmp) {
-						r.sentence = this.resolutionEqualityCheck(r.sentence);
+						this.resolutionEqualityCheck(r);
 						if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
 						if (r.sentence == null) continue;
 						let found:boolean = false;
@@ -405,7 +406,7 @@ class InterruptibleResolution
 				resolutions++;
 				this.total_resolutions++;
 				for(let r of tmp) {
-					r.sentence = this.resolutionEqualityCheck(r.sentence);
+					this.resolutionEqualityCheck(r);
 					if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
 					if (r.sentence == null) continue;
 
@@ -447,7 +448,7 @@ class InterruptibleResolution
 				resolutions++;
 				this.total_resolutions++;
 				for(let r of tmp) {
-					r.sentence = this.resolutionEqualityCheck(r.sentence);
+					this.resolutionEqualityCheck(r);
 					if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, false);
 					if (r.sentence == null) continue;
 
@@ -493,20 +494,38 @@ class InterruptibleResolution
 	}
 
 
-	// Checks to see if the equality predicate results in a contradiction: returns null
+	// Checks to see if the equality predicate results in a contradiction: sets r.sentence = null
 	// Or if there are any terms of the from x = x (which are then removed)
-	resolutionEqualityCheck(s:Sentence) : Sentence
+	resolutionEqualityCheck(r:InferenceNode)
 	{
+		let s:Sentence = r.sentence;
 		let toDelete:Term[] = [];
 		for(let i:number = 0;i<s.terms.length;i++) {
 			if (s.terms[i].functor.name == "=" &&
 				s.terms[i].attributes.length == 2) {
 				let equals:number = Term.equalsNoBindingsAttribute(s.terms[i].attributes[0], 
 							   								       s.terms[i].attributes[1]);
-				if (equals == 0) continue;
+				if (equals == 0) {
+					if (s.terms.length == 1) {
+						// special case where the sentences is just something of the form: "=(X,constant)"
+						if ((s.terms[i].attributes[0] instanceof VariableTermAttribute) &&
+							(s.terms[i].attributes[1] instanceof ConstantTermAttribute) &&
+							s.terms[i].attributes[0].sort.subsumes(s.terms[i].attributes[1].sort)) {
+							r.bindings.l.push([<VariableTermAttribute>(s.terms[i].attributes[0]), s.terms[i].attributes[1]]);
+							toDelete.push(s.terms[i]);
+						} else if ((s.terms[i].attributes[1] instanceof VariableTermAttribute) &&
+							(s.terms[i].attributes[0] instanceof ConstantTermAttribute) &&
+							s.terms[i].attributes[1].sort.subsumes(s.terms[i].attributes[0].sort)) {
+							r.bindings.l.push([<VariableTermAttribute>(s.terms[i].attributes[1]), s.terms[i].attributes[0]]);
+							toDelete.push(s.terms[i]);
+						}
+					}
+					continue;
+				}
 				if ((s.sign[i] && equals==1) ||
 				    (!s.sign[i] && equals==-1)) {
-					return null;
+					r.sentence = null;
+					return;
 				} else {
 					toDelete.push(s.terms[i]);
 				}
@@ -518,7 +537,6 @@ class InterruptibleResolution
 			s.terms.splice(idx,1);
 			s.sign.splice(idx,1);
 		}
-		return s;
 	}
 
 

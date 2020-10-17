@@ -187,6 +187,33 @@ function resolutionQueryTest2(KB_str:string[], AS_str:string[], query_str_l:stri
 }
 
 
+function normalFormTest(term_str:string, result_str_l:string[], o:Ontology)
+{
+    let term:Term = Term.fromString(term_str, o);
+    let sentences:Sentence[] = Term.termToSentences(term, o);
+
+    if (sentences == null) {
+        console.error("failed normalFormTest: " + term_str);
+        console.error("sentences is null!");
+    } else if (sentences.length != result_str_l.length) {
+        console.error("failed normalFormTest: " + term_str);
+        console.error("sentences has length " + sentences.length + ", expected " + result_str_l.length);
+        for(let sentence of sentences) {
+            console.error("    " + sentence)
+        }
+    } else {
+        for(let i:number = 0;i<sentences.length;i++) {
+            let result:Sentence = Sentence.fromString(result_str_l[i], o);
+            if (result.toString() != sentences[i].toString()) {
+                console.error("failed normalFormTest: " + term_str);
+                console.error("Expected " + i + "-th sentence to be " + result_str_l[i] + " but was " + sentences[i]);
+                return;
+            }
+        }
+    }
+}
+
+
 for(let pair of term_unification_l) {
     var term1:Term = Term.fromString(pair[0], o);
     var term2:Term = Term.fromString(pair[1], o);
@@ -202,6 +229,7 @@ for(let pair of term_unification_l) {
     }
     if (result != pair[2]) console.error("Unification result incorrect!!");
 }
+
 
 resolutionTest(
     ["~space.at(X:[object],Y:[space.location]); ~space.at(X,Y2:[space.location]); =(Y,Y2)",
@@ -707,3 +735,57 @@ resolutionQueryTest2(
     ["~relation('1'[#id], X)"],
     2,
     o);
+
+resolutionQueryTest2(
+    [],
+    [],
+    ["~=('1'[#id], X)"],
+    1,
+    o);
+
+
+
+
+normalFormTest("block(X)",
+               ["block(X)"], o);
+
+normalFormTest("#and(block(X),box(X))",
+               ["block(X)", "box(X)"], o);
+normalFormTest("#or(block(X),box(X))",
+               ["block(X);box(X)"], o);
+
+normalFormTest("#not(#and(block(X),box(X)))",
+               ["~block(X);~box(X)"], o);
+normalFormTest("#not(#or(block(X),box(X)))",
+               ["~block(X)","~box(X)"], o);
+
+normalFormTest("#not(#not(#and(block(X),box(X))))",
+               ["block(X)", "box(X)"], o);
+
+normalFormTest("#not(#not(#not(#and(block(X),box(X)))))",
+               ["~block(X);~box(X)"], o);
+
+normalFormTest("#not(#or(block(X),#not(box(X))))",
+               ["~block(X)","box(X)"], o);
+
+normalFormTest("#and(#or(block(X), color(X,'green'[green])), #or(block(X), color(X,'red'[red])))",
+               ["block(X);color(X,'green'[green])", "block(X);color(X,'red'[red])"], o);
+
+normalFormTest("#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red])))",
+               ["block(X);block(X)",
+                "block(X);color(X,'red'[red])",
+                "color(X,'green'[green]);block(X)",
+                "color(X,'green'[green]);color(X,'red'[red])"], o);
+
+normalFormTest("#and(#or(color(X, 'green'[green]), color(X,'red'[red])), block(X))",
+               ["color(X,'green'[green]);color(X,'red'[red])",
+                "block(X)"], o);
+
+normalFormTest("#not(#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red]))))",
+               ["~block(X); ~color(X,'green'[green])",
+                "~block(X); ~color(X,'red'[red])"], o);
+
+normalFormTest("#not(#and(#or(color(X,'green'[green]), color(X,'red'[red])), block(X)))",
+               ["~color(X,'green'[green]); ~block(X)",
+                "~color(X,'red'[red]); ~block(X)"], o);
+

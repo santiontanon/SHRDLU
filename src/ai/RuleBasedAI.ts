@@ -1192,23 +1192,32 @@ class RuleBasedAI {
 
 				if (needsInference) {
 					// this means that the action request has a variable and we need to start an inference process:
-					let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");
-					let target1Terms:Term[] = [];
-					let target1Signs:boolean[] = [];
-					for(let i:number = 0;i<intention_l.length;i++) {
-						if (intention_l[i].functor.name == "#not") {
-							target1Terms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
-							target1Signs.push(true);
-						} else {
-							target1Terms.push(intention_l[i]);
-							target1Signs.push(false);
-						}
-					}
+					let targets:Sentence[][] = [];
+					let negatedExpression:Term = new Term(this.o.getSort("#not"),
+														  [new TermTermAttribute((<TermTermAttribute>perf2.attributes[2]).term)])
+					let target:Sentence[] = Term.termToSentences(negatedExpression, this.o);
+					// let intention_l_ors:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#or");
+					// // Translate the term to sentences, and get the negation in normal form:
+					// let target:Sentence[] = [];
+					// for(let intention_l_or of intention_l_ors) {
+					// 	let intention_l:Term[] = NLParser.termsInList(intention_l_or, "#and");
+					// 	let targetTerms:Term[] = [];
+					// 	let targetSigns:boolean[] = [];
+					// 	for(let i:number = 0;i<intention_l.length;i++) {
+					// 		if (intention_l[i].functor.name == "#not") {
+					// 			targetTerms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
+					// 			targetSigns.push(true);
+					// 		} else {
+					// 			targetTerms.push(intention_l[i]);
+					// 			targetSigns.push(false);
+					// 		}
+					// 	}
+					// 	target.push(new Sentence(targetTerms, targetSigns));
+					// }
+					targets.push(target)
 
 					// 2) start the inference process:
-					let target1:Sentence[] = [];
-					target1.push(new Sentence(target1Terms, target1Signs));
-					let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
+					let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
 					ir.triggeredBy = perf2;
 					ir.triggeredBySpeaker = context.speaker;
 					this.inferenceProcesses.push(ir);
