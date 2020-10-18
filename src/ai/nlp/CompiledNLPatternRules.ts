@@ -64,7 +64,7 @@ class CompiledNLPatternRules extends NLPatternContainer {
 			bindings.l.push([(<VariableTermAttribute>this.speakerVariable), 
 							 new ConstantTermAttribute(context.speaker, parser.o.getSort("#id"))]);
 		}
-		let parses:NLParseRecord[] = this.root.parse(new NLParseRecord([tokenization], bindings, [], [], []), context, this, parser, AI, filterPartialParses);
+		let parses:NLParseRecord[] = this.root.parse(new NLParseRecord([tokenization], [], bindings, [], [], []), context, this, parser, AI, filterPartialParses);
 		if (parses == null) return null;
 
 //		console.log("CompiledNLPatternRules.parse, n parses: " + parses.length);
@@ -336,7 +336,7 @@ class CompiledNLPatternState {
 		for(let i:number = 0;i<this.heads.length;i++) {
 			// found a parse!
 //			console.log("parse found with bindings: " + parse.bindings);
-			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities);
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities);
 			parse2.result = this.heads[i].applyBindings(parse2.bindings);
 			parse2.ruleNames = [this.ruleNames[i]].concat(parse2.ruleNames);
 			parse2.priorities = [this.priorities[i]].concat(parse2.priorities);
@@ -474,11 +474,11 @@ class CompiledNLPatternTransition {
 		let parses:NLParseRecord[] = [];
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
-				let parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
+				let parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else if (nextToken.token == this.string) {
 				// match!
-				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
+				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(nextToken.next, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses = parses.concat(parses2);
 			}
 		}
@@ -494,14 +494,14 @@ class CompiledNLPatternTransition {
 //				console.log("Matching POS, before: " + this.term.toString() + "\n  bindings: " + parse.bindings + "\n  Matching POS, after: " + term2.toString());
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
-				let parses2:NLParseRecord[] = this.parsePOS(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
+				let parses2:NLParseRecord[] = this.parsePOS(new NLParseRecord(nextToken.next, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else {
 //						console.log("Matching POS "+term2.toString()+" with: " + nextToken.token);
 				for(let POS of nextToken.POS) {
 					let bindings:Bindings = new Bindings();
 					if (POS.term.unify(term2, OCCURS_CHECK, bindings)) {
-						let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
+						let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(nextToken.next, parse.previousPOS.concat([POS]), parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
 						if (parses2 != null) parses = parses.concat(parses2);
 					}
 				}
@@ -523,7 +523,7 @@ class CompiledNLPatternTransition {
 		if (compiled != null) {
 			// if we have a compiled tree, use it!
 //			console.log("CompiledNLPatternTransition.parsePattern: Found a compiled tree for " + term2.functor.name + " ...");
-			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, new Bindings(), parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
+			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, parse.previousPOS, new Bindings(), parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
 			for(let pr of results) {
 				let bindings2:Bindings = new Bindings();
 				// if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
@@ -537,7 +537,7 @@ class CompiledNLPatternTransition {
 				// console.log("        bindings: " + bindings2);
 				// we continue from "pr", but using the bdingins from "parse", since the bindings
 				// generated during the parsing of the sub-pattern are not relevant
-				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)), context, rule, parser, AI, filterPartialParses);
+				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, pr.previousPOS, parse.bindings.concat(bindings2), pr.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses_p = parses_p.concat(parses2);
 			}
 		} else {
@@ -548,7 +548,7 @@ class CompiledNLPatternTransition {
 				if (rule2.head.unify(term2, OCCURS_CHECK, bindings)) {
 					// rule to consider!!
 	//						console.log("  considering rule with head: " + rule2.head.toString() + "\n  new bindings: " + bindings);
-					let results:NLParseRecord[] = rule2.parseWithBindings(new NLParseRecord(parse.nextTokens, bindings, parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI);
+					let results:NLParseRecord[] = rule2.parseWithBindings(new NLParseRecord(parse.nextTokens, parse.previousPOS, bindings, parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI);
 
 					for(let pr of results) {
 						let bindings2:Bindings = new Bindings();
@@ -560,7 +560,7 @@ class CompiledNLPatternTransition {
 //						console.log("    and bindings: " + bindings2);
 						// we continue from "pr", but using the bdingins from "parse", since the bindings
 						// generated during the parsing of the sub-pattern are not relevant
-						let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)), context, rule, parser, AI, filterPartialParses);
+						let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, pr.previousPOS, parse.bindings.concat(bindings2), pr.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)), context, rule, parser, AI, filterPartialParses);
 						if (parses2 != null) parses_p = parses_p.concat(parses2);
 					}
 	//					} else {
@@ -584,7 +584,7 @@ class CompiledNLPatternTransition {
 			for(let pr of results) {
 	//			console.log("parseFunction, parse.bindings: " + parse.bindings);
 	//			console.log("parseFunction, pr.bindings: " + pr.bindings);
-				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, pr.bindings, pr.derefs, pr.ruleNames, pr.priorities), context, rule, parser, AI, filterPartialParses);
+				let parses2:NLParseRecord[] = this.destinationState.parse(new NLParseRecord(pr.nextTokens, pr.previousPOS, pr.bindings, pr.derefs, pr.ruleNames, pr.priorities), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses_p = parses_p.concat(parses2);
 			}
 		}

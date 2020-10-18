@@ -39,7 +39,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 					}
 				}
 				let target1:Sentence[] = [new Sentence(query_l,query_l_signs)];
-				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention), ai.o));
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention)));
 			} else {
 				console.error("executeIntention answer whois.name: case not handled: " + intention);
 			}
@@ -55,7 +55,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 					let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("name"),
 																	[intention.attributes[2],
 																	 new VariableTermAttribute(ai.o.getSort("symbol"), "NAME")])],[false])];
-					ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention), ai.o));
+					ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention)));
 				} else {
 					console.error("executeIntention answer whois.noname: attribute[1] or attribute[2] was not a ConstantTermAttribute: " + intention);
 				}

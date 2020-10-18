@@ -55,7 +55,7 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 				let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("space.at"),
 																[subject,
 																 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
-				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHowGoto_InferenceEffect(intention), ai.o));
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHowGoto_InferenceEffect(intention)));
 
 			} else {
 				// let subject:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[0];
@@ -64,7 +64,7 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 				let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("relation.howto"),
 																[new TermTermAttribute(action),
 																 new VariableTermAttribute(ai.o.getSort("any"), "HOW")])],[false])];
-				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention), ai.o));
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention)));
 				/*
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);

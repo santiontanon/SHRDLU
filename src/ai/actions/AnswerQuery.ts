@@ -81,7 +81,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
 			}
 //				console.log("executeIntention answer query: negated_s = " + negated_s);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
 		} else {
 			console.error("executeIntention answer query: attribute[2] was not a TermTermAttribute: " + intention);	
 		}

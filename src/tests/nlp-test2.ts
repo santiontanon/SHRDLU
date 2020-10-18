@@ -167,7 +167,8 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             }
           }
         }  
-        // console.log("derefs: " + parse.derefs);      
+        // console.log("derefs: " + parse.derefs);
+        // console.log("previousPOS: " + parse.previousPOS);
         successfulTests++;
         return true;
     }
@@ -1519,12 +1520,13 @@ NLParseTestUnifyingListener("take the crate or a ship", o.getSort("performative"
 NLParseTestUnifyingListener("take the crate and put the crate on a blue block", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], '5'[#id])), perf.request.action(V0, action.put-in('etaoin'[#id], '5'[#id], Y), #and(block(Y), color(Y, 'blue'[blue])), [number.1]))");
 NLParseTestUnifyingListener("take the crate and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], '5'[#id])), perf.request.action(V0, action.put-in('etaoin'[#id], '5'[#id], Y), #and(block(Y), color(Y, 'blue'[blue])), [number.1]))");
 NLParseTestUnifyingListener("take a red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(block(X), color(X, 'red'[red])), [number.1]), perf.request.action(V0, action.put-in('etaoin'[#id], X, Y), #and(block(Y), color(Y, 'blue'[blue])), [number.1]))");
-NLParseTestUnifyingListener("take a green or red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(#or(color(X, 'green'[green]), color(X, 'red'[red])), block(X)), [number.1]), perf.request.action(V0, action.put-in('etaoin'[#id], X, Y), #and(block(Y), color(Y, 'blue'[blue])), [number.1]))");
+NLParseTestUnifyingListener("take a green or red block and put it on a blue block", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(#or(color(X,'green'[green]), color(X,'red'[red])), block(X)), [number.1]), perf.request.action(V0, action.put-in('etaoin'[#id], X, Y), #and(block(Y), color(Y,'blue'[blue])), [number.1]))");
+NLParseTestUnifyingListener("take either a green block or a red one", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #or(#and(block(X), color(X, 'green'[green])), #and(block(X), color(X,'red'[red]))), [number.1])");
+NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #and(block(X), color(X,'red'[red])), [number.1]), perf.request.action(V0, action.put-in('etaoin'[#id], X, Y), #and(block(Y), color(Y,'blue'[blue])), [number.1]))");
+NLParseTestUnifyingListener("take either a green block or a red one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take(V0, X), #or(#and(block(X), color(X, 'green'[green])), #and(block(X), color(X,'red'[red]))), [number.1]), perf.request.action(V0, action.put-in(V0, X, Y), #and(block(Y), color(Y,'blue'[blue])), [number.1]))");
 
-// NLParseTestUnifyingListener("take either a red block or a green one", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), #or(#and(block(X), color(X, 'green'[green])), #and(block(X), color(X, 'red'[red]))), [number.1])");
-// NLParseTestUnifyingListener("take a red block and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
-// NLParseTestUnifyingListener("take either a red block or a green one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "");
-
+// NLParseTestUnifyingListener("where is the nearest one?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(block(X), space.nearest-to(X,'1'[#id])))");
+// NLParseTestUnifyingListener("what is in the red one?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), ))"); #and(space.at(X, Y), #and(block(Y), color(Y,'red'[red])))
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

@@ -65,7 +65,7 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
 			}
 //				console.log("executeIntention answer query: negated_s = " + negated_s);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, null, new AnswerHowMany_InferenceEffect(intention), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, null, new AnswerHowMany_InferenceEffect(intention)));
 		} else {
 			console.error("executeIntention answer howmany: attribute[2] was not a TermTermAttribute: " + intention);	
 		}

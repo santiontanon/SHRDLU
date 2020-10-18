@@ -1527,7 +1527,7 @@ class A4Game {
         // when any of the AIs is thinking:
         if ((this.cycle%32) < 16) {
             let thinkingY:number = 128;
-            if (this.etaoinAI.inferenceProcesses.length > 0) {
+            if (this.etaoinAI.currentInferenceProcess != null) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;
                 ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
@@ -1535,7 +1535,7 @@ class A4Game {
                 ctx.fillText("Etaoin is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
                 thinkingY-=10;
             }
-            if (this.qwertyAI.inferenceProcesses.length > 0) {
+            if (this.qwertyAI.currentInferenceProcess != null) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;
                 ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
@@ -1543,7 +1543,7 @@ class A4Game {
                 ctx.fillText("Qwerty is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
                 thinkingY-=10;
             }
-            if (this.shrdluAI.inferenceProcesses.length > 0) {
+            if (this.shrdluAI.currentInferenceProcess != null) {
                 // etaoin is thinking:
                 ctx.fillStyle = MSX_COLOR_BLACK;
                 ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);

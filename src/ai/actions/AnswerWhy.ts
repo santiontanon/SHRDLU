@@ -119,7 +119,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 				console.log("executeIntention answer why: negated_toExplain = " + negated_toExplain);
 			}
 
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s],[negated_toExplain]], 1, 0, false, null, new AnswerWhy_InferenceEffect(intention), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s],[negated_toExplain]], 1, 0, false, null, new AnswerWhy_InferenceEffect(intention)));
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);

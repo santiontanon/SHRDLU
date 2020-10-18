@@ -64,9 +64,9 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		console.log("executeIntention answer predicate: negated_s = " + negated_s);
 		if (variablesPresent) {
 			// if there are variables in the query, we should only add the negated version, since otherwise, we get spurious results!
-			ai.inferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
 		} else {
-			ai.inferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [s_l,[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention), ai.o));				
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [s_l,[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
 		}
 		
 		return true;

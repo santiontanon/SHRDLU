@@ -1203,10 +1203,10 @@ class ShrdluGameScript {
 			}
 
 			if (this.act_1_asked_about_being_alone_to_etaoin &&
-				this.game.etaoinAI.inferenceProcesses.length == 0) this.act_1_state = 12;
+				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0) this.act_1_state = 12;
 			if (this.act_1_asked_about_being_alone_to_qwerty &&
-				this.game.etaoinAI.inferenceProcesses.length == 0 &&
-				this.game.qwertyAI.inferenceProcesses.length == 0) this.act_1_state = 13;
+				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
+				this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0) this.act_1_state = 13;
 			break;
 
 		case 7:
@@ -1255,10 +1255,10 @@ class ShrdluGameScript {
 				}
 
 				if (this.act_1_asked_about_being_alone_to_etaoin &&
-					this.game.etaoinAI.inferenceProcesses.length == 0) this.act_1_state = 12;
+					this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0) this.act_1_state = 12;
 				if (this.act_1_asked_about_being_alone_to_qwerty &&
-					this.game.etaoinAI.inferenceProcesses.length == 0 &&
-					this.game.qwertyAI.inferenceProcesses.length == 0) this.act_1_state = 13;
+					this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
+					this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0) this.act_1_state = 13;
 			}
 			break;
 
@@ -1277,10 +1277,10 @@ class ShrdluGameScript {
 		case 11:
 			// waiting for player to ask about other humans (and for etaoin not to be answering anything):
 			if (this.act_1_asked_about_being_alone_to_etaoin &&
-				this.game.etaoinAI.inferenceProcesses.length == 0) this.act_1_state = 12;
+				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0) this.act_1_state = 12;
 			if (this.act_1_asked_about_being_alone_to_qwerty &&
-				this.game.etaoinAI.inferenceProcesses.length == 0 &&
-				this.game.qwertyAI.inferenceProcesses.length == 0) this.act_1_state = 13;
+				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
+				this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0) this.act_1_state = 13;
 			if (this.act_1_state == 11 && this.act_1_state_timer == 3600) {
 				// after a while, remind the player to actually ask Etaoin about being alone:
 				this.act_1_state_timer = 0;

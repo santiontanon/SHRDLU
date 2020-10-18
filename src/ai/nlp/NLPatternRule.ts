@@ -6,9 +6,10 @@ var DEREF_ERROR_VERB_COMPLETION:number = 3;
 
 
 class NLParseRecord {
-	constructor(nt:TokenizationElement[], b:Bindings, d:Term[], rn:string[], p:number[])
+	constructor(nt:TokenizationElement[], pp:PartOfSpeech[], b:Bindings, d:Term[], rn:string[], p:number[])
 	{
 		this.nextTokens = nt;
+		this.previousPOS = pp;
 		this.bindings = b;
 		this.derefs = d;
 		this.ruleNames = rn;
@@ -46,6 +47,7 @@ class NLParseRecord {
 
 
 	nextTokens:TokenizationElement[] = null;  // this is not a flat list, but all the possible "immediate next" tokens, according to different parses
+	previousPOS:PartOfSpeech[] = null; // the list of POS tags of the tokens already parsed (those that have the direct token in the pattern are ignored)
 	bindings:Bindings = null;
 	derefs:Term[] = null;  // this list accumulates all the successful deref operations completed during parsing up to this point
 	ruleNames:string[] = null;
@@ -114,7 +116,7 @@ class NLPatternRule extends NLPatternContainer {
 			bindings.l.push([(<VariableTermAttribute>this.speakerVariable), 
 							 new ConstantTermAttribute(context.speaker, parser.o.getSort("#id"))]);
 		}
-		let parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], bindings, [], [], []), context, this, parser, AI);
+		let parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], [], bindings, [], [], []), context, this, parser, AI);
 		if (parses == null) return null;
 
 		// if there is any valid parse, generate the corresponding terms:

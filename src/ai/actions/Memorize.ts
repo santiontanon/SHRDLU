@@ -85,7 +85,7 @@ class Memorize_IntentionAction extends IntentionAction {
 				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
 			}
 			negated_s_l = [negated_s];
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, true), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, true)));
 		} else {
 			if (s_l.length == 1 && s_l[0].terms.length == 1) {
 				// Check for the special case, where the player is just correcting a wrong statement she stated in the past:
@@ -99,7 +99,7 @@ class Memorize_IntentionAction extends IntentionAction {
 				}
 			}
 			console.log("executeIntention memorize: sentence list of length 1, easy case: " + s_l);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, false), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, false)));
 		}
 
 

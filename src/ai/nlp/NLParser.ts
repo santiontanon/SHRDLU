@@ -33,7 +33,8 @@ class NLParser {
 			parser.rules.push(rule);
 		}
 
-		for(let sortName of ["nounPhraseListFromContext",
+		for(let sortName of ["nounOrOne",
+							 "nounPhraseListFromContext",
 							 "maybeNegatedPrepositionalPhrase",
 							 "maybeNegatedAdjective",
 							 "nounPhrase",
@@ -241,7 +242,7 @@ class NLParser {
 		for(let parse of parses) {
 			let result:Term = this.unifyListener(parse.result, listener);
 			if (result != null) {
-				let unifiedParse:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities);
+				let unifiedParse:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities);
 				unifiedParse.result = result;
 				if (bestParse == null) {
 					bestParse = unifiedParse;

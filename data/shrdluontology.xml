@@ -164,6 +164,7 @@
     <sort name="maybeNegatedAdjective" super="grammar-concept"/>
     <sort name="maybeNegatedPrepositionalPhrase" super="grammar-concept"/>
     <sort name="nounPhraseListFromContext" super="grammar-concept"/>
+    <sort name="nounOrOne" super="grammar-concept"/>
     <sort name="perf.request.action.internal" super="grammar-concept"/>
 
 
@@ -180,6 +181,7 @@
     <sort name="#sortParent" super="parser-function"/>
     <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
     <sort name="#changeConstantSort" super="parser-function"/>
+    <sort name="#findLastNoun" super="parser-function"/>
     <sort name="#token" super="parser-function"/>  <!-- #token('hello') is equivalent to 'hello', 
                                                         just so that we can match with a constant in a variable -->
 

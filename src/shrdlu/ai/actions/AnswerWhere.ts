@@ -121,7 +121,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 															[intention.attributes[1],
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
 //				console.log("target2: " + target2);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto")), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
 		} else if (intention.attributes.length >= 5 &&
 			      (intention.attributes[2] instanceof VariableTermAttribute) &&
 			      (intention.attributes[3] instanceof VariableTermAttribute) &&
@@ -154,7 +154,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 															[intention.attributes[1],
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
 //				console.log("target2: " + target2);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto")), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
 			
 		} else if (intention.attributes.length >= 5 &&
 			       (intention.attributes[2] instanceof ConstantTermAttribute) &&
@@ -204,7 +204,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 															[intention.attributes[1],
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
 //				console.log("target2: " + target2);
-			ai.inferenceProcesses.push(new InferenceRecord(ai, additionalTerms, [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto")), ai.o));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additionalTerms, [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
 		} else {
 			console.error("executeIntention answer where: attribute[2] was not a ConstantTermAttribute nor a VariableTermAttribute: " + intention.attributes[2]);
 		}

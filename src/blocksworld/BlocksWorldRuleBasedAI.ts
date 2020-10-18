@@ -614,7 +614,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	{
 		if (this.intentions.length > 0) return false;
 		if (this.queuedIntentions.length > 0) return false;
-		if (this.inferenceProcesses.length > 0) return false;
+		if (this.currentInferenceProcess != null || this.queuedInferenceProcesses.length > 0) return false;
 		if (this.currentActionHandler != null) return false;
 		if (this.planningProcesses.length > 0) return false;
 		if (this.plans.length > 0) return false;
@@ -626,7 +626,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	{
 		if (this.intentions.length > 0) return false;
 		if (this.queuedIntentions.length > 0) return false;
-		if (this.inferenceProcesses.length > 0) return false;
+		if (this.currentInferenceProcess != null || this.queuedInferenceProcesses.length > 0) return false;
 		if (this.currentActionHandler != null) return false;
 		if (this.planningProcesses.length > 0) return false;
 		return true;

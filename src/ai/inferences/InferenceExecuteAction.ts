@@ -21,6 +21,7 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 				ir.alternative_actions = [];
 				for(let result of inf.inferences[0].endResults) {
 					ir.alternative_actions.push(this.action.applyBindings(result.bindings));
+					ai.applyBindingsToSubsequentActionsOrInferences(result.bindings);
 				}
 				if (nlcp.performative.attributes.length>=4) ir.numberConstraint = nlcp.performative.attributes[3];
 				ai.planForAction(ir);

@@ -91,7 +91,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 				let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("relation.howto"),
 																[new TermTermAttribute(action),
 																 new VariableTermAttribute(ai.o.getSort("any"), "HOW")])],[false])];
-				ai.inferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention), ai.o));
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention)));
 			} else if (path.length == 1) {
 				if (action.functor.is_a(ai.o.getSort("verb.leave"))) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],#not(space.at("+action.attributes[0]+","+action.attributes[1]+"))))", ai.o);

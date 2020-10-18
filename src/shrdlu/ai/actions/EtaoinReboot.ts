@@ -22,7 +22,8 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 			ai.intentions = [];
 			ai.queuedIntentions = [];
 			ai.intentionsCausedByRequest = [];
-			ai.inferenceProcesses = [];
+			ai.currentInferenceProcess = null;
+			ai.queuedInferenceProcesses = [];
 			ai.respondToPerformatives = true;
 			ai.terminateConversationAfterThisPerformative = false;
 			ai.currentEpisodeTerms = [];

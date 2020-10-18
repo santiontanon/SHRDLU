@@ -33,40 +33,16 @@ var CONVERSATION_TIMEOUT:number = 120*60;	// 2 minute of real time, which is 2 h
 var OCCURS_CHECK:boolean = false;
 
 class InferenceRecord {
-	constructor(ai:RuleBasedAI, additionalSentences_arg:Sentence[], targets:Sentence[][], p:number, a:number, findAllAnswers:boolean, timeTerm:Term, e:InferenceEffect, o:Ontology)
+	constructor(ai:RuleBasedAI, additionalSentences_arg:Sentence[], targets:Sentence[][], p:number, a:number, findAllAnswers:boolean, timeTerm:Term, e:InferenceEffect)
 	{
-		// Knowledge base is all the long term knowledge, plus the perception:
-		let additionalSentences:Sentence[] = [];
-		for(let s of additionalSentences_arg) additionalSentences.push(s);
-		for(let te of ai.shortTermMemory.plainTermList) {
-			additionalSentences.push(new Sentence([te.term],[true]));
-		}
-
-		let ltm:SentenceContainer = ai.longTermMemory;
-
-		if (timeTerm != null) {
-			// edit the long term memory to match the time of the query:
-			if (timeTerm.functor.name == "time.past") {
-				ltm = TimeInference.applyTimePast(ai.longTermMemory)
-			} else if (timeTerm.functor.is_a(o.getSort("time.now"))) {
-				// do nothing
-			} else {
-				console.error("InferenceRecord timeTerm not supported: " + timeTerm);
-			}
-		}
-
 		this.targets = targets;
-		for(let target of this.targets) {
-			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, true, true, timeTerm == null, ai));
-		}
 		this.priority = p;
 		this.anxiety = a;
 		this.additionalSentences = additionalSentences_arg;
 		this.findAllAnswers = findAllAnswers;
 		this.timeTerm = timeTerm;
 		this.effect = e;
-
-		//console.log("InferenceRecord: findAllAnswers = " + this.findAllAnswers);
+		this.inferences = [];
 	}
 
 
@@ -106,10 +82,37 @@ class InferenceRecord {
 			targets.push(t);
 		}
 
-		let ir:InferenceRecord = new InferenceRecord(ai, additionalSentences, targets, p, a, findAllAnswers, tt, e, o);
+		let ir:InferenceRecord = new InferenceRecord(ai, additionalSentences, targets, p, a, findAllAnswers, tt, e);
 		ir.triggeredBy = tb;
 		ir.triggeredBySpeaker = tbs;
 		return ir;
+	}
+
+
+	init(ai:RuleBasedAI, o:Ontology)
+	{
+		// Knowledge base is all the long term knowledge, plus the perception:
+		let additionalSentences:Sentence[] = [];
+		for(let s of this.additionalSentences) additionalSentences.push(s);
+		for(let te of ai.shortTermMemory.plainTermList) {
+			additionalSentences.push(new Sentence([te.term],[true]));
+		}
+
+		let ltm:SentenceContainer = ai.longTermMemory;
+		if (this.timeTerm != null) {
+			// edit the long term memory to match the time of the query:
+			if (this.timeTerm.functor.name == "time.past") {
+				ltm = TimeInference.applyTimePast(ai.longTermMemory)
+			} else if (this.timeTerm.functor.is_a(o.getSort("time.now"))) {
+				// do nothing
+			} else {
+				console.error("InferenceRecord timeTerm not supported: " + this.timeTerm);
+			}
+		}
+
+		for(let target of this.targets) {
+			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, true, true, this.timeTerm == null, ai));
+		}
 	}
 
 
@@ -1062,10 +1065,10 @@ class RuleBasedAI {
 						// 2) start the inference process:
 						let target1:Sentence[] = [];
 						target1.push(new Sentence(target1Terms, target1Signs));
-						let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new StopAction_InferenceEffect(action), this.o);
+						let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new StopAction_InferenceEffect(action));
 						ir.triggeredBy = perf2;
 						ir.triggeredBySpeaker = context.speaker;
-						this.inferenceProcesses.push(ir);
+						this.queuedInferenceProcesses.push(ir);
 					} else {
 						if (this.stopAction(action, context.speaker)) {
 							// account for the fact that maybe the request was to stop talking
@@ -1217,10 +1220,10 @@ class RuleBasedAI {
 					targets.push(target)
 
 					// 2) start the inference process:
-					let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new ExecuteAction_InferenceEffect(action), this.o);
+					let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new ExecuteAction_InferenceEffect(action));
 					ir.triggeredBy = perf2;
 					ir.triggeredBySpeaker = context.speaker;
-					this.inferenceProcesses.push(ir);
+					this.queuedInferenceProcesses.push(ir);
 					return;
 				}
 			}
@@ -1230,10 +1233,10 @@ class RuleBasedAI {
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);
 				if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
+					this.queuedIntentions.push(ir);
 					// Request for executing an action that can be satisfied. However, maybe we might need to plan for it.
 					// So, invoke the planner (if it exists), before executing the action:
-					this.planForAction(ir);
-
+					// this.planForAction(ir);
 				} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 					if (action.attributes.length>=1 &&
 						(action.attributes[0] instanceof ConstantTermAttribute) &&
@@ -1762,27 +1765,34 @@ class RuleBasedAI {
 		// select which inference process to continue in this cycle:
 		// pick the inference that generates the maximum anxiety:
 		let max_anxiety_inference:InferenceRecord = null;
-		for(let i:number = 0;i<this.inferenceProcesses.length;i++) {
-			// increment anxiety of inferences:
-			this.inferenceProcesses[i].anxiety += this.inferenceProcesses[i].priority;
+		// for(let i:number = 0;i<this.inferenceProcesses.length;i++) {
+		// 	// increment anxiety of inferences:
+		// 	this.inferenceProcesses[i].anxiety += this.inferenceProcesses[i].priority;
 
-			if (max_anxiety_inference == null ||
-				this.inferenceProcesses[i].anxiety > max_anxiety_inference.anxiety) {
-				max_anxiety_inference = this.inferenceProcesses[i];
-			}
+		// 	if (max_anxiety_inference == null ||
+		// 		this.inferenceProcesses[i].anxiety > max_anxiety_inference.anxiety) {
+		// 		max_anxiety_inference = this.inferenceProcesses[i];
+		// 	}
+		// }
+		if (this.currentInferenceProcess == null && this.queuedInferenceProcesses.length > 0) {
+			this.currentInferenceProcess = this.queuedInferenceProcesses[0];
+			this.currentInferenceProcess.init(this, this.o)
+			this.queuedInferenceProcesses.splice(0, 1);
 		}
+		max_anxiety_inference = this.currentInferenceProcess;
 
 		if (max_anxiety_inference != null) {
 			let idx:number = max_anxiety_inference.completedInferences.length;
 			if (idx >= max_anxiety_inference.inferences.length) {
 				// inference is over!
-				this.inferenceProcesses.splice(this.inferenceProcesses.indexOf(max_anxiety_inference),1);
+				// this.inferenceProcesses.splice(this.inferenceProcesses.indexOf(max_anxiety_inference),1);
+				this.currentInferenceProcess = null;
 				if (max_anxiety_inference.effect != null) {
 					max_anxiety_inference.effect.execute(max_anxiety_inference, this);
 				}
 
 				// after we have answered everything the player wanted, check to see if we had any questions in the stack:
-				if (this.inferenceProcesses.length == 0) {
+				if (this.currentInferenceProcess == null && this.queuedInferenceProcesses.length == 0) {
 					for(let context of this.contexts) {
 						if (context.expectingAnswerToQuestionTimeStamp_stack.length > 0) {
 							let idx:number = context.expectingAnswerToQuestionTimeStamp_stack.length - 1;
@@ -1834,10 +1844,11 @@ class RuleBasedAI {
 	executeIntentions()
 	{
 		if (this.intentions.length == 0 &&
-			this.inferenceProcesses.length == 0 &&
+			this.currentInferenceProcess == null && this.queuedInferenceProcesses.length == 0 &&
 			this.queuedIntentions.length > 0) {
-			this.intentions = this.queuedIntentions;
-			this.queuedIntentions = [];
+			let ir:IntentionRecord = this.queuedIntentions[0];
+			this.queuedIntentions.splice(0, 1);
+			this.planForAction(ir);
 		}
 
 		let toDelete:IntentionRecord[] = [];
@@ -2102,6 +2113,24 @@ class RuleBasedAI {
 	{
 		return null;
 	}
+
+
+	applyBindingsToSubsequentActionsOrInferences(bindings:Bindings)
+	{
+		for(let ir of this.queuedInferenceProcesses) {
+			for(let i:number = 0;i<ir.targets.length;i++) {
+				for(let j:number = 0;j<ir.targets[i].length;j++) {
+					ir.targets[i][j] = ir.targets[i][j].applyBindings(bindings);
+				}
+			}
+			if (ir.effect instanceof ExecuteAction_InferenceEffect) {
+				(<ExecuteAction_InferenceEffect>ir.effect).action = (<ExecuteAction_InferenceEffect>ir.effect).action.applyBindings(bindings);
+			}
+		}
+		for(let ir of this.queuedIntentions) {
+			ir.action = ir.action.applyBindings(bindings);
+		}
+	}
 	
 
 	restoreFromXML(xml:Element)
@@ -2172,10 +2201,11 @@ class RuleBasedAI {
 		// inference:
 		let inference_xml:Element = getFirstElementChildByTag(xml, "inference");
 		if (inference_xml != null) {
-			this.inferenceProcesses = [];
+			this.currentInferenceProcess = null;
+			this.queuedInferenceProcesses = [];
 			for(let ir_xml of getElementChildrenByTag(inference_xml, "InferenceRecord")) {
 				let ir:InferenceRecord = InferenceRecord.fromXML(ir_xml, this.o, this);
-				if (ir != null) this.inferenceProcesses.push(ir);
+				if (ir != null) this.queuedInferenceProcesses.push(ir);
 			}
 		}
 	}
@@ -2246,7 +2276,10 @@ class RuleBasedAI {
 		}
 
 		str += "<inference>\n";
-		for(let ip of this.inferenceProcesses) {
+		if (this.currentInferenceProcess != null) {
+			str += this.currentInferenceProcess.saveToXML(this) + "\n";
+		}
+		for(let ip of this.queuedInferenceProcesses) {
 			str += ip.saveToXML(this) + "\n";
 		}
 		str += "</inference>\n";
@@ -2356,11 +2389,12 @@ class RuleBasedAI {
 	intentionHandlers:IntentionAction[] = [];
 
 	intentions:IntentionRecord[] = [];	// [intention, requester] (in case the action in the intention was requested by some other character)
-	queuedIntentions:IntentionRecord[] = [];	// these will become intentions only when intentions == [] and inferenceProcesses == []
+	queuedIntentions:IntentionRecord[] = [];	// these will become intentions only when intentions == [], currentInferenceProcess == null and queuedInferenceProcesses == []
 									// the use of this is to queue things to do after the AI has finished doing the current set of things
 	intentionsCausedByRequest:IntentionRecord[] = [];	// we store the intention records for which there is a cause, for answering later "why" questions
 
-	inferenceProcesses:InferenceRecord[] = [];	// list of the current inferences the AI is trying to perform
+	currentInferenceProcess:InferenceRecord = null;	
+	queuedInferenceProcesses:InferenceRecord[] = [];	// list of the current inferences the AI wants to perform after currentInferenceProcess is done
 
 
 	contexts:NLContext[] = [];	// contexts for natural language processing (one per entity we speak to)

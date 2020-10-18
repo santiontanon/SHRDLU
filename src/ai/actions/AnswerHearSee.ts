@@ -26,6 +26,11 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 					// Case where the target is a constant:
 					if (intention.functor.is_a(ai.o.getSort("verb.see"))) {
 						if (ai.canSee((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+							// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+							if (ir.requestingPerformative != null) {
+								ir.requestingPerformative.addMentionToPerformative((<ConstantTermAttribute>(intention.attributes[1])).value, ai.o);
+							}
+
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
 							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 							return true;
@@ -34,6 +39,11 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 						}				
 					} else if (intention.functor.is_a(ai.o.getSort("verb.hear"))) {
 						if (ai.canHear((<ConstantTermAttribute>(intention.attributes[1])).value)) {
+							// If the object was not mentioned explicitly in the performative, add it to the natural language context:
+							if (ir.requestingPerformative != null) {
+								ir.requestingPerformative.addMentionToPerformative((<ConstantTermAttribute>(intention.attributes[1])).value, ai.o);
+							}
+							
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
 							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
 							return true;
