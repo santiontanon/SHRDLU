@@ -91,11 +91,11 @@ class NLPattern {
 		let parses:NLParseRecord[] = [];
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
-				let parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), context, rule, parser, AI);
+				let parses2:NLParseRecord[] = this.parseString(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else if (nextToken.token == this.string) {
 				// match!
-				parses.push(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities));
+				parses.push(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities));
 			}
 		}
 		if (parses.length == 0) return null;
@@ -110,14 +110,14 @@ class NLPattern {
 //				console.log("Matching POS, before: " + this.term.toString() + "\n  bindings: " + parse.bindings + "\n  Matching POS, after: " + term2.toString());
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
-				let parses2:NLParseRecord[] = this.parsePOS(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), context, rule, parser, AI);
+				let parses2:NLParseRecord[] = this.parsePOS(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else {
 //						console.log("Matching POS "+term2.toString()+" with: " + nextToken.token);
 				for(let POS of nextToken.POS) {
 					let bindings:Bindings = new Bindings();
 					if (POS.term.unify(term2, OCCURS_CHECK, bindings)) {
-						let newParse:NLParseRecord = new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities); 
+						let newParse:NLParseRecord = new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities); 
 //								console.log("POS match with: " + POS.term + "\nBindings: " + newParse.bindings);
 						parses.push(newParse);
 					}
@@ -139,7 +139,7 @@ class NLPattern {
 		if (compiled != null) {
 			// if we have a compiled tree, use it!
 //			console.log("NLPattern.parsePattern: Found a compiled tree for " + term2.functor.name + " ...");
-			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, parse.bindings, parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
+			let results:NLParseRecord[] = compiled.parseMatchingWithTerm(new NLParseRecord(parse.nextTokens, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI, term2);
 			for(let pr of results) {
 				let bindings2:Bindings = new Bindings();
 				if (!pr.result.unify(term2, OCCURS_CHECK, bindings2)) {
@@ -150,7 +150,7 @@ class NLPattern {
 				// generated during the parsing of the sub-pattern are not relevant
 				// console.log("ruleNames for " + term2.functor.name + ": " + parse.ruleNames);
 				// console.log("    concatenated to: " + pr.ruleNames);
-				let pr2:NLParseRecord = new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities));
+				let pr2:NLParseRecord = new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), parse.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities));
 				pr2.result = pr.result;
 				parses_p.push(pr2);				
 			}
@@ -162,7 +162,7 @@ class NLPattern {
 				if (rule2.head.unify(term2, OCCURS_CHECK, bindings)) {
 					// rule to consider!!
 	//						console.log("  considering rule with head: " + rule2.head.toString() + "\n  new bindings: " + bindings);
-					let results:NLParseRecord[] = rule2.parseWithBindings(new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities), false, context, parser, AI);
+					let results:NLParseRecord[] = rule2.parseWithBindings(new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities), false, context, parser, AI);
 
 					for(let pr of results) {
 	//							console.log("Pattern matched successfully with result: " + t.toString());
@@ -173,7 +173,7 @@ class NLPattern {
 						}
 						// we continue from "pr", but using the bdingins from "parse", since the bindings
 						// generated during the parsing of the sub-pattern are not relevant
-						parses_p.push(new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)));
+						parses_p.push(new NLParseRecord(pr.nextTokens, parse.bindings.concat(bindings2), parse.derefs, pr.ruleNames.concat(parse.ruleNames), pr.priorities.concat(parse.priorities)));
 					}
 	//					} else {
 	//						console.log("  head: " + rule2.head + "\n. did not unify with: " + term2);
@@ -282,7 +282,7 @@ class NLPattern {
 			return null;
 		}
 
-		let result_l:TermAttribute[] = context.deref((<TermTermAttribute>clause).term, listenerVariable, o, pos, AI);
+		let result_l:TermAttribute[] = context.deref((<TermTermAttribute>clause).term, listenerVariable, parse, o, pos, AI);
 
 //		console.log("specialfunction_derefFromContext result: " + result);
 
@@ -299,7 +299,10 @@ class NLPattern {
 
 		let bindings2:Bindings = new Bindings();
 		if (Term.unifyAttribute(output, result, true, bindings2)) {
-			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.ruleNames, parse.priorities);
+			let bindings3:Bindings = parse.bindings.concat(bindings2);
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, bindings3, 
+													     parse.derefs.concat([new Term(o.getSort("#derefFromContext"), [clause, output.applyBindings(bindings3)])]), 
+													     parse.ruleNames, parse.priorities);
 			return [parse2];
 		} else {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
@@ -385,7 +388,10 @@ class NLPattern {
 		let bindings2:Bindings = new Bindings();
 		let resultAtt:TermTermAttribute = new TermTermAttribute(result);
 		if (Term.unifyAttribute(output, resultAtt, true, bindings2)) {
-			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.ruleNames, parse.priorities);
+			let bindings3:Bindings = parse.bindings.concat(bindings2);
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, bindings3, 
+														 parse.derefs.concat([new Term(o.getSort("#derefUniversal"), [clause, outputVariable.applyBindings(bindings3), output.applyBindings(bindings3)])]), 
+														 parse.ruleNames, parse.priorities);
 			return [parse2];
 		} else {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
@@ -417,7 +423,7 @@ class NLPattern {
 //		console.log("specialfunction_derefHypothetical: " + clause);
 
 		// if we can dereference the expression in the context, then this function should not apply:
-		let contextDerefResult:TermAttribute[] = context.deref((<TermTermAttribute>clause).term, listenerVariable, o, pos, AI);
+		let contextDerefResult:TermAttribute[] = context.deref((<TermTermAttribute>clause).term, listenerVariable, parse, o, pos, AI);
 		if (contextDerefResult != null && contextDerefResult.length>0) {
 //			console.log("specialfunction_derefHypothetical: context.deref succeeded! " + contextDerefResult);
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
@@ -514,8 +520,10 @@ class NLPattern {
 
 		let resultAtt:TermTermAttribute = new TermTermAttribute(result);
 		if (!Term.unifyAttribute(output, resultAtt, true, bindings2)) return null;
-
-		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.ruleNames, parse.priorities);
+		let bindings3:Bindings = parse.bindings.concat(bindings2);
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, bindings3, 
+													 parse.derefs.concat([new Term(o.getSort("#derefHypothetical"), [clause, outputVariable.applyBindings(bindings3), output.applyBindings(bindings3)])]), 
+													 parse.ruleNames, parse.priorities);
 		return [parse2];
 	}	
 
@@ -684,7 +692,7 @@ class NLPattern {
 					}
 				}
 			}
-			let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, o, pos, AI);
+			let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, parse, o, pos, AI);
 //			console.log("ownerTerms: " + ownerTerms);
 //			console.log("dereffedOwner: " + dereffedOwner);
 			if (dereffedOwner == null) {
@@ -952,7 +960,10 @@ class NLPattern {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
 			return null;
 		}
-		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.ruleNames, parse.priorities);
+		let bindings3:Bindings = parse.bindings.concat(bindings2);
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, bindings3, 
+													 parse.derefs.concat([new Term(o.getSort("#derefQuery"), [clause, queryVariable.applyBindings(bindings3), query.applyBindings(bindings3)])]), 
+													 parse.ruleNames, parse.priorities);
 		return [parse2];
 	}
 
@@ -971,7 +982,7 @@ class NLPattern {
 				if (!Term.unifyAttribute(sort, sAtt, true, bindings)) {
 					return null;
 				}
-				let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+				let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
 				return [parse2];
 //			} else {
 //				return null;
@@ -1028,7 +1039,7 @@ class NLPattern {
 					let output:ConstantTermAttribute = new ConstantTermAttribute(parent.name, parent);		
 					let bindings:Bindings = new Bindings();
 					if (Term.unifyAttribute(att, output, true, bindings)) {
-						let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+						let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
 						parses.push(parse2);
 					}
 				}
@@ -1039,7 +1050,7 @@ class NLPattern {
 					let output:VariableTermAttribute = new VariableTermAttribute(parent, null);
 					let bindings:Bindings = new Bindings();
 					if (Term.unifyAttribute(att, output, true, bindings)) {
-						let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+						let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
 						parses.push(parse2);
 					}
 				}
@@ -1066,7 +1077,7 @@ class NLPattern {
 		if (!Term.unifyAttribute(args[args.length-1], new ConstantTermAttribute(concatenation, o.getSort("symbol")), true, bindings)) {
 			return null;
 		}
-		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
 		return [parse2];
 	}
 
@@ -1098,7 +1109,7 @@ class NLPattern {
 
 		let bindings2:Bindings = new Bindings();
 		if (Term.unifyAttribute(output, result, true, bindings2)) {
-			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.ruleNames, parse.priorities);
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings2), parse.derefs, parse.ruleNames, parse.priorities);
 			return [parse2];
 		} else {
 			this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
@@ -1115,7 +1126,7 @@ class NLPattern {
 
 		let bindings:Bindings = new Bindings();
 		if (!Term.unifyAttribute(args[2], newValue, true, bindings)) return null;
-		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
+		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
 		return [parse2];
 	}
 
@@ -1126,34 +1137,17 @@ class NLPattern {
 		let parses:NLParseRecord[] = [];
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
-				let parses2:NLParseRecord[] = this.specialfunction_token(new NLParseRecord(nextToken.next, parse.bindings, parse.ruleNames, parse.priorities), arg, o);
+				let parses2:NLParseRecord[] = this.specialfunction_token(new NLParseRecord(nextToken.next, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), arg, o);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else {
 				let newValue:TermAttribute = new ConstantTermAttribute(nextToken.token, o.getSort("symbol"));
 				let bindings:Bindings = new Bindings();
 				if (!Term.unifyAttribute(arg, newValue, true, bindings)) return null;
-				parses.push(new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities));
+				parses.push(new NLParseRecord(nextToken.next, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities));
 			}
 		}
 		if (parses.length == 0) return null;
 		return parses;
-		/*
-		let concatenation:string = "";
-		for(let i:number = 0;i<args.length-1;i++) {
-			if (args[i] instanceof ConstantTermAttribute) {
-				concatenation += (<ConstantTermAttribute>(args[i])).value;
-			} else {
-				return null;
-			}
-		}
-
-		let bindings:Bindings = new Bindings();
-		if (!Term.unifyAttribute(args[args.length-1], new ConstantTermAttribute(concatenation, o.getSort("symbol")), true, bindings)) {
-			return null;
-		}
-		let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings.concat(bindings), parse.ruleNames, parse.priorities);
-		return [parse2];
-		*/
 	}	
 
 

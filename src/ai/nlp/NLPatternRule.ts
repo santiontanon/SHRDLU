@@ -3,11 +3,14 @@ var DEREF_ERROR_NO_REFERENTS:number = 1;
 var DEREF_ERROR_CANNOT_DISAMBIGUATE:number = 2;
 var DEREF_ERROR_VERB_COMPLETION:number = 3;
 
+
+
 class NLParseRecord {
-	constructor(nt:TokenizationElement[], b:Bindings, rn:string[], p:number[])
+	constructor(nt:TokenizationElement[], b:Bindings, d:Term[], rn:string[], p:number[])
 	{
 		this.nextTokens = nt;
 		this.bindings = b;
+		this.derefs = d;
 		this.ruleNames = rn;
 		this.priorities = p;
 	}
@@ -34,7 +37,7 @@ class NLParseRecord {
 	}
 
 
-	// throught he first path
+	// throught the first path
 	tokensLeftToParse() : number
 	{
 		if (this.nextTokens == null || this.nextTokens.length == 0) return 0;
@@ -42,10 +45,11 @@ class NLParseRecord {
 	}
 
 
-	nextTokens:TokenizationElement[] = null;	// this is not a flat list, but all the possible "immediate next" tokens, according to different parses
+	nextTokens:TokenizationElement[] = null;  // this is not a flat list, but all the possible "immediate next" tokens, according to different parses
 	bindings:Bindings = null;
+	derefs:Term[] = null;  // this list accumulates all the successful deref operations completed during parsing up to this point
 	ruleNames:string[] = null;
-	priorities:number[] = null;	// the priorities of all the rules used up to this point
+	priorities:number[] = null; // the priorities of all the rules used up to this point
 	result:Term = null;
 }
 
@@ -84,7 +88,6 @@ class NLPatternContainer {
 		this.listenerVariable = lv;
 	}
 
-
 	name:string = "";
 	speakerVariable:VariableTermAttribute = null;
 	listenerVariable:VariableTermAttribute = null;
@@ -105,15 +108,13 @@ class NLPatternRule extends NLPatternContainer {
 	parse(tokenization:TokenizationElement, filterPartialParses:boolean, context:NLContext, parser:NLParser, AI:RuleBasedAI) : NLParseRecord[]
 	{
 		// parse the sentence:
-//		console.log("NLPatternRule.parse");
 		this.lastDerefErrors = [];
 		let bindings:Bindings = new Bindings();
 		if (this.speakerVariable != null) {
-//			console.log("Speaker: " + this.speakerVariable);
 			bindings.l.push([(<VariableTermAttribute>this.speakerVariable), 
 							 new ConstantTermAttribute(context.speaker, parser.o.getSort("#id"))]);
 		}
-		let parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], bindings, [], []), context, this, parser, AI);
+		let parses:NLParseRecord[] = this.body.parse(new NLParseRecord([tokenization], bindings, [], [], []), context, this, parser, AI);
 		if (parses == null) return null;
 
 		// if there is any valid parse, generate the corresponding terms:
@@ -146,7 +147,6 @@ class NLPatternRule extends NLPatternContainer {
 				parse2.priorities = [this.priority].concat(parse.priorities);
 				parse2.result = this.head.applyBindings(parse2.bindings);
 				NLParser.resolveCons(parse2.result, parser.o);
-//				console.log("parseWithBindings completed, result: " + result.toString() + "\nBindings: " + parse.bindings + "\nBindings Applied: " + bindings2);
 				results.push(parse2);
 			}
 		}
@@ -160,7 +160,6 @@ class NLPatternRule extends NLPatternContainer {
 		let map:[TermAttribute,TermAttribute][] = [];
 		let head:Term = this.head.clone(map);
 		let body:NLPattern = this.body.clone(map);
-//		let rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority);
 		let rule:NLPatternRule = new NLPatternRule(this.name, head, body, this.priority, this.speakerVariable, this.listenerVariable);
 
 		for(let i:number = 0;i<map.length;i++) {
@@ -168,10 +167,6 @@ class NLPatternRule extends NLPatternContainer {
 			    (<VariableTermAttribute>map[i][0]).name == "SPEAKER") {
 				rule.speakerVariable = <VariableTermAttribute>map[i][1];
 			}
-//			if (map[i][0] instanceof VariableTermAttribute &&
-//			    (<VariableTermAttribute>map[i][0]).name == "LISTENER") {
-//				rule.listenerVariable = <VariableTermAttribute>map[i][1];
-//			}
 		}
 
 		return rule;
@@ -202,12 +197,8 @@ class NLPatternRule extends NLPatternContainer {
 			if (variableNames[i] == "SPEAKER") {
 				rule.speakerVariable = variableValues[i];
 			}
-//			if (variableNames[i] == "LISTENER") {
-//				rule.listenerVariable = variableValues[i];
-//			}
 		}
 
-//		console.log("NLPatternRule.fromString: \n  " + h + "\n  " + b);
 		return rule;
 	}
 

@@ -668,13 +668,13 @@ class NLContext {
 	}
 
 
-	deref(clause:Term, listenerVariable:TermAttribute, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
+	deref(clause:Term, listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
-		return this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, o, pos, AI);;
+		return this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI);;
 	}
 
 
-	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
+	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
 		this.lastDerefErrorType = 0;
 		let properNounSort:Sort = o.getSort("proper-noun");
@@ -776,6 +776,17 @@ class NLContext {
 			return output;
 
 		} else if (pronounTerms.length > 0) {
+			// Special case for single pronouns ("it", "him", "her", etc.) that could deref to
+			// an entity in the current NLParseRecord:
+			if (pronounTerms.length == 1 &&
+				clauseElements.length == 1 && 
+				nlpr.derefs.length > 0) {
+				let pronounTerm:Term = pronounTerms[0];
+				let deref:Term = nlpr.derefs[nlpr.derefs.length-1];
+				let nlprResult:TermAttribute[] = this.matchPronounToNLPRDeref(pronounTerm, deref, o);
+				if (nlprResult != null) return nlprResult;
+			}
+
 			let output:TermAttribute[] = [];
 			for(let pronounTerm of pronounTerms) {
 				if (pronounTerm.functor.is_a(personalPronounSort)) {
@@ -784,36 +795,8 @@ class NLContext {
 					} else if (pronounTerm.attributes[3].sort.is_a(secondPerson)) {
 						output.push(listenerVariable);
 					} else if (pronounTerm.attributes[3].sort.is_a(thirdPerson)) {
-						// get the gender, only characters can match with "he"/"she", and only live humans do not match with "it"
-						let gender:number = -1;
-						if (pronounTerm.attributes[2].sort.name == "gender-masculine") gender = 0;
-						else if (pronounTerm.attributes[2].sort.name == "gender-femenine") gender = 1;
-						else if (pronounTerm.attributes[2].sort.name == "gender-neutral") gender = 2;
-
-						// find the most recent mention that could match with "the pronoun
-						let entity:NLContextEntity = null;
-
-						for(let e2 of this.mentions) {
-							if (gender == 0 || gender == 1) if (!e2.sortMatch(o.getSort("character"))) continue;
-							if (gender == 2) if (e2.sortMatch(o.getSort("human")) &&
-												 !e2.sortMatch(o.getSort("corpse"))) continue;
-
-							if (e2.objectID.value != this.speaker && e2.objectID.value != this.ai.selfID) {
-//								console.log("it: considering " + e2.objectID.value);
-								if (entity == null) {
-									entity = e2;
-								} else {
-									if (entity.mentionTime > e2.mentionTime) {
-										// we found it!
-										break;
-									}
-									// there is ambiguity... abort!
-									this.lastDerefErrorType = DEREF_ERROR_CANNOT_DISAMBIGUATE;
-									entity = null;
-									break;
-								}
-							}
-						}
+						// find the most recent mention that could match with the pronoun
+						let entity:NLContextEntity = this.pronounMatch(pronounTerm, this.mentions, o);
 						if (entity != null) output.push(entity.objectID);
 					} else {
 						console.log("context.deref: unknown person dereferencing personal pronoun: " + clauseElements);
@@ -1327,6 +1310,98 @@ class NLContext {
 
 		this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
 		return null;		
+	}
+
+
+	pronounMatch(pronounTerm:Term, candidates:NLContextEntity[], o:Ontology) : NLContextEntity
+	{
+		let entity:NLContextEntity
+		// get the gender, only characters can match with "he"/"she", and only live humans do not match with "it"
+		let gender:number = -1;
+		if (pronounTerm.attributes[2].sort.name == "gender-masculine") gender = 0;
+		else if (pronounTerm.attributes[2].sort.name == "gender-femenine") gender = 1;
+		else if (pronounTerm.attributes[2].sort.name == "gender-neutral") gender = 2;
+
+		for(let e2 of candidates) {
+			if (gender == 0 || gender == 1) if (!e2.sortMatch(o.getSort("character"))) continue;
+			if (gender == 2) if (e2.sortMatch(o.getSort("human")) &&
+								 !e2.sortMatch(o.getSort("corpse"))) continue;
+
+			if (e2.objectID.value != this.speaker && e2.objectID.value != this.ai.selfID) {
+				if (entity == null) {
+					entity = e2;
+				} else {
+					if (entity.mentionTime > e2.mentionTime) {
+						// we found it!
+						return entity;
+					}
+					// there is ambiguity... abort!
+					this.lastDerefErrorType = DEREF_ERROR_CANNOT_DISAMBIGUATE;
+					return null;
+				}
+			}
+		}
+		return entity;
+	}
+
+
+	matchPronounToNLPRDeref(pronounTerm:Term, deref:Term, o:Ontology) : TermAttribute[]
+	{
+		if (pronounTerm.attributes.length == 4 &&
+			pronounTerm.attributes[1].sort.name == "singular" &&
+			pronounTerm.attributes[3].sort.is_a(o.getSort("third-person"))) {
+			// singular:
+			// check if the last deref record would be a good match for this pronoun:			
+			if (deref.functor.name == "#derefFromContext" &&
+				deref.attributes.length == 2) {
+				let id:TermAttribute = deref.attributes[1];
+				if (id instanceof ConstantTermAttribute) {
+					let idstr:string = (<ConstantTermAttribute>id).value;
+					let entity:NLContextEntity = this.findByID(idstr);
+					if (entity != null) {
+						entity = this.pronounMatch(pronounTerm, [entity], o);
+						if (entity != null) {
+							// console.log("   matchPronounToNLPRDeref match (#derefFromContext): " + id);
+							return [id];
+						}
+					}
+				}
+			} else if (deref.functor.name == "#derefQuery" &&
+					   deref.attributes.length == 3 &&
+					   deref.attributes[2] instanceof TermTermAttribute) {
+				// console.log("pronounTerm: " + pronounTerm)
+				// console.log("deref: " + deref);
+				// See if the query could match: 
+				let gender:number = -1;
+				if (pronounTerm.attributes[2].sort.name == "gender-masculine") gender = 0;
+				else if (pronounTerm.attributes[2].sort.name == "gender-femenine") gender = 1;
+				else if (pronounTerm.attributes[2].sort.name == "gender-neutral") gender = 2;
+				let match:boolean = true;
+				let queryTerms:Term[] = NLParser.termsInList((<TermTermAttribute>deref.attributes[2]).term, "#and");
+				for(let queryTerm of queryTerms) {
+					if (gender == 0 || gender == 1) if (!queryTerm.functor.is_a(o.getSort("character"))) {
+						match = false;
+						break;
+					}
+					if (gender == 2) if (queryTerm.functor.is_a(o.getSort("human")) &&
+										 !queryTerm.functor.is_a(o.getSort("corpse"))) {
+						match = false;
+						break;						
+					}
+				}
+				if (match) {
+					// console.log("   matchPronounToNLPRDeref match (#derefQuery): " + deref.attributes[1]);
+					return [deref.attributes[1]];
+				}
+			} else {
+				// TODO: handle universals/hypotheticals
+				// ...
+			}
+		} else {
+			// TODO: support the plural case
+			// ...
+		}
+		return null;
 	}
 
 

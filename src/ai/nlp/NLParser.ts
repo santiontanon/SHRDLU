@@ -241,7 +241,7 @@ class NLParser {
 		for(let parse of parses) {
 			let result:Term = this.unifyListener(parse.result, listener);
 			if (result != null) {
-				let unifiedParse:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.ruleNames, parse.priorities);
+				let unifiedParse:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities);
 				unifiedParse.result = result;
 				if (bestParse == null) {
 					bestParse = unifiedParse;
@@ -277,7 +277,8 @@ class NLParser {
 			}
 		} else if (parse.functor.name == "#list") {
 			let result:Term = null;
-			for(let perf of NLParser.elementsInList(parse, "#list")) {
+			// we go through them in reverse, since this function reverses their order:
+			for(let perf of NLParser.elementsInList(parse, "#list").reverse()) {
 				if (!(perf instanceof TermTermAttribute)) return null;
 				let perf2:Term = this.unifyListener((<TermTermAttribute>perf).term, listener);
 				if (perf2 != null) {
