@@ -1564,6 +1564,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C2, OBJECT)
 					 #derefQuery(C, V, PREDICATE)"
 			   priority="200"/>
+	<NLPattern name="predicate-is-there-prep-2query"
+			   head="perf.q.predicate(LISTENER, #and(#cons(PREPOSITION, V, V2), #and(QUERY, QUERY2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
+			   		 #derefQuery(C, V, QUERY)
+					 #derefQuery(C2, V2, QUERY2)"/>
 
 	<NLPattern name="predicate-is-there-gerund-verb"
 			   head="perf.q.predicate(LISTENER, #and(PREDICATE, #cons(VERB, V, OBJECT)))"
@@ -2931,7 +2940,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
 			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) 
 			   		 'the' adjective('space.nearest-to'[space.nearest-to])
-			   		 (noun(NOUN, N2) | 'one' #findLastNoun(noun(NOUN, N2)))
+			   		 nounOrOne(noun(NOUN, N2))
 			   		 ('!'|'?')*"/>
     <NLPattern name="where-is-farthest"
     		   head="perf.q.whereis(LISTENER, V, L, #and(#cons(NOUN, V), space.farthest-from(V, SPEAKER)))"
