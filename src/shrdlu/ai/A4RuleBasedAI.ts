@@ -454,7 +454,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	        		}
         		}
         		actionTerms = actionTerms2;
-        		this.reactToParsedPerformatives(parsePerformatives, pbr.directObjectSymbol, speaker);
+        		this.reactToParsedPerformatives(parsePerformatives, pbr.directObjectSymbol, speaker, HPparse);
 		    } else {
 		    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + pbr.directObjectSymbol);
 		    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");

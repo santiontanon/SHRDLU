@@ -731,7 +731,7 @@ class RuleBasedAI {
 	}
 
 
-	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string)
+	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string, parse:NLParseRecord)
 	{
 		let toAdd:Term[] = [];
 		if (speaker != this.selfID) {
@@ -749,7 +749,7 @@ class RuleBasedAI {
 						let nIntentions:number = this.intentions.length;
 						let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
 						if (tmp!=null) toAdd = toAdd.concat(tmp);
-						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, null, this.o, this.time_in_seconds);
+						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, this.o, this.time_in_seconds);
 						// add this performative to all the new intentions:
 						if (nlcp.length > 0) {
 							for(let i:number = nIntentions;i<this.intentions.length;i++) {

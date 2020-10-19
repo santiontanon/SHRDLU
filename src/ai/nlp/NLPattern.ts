@@ -268,7 +268,7 @@ class NLPattern {
 			return nlprl;
 		} else if (this.term.functor.name == "#findLastNoun" && this.term.attributes.length == 1) {
 			let term2:Term = this.term.applyBindings(parse.bindings);
-			let  nlprl:NLParseRecord[] = this.specialfunction_findLastNoun(parse, term2.attributes[0], parser.o);
+			let  nlprl:NLParseRecord[] = this.specialfunction_findLastNoun(parse, term2.attributes[0], context, parser.o);
 			return nlprl;
 		} else {
 			console.error("NLPattern.parse: special function "+this.term.functor+" not supported!");
@@ -1155,13 +1155,25 @@ class NLPattern {
 	}	
 
 
-	specialfunction_findLastNoun(parse:NLParseRecord, arg:TermAttribute, o:Ontology) : NLParseRecord[]
+	specialfunction_findLastNoun(parse:NLParseRecord, arg:TermAttribute, context:NLContext, o:Ontology) : NLParseRecord[]
 	{
 		let noun:PartOfSpeech = null;
 		for(let pos of parse.previousPOS) {
 			if (pos.term.functor.name == "noun") {
 				noun = pos;
 			}
+		}
+		let n_past_performatives:number = 2;
+		for(let i:number = 0; i < context.performatives.length && i<n_past_performatives; i++) {
+			let p:NLContextPerformative = context.performatives[i];
+			if (p.parse != null) {
+				for(let pos of p.parse.previousPOS) {
+					if (pos.term.functor.name == "noun") {
+						noun = pos;
+					}
+				}
+			}
+			if (noun != null) break;
 		}
 		if (noun != null) {
 			let bindings:Bindings = new Bindings();

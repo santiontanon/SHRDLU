@@ -598,7 +598,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				// console.log(actionTerm + " added to perception");
 				this.addTermToPerception(actionTerm);
 			}
-			this.reactToParsedPerformatives(parsePerformatives, text, speaker);
+			this.reactToParsedPerformatives(parsePerformatives, text, speaker, HPparse);
 	    } else {
 	    	console.warn("BlocksWorldRuleBasedAI ("+this.selfID+"): cannot parse sentence: " + text);
 	    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
@@ -633,7 +633,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	}
 
 
-	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string)
+	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string, parse:NLParseRecord)
 	{
 		if (speaker != this.selfID && performatives.length > 0) {
 			let context:NLContext = this.contextForSpeaker(speaker);
@@ -701,7 +701,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 			if (allActionRequestsTalkingToUs && allRequestsForUs && canSatisfyThemAll && actions.length>0 && !anyNeedsInference) {
 				// Create an intention record with all the requested actions:
-				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, null, this.o, this.time_in_seconds);
+				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, parse, null, this.o, this.time_in_seconds);
 				let nlcp:NLContextPerformative = null;
 				if (nlcp_l != null) nlcp = nlcp_l[0];
 				let ir:IntentionRecord = new IntentionRecord(actions[0], 
@@ -713,7 +713,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				ir.numberConstraint = new VariableTermAttribute(this.o.getSort("all"), null);
 				this.planForAction(ir);
 			} else {
-				super.reactToParsedPerformatives(performatives, text, speaker);
+				super.reactToParsedPerformatives(performatives, text, speaker, parse);
 			}
 		}
 	}	

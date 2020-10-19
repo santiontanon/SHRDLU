@@ -167,11 +167,12 @@ class NLContextEntity {
 
 
 class NLContextPerformative {
-	constructor(t:string, speaker:string, p:Term, c:CauseRecord, context:NLContext, timeStamp:number)
+	constructor(t:string, speaker:string, p:Term, parse:NLParseRecord, c:CauseRecord, context:NLContext, timeStamp:number)
 	{
 		this.text = t;
 		this.speaker = speaker;
 		this.performative = p;
+		this.parse = parse;
 		this.cause = c;
 		this.context = context;
 		this.timeStamp = timeStamp;
@@ -271,6 +272,7 @@ class NLContextPerformative {
 		return new NLContextPerformative(xml.getAttribute("text"),
 										 xml.getAttribute("speaker"),
 										 Term.fromString(xml.getAttribute("performative"), o),
+										 null,  // TODO: save/load NLParseRecord
 										 cause,
 										 context,
 										 Number(xml.getAttribute("timeStamp")));
@@ -301,6 +303,7 @@ class NLContextPerformative {
 	text:string = null;
 	speaker:string = null;
 	performative:Term = null;
+	parse:NLParseRecord = null;
 	cause:CauseRecord = null;			// the cause of having said this performative
 	context:NLContext = null;
 	timeStamp:number = 0;				// cycle when it was recorded
@@ -500,14 +503,14 @@ class NLContext {
 	}
 
 	
-	newPerformative(speakerID:string, perfText:string, perf:Term, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
+	newPerformative(speakerID:string, perfText:string, perf:Term, parse:NLParseRecord, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
 	{
 		let newPerformatives:NLContextPerformative[] = [];
 		if (perf.functor.name=="#list") {
 			let parsePerformatives:TermAttribute[] = NLParser.elementsInList(perf, "#list");
 			for(let parsePerformative of parsePerformatives) {
 				if (parsePerformative instanceof TermTermAttribute) {
-					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, cause, o, timeStamp));
+					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, parse, cause, o, timeStamp));
 				}
 			}
 			return newPerformatives;
@@ -515,7 +518,7 @@ class NLContext {
 
 //		console.log("NLContext.newPerformative: " + perf);
 
-		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, cause, this, timeStamp);
+		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, parse, cause, this, timeStamp);
 		let IDs:ConstantTermAttribute[] = cp.IDsInPerformative(o);
 //		console.log("NLContext.newPerformative IDs found: " + IDs);
 
