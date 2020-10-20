@@ -768,7 +768,10 @@ class A4EngineApp {
             menuItems.push("Generate Debug Log");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
+                    let app = <A4EngineApp>arg;
                     generateDebugLogForDownload((<A4EngineApp>arg).game);
+                    app.achievement_debug_log = true;
+                    app.trigger_achievement_complete_alert();
                    });
 
             if (this.game.allowSaveGames) {
@@ -1180,7 +1183,10 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
+                            let app = <A4EngineApp>arg;
                             generateDebugLogForDownload((<A4EngineApp>arg).game);
+                            app.achievement_debug_log = true;
+                            app.trigger_achievement_complete_alert();
                            });
                     menuItems.push("No thanks");
                     menuCallbacks.push(
@@ -1272,7 +1278,10 @@ class A4EngineApp {
                         menuItems.push("Generate Debug Log");
                         menuCallbacks.push(
                             function(arg:any, ID:number) {    
+                                let app = <A4EngineApp>arg;
                                 generateDebugLogForDownload((<A4EngineApp>arg).game);
+                                app.achievement_debug_log = true;
+                                app.trigger_achievement_complete_alert();
                                });
                         menuItems.push("No thanks");
                         menuCallbacks.push(
@@ -1351,7 +1360,10 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
+                            let app = <A4EngineApp>arg;
                             generateDebugLogForDownload((<A4EngineApp>arg).game);
+                            app.achievement_debug_log = true;
+                            app.trigger_achievement_complete_alert();
                            });
                     menuItems.push("Title Screen");
                     menuCallbacks.push(
@@ -1415,7 +1427,7 @@ class A4EngineApp {
 
                     for(let i:number = 0; i<this.achievement_names.length; i++) {
                         BInterface.addElement(new BShrdluButton(this.achievement_names[i], fontFamily32px, 
-                                                                8*PIXEL_SIZE, 8*(i+1)*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
+                                                                8*PIXEL_SIZE, 8*i*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
                                                                 "white", false,
                             function(arg:any, ID:number) {
                                 let app = <A4EngineApp>arg;
@@ -1469,9 +1481,9 @@ class A4EngineApp {
 
         for(let i:number = 0; i<this.achievement_names.length; i++) {
             if (this.achievement_complete(i)) {
-                fillTextTopLeft("COMPLETE!", 196, (i+1)*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
+                fillTextTopLeft("COMPLETE!", 196, i*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
             } else {
-                fillTextTopLeft(" Pending", 196, (i+1)*8, fontFamily8px, MSX_COLOR_GREY);
+                fillTextTopLeft(" Pending", 196, i*8, fontFamily8px, MSX_COLOR_GREY);
             }
         }
 
@@ -1551,6 +1563,9 @@ class A4EngineApp {
                 break;
             case "The secret of Aurora":
                 return this.achievement_secret_life_in_aurora;
+                break;
+            case "Debugging":
+                return this.achievement_debug_log;
                 break;
         }
         return false;
@@ -1729,6 +1744,9 @@ class A4EngineApp {
         if (ach_xml!=null) {
             let slot_xml:Element = getFirstElementChildByTag(ach_xml, "achievement_completed_alerts_shown");
             if (slot_xml != null) this.achievement_completed_alerts_shown = <boolean []>eval(slot_xml.getAttribute("value"));
+            while(this.achievement_completed_alerts_shown.length < this.achievement_names.length) {
+                this.achievement_completed_alerts_shown.push(false);
+            }
 
             slot_xml = getFirstElementChildByTag(ach_xml, "achievement_complete_tutorial");
             if (slot_xml != null) this.achievement_complete_tutorial = <boolean>eval(slot_xml.getAttribute("value"));
@@ -1775,6 +1793,8 @@ class A4EngineApp {
             if (slot_xml != null) this.achievement_secret_msx = <boolean>eval(slot_xml.getAttribute("value"));
             slot_xml = getFirstElementChildByTag(ach_xml, "achievement_secret_3_laws_of_robotics");
             if (slot_xml != null) this.achievement_secret_3_laws_of_robotics = <boolean>eval(slot_xml.getAttribute("value"));
+            slot_xml = getFirstElementChildByTag(ach_xml, "achievement_debug_log");
+            if (slot_xml != null) this.achievement_debug_log = <boolean>eval(slot_xml.getAttribute("value"));
         } else {
             console.log("No achievement data found!");
         }
@@ -1811,6 +1831,7 @@ class A4EngineApp {
         achString += "<achievement_secret_life_in_aurora value=\""+this.achievement_secret_life_in_aurora+"\"/>"
         achString += "<achievement_secret_msx value=\""+this.achievement_secret_msx+"\"/>"
         achString += "<achievement_secret_3_laws_of_robotics value=\""+this.achievement_secret_3_laws_of_robotics+"\"/>"
+        achString += "<achievement_debug_log value=\""+this.achievement_debug_log+"\"/>"
 
         achString += "</achievements>"
         localStorage.setItem(ACHIEVEMENTS_STORAGE_KEY, achString);
@@ -1924,6 +1945,7 @@ class A4EngineApp {
         "Asimov",
         "Vintage computer",
         "The secret of Aurora",
+        "Debugging",
     ];
 
     achievement_descriptions:string[][] = [
@@ -1982,6 +2004,15 @@ class A4EngineApp {
          "possession."],
         ["Aurora might not be as dead as it",
          "seems. Can you find evidence of it?"],
+        ["Debugging the natural language side",
+         "of this game is very hard! Help me",
+         "by downloading a debug log (from",
+         "the in-game menu)! The achievement",
+         "is given for just downloading it.",
+         "But e-mailing me a log generated",
+         "after you've played the game for",
+         "a while is the real way to help the",
+         "game get better!"],
     ];
 
     achievement_completed_alerts_shown:boolean[] = [
@@ -1989,7 +2020,7 @@ class A4EngineApp {
         false, false, false,
         false, false, false, false, false, false,
         false, false, false, false, false,
-        false
+        false, false, false
     ];
 
 
@@ -2014,6 +2045,7 @@ class A4EngineApp {
     achievement_secret_life_in_aurora:boolean = false;
     achievement_secret_msx:boolean = false;
     achievement_secret_3_laws_of_robotics:boolean = false;
+    achievement_debug_log:boolean = false;
 
     achievement_alert:number = -1;
     achievement_alert_timer:number = 0;

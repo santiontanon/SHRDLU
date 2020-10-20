@@ -918,8 +918,8 @@ this.addTokenPOS(new PartOfSpeech("outside of", "space.outside.of", Term.fromStr
   /*
   "owing to",
   */
-this.addTokenPOS(new PartOfSpeech("permission to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("access to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("permission to", "permission-to", Term.fromString("preposition('permission-to'[permission-to])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go to", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
 //this.addTokenPOS(new PartOfSpeech("permission to go into", "permitted-in", Term.fromString("preposition('permitted-in'[permitted-in])", o), 1.0));
@@ -1882,6 +1882,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","over", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","on top of", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);

@@ -1534,9 +1534,8 @@ NLParseTestUnifyingListener("take either a green block or a red one and put it o
 NLParseTestUnifyingListener("where is the nearest one?!", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], X, L, #and(block(X), space.nearest-to(X,'1'[#id])))");
 NLParseTestUnifyingListener("is there any pyramid inside the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(pyramid(X), space.inside.of(X,'5'[#id])))"); 
 NLParseTestUnifyingListener("is there any pyramid inside of a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(pyramid(X), #and(space.inside.of(X,Y), crate(Y))))");
-
-// purposefully wrong, just to elicit the list of possible parses:
-// NLParseTestUnifyingListener("take either a green block or a red one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take(V0, X), #or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red]))), [number.1]), perf.request.action(V0, action.put-in(V0, X, Y), #and(block(Y), color(Y,'blue'[blue])), [number.2]))");
+NLParseTestUnifyingListener("put the crate on top of a blue one", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in(V0, '5'[#id], Y), #and(crate(Y), color(Y, 'blue'[blue])), [number.1])");
+NLParseTestUnifyingListener("put all crates on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in(V0, V_0:[any], 'room1'[#id]), crate(V_0), [all])");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
