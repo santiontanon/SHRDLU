@@ -325,6 +325,36 @@ class CompiledNLPatternState {
 	}
 
 
+	addParseIfNew(parses:NLParseRecord[], parse:NLParseRecord) : boolean
+	{
+		for(let parse2 of parses) {
+			if (parse.result != null && parse2.result != null &&
+				parse.nextTokens.length == parse2.nextTokens.length &&
+				parse.higherPriorityThan(parse2) <= 0 &&
+				parse.result.equalsNoBindings(parse2.result) == 1) {
+				if (parse.nextTokens.length == 0 ||
+					parse.nextTokens[0].token == parse2.nextTokens[0].token) {
+					// console.log("Filtering out parse: ");
+		   //          console.log("  result: " + parse.result);
+		   //          console.log("  ruleNames: " + parse.ruleNames);
+		   //          console.log("  bindings: " + parse.bindings);
+		   //          console.log("  nextTokens: " + parse.nextTokens);
+		   //          console.log("  priorities: " + parse.priorities);
+					// console.log("Because it's the same as: ");
+		   //          console.log("  result: " + parse2.result);
+		   //          console.log("  ruleNames: " + parse2.ruleNames);
+		   //          console.log("  bindings: " + parse2.bindings);
+		   //          console.log("  nextTokens: " + parse2.nextTokens);
+		   //          console.log("  priorities: " + parse2.priorities);
+					return false;
+				}
+			}
+		}
+		parses.push(parse);
+		return true;
+	}
+
+
 	parse(parse:NLParseRecord, context:NLContext, rule:NLPatternContainer, parser:NLParser, AI:RuleBasedAI, filterPartialParses:boolean) : NLParseRecord[]
 	{
 //		console.log("CompiledNLPatternState.parse... (heads: " + this.heads.length + "), parsing: " + 
@@ -340,7 +370,7 @@ class CompiledNLPatternState {
 			parse2.result = this.heads[i].applyBindings(parse2.bindings);
 			parse2.ruleNames = [this.ruleNames[i]].concat(parse2.ruleNames);
 			parse2.priorities = [this.priorities[i]].concat(parse2.priorities);
-			parses.push(parse2);
+			this.addParseIfNew(parses, parse2)
 			// console.log("HEAD reached with rule names: " + parse.ruleNames);
 			// if (parse2.nextTokens != null && parse2.nextTokens.length > 0) {
 				// console.log("    tokens left: " + parse.nextTokens[0].toStringSimple());
@@ -390,7 +420,7 @@ class CompiledNLPatternState {
 						p.nextTokens != null && p.nextTokens.length > 0) continue;
 
 //					if (p.priorities[0] >= bestPriority) {
-					parses.push(p);
+					this.addParseIfNew(parses, p)
 //					console.log("passing along result ("+t.type+", priority = " + p.priorities[0] + "): " + p.result);
 //					bestPriority = p.priorities[0];
 //					}

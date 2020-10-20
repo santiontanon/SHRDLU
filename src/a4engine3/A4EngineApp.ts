@@ -1938,7 +1938,7 @@ class A4EngineApp {
         ["Obtained when you see the different",
          "endings of the game."],
         ["Obtained when you play at least once",
-         "with a demale character and once with",
+         "with a female character and once with",
          "a male character."],
 
         ["You just woke up form a long time in",

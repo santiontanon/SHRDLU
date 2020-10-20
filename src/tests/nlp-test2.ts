@@ -137,12 +137,19 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             console.log(sentence + "\n" + parses.length + " parses:");
             for(let p of parses) {
               console.log("    parse ("+p.priorities+ " // " +p.ruleNames+ "):\n     " + p.result);
-    //          console.log("        ruleNames: " + p.ruleNames);
             }
             console.log("  highest priority parse: " + parse.result);
             console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             console.log("  highest priority parse bindings: " + parse.bindings);
             console.error("None of the parses of '"+sentence+"' is the expected one! " + expectedResult);
+
+            for(let i:number = 0;i<parses.length;i++) {
+              for(let j:number = i+1;j<parses.length;j++) {
+                if (parses[i].result.equalsNoBindings(parses[j].result)==1) {
+                  console.log(i + "==" + j);
+                }
+              }
+            }
             return false;
         } else {
             //console.log("  highest priority parse: " + parse.result);
@@ -1528,6 +1535,8 @@ NLParseTestUnifyingListener("where is the nearest one?!", o.getSort("performativ
 NLParseTestUnifyingListener("is there any pyramid inside the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(pyramid(X), space.inside.of(X,'5'[#id])))"); 
 NLParseTestUnifyingListener("is there any pyramid inside of a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(pyramid(X), #and(space.inside.of(X,Y), crate(Y))))");
 
+// purposefully wrong, just to elicit the list of possible parses:
+// NLParseTestUnifyingListener("take either a green block or a red one and put it on a blue one", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.take(V0, X), #or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red]))), [number.1]), perf.request.action(V0, action.put-in(V0, X, Y), #and(block(Y), color(Y,'blue'[blue])), [number.2]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

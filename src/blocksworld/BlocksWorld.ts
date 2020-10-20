@@ -10,7 +10,7 @@ var BW_SIZE_SMALL:string = "small";
 var BW_SIZE_MEDIUM:string = "size.medium";
 var BW_SIZE_LARGE:string = "big";
 
-var SHRDLU_ARM_Y_REST_POSITION:number = 28;
+var SHRDLU_ARM_Y_REST_POSITION:number = 32;
 
 class SBWLine {
 	constructor(x1:number, y1:number, z1:number,
@@ -229,13 +229,13 @@ class ShrdluBlocksWorld {
 
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "red", BW_SIZE_LARGE, 
 										  0, 4, 10,
-										  8, 12, 8));
+										  8, 10, 8));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "red", BW_SIZE_SMALL, 
 	 									  4, 4, 4,
 	 									  4, 4, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "blue", BW_SIZE_LARGE, 
 									 	  8, 4, 28,
-									 	  8, 12, 4));
+									 	  8, 10, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
 									 	  14, 4, 10,
 									 	  8, 8, 8));
