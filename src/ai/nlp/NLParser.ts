@@ -33,6 +33,7 @@ class NLParser {
 			parser.rules.push(rule);
 		}
 
+		let total_nstates:number = 0;
 		for(let sortName of ["nounOrOne",
 							 "nounPhraseListFromContext",
 							 "maybeNegatedPrepositionalPhrase",
@@ -50,6 +51,7 @@ class NLParser {
 
 			let nstates:number = compiled.root.getAllStatesForDOTString().length;
 			console.log("compiled parse graph for " +sortName+ " has " + nstates + " nodes");
+			total_nstates += nstates;
 
 			// To generate the pdf type: dot -Tpdf grammar-2.4.dot -o grammar-2.4.pdf
 			// if (sortName == "perf.request.action.internal") {
@@ -57,6 +59,7 @@ class NLParser {
 			// }
 			parser.compiledRules[sortName] = compiled;
 		}
+		console.log("compiled parse graph total size: " + total_nstates);
 
 /*
 		// list of sorts for which there are rules:
