@@ -1536,6 +1536,10 @@ NLParseTestUnifyingListener("is there any pyramid inside the crate?", o.getSort(
 NLParseTestUnifyingListener("is there any pyramid inside of a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(pyramid(X), #and(space.inside.of(X,Y), crate(Y))))");
 NLParseTestUnifyingListener("put the crate on top of a blue one", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in(V0, '5'[#id], Y), #and(crate(Y), color(Y, 'blue'[blue])), [number.1])");
 NLParseTestUnifyingListener("put all crates on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in(V0, V_0:[any], 'room1'[#id]), crate(V_0), [all])");
+NLParseTestUnifyingListener("you are friends with qwerty", o.getSort("performative"),  context, 'etaoin', "perf.inform('etaoin'[#id], relation.friend('etaoin'[#id], 'qwerty'[#id]))");
+NLParseTestUnifyingListener("the station has oxygen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.have('location-aurora-station'[#id], 'oxygen'[oxygen]))");
+NLParseTestUnifyingListener("the station does not have oxygen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], #not(verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

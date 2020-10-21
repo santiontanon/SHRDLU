@@ -568,6 +568,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT:[relation-verb])
 			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
 					 #derefFromContext(C, SUBJECT)"/>	
+	<NLPattern name="inform-relationverb-have-noun"
+			   head="perf.inform(LISTENER, verb.have(SUBJECT, X2))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 nounPhrase(X, N, P, C) verb(VERB:'verb.have'[symbol], N, P, T)
+			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+					 #derefFromContext(C, SUBJECT)"
+			   priority="125"/>	
 	<NLPattern name="inform-not-relationverb-noun"
 			   head="perf.inform(LISTENER, #list(#not(#cons(VERB, SUBJECT, X2)), #or(#not(#cons(X2, V:[#id])), #not(#cons(VERB, SUBJECT, V)))))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -575,9 +584,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
 			   		 nounPhrase(X, N, P, C) 
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense]) 'not'
-			   		 verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT:[relation-verb])
+			   		 verb(VERB, NV, PV, TV) #symbolToSort(VERB, VERB_SORT:[relation-verb])
 			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
 					 #derefFromContext(C, SUBJECT)"/>	
+	<NLPattern name="inform-not-relationverb-have-noun"
+			   head="perf.inform(LISTENER, #not(verb.have(SUBJECT, X2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 nounPhrase(X, N, P, C) 
+			   		 verb('verb.do'[symbol], ND, PD, [present-tense]) 'not'
+			   		 verb(VERB:'verb.have'[symbol], NV, PV, TV)
+			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+					 #derefFromContext(C, SUBJECT)"
+			   priority="125"/>	
 	<NLPattern name="inform-future-verb"
 			   head="perf.inform(LISTENER, #and(VC:#cons(VERB, SUBJECT), time.future(VC)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -988,6 +1008,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(UNIT:[measuring-unit], N2) #changeConstantSort(VALUE, UNIT, NEWVALUE)
 			   		 ('!'|'.')* 
 			   		 #derefQuery(C, NEWVALUE, QUERY)"/>
+
+	<NLPattern name="inform-friends-specialcase"
+			   head="perf.inform(LISTENER, relation.friend(OBJ1, OBJ3))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 nounPhrase(X, N:[singular], P, C)
+			   		 verb('verb.be'[symbol], N2, P2, [present-tense])
+			   		 (('friend'|'friends') 'with' | 'a' 'friend' 'of')
+			   		 nounPhrase(X3, N3:[singular], P3, C3)
+			   		 ('!'|'.')* 
+			   		 #derefFromContext(C, OBJ1)
+			   		 #derefFromContext(C3, OBJ3)"/>
 
 	<!-- special case for having a collision, which is a way to say you collided with -->
 	<NLPattern name="inform-have-collision-with-a-context"
