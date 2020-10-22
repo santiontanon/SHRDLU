@@ -2026,7 +2026,7 @@ class A4Script {
 
             case A4_SCRIPT_IN_VEHICLE:
                 if (this.ID!=null) xmlString += " object=\"" + this.ID + "\"";
-                if (this.text!=null) xmlString += " vehicle=\"" + this.ID + "\"";
+                if (this.text!=null) xmlString += " vehicle=\"" + this.text + "\"";
                 break;
         }
 

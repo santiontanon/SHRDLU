@@ -2720,7 +2720,11 @@ class ShrdluGameScript {
 						this.game.qwertyAI.allowPlayerIntoEveryWhere();
 						this.game.shrdluAI.allowPlayerIntoEveryWhere();
 
-						this.etaoinSays("perf.inform(D:'player'[#id], name('player'[#id],'david bowman'[symbol]))");
+						if (this.game.playerGender == "male") {
+							this.etaoinSays("perf.inform(D:'player'[#id], name('player'[#id],'david bowman'[symbol]))");
+						} else {
+							this.etaoinSays("perf.inform(D:'player'[#id], name('player'[#id],'susan calvin'[symbol]))");
+						}
 						this.etaoinSays("perf.inform(D:'player'[#id], role('player'[#id],'location-aurora-station'[#id],'computer-engineer'[computer-engineer]))");
 						this.etaoinSays("perf.inform(D:'player'[#id], #and(X:action.give('qwerty'[#id], [datapad], 'player'[#id]), time.future(X)))");
 						let datapad:A4Object = this.game.objectFactory.createObject("final-datapad", this.game, false, false);

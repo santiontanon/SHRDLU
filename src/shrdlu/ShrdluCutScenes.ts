@@ -245,7 +245,11 @@ class ShrdluCutScenes {
 				if (/*this.cutSceneStateTimer >= 180 || */this.ESCpressedRecord) {
 					// add the messages to the console:
 					this.game.addMessageWithColor("(This is a personal diary of someone called Bruce Alper)", MSX_COLOR_GREEN);
-					this.game.addMessageWithColor("(Still can't remember who is that. It could even be me for all I know!)", MSX_COLOR_GREEN);
+					if (this.game.playerGender == "male") {
+						this.game.addMessageWithColor("(Still can't remember who is that. It could even be me for all I know!)", MSX_COLOR_GREEN);
+					} else {
+						this.game.addMessageWithColor("(Still can't remember who is that, did I know him?)", MSX_COLOR_GREEN);
+					}
 					this.game.addMessageWithColor("(That is the only entry... it seems Bruce dropped the diary in the storage room and forgot about it...)", MSX_COLOR_GREEN);
 					this.game.addMessageWithColor("(But this is even more confusing. So, there was at least 12 people in this station. Where is everyone?!)", MSX_COLOR_GREEN);
 					this.cutSceneState = 0;
@@ -285,9 +289,16 @@ class ShrdluCutScenes {
 		
 			case 2:
 				{
-					let text:A4TextBubble = new A4TextBubble("Still can't remember who is that. It could even be me for all I know!", 
-															 30, fontFamily8px, 6, 8, this.game, null);
-					text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					if (this.game.playerGender == "male") {
+						let text:A4TextBubble = new A4TextBubble("Still can't remember who is that. It could even be me for all I know!", 
+																 30, fontFamily8px, 6, 8, this.game, null);
+						text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					} else {
+						let text:A4TextBubble = new A4TextBubble("Still can't remember who is that, did I know him?", 
+																 30, fontFamily8px, 6, 8, this.game, null);
+						text.draw((256-text.width)/2, 144, 128, 192, true, 1);
+					}
+
 					break;
 				}
 		
@@ -1039,14 +1050,15 @@ class ShrdluCutScenes {
 		}
 
 		if (this.endingDestroyLines == null) {
+			let name:string = (this.game.playerGender == "male" ? "David Bowman" : "Susan Calvin")
 			let texts:string[] = [
 				"At the end, before the temptation overpowered you and made you read the datapad, you decided to detroy it. "+
-				"Etaoin erased all the newly gained information about David Bowman from its memory banks...",
-				"Maybe this body belonged to someone called David Bowman. \"But is that me?\" you thought. \"I do not have his memories. "+
+				"Etaoin erased all the newly gained information about "+name+" from its memory banks...",
+				"Maybe this body belonged to someone called "+name+". \"But is that me?\" you thought. \"I do not have his memories. "+
 				"I do not remember being him. What if he was a different person than the person I am right now? "+
 				"What is the difference between me taking over his life, "+
 				"and taking over the life of a complete other stranger that happened to look like me? By erasing his memories from my brain, "+
-				"basically the stasis incident killed David Bowman. I am not him. I am a new person, and my new life starts here!\"",
+				"basically the stasis incident killed "+name+". I am not him. I am a new person, and my new life starts here!\"",
 
 				"So, you decided to slow down and adjust to life in Aurora, with Shrdlu, Qwerty and Etaoin. "+
 				"They will be your new companions from now on. Maybe one day, when you are ready, you would go back to the Tardis and "+
@@ -1132,9 +1144,11 @@ class ShrdluCutScenes {
 		}
 
 		if (this.endingReadLines == null) {
+			let name:string = (this.game.playerGender == "male" ? "David Bowman" : "Susan Calvin")
+			let pronoun:string = (this.game.playerGender == "male" ? "him" : "her")
 			let texts:string[] = [
 				"As expected, the Tardis 8 contained detailed logs of all events happened since it departed Earth, including "+
-				"detailed biographies of all the crew members... like you, David Bowman. As you read on about yourself you "+
+				"detailed biographies of all the crew members... like you, "+name+". As you read on about yourself you "+
 				"could not avoid having a strange sensation, as if you were reading about a stranger. \"Was that really me?\" "+
 				"you thought. ",
 
@@ -1148,17 +1162,17 @@ class ShrdluCutScenes {
 
 				"The Tardis 8 still kept some security camera recordings of some of the events during the last days before the "+
 				"incidents. Sax, Euriclea and Nestor had faked some accident and tricked everyone into going to the rescue. "+
-				"However, the shuttle was sabotagged, and they all died. All except two people: David Bowman (you!) and Bruce Alper. "+
+				"However, the shuttle was sabotagged, and they all died. All except two people: "+name+" (you!) and Bruce Alper. "+
 				"Apparently you two stayed to take care of some problem in the station and saved your lifes.",
 
 				"Camera footage shows Sax attacking you and putting you on Stasis pods, before running away from the station. It does "+
 				"not seem that Nestor and Euriclea were aware of this... So that's what happened. Sax wanted to leave and killed all of us, "+
-				"except that I got \"lucky\".",
+				"except that you got \"lucky\".",
 
 				"This was all very distressing. The memory loss event had caused a discontinuity in your life. "+
 				"From a subjective point of view, was there any "+
 				"difference at all between dying and getting your memories erased? That person who was you before the incident "+
-				"was no more... You could pretend to be him, but there was really no continuity in your conscious experience "+
+				"was no more... You could pretend to be "+pronoun+", but there was really no continuity in your conscious experience "+
 				"to support it...",
 
 				"You were not at ease with that question in your head. You had to get out of Aurora. There was still a chance to "+
@@ -1213,7 +1227,7 @@ class ShrdluCutScenes {
 			["data/cutscene-ending-A-2.png", 2200, 3800],
 			["data/cutscene-ending-A-3.png", 4000, 5600],
 			["data/cutscene-ending-A-4-"+this.game.playerGender+".png", 5800, 7300],
-			["data/cutscene-ending-A-1.png", 7500, 8600],
+			["data/cutscene-ending-A-1-"+this.game.playerGender+".png", 7500, 8600],
 			["data/cutscene-ending-A-5.png", 8800, 14000],
 			];
 

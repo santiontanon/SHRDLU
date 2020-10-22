@@ -1825,8 +1825,8 @@
 			  		<condition><storyStateCheck scope="game" variable="times-tardis-datapad-examined" value="1"/></condition>
 			  		<then>
 			  			<talkOther text="On the one hand I need to know who am I..." thought="true"/>	
-			  			<talkOther text="But on the other hand, I do not remember being David Bowman..." thought="true"/>	
-			  			<talkOther text="If I don't have memories of him, am I really him?" thought="true"/>	
+			  			<talkOther text="But on the other hand, I do not remember being a computer engineer..." thought="true"/>	
+			  			<talkOther text="If I don't have memories of that, am I really that person?" thought="true"/>	
 			  			<storyState scope="game" variable="times-tardis-datapad-examined" value="2"/>
 			  		</then>
 			  		<else>

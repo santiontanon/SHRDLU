@@ -747,6 +747,7 @@ class RuleBasedAI {
 						let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
 						if (perf2 == null) perf2 = performative;
 						let nIntentions:number = this.intentions.length;
+						let nQueuedIntentions:number = this.queuedIntentions.length;
 						let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
 						if (tmp!=null) toAdd = toAdd.concat(tmp);
 						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, this.o, this.time_in_seconds);
@@ -755,6 +756,11 @@ class RuleBasedAI {
 							for(let i:number = nIntentions;i<this.intentions.length;i++) {
 								if (this.intentions[i].requestingPerformative == null) {
 									this.intentions[i].requestingPerformative = nlcp[0];
+								}
+							}
+							for(let i:number = nQueuedIntentions;i<this.queuedIntentions.length;i++) {
+								if (this.queuedIntentions[i].requestingPerformative == null) {
+									this.queuedIntentions[i].requestingPerformative = nlcp[0];
 								}
 							}
 						}

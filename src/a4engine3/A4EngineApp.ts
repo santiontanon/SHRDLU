@@ -1417,7 +1417,7 @@ class A4EngineApp {
             case 0:
                 if (this.achievements_state_timer == 0) {
                     BInterface.pushIgnoringCurrent();
-                    BInterface.addElement(new BShrdluButton("Back", fontFamily32px, this.screen_width/2-80, this.screen_height-64, 160, 64, 
+                    BInterface.addElement(new BShrdluButton("Back", fontFamily32px, this.screen_width/2-80, this.screen_height-56, 160, 64, 
                                                      100, 
                                                      "white", true,
                                                      function(arg:any, ID:number) {
@@ -1427,7 +1427,7 @@ class A4EngineApp {
 
                     for(let i:number = 0; i<this.achievement_names.length; i++) {
                         BInterface.addElement(new BShrdluButton(this.achievement_names[i], fontFamily32px, 
-                                                                8*PIXEL_SIZE, 8*i*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
+                                                                8*PIXEL_SIZE, 8+8*i*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
                                                                 "white", false,
                             function(arg:any, ID:number) {
                                 let app = <A4EngineApp>arg;
@@ -1481,9 +1481,9 @@ class A4EngineApp {
 
         for(let i:number = 0; i<this.achievement_names.length; i++) {
             if (this.achievement_complete(i)) {
-                fillTextTopLeft("COMPLETE!", 196, i*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
+                fillTextTopLeft("COMPLETE!", 196, 8+i*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
             } else {
-                fillTextTopLeft(" Pending", 196, i*8, fontFamily8px, MSX_COLOR_GREY);
+                fillTextTopLeft(" Pending", 196, 8+i*8, fontFamily8px, MSX_COLOR_GREY);
             }
         }
 
