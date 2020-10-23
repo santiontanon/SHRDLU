@@ -111,7 +111,9 @@ class InferenceRecord {
 		}
 
 		for(let target of this.targets) {
-			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, true, true, this.timeTerm == null, ai));
+			// let occurs_check:boolean = OCCURS_CHECK;
+			let occurs_check:boolean = true;
+			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, occurs_check, true, this.timeTerm == null, ai));
 		}
 	}
 
@@ -447,8 +449,15 @@ class RuleBasedAI {
 		this.time_in_seconds = timeStamp;
 
 		// 1) Attention & Perception:
-		if ((timeStamp%this.perceptionFrequency) == this.perceptionFrequencyOffset) {
-			this.attentionAndPerception();
+		if (this.currentInferenceProcess == null) {
+			if ((timeStamp%this.perceptionFrequency) == this.perceptionFrequencyOffset) {
+				this.attentionAndPerception();
+			}
+		} else {
+			// during inference, do less perception to free up some CPU:
+			if ((timeStamp%(this.perceptionFrequency*2)) == this.perceptionFrequencyOffset) {
+				this.attentionAndPerception();
+			}
 		}
 
 		// 2) Short-term memory loop:

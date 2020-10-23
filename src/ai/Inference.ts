@@ -21,9 +21,9 @@ var INFERENCE_maximum_sentence_size:number = 6;
 var INFERENCE_allow_increasing_sentences:boolean = false;
 var INFERENCE_allow_variable_to_variable_substitutions:boolean = true;
 
-var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 2500;
+var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 4000;
 // var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 600000;	// at this point, inference will stop
-var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 1000000;	// at this point, inference will stop
+var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 2000000;	// at this point, inference will stop
 
 
 class InferenceNode
@@ -670,12 +670,19 @@ class InterruptibleResolution
 		//console.log("s1: " + s1);
 		//console.log("s2: " + s2);
 
+		let s2_term_cache:Term[] = []
+
 		for(let i:number = 0;i<s1.terms.length;i++) {
 			for(let j:number = 0;j<s2.terms.length;j++) {
+				if (s2_term_cache.length <= j) s2_term_cache.push(null);
 				if (s1.sign[i] == s2.sign[j]) continue;
 				
 				let t1:Term = s1.terms[i].applyBindings(bindings);
-				let t2:Term = s2.terms[j].applyBindings(bindings);
+				let t2:Term = s2_term_cache[j];
+				if (t2 == null) {
+					t2 = s2.terms[j].applyBindings(bindings);
+					s2_term_cache[j] = t2;
+				}
 //				console.log("p: " + p);
 //				console.log("q: " + q);
 				let bindings2:Bindings = new Bindings();
@@ -778,31 +785,6 @@ class InterruptibleResolution
 			}
 			if (!found) {
 				return false;
-				/*
-				anyNotFound = true;
-				// check if the new term in the result could potentially change the end result:
-				let vl:VariableTermAttribute[] = r.sentence.terms[i].getAllVariables();
-				let variableFound:boolean = false;
-				for(let binding of r.bindings.l) {
-					if (binding[1] instanceof VariableTermAttribute) {
-						if (vl.indexOf(<VariableTermAttribute>binding[1]) != -1) {
-							variableFound = true;
-							break;
-						}
-					} else if (binding[1] instanceof TermTermAttribute) {
-						let vl2:VariableTermAttribute[] = (<TermTermAttribute>binding[1]).term.getAllVariables();
-						for(let v of vl2) {
-							if (vl.indexOf(v) != -1) {
-								variableFound = true;
-								break;								
-							}
-						}
-						if (variableFound) break;
-					}
-				}
-				if (variableFound) return false;
-				if (previousBindings != null) return true;
-				*/
 			}
 		}
 

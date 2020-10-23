@@ -871,7 +871,7 @@
         		<condition><hasItemCheck inventory="memory core"/></condition>
         		<then>
         			<loseItem inventory="memory core"/>
-        			<talkOther text="Ok, I placed the memory card on this console's reading slot. Let's see what Etaoin can tell me!" thought="true"/>
+        			<talkOther text="Ok, I placed the memory core on this console's reading slot. Let's see what Etaoin can tell me!" thought="true"/>
         			<storyState scope="game" variable="tardis-memory-core" value="inconsole"/>
         		</then>
         		<else><talkOther text="This is a computer console, probably to interface directly with the stations main computers, I wouldn't know how to use it." thought="true"/></else>

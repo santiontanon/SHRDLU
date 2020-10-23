@@ -902,9 +902,7 @@ class Term {
             } else {
                 return 0;
             }
-        } 
-
-        if (att1 instanceof TermTermAttribute) {
+        } else if (att1 instanceof TermTermAttribute) {
             if (att2 instanceof TermTermAttribute) {
                 return att1.term.equalsNoBindings(att2.term);
             } else if (att2 instanceof ConstantTermAttribute) {
@@ -912,9 +910,7 @@ class Term {
             } else {
                 return 0;
             }
-        }
-
-        if (att1 instanceof VariableTermAttribute) {
+        } else /*if (att1 instanceof VariableTermAttribute)*/ {
             if (att2 instanceof VariableTermAttribute) {
                 //if (att1 == att2) return 1;
                 if (att1.sort == att2.sort) return 1;
@@ -923,9 +919,6 @@ class Term {
                 return 0;
             }
         }
-
-        // we should never reach here anyway
-        return -1;
     }    
 
 

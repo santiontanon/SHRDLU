@@ -1481,9 +1481,9 @@ class A4EngineApp {
 
         for(let i:number = 0; i<this.achievement_names.length; i++) {
             if (this.achievement_complete(i)) {
-                fillTextTopLeft("COMPLETE!", 196, 8+i*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
+                fillTextTopLeft("COMPLETE!", 196, 2+i*8, fontFamily8px, MSX_COLOR_LIGHT_GREEN);       
             } else {
-                fillTextTopLeft(" Pending", 196, 8+i*8, fontFamily8px, MSX_COLOR_GREY);
+                fillTextTopLeft(" Pending", 196, 2+i*8, fontFamily8px, MSX_COLOR_GREY);
             }
         }
 
