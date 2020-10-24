@@ -829,7 +829,7 @@ class A4Character extends A4WalkingObject {
                                                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                         let vehicle:A4Object = this.vehicle;
                         if (this.disembark()) {
-                            game.in_game_actions_for_log.push(["disembark("+this.ID+","+vehicle.ID+")",""+game.in_game_seconds]);
+                            game.inGameActionsForLog.push(["disembark("+this.ID+","+vehicle.ID+")",""+game.in_game_seconds]);
                         }
                     } else {
                         if (this.state == A4CHARACTER_STATE_IN_BED) {
@@ -846,7 +846,7 @@ class A4Character extends A4WalkingObject {
                                                                                                       v.ID, v.sort, null,
                                                                                                       null, null,
                                                                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
-                                        game.in_game_actions_for_log.push(["embark("+this.ID+","+v.ID+")",""+game.in_game_seconds]);
+                                        game.inGameActionsForLog.push(["embark("+this.ID+","+v.ID+")",""+game.in_game_seconds]);
                                     } else {
                                     */
                                     // interact with the object in front:
@@ -873,7 +873,7 @@ class A4Character extends A4WalkingObject {
                             o.event(A4_EVENT_DROP, this, this.map, game);
                             this.eventWithObject(A4_EVENT_ACTION_DROP, null, o, this.map, game);
                             game.playSound("data/sfx/itemPickup.wav")
-                            game.in_game_actions_for_log.push(["drop("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+                            game.inGameActionsForLog.push(["drop("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
                         }
                     }
                 }
@@ -885,7 +885,7 @@ class A4Character extends A4WalkingObject {
                         if (o.usable) {
                             o.event(A4_EVENT_USE, this, this.map, game);
                             this.eventWithObject(A4_EVENT_ACTION_USE, null, o, this.map, game);
-                            game.in_game_actions_for_log.push(["use("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+                            game.inGameActionsForLog.push(["use("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
                         }
                     }
                 }
@@ -911,7 +911,7 @@ class A4Character extends A4WalkingObject {
                                                                                           this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                             o.event(A4_EVENT_INTERACT,this,this.map,game);
                             this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
-                            game.in_game_actions_for_log.push(["interact("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+                            game.inGameActionsForLog.push(["interact("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
                             break;
                         }
                     }
@@ -973,7 +973,7 @@ class A4Character extends A4WalkingObject {
                                 target_c.eventWithObject(A4_EVENT_RECEIVE, this, item_to_give, this.map, game);
                                 this.eventWithObject(A4_EVENT_ACTION_GIVE, target_c, item_to_give, this.map, game);
                                 game.playSound("data/sfx/itemPickup.wav");
-                                game.in_game_actions_for_log.push(["give("+this.ID+","+item_to_give.ID+","+target_c.ID+")",""+game.in_game_seconds]);
+                                game.inGameActionsForLog.push(["give("+this.ID+","+item_to_give.ID+","+target_c.ID+")",""+game.in_game_seconds]);
                             }
                         }
                     }
@@ -996,7 +996,7 @@ class A4Character extends A4WalkingObject {
                                                                           this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
             if (!o.event(A4_EVENT_PUSH,this,this.map,game)) return false;
             this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
-            game.in_game_actions_for_log.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
+            game.inGameActionsForLog.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
             return true;
         } else {
             if (this == <A4Character>game.currentPlayer) {
@@ -1041,7 +1041,7 @@ class A4Character extends A4WalkingObject {
                 item.event(A4_EVENT_PICKUP, this, this.map, game);
                 this.eventWithObject(A4_EVENT_ACTION_TAKE, null, item, this.map, game);
                 game.playSound("data/sfx/itemPickup.wav");
-                game.in_game_actions_for_log.push(["take("+this.ID+","+item.ID+")",""+game.in_game_seconds]);
+                game.inGameActionsForLog.push(["take("+this.ID+","+item.ID+")",""+game.in_game_seconds]);
                 return true;
             } else {
                 if (this == <A4Character>game.currentPlayer) game.addMessageWithOriginator(this, "Inventory full!");
@@ -1065,7 +1065,7 @@ class A4Character extends A4WalkingObject {
                                                                           this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
             object.event(A4_EVENT_USE, this, this.map, game);
             this.eventWithObject(A4_EVENT_ACTION_USE, null, object, this.map, game);
-            game.in_game_actions_for_log.push(["interact("+this.ID+","+object.ID+")",""+game.in_game_seconds]);
+            game.inGameActionsForLog.push(["interact("+this.ID+","+object.ID+")",""+game.in_game_seconds]);
             return true;
         }
         return false;

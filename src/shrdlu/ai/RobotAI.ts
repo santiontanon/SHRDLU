@@ -1,5 +1,5 @@
 class RobotAI extends A4RuleBasedAI {
-	constructor(o:Ontology, nlp:NLParser, robot:A4AICharacter, game:A4Game,
+	constructor(o:Ontology, nlp:NLParser, robot:A4AICharacter, game:ShrdluA4Game,
 				rulesFileNames:string[])
 	{
 		super(o, nlp, game, 12, 4, DEFAULT_QUESTION_PATIENCE_TIMER);

@@ -1,5 +1,5 @@
 class ShrdluAI extends RobotAI {
-	constructor(o:Ontology, nlp:NLParser, shrdlu:A4AICharacter, game:A4Game,
+	constructor(o:Ontology, nlp:NLParser, shrdlu:A4AICharacter, game:ShrdluA4Game,
 				rulesFileNames:string[])
 	{
 		super(o, nlp, shrdlu, game, rulesFileNames);

@@ -1,4 +1,4 @@
-var SHRDLUMAP_MAX_ALTITUDE:number = 3;
+var MAP_MAX_ALTITUDE:number = 3;
 
 
 class PerceptionBufferRecord {
@@ -460,8 +460,8 @@ class A4Map {
 
         let object_idx:number = 0;
         let y:number = -offsety;
-        let ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
-        for(let row:number = 0;row<this.layers[0].height+SHRDLUMAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
+        let ZSY:number = Math.floor(SCREEN_Y/zoom) + MAP_MAX_ALTITUDE*8;
+        for(let row:number = 0;row<this.layers[0].height+MAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
             if (y+this.tileHeight<0) continue;
 //            console.log("draw: " + row + " -> " + y);
 //            if (row<8) {
@@ -503,8 +503,8 @@ class A4Map {
 
         let object_idx:number = 0;
         let y:number = -offsety;
-        let ZSY:number = Math.floor(SCREEN_Y/zoom) + SHRDLUMAP_MAX_ALTITUDE*8;
-        for(let row:number = 0;row<this.layers[0].height+SHRDLUMAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
+        let ZSY:number = Math.floor(SCREEN_Y/zoom) + MAP_MAX_ALTITUDE*8;
+        for(let row:number = 0;row<this.layers[0].height+MAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
             if (y+this.tileHeight<0) continue;
 //            console.log("drawRegion: " + row + " -> " + y);
 //            if (row<8) {

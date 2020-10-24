@@ -17,7 +17,7 @@ var CUTSCENE_ENDING_READ_PAD:number = 15;
 
 
 class ShrdluCutScenes {
-	constructor(game:A4Game, app:A4EngineApp)
+	constructor(game:ShrdluA4Game, app:ShrdluApp)
 	{
 		this.app = app;
 		this.game = game;
@@ -1270,6 +1270,6 @@ class ShrdluCutScenes {
 
 	ESCpressedRecord:boolean = false;
 
-	app:A4EngineApp = null;
-	game:A4Game = null;	
+	app:ShrdluApp = null;
+	game:ShrdluA4Game = null;	
 }

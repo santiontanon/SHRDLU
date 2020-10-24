@@ -13,7 +13,7 @@ class AttentionRecord {
 
 
 class EtaoinAI extends A4RuleBasedAI {
-	constructor(o:Ontology, nlp:NLParser, stationMaps:A4Map[], game:A4Game,
+	constructor(o:Ontology, nlp:NLParser, stationMaps:A4Map[], game:ShrdluA4Game,
 				rulesFileNames:string[])
 	{
 		super(o, nlp, game, 12, 0, DEFAULT_QUESTION_PATIENCE_TIMER);

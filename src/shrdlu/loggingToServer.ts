@@ -1,5 +1,5 @@
 // get a new Session ID in a token and assign it to this game
-function assignNewSessionID(game:A4Game) {
+function assignNewSessionID(game:ShrdluA4Game) {
     requestTokenFromServer((err:string, token:string) => {
        if (err) {
            console.log(err);
@@ -27,7 +27,7 @@ function requestTokenFromServer(callback:(err:string, token:string) => void) {
 }
 
 
-function writeLogToServer(game:A4Game) {
+function writeLogToServer(game:ShrdluA4Game) {
     let token:string = game.serverToken;
     if (!token) return;
     let xhr = ((<any>window).XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");

@@ -1,7 +1,7 @@
 var canvas: HTMLCanvasElement;
 var ctx: CanvasRenderingContext2D;    // current context
 
-var app: A4EngineApp;
+var app: ShrdluApp;
 var audioCtx:AudioContext = new ((<any>window).AudioContext || (<any>window).webkitAudioContext)();
 
 var PIXEL_SIZE: number = 4;
@@ -51,7 +51,7 @@ window.onload = () => {
     // replaces deprecated: ctx.mozImageSmoothingEnabled and ctx.webkitImageSmoothingEnabled
     ctx.imageSmoothingEnabled = false;
 
-    app = new A4EngineApp(WINDOW_WIDTH, WINDOW_HEIGHT);
+    app = new ShrdluApp(WINDOW_WIDTH, WINDOW_HEIGHT);
     k = new KeyboardState(-1);
 
     document.addEventListener('keydown', keyboardInputDown);
@@ -127,7 +127,7 @@ function mouseMove(event: MouseEvent)
 function waitForResourcesLoop(timestamp: number) {
 
     if (app.game.imagesLoaded()) {
-        app.game.finishLoadingGame(null, app);
+        app.game.finishLoadingGame(null);
         requestAnimationFrame(gameLoop);
     } else {
         requestAnimationFrame(waitForResourcesLoop);

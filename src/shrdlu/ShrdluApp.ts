@@ -5,8 +5,8 @@ Note (santi):
   and that can be found here: https://github.com/santiontanon/A4Engine). I translated the engine to TypeScript and started
   building SHRDLU on top of that. After the game was working, I started then removing all the functionality from the
   A4Engine that SHRDLU doesn't need (such as magic, attacks, equiping items, etc.), and adding some SHRDLU-specific code.
-- This class (A4EngineApp) implements the basic finite state machine for the control flow of the game (transitioning from the main
-  menu, to the game, etc.). The A4Game class is the one that actually implements the game, and the one that stores the game state.
+- This class (ShrdluApp) implements the basic finite state machine for the control flow of the game (transitioning from the main
+  menu, to the game, etc.). The ShrdluA4Game/A4Game class is the one that actually implements the game, and the one that stores the game state.
 
 */
 
@@ -27,6 +27,7 @@ var A4ENGINE_STATE_ACHIEVEMENTS_INGAME:number = 10
 var MAX_VOLUME:number = 1.0;
 var DEFAULT_game_path:string = "data";
 var DEFAULT_game_file:string = "shrdlu.xml";
+var SHRDLU_ONTOLOGY_PATH:string = "data/shrdluontology.xml";
 
 var A4CONFIG_STORAGE_KEY:string = "SHRDLU-configuration";
 var ACHIEVEMENTS_STORAGE_KEY:string = "SHRDLU-achievements";
@@ -34,10 +35,6 @@ var A4SAVEGAME_STORAGE_KEY:string = "SHRDLU-savegame";
 
 var INGAME_MENU:number = 1;
 var INGAME_INSTRUCTIONS:number = 1;
-//var INGAME_TALK_MENU:number = 2;
-//var INGAME_USE_MENU:number = 3;
-//var INGAME_DROPGOLD_MENU:number = 4;
-//var INGAME_TRADE_MENU:number = 5;
 var INGAME_SAVE_MENU:number = 6;
 var INGAME_LOAD_MENU:number = 7;
 var INGAME_INSTRUCTIONS_MENU:number = 8;
@@ -50,8 +47,61 @@ var QUIT_REQUEST_ACTION_LOAD2:number = 3;
 var QUIT_REQUEST_ACTION_LOAD3:number = 4;
 var QUIT_REQUEST_ACTION_LOAD4:number = 5;
 
-class A4EngineApp {
+class ShrdluApp {
     constructor(a_dx:number, a_dy:number) {
+
+        A4Script.registerCustomScript(
+            "cutScene",
+            function(xml:Element, id:number) : A4Script {
+                let s:A4Script = new A4Script(id, null, null, 0, false, false);
+                s.value = Number(xml.getAttribute("cutscene"));
+                return s;
+            },
+            function(s:A4Script) : string {
+                return " cutscene=\"" + this.value + "\"";
+            },
+            function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+            {
+                (<ShrdluA4Game>game).cutSceneActivated = script.value;
+                (<ShrdluA4Game>game).cutScenes.cutSceneState = 0;
+                (<ShrdluA4Game>game).cutScenes.cutSceneStateTimer = 0;
+                return SCRIPT_FINISHED;
+            });
+        A4Script.registerCustomScript(
+            "refillOxygen",
+            function(xml:Element, id:number) : A4Script {
+                let s:A4Script = new A4Script(id, null, null, 0, false, false);
+                return s;
+            },
+            function(s:A4Script) : string {
+                return "";
+            },
+            function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+            {
+                (<ShrdluA4Game>game).suit_oxygen = SHRDLU_MAX_SPACESUIT_OXYGEN;
+                return SCRIPT_FINISHED;
+            });
+        A4Script.registerCustomScript(
+            "embarkOnGarage",
+            function(xml:Element, id:number) : A4Script {
+                let s:A4Script = new A4Script(id, null, null, 0, false, false);
+                return s;
+            },
+            function(s:A4Script) : string {
+                return "";
+            },
+            function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+            {
+                if (otherCharacter != game.currentPlayer) return SCRIPT_FAILED;
+                if (o.sort.is_a_string("garage-rover")) {
+                    (<ShrdluA4Game>game).takeRoverOutOfTheGarage(<A4Vehicle>o, otherCharacter);
+                } else if (o.sort.is_a_string("garage-shuttle")) {
+                    (<ShrdluA4Game>game).takeShuttleToTrantorCrater(<A4Vehicle>o, otherCharacter);
+                }
+                return SCRIPT_FINISHED;
+            });
+
+
         this.loadConfiguration();
         this.loadAchievements();
 
@@ -86,10 +136,10 @@ class A4EngineApp {
         this.trade_dialog_other = null;
         this.trade_needs_update = false;
 
-        console.log("A4EngineApp created.");
+        console.log("ShrdluApp created.");
 
         if (this.gameDefinition!=null) {
-            this.game = new A4Game(this.gameDefinition, this.game_path, this.GLTM, this.SFXM, this.SFX_volume, "female");
+            this.game = new ShrdluA4Game(this.gameDefinition, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, "female", this);
         }
     }
 
@@ -258,7 +308,7 @@ class A4EngineApp {
 
         } catch(e) {
             console.error(e);
-            this.game.error_messages_for_log.push(["" + e + "%0a    " + e.stack.split("\n").join("%0a    "),""+this.game.in_game_seconds]);
+            this.game.errorMessagesForLog.push(["" + e + "%0a    " + e.stack.split("\n").join("%0a    "),""+this.game.in_game_seconds]);
             this.game.addMessageWithColor("[ERROR: an internal game error occurred, please press ESC and send a debug log to the developer]", "red");
             this.game.etaoinAI.intentions = [];    // clear the intentions to prevent the error from happening again and again if possible
             this.game.qwertyAI.intentions = [];
@@ -311,7 +361,7 @@ class A4EngineApp {
             }
         } catch(e) {
             console.error(e);
-            this.game.error_messages_for_log.push(["" + e + "%0a    " + e.stack.split("\n").join("%0a    "),""+this.game.in_game_seconds]);
+            this.game.errorMessagesForLog.push(["" + e + "%0a    " + e.stack.split("\n").join("%0a    "),""+this.game.in_game_seconds]);
             this.game.addMessageWithColor("[ERROR: an internal game error occurred, please press ESC and send a debug log to the developer]", "red");
             this.game.etaoinAI.intentions = [];    // clear the intentions to prevent the error from happening again and again
             this.game.qwertyAI.intentions = [];
@@ -511,7 +561,7 @@ class A4EngineApp {
             menuItems.push("Play");
             menuCallbacks.push(
                 function(arg:any, ID:number) {
-                        let app = <A4EngineApp>arg;
+                        let app = <ShrdluApp>arg;
                         if (app.titlescreen_state == 2) return;
                        BInterface.push();
                        BInterface.addElement(
@@ -549,7 +599,7 @@ class A4EngineApp {
                 menuItems.push("load");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                        let app = <A4EngineApp>arg;
+                        let app = <ShrdluApp>arg;
                         if (app.titlescreen_state == 2) return;
 
                         let menuItems:string[] = [];
@@ -562,7 +612,7 @@ class A4EngineApp {
                                 menuCallbacks.push(
                                     function(arg:any, ID:number) {
                                             ID -= 9;    // convert from menu item ID to slot ID
-                                            let app = <A4EngineApp>arg;
+                                            let app = <ShrdluApp>arg;
                                             let xmlString = LZString.decompressFromUTF16(localStorage.getItem(A4SAVEGAME_STORAGE_KEY + "-slot" + ID));
                                             console.log("Decompresed string is: " + xmlString.length);        
 //                                            console.log(xmlString);
@@ -575,8 +625,8 @@ class A4EngineApp {
                                             app.titlescreen_timer = 0;
                                             app.ingame_menu = 0;
                                             app.quit_request = false;
-                                            app.game = new A4Game(gamexml, app.game_path, app.GLTM, app.SFXM, app.SFX_volume, "female");
-                                            app.game.finishLoadingGame(xml.documentElement, app);
+                                            app.game = new ShrdluA4Game(gamexml, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, "female", this);
+                                            app.game.finishLoadingGame(xml.documentElement);
                                        });
                             } else {
                                 menuItems.push("slot" + (i+1));
@@ -602,7 +652,7 @@ class A4EngineApp {
             menuItems.push("Instructions");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                       let app = <A4EngineApp>arg;
+                       let app = <ShrdluApp>arg;
                        if (app.titlescreen_state == 2) return;
 
                        BInterface.push();
@@ -619,7 +669,7 @@ class A4EngineApp {
             menuItems.push("Achievements");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                       let app = <A4EngineApp>arg;
+                       let app = <ShrdluApp>arg;
                        if (app.titlescreen_state == 2) return;
                        app.titlescreen_state = 4;
                        app.titlescreen_timer = 0;
@@ -655,8 +705,8 @@ class A4EngineApp {
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
                 BInterface.reset();
 
-                app.game = new A4Game(app.gameDefinition, app.game_path, app.GLTM, app.SFXM, app.SFX_volume, this.titlescreen_requested_gender);
-                app.game.finishLoadingGame(null, this);
+                app.game = new ShrdluA4Game(app.gameDefinition, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, this.titlescreen_requested_gender, this);
+                app.game.finishLoadingGame(null);
                 if (this.writeLogsToServer) assignNewSessionID(app.game);
 
                 return A4ENGINE_STATE_ACT1INTRO;
@@ -722,7 +772,7 @@ class A4EngineApp {
             menuItems.push("Play");
             menuCallbacks.push(
                 function(arg:any, ID:number) {
-                         let app = <A4EngineApp>arg;
+                         let app = <ShrdluApp>arg;
                          BInterface.pop();
                          app.ingame_menu = 0;
                    });
@@ -730,21 +780,21 @@ class A4EngineApp {
                 menuItems.push("Save");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                             let app = <A4EngineApp>arg;
+                             let app = <ShrdluApp>arg;
                              app.createInGameMenu(INGAME_SAVE_MENU, null);
                        });
 
                 menuItems.push("Load");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                             let app = <A4EngineApp>arg;
+                             let app = <ShrdluApp>arg;
                              app.createInGameMenu(INGAME_LOAD_MENU, null);
                        });
             }
             menuItems.push("Instructions");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                       let app = <A4EngineApp>arg;
+                       let app = <ShrdluApp>arg;
                        BInterface.push();
                        BInterface.addElement(
                            new BShrdluTextFrame(getShrdluInstructionsString(), 
@@ -759,7 +809,7 @@ class A4EngineApp {
             menuItems.push("Achievements");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                        let app = <A4EngineApp>arg;
+                        let app = <ShrdluApp>arg;
                         app.quit_request = true;
                         app.quit_request_cycle = app.state_cycle;
                         app.quit_request_action = QUIT_REQUEST_ACTION_ACHIEVEMENTS;
@@ -768,8 +818,8 @@ class A4EngineApp {
             menuItems.push("Generate Debug Log");
             menuCallbacks.push(
                 function(arg:any, ID:number) {    
-                    let app = <A4EngineApp>arg;
-                    generateDebugLogForDownload((<A4EngineApp>arg).game);
+                    let app = <ShrdluApp>arg;
+                    generateDebugLogForDownload((<ShrdluApp>arg).game);
                     app.achievement_debug_log = true;
                     app.trigger_achievement_complete_alert();
                    });
@@ -778,7 +828,7 @@ class A4EngineApp {
                 menuItems.push("Quit");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                             let app = <A4EngineApp>arg;
+                             let app = <ShrdluApp>arg;
                              app.quit_request = true;
                              app.quit_request_cycle = app.state_cycle;
                              app.quit_request_action = QUIT_REQUEST_ACTION_QUIT;
@@ -787,7 +837,7 @@ class A4EngineApp {
                 menuItems.push("Save & Quit");
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                             let app = <A4EngineApp>arg;
+                             let app = <ShrdluApp>arg;
                              app.game.saveGame("slot1");
                              app.quit_request = true;
                        });
@@ -823,7 +873,7 @@ class A4EngineApp {
                 }
                 menuCallbacks.push(
                     function(arg:any, ID:number) {
-                             let app = <A4EngineApp>arg;
+                             let app = <ShrdluApp>arg;
                              app.game.saveGame("slot"+ID)
                              BInterface.pop();
                              app.ingame_menu = INGAME_MENU;
@@ -832,7 +882,7 @@ class A4EngineApp {
             menuItems.push("Back");
             menuCallbacks.push(
                 function(arg:any, ID:number) {
-                         let app = <A4EngineApp>arg;
+                         let app = <ShrdluApp>arg;
                          BInterface.pop();
                          app.ingame_menu = INGAME_MENU;
                    });
@@ -851,7 +901,7 @@ class A4EngineApp {
                     menuItems.push("Slot" + i + ": " + saveName);
                     menuCallbacks.push(
                         function(arg:any, ID:number) {
-                                let app = <A4EngineApp>arg;
+                                let app = <ShrdluApp>arg;
                                 app.quit_request = true;
                                 app.quit_request_cycle = app.state_cycle;
                                 app.quit_request_action = QUIT_REQUEST_ACTION_LOAD1 + (ID-1);
@@ -864,7 +914,7 @@ class A4EngineApp {
             menuItems.push("Back");
             menuCallbacks.push(
                 function(arg:any, ID:number) {
-                         let app = <A4EngineApp>arg;
+                         let app = <ShrdluApp>arg;
                          BInterface.pop();
                          app.ingame_menu = INGAME_MENU;
                    });
@@ -1115,8 +1165,8 @@ class A4EngineApp {
                 let xml:Document = dp.parseFromString(xmlString, "text/xml");
 //                            console.log(xml);
                 let gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
-                this.game = new A4Game(gamexml, this.game_path, this.GLTM, this.SFXM, this.SFX_volume, "female");
-                this.game.finishLoadingGame(xml.documentElement, this);
+                this.game = new ShrdluA4Game(gamexml, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, "female", this);
+                this.game.finishLoadingGame(xml.documentElement);
                 BInterface.reset();
                 this.ingame_menu = 0;
                 this.state_cycle = 0;
@@ -1183,15 +1233,15 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
-                            let app = <A4EngineApp>arg;
-                            generateDebugLogForDownload((<A4EngineApp>arg).game);
+                            let app = <ShrdluApp>arg;
+                            generateDebugLogForDownload((<ShrdluApp>arg).game);
                             app.achievement_debug_log = true;
                             app.trigger_achievement_complete_alert();
                            });
                     menuItems.push("No thanks");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {
-                                 let app = <A4EngineApp>arg;
+                                 let app = <ShrdluApp>arg;
                                  app.gamecomplete_state = 3;
                            });
                     BInterface.push();
@@ -1265,39 +1315,6 @@ class A4EngineApp {
                     this.introact_state = 0;
                     this.introact_state_timer = 0;
                     if (act >= 2) this.game.gameScript.act = "" + act;
-                    /*
-                    if (act == 3) {
-                        this.introact_state = 2;
-                        let menuItems:string[] = [];
-                        let menuCallbacks:((arg:any, ID:number) => void)[] = [];
-
-                        menuItems.push("You have reached the");
-                        menuCallbacks.push(null);
-                        menuItems.push("end of this Demo!");
-                        menuCallbacks.push(null);
-                        menuItems.push("Generate Debug Log");
-                        menuCallbacks.push(
-                            function(arg:any, ID:number) {    
-                                let app = <A4EngineApp>arg;
-                                generateDebugLogForDownload((<A4EngineApp>arg).game);
-                                app.achievement_debug_log = true;
-                                app.trigger_achievement_complete_alert();
-                               });
-                        menuItems.push("No thanks");
-                        menuCallbacks.push(
-                            function(arg:any, ID:number) {
-                                     let app = <A4EngineApp>arg;
-                                     app.introact_state = 3;
-                               });
-                        BInterface.push();
-                        createShrdluMenu(menuItems,menuCallbacks,  
-                                         fontFamily32px,32,this.screen_width/2-10*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,20*8*PIXEL_SIZE,6*8*PIXEL_SIZE,0,1,this.GLTM);
-                        BInterface.getElementByID(1).setEnabled(false);
-                        BInterface.getElementByID(2).setEnabled(false);
-
-                        return this.state;
-                    }
-                    */
                     return A4ENGINE_STATE_GAME;
                 }
                 break;
@@ -1360,20 +1377,18 @@ class A4EngineApp {
                     menuItems.push("Generate Debug Log");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {    
-                            let app = <A4EngineApp>arg;
-                            generateDebugLogForDownload((<A4EngineApp>arg).game);
+                            let app = <ShrdluApp>arg;
+                            generateDebugLogForDownload((<ShrdluApp>arg).game);
                             app.achievement_debug_log = true;
                             app.trigger_achievement_complete_alert();
                            });
                     menuItems.push("Title Screen");
                     menuCallbacks.push(
                         function(arg:any, ID:number) {
-                                 let app = <A4EngineApp>arg;
+                                 let app = <ShrdluApp>arg;
                                  app.gameover_state = 2;
                            });
                     BInterface.push();
-        //            createShrdluMenu(menuItems,menuCallbacks,  
-        //                             fontFamily32px,32,this.screen_width/2-8*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,16*8*PIXEL_SIZE,7*8*PIXEL_SIZE,0,1,this.GLTM);
                     createShrdluMenu(menuItems,menuCallbacks,  
                                      fontFamily32px,32,this.screen_width/2-10*8*PIXEL_SIZE,this.screen_height/2-4*8*PIXEL_SIZE,20*8*PIXEL_SIZE,4*8*PIXEL_SIZE,0,1,this.GLTM);
                 }
@@ -1421,7 +1436,7 @@ class A4EngineApp {
                                                      100, 
                                                      "white", true,
                                                      function(arg:any, ID:number) {
-                                                        let app = <A4EngineApp>arg;
+                                                        let app = <ShrdluApp>arg;
                                                         app.achievements_state = 2;
                                                      }));
 
@@ -1430,7 +1445,7 @@ class A4EngineApp {
                                                                 8*PIXEL_SIZE, 8+8*i*PIXEL_SIZE, 240*PIXEL_SIZE, 8*PIXEL_SIZE, 101+i, 
                                                                 "white", false,
                             function(arg:any, ID:number) {
-                                let app = <A4EngineApp>arg;
+                                let app = <ShrdluApp>arg;
                                 BInterface.push();
                                 BInterface.addElement(
                                     new BShrdluTextFrame(app.achievement_descriptions[ID-101].concat([""]).concat(app.achievement_progress_string(ID-101)), 
@@ -1863,7 +1878,7 @@ class A4EngineApp {
     game_path:string;
     game_filename:string;
     gameDefinition:Element;
-    game:A4Game;
+    game:ShrdluA4Game;
 
     mouse_x:number;
     mouse_y:number;

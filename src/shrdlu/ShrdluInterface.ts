@@ -218,7 +218,7 @@ function drawFadeInOverlay(f:number)
     }
 }
 
-function generateDebugLog(game:A4Game, writeLogsToServer:boolean) : string {
+function generateDebugLog(game:ShrdluA4Game, writeLogsToServer:boolean) : string {
     //let newline:string = "%0a";    // we need this, if we append the text to the page at the end
     let newline:string = "\n";
     let tab:string = "\t";
@@ -231,17 +231,17 @@ function generateDebugLog(game:A4Game, writeLogsToServer:boolean) : string {
         mailContent += (Number(m[2])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     mailContent += newline + "In-game Actions:" + newline;
-    for(let m of game.in_game_actions_for_log) {
+    for(let m of game.inGameActionsForLog) {
         mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     mailContent += newline + "Error messages:" + newline;
-    for(let m of game.error_messages_for_log) {
+    for(let m of game.errorMessagesForLog) {
         mailContent += (Number(m[1])-SHRDLU_START_DATE) + tab + m[0] + newline;
     }
     return mailContent;
 }
 
-function generateDebugLogForDownload(game:A4Game) {
+function generateDebugLogForDownload(game:ShrdluA4Game) {
     let mailContent: string = generateDebugLog(game, false);
 
     /*

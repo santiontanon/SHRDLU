@@ -163,44 +163,13 @@ class A4Vehicle extends A4WalkingObject {
                             if (target!=null) {
                                 game.requestWarp(this, bridge.linkedTo.map, target[0], target[1]);
                             } else {
-                                if (this.load.indexOf(game.currentPlayer)!=-1)
+                                if (this.load.indexOf(game.currentPlayer)!=-1) {
                                     game.addMessage("Something is blocking the way!");
-                            }
-                        }
-
-                        //  check if we have collided with the station, and get the rover into the garage:
-                        if (this.map.name == "Spacer Valley South" &&
-                            ((this.direction == A4_DIRECTION_LEFT && this.x == 38*this.map.tileWidth &&
-                              this.y >= 47*this.map.tileHeight && this.y <= 60*this.map.tileHeight) ||
-                             (this.direction == A4_DIRECTION_RIGHT && this.x == 28*this.map.tileWidth &&
-                              this.y >= 47*this.map.tileHeight && this.y <= 60*this.map.tileHeight) ||
-
-                             (this.direction == A4_DIRECTION_DOWN && this.y == 47*this.map.tileHeight &&
-                              this.x >= 29*this.map.tileWidth && this.x <= 37*this.map.tileWidth) ||
-                             (this.direction == A4_DIRECTION_UP && this.y == 54*this.map.tileHeight &&
-                              this.x >= 29*this.map.tileWidth && this.x <= 37*this.map.tileWidth)
-                            )) {
-                            if (!game.putRoverBackInGarage(this)) {
-                                game.addMessage("There is something in the garage blocking the parking spot!");
-                            }
-                        }
-
-                        // check if we need to go back to the station with the shuttle:
-                        if (this.map.name == "Trantor Crater" &&
-                            this.direction == A4_DIRECTION_RIGHT && this.x == 59*this.map.tileWidth) {
-
-                            // Make sure Shrdlu is in the shuttle, just in case:
-                            if (this.load.indexOf(game.shrdluAI.robot) == -1) {
-                                game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
-                                                         "I cannot leave Shrdlu behind!", A4_DIRECTION_NONE, game);
-                            } else {
-                                if (!game.takeShuttleFromTrantorCrater(this)) {
-                                    game.addMessage("There is something in the garage blocking the parking spot!");
-                                } else {
-                                    game.cutSceneActivated = CUTSCENE_SHUTTLE_LAND;
                                 }
                             }
                         }
+
+                        game.checkCustomVehicleCollisionEvents(this);
                         break;
                     }
                 }

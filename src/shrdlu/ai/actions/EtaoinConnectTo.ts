@@ -13,7 +13,7 @@ class EtaoinConnectTo_IntentionAction extends IntentionAction {
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
-		let game:A4Game = ai.game;
+		let game:ShrdluA4Game = ai.game;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 

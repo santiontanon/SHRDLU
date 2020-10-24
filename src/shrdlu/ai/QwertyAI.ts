@@ -1,5 +1,5 @@
 class QwertyAI extends RobotAI {
-	constructor(o:Ontology, nlp:NLParser, qwerty:A4AICharacter, game:A4Game,
+	constructor(o:Ontology, nlp:NLParser, qwerty:A4AICharacter, game:ShrdluA4Game,
 				rulesFileNames:string[])
 	{
 		super(o, nlp, qwerty, game, rulesFileNames);

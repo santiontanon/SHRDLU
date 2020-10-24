@@ -32,7 +32,7 @@ class AILocation {
 	}
 
 
-	distanceFromLocation(l2:AILocation, game:A4Game) : number
+	distanceFromLocation(l2:AILocation, game:ShrdluA4Game) : number
 	{
 		let l1_idx:number = game.locations.indexOf(this);
 		let l2_idx:number = game.locations.indexOf(l2);
@@ -154,7 +154,7 @@ class AILocation {
 
 
 
-	static loadLocationsFromXML(xml:Element, game:A4Game, o:Ontology)
+	static loadLocationsFromXML(xml:Element, game:ShrdluA4Game, o:Ontology)
 	{
 		// load the new locations:
 		for(let map_xml of getElementChildrenByTag(xml,"map")) {

@@ -61,12 +61,10 @@ var A4_SCRIPT_HASITEMCHECK:number = 54;
 var A4_SCRIPT_ADDPERCEPTIONPROPERTY:number = 55;
 var A4_SCRIPT_REMOVEPERCEPTIONPROPERTY:number = 56;
 
-var A4_SCRIPT_CUTSCENE:number = 60;
-var A4_SCRIPT_REFILLOXYGEN:number = 62;
-var A4_SCRIPT_EMBARK_ON_GARAGE:number = 63
 var A4_SCRIPT_IN_VEHICLE:number = 14;
 
-var A4_N_SCRIPTS:number = 69;    // #12, #15 and #29 are available
+var A4_N_SCRIPTS:number = 69;        // #12, #15 and #29 are available
+var A4_MAX_N_SCRIPTS:number = 100;   // some space for custom scripts 
 
 var SCRIPT_FINISHED:number = 0;
 var SCRIPT_NOT_FINISHED:number = 1;
@@ -75,7 +73,7 @@ var SCRIPT_FAILED:number = 2;
 var SOUND_DISTANCE_THRESHOLD:number = 256;
 
 
-var scriptNames:string[] = new Array(A4_N_SCRIPTS);
+var scriptNames:string[] = new Array(A4_MAX_N_SCRIPTS);
 
 scriptNames[A4_SCRIPT_GAMECOMPLETE] = "gameComplete";
 scriptNames[A4_SCRIPT_MESSAGE] = "message";
@@ -135,12 +133,9 @@ scriptNames[A4_SCRIPT_HASITEMCHECK] = "hasItemCheck";
 scriptNames[A4_SCRIPT_ADDPERCEPTIONPROPERTY] = "addPerceptionProperty";
 scriptNames[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = "removePerceptionProperty";
 
-scriptNames[A4_SCRIPT_CUTSCENE] = "cutScene";
-scriptNames[A4_SCRIPT_REFILLOXYGEN] = "refillOxygen";
-scriptNames[A4_SCRIPT_EMBARK_ON_GARAGE] = "embarkOnGarage"
 scriptNames[A4_SCRIPT_IN_VEHICLE] = "inVehicle";
 
-var scriptFunctions:((A4Script, A4Object, A4Map, A4Game, A4Character) => number)[] = new Array(A4_N_SCRIPTS);
+var scriptFunctions:((A4Script, A4Object, A4Map, A4Game, A4Character) => number)[] = new Array(A4_MAX_N_SCRIPTS);
 
 scriptFunctions[A4_SCRIPT_GAMECOMPLETE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
@@ -574,7 +569,7 @@ scriptFunctions[A4_SCRIPT_GIVE] = function(script:A4Script, o:A4Object, map:A4Ma
         otherCharacter.eventWithObject(A4_EVENT_RECEIVE, <A4Character>o, item, this.map, game);
         o.eventWithObject(A4_EVENT_ACTION_GIVE, otherCharacter, item, this.map, game);
         game.playSound("data/sfx/itemPickup.wav");
-        game.in_game_actions_for_log.push(["give("+o.ID+","+item.ID+","+otherCharacter.ID+")",""+game.in_game_seconds]);
+        game.inGameActionsForLog.push(["give("+o.ID+","+item.ID+","+otherCharacter.ID+")",""+game.in_game_seconds]);
         return SCRIPT_FINISHED;
     }
 }
@@ -1378,34 +1373,6 @@ scriptFunctions[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = function(script:A4Script, 
 }
 
 
-scriptFunctions[A4_SCRIPT_CUTSCENE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    game.cutSceneActivated = script.value;
-    game.cutScenes.cutSceneState = 0;
-    game.cutScenes.cutSceneStateTimer = 0;
-    return SCRIPT_FINISHED;
-}
-
-
-scriptFunctions[A4_SCRIPT_REFILLOXYGEN] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    game.suit_oxygen = SHRDLU_MAX_SPACESUIT_OXYGEN;
-    return SCRIPT_FINISHED;
-}
-
-
-scriptFunctions[A4_SCRIPT_EMBARK_ON_GARAGE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
-{
-    if (otherCharacter != game.currentPlayer) return SCRIPT_FAILED;
-    if (o.sort.is_a_string("garage-rover")) {
-        game.takeRoverOutOfTheGarage(<A4Vehicle>o, otherCharacter);
-    } else if (o.sort.is_a_string("garage-shuttle")) {
-        game.takeShuttleToTrantorCrater(<A4Vehicle>o, otherCharacter);
-    }
-    return SCRIPT_FINISHED;
-}
-
-
 scriptFunctions[A4_SCRIPT_IN_VEHICLE] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     let vehicle:A4Object = game.findObjectByIDJustObject(script.text);
@@ -1464,11 +1431,9 @@ class A4Script {
 
     static fromXML(xml:Element) : A4Script
     {
-        let s:A4Script = new A4Script(0, null, null, 0, false, false);
-
-        for(let i:number = 0;scriptNames.length;i++) {
+        for(let i:number = 0;i<scriptNames.length;i++) {
             if (xml.tagName == scriptNames[i]) {
-                s.type = i;
+                let s:A4Script = new A4Script(i, null, null, 0, false, false);
                 switch(s.type) {
                     case A4_SCRIPT_GAMECOMPLETE:
                         s.ID = xml.getAttribute("id");
@@ -1714,27 +1679,22 @@ class A4Script {
                         s.ID = xml.getAttribute("property");
                         break;
 
-                    case A4_SCRIPT_CUTSCENE:
-                        s.value = Number(xml.getAttribute("cutscene"));
-                        break;
-
-                    case A4_SCRIPT_REFILLOXYGEN:
-                        break;
-
-                    case A4_SCRIPT_EMBARK_ON_GARAGE:
-                        break;
-
                     case A4_SCRIPT_IN_VEHICLE:
                         s.ID = xml.getAttribute("object");
                         s.text = xml.getAttribute("vehicle");
                         break;
 
                     default:
+                        if (xml.tagName in A4Script.customScriptLoadFns) {
+                            let loadfn:(xml:Element, id:number) => A4Script = A4Script.customScriptLoadFns[xml.tagName];
+                            return loadfn(xml, A4Script.customScriptIDs[xml.tagName]);
+                        }
                         console.error("No loading code for script type: " + xml.tagName);
                 }
                 return s;
             }
         }
+
         console.error("Unknown script type: " + xml.tagName);
         return null;
     }
@@ -2012,23 +1972,20 @@ class A4Script {
                 break;
             }
 
-            case A4_SCRIPT_CUTSCENE:
-            {
-                xmlString += " cutscene=\"" + this.value + "\"";
-                break;
-            }
-
-            case A4_SCRIPT_REFILLOXYGEN:
-                break;
-
-            case A4_SCRIPT_EMBARK_ON_GARAGE:
-                break;
-
             case A4_SCRIPT_IN_VEHICLE:
                 if (this.ID!=null) xmlString += " object=\"" + this.ID + "\"";
                 if (this.text!=null) xmlString += " vehicle=\"" + this.text + "\"";
                 break;
+
+            default:
+                {
+                    if (this.type in A4Script.customScriptSaveFns) {
+                        let savefn:(script:A4Script) => string = A4Script.customScriptSaveFns[this.type];
+                        xmlString += savefn(this);
+                    }
+                }
         }
+
 
         if (!tagClosed) {
             xmlString +="/>";
@@ -2058,6 +2015,25 @@ class A4Script {
         return scriptFunctions[this.type](this, o, map, game, otherCharacter);
     }
 
+
+    static registerCustomScript(name:string, loadfn:(xml:Element, id:number) => A4Script, 
+                                             savefn:(script:A4Script) => string,
+                                             fn:((A4Script, A4Object, A4Map, A4Game, A4Character) => number))
+    {
+        let id:number = A4Script.nextID;
+        A4Script.nextID++;
+        A4Script.customScriptIDs[name] = id;
+        A4Script.customScriptLoadFns[name] = loadfn;
+        A4Script.customScriptSaveFns[name] = savefn;
+        scriptNames[id] = name;
+        scriptFunctions[id] = fn;
+    }
+
+
+    static nextID:number = A4_N_SCRIPTS;
+    static customScriptIDs:{ [name: string] : number; } = {};
+    static customScriptLoadFns:{ [name: string] : (xml:Element, id:number) => A4Script; } = {};
+    static customScriptSaveFns:{ [name: string] : (script:A4Script) => string; } = {};
 
 	type:number;
 

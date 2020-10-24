@@ -15,7 +15,7 @@ var QWERTY_AGENDA_DELAY:number = 30*60;	// 30 seconds
 // var QWERTY_AGENDA_DELAY:number = 5*60;	// 5 seconds
 
 class ShrdluGameScript {
-	constructor(game:A4Game, app:A4EngineApp)
+	constructor(game:ShrdluA4Game, app:ShrdluApp)
 	{
 		this.app = app;
 		this.game = game;
@@ -1756,7 +1756,7 @@ class ShrdluGameScript {
 			        this.game.currentPlayer.eventWithObject(A4_EVENT_RECEIVE, this.game.qwertyAI.robot, fixedSuit, this.game.currentPlayer.map, this.game);
 			        this.game.qwertyAI.robot.eventWithObject(A4_EVENT_ACTION_GIVE, this.game.currentPlayer, fixedSuit, this.game.currentPlayer.map, this.game);					
 					this.game.playSound("data/sfx/itemPickup.wav");
-					this.game.in_game_actions_for_log.push(["give("+this.game.qwertyAI.selfID+","+fixedSuit.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
+					this.game.inGameActionsForLog.push(["give("+this.game.qwertyAI.selfID+","+fixedSuit.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
 					this.game.qwertyAI.respondToPerformatives = true;
 					this.act_1_stasis_thread_state = 8;
 				}
@@ -2611,7 +2611,7 @@ class ShrdluGameScript {
 			        this.game.currentPlayer.eventWithObject(A4_EVENT_RECEIVE, this.game.qwertyAI.robot, fixedDatapad, this.game.currentPlayer.map, this.game);
 			        this.game.qwertyAI.robot.eventWithObject(A4_EVENT_ACTION_GIVE, this.game.currentPlayer, fixedDatapad, this.game.currentPlayer.map, this.game);					
 					this.game.playSound("data/sfx/itemPickup.wav");
-					this.game.in_game_actions_for_log.push(["give("+this.game.qwertyAI.selfID+","+fixedDatapad.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
+					this.game.inGameActionsForLog.push(["give("+this.game.qwertyAI.selfID+","+fixedDatapad.ID+","+this.game.currentPlayer.ID+")",""+this.game.in_game_seconds]);
 					this.game.qwertyAI.respondToPerformatives = true;
 					this.act_2_datapad_state = 0;
 
@@ -4124,8 +4124,8 @@ class ShrdluGameScript {
     }
 
 
-	app:A4EngineApp = null;
-	game:A4Game = null;
+	app:ShrdluApp = null;
+	game:ShrdluA4Game = null;
 	qwertyID:string = null;
 	etaoinID:string = null;
 	playerID:string = null;

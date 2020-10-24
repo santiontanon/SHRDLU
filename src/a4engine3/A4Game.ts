@@ -1,20 +1,3 @@
-var LOG_ACTIONS_IN_DEBUG_LOG:boolean = false;
-
-var SHRDLU_INVENTORY_DISPLAY_SIZE:number = 12;
-var SHRDLU_HUD_STATE_MESSAGES:number = 0;
-var SHRDLU_HUD_STATE_MESSAGES_INPUT:number = 1;
-var SHRDLU_HUD_STATE_INVENTORY:number = 2;
-var SHRDLU_HUD_STATE_SPLIT_INVENTORY:number = 3;
-
-var SHRDLU_MAX_SPACESUIT_OXYGEN:number = 8*50*60;    // 8 minutes of game time
-var COMMUNICATOR_CONNECTION_TIMEOUT:number = 50*60;    // 1 minute of game time
-
-var SHRDLU_START_DATE:number = 45186163200;    // Thursday, October 21st, 2432
-var SHRDLU_TILE_SIZE:number = 8;
-
-var SPACE_NEAR_FAR_THRESHOLD:number = 12;  // in meters
-
-
 var A4_HASH_SIZE:number = 1000;
 
 var A4_DIRECTION_NONE:number = -1;
@@ -81,7 +64,6 @@ var A4_MAX_MESSAGE_LENGTH:number = 42;
 var CYCLES_IN_PERCEPTION_BUFFER:number = 50;
 var TEXT_INITIAL_DELAY:number = 60;
 var TEXT_SPEED:number = 8;
-var EYESOPEN_SPEED:number = 180;
 
 var animationNames:string[] = [
     "idle",
@@ -137,37 +119,34 @@ class WarpRequest {
 
 
 class A4Game {
-    constructor(xml:Element, game_path:string, GLTM:GLTManager, SFXM:SFXManager, a_sfx_volume:number, gender:string)
+    constructor(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager, a4of:A4ObjectFactory, a_sfx_volume:number, gender:string)
     {
+        this.objectFactory = a4of;
         this.playerGender = gender;
-        this.loadContentFromXML(xml, game_path, GLTM, SFXM);
-
-//        console.log(xml.outerHTML);
-
+        this.loadContentFromXML(xml, game_path, ontology_path, GLTM, SFXM);
         this.sfx_volume = a_sfx_volume;
     }
 
 
-    loadContentFromXML(xml:Element, game_path:string, GLTM:GLTManager, SFXM:SFXManager)
+    loadContentFromXML(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager)
     {
+        this.ontology = new Ontology();
+        Sort.clear();
+        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
+        xmlhttp.overrideMimeType("text/xml");
+        xmlhttp.open("GET", ontology_path, false); 
+        xmlhttp.send();
+        this.ontology.loadSortsFromXML(xmlhttp.responseXML.documentElement);
+
         A4Object.s_nextID = 10000;
         this.game_path = game_path;
         this.GLTM = GLTM;
         this.SFXM = SFXM;
         this.xml = xml;
 
-        this.ontology = new Ontology();
-        Sort.clear();
-        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
-        xmlhttp.overrideMimeType("text/xml");
-        xmlhttp.open("GET", "data/shrdluontology.xml", false); 
-        xmlhttp.send();
-        this.ontology.loadSortsFromXML(xmlhttp.responseXML.documentElement);
-
         this.gameName = xml.getAttribute("name");
         this.gameTitle = xml.getAttribute("title");
         this.gameSubtitle = xml.getAttribute("subtitle");
-        this.serverToken = xml.getAttribute("serverToken") || '';
 
         console.log("game name: " + this.gameName);
         console.log("game title: " + this.gameTitle);
@@ -185,16 +164,6 @@ class A4Game {
         if (xml.getAttribute("cycle") != null) {
             this.cycle = Number(xml.getAttribute("cycle"));
         }
-        if (xml.getAttribute("playerGender") != null) {
-          this.playerGender = xml.getAttribute("playerGender");
-        }
-        if (xml.getAttribute("communicatorConnectedTo") != null) {
-          this.communicatorConnectedTo = xml.getAttribute("communicatorConnectedTo");
-        }
-        if (xml.getAttribute("communicatorConnectionTime") != null) {
-          this.communicatorConnectionTime = Number(xml.getAttribute("communicatorConnectionTime"));
-        }
-
 
         let story_xml:Element = getFirstElementChildByTag(xml, "story");
         if (story_xml!=null) {
@@ -232,6 +201,7 @@ class A4Game {
         this.tileHeight = Number(tiles_xml.getAttribute("sourceheight"));
         this.defaultZoom = targetwidth/this.tileWidth;
         this.zoom = this.targetZoom = this.defaultZoom;
+
         // In a first pass, we just trigger loading all the images (since browser games load them asynchronously)
         // later in finishLoadingGame, the rest of the game is loaded...
         for(let i:number = 0;i<tiles_xml.children.length;i++) {
@@ -243,86 +213,6 @@ class A4Game {
                 this.graphicFiles.push(gf);
             }
         }
-
-        this.rooms_with_lights = ["location-as4",    // bedroom 1
-                                  "location-as5",
-                                  "location-as6",
-                                  "location-as7",
-                                  "location-as8",
-                                  "location-as9",
-                                  "location-as10",
-                                  "location-as11",
-                                  "location-as12",
-                                  "location-as13",
-                                  "location-as14",
-                                  "location-as15",    // bedroom 12
-                                  "location-as16",    // mess hall
-                                  "location-as17",
-                                  "location-as18",
-                                  "location-as19",
-                                  "location-as20",
-                                  "location-as21",
-                                  "location-as22",
-                                  "location-as23",
-                                  "location-as24",
-                                  "location-as25",
-                                  "location-as26",
-                                  "location-as27",
-                                  "location-maintenance",
-                                  "location-as29",
-                                  "location-garage",
-                                  "location-west-cave-dark",
-                                  "location-east-cave-dark",
-                                  "tardis8-bridge", 
-                                  "tardis8-computer",
-                                  "tardis8-corridor-east",
-                                  "tardis8-corridor-west",
-                                  "tardis8-stasis1",
-                                  "tardis8-stasis2",
-                                  "tardis8-engineering",
-                                  ];
-
-        this.rooms_with_lights_on = ["location-as4",    // bedroom 1
-                                  "location-as5",
-                                  "location-as6",
-                                  "location-as7",
-                                  "location-as8",
-                                  "location-as9",
-                                  "location-as10",
-                                  "location-as11",
-                                  "location-as12",
-                                  "location-as13",
-                                  "location-as14",
-                                  "location-as15",    // bedroom 12
-                                  "location-as16",    // mess hall
-                                  "location-as17",
-                                  "location-as18",
-                                  "location-as19",
-                                  "location-as20",
-                                  "location-as21",
-                                  //"location-as22",    // we start with all the storage rooms with the lights off
-                                  //"location-as23",
-                                  //"location-as24",
-                                  "location-as25",
-                                  "location-as26",
-                                  "location-as27",
-                                  //"location-maintenance",
-                                  "location-as29",
-                                  "location-garage",
-                                  ];
-
-        this.three_d_printer_recipies = [["plastic-cup", ["plastic"]],
-                                         ["plastic-plate", ["plastic"]],
-                                         ["plastic-fork", ["plastic"]],
-                                         ["plastic-spoon", ["plastic"]],
-                                         ["plastic-knife", ["plastic"]],
-                                         ["plastic-chopstick", ["plastic"]],
-                                         ["screwdriver", ["plastic", "iron"]],
-                                         ["pliers", ["plastic", "iron"]],
-                                         ["wrench", ["plastic", "iron"]],
-                                         ["cable", ["plastic", "copper"]],
-                                         ["extension-cord", ["plastic", "copper"]],
-                                        ];
     }
 
 
@@ -337,7 +227,7 @@ class A4Game {
 
 
     // if "saveGameXml" is != null, this is a call to restore from a save state
-    finishLoadingGame(saveGameXml:Element, app:A4EngineApp)
+    finishLoadingGame(saveGameXml:Element)
     {
         let tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
         for(let idx:number = 0;idx<tiles_xml.children.length;idx++) {
@@ -416,7 +306,7 @@ class A4Game {
                 this.objectFactory.addDefinitions(obejcts_xml, this, "CharacterClass");
             }
         }
-        
+
         // loading maps:
         let objectsToRevisit_xml:Element[] = [];
         let objectsToRevisit_object:A4Object[] = [];
@@ -492,16 +382,12 @@ class A4Game {
         }
 
         this.currentPlayer = null;
-
-        // spawning player characters:
         {
             let players_xml:Element[] = getElementChildrenByTag(this.xml, "player");
             for(let i:number = 0;i<players_xml.length;i++) {
                 let player_xml:Element = players_xml[i];
                 let id:string = player_xml.getAttribute("id");
                 let className:string = player_xml.getAttribute("class");
-                if (this.playerGender == "female") className = "susan";
-                if (this.playerGender == "male") className = "david";
                 if (className == null) className = player_xml.getAttribute("type");
                 let x:number = Number(player_xml.getAttribute("x"));
                 let y:number = Number(player_xml.getAttribute("y"));
@@ -517,7 +403,7 @@ class A4Game {
                         Number(id) >= A4Object.s_nextID) A4Object.s_nextID = Number(id)+1;
                 }
                 p.loadObjectAdditionalContent(player_xml, this, this.objectFactory, objectsToRevisit_xml, objectsToRevisit_object);
-                p.warp(x, y, this.maps[mapIdx]);//, A4_LAYER_CHARACTERS);
+                p.warp(x, y, this.maps[mapIdx]);
                 this.players.push(<A4PlayerCharacter>p);
             }
         }
@@ -541,46 +427,7 @@ class A4Game {
 
         for(let i:number = 0;i<objectsToRevisit_xml.length;i++) {
             objectsToRevisit_object[i].revisitObject(objectsToRevisit_xml[i], this);
-        }
-
-        // load the location information
-        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
-        xmlhttp.overrideMimeType("text/xml");
-        xmlhttp.open("GET", "data/map-locations.xml", false); 
-        xmlhttp.send();
-        AILocation.loadLocationsFromXML(xmlhttp.responseXML.documentElement, this, this.ontology);
-
-        // create the natural language parser:
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.overrideMimeType("text/xml");
-        xmlhttp.open("GET", "data/nlpatternrules.xml", false); 
-        xmlhttp.send();
-        this.naturalLanguageParser = NLParser.fromXML(xmlhttp.responseXML.documentElement, this.ontology);
-        this.naturalLanguageGenerator = new NLGenerator(this.ontology, this.naturalLanguageParser.posParser);
-        this.naturalLanguageParser.talkingTargets = ["player", "shrdlu", "qwerty", "etaoin"];
-
-        // load the AIs:
-        this.etaoinAI = new EtaoinAI(this.ontology, this.naturalLanguageParser, [], this, 
-                                      ["data/general-kb.xml","data/etaoin-kb.xml"]);
-        this.qwertyAI = new QwertyAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Qwerty")[0]), this, 
-                                      ["data/general-kb.xml","data/qwerty-kb.xml"]);
-        this.shrdluAI = new ShrdluAI(this.ontology, this.naturalLanguageParser, <A4AICharacter>(this.findObjectByName("Shrdlu")[0]), this, 
-                                      ["data/general-kb.xml","data/shrdlu-kb.xml"]);
-
-        if (LOG_ACTIONS_IN_DEBUG_LOG) {
-          this.debugActionLog = [];
-          this.debugTextBubbleLog = [];
-          this.etaoinAI.debugActionLog = this.debugActionLog;
-          this.qwertyAI.debugActionLog = this.debugActionLog;
-          this.shrdluAI.debugActionLog = this.debugActionLog;
-        }
-
-        if (saveGameXml) {
-            let ais_xml:Element[] = getElementChildrenByTag(saveGameXml, "RuleBasedAI");
-            this.etaoinAI.restoreFromXML(ais_xml[0]);
-            this.qwertyAI.restoreFromXML(ais_xml[1]);
-            this.shrdluAI.restoreFromXML(ais_xml[2]);
-        }
+        }        
 
         // set initial camera:
         if (this.players.length > 0) {
@@ -591,131 +438,29 @@ class A4Game {
         this.gameComplete = false;
         this.gameComplete_ending_ID = null;
 
-        Sort.precomputeIsA();
-
-        this.gameScript = new ShrdluGameScript(this, app);
-        this.cutScenes = new ShrdluCutScenes(this, app);
-
-        // preload the images:
-        this.GLTM.get("data/cutscene-corpse1.png");
-        this.GLTM.get("data/cutscene-diary1.png");
-        this.GLTM.get("data/cutscene-poster1.png");
-        this.GLTM.get("data/cutscene-death-oxygen.png");
-
-        for(let variable_xml of getElementChildrenByTag(this.xml, "variable")) {
-            let vname:string = variable_xml.getAttribute("name");
-            if (vname == "textInputAllowed") this.textInputAllowed = variable_xml.getAttribute("value") == "true";
-            if (vname == "eyesClosedState") this.eyesClosedState = Number(variable_xml.getAttribute("value"));
-            if (vname == "eyesClosedTimer") this.eyesClosedTimer = Number(variable_xml.getAttribute("value"));
-            if (vname == "cutSceneActivated") this.cutSceneActivated = Number(variable_xml.getAttribute("value"));
-            if (vname == "introact_request") this.introact_request = Number(variable_xml.getAttribute("value"));
-            if (vname == "gameover_request") this.gameover_request = Number(variable_xml.getAttribute("value"));
-            if (vname == "in_game_seconds") this.in_game_seconds = Number(variable_xml.getAttribute("value"));
-            if (vname == "suit_oxygen") this.suit_oxygen = Number(variable_xml.getAttribute("value"));
-            if (vname == "comm_tower_repaired") this.comm_tower_repaired = variable_xml.getAttribute("value") == "true";
-            if (vname == "narrationMessages") {
-                for(let tmp_xml of getElementChildrenByTag(variable_xml, "message")) {
-                    this.narrationMessages.push(tmp_xml.firstChild.nodeValue);
-                }
-            }
-            if (vname == "rooms_with_lights_on") {
-                this.rooms_with_lights_on = [];
-                for(let tmp_xml of getElementChildrenByTag(variable_xml, "room")) {
-                    this.rooms_with_lights_on.push(tmp_xml.firstChild.nodeValue);
-                }
-            }
-            if (vname == "error_messages_for_log") {
-                for(let tmp_xml of getElementChildrenByTag(variable_xml, "message")) {
-                    let tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
-                    if (tmp_array[tmp_array.length-1] == "") tmp_array.splice(tmp_array.length-1, 1);
-                    this.error_messages_for_log.push(tmp_array);
-                }
-            }
-            if (vname == "in_game_actions_for_log") {
-                for(let tmp_xml of getElementChildrenByTag(variable_xml, "action")) {
-                    let tmp_array:string[] = tmp_xml.firstChild.nodeValue.split("\t");
-                    if (tmp_array[tmp_array.length-1] == "") tmp_array.splice(tmp_array.length-1, 1);
-                    this.in_game_actions_for_log.push(tmp_array);
-                }
-            }
-        }
-
-        for(let i:number = 0;i<this.maps.length;i++) {
-            this.maps[i].recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, this.map_location_names[i]);
-        }        
-
-        let script_e:Element = getFirstElementChildByTag(this.xml,"ShrdluGameScript");
-        if (script_e != null) this.gameScript.restoreFromXML(script_e);
-
-        if (this.gameScript.act == "3") {
-            this.loadTardis8LocationKnowledge();
-        }
-
-        // make sure SHRDLU knows how to go places for which it has to traverse multiple maps:
-        this.shrdluAI.robot.AI.precomputeMap2mapPaths(this);
-
         this.ensureUniqueObjectIDs();
 
         console.log("A4Game created\n");
         console.log("currentPlayer = " + this.currentPlayer);
     }
-
-
-    loadTardis8LocationKnowledge()
-    {
-        let xmlhttp:XMLHttpRequest = new XMLHttpRequest();
-        xmlhttp.overrideMimeType("text/xml");
-        xmlhttp.open("GET", "data/map-locations-tardis.xml", false); 
-        xmlhttp.send();
-        AILocation.loadLocationsFromXML(xmlhttp.responseXML.documentElement, this, this.ontology);
-        this.etaoinAI.precalculateLocationKnowledge(this, this.ontology);
-        this.shrdluAI.precalculateLocationKnowledge(this, this.ontology);
-        this.qwertyAI.precalculateLocationKnowledge(this, this.ontology);
-
-        this.getMap("Tardis 8").reevaluateVisibility();
-        this.getMap("Tardis 8").recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, 
-                                                          this.map_location_names[this.getMapIndex("Tardis 8")]);
-
-    }
-
     
 
     saveGame(saveName:string)
     {
-        let complete_xmlString:string = "<SHRDLU_savegame>\n";
+        let complete_xmlString:string = "<A4Game_savegame>\n";
         let xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
-        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName, xmlString);
 
         complete_xmlString += xmlString;
 
         for(let i:number = 0;i<this.maps.length;i++) {
             xmlString = this.maps[i].saveToXML(this);
             complete_xmlString += "\n\n\n" + xmlString;
-            //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-map" + i, xmlString);
             console.log("A4Game.saveGame: map "+i+" xmlString length " + xmlString.length);
 
         }
 
-        xmlString = this.etaoinAI.saveToXML();
-        complete_xmlString += "\n\n\n" + xmlString;
-        console.log("A4Game.saveGame: etaoin xmlString length " + xmlString.length);
-        //console.log(xmlString);
-        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-etaoin", xmlString);
-
-        xmlString = this.qwertyAI.saveToXML();
-        complete_xmlString += "\n\n\n" + xmlString;
-        console.log("A4Game.saveGame: qwerty xmlString length " + xmlString.length);
-        //console.log(xmlString);
-        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-qwerty", xmlString);
-
-        xmlString = this.shrdluAI.saveToXML();
-        complete_xmlString += "\n\n\n" + xmlString;
-        console.log("A4Game.saveGame: shrdlu xmlString length " + xmlString.length);
-        //console.log(xmlString);
-        //localStorage.setItem(A4SAVEGAME_STORAGE_KEY + "-" + saveName + "-shrdlu", xmlString);
-
-        complete_xmlString += "</SHRDLU_savegame>";
+        complete_xmlString += "</A4Game_savegame>";
 
         // save it:
         console.log("Size of sample is: " + complete_xmlString.length);
@@ -743,22 +488,9 @@ class A4Game {
     }
 
 
-    saveToXML() : string
+    saveToXMLInnerContent() : string
     {
         let xmlString:string = "";
-        xmlString += "<A4Game";
-        if (this.gameName != null) xmlString += " name=\"" + this.gameName + "\"";
-        if (this.gameTitle != null) xmlString += " title=\"" + this.gameTitle + "\"";
-        if (this.gameSubtitle != null) xmlString += " subtitle=\"" + this.gameSubtitle + "\"";
-        xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
-        xmlString += " cycle=\"" + this.cycle +"\"";
-        xmlString += " serverToken=\"" + this.serverToken + "\"";
-        xmlString += " playerGender=\"" + this.playerGender + "\""
-        if (this.communicatorConnectedTo != null) {
-          xmlString += " communicatorConnectedTo=\"" + this.communicatorConnectedTo + "\""
-          xmlString += " communicatorConnectionTime=\"" + this.communicatorConnectionTime + "\""
-        }
-        xmlString += ">\n";
 
         if (this.gameTitleImage!=null) {
             xmlString += "<titleImage>" + this.gameTitleImage + "</titleImage>\n";
@@ -887,42 +619,23 @@ class A4Game {
         }        
         xmlString += "</console>\n";
 
-        // game variables:
-        xmlString += "<variable name=\"textInputAllowed\" value=\""+this.textInputAllowed+"\"/>\n";
-        xmlString += "<variable name=\"eyesClosedState\" value=\""+this.eyesClosedState+"\"/>\n";
-        xmlString += "<variable name=\"eyesClosedTimer\" value=\""+this.eyesClosedTimer+"\"/>\n";
-        xmlString += "<variable name=\"cutSceneActivated\" value=\""+this.cutSceneActivated+"\"/>\n";
-        xmlString += "<variable name=\"introact_request\" value=\""+this.introact_request+"\"/>\n";
-        xmlString += "<variable name=\"gameover_request\" value=\""+this.gameover_request+"\"/>\n";
-        xmlString += "<variable name=\"in_game_seconds\" value=\""+this.in_game_seconds+"\"/>\n";
-        xmlString += "<variable name=\"suit_oxygen\" value=\""+this.suit_oxygen+"\"/>\n";
-        xmlString += "<variable name=\"comm_tower_repaired\" value=\""+this.comm_tower_repaired+"\"/>\n";
-        xmlString += "<variable name=\"narrationMessages\">\n";
-        for(let nm of this.narrationMessages) {
-            xmlString += "<message>" + nm + "</message>\n";
-        }
-        xmlString += "</variable>\n";
-        xmlString += "<variable name=\"rooms_with_lights_on\">\n";
-        for(let r of this.rooms_with_lights_on) {
-            xmlString += "<room>" + r + "</room>\n";
-        }
-        xmlString += "</variable>\n";
-        xmlString += "<variable name=\"error_messages_for_log\">\n";
-        for(let m of this.error_messages_for_log) {
-            xmlString += "<message>";
-            for(let tmp of m) xmlString += tmp + "\t";
-            xmlString += "</message>\n";
-        }
-        xmlString += "</variable>\n";
-        xmlString += "<variable name=\"in_game_actions_for_log\">\n";
-        for(let m of this.in_game_actions_for_log) {
-            xmlString += "<action>";
-            for(let tmp of m) xmlString += tmp + "\t";
-            xmlString += "</action>\n";
-        }
-        xmlString += "</variable>\n";
+        return xmlString;
+    }
 
-        xmlString += this.gameScript.saveToXML();
+
+    saveToXML() : string
+    {
+        let xmlString:string = "";
+        xmlString += "<A4Game";
+        if (this.gameName != null) xmlString += " name=\"" + this.gameName + "\"";
+        if (this.gameTitle != null) xmlString += " title=\"" + this.gameTitle + "\"";
+        if (this.gameSubtitle != null) xmlString += " subtitle=\"" + this.gameSubtitle + "\"";
+        xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
+        xmlString += " cycle=\"" + this.cycle +"\"";
+        xmlString += " playerGender=\"" + this.playerGender + "\""
+        xmlString += ">\n";
+
+        xmlString += this.saveToXMLInnerContent();
 
         xmlString += "</A4Game>";
         return xmlString;
@@ -942,7 +655,11 @@ class A4Game {
     }
 
 
-    getNEndings():number {return this.endingIDs.length;}
+    getNEndings():number 
+    {
+      return this.endingIDs.length;
+    }
+
     
     getGameEnding(ID:string):string[]
     {
@@ -952,9 +669,23 @@ class A4Game {
         return null;
     }
     
-    getGameTitle():string {return this.gameTitle;}
-    getGameTitleImage():string {return this.gameTitleImage;}
-    getGameSubtitle():string {return this.gameSubtitle;}
+
+    getGameTitle():string 
+    {
+      return this.gameTitle;
+    }
+
+
+    getGameTitleImage():string 
+    {
+      return this.gameTitleImage;
+    }
+
+
+    getGameSubtitle():string 
+    {
+      return this.gameSubtitle;
+    }
 
 
     addEnding(ID:string, endingText:string[])
@@ -966,11 +697,17 @@ class A4Game {
     
     update(k:KeyboardState) : boolean
     {
-        return this.updateInternal(k, true);
+        if (!this.updateInternal(k, [])) return false;
+
+        this.cycle++;
+        this.in_game_seconds++;    // we keep a separate count from cycles, since in some game scenes, time might advance faster
+        if (this.cycles_without_redrawing > 0) this.cycles_without_redrawing--;
+
+        return true;
     }
 
 
-  	updateInternal(k:KeyboardState, updateAIs:boolean) : boolean
+  	updateInternal(k:KeyboardState, additional_maps_to_update:A4Map[]) : boolean
     {
         if (this.cycle==0) {
             if (this.eventScripts[A4_EVENT_START] != null) {
@@ -978,17 +715,6 @@ class A4Game {
                     rule.executeEffects(null, null, this, null);
                 }
             }
-        } else {
-            // do not execute a story update on the first cycle, since that's when all the "onStart" methods are started,
-            // which can mess up with the story
-            this.gameScript.update();            
-        }
-
-        if (this.cutSceneActivated >= 0) {
-            if (this.cutScenes.update(this.cutSceneActivated, k)) {
-                this.cutSceneActivated = -1;
-            }
-            return true;
         }
 
         this.zoom = (0.95*this.zoom + 0.05*this.targetZoom);
@@ -999,7 +725,9 @@ class A4Game {
         for(let m of this.currentPlayer.map.getNeighborMaps()) {
             if (maps_to_update.indexOf(m) == -1) maps_to_update.push(m);
         }
-        if (maps_to_update.indexOf(this.shrdluAI.robot.map) == -1) maps_to_update.push(this.shrdluAI.robot.map);
+        for(let m of additional_maps_to_update) {
+            if (maps_to_update.indexOf(m) == -1) maps_to_update.push(m);   
+        }
        
         for(let player of this.players) {
             if (maps_to_update.indexOf(player.map)==-1) maps_to_update.push(player.map);
@@ -1024,11 +752,6 @@ class A4Game {
                                                                wr.o.x+wr.o.getPixelWidth(),
                                                                wr.o.y+wr.o.getPixelHeight()));
                 }
-                /*
-                if (isCurrentPlayer) {
-                    if (m!=null) this.addMessage("Welcome to " + m.name);
-                }
-                */
                 wr.o.warp(wr.x,wr.y,wr.map);//,wr.layer);
             } else {
                 // can't warp, since there is a collision!
@@ -1055,84 +778,14 @@ class A4Game {
 
         this.executeScriptQueues();
 
-        if (updateAIs) {
-          this.etaoinAI.update(this.in_game_seconds);
-          this.qwertyAI.update(this.in_game_seconds);
-          this.shrdluAI.update(this.in_game_seconds);
-        }
-
-        switch(this.eyesClosedState) {
-        case 0:
-            break;
-        case 1:
-            this.eyesClosedTimer++;
-            if (this.eyesClosedTimer>EYESOPEN_SPEED) {
-                this.eyesClosedState = 2;
-                this.eyesClosedTimer = 0;
-            }
-            break;
-        case 2:
-            break;
-        case 3:
-            this.eyesClosedTimer++;
-            if (this.eyesClosedTimer>EYESOPEN_SPEED) {
-                this.eyesClosedState = 0;
-                this.eyesClosedTimer = 0;
-            }
-            break;
-        }    
-
-        if (this.getStoryStateVariable("spacesuit")=="helmet") {
-            if (this.currentPlayer.map.name == "Aurora Station" ||
-                this.currentPlayer.isInVehicle()) {
-                if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                    this.suit_oxygen += 16;
-                    this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
-                }
-            } else {
-                if (this.suit_oxygen > 0) {
-                    if (this.currentPlayer.map.name == "Spacer Valley South" ||
-                        this.currentPlayer.map.name == "Spacer Valley North") {
-                        this.suit_oxygen -= 4;
-                        this.suit_oxygen = Math.max(this.suit_oxygen, 0)
-                    } else {
-                        this.suit_oxygen--;
-                    }
-                } else {
-                    this.gameover_request = 1;    // OUT Of OXYGEN!
-                }
-            }
-        } else {
-            if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN) {
-                this.suit_oxygen += 16;
-                this.suit_oxygen = Math.min(this.suit_oxygen, SHRDLU_MAX_SPACESUIT_OXYGEN)
-            }
-        }
-
-        if (this.communicatorConnectedTo != null) {
-            if ((this.etaoinAI.time_in_seconds - this.communicatorConnectionTime) > COMMUNICATOR_CONNECTION_TIMEOUT) {
-                this.communicatorConnectedTo = null;
-                this.communicatorConnectionTime = 0;
-            }
-        }
-
-        this.cycle++;
-        this.in_game_seconds++;    // we keep a separate count from cycles, since in some game scenes, time might advance faster
-        if (this.cycles_without_redrawing > 0) this.cycles_without_redrawing--;
-
-        return true;
+        return true;        
     }
 
 
-	draw(screen_width:number, screen_height:number)
+    draw(screen_width:number, screen_height:number)
     {
         let tileSize:number = (screen_height/24);
         let split:number = Math.floor(tileSize*17);
-
-        if (this.cutSceneActivated >= 0) {
-            this.cutScenes.draw(this.cutSceneActivated, screen_width, split);
-            return;
-        }
 
         // do not draw anything unless we have already executed a cycle:
         if (this.cycle==0) return;
@@ -1140,13 +793,6 @@ class A4Game {
 
         this.drawWorld(screen_width, split+tileSize);
         this.drawHUD(screen_width, screen_height, split);
-
-        let y:number = 8;
-        for(let i:number = 0;i<this.narrationMessages.length;i++) {
-            let width:number = this.narrationMessages[i].length*6*PIXEL_SIZE;
-            fillTextTopLeft(this.narrationMessages[i], screen_width/2 - width/2, y, fontFamily32px, MSX_COLOR_WHITE);
-            y += 8;
-        }
     }
 
 
@@ -1159,62 +805,12 @@ class A4Game {
             let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
             let ty:number = Math.floor((this.currentPlayer.y+this.currentPlayer.tallness)/this.tileHeight);
             map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
-            this.drawEyesclosedCover(screen_width, screen_height);
             map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
         } else {
-            // this part is not needed for SHRDLU (the character doesn't die like in other games)
-            /*
             let map:A4Map = this.maps[0];
-            map.draw(0, 0, this.zoom,screen_width, screen_height, this);
-            this.drawEyesclosedCover(screen_width, screen_height);
+            map.drawRegion(0, 0, this.zoom, screen_width, screen_height, map.visibilityRegion(0,0), this);
             map.drawTextBubbles(0, 0, this.zoom, screen_width, screen_height, this);
-            */
         }
-    }
-
-
-    drawEyesclosedCover(screen_width:number, screen_height:number)
-    {
-        switch(this.eyesClosedState) {
-        case 0:
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, screen_width, screen_height);
-            break;
-        case 1:
-            {
-              let f:number = (EYESOPEN_SPEED - this.eyesClosedTimer)/EYESOPEN_SPEED;
-              if (f<0) f = 0;
-              if (f>1) f = 1;
-              let x:number = 4*f - 1;
-              f = 0.125 * (5 + x - 3*x*x + x*x*x);
-              if (f<0) f = 0;
-              if (f>1) f = 1;
-              f = Math.sqrt(f)/2;
-              let height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
-              ctx.fillStyle = "black";
-              ctx.fillRect(0, 0, screen_width, height);
-              ctx.fillRect(0, screen_height-height, screen_width, height);
-            }
-            break;
-        case 2:
-            break;
-        case 3:
-            {
-              let f:number = this.eyesClosedTimer/EYESOPEN_SPEED;
-              if (f<0) f = 0;
-              if (f>1) f = 1;
-              let x:number = 4*f - 1;
-              f = 0.125 * (5 + x - 3*x*x + x*x*x);
-              if (f<0) f = 0;
-              if (f>1) f = 1;
-              f = Math.sqrt(f)/2;
-              let height:number = Math.floor((screen_height/PIXEL_SIZE)*f)*PIXEL_SIZE;
-              ctx.fillStyle = "black";
-              ctx.fillRect(0, 0, screen_width, height);
-              ctx.fillRect(0, screen_height-height, screen_width, height);
-            }
-            break;
-        }        
     }
 
 
@@ -1223,342 +819,15 @@ class A4Game {
         ctx.fillStyle = "black";
         ctx.fillRect(0,split+PIXEL_SIZE,screen_width,(screen_height-split));
 
-        if (this.HUD_hseparator==null) {
-            this.HUD_hseparator = this.GLTM.getPiece("data/GUI.png",0,0,8,8);
-            this.HUD_vseparator = this.GLTM.getPiece("data/GUI.png",0,8,8,8);
-            this.HUD_tseparator = this.GLTM.getPiece("data/GUI.png",48,0,8,8);
-            this.HUD_uparrow1 = this.GLTM.getPiece("data/GUI.png",8,0,8,8);
-            this.HUD_uparrow2 = this.GLTM.getPiece("data/GUI.png",8,8,8,8);
-            this.HUD_downarrow1 = this.GLTM.getPiece("data/GUI.png",16,0,8,8);
-            this.HUD_downarrow2 = this.GLTM.getPiece("data/GUI.png",16,8,8,8);
-            this.HUD_button1 = this.GLTM.getPiece("data/GUI.png",24,0,8,8);
-            this.HUD_button2 = this.GLTM.getPiece("data/GUI.png",24,8,8,8);
-
-            this.HUD_oxygen = this.GLTM.getPiece("data/GUI.png",0,48,40,8);
-            this.HUD_oxygen_bar = this.GLTM.getPiece("data/GUI.png",32,40,32,8);
-        }
-
-        if (this.HUD_hseparator != null) {
-            for(let i:number = 0;i<screen_width;i+=PIXEL_SIZE*8) {
-                this.HUD_hseparator.drawWithZoom(i, split, PIXEL_SIZE);
-            }
-        }
-        if (this.HUD_button1!=null && this.HUD_button2!=null) {
-            if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY ||
-                this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-                this.HUD_button2.drawWithZoom(27*8*PIXEL_SIZE, split, PIXEL_SIZE);
-            } else {
-                this.HUD_button1.drawWithZoom(27*8*PIXEL_SIZE, split, PIXEL_SIZE);
-            }
-        }
-
-        // we can only show either the inventory or the messags (not both):
-        if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
-            // inventory:
-            let inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE;
-            if (this.currentPlayer.inventory.length<=inventoryMaxSize) this.HUD_inventory_start = 0;
-            if (this.currentPlayer.selectedItem>=0 &&
-                this.currentPlayer.selectedItem < this.HUD_inventory_start) {
-                this.HUD_inventory_start = this.currentPlayer.selectedItem - (this.currentPlayer.selectedItem%2);
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-            if (this.currentPlayer.selectedItem >= this.HUD_inventory_start+inventoryMaxSize) {
-                this.HUD_inventory_start = this.currentPlayer.selectedItem-(inventoryMaxSize-1);
-                this.HUD_inventory_start += (this.HUD_inventory_start%2);
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-
-            // draw the inventory UI:
-            this.HUD_tseparator.drawWithZoom(26*8*PIXEL_SIZE, split, PIXEL_SIZE);
-            for(let i:number = split+PIXEL_SIZE*8;i<screen_height;i+=PIXEL_SIZE*8) {
-                this.HUD_vseparator.drawWithZoom(26*8*PIXEL_SIZE, i, PIXEL_SIZE);
-            }
-            if (!this.currentPlayer.isInVehicle()) {
-                if (this.currentPlayer.selectedItem>=0) {
-                    let item:A4Object = this.currentPlayer.inventory[this.currentPlayer.selectedItem];
-                    if (item!=null) {
-                        if ((<A4Item>item).droppable) {
-                            fillTextTopLeft("  o ", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                            fillTextTopLeft("Dr p", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-                        } else {
-                            fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                        }
-                        if (item.usable) {
-                            fillTextTopLeft("U  ", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                            fillTextTopLeft(" se", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-                        } else {
-                            fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                        }
-                    } else {
-                        fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                        fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                    }
-                } else {
-                    fillTextTopLeft("Drop", 28*8*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                    fillTextTopLeft("Use", 28*8*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-                }
-            }
-            if (this.HUD_uparrow1!=null && this.HUD_uparrow2!=null) {
-                if (this.HUD_inventory_start>0) {
-                    this.HUD_uparrow1.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_uparrow2.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            if (this.HUD_downarrow1!=null && this.HUD_downarrow2!=null) {
-                if (this.HUD_inventory_start+inventoryMaxSize<this.currentPlayer.inventory.length) {
-                    this.HUD_downarrow1.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_downarrow2.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            // draw the inventory:
-            for(let i:number = 0;i<inventoryMaxSize &&
-                                 i+this.HUD_inventory_start < this.currentPlayer.inventory.length;i++) {
-                let x:number = (i%2)*8*14*PIXEL_SIZE;
-                let y:number = split + (1+Math.floor(i/2))*8*PIXEL_SIZE;
-                let item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
-
-                if (i+this.HUD_inventory_start == this.currentPlayer.selectedItem) {
-                    ctx.fillStyle = MSX_COLOR_DARK_BLUE;
-                    ctx.fillRect(x, y, 12*8*PIXEL_SIZE, 8*PIXEL_SIZE);
-                }
-
-                // item icon:
-                let anim:A4Animation = item.getCurrentAnimation();
-                if (anim!=null) {
-                    anim.drawWithZoom(x,y,this.zoom);
-                }
-
-                // item name:
-                fillTextTopLeft(item.name, x+2*8*PIXEL_SIZE, y, fontFamily32px, MSX_COLOR_WHITE);
-            }
-
-
-        } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-            // inventory:
-            let inventoryMaxSize:number = SHRDLU_INVENTORY_DISPLAY_SIZE/2;
-            let inventoryRemoteMaxSize:number = (SHRDLU_INVENTORY_DISPLAY_SIZE/2)-1;
-            // player inventory scroll:
-            if (this.currentPlayer.inventory.length<=inventoryMaxSize) this.HUD_inventory_start = 0;
-            if (this.currentPlayer.selectedItem>=0 &&
-                this.currentPlayer.selectedItem < this.HUD_inventory_start) {
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-            if (this.currentPlayer.selectedItem >= this.HUD_inventory_start+inventoryMaxSize) {
-                this.HUD_inventory_start = this.currentPlayer.selectedItem-(inventoryMaxSize-1);
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-            // remote inventory scroll:
-            if (this.HUD_remote_inventory.content.length<=inventoryRemoteMaxSize) this.HUD_remote_inventory_start = 0;
-            if (this.HUD_remote_inventory_selected>=0 &&
-                this.HUD_remote_inventory_selected < this.HUD_remote_inventory_start) {
-                this.HUD_remote_inventory_start = this.HUD_remote_inventory_selected;
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-            if (this.HUD_remote_inventory_selected >= this.HUD_remote_inventory_start+inventoryRemoteMaxSize) {
-                this.HUD_remote_inventory_start = this.HUD_remote_inventory_selected-(inventoryRemoteMaxSize-1);
-                //console.log("selected: " + this.currentPlayer.selectedItem + ", start: " + this.HUD_inventory_start);
-            }
-
-            // draw the split inventory UI:
-            this.HUD_tseparator.drawWithZoom(13*8*PIXEL_SIZE, split, PIXEL_SIZE);
-            this.HUD_tseparator.drawWithZoom(19*8*PIXEL_SIZE, split, PIXEL_SIZE);
-            for(let i:number = split+PIXEL_SIZE*8;i<screen_height;i+=PIXEL_SIZE*8) {
-                this.HUD_vseparator.drawWithZoom(13*8*PIXEL_SIZE, i, PIXEL_SIZE);
-                this.HUD_vseparator.drawWithZoom(19*8*PIXEL_SIZE, i, PIXEL_SIZE);
-            }
-            if (this.HUD_remote_inventory_selected>=0 &&
-                this.HUD_remote_inventory.content[this.HUD_remote_inventory_selected].takeable) {
-                fillTextTopLeft(" U ",(15*8+3)*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                fillTextTopLeft("< <",(15*8+3)*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-            } else {
-                fillTextTopLeft("<U<",(15*8+3)*PIXEL_SIZE, split+2*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-            }
-            if (this.currentPlayer.selectedItem>=0) {
-                fillTextTopLeft(" O ",(15*8+3)*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_LIGHT_GREEN);
-                fillTextTopLeft("> >",(15*8+3)*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-            } else {
-                fillTextTopLeft(">O>",(15*8+3)*PIXEL_SIZE, split+4*8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_DARK_BLUE);
-            }
-            // draw the inventory:
-            if (this.HUD_uparrow1!=null && this.HUD_uparrow2!=null) {
-                if (this.HUD_inventory_start>0) {
-                    this.HUD_uparrow1.drawWithZoom(10*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_uparrow2.drawWithZoom(10*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            if (this.HUD_downarrow1!=null && this.HUD_downarrow2!=null) {
-                if (this.HUD_inventory_start+inventoryMaxSize<this.currentPlayer.inventory.length) {
-                    this.HUD_downarrow1.drawWithZoom(11*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_downarrow2.drawWithZoom(11*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            for(let i:number = 0;i<inventoryMaxSize &&
-                                 i+this.HUD_inventory_start < this.currentPlayer.inventory.length;i++) {
-                let x:number = 0;
-                let y:number = split + (1+i)*8*PIXEL_SIZE;
-                let item:A4Object = this.currentPlayer.inventory[i+this.HUD_inventory_start];
-                if (item==null) continue;
-                if (i+this.HUD_inventory_start == this.currentPlayer.selectedItem) {
-                    ctx.fillStyle = MSX_COLOR_DARK_BLUE;
-                    ctx.fillRect(x, y, 12*8*PIXEL_SIZE, 8*PIXEL_SIZE);
-                }
-                // item icon:
-                let anim:A4Animation = item.getCurrentAnimation();
-                if (anim!=null) {
-                    anim.drawWithZoom(x,y,this.zoom);
-                }
-                // item name:
-                fillTextTopLeft(item.name, x+2*8*PIXEL_SIZE, y, fontFamily32px, MSX_COLOR_WHITE);
-            }
-
-            // draw the remote inventory:
-            if (this.HUD_uparrow1!=null && this.HUD_uparrow2!=null) {
-                if (this.HUD_remote_inventory_start>0) {
-                    this.HUD_uparrow1.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_uparrow2.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            if (this.HUD_downarrow1!=null && this.HUD_downarrow2!=null) {
-                if (this.HUD_remote_inventory_start+inventoryRemoteMaxSize<this.HUD_remote_inventory.content.length) {
-                    this.HUD_downarrow1.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_downarrow2.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            // name of the remote container:
-            fillTextTopLeft(this.HUD_remote_inventory.name + ":", 20*8*PIXEL_SIZE, split+8*PIXEL_SIZE, fontFamily32px, MSX_COLOR_WHITE);
-            // inventory:
-            for(let i:number = 0;i<inventoryRemoteMaxSize &&
-                                 i+this.HUD_remote_inventory_start < this.HUD_remote_inventory.content.length;i++) {
-                let x:number = 20*8*PIXEL_SIZE;
-                let y:number = split + (2+i)*8*PIXEL_SIZE;
-                let item:A4Object = this.HUD_remote_inventory.content[i+this.HUD_remote_inventory_start];
-                if (item==null) continue;
-                if (i+this.HUD_remote_inventory_start == this.HUD_remote_inventory_selected) {
-                    ctx.fillStyle = MSX_COLOR_DARK_BLUE;
-                    ctx.fillRect(x, y, 12*8*PIXEL_SIZE, 8*PIXEL_SIZE);
-                }
-                // item icon:
-                let anim:A4Animation = item.getCurrentAnimation();
-                if (anim!=null) {
-                    anim.drawWithZoom(x,y,this.zoom);
-                }
-                // item name:
-                fillTextTopLeft(item.name, x+2*8*PIXEL_SIZE, y, fontFamily32px, MSX_COLOR_WHITE);
-            }
-        } else { 
-            // messages:
-            let x:number = 0;
-            let y:number = split+8*PIXEL_SIZE;
-
-            let start:number = 0;
-            if (this.console_first_message==-1) {
-                start = this.messages.length - A4_N_MESSAGES_IN_HUD;
-            } else {
-                start = this.console_first_message;
-            }
-            if (start<0) start = 0;
-
-            ctx.fillStyle = "white";
-            ctx.font = fontFamily32px;
-            ctx.textBaseline = "top"; 
-            ctx.textAlign = "left";
-            for(let i:number = 0;i<A4_N_MESSAGES_IN_HUD && start+i<this.messages.length;i++) {
-                ctx.fillStyle = this.messages[start+i][1];
-                ctx.fillText(this.messages[start+i][0], x, y);
-                y+=8*PIXEL_SIZE;
-            }            
-
-            if (this.HUD_uparrow1!=null && this.HUD_uparrow2!=null) {
-                if (start>0) {
-                    this.HUD_uparrow1.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_uparrow2.drawWithZoom(29*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-            if (this.HUD_downarrow1!=null && this.HUD_downarrow2!=null) {
-                if (start+A4_N_MESSAGES_IN_HUD<this.messages.length) {
-                    this.HUD_downarrow1.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                } else {
-                    this.HUD_downarrow2.drawWithZoom(30*8*PIXEL_SIZE, split, PIXEL_SIZE);
-                }
-            }
-
-            if (this.HUD_state == SHRDLU_HUD_STATE_MESSAGES_INPUT) {
-                // draw cursor:
-                if ((this.cycle%30)<15) {
-                    if (this.textInputAllowed &&
-                        !this.anyoneTalking()) {
-//                        !this.currentPlayer.isTalking()) {
-                        ctx.fillStyle = MSX_COLOR_DARK_GREEN;
-                    } else {
-                        ctx.fillStyle = MSX_COLOR_DARK_RED;
-                    }
-                    ctx.fillRect((this.HUD_text_input_cursor+1)*6*PIXEL_SIZE,184*PIXEL_SIZE,
-                                 6*PIXEL_SIZE,8*PIXEL_SIZE);
-                }
-                ctx.fillStyle = MSX_COLOR_LIGHT_GREEN;
-            } else {
-                ctx.fillStyle = MSX_COLOR_DARK_BLUE;
-            }
-            ctx.fillText(">" + this.HUD_text_input_buffer,0,184*PIXEL_SIZE);
-        }
-
-        // oxygen bar:
-        if (this.getStoryStateVariable("spacesuit")=="helmet") {
-            // show oxygen bar:
-            this.HUD_oxygen.drawWithZoom(23*8*PIXEL_SIZE, 0, PIXEL_SIZE);
-            this.HUD_oxygen_bar.drawWithZoom(28*8*PIXEL_SIZE, 0, PIXEL_SIZE);
-
-            let oxygen_bar_size:number = Math.floor((32-6)*(this.suit_oxygen/SHRDLU_MAX_SPACESUIT_OXYGEN));
-            if (this.suit_oxygen < SHRDLU_MAX_SPACESUIT_OXYGEN*0.2) {
-                ctx.fillStyle = MSX_COLOR_RED;
-            } else {
-                ctx.fillStyle = MSX_COLOR_DARK_BLUE;
-            }
-            ctx.fillRect((28*8+3)*PIXEL_SIZE,3*PIXEL_SIZE,oxygen_bar_size*PIXEL_SIZE,PIXEL_SIZE);
-        }
-
-        // when any of the AIs is thinking:
-        if ((this.cycle%32) < 16) {
-            let thinkingY:number = 128;
-            if (this.etaoinAI.currentInferenceProcess != null) {
-                // etaoin is thinking:
-                ctx.fillStyle = MSX_COLOR_BLACK;
-                ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
-                ctx.fillStyle = MSX_COLOR_WHITE;
-                ctx.fillText("Etaoin is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
-                thinkingY-=10;
-            }
-            if (this.qwertyAI.currentInferenceProcess != null) {
-                // etaoin is thinking:
-                ctx.fillStyle = MSX_COLOR_BLACK;
-                ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
-                ctx.fillStyle = MSX_COLOR_WHITE;
-                ctx.fillText("Qwerty is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
-                thinkingY-=10;
-            }
-            if (this.shrdluAI.currentInferenceProcess != null) {
-                // etaoin is thinking:
-                ctx.fillStyle = MSX_COLOR_BLACK;
-                ctx.fillRect(2*PIXEL_SIZE,thinkingY*PIXEL_SIZE,130*PIXEL_SIZE,10*PIXEL_SIZE);
-                ctx.fillStyle = MSX_COLOR_WHITE;
-                ctx.fillText("Shrdlu is thinking...",2*PIXEL_SIZE,(thinkingY+1)*PIXEL_SIZE);
-                thinkingY-=10;
-            }
-        }
+        // this is game dependent, so, this function is empty:
+        // ...
     }
 
 
     mouseClick(mouse_x: number, mouse_y: number, button: number) 
     {
         if (mouse_y < PIXEL_SIZE*8*17) {
-            // click in the game screen: this should skip text bubbles, cutscenes, etc.
+            // click in the game screen: this should skip text bubbles, etc.
             this.skipSpeechBubble();
         }
 
@@ -1755,16 +1024,6 @@ class A4Game {
     }   
 
 
-    anyoneTalking() : boolean
-    {
-        if (this.currentPlayer.isTalking()) return true;
-        if (this.qwertyAI.robot.isTalking()) return true;
-        if (this.shrdluAI.robot.isTalking()) return true;
-        if (this.currentPlayer.map.textBubbles.length != 0) return true;
-        return false;
-    }
-
-
     setGameComplete(gc:boolean, ID:string) 
     {
         this.gameComplete = gc; 
@@ -1808,9 +1067,9 @@ class A4Game {
     }
 
 
-	// if an object is removed from a map, this needs to be called, to notify
-	// the game that this happened.
-	objectRemoved(o:A4Object)
+    // if an object is removed from a map, this needs to be called, to notify
+    // the game that this happened.
+    objectRemoved(o:A4Object)
     {
         let idx:number = this.players.indexOf(<A4PlayerCharacter>o);
         if (idx>=0) this.players.splice(idx,1);
@@ -1838,52 +1097,62 @@ class A4Game {
     }
 
 
-	// Teleports an object to a requested map and position. This queues up the request,
-	// but it is not executed until at the end of a game cycle, to prevent this from 
-	// happening while we are still looping through lists of objects (concurrent modification)
-	// if "map" is 0, then the request is to remove the object from the maps (e.g., when an object is taken)
-	requestWarp(o:A4Object, map:A4Map, x:number, y:number)//, layer:number)
-  {
-      this.warpRequests.push(new WarpRequest(o,map,x,y));
-  }
+    /*
+    - Prevents the characters from accidentally going to a map that they should not go to
+    - Should be overwriten by each specific game with any custom rules necessary
+    */
+    checkPermissionToWarp(character:A4Character, target:A4Map) : boolean
+    {
+        return true;
+    }
 
 
-  requestedWarp(o:A4Object)
-  {
-      for(let request of this.warpRequests) {
-          if (request.o == o) return true;
-      }
-      return false;
-  }
+  	// Teleports an object to a requested map and position. This queues up the request,
+  	// but it is not executed until at the end of a game cycle, to prevent this from 
+  	// happening while we are still looping through lists of objects (concurrent modification)
+  	// if "map" is 0, then the request is to remove the object from the maps (e.g., when an object is taken)
+  	requestWarp(o:A4Object, map:A4Map, x:number, y:number)//, layer:number)
+    {
+        this.warpRequests.push(new WarpRequest(o,map,x,y));
+    }
 
 
-	// waits until the end of a cycle, and then deletes o
-	requestDeletion(o:A4Object)
-  {
-      this.deletionRequests.push(o);
-  }
+    requestedWarp(o:A4Object)
+    {
+        for(let request of this.warpRequests) {
+            if (request.o == o) return true;
+        }
+        return false;
+    }
 
 
-  setStoryStateVariable(variable:string, value:string)
-  {
-      this.storyState[variable] = value;
-      this.lastTimeStoryStateChanged = this.cycle;
-  }
+  	// waits until the end of a cycle, and then deletes o
+  	requestDeletion(o:A4Object)
+    {
+        this.deletionRequests.push(o);
+    }
 
 
-  getStoryStateVariable(variable:string) : string
-  {
-      return this.storyState[variable];
-  }
+    setStoryStateVariable(variable:string, value:string)
+    {
+        this.storyState[variable] = value;
+        this.lastTimeStoryStateChanged = this.cycle;
+    }
 
 
-  playSound(sound:string)
-  {
-      this.SFXM.play(sound);
-  }
+    getStoryStateVariable(variable:string) : string
+    {
+        return this.storyState[variable];
+    }
 
 
-	getGraphicFile(file:string) : A4GraphicFile
+    playSound(sound:string)
+    {
+        this.SFXM.play(sound);
+    }
+
+
+  	getGraphicFile(file:string) : A4GraphicFile
     {
         for(let gf of this.graphicFiles) {
             if (file == gf.name) return gf;
@@ -1910,7 +1179,7 @@ class A4Game {
     }
 
 
-	getCameraX(focus:A4Object, map_width:number, screen_width:number) : number
+  	getCameraX(focus:A4Object, map_width:number, screen_width:number) : number
     {
         let target_x:number = 0;
         if (map_width<screen_width/this.zoom) {
@@ -1923,12 +1192,11 @@ class A4Game {
             if (map_width - target_x < screen_width/this.zoom) target_x = map_width - screen_width/this.zoom;
         }
         target_x = Math.floor(target_x);
-//        target_x  = (target_x - target_x%PIXEL_SIZE);
         return target_x;
     }
 
 
-	getCameraY(focus:A4Object, map_height:number, screen_height:number) : number
+  	getCameraY(focus:A4Object, map_height:number, screen_height:number) : number
     {
         let top_HUD:number = 40;
         let bottom_HUD:number = 56;
@@ -1972,13 +1240,14 @@ class A4Game {
         this.addMessageWithColor(text, "white");
     }
 
+
     addMessageWithColor(text:string, color:string)
     {
         this.addMessageWithColorTime(text, color, this.in_game_seconds);
     }
 
 
-	addMessageWithColorTime(text:string, color:string, timeStamp:number)
+    addMessageWithColorTime(text:string, color:string, timeStamp:number)
     {
         // Prevent an infinite stream of error messages:
         if (this.messages.length >= 3 &&
@@ -2024,8 +1293,8 @@ class A4Game {
     }
 
 
-	// getting input form the player:
-	playerInput_ToogleInventory() 
+  	// getting input form the player:
+  	playerInput_ToogleInventory() 
     {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY ||
             this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
@@ -2036,16 +1305,6 @@ class A4Game {
         }
     }
 
-/*
-    playerInput_RequestMessageMode()
-    {
-        if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY ||
-            this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
-            this.HUD_state = SHRDLU_HUD_STATE_MESSAGES;
-            this.HUD_remote_inventory = null;
-        }
-    }
-*/
 
     playerInput_UseItem() 
     {
@@ -2109,7 +1368,6 @@ class A4Game {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
             this.currentPlayer.previousItem();
 
-
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
             if (this.currentPlayer.selectedItem == 0) {
                 if (this.HUD_remote_inventory.content.length>0) {
@@ -2135,7 +1393,6 @@ class A4Game {
                 }
             }
 
-
         } else {
             if (this.console_first_message>0) this.console_first_message--;
             if (this.console_first_message==-1 &&
@@ -2148,7 +1405,6 @@ class A4Game {
     {
         if (this.HUD_state == SHRDLU_HUD_STATE_INVENTORY) {
             this.currentPlayer.nextItem();
-
 
         } else if (this.HUD_state == SHRDLU_HUD_STATE_SPLIT_INVENTORY) {
             if (this.currentPlayer.selectedItem>=0 &&
@@ -2178,7 +1434,6 @@ class A4Game {
                     }
                 }
             }
-
 
         } else {
             if (this.console_first_message!=-1) {
@@ -2235,23 +1490,6 @@ class A4Game {
          this.currentPlayer.issueCommandWithArguments(cmd, arg, 0, target, this);
     }
 
-    /*
-    playerInput_issueCommandWithSpeechAct(cmd:number, sa:SpeechAct, direction:number)
-    {
-        this.currentPlayer.issueCommandWithSpeechAct(cmd, sa, direction, null, this);
-    }
-    */
-    /*
-	addSpeechAct(performative:number, keyword:string, text:string)
-    {
-        for(let sa of this.knownSpeechActs) {
-            if (sa.performative == performative &&
-                sa.keyword == keyword &&
-                sa.text == text) return;
-        }
-        this.knownSpeechActs.push(new SpeechAct(performative, keyword, text));
-    }
-    */  
 
     // This function returns a list with the hierarchy of objects necessary to find the desired object
     // For example, if an object is directly in a map, the list with be length 1, but if 
@@ -2287,405 +1525,17 @@ class A4Game {
     }  
 
 
-    getAILocation(o:A4Object) : AILocation
-    {
-        let map:A4Map = o.map;
-        if (map==null) {
-            let tmp:A4Object[] = this.findObjectByID(o.ID);
-            if (tmp == null || tmp.length == 0) return null;
-            if (tmp[0].map == null) return null;
-            map = tmp[0].map;
-            o = tmp[0];
-        }
-        let tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
-        let tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
-        return this.getAILocationTileCoordinate(map, tile_x, tile_y);
-    }    
-
-
-    getAILocationTileCoordinate(map:A4Map, tile_x:number, tile_y:number) : AILocation
-    {
-        let offset:number = tile_x + tile_y*map.width;
-        let location:AILocation = null;
-        let location_idx:number = -1;
-        for(let location_idx2:number = 0;location_idx2<this.locations.length;location_idx2++) {
-            let l:AILocation = this.locations[location_idx2];
-            for(let i:number = 0;i<l.maps.length;i++) {
-                if (l.maps[i] == map) {
-                    if (l.mapOccupancyMaps[i][offset]) {
-                        if (location == null) {
-                            location = l;
-                            location_idx = location_idx2;
-                        } else {
-                            if (this.location_in[location_idx2][location_idx]) {
-                                location = l;
-                                location_idx = location_idx2;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return location;
-    }    
-
-
-    getAILocationByID(id:string) : AILocation
-    {
-        for(let location of this.locations) {
-            if (location.id == id) return location;
-        }
-
-        return null;
-    }    
-
-
-    turnLightOn(room:string) : boolean
-    {
-        if (this.rooms_with_lights_on.indexOf(room) == -1) {
-            this.rooms_with_lights_on.push(room);
-            for(let i:number = 0;i<this.maps.length;i++) {
-                this.maps[i].recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, this.map_location_names[i]);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    turnLightOff(room:string) : boolean
-    {
-        if (this.rooms_with_lights_on.indexOf(room) != -1) {
-            this.rooms_with_lights_on.splice(this.rooms_with_lights_on.indexOf(room), 1);
-            for(let i:number = 0;i<this.maps.length;i++) {
-                this.maps[i].recalculateLightsOnStatus(this.rooms_with_lights, this.rooms_with_lights_on, this.map_location_names[i]);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    takeRoverOutOfTheGarage(rover:A4Vehicle, player:A4Character) : boolean
-    {
-        // 1) spawn a new vehicle on the outside
-        let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-rover", this, true, false);
-        if (newRover == null) return false;
-        newRover.ID = rover.ID;
-        newRover.direction = 2;
-        let map:A4Map = this.getMap("Spacer Valley South")
-        if (map == null) return false;
-        if (!map.walkable(336, 408, 40, 40, newRover)) return false;
-        newRover.warp(336, 408, map);
-
-        // 2) remove rover from the game
-        rover.map.removeObject(rover);
-        this.requestDeletion(rover);
-
-        // 3) teleport the player, and any other robots that were inside, and embark
-        player.warp(336, 408, map);
-        player.embark(newRover);
-        if (this.qwertyAI.robot.vehicle == rover) {
-            this.qwertyAI.robot.disembark();
-            this.qwertyAI.robot.warp(336, 408, map);
-            this.qwertyAI.robot.embark(newRover);
-        }
-        if (this.shrdluAI.robot.vehicle == rover) {
-            this.shrdluAI.robot.disembark();
-            this.shrdluAI.robot.warp(336, 408, map);
-            this.shrdluAI.robot.embark(newRover);
-        }
-
-        return true;
-    }
-
-
-    takeShuttleToTrantorCrater(shuttle:A4Vehicle, player:A4Character) : boolean
-    {
-        // 1) spawn a new vehicle on the outside
-        let newShuttle:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("driveable-shuttle", this, true, false);
-        if (newShuttle == null) return false;
-
-        newShuttle.ID = shuttle.ID;
-        newShuttle.direction = A4_DIRECTION_LEFT;
-        let map:A4Map = this.getMap("Trantor Crater")
-        if (map == null) return false;
-        if (!map.walkable(57*8, 15*8, 40, 40, newShuttle)) return false;
-        newShuttle.warp(57*8, 15*8, map);
-
-        // 2) remove shuttle from the game
-        shuttle.map.removeObject(shuttle);
-        this.requestDeletion(shuttle);
-
-        // 3) teleport the player, and any other robots that were inside, and embark
-        player.warp(57*8, 15*8, map);
-        player.embark(newShuttle);
-        if (this.qwertyAI.robot.vehicle == shuttle) {
-            this.qwertyAI.robot.disembark();
-            this.qwertyAI.robot.warp(57*8, 15*8, map);
-            this.qwertyAI.robot.embark(newShuttle);
-        }
-        if (this.shrdluAI.robot.vehicle == shuttle) {
-            this.shrdluAI.robot.disembark();
-            this.shrdluAI.robot.warp(57*8, 15*8, map);
-            this.shrdluAI.robot.embark(newShuttle);
-        }
-
-        return true;
-    }
-
-
-    putRoverBackInGarage(rover:A4Vehicle) : boolean
-    {
-        // 1) spawn a new vehicle on the garage
-        let newRover:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("garage-rover", this, true, false);
-        if (newRover == null) return false;
-        newRover.ID = rover.ID;
-        newRover.direction = 2;
-        let map:A4Map = this.getMap("Aurora Station")
-        if (map == null) return false;
-        if (!map.walkable(848, 72, 40, 40, newRover)) return false;
-        newRover.warp(848, 72, map);
-
-        // 2) remove rover from the outside
-        rover.disembark(this.currentPlayer);
-        this.currentPlayer.state = A4CHARACTER_STATE_IDLE;
-        this.currentPlayer.vehicle = null;
-        rover.map.removeObject(rover);
-        this.requestDeletion(rover);
-
-        // 3) teleport the player, and any robots in the vehicle, and disembark
-        this.currentPlayer.warp(848, 72, map);
-        this.currentPlayer.embark(newRover);
-        this.currentPlayer.disembark();
-
-        if (this.qwertyAI.robot.vehicle == rover) {
-            this.qwertyAI.robot.warp(848, 72, map);
-            this.qwertyAI.robot.embark(newRover);
-            this.qwertyAI.robot.disembark();
-        }
-        if (this.shrdluAI.robot.vehicle == rover) {
-            this.shrdluAI.robot.warp(848, 72, map);
-            this.shrdluAI.robot.embark(newRover);
-            this.shrdluAI.robot.disembark();
-        }
-
-        return true;
-    }
-
-
-    takeShuttleFromTrantorCrater(shuttle:A4Vehicle) : boolean
-    {
-        // 1) spawn a new vehicle on the garage
-        let newShuttle:A4Vehicle = <A4Vehicle>this.objectFactory.createObject("garage-shuttle", this, true, false);
-        if (newShuttle == null) return false;
-        newShuttle.ID = shuttle.ID;
-        newShuttle.direction = 2;
-        let map:A4Map = this.getMap("Aurora Station")
-        if (map == null) return false;
-        if (!map.walkable(848, 192, 40, 40, newShuttle)) return false;
-        newShuttle.warp(848, 192, map);
-
-        // 2) remove shuttle from the outside
-        shuttle.disembark(this.currentPlayer);
-        this.currentPlayer.state = A4CHARACTER_STATE_IDLE;
-        this.currentPlayer.vehicle = null;
-        shuttle.map.removeObject(shuttle);
-        this.requestDeletion(shuttle);
-
-        // 3) teleport the player, and any robots in the vehicle, and disembark
-        this.currentPlayer.warp(848, 192, map);
-        this.currentPlayer.embark(newShuttle);
-        this.currentPlayer.disembark();
-
-        if (this.qwertyAI.robot.vehicle == shuttle) {
-            this.qwertyAI.robot.warp(848, 192, map);
-            this.qwertyAI.robot.embark(newShuttle);
-            this.qwertyAI.robot.disembark();
-        }
-        if (this.shrdluAI.robot.vehicle == shuttle) {
-            this.shrdluAI.robot.warp(848, 192, map);
-            this.shrdluAI.robot.embark(newShuttle);
-            this.shrdluAI.robot.disembark();
-        }
-
-        return true;
-    }
-
-
-    /*
-    - Prevents the robots from accidentally going to a map that they do not have permission to
-    - This is to avoid edge cases where the player finds some unforeseen edge case to skip through important story plot points
-    */
-    checkPermissionToWarp(character:A4Character, target:A4Map) : boolean
-    {
-        if (character.ID == "qwerty") return false;
-        if (character.ID == "shrdlu") {
-            if (character.map.name == "Aurora Station" ||
-                character.map.name == "Aurora Station Outdoors") {
-                if (this.getStoryStateVariable("permission-to-take-shrdlu") == "false" &&
-                    character.map.name != "Aurora Station" &&
-                    character.map.name != "Aurora Station Outdoors") {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
     skipSpeechBubble() : boolean
     {
-        if (this.cutSceneActivated >= 0) {
-            this.cutScenes.ESCPressed(this.cutSceneActivated);
-            return true;
-        }
-
         if (this.currentPlayer.map.textBubbles.length > 0) {
             this.currentPlayer.map.textBubbles[0][1] = 0;
             return true;
         }
-        for(let character of [this.currentPlayer, this.qwertyAI.robot, this.shrdluAI.robot]) {
-            if (character.talkingBubble != null) {
-                character.stateCycle = character.talkingBubbleDuration;
-                return true;
-            }
+        if (this.currentPlayer.talkingBubble != null) {
+            this.currentPlayer.stateCycle = this.currentPlayer.talkingBubbleDuration;
+            return true;
         }
         return false;
-    }
-
-
-    textInputRequest()
-    {
-        if (this.textInputAllowed) this.HUD_state = SHRDLU_HUD_STATE_MESSAGES_INPUT;
-    }
-
-
-    textInputExit()
-    {
-        this.HUD_state = SHRDLU_HUD_STATE_MESSAGES;
-    }
-
-
-    textInputSubmit(SFXM:SFXManager)
-    {
-        if (!this.textInputAllowed ||
-            this.anyoneTalking()) {
-//            SFXM.play("data/sfx/beep.wav");
-            return;
-        }
-//        if (this.currentPlayer.isTalking()) return;
-        this.HUD_state = SHRDLU_HUD_STATE_MESSAGES;
-        if (this.HUD_text_input_buffer != "") {
-            /*
-            this.currentPlayer.map.addPerceptionBufferRecord(
-                new PerceptionBufferRecord("talk", this.currentPlayer.ID, this.currentPlayer.sort, 
-                                           null, null, this.HUD_text_input_buffer,
-                                           null, null,
-                                           this.currentPlayer.x, this.currentPlayer.y+this.currentPlayer.tallness, this.currentPlayer.x+this.currentPlayer.getPixelWidth(), this.currentPlayer.y+this.currentPlayer.getPixelHeight()));
-
-            this.addMessageWithColor(">"+this.HUD_text_input_buffer, MSX_COLOR_LIGHT_GREEN);
-            */
-            this.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_TALK, this.HUD_text_input_buffer, A4_DIRECTION_NONE, this);
-            this.inputBufferHistory.push(this.HUD_text_input_buffer);
-            this.lastInputBufferBeforeBrowsingHistory = null;
-            this.inputBufferHistory_position = -1;
-            this.HUD_text_input_buffer = "";
-            this.HUD_text_input_cursor = 0;
-        }
-    }
-
-
-    textInputEvent(e:KeyboardEvent, SFXM:SFXManager)
-    {
-        let textInputLimit:number = 40;
-
-//        console.log("key: " + e.key + ", keyCode:" + e.keyCode + ", modifiers: " + e.getModifierState("Shift") + " | " + e.getModifierState("CapsLock"));
-        if (e.key.length == 1 && this.HUD_text_input_buffer.length <= textInputLimit) {
-            if ((e.key >= 'a' && e.key <= 'z') ||
-                (e.key >= 'A' && e.key <= 'Z') ||
-                (e.key >= '0' && e.key <= '9') ||
-                e.key == ' ' ||
-                e.key == ',' ||
-                e.key == '.' ||
-                e.key == '\'' ||
-                e.key == '?' ||
-                e.key == '!' ||
-                e.key == '-' ||
-                // just for entering logic:
-                e.key == '#' ||
-                e.key == ':' ||
-                e.key == '(' ||
-                e.key == ')' ||
-                e.key == '[' ||
-                e.key == ']'
-                ) {
-                if (this.HUD_text_input_cursor == this.HUD_text_input_buffer.length) {
-                    this.HUD_text_input_buffer += e.key;
-                    this.HUD_text_input_cursor ++;
-                } else {
-                    this.HUD_text_input_buffer = this.HUD_text_input_buffer.substring(0,this.HUD_text_input_cursor) +
-                                                  e.key +
-                                                  this.HUD_text_input_buffer.substring(this.HUD_text_input_cursor);
-                    this.HUD_text_input_cursor ++;
-                }
-            }
-        } else if (e.key == "ArrowRight") {
-            if (this.HUD_text_input_cursor<this.HUD_text_input_buffer.length) this.HUD_text_input_cursor++;
-        } else if (e.key == "ArrowLeft") {
-            if (this.HUD_text_input_cursor>0) this.HUD_text_input_cursor--;
-        } else if (e.key == "ArrowUp") {
-            if (this.inputBufferHistory_position == -1) {
-                this.lastInputBufferBeforeBrowsingHistory = this.HUD_text_input_buffer;
-                if (this.inputBufferHistory.length > 0) {
-                    this.inputBufferHistory_position = this.inputBufferHistory.length-1;
-                    this.HUD_text_input_buffer = this.inputBufferHistory[this.inputBufferHistory_position];
-                    this.HUD_text_input_cursor = this.HUD_text_input_buffer.length;
-                }
-            } else {
-                if (this.inputBufferHistory_position>0) {
-                    this.inputBufferHistory_position--;
-                    this.HUD_text_input_buffer = this.inputBufferHistory[this.inputBufferHistory_position];
-                    this.HUD_text_input_cursor = this.HUD_text_input_buffer.length;
-                }
-            }
-        } else if (e.key == "ArrowDown") {
-            if (this.inputBufferHistory_position>=0 && this.inputBufferHistory_position<this.inputBufferHistory.length-1) {
-                this.inputBufferHistory_position++;
-                this.HUD_text_input_buffer = this.inputBufferHistory[this.inputBufferHistory_position];
-                this.HUD_text_input_cursor = this.HUD_text_input_buffer.length;
-            } else {
-                if (this.inputBufferHistory_position>=0 && this.inputBufferHistory_position == this.inputBufferHistory.length-1) {
-                    this.HUD_text_input_buffer = this.lastInputBufferBeforeBrowsingHistory;
-                    this.lastInputBufferBeforeBrowsingHistory = null;
-                    this.inputBufferHistory_position = -1;
-                    this.HUD_text_input_cursor = this.HUD_text_input_buffer.length;
-                }
-            }
-        } else if (e.key == "Backspace") {
-            if (this.HUD_text_input_cursor>0) {
-                if (this.HUD_text_input_cursor == this.HUD_text_input_buffer.length) {
-                    this.HUD_text_input_cursor--;
-                    this.HUD_text_input_buffer = this.HUD_text_input_buffer.substring(0,this.HUD_text_input_cursor);
-                } else {
-                    this.HUD_text_input_cursor--;
-                    this.HUD_text_input_buffer = this.HUD_text_input_buffer.substring(0,this.HUD_text_input_cursor) +
-                                                  this.HUD_text_input_buffer.substring(this.HUD_text_input_cursor+1);
-                }                
-            }
-        } else if (e.key == "Delete") {
-            if (this.HUD_text_input_cursor < this.HUD_text_input_buffer.length) {
-                this.HUD_text_input_buffer = this.HUD_text_input_buffer.substring(0,this.HUD_text_input_cursor) +
-                                              this.HUD_text_input_buffer.substring(this.HUD_text_input_cursor+1);
-            }                
-        }
-        if (this.HUD_text_input_cursor > textInputLimit) {
-            this.HUD_text_input_cursor = textInputLimit;
-            SFXM.play("data/sfx/beep.wav");
-        }
     }
 
 
@@ -2727,9 +1577,16 @@ class A4Game {
     }
 
 
+    // To be overwriten by each individual game
+    checkCustomVehicleCollisionEvents(vehicle:A4Vehicle)
+    {
+
+    }
+
+
     xml:Element = null;    // the XML definition of the game
 
-	  sfx_volume:number;
+	sfx_volume:number;
     drawTextBubbles:boolean = true;
     
     gameName:string = null;
@@ -2745,8 +1602,9 @@ class A4Game {
     characterDefinitionFiles:string[] = [];
     objectDefinitionFiles:string[] = [];
     
-	  cycle:number = 0;
+    cycle:number = 0;
     cycles_without_redrawing:number = 0;
+    in_game_seconds:number = 0;
     gameComplete:boolean = false;
     gameComplete_ending_ID:string = null;
 
@@ -2754,7 +1612,7 @@ class A4Game {
   	GLTM:GLTManager = null;
   	SFXM:SFXManager = null;
     graphicFiles:A4GraphicFile[] = [];
-  	objectFactory:A4ObjectFactory = new A4ObjectFactory();
+  	objectFactory:A4ObjectFactory = null;
   	tileWidth:number = 16;
     tileHeight:number = 16;
 
@@ -2812,58 +1670,13 @@ class A4Game {
     playerGender: string = null;
     storyState: { [id: string] : string; } = {};
     lastTimeStoryStateChanged:number = 0;
-    //    knownSpeechActs:SpeechAct[] = [];
 
-    //<shrdlu-specific>
-    naturalLanguageParser:NLParser = null;
-    naturalLanguageGenerator:NLGenerator = null;
-    etaoinAI:EtaoinAI = null;
-    qwertyAI:QwertyAI = null;
-    shrdluAI:ShrdluAI = null;
+    // error logging (the engine just logs them into these arrays, it's up to the specific game to do
+    // something with these):
+    errorMessagesForLog:string[][] = [];
+    inGameActionsForLog:string[][] = [];    
+    debugTextBubbleLog:[number,string,A4TextBubble][] = null;  // this is already defined in A4Game
 
-    communicatorConnectedTo:string = null;
-    communicatorConnectionTime:number = 0;
-
-    gameScript:ShrdluGameScript = null;
-    cutScenes:ShrdluCutScenes = null;
-    textInputAllowed:boolean = false;
-
-    eyesClosedState:number = 0;    // 0: eyes closed, 1: opening, 2: open, 3: closing
-    eyesClosedTimer:number = 0;
-
-    narrationMessages:string[] = []
-
-    cutSceneActivated:number = -1;
-    introact_request:number = 0;    // to notify the A4GameApp that an act is over, and we need to introduce the next one
-    gameover_request:number = 0;    // to notify the A4GameApp that player is dead, and we need to go to the game over state
-
-    locations:AILocation[] = [];
-    location_in:boolean[][];
-    location_connects:boolean[][];
-    map_location_names:string[][];
-    additional_location_connects:[string,string][] = [];
-
-    in_game_seconds:number = SHRDLU_START_DATE;
-    suit_oxygen:number = SHRDLU_MAX_SPACESUIT_OXYGEN;
-    comm_tower_repaired:boolean = false;
-    rooms_with_lights:string[] = [];
-    rooms_with_lights_on:string[] = [];
-
-    aurora_station_temperature_sensor_indoors:number = 20;
-    aurora_station_temperature_sensor_outdoors:number = 44;
-
-    error_messages_for_log:string[][] = [];
-    in_game_actions_for_log:string[][] = [];
-
-    three_d_printer_recipies:[string, string[]][];
-
-    // if these are != null, each time an AI executes an action, or a text bubble is created, it will be logged here:
-    debugActionLog:IntentionRecord[] = null;
-    debugTextBubbleLog:[number,string,A4TextBubble][] = null;
-
-    // serverToken is immutable after initialization
-    serverToken: string = '';
-    //</shrdlu-specific>
 }
 
 

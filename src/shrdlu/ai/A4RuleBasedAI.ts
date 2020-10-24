@@ -1,6 +1,6 @@
 
 class A4RuleBasedAI extends RuleBasedAI {
-	constructor(o:Ontology, nlp:NLParser, game:A4Game, pf:number, pfoffset:number, qpt:number)
+	constructor(o:Ontology, nlp:NLParser, game:ShrdluA4Game, pf:number, pfoffset:number, qpt:number)
 	{
 		super(o, nlp, pf, pfoffset, qpt);
 		this.game = game;
@@ -73,7 +73,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	precalculateLocationKnowledge(game:A4Game, o:Ontology)
+	precalculateLocationKnowledge(game:ShrdluA4Game, o:Ontology)
 	{
 		// First, remove any location knowledge that was previously in the KB:
 		this.longTermMemory.removeAllWithProvenance(LOCATIONS_PROVENANCE);
@@ -177,7 +177,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	add3DPrintingKnowledge(game:A4Game, o:Ontology, IDofAIthatCanPrint:string)
+	add3DPrintingKnowledge(game:ShrdluA4Game, o:Ontology, IDofAIthatCanPrint:string)
 	{
 		for(let recipe of game.three_d_printer_recipies) {
 			let item:string = recipe[0]
@@ -1685,7 +1685,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
-	game:A4Game = null;
+	game:ShrdluA4Game = null;
 	
 	alreadyProcessedPBRs:PerceptionBufferRecord[] = [];	// this is a small cache, so that we do not parse the same text
 														// more than once to save CPU resources.
