@@ -68,7 +68,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 			                new PerceptionBufferRecord("talk", ai.selfID, ai.o.getSort("disembodied-ai"),
 			                                           null, null, txt,
 			                                           null, null,
-			                                           targetObject.x, targetObject.y+targetObject.tallness, targetObject.x+targetObject.getPixelWidth(), targetObject.y+targetObject.getPixelHeight()));
+			                                           targetObject.x, targetObject.y, targetObject.x+targetObject.getPixelWidth(), targetObject.y+targetObject.getPixelHeight()));
 			        }
 
 					// update natural language context:

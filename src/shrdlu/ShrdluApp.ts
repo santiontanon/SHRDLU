@@ -565,8 +565,8 @@ class ShrdluApp {
                         if (app.titlescreen_state == 2) return;
                        BInterface.push();
                        BInterface.addElement(
-                           new BShrdluTextFrame(["Do you want to play as a..."], 
-                                          false, fontFamily32px, 32, 40*PIXEL_SIZE, 40*PIXEL_SIZE, 176*PIXEL_SIZE, 72*PIXEL_SIZE, app.GLTM));
+                           new BShrdluTextFrame(["Play as a..."], 
+                                          false, fontFamily32px, 32, 48*PIXEL_SIZE, 40*PIXEL_SIZE, 160*PIXEL_SIZE, 72*PIXEL_SIZE, app.GLTM));
                        BInterface.addElement(new BShrdluButton("female character", fontFamily32px, app.screen_width/2-80, 64*PIXEL_SIZE, 160, 8*PIXEL_SIZE, 41, 
                                                          "white", true,
                                                          function(arg:any, ID:number) {

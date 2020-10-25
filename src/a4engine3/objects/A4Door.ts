@@ -83,8 +83,8 @@ class A4Door extends A4Object {
                 let radius:number = 2;
                 let x1:number = this.x-radius*this.map.tileWidth;
                 let dx:number = this.getPixelWidth()+(2*radius)*this.map.tileWidth;
-                let y1:number = this.y+this.tallness-radius*this.map.tileHeight;
-                let dy:number = (this.getPixelHeight()-this.tallness)+(2*radius)*this.map.tileHeight;
+                let y1:number = this.y-radius*this.map.tileHeight;
+                let dy:number = this.getPixelHeight()+(2*radius)*this.map.tileHeight;
 
                 let l:A4Object[] = this.map.getAllObjects(x1,y1,dx,dy);
                 let characterAround:A4Character = null;
@@ -228,28 +228,6 @@ class A4Door extends A4Object {
         if (this.closed==closed) return;
 
         this.eventWithID(A4_EVENT_OPEN, this.doorID, character, map, game);
-
-        // for the SHRDLU game, I commented this code out, since we never have two adjacent doors I want to open at the same time
-        /*
-        let dx1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelWidth());
-        let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight());
-        let dx2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelWidth());
-        let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight());
-
-        let dx:number = (dx1>dx2 ? dx1:dx2);
-        let dy:number = (dy1>dy2 ? dy1:dy2);
-
-        for(let i:number = 0;i<A4_NDIRECTIONS;i++) {
-            let l:A4Object[] = this.map.getAllObjects(this.x+direction_x_inc[i], this.y+direction_y_inc[i], dx, dy);
-
-            for(let o of l) {
-                if (o!=this && o.isDoor()) {
-                    let door:A4Door = <A4Door>o;
-                    if (door.doorID == this.doorID) door.changeStateRecursively(closed, character, map, game);
-                }
-            }
-        }
-        */
     }
 
 
@@ -271,32 +249,6 @@ class A4Door extends A4Object {
                     blockage = true;
                 }
             }
-
-            // for the SHRDLU game, I commented this code out, since we never have two adjacent doors I want to open at the same time
-            /*
-            // check neighbors:
-            let dx1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelWidth());
-            let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight());
-            let dx2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelWidth());
-            let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight());
-
-            let dx:number = (dx1>dx2 ? dx1:dx2);
-            let dy:number = (dy1>dy2 ? dy1:dy2);
-            for(let i:number = 0;i<A4_NDIRECTIONS;i++) {
-                let l:A4Object[] = this.map.getAllObjects(this.x+direction_x_inc[i], this.y+direction_y_inc[i], dx, dy);
-                
-                for(let o of l) {
-                    if (o!=this && o.isDoor()) {
-                        let door:A4Door = <A4Door>o;
-                        if (door.doorID == this.doorID) {
-                            if (!door.checkForBlockages(closed, character, map, game, alreadyVisited)) {
-                                blockage = true;
-                            }
-                        }
-                    }
-                }                
-            }
-            */
             
             return !blockage;
         } else {
@@ -310,9 +262,9 @@ class A4Door extends A4Object {
     {
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_width_cache;
         let dx1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelWidth());
-        let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight());
+        let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight() - this.pixel_tallness);
         let dx2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelWidth());
-        let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight());
+        let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight() - this.pixel_tallness);
         let dx:number = (dx1>dx2 ? dx1:dx2);
         let dy:number = (dy1>dy2 ? dy1:dy2);
         this.pixel_width_cache = dx;
@@ -326,9 +278,9 @@ class A4Door extends A4Object {
     {
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_height_cache;
         let dx1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelWidth());
-        let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight());
+        let dy1:number = (this.animations[A4_ANIMATION_CLOSED]==null ? 0:this.animations[A4_ANIMATION_CLOSED].getPixelHeight() - this.pixel_tallness);
         let dx2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelWidth());
-        let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight());
+        let dy2:number = (this.animations[A4_ANIMATION_OPEN]==null ? 0:this.animations[A4_ANIMATION_OPEN].getPixelHeight() - this.pixel_tallness);
         let dx:number = (dx1>dx2 ? dx1:dx2);
         let dy:number = (dy1>dy2 ? dy1:dy2);
         this.pixel_width_cache = dx;

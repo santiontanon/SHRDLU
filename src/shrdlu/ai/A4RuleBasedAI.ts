@@ -249,7 +249,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		for(let o of l) {
 			let tile_ox:number = Math.floor(o.x/map.tileWidth);
-			let tile_oy:number = Math.floor((o.y+o.tallness)/map.tileHeight);
+			let tile_oy:number = Math.floor(o.y/map.tileHeight);
 			let offset:number = tile_ox + tile_oy*map.width;
 			// - Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
 			// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
@@ -501,9 +501,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 		if (sourceObject != null && targetObject != null) {
 			let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
-			let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
+			let y1:number = targetObject.y + targetObject.getPixelHeight()/2;
 			let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
-			let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
+			let y2:number = sourceObject.y + sourceObject.getPixelHeight()/2;
 			return this.distanceBetweenCoordinates(x1, y1, targetObject.map, x2, y2, sourceObject.map);
 		}
 		if (sourceObject != null && targetLocation != null) {
@@ -513,7 +513,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 			} else {
 				let [x1,y1]:[number,number] = targetLocation.centerCoordinatesInMap(targetLocation.maps[0]);
 				let x2:number = sourceObject.x + sourceObject.getPixelWidth()/2;
-				let y2:number = sourceObject.y + sourceObject.tallness + (sourceObject.getPixelHeight()-sourceObject.tallness)/2;
+				let y2:number = sourceObject.y + sourceObject.getPixelHeight()/2;
 				return this.distanceBetweenCoordinates(x1, y1, targetLocation.maps[0], x2, y2, sourceObject.map);
 			}
 		}
@@ -523,7 +523,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				return sourceLocation.distanceFromObject(targetObject, mapIdx);
 			} else {
 				let x1:number = targetObject.x + targetObject.getPixelWidth()/2;
-				let y1:number = targetObject.y + targetObject.tallness + (targetObject.getPixelHeight()-targetObject.tallness)/2;
+				let y1:number = targetObject.y + targetObject.getPixelHeight()/2;
 				let [x2,y2]:[number,number] = sourceLocation.centerCoordinatesInMap(sourceLocation.maps[0]);
 				return this.distanceBetweenCoordinates(x1, y1, targetObject.map, x2, y2, sourceLocation.maps[0]);
 			}
@@ -785,13 +785,13 @@ class A4RuleBasedAI extends RuleBasedAI {
 			if (o1 != null && o2 != null) {
 				if (o1.map != o2.map) return null;
 				let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-				let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+				let y1:number = Math.floor(o1.y + o1.getPixelHeight()/2);
 				let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-				let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+				let y2:number = Math.floor(o2.y + o2.getPixelHeight()/2);
 				let dx:number = x1-x2;
 				let dy:number = y1-y2;
 				if (o2.x >= o1.x && o2.x + o2.getPixelWidth() <= o1.x+o1.getPixelWidth()) dx = 0;
-				if (o2.y + o2.tallness >= o1.y + o1.tallness && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
+				if (o2.y >= o1.y && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
 				
 				// find the reference direction:
 				if (o2 instanceof A4Character) {
@@ -804,7 +804,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 					}
 					if (or.map == o2.map) {
 						let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2;
-						let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - y2;
+						let o_dy:number = Math.floor(or.y + or.getPixelHeight()/2) - y2;
 						let angle:number = Math.atan2(o_dy,o_dx);
 						if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 							inFrontDirection = A4_DIRECTION_UP;
@@ -841,7 +841,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 									}
 									if (or.map == map) {
 										let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2_y2[0];
-										let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - x2_y2[0];
+										let o_dy:number = Math.floor(or.y + or.getPixelHeight()/2) - x2_y2[0];
 										let angle:number = Math.atan2(o_dy,o_dx);
 										if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 											inFrontDirection = A4_DIRECTION_UP;
@@ -868,7 +868,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 								let x1_y1:number[] = loc1.centerCoordinatesInMap(o2.map);
 								if (x1_y1 == null) return;
 								let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-								let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+								let y2:number = Math.floor(o2.y + o2.getPixelHeight()/2);
 
 								// find the reference direction:
 								if (o2 instanceof A4Character) {
@@ -881,7 +881,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 									}
 									if (or.map == o2.map) {
 										let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2;
-										let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - y2;
+										let o_dy:number = Math.floor(or.y + or.getPixelHeight()/2) - y2;
 										let angle:number = Math.atan2(o_dy,o_dx);
 										if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 											inFrontDirection = A4_DIRECTION_UP;
@@ -909,7 +909,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 							let x2_y2:number[] = loc2.centerCoordinatesInMap(o1.map);
 							if (x2_y2 == null) return;
 							let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-							let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+							let y1:number = Math.floor(o1.y + o1.getPixelHeight()/2);
 
 							// find the reference direction:
 							let or:A4Object = this.game.findObjectByIDJustObject(referenceObject);
@@ -919,7 +919,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 							}
 							if (or.map == o1.map) {
 								let o_dx:number = Math.floor(or.x + or.getPixelWidth()/2) - x2_y2[0];
-								let o_dy:number = Math.floor(or.y+or.tallness + (or.getPixelHeight()-or.tallness)/2) - x2_y2[0];
+								let o_dy:number = Math.floor(or.y + or.getPixelHeight()/2) - x2_y2[0];
 								let angle:number = Math.atan2(o_dy,o_dx);
 								if (angle>-(6*Math.PI/8) && angle<=-(2*Math.PI/8)) {
 									inFrontDirection = A4_DIRECTION_UP;
@@ -945,7 +945,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	checkSpatialRelationBetweenCoordinates(relation:Sort, dx:number, dy:number, frontDirection:number) : boolean
 	{
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
-			let angle:number = Math.atan2(dy,dx);
+			let angle:number = Math.atan2(dy, dx);
 
 			if (relation.name == "space.north.of") {
 				return angle>-(7*Math.PI/8) && angle<=-(1*Math.PI/8);
@@ -1009,9 +1009,9 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		if (o1.map != o2.map) return relations;
 		let x1:number = Math.floor(o1.x + o1.getPixelWidth()/2);
-		let y1:number = Math.floor(o1.y+o1.tallness + (o1.getPixelHeight()-o1.tallness)/2);
+		let y1:number = Math.floor(o1.y + o1.getPixelHeight()/2);
 		let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-		let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+		let y2:number = Math.floor(o2.y + o2.getPixelHeight()/2);
 		let dx:number = x1-x2;
 		let dy:number = y1-y2;
 		let distance:number = Math.sqrt(dx*dx + dy*dy);
@@ -1019,7 +1019,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		if (distance >= SPACE_NEAR_FAR_THRESHOLD) relations.push(this.o.getSort("space.far"));
 
 		if (o2.x >= o1.x && o2.x + o2.getPixelWidth() <= o1.x+o1.getPixelWidth()) dx = 0;
-		if (o2.y + o2.tallness >= o1.y + o1.tallness && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
+		if (o2.y >= o1.y && o2.y + o2.getPixelHeight() <= o1.y+o1.getPixelHeight()) dy = 0;
 
 //		console.log("dx: " + dx + ", dy: " + dy);
 		if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
@@ -1067,7 +1067,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		let y1:number = tmp[1];
 
 		let x2:number = Math.floor(o2.x + o2.getPixelWidth()/2);
-		let y2:number = Math.floor(o2.y+o2.tallness + (o2.getPixelHeight()-o2.tallness)/2);
+		let y2:number = Math.floor(o2.y + o2.getPixelHeight()/2);
 		let dx:number = x1-x2;
 		let dy:number = y1-y2;
 

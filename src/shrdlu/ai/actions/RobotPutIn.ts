@@ -178,7 +178,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		        if (item2.length == 1) {
 		        	let s:A4Script = new A4Script(A4_SCRIPT_TAKE, null, null, 0, false, false);
 			        s.x = item2[0].x;
-			        s.y = item2[0].y+item2[0].tallness;
+			        s.y = item2[0].y;
 			        s.ID = item2[0].map.name;
 			        q.scripts.push(s);
 		        } else {

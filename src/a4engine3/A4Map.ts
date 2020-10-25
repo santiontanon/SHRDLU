@@ -151,10 +151,7 @@ class A4Map {
                 let object_xml:Element = object_xml_l[j];
                 let o:A4Object = this.loadObjectFromXML(object_xml, game, objectsToRevisit_xml, objectsToRevisit_object);
                 if (o!=null) {
-                    o.x = Number(object_xml.getAttribute("x"));
-                    o.y = Number(object_xml.getAttribute("y"));
-                    this.addObject(o);//, o.layer);
-                    //console.log("Added object " + o.name + " at " + o.x + "," + o.y + " to map " + this.name);
+                    this.addObject(o);
                 }
             }
         }
@@ -506,12 +503,9 @@ class A4Map {
         let ZSY:number = Math.floor(SCREEN_Y/zoom) + MAP_MAX_ALTITUDE*8;
         for(let row:number = 0;row<this.layers[0].height+MAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
             if (y+this.tileHeight<0) continue;
-//            console.log("drawRegion: " + row + " -> " + y);
-//            if (row<8) {
-                for(let i:number = 0;i<this.layers.length;i++) {
-                    this.layers[i].drawRegionRow(offsetx, offsety, row, zoom, SCREEN_X, SCREEN_Y, this.visibilityRegions, visibilityRegion, game, this);
-                }
-//            }
+            for(let i:number = 0;i<this.layers.length;i++) {
+                this.layers[i].drawRegionRow(offsetx, offsety, row, zoom, SCREEN_X, SCREEN_Y, this.visibilityRegions, visibilityRegion, game, this);
+            }
 
             // objects:
             let xx:number;
@@ -522,15 +516,12 @@ class A4Map {
                 if (o.burrowed) continue;
                 if ((o.y + o.getPixelHeight()) < (row-1)*this.tileHeight) continue;
                 if ((o.y + o.getPixelHeight()) > (row+1)*this.tileHeight) break;
-                //console.log("drawRegion(object): " + y + " vs " + (o.y + o.getPixelHeight()));
-//                let tx:number = Math.floor(o.x/this.tileWidth);
-//                let ty:number = Math.floor(o.y/this.tileHeight);
                 let tx:number = Math.floor(o.x/this.tileWidth);
-                let ty:number = Math.floor((o.y + o.tallness)/this.tileHeight);
+                let ty:number = Math.floor(o.y/this.tileHeight);
 
                 let draw:boolean = false;
                 let dark:boolean = true;
-                for(let i:number = 0;i<Math.floor((o.getPixelHeight()-o.tallness)/this.tileHeight) && !draw;i++) {
+                for(let i:number = 0;i<Math.floor(o.getPixelHeight()/this.tileHeight) && !draw;i++) {
                     for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
                         xx = tx+j;
                         yy = ty+i;
@@ -1109,7 +1100,7 @@ class A4Map {
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
                 let tx:number = Math.floor(o.x/this.tileWidth);
-                let ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
+                let ty:number = Math.floor(o.y/this.tileHeight);
                 let region2:number = this.visibilityRegion(tx,ty);
                 if (region == region2) l.push(o);
             }
@@ -1129,7 +1120,7 @@ class A4Map {
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
                 let tx:number = Math.floor(o.x/this.tileWidth);
-                let ty:number = Math.floor((o.y+o.tallness)/this.tileHeight);
+                let ty:number = Math.floor(o.y/this.tileHeight);
                 let region2:number = this.visibilityRegion(tx,ty);
                 if (region == region2 || 
                     (o instanceof A4Door) ||
@@ -1308,7 +1299,7 @@ class A4Map {
 
         for(let o of this.objects) {
             if (o.x<=tilex*this.tileWidth && o.x+o.getPixelWidth()>=(tilex+1)*this.tileWidth &&
-                o.y+o.tallness<=tiley*this.tileHeight && o.y+o.getPixelHeight()>=(tiley+1)*this.tileHeight) {
+                o.y<=tiley*this.tileHeight && o.y+o.getPixelHeight()>=(tiley+1)*this.tileHeight) {
                 if (!o.seeThrough()) return false;
             }
         }
@@ -1329,13 +1320,17 @@ class A4Map {
     }
 
 
-    recalculateLightsOnStatus(roomsWithLights:string[], roomsWithLightsOn:string[], regionNames:string[])
+    // By default, all the lights are on, but this function can be used to make any region of the map
+    // dark. The regionsWithLights/regionsWithLightsOn variables should be handled by each specific
+    // game, and are used to tell the engine which parts of the maps are lit and which are not.
+    // By default, if a region is not in the "regionsWithLights" list, it is assumed it is lit.
+    recalculateLightsOnStatus(regionsWithLights:string[], regionsWithLightsOn:string[], regionNames:string[])
     {
         for(let i:number = 0;i<regionNames.length;i++) {
-            if (roomsWithLights.indexOf(regionNames[i]) == -1) {
+            if (regionsWithLights.indexOf(regionNames[i]) == -1) {
                 this.lightOnStatus[i] = 1;    // by default, lights are on!
             } else {
-                if (roomsWithLightsOn.lastIndexOf(regionNames[i]) == -1) {
+                if (regionsWithLightsOn.lastIndexOf(regionNames[i]) == -1) {
                     this.lightOnStatus[i] = 0;
                 } else {
                     this.lightOnStatus[i] = 1;

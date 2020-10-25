@@ -13,7 +13,7 @@ class AILocation {
 	{
 		let map:A4Map = this.maps[mapIdx];
 		let tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
-		let tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
+		let tile_y:number = Math.floor((o.y + o.getPixelHeight()/2)/map.tileHeight);
 		let offset:number = tile_x + tile_y*map.width;
 		if (this.mapOccupancyMaps[mapIdx][offset]) {
 			return 0;
@@ -95,8 +95,8 @@ class AILocation {
 				if (this.preferredCenterCoordinatesInMap[i] != null) {
 					let x:number = this.preferredCenterCoordinatesInMap[i][0];
 					let y:number = this.preferredCenterCoordinatesInMap[i][1];
-					if (map.walkable(x, y+character.tallness,
-								 	 character.getPixelWidth(), character.getPixelHeight()-character.tallness, character)) {
+					if (map.walkable(x, y,
+								 	 character.getPixelWidth(), character.getPixelHeight(), character)) {
 						return this.preferredCenterCoordinatesInMap[i];
 					}
 				}
@@ -106,8 +106,8 @@ class AILocation {
 				for(let y:number = 0;y<this.maps[i].height;y++) {
 					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
 						if (this.mapOccupancyMaps[i][offset] &&
-							map.walkable(x*map.tileWidth, y*map.tileHeight+character.tallness,
-										 character.getPixelWidth(), character.getPixelHeight()-character.tallness, character)) {
+							map.walkable(x*map.tileWidth, y*map.tileHeight,
+										 character.getPixelWidth(), character.getPixelHeight(), character)) {
 							x1 += x*this.maps[i].tileWidth;
 							y1 += y*this.maps[i].tileHeight;
 							total ++;
@@ -121,17 +121,17 @@ class AILocation {
 
 				// find walkable coordinates outside of a bridge:
 				let half_width:number = character.getPixelWidth()/2;
-				let half_height:number = (character.getPixelHeight()-character.tallness)/2;
+				let half_height:number = character.getPixelHeight()/2;
 				let best:[number,number] = null;
 				let best_d:number = 0;
 				offset = 0;
 				for(let y:number = 0;y<this.maps[i].height;y++) {
 					for(let x:number = 0;x<this.maps[i].width;x++, offset++) {
 						if (this.mapOccupancyMaps[i][offset] &&
-							map.walkable(x*map.tileWidth, y*map.tileHeight+character.tallness,
-										 character.getPixelWidth(), character.getPixelHeight()-character.tallness, character)) {
+							map.walkable(x*map.tileWidth, y*map.tileHeight,
+										 character.getPixelWidth(), character.getPixelHeight(), character)) {
                             let bridge:A4MapBridge = map.getBridge(x*map.tileWidth+half_width, 
-                            									   y*map.tileHeight+character.tallness+half_height);
+                            									   y*map.tileHeight+half_height);
                             if (bridge==null) {
 								let xtmp:number = x*this.maps[i].tileWidth;
 								let ytmp:number = y*this.maps[i].tileHeight;

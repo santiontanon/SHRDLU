@@ -107,7 +107,7 @@ class RobotAI extends A4RuleBasedAI {
 		// just perceive an area around the robot:
 		let attention_map:A4Map = this.robot.map;
 		let attention_x:number = this.robot.x + this.robot.getPixelWidth()/2;
-		let attention_y:number = this.robot.y + this.robot.tallness + (this.robot.getPixelHeight() - this.robot.tallness)/2;
+		let attention_y:number = this.robot.y + this.robot.getPixelHeight()/2;
 
 		// find the AILocation:
 		let location:AILocation = null;

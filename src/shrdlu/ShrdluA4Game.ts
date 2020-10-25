@@ -24,16 +24,6 @@ class ShrdluA4Game extends A4Game {
         super(xml, game_path, ontology_path, GLTM, SFXM, new ShrdluA4ObjectFactory(), a_sfx_volume, gender);
         this.in_game_seconds = SHRDLU_START_DATE;
         this.app = app;
-    }
-
-
-    loadContentFromXML(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager)
-    {
-        this.serverToken = xml.getAttribute("serverToken") || '';
-
-        if (xml.getAttribute("playerGender") != null) {
-          this.playerGender = xml.getAttribute("playerGender");
-        }
 
         this.rooms_with_lights = ["location-as4",    // bedroom 1
                                   "location-as5",
@@ -113,7 +103,17 @@ class ShrdluA4Game extends A4Game {
                                          ["wrench", ["plastic", "iron"]],
                                          ["cable", ["plastic", "copper"]],
                                          ["extension-cord", ["plastic", "copper"]],
-                                        ];
+                                        ];        
+    }
+
+
+    loadContentFromXML(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager)
+    {
+        this.serverToken = xml.getAttribute("serverToken") || '';
+
+        if (xml.getAttribute("playerGender") != null) {
+          this.playerGender = xml.getAttribute("playerGender");
+        }
 
     	  super.loadContentFromXML(xml, game_path, ontology_path, GLTM, SFXM);
     }
@@ -403,23 +403,23 @@ class ShrdluA4Game extends A4Game {
         let map:A4Map = this.getMap("Spacer Valley South")
         if (map == null) return false;
         if (!map.walkable(336, 408, 40, 40, newRover)) return false;
-        newRover.warp(336, 408, map);
+        newRover.warp(336, 408+16, map);
 
         // 2) remove rover from the game
         rover.map.removeObject(rover);
         this.requestDeletion(rover);
 
         // 3) teleport the player, and any other robots that were inside, and embark
-        player.warp(336, 408, map);
+        player.warp(336, 408+16, map);
         player.embark(newRover);
         if (this.qwertyAI.robot.vehicle == rover) {
             this.qwertyAI.robot.disembark();
-            this.qwertyAI.robot.warp(336, 408, map);
+            this.qwertyAI.robot.warp(336, 408+16, map);
             this.qwertyAI.robot.embark(newRover);
         }
         if (this.shrdluAI.robot.vehicle == rover) {
             this.shrdluAI.robot.disembark();
-            this.shrdluAI.robot.warp(336, 408, map);
+            this.shrdluAI.robot.warp(336, 408+16, map);
             this.shrdluAI.robot.embark(newRover);
         }
 
@@ -438,23 +438,23 @@ class ShrdluA4Game extends A4Game {
         let map:A4Map = this.getMap("Trantor Crater")
         if (map == null) return false;
         if (!map.walkable(57*8, 15*8, 40, 40, newShuttle)) return false;
-        newShuttle.warp(57*8, 15*8, map);
+        newShuttle.warp(57*8, 15*8+16, map);
 
         // 2) remove shuttle from the game
         shuttle.map.removeObject(shuttle);
         this.requestDeletion(shuttle);
 
         // 3) teleport the player, and any other robots that were inside, and embark
-        player.warp(57*8, 15*8, map);
+        player.warp(57*8, 15*8+16, map);
         player.embark(newShuttle);
         if (this.qwertyAI.robot.vehicle == shuttle) {
             this.qwertyAI.robot.disembark();
-            this.qwertyAI.robot.warp(57*8, 15*8, map);
+            this.qwertyAI.robot.warp(57*8, 15*8+16, map);
             this.qwertyAI.robot.embark(newShuttle);
         }
         if (this.shrdluAI.robot.vehicle == shuttle) {
             this.shrdluAI.robot.disembark();
-            this.shrdluAI.robot.warp(57*8, 15*8, map);
+            this.shrdluAI.robot.warp(57*8, 15*8+16, map);
             this.shrdluAI.robot.embark(newShuttle);
         }
 
@@ -472,7 +472,7 @@ class ShrdluA4Game extends A4Game {
         let map:A4Map = this.getMap("Aurora Station")
         if (map == null) return false;
         if (!map.walkable(848, 72, 40, 40, newRover)) return false;
-        newRover.warp(848, 72, map);
+        newRover.warp(848, 72+17, map);
 
         // 2) remove rover from the outside
         rover.disembark(this.currentPlayer);
@@ -482,17 +482,17 @@ class ShrdluA4Game extends A4Game {
         this.requestDeletion(rover);
 
         // 3) teleport the player, and any robots in the vehicle, and disembark
-        this.currentPlayer.warp(848, 72, map);
+        this.currentPlayer.warp(848, 72+16, map);
         this.currentPlayer.embark(newRover);
         this.currentPlayer.disembark();
 
         if (this.qwertyAI.robot.vehicle == rover) {
-            this.qwertyAI.robot.warp(848, 72, map);
+            this.qwertyAI.robot.warp(848, 72+16, map);
             this.qwertyAI.robot.embark(newRover);
             this.qwertyAI.robot.disembark();
         }
         if (this.shrdluAI.robot.vehicle == rover) {
-            this.shrdluAI.robot.warp(848, 72, map);
+            this.shrdluAI.robot.warp(848, 72+16, map);
             this.shrdluAI.robot.embark(newRover);
             this.shrdluAI.robot.disembark();
         }
@@ -511,7 +511,7 @@ class ShrdluA4Game extends A4Game {
         let map:A4Map = this.getMap("Aurora Station")
         if (map == null) return false;
         if (!map.walkable(848, 192, 40, 40, newShuttle)) return false;
-        newShuttle.warp(848, 192, map);
+        newShuttle.warp(848, 192+16, map);
 
         // 2) remove shuttle from the outside
         shuttle.disembark(this.currentPlayer);
@@ -521,17 +521,17 @@ class ShrdluA4Game extends A4Game {
         this.requestDeletion(shuttle);
 
         // 3) teleport the player, and any robots in the vehicle, and disembark
-        this.currentPlayer.warp(848, 192, map);
+        this.currentPlayer.warp(848, 192+16, map);
         this.currentPlayer.embark(newShuttle);
         this.currentPlayer.disembark();
 
         if (this.qwertyAI.robot.vehicle == shuttle) {
-            this.qwertyAI.robot.warp(848, 192, map);
+            this.qwertyAI.robot.warp(848, 192+16, map);
             this.qwertyAI.robot.embark(newShuttle);
             this.qwertyAI.robot.disembark();
         }
         if (this.shrdluAI.robot.vehicle == shuttle) {
-            this.shrdluAI.robot.warp(848, 192, map);
+            this.shrdluAI.robot.warp(848, 192+16, map);
             this.shrdluAI.robot.embark(newShuttle);
             this.shrdluAI.robot.disembark();
         }
@@ -697,7 +697,7 @@ class ShrdluA4Game extends A4Game {
             let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
             let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
             let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
-            let ty:number = Math.floor((this.currentPlayer.y+this.currentPlayer.tallness)/this.tileHeight);
+            let ty:number = Math.floor(this.currentPlayer.y/this.tileHeight);
             map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
             this.drawEyesclosedCover(screen_width, screen_height);
             map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
@@ -1114,7 +1114,7 @@ class ShrdluA4Game extends A4Game {
             o = tmp[0];
         }
         let tile_x:number = Math.floor((o.x + o.getPixelWidth()/2)/map.tileWidth);
-        let tile_y:number = Math.floor((o.y + o.tallness + (o.getPixelHeight() - o.tallness)/2)/map.tileHeight);
+        let tile_y:number = Math.floor((o.y + o.getPixelHeight()/2)/map.tileHeight);
         return this.getAILocationTileCoordinate(map, tile_x, tile_y);
     }    
 
@@ -1204,7 +1204,7 @@ class ShrdluA4Game extends A4Game {
                 new PerceptionBufferRecord("talk", this.currentPlayer.ID, this.currentPlayer.sort, 
                                            null, null, this.HUD_text_input_buffer,
                                            null, null,
-                                           this.currentPlayer.x, this.currentPlayer.y+this.currentPlayer.tallness, this.currentPlayer.x+this.currentPlayer.getPixelWidth(), this.currentPlayer.y+this.currentPlayer.getPixelHeight()));
+                                           this.currentPlayer.x, this.currentPlayer.y, this.currentPlayer.x+this.currentPlayer.getPixelWidth(), this.currentPlayer.y+this.currentPlayer.getPixelHeight()));
 
             this.addMessageWithColor(">"+this.HUD_text_input_buffer, MSX_COLOR_LIGHT_GREEN);
             */

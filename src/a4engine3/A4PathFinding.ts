@@ -1,15 +1,3 @@
-/*
-
-Note (santi):
-This class is the old AI class I implemented for the A4Engine. I stripped out all the conversation and reasoning capabilities though, 
-since that is all handled by the RuleBasedAI and A4RuleBasedAI classes in this game. I also removed the concept of "behaviors". 
-I left the short/long-term memory structures, since pathfinding depends on them (short term memory is used to recosntruct the
-navigation buffer). But I should probably remove them, since these are now replicated in the RuleBasedAI class.
-
-The only real functionality left in this class is pathfinding.
-
-*/
-
 var NAVIGATION_BUFFER_WALKABLE:number = 0;
 var NAVIGATION_BUFFER_NOT_WALKABLE:number = 1;
 var NAVIGATION_BUFFER_BRIDGE:number = 2;
@@ -30,7 +18,7 @@ class PFTarget {
 }
 
 
-class A4AI {
+class A4PathFinding {
     constructor(c:A4Character)
     {
         this.character = c;
@@ -38,11 +26,7 @@ class A4AI {
     
     
     update(game:A4Game)
-    {
-        // 1) perception & 2) fact checking:
-        this.perception(game);
-        
-        // 6: behavior:
+    {        
         if (this.character.isIdle()) {
             // pathfinding:
             let c:A4CharacterCommand = this.navigationCycle(game);
@@ -54,33 +38,28 @@ class A4AI {
     }
   
 
-    updateAllObjectsCache()
-    {
-        let map:A4Map = this.character.map;
-        let tx:number = Math.floor(this.character.x/this.tileWidth);
-        let ty:number = Math.floor((this.character.y+this.character.tallness)/this.tileHeight);
-        let perception_x0:number = this.character.x-this.tileWidth*this.sightRadius;
-        let perception_y0:number = this.character.y+this.character.tallness-this.tileHeight*this.sightRadius;
-        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.sightRadius;
-        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.sightRadius;
-        
-        let region:number = map.visibilityRegion(tx,ty);
-        this.object_perception_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(perception_x0, perception_y0,
-                                                                                 perception_x1-perception_x0, perception_y1-perception_y0, 
-                                                                                 region);
-    }
-
-
     perception(game:A4Game)
     {
         if (this.lastPerceptionCycle != -1 &&
             this.lastPerceptionCycle + this.period > this.cycle) return;
         this.lastPerceptionCycle = this.cycle;
+
         let map:A4Map = this.character.map;
         this.tileWidth = map.getTileWidth();
         this.tileHeight = map.getTileHeight();
 
-        this.updateAllObjectsCache();
+        let tx:number = Math.floor(this.character.x/this.tileWidth);
+        let ty:number = Math.floor(this.character.y/this.tileHeight);
+        let perception_x0:number = this.character.x-this.tileWidth*this.sightRadius;
+        let perception_y0:number = this.character.y-this.tileHeight*this.sightRadius;
+        let perception_x1:number = this.character.x+this.character.getPixelWidth()+this.tileWidth*this.sightRadius;
+        let perception_y1:number = this.character.y+this.character.getPixelHeight()+this.tileHeight*this.sightRadius;
+        
+        let region:number = map.visibilityRegion(tx,ty);
+        this.object_perception_buffer = map.getAllObjectsInRegionPlusDoorsAndObstacles(
+                                                perception_x0, perception_y0,
+                                                perception_x1-perception_x0, perception_y1-perception_y0, 
+                                                region);
     }
 
 
@@ -88,8 +67,11 @@ class A4AI {
     {
         let subject:A4WalkingObject = this.character;
         if (this.character.isInVehicle()) {
-            return;    // in shrdlu, we don't want the robots to drive vehicles
-            // subject = this.character.vehicle;
+            if (this.canDriveVehicles) {
+                subject = this.character.vehicle;
+            } else {
+                return;
+            }
         }
         if (subject == null) return;
         if (subject.map != this.navigationBuffer_map ||
@@ -128,7 +110,7 @@ class A4AI {
 
         if (this.pathfinding_result_x!=-1) {
             let pixelx:number = subject.x;
-            let pixely:number = subject.y + subject.tallness;
+            let pixely:number = subject.y;
             //let pixelx1:number = subject.x + subject.getPixelWidth();
             //let pixely1:number = subject.y + subject.getPixelHeight();
             let pixel_target_x:number = this.pathfinding_result_x * this.tileWidth;
@@ -175,23 +157,13 @@ class A4AI {
     }
 
 
-    canSeeObject(object:A4Object)
+    canSeeObject(object:A4Object, game:A4Game)
     {
+        this.perception(game);
+
         if (this.object_perception_buffer.indexOf(object) != -1) return true;
         if (this.long_term_object_perception_buffer.indexOf(object) != -1) return true;
         return false;
-    }
-
-
-    getObjectPerceptionCache() : A4Object[]
-    {
-        return this.object_perception_buffer;
-    }
-
-
-    getObjectPerceptionCacheSize() : number
-    {
-        return this.object_perception_buffer.length;
     }
 
 
@@ -199,12 +171,18 @@ class A4AI {
     {
         let subject:A4Object = this.character;
         if (this.character.isInVehicle()) {
-            return;    // in shrdlu, we don't want the robots to drive vehicles
-            // subject = this.character.vehicle;
+            if (this.canDriveVehicles) {
+                subject = this.character.vehicle;
+            } else {
+                return;
+            }
         }
         if (subject == null) return;
 
         if (!force && this.navigationBuffer!=null && this.navigationBuffer_lastUpdated > this.cycle-this.period) return;
+
+        // update the perceived objects:
+        this.perception(game);
 
         if (this.navigationBuffer == null) {
             this.navigationBuffer_size = Math.floor(this.sightRadius*2 + subject.getPixelWidth()/subject.map.getTileWidth());
@@ -216,11 +194,9 @@ class A4AI {
         this.navigationBuffer_map = map;
         this.navigationBuffer_mapWidth = map.width;
         let cx:number = Math.floor((subject.x + subject.getPixelWidth()/2) / this.tileWidth);
-        let cy:number = Math.floor((subject.y + subject.tallness + (subject.getPixelHeight() - subject.tallness)/2) / this.tileHeight);
+        let cy:number = Math.floor((subject.y + subject.getPixelHeight()/2) / this.tileHeight);
         this.navigationBuffer_x = cx - Math.floor(this.sightRadius + (subject.getPixelWidth()/2)/this.tileWidth);
-        this.navigationBuffer_y = cy - Math.floor(this.sightRadius + ((subject.getPixelHeight() - subject.tallness)/2)/this.tileHeight);
-//        let character_tileWidth:number = subject.getPixelWidth()/this.tileWidth;
-//        let character_tileHeight:number = (subject.getPixelHeight() - subject.tallness)/this.tileHeight;
+        this.navigationBuffer_y = cy - Math.floor(this.sightRadius + (subject.getPixelHeight()/2)/this.tileHeight);
         
         for(let i:number = 0;i<this.navigationBuffer_size;i++) {
             for(let j:number = 0;j<this.navigationBuffer_size;j++) {
@@ -246,7 +222,7 @@ class A4AI {
 
                 if (add) {
                     let x0:number = Math.floor(o.x/this.tileWidth) - this.navigationBuffer_x;
-                    let y0:number = Math.floor((o.y + o.tallness)/this.tileHeight) - this.navigationBuffer_y;
+                    let y0:number = Math.floor(o.y/this.tileHeight) - this.navigationBuffer_y;
                     let x1:number = Math.floor((o.x+o.getPixelWidth()-1)/this.tileWidth) - this.navigationBuffer_x;
                     let y1:number = Math.floor((o.y+o.getPixelHeight()-1)/this.tileHeight) - this.navigationBuffer_y;
     //                x0 -= (character_tileWidth - 1);
@@ -318,7 +294,7 @@ class A4AI {
         }
 
         let x0:number = target.x;
-        let y0:number = (target.y+target.tallness);
+        let y0:number = target.y;
         let x1:number = (target.x+target.getPixelWidth());
         let y1:number = (target.y+target.getPixelHeight());
         for(let pft of this.pathfinding_targets) {
@@ -412,7 +388,7 @@ class A4AI {
                 let b:ShrdluAirlockDoor = <ShrdluAirlockDoor>o;
                 if (b.map == this.navigationBuffer_map &&
                     b.targetMap == targetMapName) {
-                    this.addPFTarget(b.x, b.y + b.tallness,
+                    this.addPFTarget(b.x, b.y,
                                      b.x + b.getPixelWidth(), b.y + b.getPixelHeight(),
                                      this.navigationBuffer_map,
                                      game,
@@ -432,7 +408,7 @@ class A4AI {
         let oty:number;
         // compute the origin tile cordinates (from the center of the top-left tile of the sprite):
         let pw:number = subject.getPixelWidth();
-        let ph:number = subject.getPixelHeight() - subject.tallness;
+        let ph:number = subject.getPixelHeight();
         let tw:number = Math.floor(pw/this.tileWidth);
         let th:number = Math.floor(ph/this.tileHeight);
         if (pw>this.tileWidth) {
@@ -441,14 +417,14 @@ class A4AI {
             otx = Math.floor((subject.x + pw/2)/this.tileWidth);
         }
         if (ph>this.tileHeight) {
-            oty = Math.floor((subject.y + subject.tallness + this.tileHeight/2)/this.tileHeight);
+            oty = Math.floor((subject.y + this.tileHeight/2)/this.tileHeight);
         } else {
-            oty = Math.floor((subject.y + subject.tallness + ph/2)/this.tileHeight);
+            oty = Math.floor((subject.y + ph/2)/this.tileHeight);
         }
         
         if (otx<this.navigationBuffer_x || otx>this.navigationBuffer_x+this.navigationBuffer_size ||
             oty<this.navigationBuffer_y || oty>this.navigationBuffer_y+this.navigationBuffer_size) {
-            console.error("A4AI: character is out of the navigation buffer!!!\n");
+            console.error("A4PathFinding: character is out of the navigation buffer!!!\n");
             return false;
         }
 
@@ -483,7 +459,6 @@ class A4AI {
             openRemovePosition++;
             openRemovePosition = openRemovePosition % size_sq;
 
-//            [score, priority] = this.pathFindingScore(currentx, currenty-subject.tallness/this.tileHeight, subject);
             [score, priority] = this.pathFindingScore(currentx, currenty, subject);
 //            console.log("pfs: " + currentx +", " + currenty + " -> " + score);
             if ((bestPriority==undefined || priority > bestPriority) ||
@@ -594,8 +569,6 @@ class A4AI {
         let score:number = 0;
         let dx:number;
         let dy:number;
-//        let character_x1:number = character_x0 + Math.floor(subject.getPixelWidth()/this.tileWidth)-1;
-//        let character_y1:number = character_y0 + Math.floor((subject.getPixelHeight()-subject.tallness)/this.tileHeight)-1;
         let x0:number,y0:number; //,x1:number,y1:number;
         
         for(let i:number = 0;i<this.pathfinding_targets.length;i++) {
@@ -786,4 +759,6 @@ class A4AI {
 
     map2mapNames:string[] = null;
     map2mapPaths:string[][] = null;
+
+    canDriveVehicles:boolean = false;
 }

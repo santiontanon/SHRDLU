@@ -67,9 +67,9 @@ class RobotEnter_IntentionAction extends IntentionAction {
 		// Check if the robot can see it:
 		if (!ai.visionActive) {
             let x1 = this.targetObject.x + this.targetObject.getPixelWidth() / 2;
-            let y1 = this.targetObject.y + this.targetObject.tallness + (this.targetObject.getPixelHeight() - this.targetObject.tallness) / 2;
+            let y1 = this.targetObject.y + this.targetObject.getPixelHeight() / 2;
             let x2 = ai.robot.x + ai.robot.getPixelWidth() / 2;
-            let y2 = ai.robot.y + ai.robot.tallness + (ai.robot.getPixelHeight() - ai.robot.tallness) / 2;
+            let y2 = ai.robot.y + ai.robot.getPixelHeight() / 2;
             let d:number = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 			if (d>28) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);

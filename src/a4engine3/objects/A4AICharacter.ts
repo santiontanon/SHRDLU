@@ -3,7 +3,7 @@ class A4AICharacter extends A4Character {
     constructor(name:string, sort:Sort)
     {
         super(name, sort);
-        this.AI = new A4AI(this);
+        this.AI = new A4PathFinding(this);
     }
 
     
@@ -72,5 +72,5 @@ class A4AICharacter extends A4Character {
     }
 
 
-    AI:A4AI = null;
+    AI:A4PathFinding = null;
 }

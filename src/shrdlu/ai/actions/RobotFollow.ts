@@ -112,7 +112,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 		}
 
 		let destinationX:number = this.targetObject.x;
-		let destinationY:number = (this.targetObject.y+this.targetObject.tallness);
+		let destinationY:number = this.targetObject.y;
 
 		// go to destination:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);

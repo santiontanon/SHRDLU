@@ -81,7 +81,7 @@ class ShrdluAirlockDoor extends A4Obstacle {
             // go to the target destination:
             let targetMap:A4Map = game.getMap(this.targetMap);
             if (targetMap != null) {
-                game.requestWarp(character, targetMap, this.targetX, this.targetY-character.tallness);
+                game.requestWarp(character, targetMap, this.targetX, this.targetY);
             }
             return true;
         }

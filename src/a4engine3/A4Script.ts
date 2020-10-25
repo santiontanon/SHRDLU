@@ -264,11 +264,11 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
     if (o.isAICharacter()) {
         let priority:number = 10;
         let aic:A4AICharacter = <A4AICharacter>o;
-        let ai:A4AI = aic.AI;
+        let ai:A4PathFinding = aic.AI;
         if (script.ID!=null) {
             map = game.getMap(script.ID);
         }
-        if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
+        if (o.x==script.x && o.y==script.y && o.map==map) {
             return SCRIPT_FINISHED;
         } else {
             if (o.map != map && script.stopAfterGoingThroughABridge) {
@@ -288,11 +288,11 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
     if (o.isAICharacter()) {
         let priority:number = 10;
         let aic:A4AICharacter = <A4AICharacter>o;
-        let ai:A4AI = aic.AI;
+        let ai:A4PathFinding = aic.AI;
         if (script.ID!=null) {
             map = game.getMap(script.ID);
         }
-        if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
+        if (o.x==script.x && o.y==script.y && o.map==map) {
             return SCRIPT_FINISHED;
         } else {
             if (o.map != map && script.stopAfterGoingThroughABridge) {
@@ -319,7 +319,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                         let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                         if (otherdoor == null || otherdoor.closed) {
                             // if it is closed, then teleport to the other side:
-                            game.requestWarp(o, game.getMap(o2.targetMap), door.targetX, door.targetY-o.tallness);
+                            game.requestWarp(o, game.getMap(o2.targetMap), door.targetX, door.targetY);
                         } else {
                             otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
                         }
@@ -340,7 +340,7 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
                             let otherdoor:A4Door = <A4Door>game.findObjectByIDJustObject(door.otherDoorID);
                             if (otherdoor == null || otherdoor.closed) {
                                 // if it is closed, then teleport to the other side:
-                                game.requestWarp(o, map, door.targetX, door.targetY-o.tallness);
+                                game.requestWarp(o, map, door.targetX, door.targetY);
                             } else {
                                 otherdoor.event(A4_EVENT_INTERACT, aic, o.map, game);
                             }
@@ -361,7 +361,7 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
 {
     if (o.isAICharacter()) {
         let aic:A4AICharacter = <A4AICharacter>o;
-        let ai:A4AI = aic.AI;
+        let ai:A4PathFinding = aic.AI;
         let priority:number = 10;
 
         let targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
@@ -373,15 +373,15 @@ scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object
         } else if (o.x > targetObject.x + targetObject.getPixelWidth()) {
             distance_x = o.x - (targetObject.x + targetObject.getPixelWidth());
         }
-        if (o.y + o.getPixelHeight() < targetObject.y + targetObject.tallness) {
-            distance_y = (targetObject.y + targetObject.tallness) - (o.y + o.getPixelHeight());
-        } else if (targetObject.y + targetObject.getPixelHeight() < o.y + o.tallness) {
-            distance_y = (o.y + o.tallness) - (targetObject.y + targetObject.getPixelHeight());
+        if (o.y + o.getPixelHeight() < targetObject.y) {
+            distance_y = (targetObject.y) - (o.y + o.getPixelHeight());
+        } else if (targetObject.y + targetObject.getPixelHeight() < o.y) {
+            distance_y = (o.y) - (targetObject.y + targetObject.getPixelHeight());
         }
         let distance:number = distance_x + distance_y;
         if (distance <= 0) return SCRIPT_FINISHED;
         
-        if (ai.canSeeObject(targetObject)) {
+        if (ai.canSeeObject(targetObject, game)) {
             ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
         } else {
@@ -414,7 +414,7 @@ scriptFunctions[A4_SCRIPT_USE] = function(script:A4Script, o:A4Object, map:A4Map
             // x,y,map version:
             if (o.isAICharacter()) {
                 let aic:A4AICharacter = <A4AICharacter>o;
-                let ai:A4AI = aic.AI;
+                let ai:A4PathFinding = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     if (aic.isIdle()) {
@@ -565,7 +565,7 @@ scriptFunctions[A4_SCRIPT_GIVE] = function(script:A4Script, o:A4Object, map:A4Ma
         o.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", o.ID, o.sort,
                 otherCharacter.ID, otherCharacter.sort, null,
                 item.ID, item.sort,
-                o.x, o.y+o.tallness, o.x+o.getPixelWidth(), o.y+o.getPixelHeight()));
+                o.x, o.y, o.x+o.getPixelWidth(), o.y+o.getPixelHeight()));
         otherCharacter.eventWithObject(A4_EVENT_RECEIVE, <A4Character>o, item, this.map, game);
         o.eventWithObject(A4_EVENT_ACTION_GIVE, otherCharacter, item, this.map, game);
         game.playSound("data/sfx/itemPickup.wav");
@@ -633,7 +633,7 @@ scriptFunctions[A4_SCRIPT_DROP] = function(script:A4Script, o:A4Object, map:A4Ma
         return SCRIPT_FAILED;
     } else {
         (<A4Character>o).removeFromInventory(item);
-        game.requestWarp(item, map, o.x, o.y + (o.tallness - item.tallness));//, A4_LAYER_FG);
+        game.requestWarp(item, map, o.x, o.y);//, A4_LAYER_FG);
         game.playSound("data/sfx/itemPickup.wav");
         return SCRIPT_FINISHED;
     }
@@ -645,9 +645,9 @@ scriptFunctions[A4_SCRIPT_TAKE] = function(script:A4Script, o:A4Object, map:A4Ma
     if (o.isAICharacter()) {
         let priority:number = 10;
         let aic:A4AICharacter = <A4AICharacter>o;
-        let ai:A4AI = aic.AI;
+        let ai:A4PathFinding = aic.AI;
         if (script.ID!=null) map = game.getMap(script.ID);
-        if (o.x==script.x && o.y+o.tallness==script.y && o.map==map) {
+        if (o.x==script.x && o.y==script.y && o.map==map) {
             if (aic.isIdle()) {
                 // take:
                 if (!aic.takeAction(game)) return SCRIPT_FAILED;
@@ -682,7 +682,7 @@ scriptFunctions[A4_SCRIPT_INTERACT] = function(script:A4Script, o:A4Object, map:
             // x,y,map version:
             if (o.isAICharacter()) {
                 let aic:A4AICharacter = <A4AICharacter>o;
-                let ai:A4AI = aic.AI;
+                let ai:A4PathFinding = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 
                 let interactDirection:number = A4_DIRECTION_NONE;
@@ -724,7 +724,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
 {
     if (o.isAICharacter()) {
         let aic:A4AICharacter = <A4AICharacter>o;
-        let ai:A4AI = aic.AI;
+        let ai:A4PathFinding = aic.AI;
         let priority:number = 10;
 
         let targetObject:A4Object = game.findObjectByIDJustObject(script.ID);
@@ -739,19 +739,19 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             distance_x = o.x - (targetObject.x + targetObject.getPixelWidth());
             interactDirection = A4_DIRECTION_LEFT;
         }
-        if (o.y + o.getPixelHeight() <= targetObject.y + targetObject.tallness) {
-            distance_y = (targetObject.y + targetObject.tallness) - (o.y + o.getPixelHeight());
+        if (o.y + o.getPixelHeight() <= targetObject.y) {
+            distance_y = targetObject.y - (o.y + o.getPixelHeight());
             interactDirection = A4_DIRECTION_DOWN;
-        } else if (targetObject.y + targetObject.getPixelHeight() <= o.y + o.tallness) {
-            distance_y = (o.y + o.tallness) - (targetObject.y + targetObject.getPixelHeight());
+        } else if (targetObject.y + targetObject.getPixelHeight() <= o.y) {
+            distance_y = o.y - (targetObject.y + targetObject.getPixelHeight());
             interactDirection = A4_DIRECTION_UP;
         }
         let distance:number = distance_x + distance_y;
         // special case of the corners:
-        if (o.x + o.getPixelWidth() == targetObject.x && o.y + o.getPixelHeight() == targetObject.y + targetObject.tallness) distance = 1;
-        if (o.x + o.getPixelWidth() == targetObject.x && targetObject.y + targetObject.getPixelHeight() == o.y + o.tallness) distance = 1;
-        if (targetObject.x + targetObject.getPixelWidth() == o.x && o.y + o.getPixelHeight() == targetObject.y + targetObject.tallness) distance = 1;
-        if (targetObject.x + targetObject.getPixelWidth() == o.x && targetObject.y + targetObject.getPixelHeight() == o.y + o.tallness) distance = 1;
+        if (o.x + o.getPixelWidth() == targetObject.x && o.y + o.getPixelHeight() == targetObject.y) distance = 1;
+        if (o.x + o.getPixelWidth() == targetObject.x && targetObject.y + targetObject.getPixelHeight() == o.y) distance = 1;
+        if (targetObject.x + targetObject.getPixelWidth() == o.x && o.y + o.getPixelHeight() == targetObject.y) distance = 1;
+        if (targetObject.x + targetObject.getPixelWidth() == o.x && targetObject.y + targetObject.getPixelHeight() == o.y) distance = 1;
 
         if (distance <= 0) {
             // we have arrived, interact!            
@@ -768,7 +768,7 @@ scriptFunctions[A4_SCRIPT_INTERACT_WITH_OBJECT] = function(script:A4Script, o:A4
             }
         }
         
-        if (ai.canSeeObject(targetObject)) {
+        if (ai.canSeeObject(targetObject, game)) {
             ai.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, priority, false, targetObject, game);
             return SCRIPT_NOT_FINISHED;
         } else {
@@ -803,7 +803,7 @@ scriptFunctions[A4_SCRIPT_EMBARK] = function(script:A4Script, o:A4Object, map:A4
             // x,y,map version:
             if (o.isAICharacter()) {
                 let aic:A4AICharacter = <A4AICharacter>o;
-                let ai:A4AI = aic.AI;
+                let ai:A4PathFinding = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     if (aic.isIdle()) {
@@ -868,7 +868,7 @@ scriptFunctions[A4_SCRIPT_DISEMBARK] = function(script:A4Script, o:A4Object, map
             // x,y,map version:
             if (o.isAICharacter()) {
                 let aic:A4AICharacter = <A4AICharacter>o;
-                let ai:A4AI = aic.AI;
+                let ai:A4PathFinding = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 if (o.x==script.x && o.y==script.y && o.map==map) {
                     // character is on position:
@@ -935,7 +935,7 @@ scriptFunctions[A4_SCRIPT_CHOP] = function(script:A4Script, o:A4Object, map:A4Ma
             // x,y,map version:
             if (o.isAICharacter()) {
                 let aic:A4AICharacter = <A4AICharacter>o;
-                let ai:A4AI = aic.AI;
+                let ai:A4PathFinding = aic.AI;
                 if (script.ID!=null) map = game.getMap(script.ID);
                 
                 let interactDirection:number = A4_DIRECTION_NONE;

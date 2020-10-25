@@ -7,7 +7,7 @@ Note (santi):
   two other classes (EtaoinAI and RobotAI) implement additional functionality used by the two types of NPCs in the game 
   (EtaoinAI is used for ETAOIN which is a disembodied AI, and RobotAI is used for the two robots, QWERTY and SHRDLU).
 - These classes implement all the AI functionalities except for pathfinding. For that, I reused all the pathfinding code
-  originally implemented in the A4Engine, which is still in the A4AI class inside of the A4Engine code.
+  originally implemented in the A4Engine, which is still in the A4PathFinding class inside of the A4Engine code.
 
 */
 

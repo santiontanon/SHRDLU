@@ -314,7 +314,7 @@ class A4Character extends A4WalkingObject {
                         if ((this.x%game.tileWidth)==0 && (this.y%game.tileHeight)==0) {
                             this.state = A4CHARACTER_STATE_IDLE;
                             this.walkingCounter = 0;
-                            bridge = this.map.getBridge(this.x+this.getPixelWidth()/2,this.y+this.tallness+(this.getPixelHeight()-this.tallness)/2);
+                            bridge = this.map.getBridge(this.x+this.getPixelWidth()/2,this.y+this.getPixelHeight()/2);
                             if (bridge!=null) {
                                 // if we enter a bridge, but it's not with the first pixel we moved, then stop and do not go through the bridge,
                                 // to give the AI a chance to decide whether to go through the bridge or not
@@ -395,7 +395,7 @@ class A4Character extends A4WalkingObject {
                 if (this.stateCycle>=this.getWalkSpeed()) {
                     // drop all the items:
                     for(let o of this.inventory) {
-                        game.requestWarp(o, this.map, this.x, this.y+this.tallness-o.tallness);//, A4_LAYER_FG);
+                        game.requestWarp(o, this.map, this.x, this.y);//, A4_LAYER_FG);
                         o.event(A4_EVENT_DROP, null, this.map, game);    // pass 'null' as the character, since this character is dead
                     }
                     this.inventory = [];
@@ -439,7 +439,7 @@ class A4Character extends A4WalkingObject {
                             new PerceptionBufferRecord("talk", this.ID, this.sort, 
                                                        null, null, this.talkingText,
                                                        null, null,
-                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                       this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                     }
                     /*
                     if (this.talkingTarget!=null && game.contains(this.talkingTarget)) {
@@ -494,7 +494,7 @@ class A4Character extends A4WalkingObject {
                             new PerceptionBufferRecord("talk", this.ID, this.sort, 
                                                        null, null, this.talkingText,
                                                        null, null,
-                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                       this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                     }                    
                     this.talkingText = null;
                     this.talkingBubble = null;
@@ -520,7 +520,7 @@ class A4Character extends A4WalkingObject {
                             new PerceptionBufferRecord("talk", this.ID, this.sort, 
                                                        null, null, this.talkingText,
                                                        null, null,
-                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                       this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                     }
                     this.talkingText = null;
                     this.talkingBubble = null;
@@ -585,7 +585,7 @@ class A4Character extends A4WalkingObject {
                             new PerceptionBufferRecord("talk", this.ID, this.sort, 
                                                        null, null, this.talkingText,
                                                        null, null,
-                                                       this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                       this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                     }                    
                     this.talkingText = null;
                     this.talkingBubble = null;
@@ -643,7 +643,7 @@ class A4Character extends A4WalkingObject {
             let bx:number = Math.floor(px - this.talkingBubble.width/2);
             if (bx<0) bx = 0;
             if (bx+this.talkingBubble.width>=screenWidth) bx = screenWidth - this.talkingBubble.width;
-            let py:number = (focus.y + offsety);
+            let py:number = (focus.y + offsety - focus.pixel_tallness);
             let by:number = py - (8 + this.talkingBubble.height);
 //            console.log("drawTextBubbles: " + by + " vs " + screenHeight);
             if (by<0 || py<screenHeight/3) {
@@ -826,7 +826,7 @@ class A4Character extends A4WalkingObject {
                         this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("disembark", this.ID, this.sort, 
                                                                                       this.vehicle.ID, this.vehicle.sort, null,
                                                                                       null, null,
-                                                                                      this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                                      this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                         let vehicle:A4Object = this.vehicle;
                         if (this.disembark()) {
                             game.inGameActionsForLog.push(["disembark("+this.ID+","+vehicle.ID+")",""+game.in_game_seconds]);
@@ -845,7 +845,7 @@ class A4Character extends A4WalkingObject {
                                         this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("embark", this.ID, this.sort, 
                                                                                                       v.ID, v.sort, null,
                                                                                                       null, null,
-                                                                                                      this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                                                      this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                                         game.inGameActionsForLog.push(["embark("+this.ID+","+v.ID+")",""+game.in_game_seconds]);
                                     } else {
                                     */
@@ -865,11 +865,11 @@ class A4Character extends A4WalkingObject {
                         if ((<A4Item>o).droppable) {
                             // drop:
                             this.inventory.splice(argument, 1);
-                            game.requestWarp(o, this.map, this.x, this.y + (this.tallness - o.tallness));//, A4_LAYER_FG);
+                            game.requestWarp(o, this.map, this.x, this.y);//, A4_LAYER_FG);
                             this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("drop", this.ID, this.sort, 
                                                                                           o.ID, o.sort, null,
                                                                                           null, null,
-                                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                                          this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                             o.event(A4_EVENT_DROP, this, this.map, game);
                             this.eventWithObject(A4_EVENT_ACTION_DROP, null, o, this.map, game);
                             game.playSound("data/sfx/itemPickup.wav")
@@ -908,7 +908,7 @@ class A4Character extends A4WalkingObject {
                             this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("interact", this.ID, this.sort, 
                                                                                           o.ID, o.sort, null,
                                                                                           null, null,
-                                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                                          this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                             o.event(A4_EVENT_INTERACT,this,this.map,game);
                             this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
                             game.inGameActionsForLog.push(["interact("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
@@ -969,7 +969,7 @@ class A4Character extends A4WalkingObject {
                                 this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.ID, this.sort,
                                         target_c.ID, target_c.sort, null,
                                         item_to_give.ID, item_to_give.sort,
-                                        this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                        this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                                 target_c.eventWithObject(A4_EVENT_RECEIVE, this, item_to_give, this.map, game);
                                 this.eventWithObject(A4_EVENT_ACTION_GIVE, target_c, item_to_give, this.map, game);
                                 game.playSound("data/sfx/itemPickup.wav");
@@ -993,7 +993,7 @@ class A4Character extends A4WalkingObject {
             this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("push", this.ID, this.sort, 
                                                                           o.ID, o.sort, null,
                                                                           null, null,
-                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                          this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
             if (!o.event(A4_EVENT_PUSH,this,this.map,game)) return false;
             this.eventWithObject(A4_EVENT_ACTION_INTERACT, null, o, this.map, game);
             game.inGameActionsForLog.push(["push("+this.ID+","+o.ID+")",""+game.in_game_seconds]);
@@ -1012,7 +1012,7 @@ class A4Character extends A4WalkingObject {
     takeAction(game:A4Game) : boolean 
     {
         let item:A4Object = this.map.getTakeableObject(this.x + this.getPixelWidth()/2 - 1, 
-                                                       this.y + this.tallness + (this.getPixelHeight()-this.tallness)/2 - 1, 2, 2);
+                                                       this.y + this.getPixelHeight()/2 - 1, 2, 2);
         if (item == null) {
             // no item under the player, check to see if there is something right in front:
             let collisions:A4Object[] = this.map.getAllObjectCollisionsWithOffset(this, direction_x_inc[this.direction], direction_y_inc[this.direction]);
@@ -1037,7 +1037,7 @@ class A4Character extends A4WalkingObject {
                 this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("take", this.ID, this.sort, 
                                                                               item.ID, item.sort, null,
                                                                               null, null,
-                                                                              this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                              this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
                 item.event(A4_EVENT_PICKUP, this, this.map, game);
                 this.eventWithObject(A4_EVENT_ACTION_TAKE, null, item, this.map, game);
                 game.playSound("data/sfx/itemPickup.wav");
@@ -1055,14 +1055,14 @@ class A4Character extends A4WalkingObject {
     useAction(game:A4Game) : boolean
     {
         let object:A4Object = this.map.getUsableObject(this.x + this.getPixelWidth()/2 - 1, 
-                                                       this.y + this.tallness + (this.getPixelHeight()-this.tallness)/2 - 1, 2, 2);
+                                                       this.y + this.getPixelHeight()/2 - 1, 2, 2);
         if (object!=null) {
             //console.log("useAction on " + object.name);
             this.state = A4CHARACTER_STATE_INTERACTING;
             this.map.addPerceptionBufferRecord(new PerceptionBufferRecord("interact", this.ID, this.sort, 
                                                                           object.ID, object.sort, null,
                                                                           null, null,
-                                                                          this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
+                                                                          this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight()));
             object.event(A4_EVENT_USE, this, this.map, game);
             this.eventWithObject(A4_EVENT_ACTION_USE, null, object, this.map, game);
             game.inGameActionsForLog.push(["interact("+this.ID+","+object.ID+")",""+game.in_game_seconds]);
@@ -1095,10 +1095,10 @@ class A4Character extends A4WalkingObject {
         // 1) find a non-colliding position around the vehicle:
         let best_x:number, best_y:number;
         let best_d:number = null;
-        let cx:number = this.vehicle.x+this.vehicle.getPixelWidth()/2;
-        let cy:number = this.vehicle.y+this.vehicle.tallness + (this.vehicle.getPixelHeight()-this.vehicle.tallness)/2;
+        let cx:number = this.vehicle.x + this.vehicle.getPixelWidth()/2;
+        let cy:number = this.vehicle.y + this.vehicle.getPixelHeight()/2;
         let ccx:number = this.getPixelWidth()/2;
-        let ccy:number = this.tallness + (this.getPixelHeight()-this.tallness)/2;
+        let ccy:number = this.getPixelHeight()/2;
         for(let y:number = this.vehicle.y-this.getPixelHeight();y<this.vehicle.y+this.vehicle.getPixelHeight()+this.getPixelHeight();y+=this.map.tileHeight) {
             for(let x:number = this.vehicle.x-this.getPixelWidth();x<this.vehicle.x+this.vehicle.getPixelWidth()+this.getPixelWidth();x+=this.map.tileWidth) {
                 if (this.map.walkable(x, y, this.getPixelWidth(), this.getPixelHeight(), this)) {
@@ -1165,7 +1165,7 @@ class A4Character extends A4WalkingObject {
             let pbr:PerceptionBufferRecord = new PerceptionBufferRecord("drop", this.ID, this.sort, 
                                                                         null, null, null,
                                                                         null, null,
-                                                                        this.x, this.y+this.tallness, this.x+this.getPixelWidth(), this.y+this.getPixelHeight());
+                                                                        this.x, this.y, this.x+this.getPixelWidth(), this.y+this.getPixelHeight());
             pbr.directObjectID = o.ID;
             pbr.directObjectSort = o.sort;
             this.map.addPerceptionBufferRecord(pbr);

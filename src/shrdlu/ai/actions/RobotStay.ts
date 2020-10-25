@@ -53,13 +53,13 @@ class RobotStay_IntentionAction extends IntentionAction {
 					targetMap = ai.robot.map;
 					targetID = targetLocation.id;
 					this.targetx = ai.robot.x;
-					this.targety = (ai.robot.y+ai.robot.tallness);
+					this.targety = ai.robot.y;
 				} else if (ai.visionActive) {
 					targetLocation = requesterLocation;
 					targetMap = targetObject.map;
 					targetID = targetLocation.id;
 					this.targetx = targetObject.x;
-					this.targety = (targetObject.y+targetObject.tallness);
+					this.targety = targetObject.y;
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
@@ -85,7 +85,7 @@ class RobotStay_IntentionAction extends IntentionAction {
 				if (targetObject != null) {
 					targetMap = targetObject.map;
 					this.targetx = targetObject.x;
-					this.targety = (targetObject.y+targetObject.tallness);
+					this.targety = targetObject.y;
 					targetLocation = ai.game.getAILocation(targetObject);
 				} else {
 					let targetLocation:AILocation = ai.game.getAILocationByID(targetID);
@@ -355,7 +355,7 @@ class RobotStay_IntentionAction extends IntentionAction {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
         s.x = this.targetx;
-        s.y = this.targety+ai.robot.tallness;
+        s.y = this.targety;
         s.stopAfterGoingThroughABridge = false;
         q.scripts.push(s);
         ai.currentAction_scriptQueue = q;

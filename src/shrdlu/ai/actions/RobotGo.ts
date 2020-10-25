@@ -96,7 +96,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (targetObject != null) {
 					targetMap = targetObject.map;
 					this.targetx = targetObject.x;
-					this.targety = targetObject.y+targetObject.tallness;
+					this.targety = targetObject.y;
 					targetLocation = ai.game.getAILocation(targetObject);
 					if (targetLocation != null) targetLocationID = targetLocation.id;
 				}
@@ -127,7 +127,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (targetObject != null) {
 					targetMap = targetObject.map;
 					this.targetx = targetObject.x;
-					this.targety = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
+					this.targety = targetObject.y;
 					targetLocation = ai.game.getAILocation(targetObject);
 					if (targetLocation != null) targetLocationID = targetLocation.id;
 				} else {
@@ -339,7 +339,6 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (x>this.targetx) x -= 8;
 				if (y<this.targety) y += 8;
 				if (y>this.targety) y -= 8;
-				y+=+ai.robot.tallness;
 
 				if (targetMap != null) targetLocation = ai.game.getAILocationTileCoordinate(targetMap, x/targetMap.tileWidth, y/targetMap.tileHeight);
 				if (targetLocation != null) targetLocationID = targetLocation.id;
@@ -476,7 +475,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, targetMap.name, null, 0, false, false);
 	        s.x = this.targetx;
-	        s.y = this.targety+ai.robot.tallness;
+	        s.y = this.targety;
 	        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
 	        q.scripts.push(s);
 			this.needsContinuousExecution = false;
@@ -505,14 +504,13 @@ class RobotGo_IntentionAction extends IntentionAction {
 			if (x>this.targetx) x -= 8;
 			if (y<this.targety) y += 8;
 			if (y>this.targety) y -= 8;
-	        if (ai.robot.map.walkableConsideringVehicles(x, y+ai.robot.tallness,
-                                 ai.robot.getPixelWidth(),
-                                 ai.robot.getPixelHeight()-ai.robot.tallness,ai.robot)) {
-	        } else {
+	        if (!ai.robot.map.walkableConsideringVehicles(x, y,
+				 		                                  ai.robot.getPixelWidth(),
+				 		                                  ai.robot.getPixelHeight(), ai.robot)) {
 	        	// obstacle!
-	        	let collisions:A4Object[] = ai.robot.map.getAllObjects(x, y+ai.robot.tallness,
+	        	let collisions:A4Object[] = ai.robot.map.getAllObjects(x, y,
                                  									   ai.robot.getPixelWidth(),
-                                 									   ai.robot.getPixelHeight()-ai.robot.tallness);
+                                 									   ai.robot.getPixelHeight());
 	        	let collision:A4Object = null;
 	        	for(let o of collisions) {
 	        		if (o != ai.robot &&
@@ -541,7 +539,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, ai.robot.map.name, null, 0, false, false);
 	        s.x = x;
-	        s.y = y+ai.robot.tallness;
+	        s.y = y;
 	        s.stopAfterGoingThroughABridge = true;
 	        q.scripts.push(s);
 			ai.currentAction_scriptQueue = q;
@@ -552,7 +550,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
 	        s.x = this.targetx;
-	        s.y = this.targety+ai.robot.tallness;
+	        s.y = this.targety;
 	        s.stopAfterGoingThroughABridge = false;
 	        q.scripts.push(s);
 	        ai.currentAction_scriptQueue = q;

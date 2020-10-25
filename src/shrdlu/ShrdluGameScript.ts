@@ -427,21 +427,21 @@ class ShrdluGameScript {
 				this.game.shrdluAI.respondToPerformatives = true;	// start responding to random questions from the player
 				// move to a computer:
 				this.game.qwertyAI.clearCurrentAction();
-				this.qwertyMoves(9*8, 25*8, this.game.qwertyAI.robot.map);
+				this.qwertyMoves(9*8, 27*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 320) {
 				// main character though:
 				this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
 															   "What is this place? and what am I doing here?", A4_DIRECTION_NONE, this.game);
 			} else if (this.act_intro_state_timer == 560) {
 				this.game.qwertyAI.clearCurrentAction();
-				this.qwertyMoves(9*8, 27*8, this.game.qwertyAI.robot.map);
+				this.qwertyMoves(9*8, 29*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 640) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, healthy($PLAYER)))");
 				let term:Term = Term.fromString("healthy('player'[#id])", this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, PERCEPTION_PROVENANCE);
 				// go back to player:
 				this.game.qwertyAI.clearCurrentAction();
-				this.qwertyMoves(6*8, 27*8, this.game.qwertyAI.robot.map);
+				this.qwertyMoves(6*8, 29*8, this.game.qwertyAI.robot.map);
 			} else if (this.act_intro_state_timer == 800) this.act_intro_state = 6;
 			break;
 
@@ -653,10 +653,10 @@ class ShrdluGameScript {
 		case  98:
 			if (this.act_intro_state_timer == 0) {
 				this.game.qwertyAI.clearCurrentAction();
-				this.qwertyMoves(11*8, 30*8, this.game.qwertyAI.robot.map);	// move qwerty near the chair
+				this.qwertyMoves(11*8, 32*8, this.game.qwertyAI.robot.map);	// move qwerty near the chair
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER,'good'[symbol]))");
 			} else if (this.game.qwertyAI.robot.x == 11*8 &&
-					   this.game.qwertyAI.robot.y == 30*8) {
+					   this.game.qwertyAI.robot.y == 32*8) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($QWERTY, verb.test($QWERTY, #and(C:[strength], verb.belong(C, $PLAYER))))))");
 				// 512 is the ID of the chair in the infirmary
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.push($PLAYER, '512'[#id])))");
@@ -708,7 +708,7 @@ class ShrdluGameScript {
 					this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, 
 																   "I don't know what this is all about, but let's just play along for now...", A4_DIRECTION_NONE, this.game);
 					this.game.qwertyAI.clearCurrentAction();
-        	        this.qwertyMoves(104, 216, this.game.qwertyAI.robot.map);
+        	        this.qwertyMoves(104, 232, this.game.qwertyAI.robot.map);
         	    } else {
         	    	this.act_intro_state_timer--;
         	    }
@@ -722,75 +722,75 @@ class ShrdluGameScript {
 
 		case 102:
             if (this.game.qwertyAI.robot.x == 104 &&
-            	this.game.qwertyAI.robot.y == 216) {
+            	this.game.qwertyAI.robot.y == 232) {
             	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
             	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
             	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 103;
 					this.game.qwertyAI.clearCurrentAction();
-            		this.qwertyMoves(136, 216, this.game.qwertyAI.robot.map);
+            		this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
             	}
 			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
-    	        this.qwertyMoves(104, 216, this.game.qwertyAI.robot.map);
+    	        this.qwertyMoves(104, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
 			break;
 
 		case 103:
             if (this.game.qwertyAI.robot.x == 136 &&
-            	this.game.qwertyAI.robot.y == 216) {
+            	this.game.qwertyAI.robot.y == 232) {
             	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
             	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
             	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 104;
 					this.game.qwertyAI.clearCurrentAction();
-            		this.qwertyMoves(136, 272, this.game.qwertyAI.robot.map);
+            		this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
             	}
 			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
-    	        this.qwertyMoves(136, 216, this.game.qwertyAI.robot.map);
+    	        this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
 			break;
 
 		case 104:
             if (this.game.qwertyAI.robot.x == 136 &&
-            	this.game.qwertyAI.robot.y == 272) {
+            	this.game.qwertyAI.robot.y == 288) {
             	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
             	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
             	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 105;
 					this.game.qwertyAI.clearCurrentAction();
-            		this.qwertyMoves(256, 272, this.game.qwertyAI.robot.map);
+            		this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
             	}
 			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
-    	        this.qwertyMoves(136, 272, this.game.qwertyAI.robot.map);
+    	        this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
 			break;
 
 		case 105:
             if (this.game.qwertyAI.robot.x == 256 &&
-            	this.game.qwertyAI.robot.y == 272) {
+            	this.game.qwertyAI.robot.y == 288) {
             	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
             	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
             	let d2:number = (dx*dx)+(dy*dy);
             	if (d2 < 32*32) {
             		this.act_intro_state = 106;
 					this.game.qwertyAI.clearCurrentAction();
-            		this.qwertyMoves(544, 272, this.game.qwertyAI.robot.map);
+            		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
             	}
 			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
-    	        this.qwertyMoves(256, 272, this.game.qwertyAI.robot.map);
+    	        this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
 			break;
 
 		case 106:
             if (this.game.qwertyAI.robot.x == 544 &&
-            	this.game.qwertyAI.robot.y == 272) {
+            	this.game.qwertyAI.robot.y == 288) {
             	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
             	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
             	let d2:number = (dx*dx)+(dy*dy);
@@ -798,7 +798,7 @@ class ShrdluGameScript {
             		this.act_intro_state = 107;
             	}
 			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
-        		this.qwertyMoves(544, 272, this.game.qwertyAI.robot.map);
+        		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
 			break;
@@ -808,7 +808,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.belong('location-as8'[#id], $PLAYER)))");
 			} else if (this.game.qwertyAI.robot.state == A4CHARACTER_STATE_IDLE) {
 				this.qwertyDropsObject("communicator");
-        		this.qwertyMoves(552, 272, this.game.qwertyAI.robot.map);
+        		this.qwertyMoves(552, 288, this.game.qwertyAI.robot.map);
 				this.act_intro_state = 108;
 			}
 			break;
@@ -861,10 +861,10 @@ class ShrdluGameScript {
 											    "",
 											    "  [press *ESC* to close this message]  "]);
 				this.qwertyDropsObject("bedroom5-key");
-        		this.qwertyMoves(560, 272, this.game.qwertyAI.robot.map);
+        		this.qwertyMoves(560, 288, this.game.qwertyAI.robot.map);
 			} else {
 				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
-					this.game.currentPlayer.y >= 192 && this.game.currentPlayer.y<240) {
+					this.game.currentPlayer.y >= 208 && this.game.currentPlayer.y<256) {
 					// player entered bedroom 5
 					this.act_intro_state = 112;
 				}
@@ -883,7 +883,7 @@ class ShrdluGameScript {
 			} else {
 				*/
 				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
-					this.game.currentPlayer.y >= 192 && this.game.currentPlayer.y<240 &&
+					this.game.currentPlayer.y >= 208 && this.game.currentPlayer.y<256 &&
 					this.game.currentPlayer.state == A4CHARACTER_STATE_IN_BED) {
 					// player went to bed in bedroom 5
 					this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
@@ -899,7 +899,7 @@ class ShrdluGameScript {
 				this.game.textInputAllowed = false;
 			} else if (this.act_intro_state_timer >= EYESOPEN_SPEED + 60) {
 				// bring qwerty back to the infirmary
-				this.game.requestWarp(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, 64, 216);
+				this.game.requestWarp(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, 64, 232);
 				// clear the user goal:
 				this.game.qwertyAI.removeLongTermTermMatchingWith(Term.fromString("goal('player'[#id],X)", this.game.ontology));
 				this.act_intro_state = 114;
@@ -911,7 +911,7 @@ class ShrdluGameScript {
 				this.game.in_game_seconds += 3600*7;	// sleeping for 7 hours
 				this.game.narrationMessages.push("Several hours later...");
 				this.game.currentPlayer.x = 560;
-				this.game.currentPlayer.y = 200;
+				this.game.currentPlayer.y = 216;
 				this.game.currentPlayer.direction = A4_DIRECTION_DOWN;
 
 			} else if (this.act_intro_state_timer == 120) {
@@ -1641,9 +1641,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.respondToPerformatives = true;
 				} else {
 					let x1:number = this.game.qwertyAI.robot.x;
-					let y1:number = this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness;
+					let y1:number = this.game.qwertyAI.robot.y;
 					let x2:number = target_l[0].x;
-					let y2:number = target_l[0].y+target_l[0].tallness;
+					let y2:number = target_l[0].y;
 					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
@@ -1680,10 +1680,10 @@ class ShrdluGameScript {
 			case 3:
 				// qwerty has the spacesuit!:
 				if (this.act_1_stasis_thread_state_timer == 0) {
-					this.qwertyMoves(5*8, 24*8, this.game.qwertyAI.robot.map);
+					this.qwertyMoves(5*8, 26*8, this.game.qwertyAI.robot.map);
 				} else {
 					if (this.game.qwertyAI.robot.x == 5*8 &&
-						this.game.qwertyAI.robot.y == 24*8) {
+						this.game.qwertyAI.robot.y == 26*8) {
 						// wait for the player:
 						let currentRoom:AILocation = this.game.getAILocation(this.game.currentPlayer);
 						if (currentRoom.id == "location-as25") {
@@ -1708,10 +1708,10 @@ class ShrdluGameScript {
 			case 5:
 				// go to the shelves and wait!:
 				if (this.act_1_stasis_thread_state_timer == 0) {
-					this.qwertyMoves(4*8, 15*8, this.game.qwertyAI.robot.map);
+					this.qwertyMoves(4*8, 17*8, this.game.qwertyAI.robot.map);
 				} else {
 					if (this.game.qwertyAI.robot.x == 4*8 &&
-						this.game.qwertyAI.robot.y == 15*8) {
+						this.game.qwertyAI.robot.y == 17*8) {
 						this.act_1_stasis_thread_state = 6;
 					}
 				}
@@ -1752,7 +1752,7 @@ class ShrdluGameScript {
 			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
 			                this.game.currentPlayer.ID, this.game.currentPlayer.sort, null,
 			                fixedSuit.ID, fixedSuit.sort,
-			                this.game.qwertyAI.robot.x, this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness, this.game.qwertyAI.robot.x+this.game.qwertyAI.robot.getPixelWidth(), this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.getPixelHeight()));
+			                this.game.qwertyAI.robot.x, this.game.qwertyAI.robot.y, this.game.qwertyAI.robot.x+this.game.qwertyAI.robot.getPixelWidth(), this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.getPixelHeight()));
 			        this.game.currentPlayer.eventWithObject(A4_EVENT_RECEIVE, this.game.qwertyAI.robot, fixedSuit, this.game.currentPlayer.map, this.game);
 			        this.game.qwertyAI.robot.eventWithObject(A4_EVENT_ACTION_GIVE, this.game.currentPlayer, fixedSuit, this.game.currentPlayer.map, this.game);					
 					this.game.playSound("data/sfx/itemPickup.wav");
@@ -1765,10 +1765,10 @@ class ShrdluGameScript {
 			case 8:
 				// get out of the way
 				if (this.game.qwertyAI.robot.x == 8*8 &&
-					this.game.qwertyAI.robot.y == 27*8) {
-					this.qwertyMoves(6*8, 27*8, this.game.qwertyAI.robot.map);
+					this.game.qwertyAI.robot.y == 29*8) {
+					this.qwertyMoves(6*8, 29*8, this.game.qwertyAI.robot.map);
 				} else {
-					this.qwertyMoves(8*8, 27*8, this.game.qwertyAI.robot.map);
+					this.qwertyMoves(8*8, 29*8, this.game.qwertyAI.robot.map);
 				}
 				this.act_1_stasis_thread_state = 9;
 				break;
@@ -2162,9 +2162,9 @@ class ShrdluGameScript {
 				this.game.shrdluAI.clearCurrentAction();
 				this.game.shrdluAI.clearScriptQueues();
 				this.contextShrdlu.inConversation = false;
-				this.game.requestWarp(this.game.shrdluAI.robot, this.game.qwertyAI.robot.map, 91*8, 20*8);
+				this.game.requestWarp(this.game.shrdluAI.robot, this.game.qwertyAI.robot.map, 91*8, 22*8);
 				this.game.shrdluAI.robot.x = 91*8;	// we force anyway, since, otehrwise, the agenda doesn't work
-				this.game.shrdluAI.robot.y = 20*8;
+				this.game.shrdluAI.robot.y = 22*8;
 				this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 				for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
 					let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("property.broken('broken-stasis-pod'[#id])", this.game.ontology));
@@ -2180,7 +2180,7 @@ class ShrdluGameScript {
 				this.game.in_game_seconds += 3600*8;	// sleeping for 8 hours
 				this.game.narrationMessages.push("Several hours later...");
 				this.game.currentPlayer.x = 560;
-				this.game.currentPlayer.y = 200;
+				this.game.currentPlayer.y = 216;
 				this.game.currentPlayer.direction = A4_DIRECTION_DOWN;
 			} else if (this.act_2_state_timer == 120) {
 				this.game.narrationMessages = [];
@@ -2363,7 +2363,7 @@ class ShrdluGameScript {
 
 			case 1:
 					if (this.act_2_repair_shuttle_state_timer == 0) {
-						this.shrdluMoves(106*8, 26*8, this.game.maps[0]);
+						this.shrdluMoves(106*8, 28*8, this.game.maps[0]);
 						this.game.shrdluAI.respondToPerformatives = false;
 					} else if (this.act_2_repair_shuttle_state_timer > 60*60) {
 						// if a whole minute has passed, something went wrong, reset!
@@ -2371,7 +2371,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.respondToPerformatives = true;
 					} else {
 						if (this.game.shrdluAI.robot.x == 106*8 &&
-							this.game.shrdluAI.robot.y == 26*8) {
+							this.game.shrdluAI.robot.y == 28*8) {
 							// lose the engine:
 							let l:A4Object[] = this.game.shrdluAI.robot.findObjectByID("shuttle-engine");
 							let shuttle:A4Object = this.game.findObjectByIDJustObject("garage-shuttle");
@@ -2524,9 +2524,9 @@ class ShrdluGameScript {
 					this.game.qwertyAI.respondToPerformatives = true;
 				} else {
 					let x1:number = this.game.qwertyAI.robot.x;
-					let y1:number = this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness;
+					let y1:number = this.game.qwertyAI.robot.y;
 					let x2:number = target_l[0].x;
-					let y2:number = target_l[0].y+target_l[0].tallness;
+					let y2:number = target_l[0].y;
 					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
@@ -2563,10 +2563,10 @@ class ShrdluGameScript {
 			case 3:
 				// qwerty has the datapad!:
 				if (this.act_2_datapad_state_timer == 0) {
-					this.qwertyMoves(107*8, 35*8, this.game.qwertyAI.robot.map);
+					this.qwertyMoves(107*8, 37*8, this.game.qwertyAI.robot.map);
 				} else {
 					if (this.game.qwertyAI.robot.x == 107*8 &&
-						this.game.qwertyAI.robot.y == 35*8) {
+						this.game.qwertyAI.robot.y == 37*8) {
 						this.act_2_datapad_state = 4;
 					} 
 				}
@@ -2607,7 +2607,7 @@ class ShrdluGameScript {
 			        this.game.currentPlayer.map.addPerceptionBufferRecord(new PerceptionBufferRecord("give", this.game.qwertyAI.robot.ID, this.game.qwertyAI.robot.sort,
 			                this.game.currentPlayer.ID, this.game.currentPlayer.sort, null,
 			                fixedDatapad.ID, fixedDatapad.sort,
-			                this.game.qwertyAI.robot.x, this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.tallness, this.game.qwertyAI.robot.x+this.game.qwertyAI.robot.getPixelWidth(), this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.getPixelHeight()));
+			                this.game.qwertyAI.robot.x, this.game.qwertyAI.robot.y, this.game.qwertyAI.robot.x+this.game.qwertyAI.robot.getPixelWidth(), this.game.qwertyAI.robot.y+this.game.qwertyAI.robot.getPixelHeight()));
 			        this.game.currentPlayer.eventWithObject(A4_EVENT_RECEIVE, this.game.qwertyAI.robot, fixedDatapad, this.game.currentPlayer.map, this.game);
 			        this.game.qwertyAI.robot.eventWithObject(A4_EVENT_ACTION_GIVE, this.game.currentPlayer, fixedDatapad, this.game.currentPlayer.map, this.game);					
 					this.game.playSound("data/sfx/itemPickup.wav");
@@ -2667,7 +2667,7 @@ class ShrdluGameScript {
 			case 3: // waiting to enter one of the stasis rooms:
 					if (this.game.currentPlayer.map.name == "Tardis 8" &&
 						this.game.currentPlayer.y < 11*8 ||
-						this.game.currentPlayer.y > 19*8) {
+						this.game.currentPlayer.y > 21*8) {
 						this.queueThoughtBubble("Oh! A giant stasis chamber! There must be hundreds of corpses in this ship!");
 						this.queueThoughtBubble("What an awful sight! These must be the colonists that were suposed to populate Aurora...");
 						this.act_3_state = 4;
@@ -2695,7 +2695,7 @@ class ShrdluGameScript {
 			case 6: // waiting to enter the computer room:
 					if (this.game.currentPlayer.map.name == "Tardis 8" &&
 						this.game.currentPlayer.x < 18*8 &&
-						this.game.currentPlayer.y < 12*8) {
+						this.game.currentPlayer.y < 14*8) {
 						this.queueThoughtBubble("Finally! This is the computer room!");
 						this.queueThoughtBubble("I might be able to take a memory core and bring it to the station for analysis!");
 						this.act_3_state = 7;
@@ -2817,10 +2817,10 @@ class ShrdluGameScript {
 
 			case 1:
 					if (this.act_3_repair_tardis_console_state_timer == 0) {
-						this.shrdluMoves(85*8, 14*8, this.game.maps[8]);
+						this.shrdluMoves(85*8, 16*8, this.game.maps[8]);
 					} else {
 						if (this.game.shrdluAI.robot.x == 85*8 &&
-							this.game.shrdluAI.robot.y == 14*8) {
+							this.game.shrdluAI.robot.y == 16*8) {
 							// arrived:
 							this.act_3_repair_tardis_console_state = 2;
 						} 
@@ -2869,10 +2869,10 @@ class ShrdluGameScript {
 
 			case 1:
 					if (this.act_3_repair_tardis_cable_state_timer == 0) {
-						this.shrdluMoves(45*8, 14*8, this.game.maps[8]);
+						this.shrdluMoves(45*8, 16*8, this.game.maps[8]);
 					} else {
 						if (this.game.shrdluAI.robot.x == 45*8 &&
-							this.game.shrdluAI.robot.y == 14*8) {
+							this.game.shrdluAI.robot.y == 16*8) {
 							// arrived:
 							this.act_3_repair_tardis_cable_state = 2;
 						} 
@@ -3284,7 +3284,7 @@ class ShrdluGameScript {
 						this.game.shrdluAI.queuedIntentions.length == 0 &&
 						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
 						this.game.shrdluAI.clearCurrentAction();
-						this.shrdluMoves(98*8, 7*8, this.game.qwertyAI.robot.map);
+						this.shrdluMoves(98*8, 9*8, this.game.qwertyAI.robot.map);
 						this.act_2_shrdlu_agenda_state = 2;
 					}
 					break;
@@ -3293,14 +3293,14 @@ class ShrdluGameScript {
 					if (this.game.shrdluAI.intentions.length == 0 && 
 						this.game.shrdluAI.queuedIntentions.length == 0 &&
 						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
-						this.shrdluMoves(81*8, 5*8, this.game.qwertyAI.robot.map);
+						this.shrdluMoves(81*8, 7*8, this.game.qwertyAI.robot.map);
 						this.act_2_shrdlu_agenda_state = 3;
 					}
 					break;
 			case 3: 	
 					// waiting to arrive to the actual repair spot:
 					if (this.game.shrdluAI.robot.x == 81*8 &&
-						this.game.shrdluAI.robot.y == 5*8) {
+						this.game.shrdluAI.robot.y == 7*8) {
 						this.act_2_shrdlu_agenda_state = 10;
 					}
 					break;
@@ -3320,15 +3320,15 @@ class ShrdluGameScript {
 					if (this.game.shrdluAI.intentions.length == 0 && 
 						this.game.shrdluAI.queuedIntentions.length == 0 &&
 						this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
-						this.shrdluMovesOverrideable(5*8, 24*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(5*8, 26*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 12;
 					}
 					break;
 			case 12: 	
 					// waiting to arrive to the actual spot:
 					if (this.game.shrdluAI.robot.x == 5*8 &&
-						this.game.shrdluAI.robot.y == 24*8) {
-						this.shrdluMovesOverrideable(7*8, 7*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
+						this.game.shrdluAI.robot.y == 26*8) {
+						this.shrdluMovesOverrideable(7*8, 9*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 13;
 					}
 					// resume:
@@ -3337,14 +3337,14 @@ class ShrdluGameScript {
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
-						this.shrdluMovesOverrideable(5*8, 24*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(5*8, 26*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
 					}
 					break;
 			case 13: 	
 					// waiting to arrive to the actual spot:
 					if (this.game.shrdluAI.robot.x == 7*8 &&
-						this.game.shrdluAI.robot.y == 7*8) {
-						this.shrdluMovesOverrideable(7*8, 6*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
+						this.game.shrdluAI.robot.y == 9*8) {
+						this.shrdluMovesOverrideable(7*8, 8*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 20;
 					}
 					// resume:
@@ -3353,7 +3353,7 @@ class ShrdluGameScript {
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
-						this.shrdluMovesOverrideable(7*8, 7*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(7*8, 9*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'broken-stasis-pod'[#id])", this.game.ontology));
 					}
 					break;
 			case 20: 
@@ -3363,7 +3363,7 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation) {
 						// stasis pod repaired
 						this.act_2_shrdlu_agenda_state = 21;
-						this.shrdluMovesOverrideable(87*8, 33*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(87*8, 35*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 
 						for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
@@ -3374,15 +3374,15 @@ class ShrdluGameScript {
 					// resume:
 					if (this.act_2_shrdlu_agenda_state_timer >= 60 &&
 						(this.game.shrdluAI.robot.x != 7*8 ||
-						 this.game.shrdluAI.robot.y != 6*8)) {
+						 this.game.shrdluAI.robot.y != 8*8)) {
 						this.act_2_shrdlu_agenda_state = 13;
 					}
 					break;
 			case 21:
 					// waiting to arrive to the actual spot:
 					if (this.game.shrdluAI.robot.x == 87*8 &&
-						this.game.shrdluAI.robot.y == 33*8) {
-						this.shrdluMovesOverrideable(91*8, 20*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
+						this.game.shrdluAI.robot.y == 35*8) {
+						this.shrdluMovesOverrideable(91*8, 22*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 22;
 					}
 					// resume:
@@ -3390,14 +3390,14 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
-						this.shrdluMovesOverrideable(87*8, 33*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(87*8, 35*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
 			case 22:
 					// waiting to arrive to the actual spot:
 					if (this.game.shrdluAI.robot.x == 91*8 &&
-						this.game.shrdluAI.robot.y == 20*8) {
+						this.game.shrdluAI.robot.y == 22*8) {
 						this.act_2_shrdlu_agenda_state = 23;
 					}
 					// resume:
@@ -3405,7 +3405,7 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
-						this.shrdluMovesOverrideable(91*8, 20*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(91*8, 22*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'etaoin'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
@@ -3416,18 +3416,18 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation) {
 						// etaoin repaired
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'comm-tower'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
-						this.shrdluMovesOverrideable(6*8, 21*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(6*8, 23*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 30;
 					}
 					if ((this.game.shrdluAI.robot.x != 91*8 ||
-						 this.game.shrdluAI.robot.y != 20*8)) {
+						 this.game.shrdluAI.robot.y != 22*8)) {
 						this.shrdluMovesOverrideable(87*8, 33*8, this.game.qwertyAI.robot.map, Term.fromString("verb.repair('shrdlu'[#id], 'etaoin'[#id])", this.game.ontology));
 						this.act_2_shrdlu_agenda_state = 21;
 					}
 					break;
 			case 30: 
 					if (this.game.shrdluAI.robot.x == 6*8 &&
-						this.game.shrdluAI.robot.y == 21*8 &&
+						this.game.shrdluAI.robot.y == 23*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 31;
 					}
@@ -3436,7 +3436,7 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation &&
 						(this.game.shrdluAI.robot.map.name == "Aurora Station" ||
 						 this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors")) {
-						this.shrdluMovesOverrideable(6*8, 21*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
+						this.shrdluMovesOverrideable(6*8, 23*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'comm-tower'[#id])", this.game.ontology));
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'comm-tower'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					break;
@@ -3447,12 +3447,12 @@ class ShrdluGameScript {
 						!this.contextShrdlu.inConversation) {
 						// comm tower repaired
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
 					if (this.game.shrdluAI.robot.x != 6*8 ||
-						this.game.shrdluAI.robot.y != 21*8) {
+						this.game.shrdluAI.robot.y != 23*8) {
 						this.act_2_shrdlu_agenda_state = 30;
 					}
 					break;
@@ -3461,7 +3461,7 @@ class ShrdluGameScript {
 			// Random repairs loop:
 			case 40: 
 					if (this.game.shrdluAI.robot.x == 81*8 &&
-						this.game.shrdluAI.robot.y == 5*8 &&
+						this.game.shrdluAI.robot.y == 7*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station") {
 						this.act_2_shrdlu_agenda_state = 41;
 					}
@@ -3473,12 +3473,12 @@ class ShrdluGameScript {
 							(this.game.shrdluAI.currentAction_scriptQueue.scripts.length == 1 &&
 							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].type == A4_SCRIPT_GOTO_OPENING_DOORS &&
 							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].x == 81*8 &&
-							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].y == 5*8 + this.game.shrdluAI.robot.tallness)) {
+							 this.game.shrdluAI.currentAction_scriptQueue.scripts[0].y == 7*8)) {
 							if (this.game.shrdluAI.robot.x < 20*8) {
 								// make sure it does not get stuck:
-								this.shrdluMovesOverrideable(24*8, 35*8, this.game.getMap("Aurora Station"), null);
+								this.shrdluMovesOverrideable(24*8, 37*8, this.game.getMap("Aurora Station"), null);
 							} else {
-								this.shrdluMovesOverrideable(81*8, 5*8, this.game.getMap("Aurora Station"), null);
+								this.shrdluMovesOverrideable(81*8, 7*8, this.game.getMap("Aurora Station"), null);
 							}
 						}
 					}
@@ -3496,21 +3496,21 @@ class ShrdluGameScript {
 					}
 					// resume:
 					if (this.game.shrdluAI.robot.x != 81*8 ||
-						this.game.shrdluAI.robot.y != 5*8) {
+						this.game.shrdluAI.robot.y != 7*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
 
 			case 50: 
 					// power plant
-					this.shrdluMovesOverrideable(72*8, 44*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
+					this.shrdluMovesOverrideable(72*8, 46*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
 					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					this.act_2_shrdlu_agenda_state = 51;
 					break;
 			case 51: 
 					// power plant
 					if (this.game.shrdluAI.robot.x == 72*8 &&
-						this.game.shrdluAI.robot.y == 44*8 &&
+						this.game.shrdluAI.robot.y == 46*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 52;
 					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
@@ -3526,26 +3526,26 @@ class ShrdluGameScript {
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
 					if (this.game.shrdluAI.robot.x != 72*8 ||
-						this.game.shrdluAI.robot.y != 44*8) {
+						this.game.shrdluAI.robot.y != 46*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
 			
 			case 60: 
 					// green houses
-					this.shrdluMovesOverrideable(41*8, 17*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
+					this.shrdluMovesOverrideable(41*8, 19*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
 					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					this.act_2_shrdlu_agenda_state = 61;
 					break;
 			case 61: 
 					// green houses
 					if (this.game.shrdluAI.robot.x == 41*8 &&
-						this.game.shrdluAI.robot.y == 17*8 &&
+						this.game.shrdluAI.robot.y == 19*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 62;
 					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
@@ -3561,26 +3561,26 @@ class ShrdluGameScript {
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
-					if (this.game.shrdluAI.robot.x != 72*8 ||
-						this.game.shrdluAI.robot.y != 44*8) {
+					if (this.game.shrdluAI.robot.x != 41*8 ||
+						this.game.shrdluAI.robot.y != 19*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
 
 			case 70: 
 					// recycling
-					this.shrdluMovesOverrideable(32*8, 17*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
+					this.shrdluMovesOverrideable(32*8, 19*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
 					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					this.act_2_shrdlu_agenda_state = 71;
 					break;
 			case 71: 
 					// recycling
 					if (this.game.shrdluAI.robot.x == 32*8 &&
-						this.game.shrdluAI.robot.y == 17*8 &&
+						this.game.shrdluAI.robot.y == 19*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 72;
 					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
@@ -3596,26 +3596,26 @@ class ShrdluGameScript {
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
-					if (this.game.shrdluAI.robot.x != 72*8 ||
-						this.game.shrdluAI.robot.y != 44*8) {
+					if (this.game.shrdluAI.robot.x != 32*8 ||
+						this.game.shrdluAI.robot.y != 19*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
 
 			case 80: 
 					// recycling
-					this.shrdluMovesOverrideable(54*8, 16*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
+					this.shrdluMovesOverrideable(54*8, 18*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
 					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					this.act_2_shrdlu_agenda_state = 81;
 					break;
 			case 81: 
 					// recycling
 					if (this.game.shrdluAI.robot.x == 54*8 &&
-						this.game.shrdluAI.robot.y == 16*8 &&
+						this.game.shrdluAI.robot.y == 18*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 82;
 					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
@@ -3631,26 +3631,26 @@ class ShrdluGameScript {
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
-					if (this.game.shrdluAI.robot.x != 72*8 ||
-						this.game.shrdluAI.robot.y != 44*8) {
+					if (this.game.shrdluAI.robot.x != 54*8 ||
+						this.game.shrdluAI.robot.y != 18*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
 
 			case 90: 
 					// oxygen
-					this.shrdluMovesOverrideable(54*8, 16*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
+					this.shrdluMovesOverrideable(54*8, 18*8, this.game.getMap("Aurora Station Outdoors"), Term.fromString("verb.repair('shrdlu'[#id], 'aurora-station'[#id])", this.game.ontology));
 					this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], verb.repair('shrdlu'[#id], 'aurora-station'[#id]))", this.game.ontology), PERCEPTION_PROVENANCE);
 					this.act_2_shrdlu_agenda_state = 91;
 					break;
 			case 91: 
 					// oxygen
 					if (this.game.shrdluAI.robot.x == 54*8 &&
-						this.game.shrdluAI.robot.y == 16*8 &&
+						this.game.shrdluAI.robot.y == 18*8 &&
 						this.game.shrdluAI.robot.map.name == "Aurora Station Outdoors") {
 						this.act_2_shrdlu_agenda_state = 92;
 					} else if (this.game.shrdluAI.currentAction_scriptQueue == null &&
@@ -3666,12 +3666,12 @@ class ShrdluGameScript {
 						this.game.shrdluAI.currentAction_scriptQueue == null &&
 						!this.contextShrdlu.inConversation) {
 						this.act_2_shrdlu_agenda_state = 40;
-						this.shrdluMovesOverrideable(81*8, 5*8, this.game.qwertyAI.robot.map, null);
+						this.shrdluMovesOverrideable(81*8, 7*8, this.game.qwertyAI.robot.map, null);
 						this.game.shrdluAI.addLongTermTerm(Term.fromString("verb.do('shrdlu'[#id], 'nothing'[nothing])", this.game.ontology), PERCEPTION_PROVENANCE);
 					}
 					// resume:
-					if (this.game.shrdluAI.robot.x != 72*8 ||
-						this.game.shrdluAI.robot.y != 44*8) {
+					if (this.game.shrdluAI.robot.x != 54*8 ||
+						this.game.shrdluAI.robot.y != 18*8) {
 						this.act_2_shrdlu_agenda_state = 40;
 					}
 					break;
@@ -3701,14 +3701,14 @@ class ShrdluGameScript {
 			// Random destinations loop:
 			case 0: 
 					if (this.game.qwertyAI.robot.x == 8*8 &&
-						this.game.qwertyAI.robot.y == 27*8 &&
+						this.game.qwertyAI.robot.y == 29*8 &&
 						this.game.qwertyAI.robot.map.name == "Aurora Station") {
 						this.qwerty_agenda_state = 1;
 					}
 					// resume:
 					if (this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
-						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
 					}
 					break;
 			case 1: 
@@ -3724,18 +3724,18 @@ class ShrdluGameScript {
 					}
 					// resume:
 					if (this.game.qwertyAI.robot.x != 8*8 ||
-						this.game.qwertyAI.robot.y != 27*8) {
+						this.game.qwertyAI.robot.y != 29*8) {
 						this.qwerty_agenda_state = 0;
 					}
 					break;
 
 			case 10: 
-					this.qwertyMovesOverrideable(9*8, 25*8, this.game.qwertyAI.robot.map, null);
+					this.qwertyMovesOverrideable(9*8, 27*8, this.game.qwertyAI.robot.map, null);
 					this.qwerty_agenda_state = 11;
 					break;
 			case 11: 
 					if (this.game.qwertyAI.robot.x == 9*8 &&
-						this.game.qwertyAI.robot.y == 25*8) {
+						this.game.qwertyAI.robot.y == 27*8) {
 						this.qwerty_agenda_state = 12;
 					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
@@ -3747,22 +3747,22 @@ class ShrdluGameScript {
 						this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
 						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
 					}
 					// resume:
 					if (this.game.qwertyAI.robot.x != 9*8 ||
-						this.game.qwertyAI.robot.y != 25*8) {
+						this.game.qwertyAI.robot.y != 27*8) {
 						this.qwerty_agenda_state = 0;
 					}
 					break;
 		
 			case 20: 
-					this.qwertyMovesOverrideable(3*8, 25*8, this.game.qwertyAI.robot.map, null);
+					this.qwertyMovesOverrideable(3*8, 27*8, this.game.qwertyAI.robot.map, null);
 					this.qwerty_agenda_state = 21;
 					break;
 			case 21: 
 					if (this.game.qwertyAI.robot.x == 3*8 &&
-						this.game.qwertyAI.robot.y == 25*8) {
+						this.game.qwertyAI.robot.y == 27*8) {
 						this.qwerty_agenda_state = 22;
 					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
@@ -3774,22 +3774,22 @@ class ShrdluGameScript {
 						this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
 						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
 					}
 					// resume:
 					if (this.game.qwertyAI.robot.x != 3*8 ||
-						this.game.qwertyAI.robot.y != 25*8) {
+						this.game.qwertyAI.robot.y != 27*8) {
 						this.qwerty_agenda_state = 0;
 					}
 					break;	
 
 			case 30: 
-					this.qwertyMovesOverrideable(10*8, 16*8, this.game.qwertyAI.robot.map, null);
+					this.qwertyMovesOverrideable(10*8, 18*8, this.game.qwertyAI.robot.map, null);
 					this.qwerty_agenda_state = 31;
 					break;
 			case 31: 
 					if (this.game.qwertyAI.robot.x == 10*8 &&
-						this.game.qwertyAI.robot.y == 16*8) {
+						this.game.qwertyAI.robot.y == 18*8) {
 						this.qwerty_agenda_state = 32;
 					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
@@ -3801,22 +3801,22 @@ class ShrdluGameScript {
 						this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
 						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
+						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
 					}
 					// resume:
 					if (this.game.qwertyAI.robot.x != 10*8 ||
-						this.game.qwertyAI.robot.y != 16*8) {
+						this.game.qwertyAI.robot.y != 18*8) {
 						this.qwerty_agenda_state = 0;
 					}
 					break;	
 
 			case 40: 
-					this.qwertyMovesOverrideable(34*8, 12*8, this.game.qwertyAI.robot.map, null);
+					this.qwertyMovesOverrideable(34*8, 14*8, this.game.qwertyAI.robot.map, null);
 					this.qwerty_agenda_state = 41;
 					break;
 			case 41: 
 					if (this.game.qwertyAI.robot.x == 34*8 &&
-						this.game.qwertyAI.robot.y == 12*8) {
+						this.game.qwertyAI.robot.y == 14*8) {
 						this.qwerty_agenda_state = 42;
 					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
 						!this.contextQwerty.inConversation) {
@@ -3832,7 +3832,7 @@ class ShrdluGameScript {
 					}
 					// resume:
 					if (this.game.qwertyAI.robot.x != 34*8 ||
-						this.game.qwertyAI.robot.y != 12*8) {
+						this.game.qwertyAI.robot.y != 14*8) {
 						this.qwerty_agenda_state = 0;
 					}
 					break;											
@@ -3876,7 +3876,7 @@ class ShrdluGameScript {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
-        s.y = y+this.game.qwertyAI.robot.tallness;
+        s.y = y;
         q.scripts.push(s);
 		this.game.qwertyAI.robot.addScriptQueue(q);
 	}
@@ -3888,7 +3888,7 @@ class ShrdluGameScript {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.qwertyAI.robot, this.game.qwertyAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
-        s.y = y+this.game.qwertyAI.robot.tallness;
+        s.y = y;
         q.scripts.push(s);
         this.game.qwertyAI.setNewAction(action, null, q, null);
 	}
@@ -3900,7 +3900,7 @@ class ShrdluGameScript {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.shrdluAI.robot, this.game.shrdluAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
-        s.y = y+this.game.shrdluAI.robot.tallness;
+        s.y = y;
         q.scripts.push(s);
         this.game.shrdluAI.clearCurrentAction();
 		this.game.shrdluAI.robot.addScriptQueue(q);
@@ -3913,7 +3913,7 @@ class ShrdluGameScript {
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.game.shrdluAI.robot, this.game.shrdluAI.robot.map, this.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, map.name, null, 0, false, false);
         s.x = x;
-        s.y = y+this.game.shrdluAI.robot.tallness;
+        s.y = y;
         q.scripts.push(s);
         this.game.shrdluAI.setNewAction(action, null, q, null);
 	}

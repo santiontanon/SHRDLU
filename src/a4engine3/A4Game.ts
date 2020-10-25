@@ -742,7 +742,7 @@ class A4Game {
             let acceptWarp:boolean = true;
             if (createRecord &&
                 m!=null &&
-                !m.walkableConsideringVehicles(wr.x, wr.y+wr.o.tallness, wr.o.getPixelWidth(), wr.o.getPixelHeight()-wr.o.tallness, wr.o)) acceptWarp = false;
+                !m.walkableConsideringVehicles(wr.x, wr.y, wr.o.getPixelWidth(), wr.o.getPixelHeight(), wr.o)) acceptWarp = false;
             
             if (acceptWarp) {
                 if (m!=null && createRecord) {
@@ -803,7 +803,7 @@ class A4Game {
             let mapx:number = this.getCameraX(this.currentPlayer, map.width*this.tileWidth, screen_width);
             let mapy:number = this.getCameraY(this.currentPlayer, map.height*this.tileHeight, screen_height);
             let tx:number = Math.floor(this.currentPlayer.x/this.tileWidth);
-            let ty:number = Math.floor((this.currentPlayer.y+this.currentPlayer.tallness)/this.tileHeight);
+            let ty:number = Math.floor(this.currentPlayer.y/this.tileHeight);
             map.drawRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
             map.drawTextBubblesRegion(mapx, mapy, this.zoom, screen_width, screen_height, map.visibilityRegion(tx,ty), this);
         } else {

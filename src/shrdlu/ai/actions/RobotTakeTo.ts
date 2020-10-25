@@ -50,7 +50,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 		if (targetObject != null) {
 			destinationMap = targetObject.map;
 			this.destinationX = targetObject.x;
-			this.destinationY = (targetObject.y+targetObject.tallness);// - ai.robot.tallness;
+			this.destinationY = targetObject.y;
 			destinationLocation = ai.game.getAILocation(targetObject);
 			if (destinationLocation != null) destinationLocationID = destinationLocation.id;
 		} else {
@@ -174,7 +174,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 				let s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
 				s.x = this.guideeObject.x;
-				s.y = (this.guideeObject.y+this.guideeObject.tallness)// - ai.robot.tallness;;
+				s.y = this.guideeObject.y;
 				q.scripts.push(s);
 				ai.currentAction_scriptQueue = q;
 

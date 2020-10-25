@@ -86,12 +86,12 @@ class RobotTurn_IntentionAction extends IntentionAction {
 					if (x>targetx) x -= 8;
 					if (y<targety) y += 8;
 					if (y>targety) y -= 8;
-			        if (ai.robot.map.walkableConsideringVehicles(x, y+ai.robot.tallness,
+			        if (ai.robot.map.walkableConsideringVehicles(x, y,
                                          ai.robot.getPixelWidth(),
-                                         ai.robot.getPixelHeight()-ai.robot.tallness,ai.robot)) {
+                                         ai.robot.getPixelHeight(), ai.robot)) {
 						destinationMap = ai.robot.map;
 						destinationX = x;
-						destinationY = y+ai.robot.tallness;
+						destinationY = y;
 			        } else {
 			        	// obstacle!
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #and(obstacle(X), space.at(X, [space.here]))))";					

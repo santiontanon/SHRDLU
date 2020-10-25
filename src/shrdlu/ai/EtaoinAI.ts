@@ -140,7 +140,7 @@ class EtaoinAI extends A4RuleBasedAI {
 		let attention_object:A4Object = attention_object_l[0];
 		let attention_map:A4Map = attention_object.map;
 		let attention_x:number = attention_object.x;
-		let attention_y:number = attention_object.y + attention_object.tallness;
+		let attention_y:number = attention_object.y;
 
 		if (attention_map==null) {
 			//console.log("EtaoinAI: attention_map = null");

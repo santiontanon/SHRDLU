@@ -28,7 +28,7 @@ class A4Object {
             if (a != null) console.error("A4ObjectFactory: not supported animation " + animation_xml.getAttribute("name"));
         }
             
-        // set attributes (we allow them to be either "attribute" tags, or the "property" tags set by TILED)::
+        // set attributes (we allow them to be either "attribute" tags, or the "property" tags set by TILED):
         let canWalkSet:boolean = false;
         let canSwimSet:boolean = false;
         let attributes_xml:Element[] = getElementChildrenByTag(xml, "attribute");
@@ -121,6 +121,14 @@ class A4Object {
         for(let prop_xml of getElementChildrenByTag(xml, "perceptionProperty")) {
             this.perceptionProperties.push(prop_xml.getAttribute("value"));
         }
+
+        // the coordinates in the xml files are of the top-left of the object (as it's easier to
+        // edit it this way in Tiled), so, we need to correct by adding tallness:
+        if (xml.getAttribute("x") != null) {
+            this.x = Number(xml.getAttribute("x"));
+            this.y = Number(xml.getAttribute("y")) + this.pixel_tallness;
+        }
+        this.pixel_height -= this.pixel_tallness;
     }
 
 
@@ -164,7 +172,7 @@ class A4Object {
 //            console.log(this.name + ".direction = " + this.direction);
             return true;
         } else if (name == "tallness") {
-            this.tallness = Number(attribute_xml.getAttribute("value"));
+            this.pixel_tallness = Number(attribute_xml.getAttribute("value"));
             return true;
         } else if (name == "sprite_offs_x") {
             this.sprite_offs_x = Number(attribute_xml.getAttribute("value"));
@@ -216,10 +224,12 @@ class A4Object {
         }
 
         if (saveLocation) {
+            // Coordinates in xml do not take tallness into account (it's easier to see it this way
+            // in Tiled), so, we correct by subtracting tallness:
             xmlString +=" x=\""+this.x+"\"";
-            xmlString +=" y=\""+this.y+"\"";
+            xmlString +=" y=\""+(this.y - this.pixel_tallness)+"\"";
             xmlString +=" width=\""+this.getPixelWidth()+"\"";
-            xmlString +=" height=\""+this.getPixelHeight()+"\"";
+            xmlString +=" height=\""+(this.getPixelHeight() + this.pixel_tallness)+"\"";
         }
 
         xmlString +=">\n";
@@ -274,11 +284,11 @@ class A4Object {
         xmlString += this.saveObjectAttributeToXML("interacteable",this.interacteable) + "\n";
         xmlString += this.saveObjectAttributeToXML("burrowed",this.burrowed) + "\n";
         xmlString += this.saveObjectAttributeToXML("direction",this.direction) + "\n";
-        if (this.tallness != 0) xmlString += this.saveObjectAttributeToXML("tallness",this.tallness) + "\n";
+        if (this.pixel_tallness != 0) xmlString += this.saveObjectAttributeToXML("tallness",this.pixel_tallness) + "\n";
         if (this.sprite_offs_x != 0) xmlString += this.saveObjectAttributeToXML("sprite_offs_x",this.sprite_offs_x) + "\n";
         if (this.sprite_offs_y != 0) xmlString += this.saveObjectAttributeToXML("sprite_offs_y",this.sprite_offs_y) + "\n";
         if (this.pixel_width != 0) xmlString += this.saveObjectAttributeToXML("pixel_width",this.pixel_width) + "\n";
-        if (this.pixel_height != 0) xmlString += this.saveObjectAttributeToXML("pixel_height",this.pixel_height) + "\n";
+        if (this.pixel_height != 0) xmlString += this.saveObjectAttributeToXML("pixel_height", this.pixel_height + this.pixel_tallness) + "\n";
         if (!this.drawDarkIfNoLight) xmlString += this.saveObjectAttributeToXML("drawDarkIfNoLight",this.drawDarkIfNoLight) + "\n";
 
         let onStarttagOpen:boolean = false;
@@ -392,8 +402,13 @@ class A4Object {
     draw(offsetx:number, offsety:number, game:A4Game)
     {
         if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
-            this.animations[this.currentAnimation].draw((this.x + offsetx) - this.sprite_offs_x, (this.y + offsety) - this.sprite_offs_y);
-//            this.animations[this.currentAnimation].draw((this.x + offsetx), (this.y + offsety));
+            // debugging: draw the base of the object in red color to check collisions
+            // ctx.fillStyle = "red";
+            // ctx.fillRect((this.x + offsetx) - this.sprite_offs_x, 
+            //              (this.y + offsety) - this.sprite_offs_y, 
+            //              this.getPixelWidth(), this.getPixelHeight());
+            this.animations[this.currentAnimation].draw((this.x + offsetx) - this.sprite_offs_x, 
+                                                        (this.y + offsety) - this.sprite_offs_y - this.pixel_tallness);
         }
     }
 
@@ -402,11 +417,11 @@ class A4Object {
     {
         if (this.drawDarkIfNoLight) {
             if (this.currentAnimation>=0 && this.animations[this.currentAnimation]!=null) {
-                this.animations[this.currentAnimation].drawDark((this.x + offsetx) - this.sprite_offs_x, (this.y + offsety) - this.sprite_offs_y);
-//                this.animations[this.currentAnimation].drawDark((this.x + offsetx), (this.y + offsety));
+                this.animations[this.currentAnimation].drawDark((this.x + offsetx) - this.sprite_offs_x, 
+                                                                (this.y + offsety) - this.sprite_offs_y - this.pixel_tallness);
             }
         } else {
-            this.draw(offsetx, offsety, game);
+            this.draw(offsetx, offsety - this.pixel_tallness, game);
         }
     }
 
@@ -533,13 +548,13 @@ class A4Object {
 
     getPixelWidth():number
     {
-        if (this.pixel_width != 0) return this.pixel_width;
+        if (this.pixel_width > 0) return this.pixel_width;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_width_cache;
         if (this.currentAnimation<0) return 0;
         let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return 0;
         this.pixel_width_cache = a.getPixelWidth();
-        this.pixel_height_cache = a.getPixelHeight();
+        this.pixel_height_cache = a.getPixelHeight() - this.pixel_tallness;
         this.pixel_width_cache_cycle = this.cycle;
         return this.pixel_width_cache;
     }
@@ -547,13 +562,13 @@ class A4Object {
 
     getPixelHeight():number
     {
-        if (this.pixel_height != 0) return this.pixel_height;
+        if (this.pixel_height > 0) return this.pixel_height;
         if (this.pixel_width_cache_cycle == this.cycle) return this.pixel_height_cache;
         if (this.currentAnimation<0) return 0;
         let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return 0;
         this.pixel_width_cache = a.getPixelWidth();
-        this.pixel_height_cache = a.getPixelHeight();
+        this.pixel_height_cache = a.getPixelHeight() - this.pixel_tallness;
         this.pixel_width_cache_cycle = this.cycle;
         return this.pixel_height_cache;
     }
@@ -608,9 +623,9 @@ class A4Object {
     collision(x2:number, y2:number, dx2:number, dy2:number):boolean
     {
         let dx:number = this.getPixelWidth();
-        let dy:number = this.getPixelHeight()-this.tallness;
+        let dy:number = this.getPixelHeight();
         if (this.x+dx > x2 && x2+dx2 > this.x &&
-            (this.y+this.tallness)+dy > y2 && y2+dy2 > (this.y+this.tallness)) return true;
+            this.y+dy > y2 && y2+dy2 > this.y) return true;
         return false;        
     }
 
@@ -618,11 +633,11 @@ class A4Object {
     collisionObject(o2:A4Object):boolean
     {
         let dx:number = this.getPixelWidth();
-        let dy:number = this.getPixelHeight()-this.tallness;
+        let dy:number = this.getPixelHeight();
         let dx2:number = o2.getPixelWidth();
-        let dy2:number = o2.getPixelHeight()-o2.tallness;
+        let dy2:number = o2.getPixelHeight();
         if (this.x+dx > o2.x && o2.x+dx2 > this.x &&
-            (this.y+this.tallness)+dy > (o2.y+o2.tallness) && (o2.y+o2.tallness)+dy2 > (this.y+this.tallness)) return true;
+            this.y+dy > o2.y && o2.y+dy2 > this.y) return true;
         return false;
     }
 
@@ -630,11 +645,11 @@ class A4Object {
     collisionObjectOffset(xoffs:number, yoffs:number, o2:A4Object):boolean
     {
         let dx:number = this.getPixelWidth();
-        let dy:number = this.getPixelHeight()-this.tallness;
+        let dy:number = this.getPixelHeight();
         let dx2:number = o2.getPixelWidth();
-        let dy2:number = o2.getPixelHeight()-o2.tallness;
+        let dy2:number = o2.getPixelHeight();
         if (this.x+xoffs+dx > o2.x && o2.x+dx2 > this.x+xoffs &&
-            (this.y+this.tallness)+yoffs+dy > (o2.y+o2.tallness) && (o2.y+o2.tallness)+dy2 > (this.y+this.tallness)+yoffs) return true;
+            this.y+yoffs+dy > o2.y && o2.y+dy2 > this.y+yoffs) return true;
         return false;
     }
 
@@ -646,9 +661,9 @@ class A4Object {
             return false;
         }
         if (this.map.walkableConsideringVehicles(this.x+direction_x_inc[direction]*this.map.tileWidth,
-                                                 this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight,
+                                                 this.y+direction_y_inc[direction]*this.map.tileHeight,
                                                  this.getPixelWidth(),
-                                                 this.getPixelHeight()-this.tallness,this)) return true;
+                                                 this.getPixelHeight(),this)) return true;
         return false;
     }
 
@@ -660,9 +675,9 @@ class A4Object {
             return false;
         }
         if (this.map.walkableIgnoringObject(this.x+direction_x_inc[direction]*this.map.tileWidth,
-                                            this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight,
+                                            this.y+direction_y_inc[direction]*this.map.tileHeight,
                                             this.getPixelWidth(),
-                                            this.getPixelHeight()-this.tallness,
+                                            this.getPixelHeight(),
                                             this, toIgnore)) return true;
         return false;
     }
@@ -671,11 +686,11 @@ class A4Object {
     canMoveWithoutGoingThroughABridge(direction:number) : boolean
     {
         if (this.map.getBridge(Math.floor(this.x+direction_x_inc[direction]*this.map.tileWidth + this.getPixelWidth()/2),
-                               Math.floor(this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight + (this.getPixelHeight()-this.tallness)/2))!=null) return false;
+                               Math.floor(this.y+direction_y_inc[direction]*this.map.tileHeight + this.getPixelHeight()/2))!=null) return false;
         if (this.map.walkableConsideringVehicles(this.x+direction_x_inc[direction]*this.map.tileWidth,
-                                                 this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight,
+                                                 this.y+direction_y_inc[direction]*this.map.tileHeight,
                                                  this.getPixelWidth(),
-                                                 this.getPixelHeight()-this.tallness,this)) return true;
+                                                 this.getPixelHeight(),this)) return true;
         return false;
     }
 
@@ -683,11 +698,11 @@ class A4Object {
     canMoveWithoutGoingThroughABridgeIgnoringObject(direction:number, toIgnore:A4Object) : boolean
     {
         if (this.map.getBridge(Math.floor(this.x+direction_x_inc[direction]*this.map.tileWidth + this.getPixelWidth()/2),
-                               Math.floor(this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight + (this.getPixelHeight()-this.tallness)/2))!=null) return false;
+                               Math.floor(this.y+direction_y_inc[direction]*this.map.tileHeight + this.getPixelHeight()/2))!=null) return false;
         if (this.map.walkableIgnoringObject(this.x+direction_x_inc[direction]*this.map.tileWidth,
-                                                 this.y+this.tallness+direction_y_inc[direction]*this.map.tileHeight,
+                                                 this.y+direction_y_inc[direction]*this.map.tileHeight,
                                                  this.getPixelWidth(),
-                                                 this.getPixelHeight()-this.tallness,
+                                                 this.getPixelHeight(),
                                                  this, toIgnore)) return true;
         return false;
     }
@@ -702,10 +717,10 @@ class A4Object {
             dx = o2.x - (this.x+this.getPixelWidth());
         }
         let dy:number = 0;
-        if (this.y + this.tallness > o2.y+o2.getPixelHeight()) {
-            dy = this.y + this.tallness - (o2.y+o2.getPixelHeight());
-        } else if (o2.y + o2.tallness > this.y+this.getPixelHeight()) {
-            dy = o2.y + o2.tallness - (this.y+this.getPixelHeight());
+        if (this.y > o2.y+o2.getPixelHeight()) {
+            dy = this.y  - (o2.y+o2.getPixelHeight());
+        } else if (o2.y > this.y+this.getPixelHeight()) {
+            dy = o2.y - (this.y+this.getPixelHeight());
         }
         return dx+dy;
     }
@@ -773,7 +788,7 @@ class A4Object {
     sprite_offs_y:number = 0;
     pixel_width:number = 0;    // if these are != 0 they are used, otherwise, widht/height are calculated from the current Animation
     pixel_height:number = 0;
-    tallness:number = 0;
+    pixel_tallness:number = 0;
 
     //layer:number;
     map:A4Map = null;
