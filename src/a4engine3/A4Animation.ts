@@ -11,6 +11,7 @@ class A4Animation {
         a.heightInTiles = Number(xml.getAttribute("dy"));
         a.period = Number(xml.getAttribute("period"));
         if (xml.getAttribute("looping") == "true") a.looping = true;
+        if (xml.getAttribute("seeThrough") == "false") a.seeThrough = false;
 
         let sequenceText:string = xml.firstChild.nodeValue;
         let sequenceFrames:string[] = sequenceText.split(",");
@@ -53,6 +54,7 @@ class A4Animation {
         xmlString += "dy=\"" + this.heightInTiles + "\" ";
         xmlString += "period=\"" + this.period + "\" ";
         xmlString += "looping=\"" + this.looping + "\" ";
+        if (!this.seeThrough) xmlString += "seeThrough=\"false\" ";
         xmlString += "file=\"" + this.gf.name + "\">";
         for(let i:number = 0;i<this.length;i++) {
             if (i==0) {
@@ -133,14 +135,14 @@ class A4Animation {
     }
 
 
-    seeThrough() : boolean
-    {
-        let tile:number = this.getTile();
-        if (tile<0) return true;
+    // seeThrough() : boolean
+    // {
+    //     let tile:number = this.getTile();
+    //     if (tile<0) return true;
 
-        if (this.gf.tileSeeThrough[tile]==1) return false;
-        return true;   
-    }
+    //     if (this.gf.tileSeeThrough[tile]==1) return false;
+    //     return true;   
+    // }
 
 
     getTile() : number
@@ -174,5 +176,7 @@ class A4Animation {
     cycle:number = 0;
     state:number = 0;
     completed:boolean = false;
+
+    seeThrough:boolean = true;
 }
 

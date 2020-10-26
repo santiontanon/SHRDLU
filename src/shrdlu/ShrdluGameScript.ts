@@ -27,20 +27,20 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		//if (this.act == "intro") {
+		// if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
-			//this.skip_to_end_of_act_1();
+			// this.skip_to_end_of_act_1();
 			//this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
 			//this.skip_to_act_2_shrdluback_repair_outside();
 			//this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
-			//this.skip_to_end_of_act_2();
-			//this.skip_to_tardis8();
+			// this.skip_to_end_of_act_2();
+			// this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
 			//this.skip_to_act_3_back_from_tardis();
-		//}
+		// }
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -171,7 +171,6 @@ class ShrdluGameScript {
 		//this.game.setStoryStateVariable("luminiscent-fungi", "taken");
 	}
 
-
 	skip_to_act_2()
 	{
 		this.skip_to_end_of_act_1();
@@ -279,6 +278,7 @@ class ShrdluGameScript {
 		this.act_2_repair_shuttle_state = 2;
 	}
 
+
 	skip_to_tardis8()
 	{
 		this.skip_to_end_of_act_2();
@@ -318,8 +318,8 @@ class ShrdluGameScript {
         this.game.requestDeletion(thingToRepairObject);
 		// change the graphic of the cable:
 		let map:A4Map = this.game.getMap("Tardis 8");
-		map.layers[0].tiles[44+16*map.layers[0].width] = 661;
-		map.layers[1].tiles[43+16*map.layers[0].width] = 629;
+		map.layers[0].tiles[44+16*map.layers[0].width] = this.game.mapTiles[661];
+		map.layers[1].tiles[43+16*map.layers[0].width] = this.game.mapTiles[629];
 		map.layers[0].cacheDrawTiles();
 		map.layers[1].cacheDrawTiles();
 
@@ -2884,8 +2884,8 @@ class ShrdluGameScript {
 				        this.game.requestDeletion(thingToRepairObject);
 						// change the graphic of the cable:
 						let map:A4Map = this.game.getMap("Tardis 8");
-						map.layers[0].tiles[44+16*map.layers[0].width] = 661;
-						map.layers[1].tiles[43+16*map.layers[0].width] = 629;
+						map.layers[0].tiles[44+16*map.layers[0].width] = this.game.mapTiles[661];
+						map.layers[1].tiles[43+16*map.layers[0].width] = this.game.mapTiles[629];
 						map.layers[0].cacheDrawTiles();
 						map.layers[1].cacheDrawTiles();
 

@@ -21,9 +21,9 @@ class A4GraphicFile {
         this.n_tiles = this.tilesPerRow * Math.floor(this.img.height / this.tileHeight);
         this.tiles = new Array(this.n_tiles);
         this.tilesDark = new Array(this.n_tiles);
-        this.tileTypes = new Array(this.n_tiles);
-        this.tileSeeThrough = new Array(this.n_tiles);
-        this.tileCanDig = new Array(this.n_tiles);
+        // this.tileTypes = new Array(this.n_tiles);
+        // this.tileSeeThrough = new Array(this.n_tiles);
+        // this.tileCanDig = new Array(this.n_tiles);
         console.log("GraphicFile created "+this.n_tiles+" tiles ("+this.tilesPerRow+" x "+Math.floor(this.img.height / this.tileHeight)+")");
     }
 
@@ -70,8 +70,8 @@ class A4GraphicFile {
     tileHeight:number;
     tiles:GLTile[] = null;
     tilesDark:GLTile[] = null;
-    tileTypes:number[];
-    tileSeeThrough:number[];
-    tileCanDig:number[];
+    // tileTypes:number[];
+    // tileSeeThrough:number[];
+    // tileCanDig:number[];
     GLTM:GLTManager;
 }

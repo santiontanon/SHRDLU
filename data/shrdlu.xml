@@ -17,6 +17,284 @@
 
 	<!-- Tiles: -->
 	<tiles sourcewidth="8" sourceheight="8" targetwidth="32" targetheight="32">
+		<graphicFile file="background.png"/>
+		<graphicFile file="player.png"/>
+		<graphicFile file="robots.png"/>
+		<graphicFile file="vehicles.png"/>
+		<graphicFile file="player-suit.png"/>
+		<graphicFile file="player-suit-helmet.png"/>
+
+		<!-- Floors: -->
+		<tile ID="0" tiles="0"/>
+		<tile ID="1" tiles="1"/>
+		<tile ID="2" tiles="2"/>
+		<tile ID="3" tiles="3"/>
+
+		<!-- cables: -->
+		<tile ID="4" tiles="4"/>
+		<tile ID="11" tiles="11"/>
+		<tile ID="12" tiles="12"/>
+		<tile ID="31" tiles="31"/>
+		<tile ID="63" tiles="63"/>
+		<tile ID="74" tiles="74"/>
+		<tile ID="75" tiles="75"/>
+		<tile ID="76" tiles="76"/>
+		<tile ID="95" tiles="95"/>
+
+		<!-- Walls: -->
+		<tile ID="96" tiles="73,41,96" walkable="false" seeThrough="false"/>
+		<tile ID="97" tiles="73,41,97" walkable="false" seeThrough="false"/>
+		<tile ID="98" tiles="65,33,98" walkable="false" seeThrough="false"/>
+		<tile ID="99" tiles="65,33,99" walkable="false" seeThrough="false"/>
+		<tile ID="100" tiles="73,41,100" walkable="false" seeThrough="false"/>
+		<tile ID="101" tiles="73,41,101" walkable="false" seeThrough="false"/>
+		<tile ID="102" tiles="65,33,102" walkable="false" seeThrough="false"/>
+		<tile ID="103" tiles="73,41,103" walkable="false" seeThrough="false"/>
+		<tile ID="104" tiles="66,34,104" walkable="false" seeThrough="false"/>
+		<tile ID="105" tiles="66,34,105" walkable="false" seeThrough="false"/>
+ 		<tile ID="106" tiles="64,32,106" walkable="false" seeThrough="false"/>
+ 		<tile ID="107" tiles="64,32,107" walkable="false" seeThrough="false"/>
+		<tile ID="108" tiles="73,41,108" walkable="false" seeThrough="false"/>
+		<tile ID="109" tiles="73,41,109" walkable="false" seeThrough="false"/>
+		<tile ID="110" tiles="64,32,110" walkable="false" seeThrough="false"/>
+		<tile ID="111" tiles="73,41,111" walkable="false" seeThrough="false"/>
+
+		<tile ID="9" tiles="64,9,106" walkable="false" seeThrough="false"/>
+		<tile ID="10" tiles="64,10,106" walkable="false" seeThrough="false"/>
+		<tile ID="35" tiles="64,35,106" walkable="false" seeThrough="false"/>
+		<tile ID="36" tiles="64,36,106" walkable="false" seeThrough="false"/>
+		<tile ID="44" tiles="44,34,104" walkable="false" seeThrough="false"/>
+		<tile ID="67" tiles="64,67,106" walkable="false" seeThrough="false"/>
+		<tile ID="68" tiles="64,68,106" walkable="false" seeThrough="false"/>
+
+		<tile ID="53" tiles="53,21,97" walkable="false" seeThrough="false"/>
+
+		<tile ID="42" tiles="42,32,106" walkable="false" seeThrough="false"/>
+		<tile ID="43" tiles="43,33,98" walkable="false" seeThrough="false"/>
+
+		<!-- Outdoor ground: -->
+		<tile ID="422" tiles="422"/>
+		<tile ID="423" tiles="423"/>
+		<tile ID="452" tiles="452"/>
+		<tile ID="453" tiles="453"/>
+		<tile ID="454" tiles="454"/>
+		<tile ID="455" tiles="455"/>
+		<tile ID="458" tiles="458"/>
+		<tile ID="506" tiles="506"/>
+		<tile ID="539" tiles="539"/>
+		<tile ID="803" tiles="803,803"/>
+
+		<!-- Outdoor cables: -->
+		<tile ID="313" tiles="313"/>
+		<tile ID="330" tiles="330"/>
+		<tile ID="457" tiles="457"/>
+		<tile ID="484" tiles="484"/>
+		<tile ID="485" tiles="485"/>
+		<tile ID="490" tiles="490"/>
+		<tile ID="516" tiles="516"/>
+		<tile ID="517" tiles="517"/>
+		<tile ID="522" tiles="522"/>
+		<tile ID="554" tiles="554"/>
+
+		<!-- Outdoor fence: -->
+		<tile ID="544" tiles="544" walkable="false"/>
+		<tile ID="548" tiles="548" walkable="false"/>
+		<tile ID="549" tiles="549" walkable="false"/>
+		<tile ID="576" tiles="576" walkable="false"/>
+		<tile ID="580" tiles="580" walkable="false"/>
+		<tile ID="581" tiles="581" walkable="false"/>
+		<tile ID="608" tiles="608" walkable="false"/>
+		<tile ID="612" tiles="612" walkable="false"/>
+		<tile ID="640" tiles="640" walkable="false"/>
+		<tile ID="644" tiles="644" walkable="false"/>
+
+		<!-- Outdor mountains: -->
+		<tile ID="736" tiles="832,736" walkable="false"/>
+		<tile ID="737" tiles="833,737" walkable="false"/>
+		<tile ID="738" tiles="832,738" walkable="false"/>
+		<tile ID="739" tiles="833,739" walkable="false"/>
+		<tile ID="768" tiles="768,768" walkable="false"/>
+		<tile ID="769" tiles="833,769" walkable="false"/>
+		<tile ID="770" tiles="770,770" walkable="false"/>
+		<tile ID="800" tiles="832,800" walkable="false"/>
+		<tile ID="801" tiles="833,801" walkable="false"/>
+		<tile ID="802" tiles="834,802" walkable="false"/>
+
+		<tile ID="704" tiles="704,739"/>
+		<tile ID="708" tiles="708,739"/>
+
+		<tile ID="774" tiles="774,742" walkable="false"/>
+		<tile ID="775" tiles="775,743" walkable="false"/>
+
+		<tile ID="836" tiles="836,804,772,740" walkable="false"/>
+		<tile ID="837" tiles="837,805,773,741" walkable="false"/>
+
+		<!-- Outdor station: -->
+		<tile ID="864" tiles="864" walkable="false"/>
+		<tile ID="865" tiles="865" walkable="false"/>
+		<tile ID="866" tiles="866" walkable="false"/>
+		<tile ID="867" tiles="867" walkable="false"/>
+		<tile ID="868" tiles="868" walkable="false"/>
+
+		<tile ID="896" tiles="896" walkable="false"/>
+		<tile ID="897" tiles="897" walkable="false"/>
+		<tile ID="898" tiles="898" walkable="false"/>
+		<tile ID="899" tiles="899" walkable="false"/>
+		<tile ID="900" tiles="900" walkable="false"/>
+
+		<tile ID="928" tiles="928" walkable="false"/>
+		<tile ID="929" tiles="929" walkable="false"/>
+		<tile ID="930" tiles="930" walkable="false"/>
+		<tile ID="931" tiles="931" walkable="false"/>
+		<tile ID="932" tiles="932" walkable="false"/>
+
+		<tile ID="960" tiles="960" walkable="false"/>
+		<tile ID="961" tiles="961" walkable="false"/>
+		<tile ID="962" tiles="962" walkable="false"/>
+		<tile ID="963" tiles="963" walkable="false"/>
+		<tile ID="964" tiles="964" walkable="false"/>
+
+		<!-- Caves: -->
+		<tile ID="869" tiles="869" walkable="false" seeThrough="false"/>
+		<tile ID="871" tiles="871,870" walkable="false" seeThrough="false"/>
+		<tile ID="872" tiles="872" walkable="false" seeThrough="false"/>
+		<tile ID="873" tiles="873" walkable="false" seeThrough="false"/>
+		<tile ID="901" tiles="901" walkable="false" seeThrough="false"/>
+		<tile ID="902" tiles="902,870" walkable="false" seeThrough="false"/>
+		<tile ID="903" tiles="903"/>
+		<tile ID="904" tiles="904" walkable="false" seeThrough="false"/>
+		<tile ID="905" tiles="905" walkable="false" seeThrough="false"/>
+		<tile ID="933" tiles="933" walkable="false" seeThrough="false"/>
+		<tile ID="934" tiles="934,870" walkable="false" seeThrough="false"/>
+		<tile ID="935" tiles="935" walkable="false" seeThrough="false"/>
+		<tile ID="936" tiles="936" walkable="false" seeThrough="false"/>
+		<tile ID="937" tiles="937" walkable="false" seeThrough="false"/>
+		<tile ID="965" tiles="965" walkable="false" seeThrough="false"/>
+		<tile ID="966" tiles="966,870" walkable="false" seeThrough="false"/>
+		<tile ID="967" tiles="967,870" walkable="false" seeThrough="false"/>
+		<tile ID="968" tiles="968" walkable="false" seeThrough="false"/>
+		<tile ID="969" tiles="969,870" walkable="false" seeThrough="false"/>
+		<tile ID="997" tiles="997" walkable="false" seeThrough="false"/>
+		<tile ID="998" tiles="998" walkable="false" seeThrough="false"/>
+		<tile ID="999" tiles="999" walkable="false" seeThrough="false"/>
+		<tile ID="1000" tiles="1000" walkable="false" seeThrough="false"/>
+		<tile ID="1001" tiles="1001"/>
+
+		<!-- Tardis outside -->
+		<tile ID="540" tiles="540" walkable="false"/>
+		<tile ID="541" tiles="541" walkable="false"/>
+		<tile ID="542" tiles="542" walkable="false"/>
+		<tile ID="571" tiles="571" walkable="false"/>
+		<tile ID="572" tiles="572" walkable="false"/>
+		<tile ID="573" tiles="573" walkable="false"/>
+		<tile ID="574" tiles="574" walkable="false"/>
+		<tile ID="603" tiles="603" walkable="false"/>
+		<tile ID="604" tiles="604" walkable="false"/>
+		<tile ID="605" tiles="605" walkable="false"/>
+		<tile ID="606" tiles="606" walkable="false"/>
+		<tile ID="625" tiles="625" walkable="false"/>
+		<tile ID="626" tiles="626" walkable="false"/>
+		<tile ID="635" tiles="635" walkable="false"/>
+		<tile ID="636" tiles="636" walkable="false"/>
+		<tile ID="637" tiles="637" walkable="false"/>
+		<tile ID="638" tiles="638" walkable="false"/>
+		<tile ID="662" tiles="662" walkable="false"/>
+		<tile ID="663" tiles="663" walkable="false"/>
+		<tile ID="664" tiles="664" walkable="false"/>
+		<tile ID="665" tiles="665" walkable="false"/>
+		<tile ID="666" tiles="666" walkable="false"/>
+		<tile ID="693" tiles="693" walkable="false"/>
+		<tile ID="694" tiles="694" walkable="false"/>
+		<tile ID="695" tiles="695" walkable="false"/>
+		<tile ID="696" tiles="696" walkable="false"/>
+		<tile ID="697" tiles="697" walkable="false"/>
+		<tile ID="698" tiles="698" walkable="false"/>
+		<tile ID="699" tiles="699" walkable="false"/>
+		<tile ID="700" tiles="700" walkable="false"/>
+		<tile ID="701" tiles="701" walkable="false"/>
+		<tile ID="702" tiles="702" walkable="false"/>
+		<tile ID="703" tiles="703" walkable="false"/>
+		<tile ID="763" tiles="763" walkable="false"/>
+		<tile ID="725" tiles="725"/>
+		<tile ID="726" tiles="726"/>
+		<tile ID="727" tiles="727"/>
+		<tile ID="728" tiles="728"/>
+		<tile ID="729" tiles="729"/>
+		<tile ID="730" tiles="730"/>
+		<tile ID="731" tiles="731" walkable="false"/>
+		<tile ID="732" tiles="732" walkable="false"/>
+		<tile ID="733" tiles="733" walkable="false"/>
+		<tile ID="734" tiles="734" walkable="false"/>
+		<tile ID="735" tiles="735" walkable="false"/>
+		<tile ID="737" tiles="737" walkable="false"/>
+		<tile ID="757" tiles="757" walkable="false"/>
+		<tile ID="758" tiles="758" walkable="false"/>
+		<tile ID="759" tiles="759" walkable="false"/>
+		<tile ID="760" tiles="760" walkable="false"/>
+		<tile ID="761" tiles="761" walkable="false"/>
+		<tile ID="762" tiles="762" walkable="false"/>
+		<tile ID="764" tiles="764" walkable="false"/>
+		<tile ID="765" tiles="765" walkable="false"/>
+		<tile ID="766" tiles="766" walkable="false"/>
+		<tile ID="767" tiles="767" walkable="false"/>
+		<tile ID="789" tiles="789" walkable="false"/>
+		<tile ID="790" tiles="790"/>
+		<tile ID="791" tiles="791"/>
+		<tile ID="792" tiles="792"/>
+		<tile ID="793" tiles="793" walkable="false"/>
+		<tile ID="794" tiles="794" walkable="false"/>
+		<tile ID="821" tiles="821" walkable="false"/>
+		<tile ID="822" tiles="822"/>
+		<tile ID="823" tiles="823"/>
+		<tile ID="824" tiles="824"/>
+		<tile ID="825" tiles="825" walkable="false"/>
+		<tile ID="826" tiles="826" walkable="false"/>
+		<tile ID="856" tiles="856"/>
+		<tile ID="857" tiles="857" walkable="false"/>
+		<tile ID="858" tiles="858" walkable="false"/>
+
+		<tile ID="631" tiles="631"/>
+		<tile ID="632" tiles="632"/>
+		<tile ID="633" tiles="633"/>
+		<tile ID="634" tiles="634"/>
+		<tile ID="667" tiles="667"/>
+		<tile ID="668" tiles="668"/>
+		<tile ID="669" tiles="669"/>
+		<tile ID="670" tiles="670"/>
+		<tile ID="671" tiles="671"/>
+
+		<!-- Tardis interior -->
+		<tile ID="682" tiles="682"/>
+		<tile ID="914" tiles="914"/>
+		<tile ID="972" tiles="972"/>
+		<tile ID="973" tiles="973"/>
+		<tile ID="974" tiles="974"/>
+		<tile ID="1002" tiles="1002"/>
+		<tile ID="1003" tiles="1003"/>
+		<tile ID="1004" tiles="1004"/>
+		<tile ID="1005" tiles="1005"/>
+		<tile ID="1006" tiles="1006"/>
+
+		<tile ID="710" tiles="678" walkable="false" seeThrough="false"/>
+
+		<tile ID="645" tiles="806,806,645" walkable="false" seeThrough="false"/>
+		<tile ID="677" tiles="835,709,677" walkable="false" seeThrough="false"/>
+		<tile ID="678" tiles="618,710,678" walkable="false" seeThrough="false"/>
+		<tile ID="679" tiles="650,711,679" walkable="false" seeThrough="false"/>
+		<tile ID="714" tiles="806,806,714" walkable="false" seeThrough="false"/>
+		<tile ID="806" tiles="806,806,806" walkable="false" seeThrough="false"/>
+		<tile ID="807" tiles="618,710,807" walkable="false" seeThrough="false"/>
+		<tile ID="838" tiles="586,709,838" walkable="false" seeThrough="false"/>
+		<tile ID="839" tiles="650,711,839" walkable="false" seeThrough="false"/>
+		<tile ID="840" tiles="806,806,840" walkable="false" seeThrough="false"/>
+		<tile ID="841" tiles="806,806,841" walkable="false" seeThrough="false"/>
+		<tile ID="994" tiles="1009,977,994" walkable="false" seeThrough="false"/>
+		<tile ID="995" tiles="806,806,995" walkable="false" seeThrough="false"/>
+		<tile ID="850" tiles="882,882,850" walkable="false" seeThrough="false"/>
+		<tile ID="851" tiles="915,883,851" walkable="false" seeThrough="false"/>
+		<tile ID="882" tiles="882,882,882" walkable="false" seeThrough="false"/>
+
+
 		<!-- 
 			 0 - walkable
 			 1 - wall
@@ -24,7 +302,7 @@
 			 3 - choppeable tree
 			 4 - water			
 		-->
-		<types file="background.png">
+		<!--types file="background.png">
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -438,8 +716,7 @@
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,		  
-  		</canDig>
-
+  		</canDig-->
 
 	</tiles>	
 

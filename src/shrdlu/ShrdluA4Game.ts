@@ -472,7 +472,7 @@ class ShrdluA4Game extends A4Game {
         let map:A4Map = this.getMap("Aurora Station")
         if (map == null) return false;
         if (!map.walkable(848, 72, 40, 40, newRover)) return false;
-        newRover.warp(848, 72+17, map);
+        newRover.warp(848, 72+16, map);
 
         // 2) remove rover from the outside
         rover.disembark(this.currentPlayer);
@@ -598,8 +598,9 @@ class ShrdluA4Game extends A4Game {
         if (this.cutSceneActivated >= 0) {
             if (this.cutScenes.update(this.cutSceneActivated, k)) {
                 this.cutSceneActivated = -1;
+            } else {
+              return true;
             }
-            return true;
         }
 
         if (!super.updateInternal(k, [this.shrdluAI.robot.map])) return false;

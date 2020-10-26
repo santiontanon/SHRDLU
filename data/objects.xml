@@ -737,7 +737,7 @@
 	</ObjectClass>	
 
 	<ObjectClass class="horizontal-door" super="door" name="door">
-      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">132,130,128</animation>
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" seeThrough="false" file="background.png">132,130,128</animation>
       <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">130,132,134</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
@@ -749,7 +749,7 @@
     </ObjectClass>
 
 	<ObjectClass class="tardis-horizontal-door" super="door" name="door">
-      <animation name="closed" dx="3" dy="3" period="4" looping="false" file="background.png">879,1027,1024,876</animation>
+      <animation name="closed" dx="3" dy="3" period="4" looping="false" seeThrough="false" file="background.png">879,1027,1024,876</animation>
       <animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">876,1024,1027,879</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
@@ -762,7 +762,7 @@
     </ObjectClass>
 
 	<ObjectClass class="vertical-door" super="door" name="door">
-      <animation name="closed" dx="1" dy="4" period="4" looping="false" file="background.png">19,18,17,16</animation>
+      <animation name="closed" dx="1" dy="4" period="4" looping="false" seeThrough="false" file="background.png">19,18,17,16</animation>
       <animation name="idle" dx="1" dy="4" period="4" looping="false" file="background.png">17,18,19,20</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
@@ -774,7 +774,7 @@
     </ObjectClass>
 
 	<ObjectClass class="tardis-vertical-door" super="door" name="door">
-      <animation name="closed" dx="1" dy="4" period="4" looping="false" file="background.png">894,893,892,891</animation>
+      <animation name="closed" dx="1" dy="4" period="4" looping="false" seeThrough="false" file="background.png">894,893,892,891</animation>
       <animation name="idle" dx="1" dy="4" period="4" looping="false" file="background.png">892,893,894,895</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
@@ -788,7 +788,7 @@
 
 
 	<ObjectClass class="airlock-door" super="door" name="airlock-door">
-      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">144,142,140,138,136</animation>
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" seeThrough="false" file="background.png">144,142,140,138,136</animation>
       <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">138,140,142,144,146</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">
@@ -797,12 +797,12 @@
     </ObjectClass>
 
 	<ObjectClass class="airlock-outside-door" super="ShrdluAirlockDoor" name="airlock-outside-door">
-      <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">136</animation>
+      <animation name="idle" dx="2" dy="3" period="4" looping="false" seeThrough="false" file="background.png">136</animation>
       <attribute name="tallness" value="16"/>
     </ObjectClass>
 
 	<ObjectClass class="garage-airlock" super="obstacle" name="large-airlock-door">
-      <animation name="idle" dx="1" dy="6" period="4" looping="false" file="background.png">543</animation>
+      <animation name="idle" dx="1" dy="6" period="4" looping="false" seeThrough="false" file="background.png">543</animation>
       <attribute name="interacteable" value="true"/>
       <attribute name="tallness" value="16"/>
 		<eventRule event="interact" once="false">
@@ -1547,7 +1547,7 @@
 
 	<ObjectClass class="collapsed-ceiling-right" super="obstacle" name="collapsed ceiling">
 		<attribute name="tallness" value="8"/>
-		<animation name="idle" dx="3" dy="4" period="4" looping="false" file="background.png">750</animation>
+		<animation name="idle" dx="3" dy="4" period="4" looping="false" seeThrough="false" file="background.png">750</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<talkOther text="The ceiling has collapsed here, I need to find an alternative route if I want to get through..." thought="true"/>
@@ -1555,7 +1555,7 @@
 	</ObjectClass>		
 	<ObjectClass class="collapsed-ceiling-left" super="obstacle" name="collapsed ceiling">
 		<attribute name="tallness" value="8"/>
-		<animation name="idle" dx="3" dy="4" period="4" looping="false" file="background.png">747</animation>
+		<animation name="idle" dx="3" dy="4" period="4" looping="false" seeThrough="false" file="background.png">747</animation>
 		<attribute name="interacteable" value="true"/>
         <eventRule event="interact">
         	<talkOther text="The ceiling has collapsed here, I need to find an alternative route if I want to get through..." thought="true"/>
@@ -1725,7 +1725,7 @@
 	</ObjectClass>		
 
 	<ObjectClass class="tardis-computer-door" super="door" name="door">
-      <animation name="closed" dx="2" dy="3" period="4" looping="false" file="background.png">952,950,948,946</animation>
+      <animation name="closed" dx="2" dy="3" period="4" looping="false" seeThrough="false" file="background.png">952,950,948,946</animation>
       <animation name="idle" dx="2" dy="3" period="4" looping="false" file="background.png">946,948,950,952</animation>
       <attribute name="tallness" value="16"/>
       <eventRule event="open" once="false">

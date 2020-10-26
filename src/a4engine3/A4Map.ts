@@ -114,11 +114,13 @@ class A4Map {
             this.layers.push(new A4MapLayer(this.width, this.height, gfs));
             if (i<layers_xmls.length) {
                 let layer_properties_xml:Element = getFirstElementChildByTag(layers_xmls[i], "properties");
-                let layer_properties_xmls:Element[] = getElementChildrenByTag(layer_properties_xml, "property");
-                for(let j:number = 0;j<layer_properties_xmls.length;j++) {
-                    let property:Element = layer_properties_xmls[j];
-                    if (property.getAttribute("name") == "elevation") {
-                        this.layers[i].elevation = Number(property.getAttribute("value"));
+                if (layer_properties_xml != null) {
+                    let layer_properties_xmls:Element[] = getElementChildrenByTag(layer_properties_xml, "property");
+                    for(let j:number = 0;j<layer_properties_xmls.length;j++) {
+                        let property:Element = layer_properties_xmls[j];
+                        if (property.getAttribute("name") == "elevation") {
+                            this.layers[i].elevation = Number(property.getAttribute("value"));
+                        }
                     }
                 }
 
@@ -129,14 +131,17 @@ class A4Map {
                     let idx:number = 0;
                     for(let j:number = 0;j<values.length;j++) {
                         if (values[j]!="") {
-                            this.layers[i].tiles[idx] = Number(values[j]) - 1;
+                            this.layers[i].tiles[idx] = game.mapTiles[Number(values[j]) - 1];
+                            if (this.layers[i].tiles[idx] == null && (Number(values[j]) - 1) >= 0) {
+                                console.error("Cannot find mapTile with ID: " + (Number(values[j]) - 1));
+                            }
                             idx++;
                         }
                     }
                 } else {
                     let tile_xmls:Element[] = getElementChildrenByTag(data_xml, "tile");
                     for(let j:number = 0;j<tile_xmls.length;j++) {
-                        this.layers[i].tiles[j] = Number(tile_xmls[j].getAttribute("gid")) - 1;
+                        this.layers[i].tiles[j] = game.mapTiles[Number(tile_xmls[j].getAttribute("gid")) - 1];
                     }
                 }
                 // console.log("Map layer loaded with " + tile_xmls.length + " tiles (out of " + (this.width * this.height) + ")");
@@ -310,7 +315,11 @@ class A4Map {
             xmlString += "<data encoding=\"csv\">\n";
             for(let y:number = 0;y<this.height;y++) {
                 for(let x:number = 0;x<this.width;x++) {
-                    xmlString += (ml.tiles[x+y*this.width]+1)+",";
+                    if (ml.tiles[x+y*this.width] != null) {
+                        xmlString += (ml.tiles[x+y*this.width].ID+1)+",";
+                    } else {
+                        xmlString += "0,";
+                    }
                 }
                 xmlString += "\n";
             }
@@ -368,6 +377,14 @@ class A4Map {
 
         xmlString += "</map>";
         return xmlString;
+    }
+
+
+    cacheDrawTiles()
+    {
+        for(let layer of this.layers) {
+            layer.cacheDrawTiles();
+        }
     }
 
 
@@ -447,49 +464,6 @@ class A4Map {
         this.cycle++;
     }
 
-/*
-	draw(offsetx:number, offsety:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, game:A4Game)
-    {
-        this.sortObjectByYCoordinate();
-
-        ctx.save();
-        ctx.scale(zoom, zoom);
-
-        let object_idx:number = 0;
-        let y:number = -offsety;
-        let ZSY:number = Math.floor(SCREEN_Y/zoom) + MAP_MAX_ALTITUDE*8;
-        for(let row:number = 0;row<this.layers[0].height+MAP_MAX_ALTITUDE && y<ZSY;y+=this.tileHeight, row++) {
-            if (y+this.tileHeight<0) continue;
-//            console.log("draw: " + row + " -> " + y);
-//            if (row<8) {
-                for(let i:number = 0;i<this.layers.length;i++) {
-                    this.layers[i].drawRow(offsetx, offsety, row, zoom, SCREEN_X, SCREEN_Y, game);
-                }
-//            }
-
-            // objects:
-            for(;object_idx<this.objects.length;object_idx++) {
-                let o:A4Object = this.objects[object_idx];
-                if (o.burrowed) continue;
-                if ((o.y + o.getPixelHeight()) < (row-1)*this.tileHeight) continue;
-                if ((o.y + o.getPixelHeight()) > (row+1)*this.tileHeight) break;
-                let tx:number = Math.floor(o.x/this.tileWidth);
-                let ty:number = Math.floor(o.y/this.tileHeight);
-                let draw:boolean = false;
-                for(let i:number = 0;i<Math.floor(o.getPixelHeight()/this.tileHeight) && !draw;i++) {
-                    for(let j:number = 0;j<Math.floor(o.getPixelWidth()/this.tileWidth) && !draw;j++) {
-                        if (tx+j>=0 && tx+j<this.width &&
-                            ty+i>=0 && ty+i<this.height) {
-                            draw = true;
-                        }
-                    }
-                }
-                if (draw) o.draw(-offsetx,-offsety, game);
-            }    
-        }
-        ctx.restore();
-    }
-*/
 
     drawRegion(offsetx:number, offsety:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, visibilityRegion:number, game:A4Game)
     {

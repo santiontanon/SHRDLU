@@ -10,7 +10,7 @@ class A4MapLayer {
             startTile += gfs[i].n_tiles;
         }
         for(let i:number = 0;i<width*height;i++) {
-            this.tiles.push(-1);
+            this.tiles.push(null);
             this.canDig.push(0);
         }
         this.tileWidth = gfs[0].tileWidth;
@@ -20,25 +20,9 @@ class A4MapLayer {
 
     cacheDrawTiles()
     {
-        this.glTiles = new Array(this.width * this.height);
-        this.glTilesDark = new Array(this.width * this.height);
         for(let i:number = 0;i<this.width * this.height;i++) {
-            if (this.tiles[i]>=0) {
-                for(let j:number = 0;j<this.graphicFiles.length;j++) {
-                    if (j<this.graphicFiles.length-1 && this.tiles[i]>=this.gfs_startTile[j+1]) continue;
-                    this.glTiles[i] = this.graphicFiles[j].getTile(this.tiles[i]-this.gfs_startTile[j]);
-                    this.glTilesDark[i] = this.graphicFiles[j].getTileDark(this.tiles[i]-this.gfs_startTile[j]);
-                    // if images are not yet loaded, wait!
-                    if (this.glTiles[i] == null || this.glTilesDark[i] == null) {
-                        this.glTiles = null;
-                        this.glTilesDark = null;
-                        return;
-                    }
-                    break;
-                }
-            } else {
-                this.glTiles[i] = null;
-                this.glTilesDark[i] = null;
+            if (this.tiles[i] != null) {
+                this.tiles[i].cacheDrawTiles(this.graphicFiles, this.gfs_startTile);
             }
         }        
     }
@@ -46,11 +30,8 @@ class A4MapLayer {
 
 	draw(offsetx:number, offsety:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, game:A4Game)
     {
-        if (this.glTiles == null) this.cacheDrawTiles();
-
         ctx.save();
         ctx.scale(zoom, zoom);
-        //    output_debug_message("A4MapLayer::draw\n");
         let y:number = -offsety;
         let ZSY:number = Math.floor(SCREEN_Y/zoom);
         let ZSX:number = Math.floor(SCREEN_X/zoom);
@@ -60,8 +41,8 @@ class A4MapLayer {
             let x:number = -offsetx;
             for(let j:number = 0;j<this.width && x<ZSX;j++,x+=this.tileWidth,offset++) {
                 if (x+this.tileWidth<0) continue;
-                if (this.glTiles[offset]!=null) {
-                    this.glTiles[offset].draw(x,y);
+                if (this.tiles[offset]!=null) {
+                    this.tiles[offset].draw(x, y, this.tileHeight);
                 }
             }
         }
@@ -69,39 +50,11 @@ class A4MapLayer {
         ctx.restore();
     }
 
-
-/*
-    drawRow(offsetx:number, offsety:number, i:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, game:A4Game)
-    {
-        if (this.glTiles == null) this.cacheDrawTiles();
-
-        i -= this.elevation;
-        if (i<0) return;
-        if (i>=this.height) return;
-        //    console.log("A4MapLayer.drawRegionRow " + i);        
-        let y:number = i*this.tileHeight - offsety;
-        let offset:number = i*this.width;
-        let ZSX:number = Math.floor(SCREEN_X/zoom);
-        let x:number = -offsetx;
-        for(let j:number = 0;j<this.width && x<ZSX;j++,x+=this.tileWidth,offset++) {
-            if (x+this.tileWidth<0) continue;
-            if (this.glTiles[offset] != null) {
-                this.glTiles[offset].draw(x, y);
-            }
-        }
-    }    
-*/
-
   
     drawRegion(offsetx:number, offsety:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, visibility:number[], visibilityRegion:number, game:A4Game, map:A4Map)
     {
-//        console.log("(ox, oy) = " + offsetx + ", " + offsety)
-        if (this.glTiles == null) this.cacheDrawTiles();
-        if (this.glTiles == null) return;
-
         ctx.save();
         ctx.scale(zoom, zoom);
-        //    output_debug_message("A4MapLayer::draw\n");        
         let y:number = -offsety;
         let ZSY:number = Math.floor(SCREEN_Y/zoom);
         let ZSX:number = Math.floor(SCREEN_X/zoom);
@@ -111,12 +64,12 @@ class A4MapLayer {
             let x:number = -offsetx;
             for(let j:number = 0;j<this.width && x<ZSX;j++,x+=this.tileWidth,offset++) {
                 if (x+this.tileWidth<0) continue;
-                if (this.glTiles[offset] != null) {
+                if (this.tiles[offset] != null) {
                     if (visibility[offset]==visibilityRegion) {
                         if (map.lightOnStatus[offset]) {
-                            this.glTiles[offset].draw(x, y);
+                            this.tiles[offset].draw(x, y, this.tileHeight);
                         } else {
-                            this.glTilesDark[offset].draw(x, y);
+                            this.tiles[offset].drawDark(x, y, this.tileHeight);
                         }
                     } else if (visibility[offset]==0 &&
                                ((j>0 && visibility[offset-1]==visibilityRegion) ||
@@ -130,9 +83,9 @@ class A4MapLayer {
                                 (j<this.width-1 && i<this.height-1 && visibility[offset+1+this.width]==visibilityRegion)
                                )) {
                         if (map.lightOnStatus[offset]) {
-                            this.glTiles[offset].draw(x, y);
+                            this.tiles[offset].draw(x, y, this.tileHeight);
                         } else {
-                            this.glTilesDark[offset].draw(x, y);
+                            this.tiles[offset].drawDark(x, y, this.tileHeight);
                         }
                     }
                 }
@@ -145,13 +98,9 @@ class A4MapLayer {
 
     drawRegionRow(offsetx:number, offsety:number, i:number, zoom:number, SCREEN_X:number, SCREEN_Y:number, visibility:number[], visibilityRegion:number, game:A4Game, map:A4Map)
     {
-        if (this.glTiles == null) this.cacheDrawTiles();
-        if (this.glTiles == null) return;
-
         i -= this.elevation;
         if (i<0) return;
         if (i>=this.height) return;
-        //    console.log("A4MapLayer.drawRegionRow " + i);        
         let y:number = i*this.tileHeight - offsety;
         let offset:number = i*this.width;
         let offsetWithoutElevation:number = (i+this.elevation)*this.width;
@@ -160,12 +109,12 @@ class A4MapLayer {
         let x:number = -offsetx;
         for(let j:number = 0;j<this.width && x<ZSX;j++,x+=this.tileWidth,offset++,offsetWithoutElevation++,visibilityOffset++) {
             if (x+this.tileWidth<0) continue;
-            if (this.glTiles[offset] != null) {
+            if (this.tiles[offset] != null) {
                 if (visibility[visibilityOffset] == visibilityRegion) {
                     if (map.lightOnStatus[offsetWithoutElevation]) {
-                        this.glTiles[offset].draw(x, y);
+                        this.tiles[offset].draw(x, y, this.tileHeight);
                     } else {
-                        this.glTilesDark[offset].draw(x, y);
+                        this.tiles[offset].drawDark(x, y, this.tileHeight);
                     }
                 } else if (visibility[visibilityOffset]==0 &&
                            ((j>0 && visibility[visibilityOffset-1]==visibilityRegion) ||
@@ -179,9 +128,9 @@ class A4MapLayer {
                             (j<this.width-1 && i<this.height-1 && visibility[visibilityOffset+1+this.width]==visibilityRegion)
                            )) {
                     if (map.lightOnStatus[offsetWithoutElevation]) {
-                        this.glTiles[offset].draw(x, y);
+                        this.tiles[offset].draw(x, y, this.tileHeight);
                     } else {
-                        this.glTilesDark[offset].draw(x, y);
+                        this.tiles[offset].drawDark(x, y, this.tileHeight);
                     }
                 }
             }
@@ -198,10 +147,10 @@ class A4MapLayer {
         let tile_y:number = Math.floor(y/this.tileHeight);
         let tile_x2:number = Math.floor((x+dx-1)/this.tileWidth);
         let tile_y2:number = Math.floor((y+dy-1)/this.tileHeight);
-        let tile:number;
-        let type:number;
-        tile_y -= this.elevation;
-        tile_y2 -= this.elevation;
+        let tile:A4MapTile = null;
+        // let type:number;
+        // tile_y -= this.elevation;
+        // tile_y2 -= this.elevation;
         for(let i:number = tile_y;i<=tile_y2;i++) {
             //if (i<0) return false;
             //if (i>=this.height) return false;
@@ -212,18 +161,22 @@ class A4MapLayer {
                 //if (j>=this.width) return false;
                 if (j>=this.width) continue;
                 tile = this.tiles[j+i*this.width];
-                if (tile>=0) {
-                    for(let k:number = 0;k<this.graphicFiles.length;k++) {
-                        if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-                        type = this.graphicFiles[k].tileTypes[tile-this.gfs_startTile[k]];
-                        if (type==A4_TILE_WALL ||
-                            type==A4_TILE_TREE ||
-                            type==A4_TILE_CHOPPABLE_TREE) return false;
-                        if (!subject.canWalk && type == A4_TILE_WALKABLE) return false;
-                        if (!subject.canSwim && type == A4_TILE_WATER) return false;
-                        break;
-                    }
-                }
+                if (tile != null && !tile.walkable) {
+                    return false;
+                } 
+
+                // if (tile>=0) {
+                //     for(let k:number = 0;k<this.graphicFiles.length;k++) {
+                //         if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
+                //         type = this.graphicFiles[k].tileTypes[tile-this.gfs_startTile[k]];
+                //         if (type==A4_TILE_WALL ||
+                //             type==A4_TILE_TREE ||
+                //             type==A4_TILE_CHOPPABLE_TREE) return false;
+                //         if (!subject.canWalk && type == A4_TILE_WALKABLE) return false;
+                //         if (!subject.canSwim && type == A4_TILE_WATER) return false;
+                //         break;
+                //     }
+                // }
             }
         }          
         return true;
@@ -232,16 +185,20 @@ class A4MapLayer {
 	
     seeThrough(tilex:number, tiley:number) : boolean
     {
-        tiley -= this.elevation;
-        if (tiley<0) return true;
-        let tile:number = this.tiles[tilex+tiley*this.width];
-        if (tile>=0) {
-            for(let k:number = 0;k<this.graphicFiles.length;k++) {
-                if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-                if (this.graphicFiles[k].tileSeeThrough[tile-this.gfs_startTile[k]]!=0) return false;
-                break;
-            }
-        }
+        // tiley -= this.elevation;
+        // if (tiley<0) return true;
+        let tile:A4MapTile = this.tiles[tilex+tiley*this.width];
+        if (tile != null && !tile.seeThrough) {
+            return false;
+        } 
+
+        // if (tile>=0) {
+        //     for(let k:number = 0;k<this.graphicFiles.length;k++) {
+        //         if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
+        //         if (this.graphicFiles[k].tileSeeThrough[tile-this.gfs_startTile[k]]!=0) return false;
+        //         break;
+        //     }
+        // }
 
         return true;    
     }
@@ -276,7 +233,6 @@ class A4MapLayer {
         return false;
     }
     
-
 
     spellCollision(spell:A4Object, caster:A4Object) : boolean
     {
@@ -318,14 +274,10 @@ class A4MapLayer {
     tileWidth:number;
     tileHeight:number;
 
-    elevation:number = 0;    // this indicates the elevation offset of the tiles in this layer (this is SHRDLU-specific)
+    elevation:number = 0;    // this indicates the elevation offset of the tiles in this layer
 
     graphicFiles:A4GraphicFile[] = [];
     gfs_startTile:number[] = [];
-    tiles:number[] = [];
     canDig:number[] = [];
-//    objects:A4Object[] = [];
-
-    glTiles:GLTile[] = null;
-    glTilesDark:GLTile[] = null;
+    tiles:A4MapTile[] = [];
 };

@@ -383,7 +383,7 @@ class A4Object {
 
             if (this.animations[this.currentAnimation]!=null) {
                 if (!this.animations[this.currentAnimation].update()) {
-                    if (this.previousSeeThrough != this.animations[this.currentAnimation].seeThrough()) {
+                    if (this.previousSeeThrough != this.animations[this.currentAnimation].seeThrough) {
                         //console.log("object " + this.name + " changed seeThrough from " + this.previousSeeThrough + " to " + !this.previousSeeThrough);
                         this.map.reevaluateVisibilityRequest();
                         this.previousSeeThrough = !this.previousSeeThrough;
@@ -616,7 +616,7 @@ class A4Object {
     {
         let a:A4Animation = this.animations[this.currentAnimation];
         if (a==null) return true;
-        return a.seeThrough();
+        return a.seeThrough;
     }
 
 

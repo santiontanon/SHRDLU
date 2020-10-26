@@ -204,15 +204,25 @@ class A4Game {
 
         // In a first pass, we just trigger loading all the images (since browser games load them asynchronously)
         // later in finishLoadingGame, the rest of the game is loaded...
-        for(let i:number = 0;i<tiles_xml.children.length;i++) {
-            let c:Element = tiles_xml.children[i];
-            let file:string = c.getAttribute("file");
+        for(let graphifile_xml of getElementChildrenByTag(tiles_xml, "graphicFile")) {
+            let file:string = graphifile_xml.getAttribute("file");
             let gf:A4GraphicFile = this.getGraphicFile(file);
             if (gf == null) {
                 gf = new A4GraphicFile(file, this.tileWidth, this.tileHeight, this.game_path, this.GLTM);
                 this.graphicFiles.push(gf);
+            } else {
+                console.error("Cannot find graphic file: " + file);
             }
         }
+        // for(let i:number = 0;i<tiles_xml.children.length;i++) {
+        //     let c:Element = tiles_xml.children[i];
+        //     let file:string = c.getAttribute("file");
+        //     let gf:A4GraphicFile = this.getGraphicFile(file);
+        //     if (gf == null) {
+        //         gf = new A4GraphicFile(file, this.tileWidth, this.tileHeight, this.game_path, this.GLTM);
+        //         this.graphicFiles.push(gf);
+        //     }
+        // }
     }
 
 
@@ -230,6 +240,16 @@ class A4Game {
     finishLoadingGame(saveGameXml:Element)
     {
         let tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
+        for(let tile_xml of getElementChildrenByTag(tiles_xml, "tile")) {
+            let tile:A4MapTile = A4MapTile.loadFromXML(tile_xml, this);
+            this.mapTiles[tile.ID] = tile;
+        }
+        for(let graphifile_xml of getElementChildrenByTag(tiles_xml, "graphicFile")) {
+            let file:string = graphifile_xml.getAttribute("file");
+            let gf:A4GraphicFile = this.getGraphicFile(file);
+            if (gf.tiles == null) gf.updateAfterLoaded();
+        }        
+        /*
         for(let idx:number = 0;idx<tiles_xml.children.length;idx++) {
             let c:Element = tiles_xml.children[idx];
             let file:string = c.getAttribute("file");
@@ -269,7 +289,7 @@ class A4Game {
             } else {
                 console.log("undefined tag inside of the tile definition: " + c.tagName);
             }
-        }
+        }*/
 
         // loading object types:
         {
@@ -316,6 +336,7 @@ class A4Game {
                 for(let i:number = 0;i<maps_xml.length;i++) {
                     let tmx:Element = maps_xml[i];
                     let map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    map.cacheDrawTiles();
                     this.maps.push(map);
                 }
             } else {
@@ -332,6 +353,7 @@ class A4Game {
                     xmlhttp.send();
                     tmx = xmlhttp.responseXML.documentElement;
                     let map:A4Map = new A4Map(tmx, this, objectsToRevisit_xml, objectsToRevisit_object);
+                    map.cacheDrawTiles();
                     this.maps.push(map);
                 }
             }
@@ -518,32 +540,37 @@ class A4Game {
                           " targetwidth=\""+this.tileWidth*this.defaultZoom+"\"" + 
                           " targetheight=\""+this.tileHeight*this.defaultZoom+"\">\n";
         for(let gf of this.graphicFiles) {
-            xmlString += "<types file=\"" + gf.name + "\">\n"
-            for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
-                for(let j:number = 0;j<gf.tilesPerRow;j++) {
-                    xmlString += gf.tileTypes[i+j] +",";
-                }
-                xmlString += "\n";
-            }
-            xmlString += "</types>\n";
+            xmlString += "<graphicFile file=\"" + gf.name + "\"/>\n"
+            // xmlString += "<types file=\"" + gf.name + "\">\n"
+            // for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
+            //     for(let j:number = 0;j<gf.tilesPerRow;j++) {
+            //         xmlString += gf.tileTypes[i+j] +",";
+            //     }
+            //     xmlString += "\n";
+            // }
+            // xmlString += "</types>\n";
 
-            xmlString += "<seeThrough file=\"" + gf.name + "\">\n"
-            for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
-                for(let j:number = 0;j<gf.tilesPerRow;j++) {
-                    xmlString += gf.tileSeeThrough[i+j] +",";
-                }
-                xmlString += "\n";
-            }
-            xmlString += "</seeThrough>\n";
+            // xmlString += "<seeThrough file=\"" + gf.name + "\">\n"
+            // for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
+            //     for(let j:number = 0;j<gf.tilesPerRow;j++) {
+            //         xmlString += gf.tileSeeThrough[i+j] +",";
+            //     }
+            //     xmlString += "\n";
+            // }
+            // xmlString += "</seeThrough>\n";
 
-            xmlString += "<canDig file=\"" + gf.name + "\">\n"
-            for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
-                for(let j:number = 0;j<gf.tilesPerRow;j++) {
-                    xmlString += gf.tileCanDig[i+j] +",";
-                }
-                xmlString += "\n";
-            }
-            xmlString += "</canDig>\n";
+            // xmlString += "<canDig file=\"" + gf.name + "\">\n"
+            // for(let i:number = 0;i<gf.n_tiles;i+=gf.tilesPerRow) {
+            //     for(let j:number = 0;j<gf.tilesPerRow;j++) {
+            //         xmlString += gf.tileCanDig[i+j] +",";
+            //     }
+            //     xmlString += "\n";
+            // }
+            // xmlString += "</canDig>\n";
+        }
+        for (let ID in this.mapTiles) {
+            let mp:A4MapTile = this.mapTiles[ID];
+            xmlString += mp.saveToXML();
         }
         
         xmlString+="</tiles>\n";
@@ -1615,6 +1642,7 @@ class A4Game {
   	objectFactory:A4ObjectFactory = null;
   	tileWidth:number = 16;
     tileHeight:number = 16;
+    mapTiles:{[ID:number] : A4MapTile } = {};
 
     // AI:
     ontology:Ontology = new Ontology();
