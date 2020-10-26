@@ -7,7 +7,6 @@ class PerceptionBufferRecord {
                 indirectID:string, indirectSort:Sort, 
                 x0:number, y0:number, x1:number, y1:number)
     {
-//        console.log(action.length);
         this.action = action;
         this.subjectID = subjectID;
         this.subjectSort = subjectSort;
@@ -81,7 +80,6 @@ class A4Map {
             let property:Element = properties_xmls[i];
             if (property.getAttribute("name") == "name") {
                 this.name = property.getAttribute("value");
-//                console.log("Map name is: " + this.name);
             } else if (property.getAttribute("name") == "pixels_per_meter") {
                 this.pixelsPerMeter = Number(property.getAttribute("value"));
             }
@@ -144,7 +142,6 @@ class A4Map {
                         this.layers[i].tiles[j] = game.mapTiles[Number(tile_xmls[j].getAttribute("gid")) - 1];
                     }
                 }
-                // console.log("Map layer loaded with " + tile_xmls.length + " tiles (out of " + (this.width * this.height) + ")");
             }
         }
 
@@ -168,7 +165,6 @@ class A4Map {
             for(let i:number = 0;i<onstarts_xml.length;i++) {
                 let onstart_xml:Element = onstarts_xml[i];
                 let tmp:A4ScriptExecutionQueue = null;
-//                let script_xml_l:NodeListOf<Element> = onstart_xml.children;
                 let script_xml_l:HTMLCollection = onstart_xml.children;
                 for(let j:number = 0;j<script_xml_l.length;j++) {
                     let script_xml:Element = script_xml_l[j];
@@ -214,7 +210,6 @@ class A4Map {
                 mb.ID = o_ID;
                 if (!isNaN(Number(o_ID)) &&
                     Number(o_ID) >= A4Object.s_nextID) A4Object.s_nextID = Number(o_ID)+1;
-//                console.log("Map:" + mb.name + " -> " + mb.ID + " (" + A4Object.s_nextID + ")");
             }
             return null;
         } else if (o_class == "BridgeDestination") {
@@ -225,7 +220,6 @@ class A4Map {
                 mb.ID = o_ID;
                 if (!isNaN(Number(o_ID)) &&
                     Number(o_ID) >= A4Object.s_nextID) A4Object.s_nextID = Number(o_ID)+1;
-//                console.log("Map:" + mb.name + " -> " + mb.ID + " (" + A4Object.s_nextID + ")");
             }
             return null;
         } else if (o_class == "Trigger") {
@@ -237,7 +231,6 @@ class A4Map {
             if (object_xml.getAttribute("repeat") == "true") once = false;
             let scripts_xmls:Element[] = getElementChildrenByTag(object_xml, "script");
             if (scripts_xmls != null && scripts_xmls.length>0) {
-//                let tmp:NodeListOf<Element> = scripts_xmls[0].children;
                 let tmp:HTMLCollection = scripts_xmls[0].children;
                 for(let i:number = 0;i<tmp.length;i++) {
                     let s:A4Script = A4Script.fromXML(tmp[i]);
@@ -251,14 +244,11 @@ class A4Map {
                 return null;
             }
             o.loadObjectAdditionalContent(object_xml, game, of, objectsToRevisit_xml, objectsToRevisit_object);
-            //if (o.isCharacter()) layer = A4_LAYER_CHARACTERS;
         }
-        //o.layer = layer;
         if (o_ID != null) {
             o.ID = o_ID;
             if (!isNaN(Number(o_ID)) &&
                 Number(o_ID) >= A4Object.s_nextID) A4Object.s_nextID = Number(o_ID)+1;
-//            console.log("Map:" + o.name + " -> " + o.ID + " (" + A4Object.s_nextID + ")");
         }
         return o;    
     }
@@ -396,16 +386,9 @@ class A4Map {
             }
         }
 
-/*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].update(game);
-        }
-*/
-
         // objects:
         let toDelete:A4Object[] = [];
         for(let o of this.objects) {
-//            if (this.cycle==0) console.log("Map "+this.name+" update cycle 0 of " + o.name);
             if (!o.update(game)) {
                 game.requestDeletion(o);
                 toDelete.push(o);
@@ -686,11 +669,6 @@ class A4Map {
 
 	removeObject(o:A4Object) : boolean
     {
-        /*
-        if (o.layer >= 0 && o.layer < A4_N_LAYERS) {
-            this.layers[o.layer].removeObject(o);
-        }
-        */
         let idx:number = this.objects.indexOf(o);
         if (idx>=0) {
             this.objects.splice(idx, 1);        
@@ -699,33 +677,16 @@ class A4Map {
         return false;
     }
 
-/*
-	removeObjectFromLayer(o:A4Object, layer:number)
-    {
-        this.layers[layer].removeObject(o);
-    }
-*/
-
-/*
-    void removePerceptionBuffersForObject(A4Object *o, bool actions, bool warps);
-*/
 
 	addObject(o:A4Object)//, layer:number)
     {
-//        this.layers[layer].addObject(o);
         this.objects.push(o);
-//        o.layer = layer;
         o.map = this;
     }
 
 
     contains(o:A4Object) : boolean
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            if (this.layers[i].contains(o)) return true;
-        }
-        */
         if (this.objects.indexOf(o)!=-1) return true;        
         return false;
     }
@@ -761,11 +722,6 @@ class A4Map {
 
     objectRemoved(o:A4Object)
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].objectRemoved(o);
-        }
-        */
         for(let o2 of this.objects) {
             o2.objectRemoved(o);
         }        
@@ -774,12 +730,6 @@ class A4Map {
 
     checkIfDoorGroupStateCanBeChanged(doorGroup:string, state:boolean, character:A4Character, map:A4Map, game:A4Game)
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            if (!this.layers[i].checkIfDoorGroupStateCanBeChanged(doorGroup, state, character, map, game)) return false;
-        }
-        return true;
-        */
         for(let o of this.objects) {
             if (o.isDoor()) {
                 let d:A4Door = <A4Door>o;
@@ -794,11 +744,6 @@ class A4Map {
 
     setDoorGroupState(doorGroup:string, state:boolean, character:A4Character, map:A4Map, game:A4Game)
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].setDoorGroupState(doorGroup, state, character, map, game);
-        }
-        */
         for(let o of this.objects) {
             if (o.isDoor()) {
                 let d:A4Door = <A4Door>o;
@@ -895,15 +840,6 @@ class A4Map {
         return this.walkableOnlyObjectsIgnoringObject(x,y, dx, dy, subject, toIgnore);
     }    
 
-    /*
-	walkable(x:number, y:number, dx:number, dy:number, subject:A4Object) : boolean
-    {
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            if (!this.layers[i].walkable(x,y,dx,dy, subject)) return false;
-        }        
-        return true;        
-    }
-    */
 
     walkableConsideringVehicles(x:number, y:number, dx:number, dy:number, subject:A4Object) : boolean
     {
@@ -911,32 +847,9 @@ class A4Map {
         let retobjects:boolean = true;
         for(let i:number = 0;i<this.layers.length;i++) {
             if (rettiles && !this.layers[i].walkableOnlyBackground(x,y,dx,dy, subject)) rettiles = false;
-//            if (retobjects && !this.layers[i].walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
         }
         if (rettiles && !this.walkableOnlyObjects(x,y,dx,dy, subject)) retobjects = false;
 
-        // if there is a vehicle, characters can always walk on them (unless there is a collision with an object):
-        /*
-        if (!rettiles && retobjects && subject.isCharacter()) {
-            let buffer:A4Object[] = this.getAllObjects(x, y, dx, dy);
-            for(let o of buffer) {
-                if (o!=subject && o.isVehicle() && (<A4Vehicle>o).isEmpty()) {
-                    // see if the vehicle covers all the area that was not walkable:
-                    for(let xoff:number = 0;xoff<dx;xoff+=granularityX) {
-                        for(let yoff:number = 0;yoff<dy;yoff+=granularityY) {
-                            if (!this.walkable(x+xoff,y+yoff,1,1,subject)) {
-                                if (!o.collision(x+xoff, y+yoff, 1, 1)) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-        */
-//        console.log(x+","+y+" with "+dx+","+dy+": " + rettiles + " - " + retobjects);
         return rettiles && retobjects;        
     }
 
@@ -944,9 +857,6 @@ class A4Map {
     getBridge(x:number, y:number) : A4MapBridge
     {
         for(let b of this.bridges) {
-    //        output_debug_message("A4Map::getBridge: comparing %i,%i to %i,%i-%i,%i\n",x,y,b->m_x,b->m_y,b->m_dx,b->m_dy);
-            //if (b.x<=x && b.x+b.width>x &&
-            //    b.y<=y && b.y+b.height>y) {
             if (b.x < x && b.x+b.width  > x &&
                 b.y < y && b.y+b.height > y) {
                 return b;
@@ -958,13 +868,6 @@ class A4Map {
 
 	getTakeableObject(x:number, y:number, dx:number, dy:number) : A4Object
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            let o:A4Object = this.layers[i].getTakeableObject(x,y,dx,dy);
-            if (o!=null) return o;
-        }
-        return null;
-        */
         for(let o of this.objects) {
             if (o.takeable && !o.burrowed && o.collision(x,y,dx,dy)) return o;
         }
@@ -974,13 +877,6 @@ class A4Map {
 
     getBurrowedObject(x:number, y:number, dx:number, dy:number) : A4Object
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            let o:A4Object = this.layers[i].getBurrowedObject(x,y,dx,dy);
-            if (o!=null) return o;
-        }
-        return null;
-        */
         for(let o of this.objects) {
             if (o.burrowed && o.collision(x,y,dx,dy)) return o;
         }
@@ -990,13 +886,6 @@ class A4Map {
 
 	getUsableObject(x:number, y:number, dx:number, dy:number) : A4Object
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            let o:A4Object = this.layers[i].getUsableObject(x,y,dx,dy);
-            if (o!=null) return o;
-        }
-        return null;
-        */
         for(let o of this.objects) {
             if (o.usable && !o.burrowed && o.collision(x,y,dx,dy)) return o;
         }
@@ -1006,13 +895,6 @@ class A4Map {
 
     getVehicleObject(x:number, y:number, dx:number, dy:number) : A4Object
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            let o:A4Object = this.layers[i].getVehicleObject(x,y,dx,dy);
-            if (o!=null) return o;
-        }
-        return null;
-        */
         for(let o of this.objects) {
             if (o.isVehicle() && o.collision(x,y,dx,dy)) return o;
         }
@@ -1051,11 +933,6 @@ class A4Map {
     getAllObjects(x:number, y:number, dx:number, dy:number) : A4Object[]
     {
         let l:A4Object[] = [];
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].getAllObjects(x, y, dx, dy, l);
-        }
-        */
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) l.push(o);
         }                
@@ -1066,11 +943,6 @@ class A4Map {
     getAllObjectsInRegion(x:number, y:number, dx:number, dy:number, region:number) : A4Object[]
     {
         let l:A4Object[] = [];
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].getAllObjectsInRegion(x, y, dx, dy, this, region, l);
-        }
-        */
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
                 let tx:number = Math.floor(o.x/this.tileWidth);
@@ -1086,11 +958,6 @@ class A4Map {
     getAllObjectsInRegionPlusDoorsAndObstacles(x:number, y:number, dx:number, dy:number, region:number) : A4Object[]
     {
         let l:A4Object[] = [];
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].getAllObjectsInRegion(x, y, dx, dy, this, region, l);
-        }
-        */
         for(let o of this.objects) {
             if (o.collision(x,y,dx,dy)) {
                 let tx:number = Math.floor(o.x/this.tileWidth);
@@ -1106,59 +973,9 @@ class A4Map {
         return l;
     }
 
-/*
-    chopTree(o:A4Character, tool:A4Object, game:A4Game, direction:number) : boolean
-    {
-        let x:number = o.x + direction_x_inc[direction];
-        let y:number = o.y + direction_y_inc[direction];
-        let dx:number = o.getPixelWidth();
-        let dy:number = o.getPixelHeight();
-        for(let i:number = 0;i<this.layers.length;i++) {
-            if (this.layers[i].chopTree(x,y,dx,dy)) {
-                tool.event(A4_EVENT_USE, o, this, game);
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    spellCollision(spell:A4Object, caster:A4Object) : boolean
-    {
-        for(let i:number = 0;i<this.layers.length;i++) {
-            if (this.layers[i].spellCollision(spell, caster)) return true;
-        }
-        return false;
-    }
-
-
-    spellCollisionArea(x:number, y:number, w:number, h:number, caster:A4Object) : boolean
-    {
-        for(let i:number = 0;i<this.layers.length;i++) {
-            if (this.layers[i].spellCollisionArea(x,y,w,h, caster)) return true;
-        }
-        return false;
-    }
-    */
-    
-
-/*
-    getObject(ID:number) : A4Object
-    {
-        for(let o2 of this.objects) {
-            if (o2.ID == ID) return o2;
-        }        
-        return null;
-    }
-*/
 
     triggerObjectsEvent(event:number, otherCharacter:A4Character, map:A4Map, game:A4Game)
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].triggerObjectsEvent(event,otherCharacter,map,game);
-        }
-        */
         for(let o of this.objects) {
             o.event(event,otherCharacter,map,game);
         }
@@ -1167,11 +984,6 @@ class A4Map {
 
     triggerObjectsEventWithID(event:number, ID:string, otherCharacter:A4Character, map:A4Map, game:A4Game)
     {
-        /*
-        for(let i:number = 0;i<A4_N_LAYERS;i++) {
-            this.layers[i].triggerObjectsEventWithID(event,ID,otherCharacter,map,game);
-        }
-        */
         for(let o of this.objects) {
             o.eventWithID(event,ID,otherCharacter,map,game);
         }

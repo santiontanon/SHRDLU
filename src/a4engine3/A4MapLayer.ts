@@ -148,13 +148,7 @@ class A4MapLayer {
         let tile_x2:number = Math.floor((x+dx-1)/this.tileWidth);
         let tile_y2:number = Math.floor((y+dy-1)/this.tileHeight);
         let tile:A4MapTile = null;
-        // let type:number;
-        // tile_y -= this.elevation;
-        // tile_y2 -= this.elevation;
         for(let i:number = tile_y;i<=tile_y2;i++) {
-            //if (i<0) return false;
-            //if (i>=this.height) return false;
-            // We let objects go through the edge of maps if there is no wall:
             if (i<0) continue;
             if (i>=this.height) continue;
             for(let j:number = tile_x;j<=tile_x2;j++) {
@@ -164,19 +158,6 @@ class A4MapLayer {
                 if (tile != null && !tile.walkable) {
                     return false;
                 } 
-
-                // if (tile>=0) {
-                //     for(let k:number = 0;k<this.graphicFiles.length;k++) {
-                //         if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-                //         type = this.graphicFiles[k].tileTypes[tile-this.gfs_startTile[k]];
-                //         if (type==A4_TILE_WALL ||
-                //             type==A4_TILE_TREE ||
-                //             type==A4_TILE_CHOPPABLE_TREE) return false;
-                //         if (!subject.canWalk && type == A4_TILE_WALKABLE) return false;
-                //         if (!subject.canSwim && type == A4_TILE_WATER) return false;
-                //         break;
-                //     }
-                // }
             }
         }          
         return true;
@@ -185,89 +166,13 @@ class A4MapLayer {
 	
     seeThrough(tilex:number, tiley:number) : boolean
     {
-        // tiley -= this.elevation;
-        // if (tiley<0) return true;
         let tile:A4MapTile = this.tiles[tilex+tiley*this.width];
         if (tile != null && !tile.seeThrough) {
             return false;
         } 
-
-        // if (tile>=0) {
-        //     for(let k:number = 0;k<this.graphicFiles.length;k++) {
-        //         if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-        //         if (this.graphicFiles[k].tileSeeThrough[tile-this.gfs_startTile[k]]!=0) return false;
-        //         break;
-        //     }
-        // }
-
         return true;    
     }
 
-    /*
-    chopTree(x:number, y:number, dx:number, dy:number) : boolean
-    {
-        if (x<0 || y<0) return false;
-        let tile_x:number = Math.floor(x/this.tileWidth);
-        let tile_y:number = Math.floor(y/this.tileHeight);
-        let tile_x2:number = Math.floor((x+dx-1)/this.tileWidth);
-        let tile_y2:number = Math.floor((y+dy-1)/this.tileHeight);
-        let tile:number;
-        for(let i:number = tile_y;i<=tile_y2;i++) {
-            if (i>=this.height) return false;
-            for(let j:number = tile_x;j<=tile_x2;j++) {
-                if (j>=this.width) return false;
-                tile = this.tiles[j+i*this.width];
-                if (tile>=0) {
-                    for(let k:number = 0;k<this.graphicFiles.length;k++) {
-                        if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-                        if (this.graphicFiles[k].tileTypes[tile-this.gfs_startTile[k]]==A4_TILE_CHOPPABLE_TREE) {
-                            this.tiles[j+i*this.width] = -1;
-                            this.glTiles[j+i*this.width] = null;
-                            return true;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    
-
-    spellCollision(spell:A4Object, caster:A4Object) : boolean
-    {
-        return this.spellCollisionArea(spell.x,spell.y,spell.getPixelWidth(),spell.getPixelHeight(),caster);
-    }
-
-
-    spellCollisionArea(x:number, y:number, dx:number, dy:number, caster:A4Object) : boolean
-    {
-        if (x<0 || y<0) return true;
-        let tile_x:number = Math.floor(x/this.tileWidth);
-        let tile_y = Math.floor(y/this.tileHeight);
-        let tile_x2 = Math.floor((x+dx-1)/this.tileWidth);
-        let tile_y2 = Math.floor((y+dy-1)/this.tileHeight);
-        for(let i:number = tile_y;i<=tile_y2;i++) {
-            if (i>=this.height) return true;
-            for(let j:number = tile_x;j<=tile_x2;j++) {
-                if (j>=this.width) return true;
-                let tile:number = this.tiles[j+i*this.width];
-                if (tile>=0) {
-                    for(let k:number = 0;k<this.graphicFiles.length;k++) {
-                        if (k<this.graphicFiles.length-1 && tile>=this.gfs_startTile[k+1]) continue;
-                        let type:number = this.graphicFiles[k].tileTypes[tile-this.gfs_startTile[k]];
-                        if (type!=A4_TILE_WALKABLE &&
-                            type!=A4_TILE_WATER) return true;
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        return false;
-    }
-    */
 
 	width:number;
     height:number;
