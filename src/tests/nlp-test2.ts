@@ -1540,6 +1540,10 @@ NLParseTestUnifyingListener("you are friends with qwerty", o.getSort("performati
 NLParseTestUnifyingListener("the station has oxygen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], verb.have('location-aurora-station'[#id], 'oxygen'[oxygen]))");
 NLParseTestUnifyingListener("the station does not have oxygen", o.getSort("performative"),  context, 'etaoin', "perf.inform(V0:'etaoin'[#id], #not(verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])))");
 
+// For version 3.7:
+NLParseTestUnifyingListener("leave the ship on the floor", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("drop the ship on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("leave the ship on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], 'room1'[#id]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
