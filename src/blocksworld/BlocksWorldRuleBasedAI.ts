@@ -735,7 +735,10 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			if (action.functor.is_a_string("action.take") && action.attributes.length==2) {
 				let target:TermAttribute = action.attributes[1];
 				predicates.push(new PlanningPredicate(Term.fromString("verb.hold('"+this.selfID+"'[#id], "+target+")", this.o), true));
-			} else if (action.functor.is_a_string("action.put-in") && action.attributes.length==3 &&
+			} else if ((action.functor.is_a_string("action.put-in") ||
+				 	    action.functor.is_a_string("action.drop") ||
+				 	    action.functor.is_a_string("verb.leave")) && 
+					   action.attributes.length==3 &&
 					   (action.attributes[2] instanceof ConstantTermAttribute)) {
 				let o1:TermAttribute = action.attributes[1];
 				let o2:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[2];

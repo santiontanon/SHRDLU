@@ -11,6 +11,9 @@ class BWPutIn_IntentionAction extends IntentionAction {
 	canHandle(intention:Term, ai:RuleBasedAI) : boolean
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.put-in"))) return true;
+		if ((intention.functor.is_a(ai.o.getSort("action.drop")) ||
+		     intention.functor.is_a(ai.o.getSort("verb.leave"))) &&
+			intention.attributes.length == 3) return true;
 		return false;
 	}
 
