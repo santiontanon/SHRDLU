@@ -564,7 +564,7 @@ class NLParser {
 				output.addAttribute(replacement);
 			} else {
 				if (term.attributes[j] instanceof TermTermAttribute) {
-					output.addAttribute(new TermTermAttribute((<TermTermAttribute>term.attributes[j]).term.clone(map)));
+					output.addAttribute(new TermTermAttribute((<TermTermAttribute>term.attributes[j]).term.cloneKeepingVariables(map)));
 				} else {
 					output.addAttribute(term.attributes[j]);
 				}

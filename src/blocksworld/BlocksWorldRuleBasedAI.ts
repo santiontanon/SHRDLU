@@ -144,54 +144,62 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
         	}
         }
 
-        // planning:
-        let toDelete:PlanningRecord[] = [];
-        for(let pr of this.planningProcesses) {
-        	if (pr.step()) {
-    			toDelete.push(pr);
+        // planning (only if we are not executing any plans, otherwise, we wait until we are done executing):
+        if (this.plans.length == 0 && this.intentions.length == 0 && this.queuedIntentions.length == 0) {
+	        let toDelete:PlanningRecord[] = [];
+	        for(let pr of this.planningProcesses) {
+	        	if (pr.step()) {
+	    			toDelete.push(pr);
 
-        		// get the plan and execute it:
-        		if (pr.plan == null) {
-        			// generate error message:
-        			if (pr.requester != null) {
-						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest("+pr.requester+"))", this.o);
-						this.intentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
-					}
-        		} else {
-        			if (pr.requester != null) {
-						let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok("+pr.requester+"))", this.o);
-						this.intentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
-					}
-        			this.plans.push(pr);
-        		}
-        	}
-        }
-        for(let pr of toDelete) {
-        	this.planningProcesses.splice(this.planningProcesses.indexOf(pr), 1);
-        }
+	        		// get the plan and execute it:
+	        		if (pr.plan == null) {
+	        			// generate error message:
+	        			if (pr.requester != null) {
+							let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest("+pr.requester+"))", this.o);
+							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+						}
+	        		} else {
+	        			if (pr.requester != null) {
+							let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok("+pr.requester+"))", this.o);
+							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+						}
+						console.log("pushing plan:\n" + pr.plan);
+	        			this.plans.push(pr);
+	        		}
+	        	}
+	        	break;	// only plan for the first plan
+	        }
+	        for(let pr of toDelete) {
+	        	this.planningProcesses.splice(this.planningProcesses.indexOf(pr), 1);
+	        }
+	    }
 
-        // execute plans:
-        toDelete = [];
-        for(let pr of this.plans) {
-        	let plan:PlanningPlan = pr.plan;
+        // execute plans (only the first):
+        {
+	        let toDelete:PlanningRecord[] = [];
+	        for(let pr of this.plans) {
+	        	let plan:PlanningPlan = pr.plan;
 
-        	// execute the plan:
-        	if (this.isIdleWithoutConsideringPlanExecution()) {
-        		if (pr.planExecutionPointer >= plan.actions.length) {
-        			// we are done!
-        			toDelete.push(pr);
-        		} else {
-        			let action:Term = plan.actions[pr.planExecutionPointer].signature;
-        			pr.planExecutionPointer++;
-        			// we set the requester to null, so that we don't constantly say "ok" after each action
-        			this.intentions.push(new IntentionRecord(action, null, 
-        													 pr.requestingPerformative, null, this.time_in_seconds));
-        		}
-        	}
-        }
-        for(let pr of toDelete) {
-        	this.plans.splice(this.plans.indexOf(pr), 1);
-        }
+	        	// execute the plan:
+	        	if (this.isIdleWithoutConsideringPlanExecution()) {
+	        		if (pr.planExecutionPointer >= plan.actions.length) {
+	        			// we are done!
+	        			toDelete.push(pr);
+	        		} else {
+	        			let action:Term = plan.actions[pr.planExecutionPointer].signature;
+	        			pr.planExecutionPointer++;
+	        			// we set the requester to null, so that we don't constantly say "ok" after each action
+	        			this.intentions.push(new IntentionRecord(action, null, 
+	        													 pr.requestingPerformative, null, this.time_in_seconds));
+	        		}
+	        	}
+
+	        	break;	// execute only one plan at a time
+	        }
+	        for(let pr of toDelete) {
+	        	this.plans.splice(this.plans.indexOf(pr), 1);
+	        }
+	    }
 	}	
 
 
@@ -628,7 +636,6 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (this.queuedIntentions.length > 0) return false;
 		if (this.currentInferenceProcess != null || this.queuedInferenceProcesses.length > 0) return false;
 		if (this.currentActionHandler != null) return false;
-		if (this.planningProcesses.length > 0) return false;
 		return true;
 	}
 
@@ -747,6 +754,12 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				} else {
 					predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+","+o2+")", this.o), true));
 				}
+			} else if ((action.functor.is_a_string("action.drop") ||
+				 	    action.functor.is_a_string("verb.leave")) && 
+					   action.attributes.length==2 &&
+					   (action.attributes[1] instanceof ConstantTermAttribute)) {
+				let o1:TermAttribute = action.attributes[1];
+				predicates.push(new PlanningPredicate(Term.fromString("verb.hold('shrdlu'[#id], "+o1+")", this.o), false));
 			} else {
 				// unsupported action, just execute directly without planning:
 				this.intentions.push(ir);
@@ -771,7 +784,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			goal.number_constraint = numberConstraint;
 		} else {
 			// unsupported number constraint, just execute directly without planning:
-			this.intentions.push(ir);
+			this.queuedIntentions.push(ir);
 			return;
 		}
 

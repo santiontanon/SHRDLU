@@ -1544,6 +1544,10 @@ NLParseTestUnifyingListener("the station does not have oxygen", o.getSort("perfo
 NLParseTestUnifyingListener("leave the ship on the floor", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("drop the ship on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("leave the ship on the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id], 'room1'[#id]))");
+NLParseTestUnifyingListener("take everything", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), object(X), [all])");
+NLParseTestUnifyingListener("put everything into the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, 'room1'[#id]), #and(object(X), !=(X, 'room1'[#id])), [all])");
+NLParseTestUnifyingListener("put all keys in rooms", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.put-in(V0, '6'[#id], X), room(X), N:[number.1]),perf.request.action(V0, action.put-in(V0, '4'[#id], X), room(X), N))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

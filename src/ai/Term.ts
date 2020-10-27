@@ -140,8 +140,9 @@ abstract class TermAttribute {
 
     abstract applyBindings_internal(bindings:Bindings, map:[Term, TermAttribute][]) : TermAttribute
 
-
     abstract clone(map:[TermAttribute,TermAttribute][]) : TermAttribute;
+
+    abstract cloneKeepingVariables(map:[TermAttribute,TermAttribute][]) : TermAttribute;
 
 
     toString() :string
@@ -207,6 +208,10 @@ class ConstantTermAttribute extends TermAttribute {
         return this;    // this is a constant, no need to clone
     }
 
+    cloneKeepingVariables(map:[TermAttribute,TermAttribute][]) : TermAttribute
+    {
+        return this;    // this is a constant, no need to clone
+    }
 
     toStringInternal(variables:TermAttribute[], variableNames:string[]) : string
     {
@@ -282,6 +287,12 @@ class VariableTermAttribute extends TermAttribute {
     }
 
 
+    cloneKeepingVariables(map:[TermAttribute,TermAttribute][]) : TermAttribute
+    {
+        return this;
+    }
+
+
     toStringInternal(variables:TermAttribute[], variableNames:string[]) : string
     {
 //        if (this.name != null) return this.name + ":[" + this.sort.name + "]";
@@ -335,6 +346,17 @@ class TermTermAttribute extends TermAttribute {
             if (v1 == this) return v2;
         }
         let v:TermTermAttribute = new TermTermAttribute(this.term.clone(map));
+        map.push([this, v]);
+        return v;
+    }
+
+
+    cloneKeepingVariables(map:[TermAttribute,TermAttribute][]) : TermAttribute
+    {
+        for(let [v1,v2] of map) {
+            if (v1 == this) return v2;
+        }
+        let v:TermTermAttribute = new TermTermAttribute(this.term.cloneKeepingVariables(map));
         map.push([this, v]);
         return v;
     }
@@ -1069,6 +1091,16 @@ class Term {
         let attributes:TermAttribute[] = [];
         for(let a of this.attributes) {
             attributes.push(a.clone(map));
+        }
+        return new Term(this.functor, attributes);
+    }
+
+
+    cloneKeepingVariables(map:[TermAttribute,TermAttribute][]) : Term
+    {
+        let attributes:TermAttribute[] = [];
+        for(let a of this.attributes) {
+            attributes.push(a.cloneKeepingVariables(map));
         }
         return new Term(this.functor, attributes);
     }

@@ -13,7 +13,8 @@ class BWPutIn_IntentionAction extends IntentionAction {
 		if (intention.functor.is_a(ai.o.getSort("action.put-in"))) return true;
 		if ((intention.functor.is_a(ai.o.getSort("action.drop")) ||
 		     intention.functor.is_a(ai.o.getSort("verb.leave"))) &&
-			intention.attributes.length == 3) return true;
+			(intention.attributes.length == 3 ||
+			 intention.attributes.length == 2)) return true;
 		return false;
 	}
 
@@ -28,6 +29,7 @@ class BWPutIn_IntentionAction extends IntentionAction {
 		let denyrequestCause:Term = null;
 
 		for(let intention of alternative_actions) {
+			if (intention.attributes.length != 3) continue;
 			let objectID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 			let destinationID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
 			let objectToPut:ShrdluBlock = null;

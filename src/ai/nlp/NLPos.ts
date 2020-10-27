@@ -708,6 +708,7 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("someone else", "pronoun.anyone.else", Term.fromString("indefinite-pronoun('pronoun.anyone.else'[symbol],[grammatical-number],[gender],[third-person])", o), 1.0));
 
     this.addTokenPOS(new PartOfSpeech("nothing", "nothing", Term.fromString("nothing('nothing'[symbol],[singular],[gender],[third-person])", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("everything", "everything", Term.fromString("everything('everything'[symbol],[singular],[gender],[third-person])", o), 1.0));
 
     // prepositions:
 /*
@@ -1882,8 +1883,10 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","over", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","onto", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on top of", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","at", "put","puts","put","put","putting", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","into", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","in", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);

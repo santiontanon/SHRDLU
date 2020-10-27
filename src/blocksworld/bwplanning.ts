@@ -356,6 +356,7 @@ class BWPlannerState {
 
 	isOnTopOf(o1:number, o2:number) : boolean
 	{
+		if (o1 == null || o2 == null) return false;
 		if (o1 == o2) return false;
 		if (this.x[o1]+this.bw.objects[o1].dx > this.x[o2] && this.x[o2]+this.bw.objects[o2].dx > this.x[o1] &&
 			this.y[o1] == this.y[o2]+this.bw.objects[o2].dy &&
@@ -368,6 +369,7 @@ class BWPlannerState {
 
 	isInsideOf(o1:number, o2:number) : boolean
 	{
+		if (o1 == null || o2 == null) return false;
 		if (o1 == o2) return false;
 		if (this.collide(o1, o2)) {
 			// they overlap:
@@ -382,6 +384,7 @@ class BWPlannerState {
 
 	collide(o1:number, o2:number): boolean
 	{
+		if (o1 == null || o2 == null) return false;
 		if (this.x[o1]+this.bw.objects[o1].dx > this.x[o2] && this.x[o2]+this.bw.objects[o2].dx > this.x[o1] &&
 			this.y[o1]+this.bw.objects[o1].dy > this.y[o2] && this.y[o2]+this.bw.objects[o2].dy > this.y[o1] &&
 			this.z[o1]+this.bw.objects[o1].dz > this.z[o2] && this.z[o2]+this.bw.objects[o2].dz > this.z[o1]) {

@@ -5242,8 +5242,21 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		  definite-article('all'[symbol], [plural]) ['the'] noun(NOUN, [plural])
     		   		  #token(PREP)
     		   		 )
-    		   		 nounPhrase(X4, N4, P4, C4)
+    		   		 nounPhrase(X4, [singular], P4, C4)
     		   		 #derefFromContext(C4, OBJ4)"
+    		   priority="200"/>
+
+    <NLPattern name="action-phrasal2-all-noun-in-pluralnoun"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJ1, V), #cons(NOUN2, V), [number.1])"
+    		   body="phrasal-verb(VERB, N, [second-person], T, PREP)
+    		   		 (#token(PREP)
+    		   		  definite-article('all'[symbol], [plural]) ['the'] noun(NOUN1, [plural])
+    		   		  |
+    		   		  definite-article('all'[symbol], [plural]) ['the'] noun(NOUN1, [plural])
+    		   		  #token(PREP)
+    		   		 )
+    		   		 noun(NOUN2, [plural])
+    		   		 #derefFromContext(#and(the(NOUN1, N1:[plural]), noun(NOUN1, N1)), OBJ1)"
     		   priority="200"/>
 
     <NLPattern name="action-phrasal2-noun-in-all-noun"
@@ -5668,6 +5681,25 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		          verb('verb.go'[symbol], N, P, [present-tense])|
     		          verb('verb.walk'[symbol], N, P, [present-tense]))
     		         ('this' 'way'|'my' 'way'|['in'] 'this' 'direction'|['in'] 'my' 'direction')"/>
+
+    <NLPattern name="action-verb-everything"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, X), object(X), [all])"
+    		   body="verb(VERB, N, P, [present-tense])
+    		         ('everything'|'every' 'thing')"/>
+
+    <NLPattern name="action-phrasalverb-everything"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, X), object(X), [all])"
+    		   body="phrasal-verb(VERB, N, P, [present-tense],PREP)
+    		         ('everything'|'every' 'thing')
+    		         #token(PREP)"/>
+
+    <NLPattern name="action-phrasalverb-everything-obj"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, X, OBJECT2), #and(object(X), !=(X, OBJECT2)), [all])"
+    		   body="phrasal-verb(VERB, N, P, [present-tense],PREP)
+    		         ('everything'|'every' 'thing')
+    		         #token(PREP)
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         #derefFromContext(C2, OBJECT2)"/>
 
     <!-- get out of here / get out, etc. rule -->
     <NLPattern name="action-get-out"

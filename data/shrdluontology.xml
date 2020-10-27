@@ -127,6 +127,7 @@
     <sort name="pronoun.something" super="indefinite-pronoun"/>    
     <sort name="pronoun.anything" super="indefinite-pronoun"/>
     <sort name="nothing" super="pronoun"/>    
+    <sort name="everything" super="pronoun"/>    
 
     <sort name="preposition" super="part-of-speech"/>    
     <sort name="numeral" super="part-of-speech"/>    
