@@ -3,6 +3,7 @@ class A4IntentionActionFactory extends IntentionActionFactory {
 	{	
 		if (xml.getAttribute("type") == "A4AnswerHow_IntentionAction") return A4AnswerHow_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "A4AnswerWhere_IntentionAction") return AnswerWhere_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "A4Locate_IntentionAction") return A4Locate_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinHelp_IntentionAction") return EtaoinHelp_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinClose_IntentionAction") return EtaoinClose_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinOpen_IntentionAction") return EtaoinOpen_IntentionAction.loadFromXML(xml, ai);

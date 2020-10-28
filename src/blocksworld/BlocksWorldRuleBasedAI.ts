@@ -46,6 +46,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				rulesFileNames:string[])
 	{
 		super(o, nlp, pf, pfoffset, qpt);
+		this.perceptionFrequency = 0;
 		this.world = world;
 		this.app = app;
 		this.selfID = "shrdlu";
@@ -71,6 +72,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new BWTake_IntentionAction());
 	    this.intentionHandlers.push(new BWPutIn_IntentionAction());
 	    this.intentionHandlers.push(new BWPutUnder_IntentionAction());
+	    this.intentionHandlers.push(new BWLocate_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {

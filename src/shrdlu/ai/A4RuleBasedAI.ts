@@ -21,6 +21,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new AnswerHearSee_IntentionAction());
 	    this.intentionHandlers.push(new AnswerWhere_IntentionAction());
 	    this.intentionHandlers.push(new AnswerDistance_IntentionAction());
+	    this.intentionHandlers.push(new A4Locate_IntentionAction());
 
 		this.locationsWherePlayerIsNotPermitted.push("location-as4");	// bedroom 1
 		this.locationsWherePlayerIsNotPermitted.push("location-as5");	// bedroom 2

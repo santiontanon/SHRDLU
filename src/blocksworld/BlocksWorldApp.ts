@@ -144,6 +144,7 @@ class BlocksWorldApp {
         for(let ke of k.keyevents) this.textInputEvent(ke);
 
         if (k.key_press(KEY_CODE_RETURN)) {
+            this.shrdlu.update(this.time);
             if (this.textInputSubmit()) {
                 return STATE_SHRDLU_ACTING;
             }

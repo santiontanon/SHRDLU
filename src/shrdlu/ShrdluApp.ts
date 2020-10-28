@@ -625,7 +625,7 @@ class ShrdluApp {
                                             app.titlescreen_timer = 0;
                                             app.ingame_menu = 0;
                                             app.quit_request = false;
-                                            app.game = new ShrdluA4Game(gamexml, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, "female", this);
+                                            app.game = new ShrdluA4Game(gamexml, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, "female", app);
                                             app.game.finishLoadingGame(xml.documentElement);
                                        });
                             } else {
@@ -705,7 +705,7 @@ class ShrdluApp {
             if (this.titlescreen_timer>SHRDLU_FADEIN_TIME) {
                 BInterface.reset();
 
-                app.game = new ShrdluA4Game(app.gameDefinition, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, this.titlescreen_requested_gender, this);
+                app.game = new ShrdluA4Game(app.gameDefinition, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, this.titlescreen_requested_gender, app);
                 app.game.finishLoadingGame(null);
                 if (this.writeLogsToServer) assignNewSessionID(app.game);
 

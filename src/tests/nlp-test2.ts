@@ -1547,7 +1547,9 @@ NLParseTestUnifyingListener("leave the ship on the kitchen", o.getSort("performa
 NLParseTestUnifyingListener("take everything", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], X), object(X), [all])");
 NLParseTestUnifyingListener("put everything into the kitchen", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, 'room1'[#id]), #and(object(X), !=(X, 'room1'[#id])), [all])");
 NLParseTestUnifyingListener("put all keys in rooms", o.getSort("performative"),  context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], action.put-in(V0, '6'[#id], X), room(X), N:[number.1]),perf.request.action(V0, action.put-in(V0, '4'[#id], X), room(X), N))");
-
+NLParseTestUnifyingListener("find a cube", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), cube(X), [number.1])");
+NLParseTestUnifyingListener("find an object on a cube", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(object(X), #and(space.directly.on.top.of(X, Y), cube(Y))), [number.1])");
+NLParseTestUnifyingListener("find an object on a red cube", o.getSort("performative"),  context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(object(X), #and(space.directly.on.top.of(X, Y), #and(color(Y,'red'[red]), cube(Y)))), [number.1])");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

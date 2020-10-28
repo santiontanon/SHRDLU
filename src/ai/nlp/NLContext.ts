@@ -241,7 +241,7 @@ class NLContextPerformative {
 	addMentionToPerformative(id:string, o:Ontology)
 	{
 		if (id == null) return;
-		this.IDsInPerformative(o);
+		this.IDsInPerformative(o);	// make sure we have calculated the IDs in the performative
 		for(let id2 of this.IDs) {
 			if ((id2 instanceof ConstantTermAttribute) &&
 				(<ConstantTermAttribute>id2).value == id) {
@@ -258,6 +258,8 @@ class NLContextPerformative {
 			let idx:number = this.context.mentions.indexOf(ce);
 			if (idx != -1) this.context.mentions.splice(idx,1);
 			this.context.mentions.unshift(ce);
+		} else {
+			console.error("addMentionToPerformative: could not create NLContextEntity!");
 		}
 	}
 

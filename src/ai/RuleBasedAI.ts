@@ -450,12 +450,12 @@ class RuleBasedAI {
 
 		// 1) Attention & Perception:
 		if (this.currentInferenceProcess == null) {
-			if ((timeStamp%this.perceptionFrequency) == this.perceptionFrequencyOffset) {
+			if (this.perceptionFrequency == 0 || (timeStamp%this.perceptionFrequency) == this.perceptionFrequencyOffset) {
 				this.attentionAndPerception();
 			}
 		} else {
 			// during inference, do less perception to free up some CPU:
-			if ((timeStamp%(this.perceptionFrequency*2)) == this.perceptionFrequencyOffset) {
+			if (this.perceptionFrequency == 0 || (timeStamp%(this.perceptionFrequency*2)) == this.perceptionFrequencyOffset) {
 				this.attentionAndPerception();
 			}
 		}

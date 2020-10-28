@@ -5384,7 +5384,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         nounPhrase(X3, N3, P3, CO) 
     		         #derefQuery(CO, V, QUERY)"/>
 
-    <NLPattern name="action-verb-query-query"
+    <NLPattern name="action-phrasalverb-query-query"
     		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, QUERY_VARIABLE3, QUERY_VARIABLE4), #and(QUERY3, QUERY4), [number.1])"
     		   body="phrasal-verb(VERB, N2, [second-person], [present-tense], PREP)
     		         nounPhrase(X3, N3, P3, C3)
@@ -5393,7 +5393,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefQuery(C3, QUERY_VARIABLE3, QUERY3)
     		         #derefQuery(C4, QUERY_VARIABLE4, QUERY4)"/>
 
-     <NLPattern name="action-verb-query-np"
+     <NLPattern name="action-phrasalverb-query-np"
     		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, QUERY_VARIABLE3, OBJECT4), QUERY3, [number.1])"
     		   body="phrasal-verb(VERB, N2, [second-person], [present-tense], PREP)
     		         nounPhrase(X3, N3, P3, C3)
@@ -5701,6 +5701,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         nounPhrase(X2, [singular], P2, C2)
     		         #derefFromContext(C2, OBJECT2)"/>
 
+    <!--NLPattern name="action-verb-a-...."
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, X, OBJECT2), #and(object(X), !=(X, OBJECT2)), [all])"
+    		   body="phrasal-verb(VERB, N, P, [present-tense],PREP)
+    		         ('everything'|'every' 'thing')
+    		         #token(PREP)
+    		         nounPhrase(X2, [singular], P2, C2)
+    		         #derefFromContext(C2, OBJECT2)"/-->
+
     <!-- get out of here / get out, etc. rule -->
     <NLPattern name="action-get-out"
     		   head="perf.request.action.internal(LISTENER, verb.go(LISTENER, [space.away]))"
@@ -5786,6 +5794,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 nounPhrase(X3, N3, P3, C3)
     		         #derefQuery(C2, V, QUERY)
     		         #derefQuery(C3, V2, QUERY2)"/>
+
+    <NLPattern name="action-verb-query-prep-query"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, V), #and(QUERY2, #and(#cons(PREP, V, V2), QUERY3)), [number.1])"
+    		   body="verb(VERB, N, P, T)
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 preposition(PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		         #derefQuery(C2, V, QUERY2)
+    		         #derefQuery(C3, V2, QUERY3)"/>
 
 	<!-- requests involving alternatives -->
     <NLPattern name="action-verb-query-or-query"
