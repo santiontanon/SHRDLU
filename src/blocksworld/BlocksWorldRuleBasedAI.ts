@@ -70,6 +70,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new BWAnswerWhere_IntentionAction());
 	    this.intentionHandlers.push(new BWTake_IntentionAction());
 	    this.intentionHandlers.push(new BWPutIn_IntentionAction());
+	    this.intentionHandlers.push(new BWPutUnder_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
@@ -754,6 +755,12 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				} else {
 					predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+","+o2+")", this.o), true));
 				}
+			} else if (action.functor.is_a_string("action.put-under") && 
+					   action.attributes.length==3 &&
+					   (action.attributes[2] instanceof ConstantTermAttribute)) {
+				let o1:TermAttribute = action.attributes[1];
+				let o2:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[2];
+				predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o2+","+o1+")", this.o), true));
 			} else if ((action.functor.is_a_string("action.drop") ||
 				 	    action.functor.is_a_string("verb.leave")) && 
 					   action.attributes.length==2 &&
