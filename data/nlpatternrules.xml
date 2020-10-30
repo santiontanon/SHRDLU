@@ -1399,7 +1399,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
-			   		 'tell' 'me' 'if'
+			   		 [('would'|'could') 'you'] ['please'] 'tell' 'me' 'if'
 			   		 'the' noun(PROPERTY, PN) 'of'
 			   		 nounPhrase(X2, N2, P2, C2) 
 			   		 verb('verb.be'[symbol], N, P, T)
@@ -1472,6 +1472,28 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"
 			   priority="150"/>
+	<NLPattern name="q.predicate-be-obj-prep-obj2"
+		       head="perf.q.predicate(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [('would'|'could') 'you'] ['please'] 'tell' 'me' 'if'
+			   		 nounPhrase(X, N, P, C)
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>
+	<NLPattern name="q.predicate-be-obj-prep-obj3"
+		       head="perf.q.predicate(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 'do' 'you' 'know' 'if'
+			   		 nounPhrase(X, N, P, C)
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C2, OBJECT)"/>			   		 
 	<NLPattern name="q.predicate-was-obj-prep-obj"
 		       head="perf.q.predicate(LISTENER, #and(PRED:#cons(PREPOSITION, SUBJECT, OBJECT), time.past(PRED)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2506,7 +2528,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 ('!'|'?')* 
     		   		 #derefFromContext(#and(#cons(DETERMINER, X:'object'[object], [singular]), noun(X,[singular])), SUBJECT)"/> 
 
-    <NLPattern name="q.predicate-do-i-verb-object"
+    <NLPattern name="q.predicate-do-obj-verb-object"
     		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -2518,6 +2540,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 ('!'|'?')* 
     		   		 #derefFromContext(C2, SUBJECT)
     		   		 #derefFromContext(C3, OBJECT)"/> 
+    <NLPattern name="q.predicate-do-obj-verb-object2"
+    		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
+			   		 [('would'|'could') 'you'] ['please'] 'tell' 'me' 'if'
+			   		 nounPhrase(X2, [singular], P2, C2)
+			   		 verb(VERB, N, P, [present-tense]) #symbolToSort(VERB, VERB_SYMBOL:[relation-verb])
+			   		 nounPhrase(X3, N3, P3, C3)
+    		   		 ('!'|'?')* 
+    		   		 #derefFromContext(C2, SUBJECT)
+    		   		 #derefFromContext(C3, OBJECT)"/>     		   		 
     <NLPattern name="q.predicate-do-i-verb-object-past"
     		   head="perf.q.predicate(LISTENER, #and(V:#cons(VERB, SUBJECT, OBJECT), time.past(V)))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2752,6 +2786,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 adjective(ADJ)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
+
+	<!--NLPattern name="q.predicate-obj-relation=obj"
+			   head="perf.q.predicate(LISTENER, space.at(SPEAKER, LOCATION))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'this'
+			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')*
+			   		 #derefFromContext(#and(adjective(X2, 'space.location'[space.location]), C2), LOCATION)"/-->
+
 
 	<!-- Passive voice question: -->
     <NLPattern name="q.predicate-passive"
