@@ -21,7 +21,8 @@ class ShrdluA4Game extends A4Game {
 
     constructor(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager, a_sfx_volume:number, gender:string, app:ShrdluApp)
     {
-        super(xml, game_path, ontology_path, GLTM, SFXM, new ShrdluA4ObjectFactory(), a_sfx_volume, gender);
+        super(xml, game_path, ontology_path, GLTM, SFXM, new ShrdluA4ObjectFactory(), a_sfx_volume);
+        this.playerGender = gender;
         this.in_game_seconds = SHRDLU_START_DATE;
         this.app = app;
 
@@ -110,18 +111,21 @@ class ShrdluA4Game extends A4Game {
     loadContentFromXML(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager)
     {
         this.serverToken = xml.getAttribute("serverToken") || '';
-
-        if (xml.getAttribute("playerGender") != null) {
-          this.playerGender = xml.getAttribute("playerGender");
-        }
-
     	  super.loadContentFromXML(xml, game_path, ontology_path, GLTM, SFXM);
     }
+
 
     // if "saveGameXml" is != null, this is a call to restore from a save state
     finishLoadingGame(saveGameXml:Element)
     {
         // overwrite spawned characters:
+        if (this.playerGender == null) {
+          // if no player gender specified, read it from the xml file:
+          for(let variable_xml of getElementChildrenByTag(this.xml, "variable")) {
+              let vname:string = variable_xml.getAttribute("name");
+              if (vname == "playerGender") this.playerGender = variable_xml.getAttribute("value");
+          }        
+        }
         let players_xml:Element[] = getElementChildrenByTag(this.xml, "player");
         for(let i:number = 0;i<players_xml.length;i++) {
             let player_xml:Element = players_xml[i];
@@ -258,7 +262,7 @@ class ShrdluA4Game extends A4Game {
 
     saveGame(saveName:string)
     {
-    	super.saveGame(saveName);
+      	super.saveGame(saveName);
         let complete_xmlString:string = "<SHRDLU_savegame>\n";
         let xmlString:string = this.saveToXML();
         console.log("A4Game.saveGame: game xmlString length " + xmlString.length);
@@ -324,7 +328,8 @@ class ShrdluA4Game extends A4Game {
             xmlString += "<varuable name=\"communicatorConnectionTime\" value=\"" + this.communicatorConnectionTime + "\"/>\n";
         }
 
-        // game variables:
+        // game variables
+        xmlString += "<variable name=\"playerGender\" value=\""+this.playerGender+"\"/>\n";
         xmlString += "<variable name=\"textInputAllowed\" value=\""+this.textInputAllowed+"\"/>\n";
         xmlString += "<variable name=\"eyesClosedState\" value=\""+this.eyesClosedState+"\"/>\n";
         xmlString += "<variable name=\"eyesClosedTimer\" value=\""+this.eyesClosedTimer+"\"/>\n";
@@ -1376,6 +1381,7 @@ class ShrdluA4Game extends A4Game {
     map_location_names:string[][];
     additional_location_connects:[string,string][] = [];
 
+    playerGender: string = null;
     suit_oxygen:number = SHRDLU_MAX_SPACESUIT_OXYGEN;
     comm_tower_repaired:boolean = false;
     rooms_with_lights:string[] = [];

@@ -119,10 +119,9 @@ class WarpRequest {
 
 
 class A4Game {
-    constructor(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager, a4of:A4ObjectFactory, a_sfx_volume:number, gender:string)
+    constructor(xml:Element, game_path:string, ontology_path:string, GLTM:GLTManager, SFXM:SFXManager, a4of:A4ObjectFactory, a_sfx_volume:number)
     {
         this.objectFactory = a4of;
-        this.playerGender = gender;
         this.loadContentFromXML(xml, game_path, ontology_path, GLTM, SFXM);
         this.sfx_volume = a_sfx_volume;
     }
@@ -659,7 +658,6 @@ class A4Game {
         if (this.gameSubtitle != null) xmlString += " subtitle=\"" + this.gameSubtitle + "\"";
         xmlString += " allowSaveGames=\"" + this.allowSaveGames + "\"";
         xmlString += " cycle=\"" + this.cycle +"\"";
-        xmlString += " playerGender=\"" + this.playerGender + "\""
         xmlString += ">\n";
 
         xmlString += this.saveToXMLInnerContent();
@@ -1137,7 +1135,6 @@ class A4Game {
   	// Teleports an object to a requested map and position. This queues up the request,
   	// but it is not executed until at the end of a game cycle, to prevent this from 
   	// happening while we are still looping through lists of objects (concurrent modification)
-  	// if "map" is 0, then the request is to remove the object from the maps (e.g., when an object is taken)
   	requestWarp(o:A4Object, map:A4Map, x:number, y:number)//, layer:number)
     {
         this.warpRequests.push(new WarpRequest(o,map,x,y));
@@ -1695,7 +1692,6 @@ class A4Game {
     scriptQueues: A4ScriptExecutionQueue[] = [];
 
     // story state:
-    playerGender: string = null;
     storyState: { [id: string] : string; } = {};
     lastTimeStoryStateChanged:number = 0;
 

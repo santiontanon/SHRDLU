@@ -255,7 +255,7 @@ class A4Object {
                                  " y=\""+ this.y +"\"" +
                                  " map=\""+ mapNumber +"\">\n";
 
-        xmlString += this.savePropertiesToXML(game) + "\n";
+        xmlString += this.savePropertiesToXML(game);
 
         xmlString += "</" + tag + ">";
         return xmlString;

@@ -139,7 +139,7 @@ class ShrdluApp {
         console.log("ShrdluApp created.");
 
         if (this.gameDefinition!=null) {
-            this.game = new ShrdluA4Game(this.gameDefinition, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, "female", this);
+            this.game = new ShrdluA4Game(this.gameDefinition, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, null, this);
         }
     }
 
@@ -625,7 +625,7 @@ class ShrdluApp {
                                             app.titlescreen_timer = 0;
                                             app.ingame_menu = 0;
                                             app.quit_request = false;
-                                            app.game = new ShrdluA4Game(gamexml, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, "female", app);
+                                            app.game = new ShrdluA4Game(gamexml, app.game_path, SHRDLU_ONTOLOGY_PATH, app.GLTM, app.SFXM, app.SFX_volume, null, app);
                                             app.game.finishLoadingGame(xml.documentElement);
                                        });
                             } else {
@@ -1165,7 +1165,7 @@ class ShrdluApp {
                 let xml:Document = dp.parseFromString(xmlString, "text/xml");
 //                            console.log(xml);
                 let gamexml:Element = getFirstElementChildByTag(xml.documentElement, "A4Game");
-                this.game = new ShrdluA4Game(gamexml, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, "female", this);
+                this.game = new ShrdluA4Game(gamexml, this.game_path, SHRDLU_ONTOLOGY_PATH, this.GLTM, this.SFXM, this.SFX_volume, null, this);
                 this.game.finishLoadingGame(xml.documentElement);
                 BInterface.reset();
                 this.ingame_menu = 0;

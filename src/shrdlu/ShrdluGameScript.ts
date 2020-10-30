@@ -39,7 +39,7 @@ class ShrdluGameScript {
 			// this.skip_to_end_of_act_2();
 			// this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
-			//this.skip_to_act_3_back_from_tardis();
+			// this.skip_to_act_3_back_from_tardis();
 		// }
 
 		if (this.act == "intro") this.update_act_intro();
