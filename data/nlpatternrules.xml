@@ -3710,6 +3710,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
     		   		 #derefFromContext(C2, OBJECT)"/>
 
+    <NLPattern name="q.query-what-noun-be-prep-query"
+			   head="perf.q.query(LISTENER, V, #and(#cons(NOUN, V), #and(#cons(PREPOSITION, V, V2), QUERY2)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') noun(NOUN, NN) verb('verb.be'[symbol], N, P, [present-tense]) 
+    		   		 preposition(PREPOSITION) 
+    		   		 nounPhrase(X2, [singular], P2, C2) ('!'|'?')* 
+    		   		 #derefQuery(C2, V2, QUERY2)"/>
+
     <NLPattern name="q.query-what-be-adverb"
 			   head="perf.q.query(LISTENER, V, #and(object(V), QUERY))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

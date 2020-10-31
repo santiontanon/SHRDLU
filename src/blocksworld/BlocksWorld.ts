@@ -189,7 +189,7 @@ class ShrdluBlock {
 	{
 		if (this == o2) return false;
 		if (this.x+this.dx > o2.x && o2.x+o2.dx > this.x &&
-			this.y == o2.y+o2.dy &&
+			this.y > o2.y && o2.y+o2.dy >= this.y &&
 			this.z+this.dz > o2.z && o2.z+o2.dz > this.z) {
 			return true;
 		}

@@ -1561,7 +1561,7 @@ NLParseTestUnifyingListener("please tell me what is northeast of me", o.getSort(
 NLParseTestUnifyingListener("please tell me what does the crate contain", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.contains('5'[#id], X))");
 NLParseTestUnifyingListener("could you tell me what is inside of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), space.inside.of(X, '5'[#id])))");
 NLParseTestUnifyingListener("could you tell me what is contained by me", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.contains('1'[#id], X))");
-
+NLParseTestUnifyingListener("which crate is inside a room?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(crate(X), #and(space.inside.of(X, Y), room(Y))))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
