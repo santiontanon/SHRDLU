@@ -6014,6 +6014,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)
 		   		 	 #derefFromContext(C2, OBJECT)"/>
+    <NLPattern name="q.howmany-X-are-there-not-in"
+    		   head="perf.q.howmany(LISTENER, V, #and(#not(#cons(PREPOSITION, V, OBJECT)), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there'] 'not'
+		   		 	 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) 
+		   		 	 ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefFromContext(C2, OBJECT)"/>
     <NLPattern name="q.howmany-X-are-there-here"
     		   head="perf.q.howmany(LISTENER, V, #and(space.at(V, LOCATION), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -6046,12 +6055,27 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
 		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)"/>
+    <NLPattern name="q.howmany-X-are-not-Y"
+    		   head="perf.q.howmany(LISTENER, V, #and(#not(#cons(A, V)), QUERY))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) 'not' adjective(A) ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)"/>
     <NLPattern name="q.howmany-X-are-Y2"
     		   head="perf.q.howmany(LISTENER, V, #and(#cons(A_PARENT:[property-with-value], V, A:[property-with-value]), QUERY))"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
 		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) adjective(A) #sortParent(A, A_PARENT) ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)"
+		   	   priority="200"/>
+    <NLPattern name="q.howmany-X-are-not-Y2"
+    		   head="perf.q.howmany(LISTENER, V, #and(#not(#cons(A_PARENT:[property-with-value], V, A:[property-with-value])), QUERY))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) 
+		   		 	 verb('verb.be'[symbol], N2, P2, [present-tense]) 'not' adjective(A) #sortParent(A, A_PARENT) ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)"
 		   	   priority="200"/>
     <NLPattern name="q.howmany-X-in-Y"

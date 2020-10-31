@@ -1565,6 +1565,7 @@ NLParseTestUnifyingListener("which crate is inside a room?", o.getSort("performa
 NLParseTestUnifyingListener("what is supporting the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.support(X, '5'[#id]))");
 NLParseTestUnifyingListener("what supports the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.support(X, '5'[#id]))");
 NLParseTestUnifyingListener("is the crate supported?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.support(X, '5'[#id]))");
+NLParseTestUnifyingListener("how many keys are not in the kitchen?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), #not(space.at(X,'room1'[#id]))))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
