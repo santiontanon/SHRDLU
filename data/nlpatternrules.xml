@@ -2787,16 +2787,17 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)"/>
 
-	<!--NLPattern name="q.predicate-obj-relation=obj"
-			   head="perf.q.predicate(LISTENER, space.at(SPEAKER, LOCATION))"
+	<NLPattern name="q.predicate-be-obj-relationverb"
+			   head="perf.q.predicate(LISTENER, #cons(VERB, V, OBJECT2))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
-			   		 'this'
-			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')*
-			   		 #derefFromContext(#and(adjective(X2, 'space.location'[space.location]), C2), LOCATION)"/-->
-
+			   		 ([('would'|'can'|'could') 'you'] ('tell' 'me'|'know') 'if' |
+			   		  verb('verb.be'[symbol], N, P, [present-tense]))
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 verb(VERB, N3, P3, [participle-tense]) #symbolToSort(VERB, VERBSORT) #subsumes([relation-verb], VERBSORT)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
 
 	<!-- Passive voice question: -->
     <NLPattern name="q.predicate-passive"
@@ -4036,6 +4037,29 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') noun(NOUN, NOUN_N) verb('verb.be'[symbol], N, P, [present-tense])
 			   		 'not' adjective(ADJ)
 			   		 ('!'|'?')*"/> 
+
+    <NLPattern name="q.query-be-gerund-obj"
+    		   head="perf.q.query(LISTENER, X, #cons(VERB, X, OBJECT3))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] 'what' verb('verb.be'[symbol], N, P, [present-tense])
+			   		 verb(VERB, N2, P2, [gerund-tense])
+			   		 nounPhrase(X3, [singular], P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT3)"/>
+
+    <NLPattern name="q.query-be-relationverb-obj"
+    		   head="perf.q.query(LISTENER, X, #cons(VERB, X, OBJECT3))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] 'what'
+			   		 verb(VERB, N2, P2, [present-tense])
+			   		 #symbolToSort(VERB, VERBSORT) #subsumes([relation-verb], VERBSORT)
+			   		 nounPhrase(X3, [singular], P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT3)"/> 	
 
 	<!-- special cases of forms to say "what is your name?" --> 
     <NLPattern name="q.query-name"
