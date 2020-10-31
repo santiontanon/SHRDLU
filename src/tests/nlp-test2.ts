@@ -305,7 +305,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1539,7 +1539,7 @@ NLParseTestUnifyingListener("put all crates on the kitchen", o.getSort("performa
 NLParseTestUnifyingListener("you are friends with qwerty", o.getSort("performative"),  context, "etaoin", "perf.inform('etaoin'[#id], relation.friend('etaoin'[#id], 'qwerty'[#id]))");
 NLParseTestUnifyingListener("the station has oxygen", o.getSort("performative"),  context, "etaoin", "perf.inform(V0:'etaoin'[#id], verb.have('location-aurora-station'[#id], 'oxygen'[oxygen]))");
 NLParseTestUnifyingListener("the station does not have oxygen", o.getSort("performative"),  context, "etaoin", "perf.inform(V0:'etaoin'[#id], #not(verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])))");
-*/
+
 
 // For version 3.7:
 NLParseTestUnifyingListener("leave the ship on the floor", o.getSort("performative"),  context, "etaoin", "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
@@ -1557,7 +1557,10 @@ NLParseTestUnifyingListener("do you know if the crate is in the kitchen", o.getS
 NLParseTestUnifyingListener("please would you tell me if the crate is in the kitchen", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], space.at('5'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("please tell me if the crate contains the kitchen", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.contains('5'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("do you know if the crate contains the kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.contains('5'[#id], 'room1'[#id]))");
-
+NLParseTestUnifyingListener("please tell me what is northeast of me", o.getSort("performative"), context, 'etaoin', "perf.q.query(V0:'etaoin'[#id], V1:[any], V2:#and(V3:object(V1), V4:space.northeast.of(V1, V5:'1'[#id])))");
+NLParseTestUnifyingListener("please tell me what does the crate contain", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.contains('5'[#id], X))");
+NLParseTestUnifyingListener("could you tell me what is inside of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), space.inside.of(X, '5'[#id])))");
+NLParseTestUnifyingListener("could you tell me what is contained by me", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, verb.contains('1'[#id], X))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

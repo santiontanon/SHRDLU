@@ -104,14 +104,13 @@ class NLParser {
 		let compiled:CompiledNLPatternRules = this.compiledRules[s.name];
 		if (compiled != null) {
 			// if we have a compiled tree, use it!
-//			console.log("NLParser.parse: Found a compiled tree for " + s.name + " ...");
 			let results2:NLParseRecord[] = compiled.parse(tokens2, true, context, this, AI);
 			if (results2 != null && results2.length > 0) {
 				for(let r of results2) {
-					//console.log("(1) result before resolving the lists:" + r.result);
+					// console.log("(1) result before resolving the lists:" + r.result);
 					r.result = this.resolveLists(r.result);
-					//console.log("(2) result after resolving the lists:" + r.result);
-//					console.log("result! (" + r.priorities[0] + "): " + r.result);
+					// console.log("(2) result after resolving the lists:" + r.result);
+
 					// properly resolve the "listener" variable:
 					if (s.name == "performative" && r.result.attributes.length>0) {
 						let performativeHead:Term = r.result;
@@ -129,7 +128,7 @@ class NLParser {
 						if (performativeHead.functor.is_a_string("performative")) {
 							if (compiled.listenerVariable != performativeHead.attributes[0]) {
 								let b2:Bindings = new Bindings();
-								b2.l.push([compiled.listenerVariable, r.result.attributes[0]]);
+								b2.l.push([compiled.listenerVariable, performativeHead.attributes[0]]);
 								r.result = r.result.applyBindings(b2);
 							}
 						}
@@ -137,18 +136,15 @@ class NLParser {
 					if (this.semanticallyCorrect(r.result, context)) {						
 						if (r.priorities[0] > bestPriorityOfFirstRule) bestPriorityOfFirstRule = r.priorities[0];
 						results.push(r);
-						//console.log("(3) result after applying bindings:" + r.result);
 					} else {
 						semanticalErrors.push(r);
 						for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 					}
 				}
 			} else {
-//				console.log("nope...");
 				for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 			}
 		} else {
-//			console.log("NLParser.parse: Using the raw rules for " + s.name + " ...");
 			// we don't have a compiled tree, just use the rules...
 			for(let rawRule of this.rules) {
 				if (rawRule.priority <= bestPriorityOfFirstRule) continue;

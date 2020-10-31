@@ -486,6 +486,7 @@ class POSParser {
       //"the tardis bridge",
       "tardis 8 bridge",
       //"the tardis 8 bridge",
+      "tardis corridor",
       "strange dust",
       "weird dust",
       "luminiscent dust",
