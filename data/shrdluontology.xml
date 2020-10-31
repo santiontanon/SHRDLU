@@ -711,6 +711,7 @@
     <sort name="action.put-in" super="actionverb,verb.put"/>
     <sort name="action.put-under" super="actionverb,verb.put"/>
     <sort name="action.drop" super="actionverb"/>
+    <sort name="action.drop-in" super="action.drop,action.put-in"/>
     <sort name="action.push" super="actionverb"/>
     <sort name="action.pull" super="actionverb"/>
     <sort name="action.open" super="actionverb,relation-verb"/>

@@ -1883,6 +1883,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.drop-in","on", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.drop-in","in", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","over", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","onto", "put","puts","put","put","putting", false, multitokens_raw, o);
