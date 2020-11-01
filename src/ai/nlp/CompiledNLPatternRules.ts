@@ -78,9 +78,9 @@ class CompiledNLPatternRules extends NLPatternContainer {
 //			parse.ruleNames = [this.name].concat(parse.ruleNames);
 //			parse.priorities = [this.priority].concat(parse.priorities);
 //			parse.result = this.head.applyBindings(parse.bindings);
-//			console.log("Parse completed, result (before resolvecons): " + parse.result);
+			// console.log("Parse completed, result (before resolvecons): " + parse.result);
 			NLParser.resolveCons(parse.result, parser.o);
-//			console.log("CompiledNLPatternRules.parse: Parse completed, result: " + parse.result.toString());
+			// console.log("CompiledNLPatternRules.parse: Parse completed, result: " + parse.result);
 			results.push(parse);
 		}
 
@@ -101,7 +101,9 @@ class CompiledNLPatternRules extends NLPatternContainer {
 //				parse2.ruleNames = [this.name].concat(parse.ruleNames);
 //				parse2.priorities = [this.priority].concat(parse.priorities);
 //				parse2.result = this.head.applyBindings(parse2.bindings);
+				// console.log("parseMatchingWithTerm completed, result (before resolvecons): " + parse2.result);
 				NLParser.resolveCons(parse2.result, parser.o);
+				// console.log("parseMatchingWithTerm.parse: Parse completed, result: " + parse2.result);
 				let bindings:Bindings = new Bindings();
 				// if (parse2.result.unify(term, OCCURS_CHECK, bindings)) {
 				if (term.unify(parse2.result, OCCURS_CHECK, bindings)) {
@@ -155,13 +157,13 @@ class CompiledNLPatternState {
 	{
 		switch(current.type) {
 			case NLPATTERN_SEQUENCE:
-				let currentStates:[CompiledNLPatternState,Bindings][] = [[this,bindings]];
+				let currentStates:[CompiledNLPatternState,Bindings][] = [[this, bindings]];
 				for(let i:number = 0;i<current.children.length;i++) {
 					let nextStates:[CompiledNLPatternState,Bindings][] = [];
 					for(let tmp of currentStates) {
 						let s:CompiledNLPatternState = tmp[0];
 						let b:Bindings = tmp[1];
-						let nextStates2:[CompiledNLPatternState,Bindings][] = s.addRuleInternal(priority,current.children[i], b, speakerVariable, listenerVariable);
+						let nextStates2:[CompiledNLPatternState,Bindings][] = s.addRuleInternal(priority, current.children[i], b, speakerVariable, listenerVariable);
 						for(let ns of nextStates2) nextStates.push(ns);
 					}
 					currentStates = nextStates;
@@ -171,12 +173,18 @@ class CompiledNLPatternState {
 			case NLPATTERN_ALTERNATIVE:
 				{
 					let nextStates:[CompiledNLPatternState,Bindings][] = [];
+					let accumBindings:Bindings = bindings;
 					for(let i:number = 0;i<current.children.length;i++) {
-						let nextStates2:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority,current.children[i], bindings, speakerVariable, listenerVariable);
-						for(let ns2 of nextStates2) nextStates.push(ns2);
+						let nextStates2:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority, current.children[i], accumBindings, speakerVariable, listenerVariable);
+						if (nextStates2.length != 1) {
+							console.error("!!!");
+						}
+						for(let ns2 of nextStates2) {
+							nextStates.push(ns2);
+							accumBindings = ns2[1];
+						}
 					}
 					if (nextStates.length > 1) {
-						let bindings:Bindings = new Bindings();
 						let s:CompiledNLPatternState = new CompiledNLPatternState();
 						for(let ns of nextStates) {
 							let t:CompiledNLPatternTransition = new CompiledNLPatternTransition();
@@ -184,11 +192,8 @@ class CompiledNLPatternState {
 							t.maxPriority = priority;
 							t.destinationState = s;
 							ns[0].transitions.push(t);
-							for(let bp of ns[1].l) {
-								if (bindings.l.indexOf(bp) == -1) bindings.l.push(bp);
-							}
 						}
-						return [[s,bindings]];
+						return [[s, accumBindings]];
 					} else {
 						return nextStates;
 					}
@@ -196,7 +201,7 @@ class CompiledNLPatternState {
 
 			case NLPATTERN_OPTIONAL:
 				{
-					let nextStates:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority,current.children[0], bindings, speakerVariable, listenerVariable);
+					let nextStates:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority, current.children[0], bindings, speakerVariable, listenerVariable);
 					if (nextStates.length == 1) {
 						let found:boolean = false;
 						for(let t2 of this.transitions) {
@@ -222,14 +227,14 @@ class CompiledNLPatternState {
 
 			case NLPATTERN_REPEAT:
 				{
-					let nextStates:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority,current.children[0], bindings, speakerVariable, listenerVariable);
+					let nextStates:[CompiledNLPatternState,Bindings][] = this.addRuleInternal(priority, current.children[0], bindings, speakerVariable, listenerVariable);
 					// replace the next states with this:
 					let open:[CompiledNLPatternState,CompiledNLPatternTransition][] = [];
 					let closed:CompiledNLPatternState[] = [];
 					open.push([this, null]);
 					while(open.length > 0) {
 	//					console.log("open: " + open.length + ", closed: " + closed.length);
-						let [current_s,current_t]:[CompiledNLPatternState,CompiledNLPatternTransition] = open[0];
+						let [current_s, current_t]:[CompiledNLPatternState,CompiledNLPatternTransition] = open[0];
 						open.splice(0,1);
 						closed.push(current_s);
 						let found:boolean = false;
@@ -249,7 +254,7 @@ class CompiledNLPatternState {
 						}
 					}
 				}
-				return [[this,bindings]];
+				return [[this, bindings]];
 				
 			case NLPATTERN_STRING:
 			case NLPATTERN_POS:
@@ -268,8 +273,8 @@ class CompiledNLPatternState {
 					if (current.term != null) {
 //						let v:TermAttribute[] = [];
 //						let vn:string[] = [];
-//						console.log("  adding transition: " + current.term.toStringInternal(v,vn));
-//						console.log("  with bindings: " + bindings.toStringWithMappings(v,vn));
+//						console.log("  adding transition: " + current.term.toStringInternal(v, vn));
+//						console.log("  with bindings: " + bindings.toStringWithMappings(v, vn));
 						let term2:Term = current.term.applyBindings(bindings);
 						// set the proper LISTENER and SPEAKER variables:
 						let variables:VariableTermAttribute[] = term2.getAllVariables();

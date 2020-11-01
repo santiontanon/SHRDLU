@@ -681,7 +681,7 @@ class NLContext {
 
 	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
-		this.lastDerefErrorType = 0;
+		this.lastDerefErrorType = 0; 
 		let properNounSort:Sort = o.getSort("proper-noun");
 		let nounSort:Sort = o.getSort("noun");
 		let pronounSort:Sort = o.getSort("pronoun");
@@ -909,6 +909,7 @@ class NLContext {
 						// console.log("context.derefInternal: nounTerm = " + nounTerm);
 
 						for(let determinerTerm of determinerTerms) {
+							// console.log("determinerTerm: " + determinerTerm);
 							let determinerNumberSort:Sort = determinerTerm.attributes[1].sort;
 							if (determinerTerm.functor.name == "the") {
 //								if (singular) {
@@ -952,6 +953,10 @@ class NLContext {
 								} else {
 									console.log("context.deref: determiner " + determinerTerm + " not yet supported!");
 								}
+							} else if (determinerTerm.functor.name == "article.any") {
+//								a_determiner = true;
+//								console.log("context.deref: determiner " + determinerTerm + " is invalid in contex dereference!");
+								return null;
 							} else if (determinerTerm.functor.name == "a") {
 //								a_determiner = true;
 //								console.log("context.deref: determiner " + determinerTerm + " is invalid in contex dereference!");

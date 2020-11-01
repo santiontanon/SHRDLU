@@ -152,903 +152,643 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ['i'] verb('action.take'[symbol], [singular], [first-person], T) ('it'|'that') 'back' ('!'|'.')*"/>			   
 
 	<!-- Patterns for performative "perf.inform" -->
+	<NLPattern name="inform"
+			   head="perf.inform(LISTENER, PREDICATE)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 ['i' 'think']
+			   		 perf.inform.internal(LISTENER, PREDICATE)
+			   		 ('!'|'.')*"/>
+
+	<NLPattern name="inform2"
+			   head="perf.inform(LISTENER, PREDICATE)"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey') [('!'|',')]]
+			   		 ('did' 'you' 'know' ['that'] | 'were' 'you' 'aware' ['that'])
+			   		 perf.inform.internal(LISTENER, PREDICATE)
+			   		 ('!'|'?'|'.')*"/>
+
 	<!-- rules for variants of "my name is david" -->
 	<NLPattern name="inform-myname1"
-			   head="perf.inform(LISTENER, name(SPEAKER,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'i' verb('verb.be'[symbol], [singular], [first-person], T) ['called'] proper-noun(NAME, [singular])
-			   		 ('!'|'.')*"
+			   head="perf.inform.internal(LISTENER, name(SPEAKER,NAME))"
+			   body="'i' verb('verb.be'[symbol], [singular], [first-person], T) ['called'] proper-noun(NAME, [singular])"
 			   priority="200"/>
 	<NLPattern name="inform-myname2"
-			   head="perf.inform(LISTENER, name(SPEAKER,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 ('you' 'can'|'people') 'call' 'me' proper-noun(NAME, [singular]) ('!'|'.')*"/>
+			   head="perf.inform.internal(LISTENER, name(SPEAKER,NAME))"
+			   body="('you' 'can'|'people') 'call' 'me' proper-noun(NAME, [singular])"/>
 
 	<NLPattern name="inform-obj's-name-is"
-			   head="perf.inform(LISTENER, name(SUBJECT,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) '\'s' noun('name'[name], N2)
+			   head="perf.inform.internal(LISTENER, name(SUBJECT,NAME))"
+			   body="nounPhrase(X, N, P, C) '\'s' noun('name'[name], N2)
 			   		 verb('verb.be'[symbol], [singular], [third-person], T)
 			   		 proper-noun(NAME, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-name-of-obj-is"
-			   head="perf.inform(LISTENER, name(SUBJECT,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'the' noun('name'[name], N2) 'of' nounPhrase(X, N, P, C)
+			   head="perf.inform.internal(LISTENER, name(SUBJECT,NAME))"
+			   body="'the' noun('name'[name], N2) 'of' nounPhrase(X, N, P, C)
 			   		 verb('verb.be'[symbol], [singular], [third-person], T)
 			   		 proper-noun(NAME, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-obj-is-called"
-			   head="perf.inform(LISTENER, name(SUBJECT,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C)
+			   head="perf.inform.internal(LISTENER, name(SUBJECT,NAME))"
+			   body="nounPhrase(X, N, P, C)
 			   		 verb('verb.be'[symbol], [singular], [third-person], T) 'called'
 			   		 proper-noun(NAME, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-i-will-call-x-name"
-			   head="perf.inform(LISTENER, name(OBJECT,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'i' 'will' 'call'
+			   head="perf.inform.internal(LISTENER, name(OBJECT,NAME))"
+			   body="'i' 'will' 'call'
 			   		 nounPhrase(X, N, P, C)
 			   		 proper-noun(NAME, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-X-is-named"
-			   head="perf.inform(LISTENER, name(OBJECT,NAME))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C)
+			   head="perf.inform.internal(LISTENER, name(OBJECT,NAME))"
+			   body="nounPhrase(X, N, P, C)
 			   		 verb('verb.be'[symbol], [singular], P2, T2)
 			   		 'named'
 			   		 proper-noun(NAME, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
 	<!-- e.g.: "the crate is closed" -->
 	<NLPattern name="inform-X-is-adj-noun"
-			   head="perf.inform(LISTENER, #cons(X2,SUBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) 
-			   		 ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #cons(X2,SUBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) 
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="150"/>
 	<NLPattern name="inform-X-is-not-adj-noun"
-			   head="perf.inform(LISTENER, #not(#cons(X2,SUBJECT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' ['very'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'.')* #derefFromContext(C, SUBJECT)"/>
+			   head="perf.inform.internal(LISTENER, #not(#cons(X2,SUBJECT)))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' ['very'] 
+			   		 (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N))
+			   		 #derefFromContext(C, SUBJECT)"/>
 
 	<NLPattern name="inform-X-is-adj-property-with-value"
-			   head="perf.inform(LISTENER, #cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')* #derefFromContext(C, SUBJECT)"
+			   head="perf.inform.internal(LISTENER, #cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT) 
+			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="inform-X-is-a-noun-property-with-value"
-			   head="perf.inform(LISTENER, #cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, #cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
-			   		 noun(X2, [singular]) #sortParent(X2, X2_PARENT) ('!'|'.')* 
+			   		 noun(X2, [singular]) #sortParent(X2, X2_PARENT)
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="inform-X-is-not-a-noun-property-with-value"
-			   head="perf.inform(LISTENER, #not(#cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, #not(#cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 'not'
 			   		 indefinite-article('a'[symbol], [singular])
-			   		 noun(X2, [singular]) #sortParent(X2, X2_PARENT) ('!'|'.')* 
+			   		 noun(X2, [singular]) #sortParent(X2, X2_PARENT)
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="inform-X-is-a-noun-role"
-			   head="perf.inform(LISTENER, role(SUBJECT,X2:[role]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, role(SUBJECT,X2:[role]))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 (indefinite-article('a'[symbol], [singular]) | 'the')
-			   		 noun(X2, [singular]) ('!'|'.')* 
+			   		 noun(X2, [singular])
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="250"/>
 	<NLPattern name="inform-X-is-not-a-role"
-			   head="perf.inform(LISTENER, #not(role(SUBJECT,X2:[role])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, #not(role(SUBJECT,X2:[role])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 'not'
 			   		 (indefinite-article('a'[symbol], [singular]) | 'the')
-			   		 noun(X2, [singular]) ('!'|'.')* 
+			   		 noun(X2, [singular])
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="250"/>			   
 	<NLPattern name="inform-X-is-a-noun-profession"
-			   head="perf.inform(LISTENER, profession(SUBJECT,X2:[profession]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, profession(SUBJECT,X2:[profession]))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 (indefinite-article('a'[symbol], [singular]) | 'the')
-			   		 noun(X2, [singular]) ('!'|'.')* 
+			   		 noun(X2, [singular])
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="300"/>
 	<NLPattern name="inform-X-is-not-a-profession"
-			   head="perf.inform(LISTENER, #not(profession(SUBJECT,X2:[profession])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, #not(profession(SUBJECT,X2:[profession])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
 			   		 'not'
 			   		 (indefinite-article('a'[symbol], [singular]) | 'the')
-			   		 noun(X2, [singular]) ('!'|'.')* 
+			   		 noun(X2, [singular])
 			   		 #derefFromContext(C, SUBJECT)"
 			   priority="300"/>	
 
 	<NLPattern name="inform-X-is-not-adj"
-			   head="perf.inform(LISTENER, #not(#cons(X2_PARENT:[property-with-value], SUBJECT,X2:[property-with-value])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')* #derefFromContext(C, SUBJECT)"
+			   head="perf.inform.internal(LISTENER, #not(#cons(X2_PARENT:[property-with-value], SUBJECT,X2:[property-with-value])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT)
+			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 	<NLPattern name="inform-X-is-adj-property-with-2-values"
-			   head="perf.inform(LISTENER, #or(#cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]),
+			   head="perf.inform.internal(LISTENER, #or(#cons(X2_PARENT:[property-with-value],SUBJECT,X2:[property-with-value]),
 			   								   #cons(X3_PARENT:[property-with-value],SUBJECT,X3:[property-with-value])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) ['either']
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) ['either']
 			   		 adjective(X2) #sortParent(X2, X2_PARENT)
 			   		 'or'
 			   		 adjective(X3) #sortParent(X3, X3_PARENT)
-			   		 ('!'|'.')* #derefFromContext(C, SUBJECT)"
+			   		 #derefFromContext(C, SUBJECT)"
 			   priority="200"/>
 
 	<NLPattern name="inform-X-is-propernoun"
-			   head="perf.inform(LISTENER, QUERY)"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 properNounCompound(X2, N) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, QUERY)"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 properNounCompound(X2, N)
 			   		 #derefQuery(C, X2, QUERY)"/>
 
 	<NLPattern name="inform-X-is-not-propernoun"
-			   head="perf.inform(LISTENER, #not(QUERY))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not'
-			   		 properNounCompound(X2, N) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, #not(QUERY))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not'
+			   		 properNounCompound(X2, N)
 			   		 #derefQuery(C, X2, QUERY)"/>
 
 	<!-- e.g.: "all chairs are small" -->
 	<NLPattern name="inform-universal-are-adj|noun"
-			   head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #cons(X2, V:[#id])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)|noun(X2, N3:[plural])) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #cons(X2, V:[#id])))"
+			   body="nounPhrase(X, N, P, C) 
+			   		 verb('verb.be'[symbol], N, P, T) 
+			   		 ( adjective(X2) | 
+			   		   indefinite-article(ART, N2:[singular]) noun(X2, N2) | 
+			   		   noun(X2, N3:[plural]) )
 			   		 #derefUniversal(C, V, LEFTSIDE)"/>
 	<NLPattern name="inform-plural-are-adj|noun"
-			   head="perf.inform(LISTENER, #or(#not(#cons(X, V:[#id])), #cons(X2, V)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 noun(X, N:[plural]) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)|noun(X2, N3:[plural])) ('!'|'.')*"/>
+			   head="perf.inform.internal(LISTENER, #or(#not(#cons(X, V:[#id])), #cons(X2, V)))"
+			   body="noun(X, N:[plural]) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)|noun(X2, N3:[plural]))"/>
 	<NLPattern name="inform-be-not-adj|noun"
-			   head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2, V:[#id]))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2, V:[#id]))))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N))
 			   		 #derefUniversal(C, V, LEFTSIDE)"/>
 	<NLPattern name="inform-are-not-adj|noun"
-		       head="perf.inform(LISTENER, #or(#not(#cons(X, V:[#id])), #not(#cons(X2, V))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 noun(X, N:[plural]) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)|noun(X2, N3:[plural])) ('!'|'.')*"/>
+		       head="perf.inform.internal(LISTENER, #or(#not(#cons(X, V:[#id])), #not(#cons(X2, V))))"
+			   body="noun(X, N:[plural]) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, N2:[singular]) noun(X2, N2)|noun(X2, N3:[plural]))"/>
 	<!-- e.g.: "all chairs speak english" -->
 	<NLPattern name="inform-universal-verb-object"
-		       head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #cons(VERB, V:[#id], OBJECT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
-			   		 nounPhrase(X3, N3, P3, C3) ('!'|'.')*
+		       head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #cons(VERB, V:[#id], OBJECT)))"
+			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
+			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C3, OBJECT)
 			   		 #derefUniversal(C, V, LEFTSIDE)"/>
 	<NLPattern name="perf-inform-np-be-adj-universal"
-			   head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT)
 			   		 #derefUniversal(C, V, LEFTSIDE)"
 			   priority="200"/>
 	<NLPattern name="perf-inform-np-be-not-adj-universal"
-			   head="perf.inform(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value]))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')*
+			   head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #not(#cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value]))))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT)
 			   		 #derefUniversal(C, V, LEFTSIDE)"
 			   priority="200"/>
 
 	<NLPattern name="my-property-with-value-is-X"
-			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], SPEAKER, X3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 possessive-determiner('determiner.my'[symbol], N)
+			   head="perf.inform.internal(LISTENER, #cons(X2:[property-with-value], SPEAKER, X3))"
+			   body="possessive-determiner('determiner.my'[symbol], N)
 			   		 noun(X2, N2)
-			   		 verb('verb.be'[symbol], N, P, T) noun(X3,N3) ('!'|'.')*"/>
+			   		 verb('verb.be'[symbol], N, P, T) noun(X3,N3)"/>
 	<NLPattern name="your-property-with-value-is-X"
-			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], LISTENER, X3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 possessive-determiner('determiner.your'[symbol], N)
+			   head="perf.inform.internal(LISTENER, #cons(X2:[property-with-value], LISTENER, X3))"
+			   body="possessive-determiner('determiner.your'[symbol], N)
 			   		 noun(X2, N2)
-			   		 verb('verb.be'[symbol], N, P, T) noun(X3,N3) ('!'|'.')*"/>
-
+			   		 verb('verb.be'[symbol], N, P, T) noun(X3,N3)"/>
 
 	<!-- e.g.: "socrates was a man" -->
 	<NLPattern name="inform-hypothetical-be-adj|noun"
-			   head="perf.inform(LISTENER, #list(LEFTSIDE, #cons(X2, V:[#id])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N))  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #list(LEFTSIDE, #cons(X2, V:[#id])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N))
 			   		 #derefHypothetical(C, V, LEFTSIDE)"/>
 	<NLPattern name="inform-hypothetical-be-not-adj|noun"
-			   head="perf.inform(LISTENER, #list(LEFTSIDE, #not(#cons(X2, V:[#id]))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N))  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #list(LEFTSIDE, #not(#cons(X2, V:[#id]))))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) 
 			   		 #derefHypothetical(C, V, LEFTSIDE)"/>
 
 	<NLPattern name="inform-hypothetical-be-property-with-value"
-			   head="perf.inform(LISTENER, #list(LEFTSIDE, #cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value])))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #list(LEFTSIDE, #cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value])))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X2) #sortParent(X2, X2_PARENT)
 			   		 #derefHypothetical(C, V, LEFTSIDE)"
 			   priority="200"/>
 	<NLPattern name="inform-hypothetical-be-not-property-with-value"
-			   head="perf.inform(LISTENER, #list(LEFTSIDE, #not(#cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value]))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #list(LEFTSIDE, #not(#cons(X2_PARENT:[property-with-value], V:[#id], X2:[property-with-value]))))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X2) #sortParent(X2, X2_PARENT) 
 			   		 #derefHypothetical(C, V, LEFTSIDE)"
 			   priority="200"/>
 
 	<!-- e.g.: "the ship is mine" -->
 	<NLPattern name="inform-object-be-mine"
-			   head="perf.inform(LISTENER, verb.own(SPEAKER, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 possessive-pronoun(PP2,[singular],G2,[first-person]) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, verb.own(SPEAKER, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 possessive-pronoun(PP2,[singular],G2,[first-person])
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-object-be-yours"
-			   head="perf.inform(LISTENER, verb.own(LISTENER, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 possessive-pronoun(PP2,[singular],G2,[second-person]) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, verb.own(LISTENER, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 possessive-pronoun(PP2,[singular],G2,[second-person])
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-obj-is-obj's"
-			   head="perf.inform(LISTENER, verb.own(OWNER, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 nounPhrase(X2, [singular], P, C2) '\'s'  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, verb.own(OWNER, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 nounPhrase(X2, [singular], P, C2) '\'s'
 					 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OWNER)"/>
 
 	<!-- e.g.: "I am in the kitchen" -->
 	<NLPattern name="inform-obj-be-prep"
-			   head="perf.inform(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #cons(PREPOSITION, SUBJECT, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"/>
 	<NLPattern name="inform-be-not-prep-obj"
-			   head="perf.inform(LISTENER, #not(#cons(PREPOSITION, SUBJECT, OBJECT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 'not' preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #not(#cons(PREPOSITION, SUBJECT, OBJECT)))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 'not' preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
 			   		 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"/>
 	<NLPattern name="inform-be-not-prep-query"
-			   head="perf.inform(LISTENER, #and(#cons(PREPOSITION, SUBJECT, QUERY_V), QUERY))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #and(#cons(PREPOSITION, SUBJECT, QUERY_V), QUERY))"
+			   body="nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
+			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefQuery(C2, QUERY_V, QUERY)"/>
 
 	<!-- e.g.: "I have the white key" -->
 	<NLPattern name="inform-verb"
-			   head="perf.inform(LISTENER, #cons(VERB, SUBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #cons(VERB, SUBJECT))"
+			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T)
 					 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-verb-context"
-			   head="perf.inform(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
-			   		 nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
+			   		 nounPhrase(X2, [singular], P2, C2)
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"/>
 	<NLPattern name="inform-verb-context-future"
-			   head="perf.inform(LISTENER, #and(STATEMENT:#cons(VERB, SUBJECT, OBJECT), time.future(STATEMENT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) ('will'|'shall') verb(VERB, N, P, T) 
-			   		 nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #and(STATEMENT:#cons(VERB, SUBJECT, OBJECT), time.future(STATEMENT)))"
+			   body="nounPhrase(X, N, P, C) ('will'|'shall') verb(VERB, N, P, T) 
+			   		 nounPhrase(X2, [singular], P2, C2)
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"/>
 	<NLPattern name="inform-donot-verb-context"
-			   head="perf.inform(LISTENER, #not(#cons(VERB, SUBJECT, OBJECT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) ('will'|'shall'|verb('verb.do'[symbol], N, P, [present-tense])) 'not' verb(VERB, N3, P3, [infinitive-tense])
-			   		 nounPhrase(X2, [singular], P2, C2)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #not(#cons(VERB, SUBJECT, OBJECT)))"
+			   body="nounPhrase(X, N, P, C) ('will'|'shall'|verb('verb.do'[symbol], N, P, [present-tense])) 'not' verb(VERB, N3, P3, [infinitive-tense])
+			   		 nounPhrase(X2, [singular], P2, C2)
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"/>
 	<NLPattern name="inform-verb-a-noun"
-			   head="perf.inform(LISTENER, #and(#cons(VERB, SUBJECT, NOUN_V:[#id]), #cons(X2, NOUN_V)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
+			   head="perf.inform.internal(LISTENER, #and(#cons(VERB, SUBJECT, NOUN_V:[#id]), #cons(X2, NOUN_V)))"
+			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
-			   		 noun(X2, N2)  ('!'|'.')* 
+			   		 noun(X2, N2)
 					 #derefFromContext(C, SUBJECT)"/>	
 	<NLPattern name="inform-not-verb-a-noun"
-			   head="perf.inform(LISTENER, #or(#not(#cons(VERB, SUBJECT, NOUN_V:[#id])), #not(#cons(X2, NOUN_V))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 'do' 'not' verb(VERB, N, P, T) 
+			   head="perf.inform.internal(LISTENER, #or(#not(#cons(VERB, SUBJECT, NOUN_V:[#id])), #not(#cons(X2, NOUN_V))))"
+			   body="nounPhrase(X, N, P, C) 'do' 'not' verb(VERB, N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
-			   		 noun(X2, N2)  ('!'|'.')* 
+			   		 noun(X2, N2)
 					 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-relationverb-noun"
-			   head="perf.inform(LISTENER, #list(#cons(VERB, SUBJECT, X2), #or(#not(#cons(X2, V:[#id])), #cons(VERB, SUBJECT, V))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT:[relation-verb])
-			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #list(#cons(VERB, SUBJECT, X2), #or(#not(#cons(X2, V:[#id])), #cons(VERB, SUBJECT, V))))"
+			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT:[relation-verb])
+			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
 					 #derefFromContext(C, SUBJECT)"/>	
 	<NLPattern name="inform-relationverb-have-noun"
-			   head="perf.inform(LISTENER, verb.have(SUBJECT, X2))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb(VERB:'verb.have'[symbol], N, P, T)
-			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, verb.have(SUBJECT, X2))"
+			   body="nounPhrase(X, N, P, C) verb(VERB:'verb.have'[symbol], N, P, T)
+			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
 					 #derefFromContext(C, SUBJECT)"
 			   priority="125"/>	
 	<NLPattern name="inform-not-relationverb-noun"
-			   head="perf.inform(LISTENER, #list(#not(#cons(VERB, SUBJECT, X2)), #or(#not(#cons(X2, V:[#id])), #not(#cons(VERB, SUBJECT, V)))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 
+			   head="perf.inform.internal(LISTENER, #list(#not(#cons(VERB, SUBJECT, X2)), #or(#not(#cons(X2, V:[#id])), #not(#cons(VERB, SUBJECT, V)))))"
+			   body="nounPhrase(X, N, P, C) 
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense]) 'not'
 			   		 verb(VERB, NV, PV, TV) #symbolToSort(VERB, VERB_SORT:[relation-verb])
-			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
 					 #derefFromContext(C, SUBJECT)"/>	
 	<NLPattern name="inform-not-relationverb-have-noun"
-			   head="perf.inform(LISTENER, #not(verb.have(SUBJECT, X2)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 
+			   head="perf.inform.internal(LISTENER, #not(verb.have(SUBJECT, X2)))"
+			   body="nounPhrase(X, N, P, C) 
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense]) 'not'
 			   		 verb(VERB:'verb.have'[symbol], NV, PV, TV)
-			   		 (noun(X2, [plural])|noun(X2, [uncountable])) ('!'|'.')* 
+			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
 					 #derefFromContext(C, SUBJECT)"
 			   priority="125"/>	
 	<NLPattern name="inform-future-verb"
-			   head="perf.inform(LISTENER, #and(VC:#cons(VERB, SUBJECT), time.future(VC)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 'will' verb(VERB, N, P, T)  ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #and(VC:#cons(VERB, SUBJECT), time.future(VC)))"
+			   body="nounPhrase(X, N, P, C) 'will' verb(VERB, N, P, T)
 					 #derefFromContext(C, SUBJECT)"/>	
 	<NLPattern name="inform-future-continuous-verb"
-			   head="perf.inform(LISTENER, #and(VC:#cons(VERB, SUBJECT), time.future(VC)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 
+			   head="perf.inform.internal(LISTENER, #and(VC:#cons(VERB, SUBJECT), time.future(VC)))"
+			   body="nounPhrase(X, N, P, C) 
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
 			   		 'going to'
-			   		 verb(VERB, N2, P2, [infinitive-tense])  ('!'|'.')* 
+			   		 verb(VERB, N2, P2, [infinitive-tense])
 					 #derefFromContext(C, SUBJECT)"/>	
 	<NLPattern name="inform-future-verb-a-noun"
-			   head="perf.inform(LISTENER, #and(VC:#cons(VERB, SUBJECT, NOUN_V), #and(#cons(X2, NOUN_V), time.future(VC))))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) 'will' verb(VERB, N, P, T) 
+			   head="perf.inform.internal(LISTENER, #and(VC:#cons(VERB, SUBJECT, NOUN_V), #and(#cons(X2, NOUN_V), time.future(VC))))"
+			   body="nounPhrase(X, N, P, C) 'will' verb(VERB, N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
-			   		 noun(X2, N2) ('!'|'.')* 
+			   		 noun(X2, N2)
 					 #derefFromContext(C, SUBJECT)"/>	
 
 	<!-- "there is a crate here" / "there is a crate in the kitchen" -->
 	<NLPattern name="inform-there-is-a-noun-loc"
-			   head="perf.inform(LISTENER, #and(space.at(QUERY_V, LOCATION), QUERY))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'there' verb('verb.be'[symbol], N, P, [present-tense])
+			   head="perf.inform.internal(LISTENER, #and(space.at(QUERY_V, LOCATION), QUERY))"
+			   body="'there' verb('verb.be'[symbol], N, P, [present-tense])
 			   		 indefinite-article('a'[symbol], [singular]) nounPhraseNoDeterminer(X2, N2, P2, C2)
-					 noun(X3:[space.location], N3) ('!'|'.')* 
+					 noun(X3:[space.location], N3)
     		   		 #derefFromContext(noun(X3, N3), LOCATION)
 					 #derefQuery(C2, QUERY_V, QUERY)"/>	
 
 	<NLPattern name="inform-there-is-a-noun-prep"
-			   head="perf.inform(LISTENER, #and(#cons(PREP, QUERY_V, OBJECT), QUERY))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'there' verb('verb.be'[symbol], N, P, [present-tense])
+			   head="perf.inform.internal(LISTENER, #and(#cons(PREP, QUERY_V, OBJECT), QUERY))"
+			   body="'there' verb('verb.be'[symbol], N, P, [present-tense])
 			   		 indefinite-article('a'[symbol], [singular]) nounPhraseNoDeterminer(X2, N2, P2, C2)
 					 preposition(PREP)
-					 nounPhrase(X3, N3, P3, C3) ('!'|'.')* 
+					 nounPhrase(X3, N3, P3, C3)
     		   		 #derefFromContext(C3, OBJECT)
 					 #derefQuery(C2, QUERY_V, QUERY)"/>	
 					 
     <!-- e.g.: "the color of my key is white" -->
 	<NLPattern name="inform-property-with-value"
-			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         'the' noun(X2, [singular]) 'of'
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X3) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
+			   body="'the' noun(X2, [singular]) 'of'
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) adjective(X3)
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-property-with-value-not"
-			   head="perf.inform(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         'the' noun(X2, [singular]) 'of'
-			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X3) ('!'|'.')* 
+			   head="perf.inform.internal(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
+			   body="'the' noun(X2, [singular]) 'of'
+			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 'not' adjective(X3)
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-property-with-value-saxon"
-			   head="perf.inform(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
+			   head="perf.inform.internal(LISTENER, #cons(X2:[property-with-value], OBJECT, X3))"
+			   body="nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
 			   		 verb('verb.be'[symbol], N, P, T) adjective(X3)
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"
 			   priority="200"/>
 	<NLPattern name="inform-property-with-value-saxon-not"
-			   head="perf.inform(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
+			   head="perf.inform.internal(LISTENER, #not(#cons(X2:[property-with-value], OBJECT, X3)))"
+			   body="nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
 			   		 verb('verb.be'[symbol], N, P, T) 'not' adjective(X3)
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, OBJECT)"
 			   priority="200"/>
 
 	<NLPattern name="inform-property-with-2-values"
-			   head="perf.inform(LISTENER, #or(#cons(X2:[property-with-value], OBJECT, X3),
+			   head="perf.inform.internal(LISTENER, #or(#cons(X2:[property-with-value], OBJECT, X3),
 			   								   #cons(X2, OBJECT, X4)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         'the' noun(X2, [singular]) 'of'
+			   body="'the' noun(X2, [singular]) 'of'
 			   		 nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, T) 
-			   		 ['either'] adjective(X3) ['or'] adjective(X4) ('!'|'.')* 
+			   		 ['either'] adjective(X3) ['or'] adjective(X4)
 			   		 #derefFromContext(C, OBJECT)"/>
 
 	<NLPattern name="inform-haveable-property-with-value"
-			   head="perf.inform(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, OBJECT2))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N, P, C)
+			   head="perf.inform.internal(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, OBJECT2))"
+			   body="nounPhrase(X, N, P, C)
     		         verb('verb.have'[symbol], N, P, T)
     		         preposition(X3) 
-			   		 nounPhrase(X2, N2, P2, C2) ('!'|'.')* 
+			   		 nounPhrase(X2, N2, P2, C2)
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
 	<NLPattern name="inform-haveable-property-with-verb-value"
-			   head="perf.inform(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, #cons(VERB:[symbol], OBJECT, OBJECT2)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N, P, C)
+			   head="perf.inform.internal(LISTENER, #cons(X3:[haveable-property-with-value], OBJECT, #cons(VERB:[symbol], OBJECT, OBJECT2)))"
+			   body="nounPhrase(X, N, P, C)
     		         verb('verb.have'[symbol], N, P, T)
     		         preposition(X3) 
     		         verb(VERB, VN, VP, [infinitive-tense])
-			   		 nounPhrase(X2, N2, P2, C2) ('!'|'.')* 
+			   		 nounPhrase(X2, N2, P2, C2)
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
 	<NLPattern name="inform-role"
-			   head="perf.inform(LISTENER, role(OBJECT, OBJECT2, ROLE:[role]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, role(OBJECT, OBJECT2, ROLE:[role]))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb('verb.be'[symbol], N, P, T)
     		         (indefinite-article(ART, [singular]) | 'the') noun(ROLE, N)
     		         preposition('space.at'[space.at]) 
-			   		 nounPhrase(X3, N3, P3, C3) ('!'|'.')* 
+			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C3, OBJECT2)"
 			   priority="200"/>
 	<NLPattern name="inform-profession"
-			   head="perf.inform(LISTENER, profession(OBJECT, OBJECT2, ROLE:[profession]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, profession(OBJECT, OBJECT2, ROLE:[profession]))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb('verb.be'[symbol], N, P, T)
     		         (indefinite-article(ART, [singular]) | 'the') noun(ROLE, N)
     		         preposition('space.at'[space.at]) 
-			   		 nounPhrase(X3, N3, P3, C3) ('!'|'.')* 
+			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C3, OBJECT2)"
 			   priority="250"/>
 
 	<NLPattern name="inform-present-continuous-verb-obj"
-			   head="perf.inform(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb('verb.be'[symbol], N2, P2, [present-tense]) verb(VERB, N3, P3, [gerund-tense]) 
-    		         nounPhrase(X4, N4, P4, C4) ('!'|'.')* 
+    		         nounPhrase(X4, N4, P4, C4)
     		         #derefFromContext(C, SUBJECT)
     		         #derefFromContext(C4, OBJECT)"/>
 
 	<NLPattern name="inform-present-continuous-verb-noun"
-			   head="perf.inform(LISTENER, #cons(VERB, SUBJECT, X4))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, #cons(VERB, SUBJECT, X4))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb('verb.be'[symbol], N2, P2, [present-tense]) verb(VERB, N3, P3, [gerund-tense]) 
-    		         noun(X4, N4) ('!'|'.')* 
+    		         noun(X4, N4)
     		         #derefFromContext(C, SUBJECT)"
     		   priority="50"/>
 
 	<NLPattern name="inform-cardinal-direction-continuous-present"
-			   head="perf.inform(LISTENER, facing-direction(SUBJECT, X4:[cardinal-direction]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, facing-direction(SUBJECT, X4:[cardinal-direction]))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb('verb.be'[symbol], N2, P2, [present-tense]) 
     		         ['now'] 
     		         (verb('verb.face'[symbol], N3, P3, [gerund-tense])|
     		          verb('verb.look-at'[symbol], N3, P3, [gerund-tense])|
     		          'looking')
     		         ['to'] ['the']
-    		         noun(X4, N4) ['now'] ('!'|'.')* 
+    		         noun(X4, N4) ['now']
     		         #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-cardinal-direction"
-			   head="perf.inform(LISTENER, facing-direction(SUBJECT, X4:[cardinal-direction]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, facing-direction(SUBJECT, X4:[cardinal-direction]))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         (verb('verb.face'[symbol], N3, P3, [present-tense])|
     		          verb('verb.look-at'[symbol], N3, P3, [present-tense])|
     		          'look'|'looks')
     		         ['to'] ['the']
-    		         noun(X4, N4) ['now'] ('!'|'.')* 
+    		         noun(X4, N4) ['now']
     		         #derefFromContext(C, SUBJECT)"/>
 
 	<NLPattern name="inform-X-can-Y"
-			   head="perf.inform(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
+			   head="perf.inform.internal(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT)))"
+			   body="nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
 			   		 verb(VERB, N2, P2, [infinitive-tense]) 
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
 	<NLPattern name="inform-X-can-Y-obj"
-			   head="perf.inform(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT,OBJECT3)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
+			   head="perf.inform.internal(LISTENER, verb.can(OBJECT, #cons(VERB,OBJECT,OBJECT3)))"
+			   body="nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
 			   		 verb(VERB, N2, P2, [infinitive-tense]) 
 			   		 nounPhrase(X3, N3, P3, C3)
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C3, OBJECT3)"/>
 
 	<NLPattern name="inform-X-does-noun"
-			   head="perf.inform(LISTENER, verb.do(OBJECT, NOUN))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
+			   head="perf.inform.internal(LISTENER, verb.do(OBJECT, NOUN))"
+			   body="nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
 			   		 noun(NOUN, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 	<NLPattern name="inform-X-does-nothing"
-			   head="perf.inform(LISTENER, verb.do(OBJECT, 'nothing'[nothing]))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
+			   head="perf.inform.internal(LISTENER, verb.do(OBJECT, 'nothing'[nothing]))"
+			   body="nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
 			   		 'nothing'
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
     <NLPattern name="inform-X-be-my-haveable-relation"
-    		   head="perf.inform(LISTENER, #cons(RELATION:[haveable-relation], SPEAKER, OBJECT))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #cons(RELATION:[haveable-relation], SPEAKER, OBJECT))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense])
 			   		 'my'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
     <NLPattern name="inform-X-be-your-haveable-relation"
-    		   head="perf.inform(LISTENER, #cons(RELATION:[haveable-relation], LISTENER, OBJECT))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #cons(RELATION:[haveable-relation], LISTENER, OBJECT))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense])
 			   		 'your'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
     <NLPattern name="inform-X-be-Y's-haveable-relation"
-    		   head="perf.inform(LISTENER, #cons(RELATION:[haveable-relation], OBJECT2, OBJECT))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #cons(RELATION:[haveable-relation], OBJECT2, OBJECT))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense])
 			   		 nounPhrase(X2, [singular], P2, C2) '\'s'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
     <NLPattern name="inform-X-and-Y-be-haveable-relation"
-    		   head="perf.inform(LISTENER, #cons(RELATION:[haveable-relation], OBJECT, OBJECT2))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #cons(RELATION:[haveable-relation], OBJECT, OBJECT2))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 'and'
 			   		 nounPhrase(X2, [singular], P2, C2)
 			   		 verb('verb.be'[symbol], N, P, [present-tense])
 			   		 noun(RELATION, [plural])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>			   		 
 
 
     <NLPattern name="inform-X-be-not-my-haveable-relation"
-    		   head="perf.inform(LISTENER, #not(#cons(RELATION:[haveable-relation], SPEAKER, OBJECT)))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #not(#cons(RELATION:[haveable-relation], SPEAKER, OBJECT)))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'not'
 			   		 'my'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
     <NLPattern name="inform-X-be-not-your-haveable-relation"
-    		   head="perf.inform(LISTENER, #not(#cons(RELATION:[haveable-relation], LISTENER, OBJECT)))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #not(#cons(RELATION:[haveable-relation], LISTENER, OBJECT)))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'not'
 			   		 'your'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)"/>
 
     <NLPattern name="inform-X-be-not-Y's-haveable-relation"
-    		   head="perf.inform(LISTENER, #not(#cons(RELATION:[haveable-relation], OBJECT2, OBJECT)))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #not(#cons(RELATION:[haveable-relation], OBJECT2, OBJECT)))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'not'
 			   		 nounPhrase(X2, [singular], P2, C2) '\'s'
 			   		 noun(RELATION, [singular])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
     <NLPattern name="inform-X-and-Y-be-not-haveable-relation"
-    		   head="perf.inform(LISTENER, #not(#cons(RELATION:[haveable-relation], OBJECT, OBJECT2)))"
-    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
-			   		 nounPhrase(X, [singular], P, C)
+    		   head="perf.inform.internal(LISTENER, #not(#cons(RELATION:[haveable-relation], OBJECT, OBJECT2)))"
+    		   body="nounPhrase(X, [singular], P, C)
 			   		 'and'
 			   		 nounPhrase(X2, [singular], P2, C2)
 			   		 verb('verb.be'[symbol], N, P, [present-tense]) 'not'
 			   		 noun(RELATION, [plural])
-			   		 ('!'|'.')*
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C2, OBJECT2)"/>
 
 	<!-- Inform performatives for properties with value, without actual values -->
 	<NLPattern name="inform-i-verb-my-obj"
-		       head="perf.inform(LISTENER, #cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+		       head="perf.inform.internal(LISTENER, #cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb(VERB, N, P, T)
     		         possessive-determiner('determiner.my'[symbol], N)
     		         noun(PROP, N2)
-    		         ('!'|'.')*
     		         #derefFromContext(C, SPEAKER)"/>
 	<NLPattern name="inform-i-verb-my-obj-time"
-		       head="perf.inform(LISTENER, #and(PRED:#cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)), #cons(TIMEADV:[time], PRED)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         ['i' 'think']
-    		         nounPhrase(X, N:[singular], P, C)
+		       head="perf.inform.internal(LISTENER, #and(PRED:#cons(VERB, SPEAKER, #cons(PROP, SPEAKER, QUERY_VARIABLE)), #cons(TIMEADV:[time], PRED)))"
+			   body="nounPhrase(X, N:[singular], P, C)
     		         verb(VERB, N, P, T)
     		         possessive-determiner('determiner.my'[symbol], N)
     		         noun(PROP, N2)
     		         [adverb(TIMEADV)]
-    		         ('!'|'.')*
     		         #derefFromContext(C, SPEAKER)"/>
 
     <!-- talking about the ambient, "it's dark", "it's sunny", etc. -->
 	<NLPattern name="inform-ambient"
-			   head="perf.inform(LISTENER, #cons(ADJ, LOCATION))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'it' verb('verb.be'[symbol], N, [third-person], [present-tense])
+			   head="perf.inform.internal(LISTENER, #cons(ADJ, LOCATION))"
+			   body="'it' verb('verb.be'[symbol], N, [third-person], [present-tense])
 			   		 adjective(ADJ) (#subsumes([temperature], ADJ) | #subsumes([brightness], ADJ))
 			   		 [['in'] 'here'] 
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(noun('space.here'[space.here],[singular]), LOCATION)
 			   		 "/>
 
     <!-- talking about measuring units (kilograms, celcius, etc.) -->
 	<NLPattern name="inform-value-units1"
-			   head="perf.inform(LISTENER, #cons(PROPERTY:[property-with-value], SUBJECT, NEWVALUE))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N:[singular], P, C) '\'s'
+			   head="perf.inform.internal(LISTENER, #cons(PROPERTY:[property-with-value], SUBJECT, NEWVALUE))"
+			   body="nounPhrase(X, N:[singular], P, C) '\'s'
 			   		 noun(PROPERTY, [singular])
 			   		 verb('verb.be'[symbol], N, [third-person], [present-tense])
 			   		 cardinal(VALUE)
 			   		 noun(UNIT:[measuring-unit], N2) #changeConstantSort(VALUE, UNIT, NEWVALUE)
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-value-units2"
-			   head="perf.inform(LISTENER, #cons(PROPERTY:[property-with-value], SUBJECT, NEWVALUE))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'the' noun(PROPERTY, [singular]) 'of'
+			   head="perf.inform.internal(LISTENER, #cons(PROPERTY:[property-with-value], SUBJECT, NEWVALUE))"
+			   body="'the' noun(PROPERTY, [singular]) 'of'
 			   		 nounPhrase(X, N:[singular], P, C)
 			   		 verb('verb.be'[symbol], N, [third-person], [present-tense])
 			   		 cardinal(VALUE)
 			   		 noun(UNIT:[measuring-unit], N2) #changeConstantSort(VALUE, UNIT, NEWVALUE)
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="inform-value-units3"
-			   head="perf.inform(LISTENER, QUERY)"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, QUERY)"
+			   body="nounPhrase(X, N:[singular], P, C)
 			   		 verb('verb.be'[symbol], N, [third-person], [present-tense])
 			   		 cardinal(VALUE)
 			   		 noun(UNIT:[measuring-unit], N2) #changeConstantSort(VALUE, UNIT, NEWVALUE)
-			   		 ('!'|'.')* 
 			   		 #derefQuery(C, NEWVALUE, QUERY)"/>
 
 	<NLPattern name="inform-friends-specialcase"
-			   head="perf.inform(LISTENER, relation.friend(OBJ1, OBJ3))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N:[singular], P, C)
+			   head="perf.inform.internal(LISTENER, relation.friend(OBJ1, OBJ3))"
+			   body="nounPhrase(X, N:[singular], P, C)
 			   		 verb('verb.be'[symbol], N2, P2, [present-tense])
 			   		 (('friend'|'friends') 'with' | 'a' 'friend' 'of')
 			   		 nounPhrase(X3, N3:[singular], P3, C3)
-			   		 ('!'|'.')* 
 			   		 #derefFromContext(C, OBJ1)
 			   		 #derefFromContext(C3, OBJ3)"/>
 
 	<!-- special case for having a collision, which is a way to say you collided with -->
 	<NLPattern name="inform-have-collision-with-a-context"
-			   head="perf.inform(LISTENER, verb.collide-with(SUBJECT, OBJECT))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.have'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, verb.collide-with(SUBJECT, OBJECT))"
+			   body="nounPhrase(X, N, P, C) verb('verb.have'[symbol], N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
 			   		 noun('collision'[collision], N2) 
 			   		 ('with'|'against')
 			   		 nounPhrase(X3, N3, P3, C3)
-			   		 ('!'|'.')* 
-					 #derefFromContext(C, SUBJECT)
+			   		 #derefFromContext(C, SUBJECT)
 					 #derefFromContext(C3, OBJECT)"/>
 	<NLPattern name="inform-have-collision-with-a-noun"
-			   head="perf.inform(LISTENER, #and(verb.collide-with(SUBJECT, NOUN_V:[#id]), #cons(X3, NOUN_V)))"
-			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 nounPhrase(X, N, P, C) verb('verb.have'[symbol], N, P, T) 
+			   head="perf.inform.internal(LISTENER, #and(verb.collide-with(SUBJECT, NOUN_V:[#id]), #cons(X3, NOUN_V)))"
+			   body="nounPhrase(X, N, P, C) verb('verb.have'[symbol], N, P, T) 
 			   		 indefinite-article('a'[symbol], [singular])
 			   		 noun('collision'[collision], N2) 
 			   		 ('with'|'against') 
 			   		 indefinite-article('a'[symbol], [singular])
 			   		 noun(X3, N3) 
-			   		 ('!'|'.')* 
-					 #derefFromContext(C, SUBJECT)"/>
+			   		 #derefFromContext(C, SUBJECT)"/>
 
 	<NLPattern name="q.predicate-have-collision"
 			   head="perf.q.predicate(LISTENER, #and(V:verb.collide-with(SUBJECT, OBJECT), time.past(V)))"
@@ -1136,13 +876,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 ('yes' | ['hell'] 'yeah' | 'of' 'course' | 'sure') [','] perf.inform(LISTENER, P) ('!'|'?'|'.')*"/>
+			   		 ('yes' | ['hell'] 'yeah' | 'of' 'course' | 'sure') [','] perf.inform.internal(LISTENER, P) ('!'|'?'|'.')*"/>
 	<NLPattern name="answer-yes-complex2"
 			   head="perf.inform.answer(LISTENER, 'yes'[symbol], P)"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 ('yes' | ['hell'] 'yeah' | 'of' 'course' | 'sure') [','] perf.inform(LISTENER, #and(P, time.future(P))) ('!'|'?'|'.')*"
+			   		 ('yes' | ['hell'] 'yeah' | 'of' 'course' | 'sure') [','] perf.inform.internal(LISTENER, #and(P, time.future(P))) ('!'|'?'|'.')*"
 			   priority="200"/>
 	<NLPattern name="answer-yes-complex-specialcase"
 			   head="perf.inform.answer(LISTENER, 'yes'[symbol])"
@@ -1467,8 +1207,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C)  
-			   		 ['not'] preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2) ('!'|'?')*
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 nounPhrase(X, N, P, C)  
+			   		 ['not'] preposition(PREPOSITION) 
+			   		 nounPhrase(X2, [singular], P2, C2) ('!'|'?')*
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(C2, OBJECT)"
 			   priority="150"/>
@@ -1617,8 +1359,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
 			   		 preposition(PREPOSITION) nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT)
-					 #derefQuery(C, V, PREDICATE)"
-			   priority="200"/>
+					 #derefQuery(C, V, PREDICATE)"/>
 	<NLPattern name="predicate-is-there-prep-2query"
 			   head="perf.q.predicate(LISTENER, #and(#cons(PREPOSITION, V, V2), #and(QUERY, QUERY2)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -5693,6 +5434,31 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #symbolToSort(LSYMBOL,LSORT)"
     		   priority="250"/>
 
+    <NLPattern name="action-advance"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [forward]))"
+    		   body="verb('verb.advance'[symbol], N2, P2, [infinitive-tense])"
+    		   priority="250"/>
+    <NLPattern name="action-advance2"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [forward], '2'[number.2]))"
+    		   body="verb('verb.advance'[symbol], N2, P2, [infinitive-tense]) 'twice'"
+    		   priority="250"/>
+    <NLPattern name="action-advance-n"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [forward], NUMBER))"
+    		   body="verb('verb.advance'[symbol], N2, P2, [infinitive-tense]) cardinal(NUMBER) 'times'"
+    		   priority="250"/>    		   
+    <NLPattern name="action-retreat"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [backward]))"
+    		   body="verb('verb.retreat'[symbol], N2, P2, [infinitive-tense])"
+    		   priority="250"/>
+    <NLPattern name="action-retreat2"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [backward], '2'[number.2]))"
+    		   body="verb('verb.retreat'[symbol], N2, P2, [infinitive-tense]) 'twice'"
+    		   priority="250"/>
+    <NLPattern name="action-retreat-n"
+    		   head="perf.request.action.internal(LISTENER, verb.move(LISTENER, [backward], NUMBER))"
+    		   body="verb('verb.retreat'[symbol], N2, P2, [infinitive-tense]) cardinal(NUMBER) 'times'"
+    		   priority="250"/>
+
     <NLPattern name="action-go-direction-amount"
     		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, LSORT:[direction], ASORT:[amount]))"
     		   body="verb(V2, N2, P2, [infinitive-tense]) 
@@ -5728,12 +5494,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         adverb('space.far'[space.far])"/>
 
     <NLPattern name="action-go-direction-twice"
-    		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, LSORT:[direction], '2'[number]))"
+    		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, LSORT:[direction], '2'[number.2]))"
     		   body="verb(V2, N2, P2, [infinitive-tense])
     		         adverb(LSYMBOL) #symbolToSort(LSYMBOL,LSORT)
     		         'twice'"/>
     <NLPattern name="action-go-direction-twice2"
-    		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, LSORT:[direction], '2'[number]))"
+    		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, LSORT:[direction], '2'[number.2]))"
     		   body="verb(V2, N2, P2, [infinitive-tense])
     		         [('to'|'toward'|'towards')] ['the'] noun(LSYMBOL, [singular]) #symbolToSort(LSYMBOL,LSORT)
     		         'twice'"/>
@@ -6971,14 +6737,11 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<!-- e.g.: "I cannot parse the sentence" -->
     <NLPattern name="cannot-verb"
-    		   head="perf.inform(LISTENER,#not(verb.can(OBJECT,#cons(VERB, OBJECT, 'sentence'[sentence]))))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-			   		 nounPhrase(X, N, P, C)
+    		   head="perf.inform.internal(LISTENER,#not(verb.can(OBJECT,#cons(VERB, OBJECT, 'sentence'[sentence]))))"
+		   	   body="nounPhrase(X, N, P, C)
 			   		 verb('verb.can'[symbol], NV, PV, TV) 'not'
 			   		 verb(VERB, NV2, PV2, [infinitive-tense]) 
 			   		 'the' 'sentence'
-			   		 ('!'|'?')*
 			   		 #derefFromContext(C, OBJECT)"
 			   priority="150"/>
 
@@ -7043,32 +6806,25 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
  	<!-- cause explanation patterns --> 
     <NLPattern name="cause-saxon"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(X2:[property-with-value], OBJECT, X3), CLAUSE2))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-    		         nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
+    		   head="perf.inform.internal(LISTENER, relation.cause(#cons(X2:[property-with-value], OBJECT, X3), CLAUSE2))"
+		   	   body="nounPhrase(X, N, P, C) '\'s' noun(X2, [singular])
 			   		 verb('verb.be'[symbol], N, P, T) adjective(X3) 
 			   		 ('because'|'because of')
-		   	   		 perf.inform(LISTENER, CLAUSE2)
+		   	   		 perf.inform.internal(LISTENER, CLAUSE2)
 		   	   		 #derefFromContext(C, OBJECT)"/> 
 
     <NLPattern name="cause2"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1), CLAUSE2))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
+    		   head="perf.inform.internal(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1), CLAUSE2))"
+		   	   body="nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
 					 ('because'|'because of')
-		   	   		 perf.inform(LISTENER, CLAUSE2)
+		   	   		 perf.inform.internal(LISTENER, CLAUSE2)
 		   	   		 #derefFromContext(C, SUBJECT1)
 		   	   		 #derefFromContext(C2, OBJECT1)"/> 	
     <NLPattern name="cause2-simple"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
+    		   head="perf.inform.internal(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
+		   	   body="nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
 					 ('because'|'because of')
 					 nounPhrase(X3, N3, P3, C3) verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) 
-					 ('!'|'.')*
 					 #symbolToSort(O2SYMBOL,OBJECT2)
 					 #derefFromContext(C, SUBJECT1)
 					 #derefFromContext(C2, OBJECT1)
@@ -7076,39 +6832,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   priority="200"/>
 
     <NLPattern name="cause1"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1), CLAUSE2))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T)
+    		   head="perf.inform.internal(LISTENER, relation.cause(#cons(V,SUBJECT1), CLAUSE2))"
+		   	   body="nounPhrase(X, N, P, C)  verb(V, N, P, T)
 					 ('because'|'because of')
-		   	   		 perf.inform(LISTENER, CLAUSE2)
+		   	   		 perf.inform.internal(LISTENER, CLAUSE2)
 		   	   		 #derefFromContext(C, SUBJECT1)"/>
     <NLPattern name="cause1-simple"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1), #cons(V3,SUBJECT2,OBJECT2)))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T)
+    		   head="perf.inform.internal(LISTENER, relation.cause(#cons(V,SUBJECT1), #cons(V3,SUBJECT2,OBJECT2)))"
+		   	   body="nounPhrase(X, N, P, C)  verb(V, N, P, T)
 					 ('because'|'because of')
 					 nounPhrase(X3, N3, P3, C3) verb(V3, N3, P3, T3) noun(O2SYMBOL, N4) 
-					 ('!'|'.')*
 					 #symbolToSort(O2SYMBOL,OBJECT2)
 					 #derefFromContext(C, SUBJECT1)
 					 #derefFromContext(C3, SUBJECT2)"
 			   priority="200"/>
-
-    <!--NLPattern name="cause2"
-    		   head="perf.inform(LISTENER, relation.cause(#cons(V,SUBJECT1,OBJECT1),#cons(V3,SUBJECT2,OBJECT2)))"
-		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
-		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
-					 nounPhrase(X, N, P, C)  verb(V, N, P, T) nounPhrase(X2, N2, P2, C2)
-					 'because'
-					 nounPhrase(X3, N3, P3, C3)  verb(V3, N3, P3, T3) nounPhrase(X4, N4, P4, C4)
-					 ('!'|'.')*
-					 #derefFromContext(C, SUBJECT1)
-					 #derefFromContext(C2, OBJECT1)
-					 #derefFromContext(C3, SUBJECT2)
-					 #derefFromContext(C4, OBJECT2)
-					 "/-->
 
 	<!-- perf.q.how patterns --> 
     <NLPattern name="q.how-verb"

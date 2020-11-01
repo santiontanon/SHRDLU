@@ -209,6 +209,7 @@
     <sort name="perf.thankyou" super="performative"/>
     <sort name="perf.youarewelcome" super="performative"/>
     <sort name="perf.inform" super="performative"/>
+    <sort name="perf.inform.internal" super="grammar-concept"/>
     <sort name="perf.inform.parseerror" super="perf.inform"/>   <!-- just so we can distinguish when an AI generates a performative to inform of a parse error -->
     <sort name="perf.inform.answer" super="perf.inform"/>
     <sort name="perf.acknowledge" super="performative"/>
@@ -619,6 +620,8 @@
     <sort name="verb.hear" super="verb"/>
     <sort name="verb.help" super="verb"/>
     <sort name="verb.move" super="verb"/>
+    <sort name="verb.advance" super="verb.move"/>
+    <sort name="verb.retreat" super="verb.move"/>
     <sort name="verb.move-to" super="verb"/>
     <sort name="verb.need" super="verb,#stateSort"/>
     <sort name="verb.need-for" super="verb"/>

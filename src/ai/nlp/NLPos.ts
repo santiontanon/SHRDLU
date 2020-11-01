@@ -1710,6 +1710,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
 
   this.addStandardVerbPOS("verb.access", "access","accesses","accessed","accessed","accessing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.advance", "advance","advances","advanced","advanced","advancing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "acquire","acquires","acquired","acquired","acquiring", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.follow", "accompany","accompanies","accompanied","accompanied","accompanying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.allow", "allow","allows","allowed","allowed","allowing", false, multitokens_raw, o);
@@ -1830,6 +1831,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.reproduce-media", "play","plays","played","played","playing", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.reboot", "reboot","reboots","rebootted","rebootted","rebutting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rest-on", "rest on","rests on","rested on","rested on","resting on", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.retreat", "retreat","retreats","retreated","retreated","retreating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.roll", "roll","rolls","rolled","rolled","rolling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.roll-of", "roll of","rolls of","rolled of","rolled of","rolling of", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);

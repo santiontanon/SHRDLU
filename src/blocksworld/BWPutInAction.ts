@@ -93,10 +93,21 @@ class BWPutIn_IntentionAction extends IntentionAction {
 			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(objectID, ai.o);
 			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(destinationID, ai.o);
 
+			// find the position closest to the arm:
+			let distance:number = null;
+			for(let position of positions) {
+				let d:number = (position[0] - world.shrdluArm.x)*(position[0] - world.shrdluArm.x) + 
+							   (position[1] - world.shrdluArm.y)*(position[1] - world.shrdluArm.y) + 
+							   (position[2] - world.shrdluArm.z)*(position[2] - world.shrdluArm.z);
+				if (distance == null || d<distance) {
+					this.targetx = position[0];
+					this.targety = position[1];
+					this.targetz = position[2];
+					distance = d;
+				}
+			}
+
 			// put it down:
-			this.targetx = positions[0][0];
-			this.targety = positions[0][1];
-			this.targetz = positions[0][2];
 			ai.intentionsCausedByRequest.push(ir);
 			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
 										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
