@@ -690,7 +690,7 @@ class POSParser {
 
     this.addTokenPOS(new PartOfSpeech("some", "pronoun.some", Term.fromString("indefinite-pronoun('pronoun.some'[symbol],[plural],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("all", "pronoun.all", Term.fromString("indefinite-pronoun('pronoun.all'[symbol],[plural],[gender],[third-person])", o), 1.0));
-//    this.addTokenPOS(new PartOfSpeech("there", "pronoun.there", Term.fromString("indefinite-pronoun('pronoun.there'[symbol],[grammatical-number],[gender],[third-person])", o), 1.0));
+    // this.addTokenPOS(new PartOfSpeech("there", "pronoun.there", Term.fromString("indefinite-pronoun('pronoun.there'[symbol],[grammatical-number],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anyone", "pronoun.anyone", Term.fromString("indefinite-pronoun('pronoun.anyone'[symbol],[singular],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("anybody", "pronoun.anyone", Term.fromString("indefinite-pronoun('pronoun.anyone'[symbol],[singular],[gender],[third-person])", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("someone", "pronoun.someone", Term.fromString("indefinite-pronoun('pronoun.someone'[symbol],[plural],[gender],[third-person])", o), 1.0));

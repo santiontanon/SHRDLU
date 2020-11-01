@@ -9,11 +9,6 @@ class NLContextEntity {
 		this.mentionTime = time;
 		this.distanceFromSpeaker = distance;
 		this.terms = tl;
-	 //    if (typeof id.value === 'string') {
-	 //    	// ...
-	 //    } else {
-		// 	console.error("number ID!");
-		// }
 	}
 
 
@@ -48,18 +43,15 @@ class NLContextEntity {
 	adjectiveMatch(sort:Sort, o:Ontology) : boolean
 	{
 		for(let term of this.terms) {
-//			console.log("checking term: " + term + " for adjective " + sort.name);
 			if (term.attributes.length == 1 &&
 				term.functor.is_a(sort)) {
 				return true;
 			} else if (term.attributes.length == 2 &&
-//					   term.functor.is_a(sort) &&
 					   term.functor.is_a(o.getSort("property-with-value")) &&
 					   (term.attributes[1] instanceof ConstantTermAttribute) &&
 					   term.attributes[1].sort.is_a(sort)) {
 				return true;
 			}
-//			console.log("    no match...");
 		}		
 		return false;
 	}
@@ -67,14 +59,9 @@ class NLContextEntity {
 
 	relationMatch(relation:Term, o:Ontology, pos:POSParser) : boolean
 	{
-		//console.log("        relationMatch: " + relation + " with " + this.terms);
 		for(let term of this.terms) {
-//			console.log("checking term: " + term + " for relation " + relation);
 			if (relation.subsumesNoBindings(term) == 1) {
-				// console.log("match! " + relation  + "   subsumes   " + term);
 				return true;
-//			} else {
-				// console.log("no match! " + relation  + "   does not subsume   " + term);				
 			}
 		}		
 
@@ -83,7 +70,6 @@ class NLContextEntity {
 			let inverseRelation:Sort = o.getSort(pos.reverseRelations[relation.functor.name]);
 			let relation_reverse:Term = new Term(inverseRelation, [relation.attributes[1], relation.attributes[0]]);
 			for(let term of this.terms) {
-//				if (term.equalsNoBindings(relation_reverse) == 1) {
 				if (relation_reverse.subsumesNoBindings(term) == 1) {
 					return true;
 				}
@@ -412,7 +398,6 @@ class NLContext {
 				t.functor.is_a(pSort)) {
 				if (t.attributes[0] instanceof ConstantTermAttribute &&
 				    (<ConstantTermAttribute>t.attributes[0]).value == ID) {
-//					console.log("newContextEntity: adding " + t + " to " + ID);
 					e.terms.push(t);
 				}
 			}
@@ -426,7 +411,6 @@ class NLContext {
 				for(let att of te.term.attributes) {
 					if (att instanceof ConstantTermAttribute &&
 					    (<ConstantTermAttribute>att).value == ID) {
-//						console.log("newContextEntity: adding " + s.terms[0] + " to " + ID);
 						e.addTerm(te.term);
 					}
 				}
@@ -434,13 +418,10 @@ class NLContext {
 		}
 		for(let tmp of typeSortsWithArity) {
 			let s_l:Sentence[] = this.ai.longTermMemory.allSingleTermMatches(<Sort>(tmp[0]), <number>(tmp[1]), o);
-//			console.log("allSingleTermMatches ("+tmp[0]+"): " + s_l.length);
 			for(let s of s_l) {
-//				console.log("NLContext: considering sentence " + s);
 				for(let att of s.terms[0].attributes) {
 					if (att instanceof ConstantTermAttribute &&
 					    (<ConstantTermAttribute>att).value == ID) {
-//						console.log("newContextEntity: adding " + s.terms[0] + " to " + ID);
 						e.addTerm(s.terms[0]);
 					}
 				}
@@ -518,11 +499,8 @@ class NLContext {
 			return newPerformatives;
 		}
 
-//		console.log("NLContext.newPerformative: " + perf);
-
 		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, parse, cause, this, timeStamp);
 		let IDs:ConstantTermAttribute[] = cp.IDsInPerformative(o);
-//		console.log("NLContext.newPerformative IDs found: " + IDs);
 
 		for(let id of IDs) {
 			let ce:NLContextEntity = this.newContextEntity(id, timeStamp, null, o, false);			
@@ -629,11 +607,9 @@ class NLContext {
 
 	static searchForIDsInClause(clause:Term, IDs:ConstantTermAttribute[], o:Ontology)
 	{
-//		console.log("searchForIDsInClause");
 		for(let i:number = 0;i<clause.attributes.length;i++) {
 			if (clause.attributes[i] instanceof ConstantTermAttribute &&
 				clause.attributes[i].sort.name == "#id") {
-//					console.log("searchForIDsInClause: " + clause.attributes[0]);
 				IDs.push(<ConstantTermAttribute>(clause.attributes[i]));
 			} else if (clause.attributes[i] instanceof TermTermAttribute) {
 				NLContext.searchForIDsInClause((<TermTermAttribute>clause.attributes[i]).term, IDs, o);
@@ -732,11 +708,6 @@ class NLContext {
 				console.error("context.deref: clause contains an element that is not a term!");
 			}
 		}
-		/*
-		console.log("context.derefInternal: \n  PN: " + properNounTerms + "\n  N: " + nounTerms + 
-					"\n  P:" + pronounTerms + "\n  A: " + adjectiveTerms + "\n  D: " + determinerTerms + 
-					"\n  R:" + relationTerms + "\n  O: " + otherTerms);
-		*/
 		if (genitiveTerm != null) return null;
 		let all_determiner:Term = null;
 		let other_determiner:Term = null;
@@ -769,13 +740,10 @@ class NLContext {
 			for(let properNounTerm of properNounTerms) {
 				if (properNounTerm.attributes[0] instanceof ConstantTermAttribute) {
 					let name:string = <string>(<ConstantTermAttribute>(properNounTerm.attributes[0])).value;
-					//let entity:NLContextEntity = this.findClosestProperNoun(name, o);
-					//if (entity != null) output.push(entity.objectID);
 					let entities:NLContextEntity[] = this.findAllProperNoun(name, o);
 					for(let entity of entities) {
 						if (output.indexOf(entity.objectID) == -1) output.push(entity.objectID);
 					}
-					// console.log("Proper noun match ('"+name+"'): " + output);
 				}
 			}
 			return output;
@@ -899,8 +867,8 @@ class NLContext {
 						// - "those" -> (ignore)
 						// - "other" -> removes all the matches from short term memory or from mentions
 
-						// "a" -> ???
-						// "some"/"any"/"much"/"many" -> ???
+						// "a"/"any" -> fail
+						// "some"/"much"/"many" -> ???
 						let the_determiner:boolean = false;
 //						let a_determiner:boolean = false;
 						let this_determiner:boolean = false;
@@ -1582,7 +1550,7 @@ class NLContext {
 			if (s.terms[0].functor == nameSort && 
 				s.terms[0].attributes[1] instanceof ConstantTermAttribute &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), 0, null, o, true);
 				if (e != null) return e;
 			}
 		}
@@ -1608,7 +1576,7 @@ class NLContext {
 				(s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
 				(<ConstantTermAttribute>s.terms[0].attributes[1]).value == name) {
 				//console.log("    findAllProperNoun: '"+(<ConstantTermAttribute>s.terms[0].attributes[0]).value+"'");
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), 0, null, o, true);
 				if (e != null) {
 					matches.push(e);
 				} else {
@@ -1653,7 +1621,7 @@ class NLContext {
 		for(let s of this.ai.longTermMemory.allSingleTermMatches(sort, 1, o)) {
 			if (s.terms[0].functor.is_a(sort) &&
 				s.terms[0].attributes[0] instanceof ConstantTermAttribute) {
-				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), this.ai.time_in_seconds, null, o, true);
+				let e:NLContextEntity = this.newContextEntity(<ConstantTermAttribute>(s.terms[0].attributes[0]), 0, null, o, true);
 				if (e != null) results.push(e);
 			}
 		}

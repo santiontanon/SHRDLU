@@ -1568,10 +1568,11 @@ NLParseTestUnifyingListener("is the crate supported?", o.getSort("performative")
 NLParseTestUnifyingListener("how many keys are not in the kitchen?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(key(X), #not(space.at(X,'room1'[#id]))))"); 
 NLParseTestUnifyingListener("now drop a block on the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.drop-in('etaoin'[#id], X, '5'[#id]), block(X), [number.1])");
 NLParseTestUnifyingListener("go drop a block on the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.drop-in('etaoin'[#id], X, '5'[#id]), block(X), [number.1])");
-NLParseTest("were you aware that the red key is in the kitchen?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room1'[#id]))");
-NLParseTest("did you know that the red key is in the kitchen?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room1'[#id]))");
 NLParseTestUnifyingListener("advance", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.move(V0, [forward]))");
 NLParseTestUnifyingListener("retreat twice", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.move(V0, [backward], '2'[number.2]))");
+NLParseTest("were you aware that the red key is in the kitchen?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room1'[#id]))");
+NLParseTest("did you know that the red key is in the bedroom?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room2'[#id]))");
+NLParseTestUnifyingListener("take me there", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room2'[#id]))"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
