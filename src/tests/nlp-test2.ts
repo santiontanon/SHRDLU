@@ -1574,6 +1574,12 @@ NLParseTest("were you aware that the red key is in the kitchen?", o.getSort("per
 NLParseTest("did you know that the red key is in the bedroom?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room2'[#id]))");
 NLParseTestUnifyingListener("take me there", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room2'[#id]))"); 
 
+NLParseTest("the pyramid that you hold", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
+NLParseTest("the pyramid that you are holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
+NLParseTest("the pyramid you are holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
+NLParseTest("the pyramid that you are not holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(#not(V5:verb.hold(LISTENER, V0)), V7:noun(V0, V1))))");
+
+
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
 

@@ -143,6 +143,7 @@
     <sort name="phrasal-verb" super="verb"/>    
     <sort name="conjunction" super="part-of-speech"/>    
 
+    <sort name="conjunction-if" super="conjunction"/>    
     <sort name="conjunction-contrast" super="conjunction"/>    
     <sort name="conjunction-consequence" super="conjunction"/>    
 

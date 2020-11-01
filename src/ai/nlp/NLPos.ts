@@ -604,6 +604,7 @@ class POSParser {
     
 
     // conjunctions:
+    this.addTokenPOS(new PartOfSpeech("if", "conjunction-if", Term.fromString("conjunction-if()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("but", "conjunction-contrast", Term.fromString("conjunction-contrast()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("however", "conjunction-contrast", Term.fromString("conjunction-contrast()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("so", "conjunction-consequence", Term.fromString("conjunction-consequence()", o), 1.0));
