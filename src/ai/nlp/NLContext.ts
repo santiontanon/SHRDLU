@@ -108,7 +108,7 @@ class NLContextEntity {
 	{
 		let id:ConstantTermAttribute = new ConstantTermAttribute(xml.getAttribute("id"),
 																 o.getSort(xml.getAttribute("sort")));
-		let time:number = null;
+		let time:number = 0;
 		let distance:number = null;
 		let tl:Term[] = [];
 
@@ -1390,60 +1390,106 @@ class NLContext {
 	*/
 	applySingularTheDeterminer(msl:NLContextEntity[][]) : NLContextEntity[]
 	{
-		if (msl[0].length == 1) {
+		let pool:NLContextEntity[] = null;
+
+		if (msl[0].length > 0) {
+			pool = msl[0];
+		} else if (msl[1].length > 0) {
+			pool = msl[1];
+		} else {
+			pool = msl[2];
+		}
+
+
+		if (pool.length == 1) {
 			// mentions:
-			return [msl[0][0]];
-		} else if (msl[0].length>1) {
+			return [pool[0]];
+		} else if (pool.length>1) {
 			// mentions:
 			// console.log("    msl[0][0].mentionTime: " + msl[0][0].mentionTime + " (" + msl[0][0].objectID + ")");
 			// console.log("    msl[0][1].mentionTime: " + msl[0][1].mentionTime + " (" + msl[0][0].objectID + ")");
-			if (msl[0][0].mentionTime > 
-				msl[0][1].mentionTime) {
-				return [msl[0][0]];
+			if (pool[0].mentionTime > 
+				pool[1].mentionTime) {
+				return [pool[0]];
 			} else {
-				// the two closest entities were mentioned at the same time, we cannot disambiguate just by time, try to disambiguate by distnace!
-				let best:NLContextEntity = null;
-				let newBest:boolean = false;
-				for(let e of msl[0]) {
-					if (best == null) {
-						best = e;
-					} else {
-						if (e.mentionTime < best.mentionTime) {
-							best = e;
-							newBest = true;
-						} else if (e.mentionTime == best.mentionTime) {
-							if (e.distanceFromSpeaker != null && best.distanceFromSpeaker != null) {
-								if (e.distanceFromSpeaker < best.distanceFromSpeaker) {
-									best = e;
-									newBest = true;
-								} else if (e.distanceFromSpeaker == best.distanceFromSpeaker) {
-									newBest = false;
-								}
-							} else {
-								return [];
-							}
-						}
+				// the two closest entities were mentioned at the same time.
+				// Since we cannot disambiguate just by time, try to disambiguate by distance:
+				// let best:NLContextEntity = null;
+				// let newBest:boolean = false;
+				// for(let e of msl[0]) {
+				// 	if (best == null) {
+				// 		best = e;
+				// 	} else {
+				// 		if (e.mentionTime < best.mentionTime) {
+				// 			best = e;
+				// 			newBest = true;
+				// 		} else if (e.mentionTime == best.mentionTime) {
+				// 			if (e.distanceFromSpeaker != null && best.distanceFromSpeaker != null) {
+				// 				if (e.distanceFromSpeaker < best.distanceFromSpeaker) {
+				// 					best = e;
+				// 					newBest = true;
+				// 				} else if (e.distanceFromSpeaker == best.distanceFromSpeaker) {
+				// 					newBest = false;
+				// 				}
+				// 			} else {
+				// 				return [];
+				// 			}
+				// 		}
+				// 	}
+				// }
+				// if (best != null && newBest) return [best];
+
+				let candidates:NLContextEntity[] = []
+				let bestTime:number = null;
+				for(let e of pool) {
+					if (bestTime == null || e.mentionTime < bestTime) {
+						bestTime = e.mentionTime;
+						candidates = [e];
+					} else if (bestTime == e.mentionTime) {
+						candidates.push(e);
 					}
 				}
-				if (best != null && newBest) return [best];
+				if (candidates.length <= 1) return candidates;
+
+				// sort by distance:
+				candidates.sort((e1:NLContextEntity, e2:NLContextEntity) => 
+					{
+						if (e1.distanceFromSpeaker == null &&
+							e2.distanceFromSpeaker == null) {
+							return 0;
+						} else if (e1.distanceFromSpeaker == null) {
+							return 1;
+						} else if (e2.distanceFromSpeaker == null) {
+							return -1;
+						} else {
+							return e1.distanceFromSpeaker - e2.distanceFromSpeaker;
+						}
+					});
+				// if the closest one is clearly closer (and the others are far), disambiguate:
+				if (candidates[0].distanceFromSpeaker < candidates[1].distanceFromSpeaker &&
+					candidates[0].distanceFromSpeaker < SPACE_NEAR_FAR_THRESHOLD &&
+					candidates[1].distanceFromSpeaker > SPACE_NEAR_FAR_THRESHOLD) {
+					return [candidates[0]]
+				}
+
 				return [];
 			}
-		} else if (msl[1].length==1) {
-			// short term memory:
-			return [msl[1][0]];
-		} else if (msl[1].length>1) {
-			// short term memory:
-			let d1:number = msl[1][0].distanceFromSpeaker;
-			let d2:number = msl[1][1].distanceFromSpeaker;
-			// if the distance d1 is smaller than d2:
-			if (d1 != null && d2 != null) {
-				// if the distance d1 is SIGNIFICANTLY smaller than d2:
-				//if (d1 <= 32 && d2 >= 64) return [msl[1][0]];
-				if (d1 < d2) return [msl[1][0]];
-			}
-			return [];
-		} else if (msl[2].length==1) {
-			return [msl[2][0]];
+		// } else if (msl[1].length==1) {
+		// 	// short term memory:
+		// 	return [msl[1][0]];
+		// } else if (msl[1].length>1) {
+		// 	// short term memory:
+		// 	let d1:number = msl[1][0].distanceFromSpeaker;
+		// 	let d2:number = msl[1][1].distanceFromSpeaker;
+		// 	// if the distance d1 is smaller than d2:
+		// 	if (d1 != null && d2 != null) {
+		// 		// if the distance d1 is SIGNIFICANTLY smaller than d2:
+		// 		//if (d1 <= 32 && d2 >= 64) return [msl[1][0]];
+		// 		if (d1 < d2) return [msl[1][0]];
+		// 	}
+		// 	return [];
+		// } else if (msl[2].length==1) {
+		// 	return [msl[2][0]];
 		}
 		return [];
 	}

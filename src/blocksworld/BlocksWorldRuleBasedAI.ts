@@ -241,7 +241,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 						// let distanceFromSpeaker:number = this.distanceBetweenIds(speaker, id);
 						// let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSpeaker, this.o, false);
 						let distanceFromSelf:number = this.distanceBetweenIds(this.selfID, id);
-						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], null, distanceFromSelf, this.o, false);
+						let e:NLContextEntity = context.newContextEntity(<ConstantTermAttribute>t.attributes[0], 0, distanceFromSelf, this.o, false);
 						if (e!=null && context.shortTermMemory.indexOf(e) == -1) context.shortTermMemory.push(e);
 					}
 				}
@@ -565,6 +565,9 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				context.lastPerformativeInvolvingThisCharacterWasToUs = true;
 				return true;
 			}
+		} else {
+			// if there is no performative (parse error), they are talking to us!
+			return true;
 		}
 
 		if (context.performatives.length>0 &&
