@@ -57,7 +57,6 @@ class CompiledNLPatternRules extends NLPatternContainer {
 	{
 		// parse the sentence:
 //		console.log("NLPatternRule.parse");
-		this.lastDerefErrors = [];
 		let bindings:Bindings = new Bindings();
 		if (this.speakerVariable != null) {
 //			console.log("Speaker: " + this.speakerVariable);

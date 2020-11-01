@@ -49,7 +49,6 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 								  timeTerm, ai, requester, 
 								  intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) return true;
 
-		// negate the query:
 		let negated_s:Sentence = new Sentence([],[]);
 		for(let s of s_l) {
 			if (s.getAllVariables().length > 0) variablesPresent = true;

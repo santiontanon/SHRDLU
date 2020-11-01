@@ -1064,6 +1064,7 @@ class RuleBasedAI {
 					if (perf2.attributes.length>=3 &&
 						perf2.attributes[2] instanceof TermTermAttribute) {
 						// this means that the action request has a variable and we need to start an inference process:
+						/*
 						let intention_l:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#and");;
 						let target1Terms:Term[] = [];
 						let target1Signs:boolean[] = [];
@@ -1079,8 +1080,16 @@ class RuleBasedAI {
 
 						// 2) start the inference process:
 						let target1:Sentence[] = [];
-						target1.push(new Sentence(target1Terms, target1Signs));
-						let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new StopAction_InferenceEffect(action));
+						target1.push(new Sentence(target1Terms, target1Signs));*/
+
+						let targets:Sentence[][] = [];
+						let negatedExpression:Term = new Term(this.o.getSort("#not"),
+															  [new TermTermAttribute((<TermTermAttribute>perf2.attributes[2]).term)])
+						let target:Sentence[] = Term.termToSentences(negatedExpression, this.o);
+						targets.push(target)
+						let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new StopAction_InferenceEffect(action));
+
+						// let ir:InferenceRecord = new InferenceRecord(this, [], [target1], 1, 0, false, null, new StopAction_InferenceEffect(action));
 						ir.triggeredBy = perf2;
 						ir.triggeredBySpeaker = context.speaker;
 						this.queuedInferenceProcesses.push(ir);
@@ -1214,24 +1223,6 @@ class RuleBasedAI {
 					let negatedExpression:Term = new Term(this.o.getSort("#not"),
 														  [new TermTermAttribute((<TermTermAttribute>perf2.attributes[2]).term)])
 					let target:Sentence[] = Term.termToSentences(negatedExpression, this.o);
-					// let intention_l_ors:Term[] = NLParser.termsInList((<TermTermAttribute>perf2.attributes[2]).term, "#or");
-					// // Translate the term to sentences, and get the negation in normal form:
-					// let target:Sentence[] = [];
-					// for(let intention_l_or of intention_l_ors) {
-					// 	let intention_l:Term[] = NLParser.termsInList(intention_l_or, "#and");
-					// 	let targetTerms:Term[] = [];
-					// 	let targetSigns:boolean[] = [];
-					// 	for(let i:number = 0;i<intention_l.length;i++) {
-					// 		if (intention_l[i].functor.name == "#not") {
-					// 			targetTerms.push((<TermTermAttribute>(intention_l[i].attributes[0])).term);
-					// 			targetSigns.push(true);
-					// 		} else {
-					// 			targetTerms.push(intention_l[i]);
-					// 			targetSigns.push(false);
-					// 		}
-					// 	}
-					// 	target.push(new Sentence(targetTerms, targetSigns));
-					// }
 					targets.push(target)
 
 					// 2) start the inference process:
@@ -1375,15 +1366,19 @@ class RuleBasedAI {
 		for(let e of this.naturalLanguageParser.error_deref) {
 			if (e.tokensLeftToParse > 0) continue;
 			if (e.derefFromContextErrors.length>0) {
+				if (errorType > e.derefErrorType) continue;
 				tmp = e.derefFromContextErrors[0];
 				errorType = e.derefErrorType;
 			} else if (e.derefUniversalErrors.length>0) {
+				if (errorType > e.derefErrorType) continue;
 				tmp = e.derefUniversalErrors[0];
 				errorType = e.derefErrorType;
 			} else if (e.derefHypotheticalErrors.length>0) {
+				if (errorType > e.derefErrorType) continue;
 				tmp = e.derefHypotheticalErrors[0];
 				errorType = e.derefErrorType;
 			} else if (e.derefQueryErrors.length>0) {
+				if (errorType > e.derefErrorType) continue;
 				tmp = e.derefQueryErrors[0];
 				errorType = e.derefErrorType;
 			}

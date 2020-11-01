@@ -100,6 +100,10 @@ class NLParser {
 		let bestPriorityOfFirstRule:number = 0;
 		let semanticalErrors:NLParseRecord[] = [];
 
+		for(let sort in this.compiledRules) {
+			this.compiledRules[sort].lastDerefErrors = [];
+		}
+
 		let compiled:CompiledNLPatternRules = this.compiledRules[s.name];
 		if (compiled != null) {
 			// if we have a compiled tree, use it!
@@ -137,11 +141,16 @@ class NLParser {
 						results.push(r);
 					} else {
 						semanticalErrors.push(r);
-						for(let e of compiled.lastDerefErrors) derefErrors.push(e);
+						// for(let e of compiled.lastDerefErrors) derefErrors.push(e);
 					}
 				}
-			} else {
-				for(let e of compiled.lastDerefErrors) derefErrors.push(e);
+			}
+			if (results.length == 0) {
+				for(let sort in this.compiledRules) {
+					for(let e of this.compiledRules[sort].lastDerefErrors) {
+						derefErrors.push(e);
+					}
+				}
 			}
 		} else {
 			// we don't have a compiled tree, just use the rules...

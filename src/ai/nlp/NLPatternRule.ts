@@ -1,7 +1,8 @@
+// Sorted in order or preference of reporting (we prefer to report the ones with a higher number):
 var DEREF_ERROR_CANNOT_PROCESS_EXPRESSION:number = 0;
-var DEREF_ERROR_NO_REFERENTS:number = 1;
-var DEREF_ERROR_CANNOT_DISAMBIGUATE:number = 2;
-var DEREF_ERROR_VERB_COMPLETION:number = 3;
+var DEREF_ERROR_VERB_COMPLETION:number = 1;
+var DEREF_ERROR_NO_REFERENTS:number = 2;
+var DEREF_ERROR_CANNOT_DISAMBIGUATE:number = 3;
 
 
 
