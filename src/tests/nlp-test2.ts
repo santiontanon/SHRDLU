@@ -6,6 +6,8 @@
 
 */
 
+var SPACE_NEAR_FAR_THRESHOLD:number = 12;
+
 var o:Ontology = new Ontology();
 Sort.clear();
 var xmlhttp:XMLHttpRequest = new XMLHttpRequest();
@@ -184,89 +186,89 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
 
 var context:NLContext = new NLContext("1", testAI, 5);
 var ce1:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('1', o.getSort("#id")), 
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("human('1'[#id])",o), 
                                                Term.fromString("name('1'[#id], 'david'[symbol])",o),
                                                Term.fromString("verb.own('1'[#id],'4'[#id])",o),
                                                Term.fromString("space.at('1'[#id],'room1'[#id])",o)]);
 var ce2:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('2', o.getSort("#id")),
-                                              null, 100, 
+                                              0, 100, 
                                               [Term.fromString("ship('2'[#id])",o),
                                                Term.fromString("color('2'[#id],'red'[red])",o),
                                                Term.fromString("verb.belong('2'[#id],'etaoin'[#id])",o)]);
 var ce3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin', o.getSort("#id")),
-                                              null, 10, 
+                                              0, 10, 
                                               [Term.fromString("disembodied-ai('etaoin'[#id])",o),
                                                Term.fromString("name('etaoin'[#id], 'etaoin'[symbol])",o),
                                                Term.fromString("verb.own('etaoin'[#id],'2'[#id])",o),
                                                Term.fromString("space.at('etaoin'[#id],'location-aurora-station'[#id])",o),
                                                Term.fromString("verb.own('etaoin'[#id], 'etaoin-memory'[#id])",o)]);
 var ce4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('4', o.getSort("#id")),
-                                              null, 3, 
+                                              0, 3, 
                                               [Term.fromString("white-key('4'[#id])",o),
                                                Term.fromString("name('4'[#id], 'bedroom key'[symbol])",o),
                                                Term.fromString("color('4'[#id],'white'[white])",o),
                                                Term.fromString("verb.belong('4'[#id],'1'[#id])",o)]);
 var ce5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('5', o.getSort("#id")),
-                                              null, 5, 
+                                              0, 5, 
                                               [Term.fromString("crate('5'[#id])",o),
                                                Term.fromString("property.opened('5'[#id])",o)]);
 var ce6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('6', o.getSort("#id")),
-                                              null, 4, 
+                                              0, 4, 
                                               [Term.fromString("red-key('6'[#id])",o),
                                                Term.fromString("color('6'[#id],'red'[red])",o)]);
 var ce7:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room1', o.getSort("#id")),
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("kitchen('room1'[#id])",o),
                                                Term.fromString("space.inside.of('room1'[#id], 'location-aurora-station'[#id])",o),
                                                Term.fromString("verb.belong('door1'[#id], 'room1'[#id])",o),
                                                Term.fromString("space.at('1'[#id],'room1'[#id])",o),
                                                Term.fromString("space.at('vitamins'[#id],'room1'[#id])",o)]);
 var ce8:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('location-aurora-station', o.getSort("#id")),
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("station('location-aurora-station'[#id])",o),
                                                Term.fromString("name('location-aurora-station'[#id], 'aurora station'[symbol])",o),
                                                Term.fromString("space.inside.of('room1'[#id], 'location-aurora-station'[#id])",o),
                                                Term.fromString("space.inside.of('room2'[#id], 'location-aurora-station'[#id])",o),
                                                Term.fromString("space.at('location-aurora-station'[#id], 'spacer-valley'[#id])",o)]);
 var ce9:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin-memory', o.getSort("#id")),
-                                              null, 20, 
+                                              0, 20, 
                                               [Term.fromString("memory-bank('etaoin-memory'[#id])",o),
                                                Term.fromString("verb.belong('etaoin-memory'[#id], 'etaoin'[#id])",o)]);
 var ce10:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room2', o.getSort("#id")),
-                                              null, 30, 
+                                              0, 30, 
                                               [Term.fromString("bedroom('room2'[#id])",o),
                                                Term.fromString("name('room2'[#id], 'bedroom 5'[symbol])",o),
                                                Term.fromString("space.inside.of('room2'[#id], 'location-aurora-station'[#id])",o),
                                                Term.fromString("verb.belong('door2'[#id], 'room2'[#id])",o)]);
 var ce11:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('l1', o.getSort("#id")),
-                                              null, 30, 
+                                              0, 30, 
                                               [Term.fromString("light('l1'[#id])",o),
                                                Term.fromString("space.at('l1'[#id], 'room1'[#id])",o)]);
 var ce12:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('space', o.getSort("#id")),
-                                              null, 1000, 
+                                              0, 1000, 
                                               [Term.fromString("outer-space('space'[#id])",o),
                                                Term.fromString("name('space'[#id], 'space'[symbol])",o)]);
 var ce13:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('spacer-valley', o.getSort("#id")),
-                                              null, 1000, 
+                                              0, 1000, 
                                               [Term.fromString("valley('spacer-valley'[#id])",o),
                                                Term.fromString("name('spacer-valley'[#id], 'spacer valley'[symbol])",o),
                                                Term.fromString("space.at('location-aurora-station'[#id], 'spacer-valley'[#id])",o)]);
 var ce14:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('english', o.getSort("#id")),
-                                              null, null, 
+                                              0, null, 
                                               [Term.fromString("language('english'[#id])",o),
                                                Term.fromString("name('english'[#id], 'english'[symbol])",o)]);
 var ce15:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('door1', o.getSort("#id")),
-                                              null, 10, 
+                                              0, 10, 
                                               [Term.fromString("door('door1'[#id])",o),
                                                Term.fromString("verb.belong('door1'[#id], 'room1'[#id])",o)]);
 var ce16:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('door2', o.getSort("#id")),
-                                              null, 30, 
+                                              0, 30, 
                                               [Term.fromString("door('door2'[#id])",o),
                                                Term.fromString("verb.belong('door2'[#id], 'room2'[#id])",o)]);
 
 var ce17:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty', o.getSort("#id")),
-                                              null, 30, 
+                                              0, 30, 
                                               [Term.fromString("robot('qwerty'[#id])",o),
                                                Term.fromString("small('qwerty'[#id])",o),
                                                Term.fromString("color('qwerty'[#id], 'white'[white])",o),
@@ -274,7 +276,7 @@ var ce17:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty
                                                Term.fromString("space.at('etaoin'[#id],'room2'[#id])",o)]);
 
 var ce18:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('vitamins', o.getSort("#id")),
-                                              null, 30, 
+                                              0, 30, 
                                               [Term.fromString("vitamins('vitamins'[#id])",o),
                                                Term.fromString("space.at('vitamins'[#id],'room1'[#id])",o)]);
 
@@ -1573,12 +1575,12 @@ NLParseTestUnifyingListener("retreat twice", o.getSort("performative"),  context
 NLParseTest("were you aware that the red key is in the kitchen?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room1'[#id]))");
 NLParseTest("did you know that the red key is in the bedroom?", o.getSort("performative"), context, "perf.inform([any], space.at('6'[#id], 'room2'[#id]))");
 NLParseTestUnifyingListener("take me there", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room2'[#id]))"); 
-
 NLParseTest("the pyramid that you hold", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
 NLParseTest("the pyramid that you are holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
 NLParseTest("the pyramid you are holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(V5:verb.hold(LISTENER, V0), V7:noun(V0, V1))))");
 NLParseTest("the pyramid that you are not holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(#not(V5:verb.hold(LISTENER, V0)), V7:noun(V0, V1))))");
-
+NLParseTestUnifyingListener("take me back to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
+NLParseTestUnifyingListener("take me to the kitchen again", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

@@ -37,70 +37,70 @@ function testNLG_entity(id:ConstantTermAttribute, speaker:string, result:string)
 
 var idSort:Sort = g_o.getSort("#id");
 var ceg1:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('1', g_o.getSort("#id")), 
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("human('1'[#id])",g_o), 
                                                Term.fromString("name('1'[#id], 'david'[symbol])",g_o),
                                                Term.fromString("verb.own('1'[#id],'k1'[#id])",g_o)]);
 var ceg2:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s1', g_o.getSort("#id")),
-                                              null, 100, 
+                                              0, 100, 
                                               [Term.fromString("ship('s1'[#id])",g_o),
                                                Term.fromString("color('s1'[#id],'red'[red])",g_o),
                                                Term.fromString("verb.belong('s1'[#id],'etaoin'[#id])",g_o)]);
 var ceg3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin', g_o.getSort("#id")),
-                                              null, 10, 
+                                              0, 10, 
                                               [Term.fromString("ai('etaoin'[#id])",g_o),
                                                Term.fromString("name('etaoin'[#id], 'etaoin'[#id])",g_o),
                                                Term.fromString("verb.own('etaoin'[#id],'s1'[#id])",g_o)]);
 var ceg4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('qwerty', g_o.getSort("#id")),
-                                              null, 10, 
+                                              0, 10, 
                                               [Term.fromString("robot('qwerty'[#id])",g_o),
                                                Term.fromString("name('qwerty'[#id], 'qwerty'[#id])",g_o)]);
 var ceg5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k1', g_o.getSort("#id")),
-                                              null, 3, 
+                                              0, 3, 
                                               [Term.fromString("key-card('k1'[#id])",g_o),
                                                Term.fromString("color('k1'[#id],'blue'[blue])",g_o),
                                                Term.fromString("verb.belong('k1'[#id],'1'[#id])",g_o)]);
 var ceg6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c1', g_o.getSort("#id")),
-                                              null, 4, 
+                                              0, 4, 
                                               [Term.fromString("crate('c1'[#id])",g_o),
                                                Term.fromString("property.opened('c1'[#id])",g_o)]);
 var ceg7:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('k2', g_o.getSort("#id")),
-                                              null, 3, 
+                                              0, 3, 
                                               [Term.fromString("key-card('k2'[#id])",g_o),
                                                Term.fromString("color('k2'[#id],'red'[red])",g_o)]);
 var ceg8:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room1', g_o.getSort("#id")),
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("kitchen('room1'[#id])",g_o),
                                                Term.fromString("temperature('room1'[#id],'25'[temperature.unit.celsius])",g_o)]);
 var ceg9:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s2', g_o.getSort("#id")),
-                                              null, 100, 
+                                              0, 100, 
                                               [Term.fromString("ship('s2'[#id])",g_o),
                                                Term.fromString("color('s2'[#id],'red'[red])",g_o)]);
 var ceg10:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('s3', g_o.getSort("#id")),
-                                              null, 100, 
+                                              0, 100, 
                                               [Term.fromString("ship('s3'[#id])",g_o),
                                                Term.fromString("color('s3'[#id],'blue'[blue])",g_o)]);
 var ceg11:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('c2', g_o.getSort("#id")),
-                                              null, 4, 
+                                              0, 4, 
                                               [Term.fromString("crate('c2'[#id])",g_o),
                                                Term.fromString("property.opened('c2'[#id])",g_o),
                                                Term.fromString("verb.belong('c2'[#id],'qwerty'[#id])",g_o)]);
 var ceg12:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('room2', g_o.getSort("#id")),
-                                              null, 0, 
+                                              0, 0, 
                                               [Term.fromString("bedroom('room2'[#id])",g_o)]);
 
 var ceg13:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('ch1', g_o.getSort("#id")),
-                                              null, 10, 
+                                              0, 10, 
                                               [Term.fromString("chair('ch1'[#id])",g_o),
                                                Term.fromString("space.at('ch1'[#id],'room1'[#id])",g_o)]);
 
 var ceg14:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('ch2', g_o.getSort("#id")),
-                                              null, 50, 
+                                              0, 50, 
                                               [Term.fromString("chair('ch2'[#id])",g_o),
                                                Term.fromString("space.at('ch2'[#id],'room2'[#id])",g_o)]);
 
 var ceg15:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('cave-in', g_o.getSort("#id")),
-                                              null, 50, 
+                                              0, 50, 
                                               [Term.fromString("cave-in('cave-in'[#id])",g_o),
                                                Term.fromString("space.at('cave-in'[#id],'room2'[#id])",g_o)]);
 

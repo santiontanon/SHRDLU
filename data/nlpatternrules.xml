@@ -4400,7 +4400,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
-    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION)
+    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION) ['again']
     		         [[','] 'please'] 
     		         ('!'|'.')*"
     		   priority="125"/>
@@ -4410,7 +4410,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
-    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION)
+    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4420,7 +4420,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
-    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT)
+    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT) ['again']
     		         [[','] 'please'] 
     		         ('!'|'.')*"
     		   priority="125"/>
@@ -4430,7 +4430,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
-    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT)
+    		   		 ['go'] perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4441,9 +4441,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
     		   		 ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4455,9 +4455,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
     		   		 ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4469,9 +4469,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
     		   		 ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4483,9 +4483,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
     		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
     		   		 ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'.')*"/>
@@ -4497,7 +4497,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION)
+    		   		 perf.request.action.internal(LISTENER, ACTION) ['again']
     		         [[','] 'please'] 
     		         ('!'|'?')*"
     		   priority="125"/>
@@ -4508,7 +4508,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION)
+    		   		 perf.request.action.internal(LISTENER, ACTION) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4519,7 +4519,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT)
+    		   		 perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT) ['again']
     		         [[','] 'please'] 
     		         ('!'|'?')*"
     		   priority="125"/>
@@ -4530,7 +4530,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT)
+    		   		 perf.request.action.internal(LISTENER, ACTION, CONDITION, CONSTRAINT) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4541,9 +4541,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4555,9 +4555,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4569,9 +4569,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4583,9 +4583,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
     		   		 subject-personal-pronoun(X1, N, G, [second-person])
     		   		 ['please'] ['go'] 
-    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1)
+    		   		 perf.request.action.internal(LISTENER, ACTION1, CONDITION1, CONSTRAINT1) ['again']
     		   		 'and' ['then']
-    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2)
+    		   		 perf.request.action.internal(LISTENER, ACTION2, CONDITION2, CONSTRAINT2) ['again']
     		         [[','] 'please'] 
     		         [[','] nounPhraseNoDeterminer(X_L2, [singular], [third-person], C_L2) #derefFromContext(#and(noun('character'[character], [singular]), C_L2), LISTENER)]
     		         ('!'|'?')*"/>
@@ -4882,7 +4882,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action.internal(LISTENER, verb.take-to(LISTENER, OBJECT2, OBJECT3))"
 			   body="(verb('action.take'[symbol], N, P, [present-tense]) | verb('verb.show'[symbol], N, P, [present-tense]))
 			   		 nounPhrase(X2, N2, P2, C2)
-			   		 'to'
+			   		 ['back'] 'to'
 			   		 nounPhrase(X3, N3, P3, C3) 
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"
@@ -4891,7 +4891,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   head="perf.request.action.internal(LISTENER, verb.take-to(LISTENER, SPEAKER, OBJECT3))"
 			   body="verb('verb.show'[symbol], N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
-			   		 'the' ('way'|'path') 'to'
+			   		 'the' ('way'|'path') ['back']  'to'
 			   		 nounPhrase(X3, N3, P3, C3) 
 			   		 #derefFromContext(C2, SPEAKER)
 			   		 #derefFromContext(C3, OBJECT3)"
@@ -4903,7 +4903,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 'me'
 			   		 verb('action.take'[symbol], N1, P1, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
-			   		 'to'
+			   		 ['back'] 'to'
 			   		 nounPhrase(X3, N3, P3, C3) 
 			   		 #derefFromContext(C2, OBJECT2)
 			   		 #derefFromContext(C3, OBJECT3)"
@@ -4913,7 +4913,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.request.action.internal(LISTENER, verb.take-to(LISTENER, OBJECT, OBJECT2))"
     		   body="verb('action.take'[symbol], N1, P1, [present-tense])
     		         nounPhrase(X3, N3, P3, CO)
-    		         'there'
+    		         ['back'] 'there'
     		         #derefFromContext(CO, OBJECT)
     		         #derefFromContext(noun('space.there'[space.there], [singular]), OBJECT2)"
     		   priority="125"/>
