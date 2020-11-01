@@ -1581,6 +1581,8 @@ NLParseTest("the pyramid you are holding", o.getSort("nounPhrase"), context, "no
 NLParseTest("the pyramid that you are not holding", o.getSort("nounPhrase"), context, "nounPhrase(V0:'pyramid'[pyramid], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:#and(#not(V5:verb.hold(LISTENER, V0)), V7:noun(V0, V1))))");
 NLParseTestUnifyingListener("take me back to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("take me to the kitchen again", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
+NLParseTestUnifyingListener("how far away is qwerty from the crate?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], 'qwerty'[#id], '5'[#id])");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

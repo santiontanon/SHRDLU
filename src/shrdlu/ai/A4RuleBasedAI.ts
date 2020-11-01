@@ -541,6 +541,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		}
 
 		// special cases:
+		/**
 		// NOTE: this is bad, I should have these in the KB in some declarative form!
 		if (source == 'earth') {
 			if (targetObject != null || targetLocation != null || target == 'aurora') {
@@ -562,6 +563,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 				return 0;
 			}
 		}
+		*/
 		return super.distanceBetweenIds(source, target);
 	}
 
@@ -570,7 +572,16 @@ class A4RuleBasedAI extends RuleBasedAI {
 	distanceBetweenCoordinates(x1:number, y1:number, map1:A4Map, 
 							   x2:number, y2:number, map2:A4Map): number
 	{
-		return this.distanceBetweenCoordinates_internal(x1, y1, map1, x2, y2, map2, [map1]);
+		let best_d:number = this.distanceBetweenCoordinates_internal(x1, y1, map1, x2, y2, map2, [map1]);
+		if (best_d == null && (map1.name == "Trantor Crater" || map2.name == "Trantor Crater")) {
+			// since there are no connections to Trantor Crater, this has to be hardcoded (Assuming we are on the other maps):
+			return 8192000;
+		}
+		if (best_d == null && (map1.name == "Tardis 8" || map2.name == "Tardis 8")) {
+			// since there are no connections to Trantor Crater, this has to be hardcoded:
+			return 8192000;
+		}
+		return best_d;
 	}
 
 

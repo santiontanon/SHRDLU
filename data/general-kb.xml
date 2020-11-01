@@ -160,6 +160,9 @@
 	<sentence provenance="background" sentence="communication.tower('comm-tower'[#id])"/>
 	<sentence provenance="background" sentence="space.inside.of('comm-tower'[#id],'location-aurora-settlement'[#id])"/>
 
+	<sentence provenance="background" sentence="distance('solar-system'[#id], 'tau-ceti-system'[#id], '12'[light-year])"/>
+	<sentence provenance="background" sentence="distance('aurora'[#id], 'tau-ceti'[#id], '82578025'[kilometer])"/>
+
 	<!-- general knowledge about the robots/ships -->
 	<sentence provenance="background" sentence="disembodied-ai('etaoin'[#id])"/>
 	<sentence provenance="background" sentence="name('etaoin'[#id],'etaoin'[symbol])"/>
@@ -704,5 +707,9 @@
 
 	<sentence provenance="background" sentence="~short(X); length(X, 'short'[short])"/>
 	<sentence provenance="background" sentence="~long(X); length(X, 'long'[long])"/>
+
+	<sentence provenance="background" sentence="~space.inside.of(X,Y); distance(X,Y,'0'[kilometer])"/>
+	<sentence provenance="background" sentence="~distance(X,Y,D); distance(Y,X,D)"/>
+	<sentence provenance="background" sentence="~distance(X,Y,D); ~space.inside.of(Z,X); distance(Z,Y,D)"/>
 	
 </knowledgeBase>

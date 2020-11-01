@@ -6667,6 +6667,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C3, OBJECT2)"/>
 
+    <NLPattern name="distance-howfar-is-X-from-Y"
+    		   head="perf.q.distance(LISTENER, OBJECT3, OBJECT4)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 'how' 'far' ['away'] 
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 'from'
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C3, OBJECT3)
+			   		 #derefFromContext(C4, OBJECT4)"/>
+
     <NLPattern name="distance-howfar-is-X-unit"
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

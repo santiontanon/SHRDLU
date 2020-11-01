@@ -137,6 +137,10 @@
 	<sentence provenance="background" sentence="~short(X); length(X, 'short'[short])"/>
 	<sentence provenance="background" sentence="~long(X); length(X, 'long'[long])"/>
 	
+	<sentence provenance="background" sentence="~space.inside.of(X,Y); distance(X,Y,'0'[kilometer])"/>
+	<sentence provenance="background" sentence="~distance(X,Y,D); distance(Y,X,D)"/>
+	<sentence provenance="background" sentence="~distance(X,Y,D); ~space.inside.of(Z,X); distance(Z,Y,D)"/>
+
 	<sentence provenance="background" sentence="~space.directly.on.top.of(X, Y); verb.support(Y, X)"/>
 	<sentence provenance="background" sentence="space.directly.on.top.of(X, Y); ~verb.support(Y, X)"/>
 	<sentence provenance="background" sentence="~shape(X, Y); ~shape(X, Z); =(Y, Z)"/>
@@ -165,6 +169,5 @@
 
 	<sentence provenance="background" sentence="~verb.can(X, verb.roll(X)); ~object(Y); verb.can(X, verb.roll-of(X, Y))"/>
 	<sentence provenance="background" sentence="verb.can(X, verb.roll(X)); ~object(Y); ~verb.can(X, verb.roll-of(X, Y))"/>
-
 
 </knowledgeBase>

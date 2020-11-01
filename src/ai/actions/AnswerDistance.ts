@@ -52,13 +52,15 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 		}
 
 		// launch an inference process:
-		// ...
-
-		if (requester != null) {
-			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+		{
+			let newPerformative:Term = Term.fromString("action.answer.distance('"+ai.selfID+"'[#id], "+requester+", perf.q.query('"+ai.selfID+"'[#id], DISTANCE, distance('"+o1ID+"'[#id],'"+o2ID+"'[#id], DISTANCE)))", ai.o);
+			let negated_s_l:Sentence[] = Term.termToSentences(new Term(ai.o.getSort("#not"), [(<TermTermAttribute>(newPerformative.attributes[2])).term.attributes[2]]), ai.o);
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new AnswerQuery_InferenceEffect(newPerformative, ir.requestingPerformative)));
 		}
-		
+		// if (requester != null) {
+		// 	let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
+		// 	ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+		// }		
 		return true;
 	}
 
