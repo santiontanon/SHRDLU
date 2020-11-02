@@ -170,4 +170,6 @@
 	<sentence provenance="background" sentence="~verb.can(X, verb.roll(X)); ~object(Y); verb.can(X, verb.roll-of(X, Y))"/>
 	<sentence provenance="background" sentence="verb.can(X, verb.roll(X)); ~object(Y); ~verb.can(X, verb.roll-of(X, Y))"/>
 
+	<sentence provenance="background" sentence="~tall(X); ~short-tallness(X)"/>
+
 </knowledgeBase>

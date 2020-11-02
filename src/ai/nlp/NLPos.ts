@@ -217,6 +217,12 @@ class POSParser {
       "with respect to",
       "with a view to",
 
+      "taller than",
+      "shorter than",
+      "bigger than",
+      "larger than",
+      "smaller than",
+
       "alone in",
 
       // pronouns:
@@ -983,8 +989,12 @@ this.addTokenPOS(new PartOfSpeech("allowed to enter", "permitted-in", Term.fromS
   "with a view to",
   */  
 
-  this.addTokenPOS(new PartOfSpeech("larger", "relation.larger", Term.fromString("preposition('relation.larger'[relation.larger])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("smaller", "relation.smaller", Term.fromString("preposition('relation.smaller'[relation.smaller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("taller than", "taller", Term.fromString("preposition('taller'[taller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("shorter than", "shorter-tallness", Term.fromString("preposition('shorter-tallness'[shorter-tallness])", o), 1.0));
+
+  this.addTokenPOS(new PartOfSpeech("bigger than", "relation.larger", Term.fromString("preposition('relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("larger than", "relation.larger", Term.fromString("preposition('relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("smaller than", "relation.smaller", Term.fromString("preposition('relation.smaller'[relation.smaller])", o), 1.0));
 
   // these one are here at the end, to overwrite "because of" and "within":
   this.addTokenPOS(new PartOfSpeech("because", "relation.cause", Term.fromString("preposition('relation.cause'[relation.cause])", o), 1.0));  
@@ -1587,6 +1597,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("t - 14 hyperdrive", "shuttle-engine", o, multitokens_raw);
   this.addStandardNounPOS("t - 14 hyperdrive generator", "shuttle-engine", o, multitokens_raw);
   this.addStandardNounPOS("table", "table", o, multitokens_raw);
+  this.addTokenPOS(new PartOfSpeech("tallness", "tallness", Term.fromString("noun('tallness'[tallness], [singular])", o), 1.0));
   this.addStandardNounPOS("tank", "tank", o, multitokens_raw);
   this.addStandardNounPOS("tardis", "tardis", o, multitokens_raw);
   this.addStandardNounPOS("tardis memory", "tardis-memory-core", o, multitokens_raw);
@@ -1992,7 +2003,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("purple", "purple", Term.fromString("adjective('purple'[purple])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("rectangular", "rectangular", Term.fromString("adjective('rectangular'[rectangular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("red", "red", Term.fromString("adjective('red'[red])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("short", "short-tallness", Term.fromString("adjective('short-tallness'[short-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("short", "short", Term.fromString("adjective('short'[short])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("shortest", "shortest-tallness", Term.fromString("adjective('shortest-tallness'[shortest-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
@@ -2003,6 +2016,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("strange", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("tall", "tall", Term.fromString("adjective('tall'[tall])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("tallest", "tallest", Term.fromString("adjective('tallest'[tallest])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("thirsty", "thirsty", Term.fromString("adjective('thirsty'[thirsty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("uncharged", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("useful", "useful", Term.fromString("adjective('useful'[useful])", o), 1.0));

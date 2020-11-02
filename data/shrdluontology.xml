@@ -859,8 +859,19 @@
     <sort name="size.medium" super="size"/>
 
     <sort name="length" super="property"/>
+    <sort name="tallness" super="length,property"/>
+
     <sort name="short" super="length,small"/>
     <sort name="long" super="length,big"/>
+
+    <sort name="short-tallness" super="tallness,small"/>
+    <sort name="tall" super="tallness,big"/>
+
+    <sort name="tallest" super="property,superlative-adjective"/>
+    <sort name="shortest-tallness" super="property,superlative-adjective"/>
+
+    <sort name="taller" super="spatial-relation"/>
+    <sort name="shorter-tallness" super="spatial-relation"/>
 
     <sort name="length.unit" super="measuring-unit,length"/>
     <sort name="distance.unit" super="measuring-unit,distance"/>

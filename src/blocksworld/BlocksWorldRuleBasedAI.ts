@@ -100,6 +100,13 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				this.addTermToPerception(Term.fromString("shape('"+object.ID+"'[#id], '"+object.shape+"'["+object.shape+"])", this.o));
 			}
 
+			if (object.dy > BLOCK_TALLNESS_THRESHOLD) {
+				this.addTermToPerception(Term.fromString("tall('"+object.ID+"'[#id])", this.o));
+			}
+			if (object.dy < BLOCK_SHORTNESS_THRESHOLD) {
+				this.addTermToPerception(Term.fromString("short-tallness('"+object.ID+"'[#id])", this.o));
+			}
+
 			if (object.ID != "shrdlu-arm") {
 				let clearTop:boolean = true;
 				for(let object2 of this.world.objects) {
@@ -351,6 +358,10 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 					return angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8) && (dx > 0 || dz > 0);
 				}
 			}
+		} else if (relation.name == "taller") {
+			return o1.dy > o2.dy;
+		} else if (relation.name == "shorter-tallness") {
+			return o2.dy > o1.dy;
 		} else if (relation.is_a(this.cache_sort_space_at)) {
 			if (o1 == this.world.objectInArm && o1 == this.world.shrdluArm) return true;
 			if (o1.isInside(o2) || o1.isOnTopOf(o2)) return true;
