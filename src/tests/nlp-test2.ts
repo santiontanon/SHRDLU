@@ -1582,7 +1582,9 @@ NLParseTest("the pyramid that you are not holding", o.getSort("nounPhrase"), con
 NLParseTestUnifyingListener("take me back to the kitchen", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("take me to the kitchen again", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.take-to('etaoin'[#id], '1'[#id], 'room1'[#id]))"); 
 NLParseTestUnifyingListener("how far away is qwerty from the crate?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], 'qwerty'[#id], '5'[#id])");
-
+NLParseTestUnifyingListener("find a cube taller than the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(cube(X), taller(X, '5'[#id])), [number.1])");
+NLParseTestUnifyingListener("find a cube which is taller than the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(cube(X), taller(X, '5'[#id])), [number.1])");
+NLParseTestUnifyingListener("find a ship taller than the red one", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(ship(X), taller(X, '2'[#id])), [number.1])");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

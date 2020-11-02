@@ -1163,17 +1163,19 @@ class NLPattern {
 				noun = pos;
 			}
 		}
-		let n_past_performatives:number = 2;
-		for(let i:number = 0; i < context.performatives.length && i<n_past_performatives; i++) {
-			let p:NLContextPerformative = context.performatives[i];
-			if (p.parse != null) {
-				for(let pos of p.parse.previousPOS) {
-					if (pos.term.functor.name == "noun") {
-						noun = pos;
+		if (noun == null) {
+			let n_past_performatives:number = 2;
+			for(let i:number = 0; i < context.performatives.length && i<n_past_performatives; i++) {
+				let p:NLContextPerformative = context.performatives[i];
+				if (p.parse != null) {
+					for(let pos of p.parse.previousPOS) {
+						if (pos.term.functor.name == "noun") {
+							noun = pos;
+						}
 					}
 				}
+				if (noun != null) break;
 			}
-			if (noun != null) break;
 		}
 		if (noun != null) {
 			let bindings:Bindings = new Bindings();

@@ -5890,7 +5890,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		   		 	 'how' 'many' 
 		   		 	 nounPhrase(XN, NN, PN, CN)
-		   		 	 ('that'|'who')
+		   		 	 ('that'|'which'|'who')
 		   		 	 ('do'|'does') 'not'
 		   		 	 verb(VERB, N, P, [present-tense])
 		   		 	 nounPhrase(X2, N2, P2, C2)
@@ -7186,11 +7186,11 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-determiner-preposition3"
 			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ, PREPOSITION)))"
-			   body="maybeNegatedAdjective(X, ADJ) noun(X, N) 
+			   body="maybeNegatedAdjective(X, ADJ) nounOrOne(noun(X, N))
 			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-determiner-preposition-adj-adj"
 			   head="nounPhrase(X, N, [third-person], #and(noun(X,N), #and(ADJ1, #and(ADJ2, PREPOSITION))))"
-			   body="maybeNegatedAdjective(X, ADJ1) maybeNegatedAdjective(X, ADJ2) noun(X, N) 
+			   body="maybeNegatedAdjective(X, ADJ1) maybeNegatedAdjective(X, ADJ2) nounOrOne(noun(X, N))
 			   		 maybeNegatedPrepositionalPhrase(X, PREPOSITION)"/>
 	<NLPattern name="nounphrase-all-of"
 			   head="nounPhrase(X, [plural], P, #and(#cons(DET, X, [plural]), C))"
@@ -7228,13 +7228,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<NLPattern name="nounphrase-adjective-phrase"
 			   head="nounPhraseNoDeterminer(X, N, [third-person], #and(adjective(X, A), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 (verb('verb.be'[symbol], N, [third-person], T)|
 			   		  verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
 	<NLPattern name="nounphrase-adjective-phrase-not"
 			   head="nounPhraseNoDeterminer(X, N, [third-person], #and(#not(adjective(X, A)), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 (verb('verb.be'[symbol], N, [third-person], T) 'not'|
 			   		  verb('verb.do'[symbol], NN, [third-person], TT) 'not' verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
@@ -7260,13 +7260,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<NLPattern name="nounphrase-npn-adjective-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(adjective(X, A), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 (verb('verb.be'[symbol], N, [third-person], T)|
 			   		  verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
 	<NLPattern name="nounphrase-npn-adjective-phrase-not"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#not(adjective(X, A)), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 (verb('verb.be'[symbol], N, [third-person], T) 'not'|
 			   		  verb('verb.do'[symbol], NN, [third-person], TT) 'not' verb('verb.seem'[symbol], N, [third-person], T))
 			   		 adjective(A)"/>
@@ -7285,13 +7285,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="maybeNegatedAdjective(X, ADJ) nounPhraseNoDeterminerNoProperNoun(X, N, P, C)"/>
 	<NLPattern name="nounphrase-npn-that-verb-obj-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#cons(VERB, X, O2), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 verb(VERB, N, [third-person], T) #symbolToSort(VERB, VERB_SORT) #subsumes([relation-verb], VERB_SORT) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
 	<NLPattern name="nounphrase-npn-that-not-verb-obj-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#not(#cons(VERB, X, O2)), noun(X, N)))"
-			   body="noun(X, N) ('that'|'who')
+			   body="nounOrOne(noun(X, N)) ('that'|'which'|'who')
 			   		 verb('verb.do'[symbol], NN, [third-person], TT) 'not'
 			   		 verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT) #subsumes([relation-verb], VERB_SORT) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
@@ -7299,14 +7299,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<NLPattern name="nounphrase-npn-that-obj-verb-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#cons(VERB, O2, X), noun(X, N)))"
-			   body="noun(X, N) [('that'|'who')]
+			   body="nounOrOne(noun(X, N)) [('that'|'which'|'who')]
 			   		 nounPhrase(X2, [singular], P2, C2) 
 			   		 (verb(VERB, [singular], P2, T3) | verb('verb.be'[symbol], [singular], P2, T3) verb(VERB, N3, P3, [gerund-tense]))
 			   		 #symbolToSort(VERB, VERB_SORT) #subsumes([relation-verb], VERB_SORT) 
 					 #derefFromContext(C2, O2)"/>
 	<NLPattern name="nounphrase-npn-that-obj-not-verb-phrase"
 			   head="nounPhraseNoDeterminerNoProperNoun(X, N, [third-person], #and(#not(#cons(VERB, O2, X)), noun(X, N)))"
-			   body="noun(X, N) [('that'|'who')]
+			   body="nounOrOne(noun(X, N)) [('that'|'which'|'who')]
 			   		 nounPhrase(X2, [singular], P2, C2) 
 			   		 (verb('verb.do'[symbol], [singular], P2, T3) 'not' verb(VERB, N3, P3, [infinitive-tense]) | 
 			   		  verb('verb.be'[symbol], [singular], P2, T3) 'not' verb(VERB, N3, P3, [gerund-tense]))
@@ -7329,13 +7329,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<NLPattern name="negated-prepositional-phrase"
 			   head="maybeNegatedPrepositionalPhrase(X, #not(#cons(PREPOSITION, X, O2)))"
-			   body="'not'
+			   body="[('that'|'which'|'who') 'is'] 'not'
 			   		 preposition(PREPOSITION) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
 	<NLPattern name="prepositional-phrase"
 			   head="maybeNegatedPrepositionalPhrase(X, #cons(PREPOSITION, X, O2))"
-			   body="preposition(PREPOSITION) 
+			   body="[('that'|'which'|'who') 'is'] preposition(PREPOSITION) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
 
