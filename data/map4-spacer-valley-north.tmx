@@ -89,14 +89,14 @@
   <object id="900" name="SPACER-VALLEY-NORTH" type="Bridge" x="152" y="240" width="136" height="16"/>
   <object id="901" name="SPACER-VALLEY-NORTH" type="BridgeDestination" x="152" y="208" width="136" height="40"/>
   <object id="910" name="EAST-CAVE" type="BridgeDestination" x="592" y="144" width="32" height="40"/>
-  <object id="911" name="EAST-CAVE" type="Bridge" x="600" y="152" width="16" height="8"/>
+  <object id="911" name="EAST-CAVE" type="Bridge" x="600" y="144" width="16" height="8"/>
   <object id="912" type="small-boulder" x="72" y="200" width="8" height="8"/>
   <object id="913" type="small-boulder" x="168" y="112" width="8" height="8"/>
   <object id="915" type="small-boulder" x="264" y="72" width="8" height="8"/>
   <object id="916" type="small-boulder" x="440" y="120" width="8" height="8"/>
   <object id="917" type="small-boulder" x="512" y="72" width="8" height="8"/>
   <object id="918" type="small-boulder" x="560" y="72" width="8" height="8"/>
-  <object id="919" name="WEST-CAVE" type="Bridge" x="32" y="184" width="16" height="8"/>
+  <object id="919" name="WEST-CAVE" type="Bridge" x="32" y="176" width="16" height="8"/>
   <object id="920" name="WEST-CAVE" type="BridgeDestination" x="24" y="176" width="32" height="40"/>
   <object id="921" type="shuttle-piece" x="208" y="24" width="8" height="8"/>
   <object id="622" name="SPACER-GORGE" type="BridgeDestination" x="512" y="8" width="64" height="40"/>

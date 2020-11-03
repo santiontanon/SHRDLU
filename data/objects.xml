@@ -1487,7 +1487,7 @@
 	<ObjectClass class="large-boulder" super="boulder" name="large boulder">
 		<attribute name="tallness" value="0"/>
 		<attribute name="weight" value="4"/>
-		<animation name="idle" dx="2" dy="2" period="4" looping="false" file="background.png">742</animation>		
+		<animation name="idle" dx="2" dy="2" period="4" looping="false" seeThrough="false" file="background.png">742</animation>		
 		<onStart>
 			<addPerceptionProperty property="heavy-weight"/>
 			<addPerceptionProperty property="big"/>
@@ -1497,7 +1497,7 @@
 	<ObjectClass class="huge-boulder" super="boulder" name="huge boulder">
 		<attribute name="tallness" value="0"/>
 		<attribute name="weight" value="6"/>
-		<animation name="idle" dx="3" dy="3" period="4" looping="false" file="background.png">744</animation>		
+		<animation name="idle" dx="3" dy="3" period="4" looping="false" seeThrough="false" file="background.png">744</animation>		
 		<onStart>
 			<addPerceptionProperty property="heavy-weight"/>
 			<addPerceptionProperty property="big"/>

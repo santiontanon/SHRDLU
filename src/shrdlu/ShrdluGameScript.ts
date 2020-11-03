@@ -31,10 +31,10 @@ class ShrdluGameScript {
 			//this.skip_to_act_end_of_intro();
 			//this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
-			//this.skip_to_act_2();
+			// this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
-			//this.skip_to_act_2_shrdluback_repair_outside();
-			//this.skip_to_act_2_crash_site();
+			// this.skip_to_act_2_shrdluback_repair_outside();
+			// this.skip_to_act_2_crash_site();
 			//this.skip_to_act_2_after_crash_site();
 			// this.skip_to_end_of_act_2();
 			// this.skip_to_tardis8();
@@ -231,6 +231,7 @@ class ShrdluGameScript {
 		this.game.setStoryStateVariable("permission-to-take-shrdlu", "true");
 	}
 
+	
 	skip_to_act_2_after_crash_site()
 	{
 		this.skip_to_act_2_crash_site();

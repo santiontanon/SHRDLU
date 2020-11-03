@@ -241,6 +241,9 @@ class A4Game {
         let tiles_xml:Element = getFirstElementChildByTag(this.xml, "tiles");
         for(let tile_xml of getElementChildrenByTag(tiles_xml, "tile")) {
             let tile:A4MapTile = A4MapTile.loadFromXML(tile_xml, this);
+            if (tile.ID in this.mapTiles) {
+                console.error("redefining tile:" + tile.ID);
+            }
             this.mapTiles[tile.ID] = tile;
         }
         for(let graphifile_xml of getElementChildrenByTag(tiles_xml, "graphicFile")) {

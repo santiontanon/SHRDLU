@@ -546,15 +546,18 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	        return false;
 		} else {
+			// we changed maps, so, stop just in case:
+			return true;
+			
 			// go to destination:
-	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
-	        s.x = this.targetx;
-	        s.y = this.targety;
-	        s.stopAfterGoingThroughABridge = false;
-	        q.scripts.push(s);
-	        ai.currentAction_scriptQueue = q;
-	        return false;
+	        // let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	        // let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
+	        // s.x = this.targetx;
+	        // s.y = this.targety;
+	        // s.stopAfterGoingThroughABridge = false;
+	        // q.scripts.push(s);
+	        // ai.currentAction_scriptQueue = q;
+	        // return false;
 		}
 
 	}
