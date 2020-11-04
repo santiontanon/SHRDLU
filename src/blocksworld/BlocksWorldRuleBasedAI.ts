@@ -819,6 +819,22 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	}
 
 
+	stopAction(actionRequest:Term, requester:string) : boolean
+	{
+		if (actionRequest.functor.is_a(this.cache_sort_action_think)) {
+			if (actionRequest.attributes.length == 1) {
+				// stop inference and planning processes:
+				this.currentInferenceProcess = null;
+				this.queuedInferenceProcesses = [];
+				this.planningProcesses = [];
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return super.stopAction(actionRequest, requester);
+	}
+
 	/*
 	getWorldStateForPlanning(version:string) : PlanningState
 	{

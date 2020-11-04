@@ -433,6 +433,7 @@ class RuleBasedAI {
 		this.cache_sort_stateSort = this.o.getSort("#stateSort");
 		this.cache_sort_action_talk = this.o.getSort("action.talk");
 		this.cache_sort_action_follow = this.o.getSort("verb.follow");
+		this.cache_sort_action_think = this.o.getSort("verb.think");
 
 		this.inferenceEffectFactory = new InferenceEffectFactory();		
 
@@ -1352,6 +1353,15 @@ class RuleBasedAI {
 				let context:NLContext = this.contextForSpeaker(requester);
 				if (context != null) this.terminateConversationAfterThisPerformative = true;
 				return true;
+			}
+		} else if (actionRequest.functor.is_a(this.cache_sort_action_think)) {
+			if (actionRequest.attributes.length == 1) {
+				// stop inference processes:
+				this.currentInferenceProcess = null;	
+				this.queuedInferenceProcesses = [];
+				return true;
+			} else {
+				return false;
 			}
 		}
 		return false;
@@ -2447,4 +2457,5 @@ class RuleBasedAI {
 	cache_sort_verb_contains:Sort = null;
 	cache_sort_stateSort:Sort = null;
 	cache_sort_action_follow:Sort = null;
+	cache_sort_action_think:Sort = null;
 }
