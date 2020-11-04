@@ -1586,6 +1586,13 @@ NLParseTestUnifyingListener("find a cube taller than the crate", o.getSort("perf
 NLParseTestUnifyingListener("find a cube which is taller than the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(cube(X), taller(X, '5'[#id])), [number.1])");
 NLParseTestUnifyingListener("find a ship taller than the red one", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(ship(X), taller(X, '2'[#id])), [number.1])");
 
+
+// For version 3.8:
+NLParseTestUnifyingListener("hand the white key over", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
+NLParseTestUnifyingListener("push the crate twice", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], '2'[number.2]))");
+NLParseTestUnifyingListener("push the crate forward four times", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], [forward], '4'[number.4]))");
+
+
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
 

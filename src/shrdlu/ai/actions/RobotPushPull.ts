@@ -35,6 +35,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 
 		let targetObject:A4Object = null;
 		let adverbSort:Sort = null;
+		let numberConstant:number = null;
 		let targetDirection:number = -1;
 
 		if (intention.attributes.length >= 2) {
@@ -59,12 +60,25 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 				targetObject = targetObjectL[0];
 			} else if ((intention.attributes[1] instanceof VariableTermAttribute)) {
 				adverbSort = intention.attributes[1].sort;
+			} else if ((intention.attributes[1] instanceof ConstantTermAttribute) &&
+					   intention.attributes[1].sort.is_a_string("number")) {
+				numberConstant = Number((<ConstantTermAttribute>(intention.attributes[1])).value)
 			}
 		}
+
 		if (adverbSort == null &&
 			intention.attributes.length >= 3 && 
 			(intention.attributes[2] instanceof VariableTermAttribute)) {
 			adverbSort = intention.attributes[2].sort;
+		} else if (intention.attributes.length >= 3 && 
+				   (intention.attributes[2] instanceof ConstantTermAttribute) &&
+				   intention.attributes[2].sort.is_a_string("number")) {
+			numberConstant = Number((<ConstantTermAttribute>(intention.attributes[2])).value)
+		}
+		if (intention.attributes.length >= 4 && 
+			(intention.attributes[3] instanceof ConstantTermAttribute) &&
+			intention.attributes[3].sort.is_a_string("number")) {
+			numberConstant = Number((<ConstantTermAttribute>(intention.attributes[3])).value)
 		}
 
 		if (adverbSort != null) {
@@ -152,14 +166,16 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 
 		// perform the action:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-        let s:A4Script = null
-        
-        if (intention.functor.is_a(ai.o.getSort("action.pull"))) {
-			s = new A4Script(A4_SCRIPT_PULL, targetObject.ID, null, targetDirection, false, false);
-        } else {
-        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
-        }
-        q.scripts.push(s);
+        if (numberConstant == null) numberConstant = 1;
+        for(let i:number = 0;i<numberConstant;i++) {
+	        let s:A4Script = null
+	        if (intention.functor.is_a(ai.o.getSort("action.pull"))) {
+				s = new A4Script(A4_SCRIPT_PULL, targetObject.ID, null, targetDirection, false, false);
+	        } else {
+	        	s = new A4Script(A4_SCRIPT_PUSH, targetObject.ID, null, targetDirection, false, false);
+	        }
+	        q.scripts.push(s);
+	    }
         ai.setNewAction(intention, requester, q, this);
 		ai.addLongTermTerm(new Term(intention.functor,
 									[new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
