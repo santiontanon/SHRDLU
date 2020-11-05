@@ -25,6 +25,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 
 		console.log("query result, answer where space.directly.on.top.of (target): " + inf.inferences[0].endResults);
 		console.log("query result, answer where space.inside.of (target): " + inf.inferences[1].endResults);
+		console.log("query result, answer where space.at (target): " + inf.inferences[2].endResults);
 
 		if (this.effectParameter.attributes[2] instanceof ConstantTermAttribute) {
 			targetID = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
@@ -39,7 +40,8 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 		}
 
 		if (inf.inferences[0].endResults.length == 0 &&
-			inf.inferences[1].endResults.length == 0) {
+			inf.inferences[1].endResults.length == 0 &&
+			inf.inferences[2].endResults.length == 0) {
 			let term1:Term = null;
 			if (targetID != null) {
 				term1 = Term.fromString("perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol],"+query_perf+"('"+ai.selfID+"'[#id],"+targetTermString+"))", ai.o);
@@ -75,6 +77,20 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 								targetLocationID = (<ConstantTermAttribute>v).value;
 								selectedBindings = result.bindings;
 								where_preposition = "space.inside.of";
+							}
+						}
+					}
+				}
+			}
+			if (targetLocationID == null) {
+				for(let result of inf.inferences[2].endResults) {
+					for(let b of result.bindings.l) {
+						if (b[0].name == "WHERE") {
+							let v:TermAttribute = b[1];
+							if (v instanceof ConstantTermAttribute) {
+								targetLocationID = (<ConstantTermAttribute>v).value;
+								selectedBindings = result.bindings;
+								where_preposition = "space.at";
 							}
 						}
 					}
