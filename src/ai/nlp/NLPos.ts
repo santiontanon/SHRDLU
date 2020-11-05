@@ -216,6 +216,7 @@ class POSParser {
       "with regard to",
       "with respect to",
       "with a view to",
+      "sitting on",
 
       "taller than",
       "shorter than",
@@ -746,6 +747,7 @@ this.addTokenPOS(new PartOfSpeech("alone in", "alone-in", Term.fromString("prepo
 this.addTokenPOS(new PartOfSpeech("at", "space.at", Term.fromString("preposition('space.at'[space.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("at", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("barring", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("sitting on", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("on", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("on", "time.at", Term.fromString("preposition('time.at'[time.at])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("atop", "space.directly.on.top.of", Term.fromString("preposition('space.directly.on.top.of'[space.directly.on.top.of])", o), 1.0));

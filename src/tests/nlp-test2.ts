@@ -1591,6 +1591,10 @@ NLParseTestUnifyingListener("find a ship taller than the red one", o.getSort("pe
 NLParseTestUnifyingListener("hand the white key over", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("push the crate twice", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], '2'[number.2]))");
 NLParseTestUnifyingListener("push the crate forward four times", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], [forward], '4'[number.4]))");
+NLParseTestUnifyingListener("which cube is sitting on the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], L, #and(cube(L), space.directly.on.top.of(L,'5'[#id])))");
+NLParseTestUnifyingListener("are there any more?", o.getSort("performative"), context, 'etaoin', "perf.moreresults('etaoin'[#id])");
+NLParseTestUnifyingListener("how many things are on top of green cubes?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(object(X), #and(space.directly.on.top.of(X,Y), #and(cube(Y), color(Y, 'green'[green])))))"); 
+NLParseTestUnifyingListener("how many things are not on top of a green cube?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(object(X), #and(#not(space.directly.on.top.of(X,Y)), #and(cube(Y), color(Y, 'green'[green])))))"); 
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

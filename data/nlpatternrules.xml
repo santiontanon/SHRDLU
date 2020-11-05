@@ -5767,6 +5767,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 indefinite-pronoun('pronoun.anyone.else'[symbol],N,G,P)
     		          [[','] 'please'] ('!'|'?')*"
     		   priority="200"/>
+    <NLPattern name="moreresults5"
+			   head="perf.moreresults(LISTENER)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 ['please' [',']] 
+    		   		 ('are'|'is') 'there' ('any'|'anything') ('more'|'else') ('!'|'?')*"/>
 
      <!-- perf.request.repeataction -->
     <NLPattern name="repeataction"
@@ -5813,7 +5819,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 (verb('verb.do'[symbol], N2, P2, [present-tense]) | verb('verb.can'[symbol], N2, P2, [present-tense]))
 		   		 	 'you' verb('verb.see'[symbol], N3, P3, [present-tense]) ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)"/>
-    <NLPattern name="q.howmany-X-are-there-in"
+    <NLPattern name="q.howmany-X-are-there-prep"
     		   head="perf.q.howmany(LISTENER, V, #and(#cons(PREPOSITION, V, OBJECT), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -5822,7 +5828,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)
 		   		 	 #derefFromContext(C2, OBJECT)"/>
-    <NLPattern name="q.howmany-X-are-there-not-in"
+    <NLPattern name="q.howmany-X-are-there-not-prep"
     		   head="perf.q.howmany(LISTENER, V, #and(#not(#cons(PREPOSITION, V, OBJECT)), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -5831,6 +5837,26 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   		 	 ('!'|'?')* 
 		   		 	 #derefQuery(C, V, QUERY)
 		   		 	 #derefFromContext(C2, OBJECT)"/>
+
+    <NLPattern name="q.howmany-X-are-there-prep-query"
+    		   head="perf.q.howmany(LISTENER, V, #and(#cons(PREPOSITION, V, V2), #and(QUERY, QUERY2)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there']
+		   		 	 preposition(PREPOSITION) nounPhrase(X2, N2, P2, C2) 
+		   		 	 ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefQuery(C2, V2, QUERY2)"/>
+    <NLPattern name="q.howmany-X-are-there-not-prep-query"
+    		   head="perf.q.howmany(LISTENER, V, #and(#not(#cons(PREPOSITION, V, V2)), #and(QUERY, QUERY2)))"			
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		   		 	 'how' 'many' nounPhrase(X, N, P, C) verb('verb.be'[symbol], N, P, [present-tense]) ['there'] 'not'
+		   		 	 preposition(PREPOSITION) nounPhrase(X2, N2, P2, C2) 
+		   		 	 ('!'|'?')* 
+		   		 	 #derefQuery(C, V, QUERY)
+		   		 	 #derefQuery(C2, V2, QUERY2)"/>
+
     <NLPattern name="q.howmany-X-are-there-here"
     		   head="perf.q.howmany(LISTENER, V, #and(space.at(V, LOCATION), QUERY))"			
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
