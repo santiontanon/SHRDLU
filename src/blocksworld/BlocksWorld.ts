@@ -238,7 +238,7 @@ class ShrdluBlocksWorld {
 	 									  4, 4, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "blue", BW_SIZE_LARGE, 
 									 	  8, 4, 28,
-									 	  4, 10, 4));
+									 	  4, 12, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
 									 	  14, 4, 10,
 									 	  8, 8, 8));

@@ -24,6 +24,34 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 		if (queryPerformative.attributes[2] instanceof TermTermAttribute) {
 			queryTerm = (<TermTermAttribute>(queryPerformative.attributes[2])).term;
 		}
+		let forAllVariableNames:string[] = [];
+		if (queryPerformative.attributes.length >= 4) {
+			for(let forAll of NLParser.termsInList((<TermTermAttribute>(queryPerformative.attributes[3])).term, "#and")) {
+				if (forAll.attributes.length>=1 &&
+					forAll.attributes[0] instanceof VariableTermAttribute) {
+					forAllVariableNames.push((<VariableTermAttribute>forAll.attributes[0]).name);
+				}
+			}
+		}
+		console.log("forAllVariableNames: " + forAllVariableNames);
+		if (inf.inferences.length != 1+forAllVariableNames.length) {
+			console.error("number of inferences is wrong, should be 1 + " + forAllVariableNames.length + ", but is: " + inf.inferences.length);
+		} else {
+			// filter by the forAll results:
+			for(let i:number = 0;i<forAllVariableNames.length;i++) {
+				if (inf.inferences.length >= i+1) {
+			        let allValues:TermAttribute[] = [];
+			        for(let result of inf.inferences[i+1].endResults) {
+			            let v:TermAttribute = result.getValueForVariableName(forAllVariableNames[i]);
+			            if (v != null) allValues.push(v);
+			        }
+			        console.log("forAll values ("+forAllVariableNames[i]+"): " + allValues);
+			        inf.inferences[0].filterResultsByForAll([queryVariable.name], forAllVariableNames[i], allValues);
+			    }
+			}			
+		}
+
+
 		let negativeAnswer:string = "'no-matches-found'[symbol]";
 		if (queryTerm != null) {
 			if (queryTerm.functor.is_a(ai.cache_sort_property_with_value) ||

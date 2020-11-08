@@ -45,6 +45,7 @@ Just a small log of the performatives the game is using and what are the paramet
 	<li><b>perf.q.predicate-negated(listener, predicate)</b>: same as perf.q.predicate, but it will test the negation of the predicate</li>
 	<li><b>perf.q.predicate-negated(listener, predicate, additional_sentences)</b></li>
 	<li><b>perf.q.query(listener, variable, query)</b></li>
+	<li><b>perf.q.query(listener, variable, query, additional_sentences)</b></li>
 </ul>
 Most of the following performatives could just be defined as perf.q.query, but it is useful to separate them, as the way in which the text to answer would be generated differs in some cases from a regular query. For example, if you translate "where is the red key?" to a perf.q.query, the answer would be "the kitchen", but as a perf.q.wheris, it will be "in the kitchen". 
 <ul>

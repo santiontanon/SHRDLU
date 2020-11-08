@@ -22,6 +22,7 @@
     <sort name="#cons" super="any"/>
     <sort name="#list" super="any"/>
     <sort name="#query" super="any"/>
+    <sort name="#forall" super="any"/>
 
     <sort name="#stateSort" super="any"/>   <!-- sorts inheriting from this one are considered as if they can change over time -->
 

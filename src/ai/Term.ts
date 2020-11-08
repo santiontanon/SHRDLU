@@ -1,5 +1,5 @@
 class Bindings {
-    concat(b:Bindings) {
+    concat(b:Bindings) : Bindings {
         if (b == null) return null;
         let result:Bindings = new Bindings();
         //result.l = this.l.concat(b.l);
@@ -52,6 +52,15 @@ class Bindings {
             }
         }
         this.l = new_l;
+    }
+
+
+    getValueForVariableName(vName:string) : TermAttribute
+    {
+        for(let b of this.l) {
+            if (b[0].name == vName) return b[1];
+        }
+        return null;
     }
 
 
@@ -1265,6 +1274,24 @@ class Term {
 
         return term;
     }    
+
+
+    static sentencesToTerm(s_l:Sentence[], o:Ontology) : Term
+    {
+        let term:Term = null;
+
+        for(let i:number = 0; i<s_l.length; i++) {
+            let s:Sentence = s_l[i];
+            let term2:Term = Term.sentenceToTerm(s, o);
+            if (term == null) {
+                term = term2;
+            } else {
+                term = new Term(o.getSort("#and"), [new TermTermAttribute(term), new TermTermAttribute(term2)]);
+            }
+        }
+
+        return term;
+    }
 
 
     static sentenceToTerm(sentence:Sentence, o:Ontology) : Term

@@ -3135,6 +3135,68 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 (noun(NOUN, [singular]) | 'one' #findLastNoun(noun(NOUN, [singular])))
 			   		 ('!'|'?')*"
 			   priority="150"/>
+
+    <NLPattern name="q.query-is-not-preposition-query"
+    		   head="perf.q.query(LISTENER, X, #and(object(X), #and(#not(#cons(PREPOSITION, X, Y)), QUERY)), #forall(Y, QUERY))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] 'what' verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'not' preposition(PREPOSITION)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C2, Y, QUERY)"/>
+
+    <NLPattern name="q.query-noun-is-preposition-query"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #and(#cons(PREPOSITION, X, Y), QUERY)))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') 
+			   		 noun(NOUN, N1) verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C2, Y, QUERY)"/>
+
+    <NLPattern name="q.query-noun-is-preposition-any-query"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #and(#cons(PREPOSITION, X, Y), QUERY)), #forall(Y, QUERY))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') 
+			   		 noun(NOUN, N1) verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 preposition(PREPOSITION)
+			   		 ('any'|'all')
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C2, Y, QUERY)"
+			   priority="150"/>
+
+    <NLPattern name="q.query-noun-is-not-preposition-query"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #and(#not(#cons(PREPOSITION, X, Y)), QUERY)), #forall(Y, QUERY))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') 
+			   		 noun(NOUN, N1) verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'not' preposition(PREPOSITION)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C2, Y, QUERY)"/>
+
+    <NLPattern name="q.query-noun-is-not-preposition-obj"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #not(#cons(PREPOSITION, X, OBJECT2))))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') 
+			   		 noun(NOUN, N1) verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 'not' preposition(PREPOSITION)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, OBJECT2)"/>
+
     <NLPattern name="q.query-what-do-obj-verb"
 			   head="perf.q.query(LISTENER, V, #cons(V2,QUERY_ARG1,V))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |

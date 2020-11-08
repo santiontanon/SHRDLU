@@ -1595,6 +1595,11 @@ NLParseTestUnifyingListener("which cube is sitting on the crate?", o.getSort("pe
 NLParseTestUnifyingListener("are there any more?", o.getSort("performative"), context, 'etaoin', "perf.moreresults('etaoin'[#id])");
 NLParseTestUnifyingListener("how many things are on top of green cubes?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(object(X), #and(space.directly.on.top.of(X,Y), #and(cube(Y), color(Y, 'green'[green])))))"); 
 NLParseTestUnifyingListener("how many things are not on top of a green cube?", o.getSort("performative"),  context, "etaoin", "perf.q.howmany(V0:'etaoin'[#id], X, #and(object(X), #and(#not(space.directly.on.top.of(X,Y)), #and(cube(Y), color(Y, 'green'[green])))))"); 
+NLParseTestUnifyingListener("what is not on top of a green cube?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(#not(space.directly.on.top.of(X,Y)), Q:#and(cube(Y), color(Y, 'green'[green])))), #forall(Y, Q))");
+NLParseTestUnifyingListener("what things are on top of green cubes?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(space.directly.on.top.of(X,Y), #and(cube(Y), color(Y, 'green'[green])))))");
+NLParseTestUnifyingListener("what things are not on top of green cubes?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(#not(space.directly.on.top.of(X,Y)), Q:#and(cube(Y), color(Y, 'green'[green])))), #forall(Y, Q))");
+NLParseTestUnifyingListener("which blocks are taller than any pyramid?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(Q:pyramid(Y),taller(X,Y))), #forall(Y, Q))");
+NLParseTestUnifyingListener("what things are not on top of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #not(space.directly.on.top.of(X,'5'[#id]))))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

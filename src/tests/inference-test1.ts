@@ -70,9 +70,6 @@ var term_unification_l:[string,string,boolean][] = [
                                         ["action.talk(T:[number], X:[character], perf.greet('self'[character]))",
                                          "action.talk('615'[number], 'David'[character], perf.greet('chair'[object]))",
                                          false],
-//                                        ["action.talk(T:[number])",
-//                                         "action.talk('615'[any])",
-//                                         true]        // This test does not work, but I'm unsure if should!
                                     ];
 
 
@@ -111,29 +108,29 @@ function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[],
 {
     //DEBUG_resolution = true;
     
-    var KB:SentenceContainer = new SentenceContainer();
+    let KB:SentenceContainer = new SentenceContainer();
     for(let str of KB_str) {
-        var s:Sentence = Sentence.fromString(str, o);
+        let s:Sentence = Sentence.fromString(str, o);
 //        console.log("parsed KB sentence: " + s.toString());
         KB.addSentence(s, "background", 1, 0);
     }
-    var additionalSentences:Sentence[] = [];
+    let additionalSentences:Sentence[] = [];
     for(let str of AS_str) {
-        var s:Sentence = Sentence.fromString(str, o);
+        let s:Sentence = Sentence.fromString(str, o);
         additionalSentences.push(s);
     }
-    var query:Sentence[] = [];
+    let query:Sentence[] = [];
     for(let query_str of query_str_l) {
         query.push(Sentence.fromString(query_str, o));
     }
 //    console.log("parsed query sentence: " + query.toString());
-    var r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
-//    var steps:number = 0;
+    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
+//    let steps:number = 0;
     while(!r.step()) {
 //        steps++;
 //        if (steps>=5) break;
     }
-    var result:boolean = r.endResults.length > 0;
+    let result:boolean = r.endResults.length > 0;
     if (result != expectedResult) {
         console.error("failed resolutionTest, query: " + query_str_l);
     } else {
@@ -154,30 +151,67 @@ function resolutionQueryTest(KB_str:string[], query_str_l:string[], numberOfExpe
     resolutionQueryTest2(KB_str, [], query_str_l, numberOfExpectedResults, o);
 }
 
-
 function resolutionQueryTest2(KB_str:string[], AS_str:string[], query_str_l:string[], numberOfExpectedResults:number, o:Ontology)
+{
+    resolutionQueryTest2ForAll(KB_str, AS_str, query_str_l, [], numberOfExpectedResults, o);
+}
+
+function resolutionQueryTest2ForAll(KB_str:string[], AS_str:string[], query_str_l:string[], forall_str_l:string[],
+                                    numberOfExpectedResults:number, o:Ontology)
 {
     //DEBUG_resolution = true;
     
-    var KB:SentenceContainer = new SentenceContainer();
+    let KB:SentenceContainer = new SentenceContainer();
     for(let str of KB_str) {
-        var s:Sentence = Sentence.fromString(str, o);
+        let s:Sentence = Sentence.fromString(str, o);
 //        console.log("parsed KB sentence: " + s.toString());
         KB.addSentence(s, "background", 1, 0);
     }
-    var additionalSentences:Sentence[] = [];
+    let additionalSentences:Sentence[] = [];
     for(let str of AS_str) {
-        var s:Sentence = Sentence.fromString(str, o);
+        let s:Sentence = Sentence.fromString(str, o);
         additionalSentences.push(s);
-    }    
-    var query:Sentence[] = [];
+    }
+    let query:Sentence[] = [];
+    let queryVariables:string[] = [];
     for(let query_str of query_str_l) {
-        query.push(Sentence.fromString(query_str, o));
+        let s:Sentence = Sentence.fromString(query_str, o);
+        query.push(s);
+        for(let v of s.getAllVariables()) {
+            if (queryVariables.indexOf(v.name) == -1) queryVariables.push(v.name);
+        }
     }
 //    console.log("parsed query sentence: " + query.toString());
+    let forAlls:[VariableTermAttribute, Term][] = [];
+    for(let forAll_str of forall_str_l) {
+        let forAll_term:Term = Term.fromString(forAll_str, o);
+        forAlls.push([<VariableTermAttribute>(forAll_term.attributes[0]), (<TermTermAttribute>(forAll_term.attributes[1])).term]);
+        let idx:number = queryVariables.indexOf((<VariableTermAttribute>(forAll_term.attributes[0])).name);
+        if (idx != -1) queryVariables.splice(idx,1);
+    }
 
-    var r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
+    // for(let v of queryVariables) {
+    //     console.log("query variable: " + v);
+    // }
+
+    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
     while(!r.stepAccumulatingResults());
+
+    for(let i:number = 0;i<forAlls.length;i++) {
+        // console.log("inference for forAll: " + forAlls[i][1]);
+        let negatedForAll:Sentence[] = Term.termToSentences(new Term(o.getSort("#not"), [new TermTermAttribute(forAlls[i][1])]), o);
+        let r2:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, negatedForAll, true, true, true, testAI);
+        while(!r2.stepAccumulatingResults());
+        let allValues:TermAttribute[] = [];
+        for(let result of r2.endResults) {
+            let v:TermAttribute = result.getValueForVariableName(forAlls[i][0].name);
+            if (v != null) allValues.push(v);
+        }
+        // console.log("forAll values ("+forAlls[i][0].name+"): " + allValues);
+
+        // filter main inference results based on the forAll results:
+        r.filterResultsByForAll(queryVariables, forAlls[i][0].name, allValues);
+    }
 
     if (r.endResults.length == numberOfExpectedResults) {
         console.log("resolutionQueryTest: " + r.endResults);
@@ -215,13 +249,13 @@ function normalFormTest(term_str:string, result_str_l:string[], o:Ontology)
 
 
 for(let pair of term_unification_l) {
-    var term1:Term = Term.fromString(pair[0], o);
-    var term2:Term = Term.fromString(pair[1], o);
+    let term1:Term = Term.fromString(pair[0], o);
+    let term2:Term = Term.fromString(pair[1], o);
     console.log("-------------------------");
     console.log("Term 1: " + term1);
     console.log("Term 2: " + term2);
-    var bindings:Bindings = new Bindings();
-    var result:boolean = term1.unify(term2, OCCURS_CHECK, bindings);
+    let bindings:Bindings = new Bindings();
+    let result:boolean = term1.unify(term2, OCCURS_CHECK, bindings);
     if (result) {
         console.log("They unify, bindings: " + bindings);
     } else {
@@ -743,6 +777,35 @@ resolutionQueryTest2(
     1,
     o);
 
+
+console.log("negating: #and(pyramid(X),#and(cube(Y),space.at(X,Y)))");
+for(let s of Term.termToSentences(Term.fromString("#not(#and(pyramid(X),#and(cube(Y),space.at(X,Y))))", o), o)) {
+    console.log(s.toString());
+}
+resolutionQueryTest2ForAll(
+    ["cube('c1'[#id])", "cube('c2'[#id])", "pyramid('p1'[#id])", "pyramid('p2'[#id])", 
+     "space.at('p1'[#id],'c1'[#id])", "~space.at('p1'[#id],'c2'[#id])",
+     "~space.at('p2'[#id],'c1'[#id])", "~space.at('p2'[#id],'c2'[#id])"],
+    [],
+    ["~pyramid(X);~cube(Y);~space.at(X,Y)"], // query
+    [], // forall
+    1,
+    o);
+
+
+console.log("negating: #and(pyramid(X),#or(#not(cube(Y)),#not(space.at(X,Y))))");
+for(let s of Term.termToSentences(Term.fromString("#not(#and(pyramid(X),#or(#not(cube(Y)),#not(space.at(X,Y)))))", o), o)) {
+    console.log(s.toString());
+}
+resolutionQueryTest2ForAll(
+    ["cube('c1'[#id])", "cube('c2'[#id])", "pyramid('p1'[#id])", "pyramid('p2'[#id])", 
+     "space.at('p1'[#id],'c1'[#id])", "~space.at('p1'[#id],'c2'[#id])", "~space.at('p1'[#id],'p2'[#id])",
+     "~space.at('p2'[#id],'c1'[#id])", "~space.at('p2'[#id],'c2'[#id])", "~space.at('p2'[#id],'p1'[#id])"],
+    [], // additional sentences
+    ["~pyramid(X);cube(Y)","~pyramid(X);space.at(X,Y)"], // query
+    ["#forall(Y,cube(Y))"], // forall
+    1,
+    o);
 
 
 

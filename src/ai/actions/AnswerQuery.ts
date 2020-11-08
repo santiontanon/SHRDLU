@@ -50,6 +50,11 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 		if (intention.attributes[2] instanceof TermTermAttribute) {
 			let queryPerformative:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(queryPerformative.attributes[2])).term, ai.o);
+			let forAlls:Term[] = [];
+			if (queryPerformative.attributes.length >= 4) {
+				forAlls = NLParser.termsInList((<TermTermAttribute>(queryPerformative.attributes[3])).term, "#and");
+			}
+			console.log("forAlls: " + forAlls);
 
 			// search for time-related sentences (which just indicate the time at which this query must be performed):
 			// or terms that require KB updates (e.g., property.age):
@@ -70,18 +75,43 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			}
 
 			// negate the query:
-			let  negated_s:Sentence = new Sentence([],[]);
-			for(let s of s_l) {
-				let  tmp:Sentence[] = s.negate();
-				if (tmp == null || tmp.length != 1) {
-					console.error("executeIntention answer query: cannot negate query!: " + intention);		
-					return true;
-				}
-				negated_s.terms = negated_s.terms.concat(tmp[0].terms);
-				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
+			let targets:Sentence[][] = [];
+			let negatedExpression:Term = new Term(ai.o.getSort("#not"),
+												  [new TermTermAttribute(Term.sentencesToTerm(s_l, ai.o))])
+			console.log("negatedExpression: " + negatedExpression);
+			let target:Sentence[] = Term.termToSentences(negatedExpression, ai.o);
+			targets.push(target)
+
+			// negate the forAlls:
+			for(let forAll of forAlls) {
+				if (forAll.attributes.length >= 2 && 
+					forAll.attributes[1] instanceof TermTermAttribute) {
+					let forAllTerm:Term = (<TermTermAttribute>(forAll.attributes[1])).term;
+			        let negatedForAll:Sentence[] = Term.termToSentences(new Term(ai.o.getSort("#not"), [new TermTermAttribute(forAllTerm)]), ai.o);
+			        targets.push(negatedForAll);
+			    }
 			}
-//				console.log("executeIntention answer query: negated_s = " + negated_s);
-			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
+
+			console.log("targets: ");
+			for(let t of targets) {
+				console.log("    " + t);
+			}
+
+			// 2) start the inference process:
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
+
+// 			let  negated_s:Sentence = new Sentence([],[]);
+// 			for(let s of s_l) {
+// 				let  tmp:Sentence[] = s.negate();
+// 				if (tmp == null || tmp.length != 1) {
+// 					console.error("executeIntention answer query: cannot negate query!: " + intention);		
+// 					return true;
+// 				}
+// 				negated_s.terms = negated_s.terms.concat(tmp[0].terms);
+// 				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
+// 			}
+// //				console.log("executeIntention answer query: negated_s = " + negated_s);
+// 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
 		} else {
 			console.error("executeIntention answer query: attribute[2] was not a TermTermAttribute: " + intention);	
 		}

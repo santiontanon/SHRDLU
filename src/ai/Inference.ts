@@ -56,6 +56,25 @@ class InferenceNode
 	}
 
 
+	getValueForVariableName(vName:string) : TermAttribute
+	{
+		return this.bindings.getValueForVariableName(vName);
+	}
+
+
+	matchesOnVariableNames(n2:InferenceNode, vNames:string[]) : boolean
+	{
+		for(let vName of vNames) {
+			let v1:TermAttribute = this.getValueForVariableName(vName);
+			let v2:TermAttribute = n2.getValueForVariableName(vName);
+			if (v1 == null && v2 != null) return false;
+			if (v1 != null && v1 == null) return false;
+			if (Term.equalsNoBindingsAttribute(v1, v2) != 1) return false;
+		}
+		return true;
+	}
+
+
 	toString() : string
 	{
 		return "[ sentence: " + this.sentence + ", bindings: " + this.bindings + "]"; 
@@ -131,6 +150,7 @@ class InterruptibleResolution
 				console.log("   " + t.toString());
 			}
 */
+			console.log("InterruptibleResolution:");
 			for(let t of target) {
 				console.log("   target: " + t.toString());
 			}
@@ -616,7 +636,7 @@ class InterruptibleResolution
 //		console.log("resolutionBetweenSentencesWithBindings: " + s1 + " with " + s2);
 		let resolvents:InferenceNode[] = [];
 //		this.resolutionBetweenSentencesWithBindings_internal(s1, s2, [], [], new Bindings(), resolvents, occursCheck);
-		this.resolutionBetweenSentencesWithBindings_internal(parent1.sentence, parent2.sentence, parent1, parent2, new Bindings(), resolvents, occursCheck);
+		this.resolutionBetweenSentencesWithBindings_internal(parent1.sentence, parent2.sentence, parent1, parent2, resolvents, occursCheck);
 		let resolvents2:InferenceNode[] = [];
 		for(let r of resolvents) {
 			r.bindings = parent1.bindings.concat(parent2.bindings.concat(r.bindings))
@@ -663,7 +683,6 @@ class InterruptibleResolution
 	// s2: is from the KB
 	resolutionBetweenSentencesWithBindings_internal(s1:Sentence, s2:Sentence, 
 													parent1:InferenceNode, parent2:InferenceNode,
-												    bindings:Bindings, 
 												    resolvents:InferenceNode[],
 												    occursCheck:boolean) : void
 	{
@@ -671,6 +690,16 @@ class InterruptibleResolution
 		//console.log("s2: " + s2);
 
 		let s2_term_cache:Term[] = []
+	    let bindings:Bindings = new Bindings();
+	    if (parent1.bindings != null) {
+	    	bindings = bindings.concat(parent1.bindings);
+	    }
+	    if (parent2.bindings != null) {
+	    	bindings = bindings.concat(parent2.bindings);
+	    }
+
+	    // if they are not compatible:
+	    if (bindings == null) return;
 
 		for(let i:number = 0;i<s1.terms.length;i++) {
 			for(let j:number = 0;j<s2.terms.length;j++) {
@@ -793,6 +822,56 @@ class InterruptibleResolution
 			return true;
 		} else {
 			return true;
+		}
+	}
+
+
+	filterResultsByForAll(queryVariableNames:string[], forAllVariableName:string, forAllValues:TermAttribute[])
+	{
+		let results:[InferenceNode, TermAttribute[]][] = [];
+
+		for(let r of this.endResults) {
+			let match:boolean = false;
+			for(let [prev_r, missingValues] of results) {
+				if (r.matchesOnVariableNames(prev_r, queryVariableNames)) {
+					let v:TermAttribute = r.getValueForVariableName(forAllVariableName);
+					for(let i:number = 0;i<missingValues.length;i++) {
+						if (Term.equalsNoBindingsAttribute(missingValues[i], v) == 1) {
+							missingValues.splice(i, 1);
+							break;
+						}
+					}
+					match = true;
+					break;
+				}
+			}
+			if (!match) {
+				console.log("filterResultsByForAll (new result): " + r.bindings);
+				let bindings:Bindings = new Bindings();
+				for(let vv of r.bindings.l) {
+					if (vv[0].name != forAllVariableName) {
+						bindings.l.push(vv);
+					}
+				}
+				let r2:InferenceNode = new InferenceNode(r.sentence, bindings, r.parent1, r.parent2);
+				let missingValues:TermAttribute[] = [...forAllValues];
+				let v:TermAttribute = r.getValueForVariableName(forAllVariableName);
+				for(let i:number = 0;i<missingValues.length;i++) {
+					if (Term.equalsNoBindingsAttribute(missingValues[i], v) == 1) {
+						missingValues.splice(i, 1);
+						break;
+					}
+				}
+				results.push([r2, missingValues])
+			}
+		}
+
+		this.endResults = [];
+		for(let [r, missingValues] of results) {
+			console.log("filterResultsByForAll (final result): " + r.bindings + ", missingValues: " + missingValues);
+			if (missingValues.length == 0) {
+				this.endResults.push(r);
+			}
 		}
 	}
 
