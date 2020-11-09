@@ -1600,7 +1600,7 @@ NLParseTestUnifyingListener("what things are on top of green cubes?", o.getSort(
 NLParseTestUnifyingListener("what things are not on top of green cubes?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(#not(space.directly.on.top.of(X,Y)), Q:#and(cube(Y), color(Y, 'green'[green])))), #forall(Y, Q))");
 NLParseTestUnifyingListener("which blocks are taller than any pyramid?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(Q:pyramid(Y),taller(X,Y))), #forall(Y, Q))");
 NLParseTestUnifyingListener("what things are not on top of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #not(space.directly.on.top.of(X,'5'[#id]))))");
-
+NLParseTestUnifyingListener("which is taller, the crate or qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #or(#and(=(X,'5'[#id]), taller('5'[#id],'qwerty'[#id])), #and(=(X,'qwerty'[#id]), taller('qwerty'[#id],'5'[#id]))))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

@@ -270,19 +270,32 @@ class NLParser {
 	{
 		if (parse.functor.is_a(this.o.getSort("performative"))) {
 			// create a pattern for unification:
-			let pattern:Term = new Term(parse.functor, []);
-			pattern.addAttribute(new ConstantTermAttribute(listener, this.o.getSort("#id")));
-			for(let i:number = 1;i<parse.attributes.length;i++) {
-				pattern.addAttribute(new VariableTermAttribute(this.o.getSort("any"), null));
-			}
-
-			let bindings:Bindings = new Bindings();
-			if (parse.unify(pattern, OCCURS_CHECK, bindings)) {
-				return parse.applyBindings(bindings);
+			if (parse.attributes.length > 0) {
+				let bindings:Bindings = new Bindings();
+				if (Term.unifyAttribute(new ConstantTermAttribute(listener, this.o.getSort("#id")),
+										parse.attributes[0], OCCURS_CHECK, bindings)) {
+					return parse.applyBindings(bindings);
+				} else {
+					console.warn("NLParser.unifyListener: cannot unify listener for parse " + parse);
+					return null;
+				}
 			} else {
-				console.warn("NLParser.unifyListener: parse " + parse + " does not unify with pattern " + pattern);
-				return null;
+				console.warn("NLParser.unifyListener: cannot unify listener for parse " + parse);
+				return null;				
 			}
+			// let pattern:Term = new Term(parse.functor, []);
+			// pattern.addAttribute(new ConstantTermAttribute(listener, this.o.getSort("#id")));
+			// for(let i:number = 1;i<parse.attributes.length;i++) {
+			// 	pattern.addAttribute(new VariableTermAttribute(this.o.getSort("any"), null));
+			// }
+
+			// let bindings:Bindings = new Bindings();
+			// if (parse.unify(pattern, OCCURS_CHECK, bindings)) {
+			// 	return parse.applyBindings(bindings);
+			// } else {
+			// 	console.warn("NLParser.unifyListener: parse " + parse + " does not unify with pattern " + pattern);
+			// 	return null;
+			// }
 		} else if (parse.functor.name == "#list") {
 			let result:Term = null;
 			// we go through them in reverse, since this function reverses their order:

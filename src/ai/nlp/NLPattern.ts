@@ -743,7 +743,8 @@ class NLPattern {
 				if ((<TermTermAttribute>t).term.functor.is_a(o.getSort("adjective"))) {
 					let t2:Term = (<TermTermAttribute>t).term;
 					if (t2.attributes[0] == queryFunctor &&
-						t2.attributes[1] instanceof ConstantTermAttribute) {
+						t2.attributes[1] instanceof ConstantTermAttribute &&
+						t2.attributes[1].sort.name != "#id") {
 						let adjectiveSort:Sort = o.getSort((<ConstantTermAttribute>(t2.attributes[1])).value);
 						if (adjectiveSort != null) adjectives.push(adjectiveSort);
 					}

@@ -265,6 +265,50 @@ for(let pair of term_unification_l) {
 }
 
 
+normalFormTest("block(X)",
+               ["block(X)"], o);
+
+normalFormTest("#and(block(X),box(X))",
+               ["block(X)", "box(X)"], o);
+normalFormTest("#or(block(X),box(X))",
+               ["block(X);box(X)"], o);
+
+normalFormTest("#not(#and(block(X),box(X)))",
+               ["~block(X);~box(X)"], o);
+normalFormTest("#not(#or(block(X),box(X)))",
+               ["~block(X)","~box(X)"], o);
+
+normalFormTest("#not(#not(#and(block(X),box(X))))",
+               ["block(X)", "box(X)"], o);
+
+normalFormTest("#not(#not(#not(#and(block(X),box(X)))))",
+               ["~block(X);~box(X)"], o);
+
+normalFormTest("#not(#or(block(X),#not(box(X))))",
+               ["~block(X)","box(X)"], o);
+
+normalFormTest("#and(#or(block(X), color(X,'green'[green])), #or(block(X), color(X,'red'[red])))",
+               ["block(X);color(X,'green'[green])", "block(X);color(X,'red'[red])"], o);
+
+normalFormTest("#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red])))",
+               ["block(X);block(X)",
+                "block(X);color(X,'red'[red])",
+                "color(X,'green'[green]);block(X)",
+                "color(X,'green'[green]);color(X,'red'[red])"], o);
+
+normalFormTest("#and(#or(color(X, 'green'[green]), color(X,'red'[red])), block(X))",
+               ["color(X,'green'[green]);color(X,'red'[red])",
+                "block(X)"], o);
+
+normalFormTest("#not(#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red]))))",
+               ["~block(X); ~color(X,'green'[green])",
+                "~block(X); ~color(X,'red'[red])"], o);
+
+normalFormTest("#not(#and(#or(color(X,'green'[green]), color(X,'red'[red])), block(X)))",
+               ["~color(X,'green'[green]); ~block(X)",
+                "~color(X,'red'[red]); ~block(X)"], o);
+
+
 resolutionTest(
     ["~space.at(X:[object],Y:[space.location]); ~space.at(X,Y2:[space.location]); =(Y,Y2)",
      "space.at(X:'18':[character], Y:'bedroom'[bedroom])"],
@@ -808,47 +852,20 @@ resolutionQueryTest2ForAll(
     o);
 
 
+console.log("negating: #or(#and(=(X,'c1'[#id]), taller(X,'c2'[#id])), #and(=(X,'c2'[#id]), taller(X,'c1'[#id])))");
+for(let s of Term.termToSentences(Term.fromString("#not(#or(#and(=(X,'c1'[#id]), taller(X,'c2'[#id])), #and(=(X,'c2'[#id]), taller(X,'c1'[#id]))))", o), o)) {
+    console.log(s.toString());
+}
+resolutionQueryTest2ForAll(
+    ["taller('c2'[#id],'c1'[#id])"],
+    [], // additional sentences
+    ["~=(X:[any], 'c1'[#id]); ~taller(X, 'c2'[#id])",
+     "~=(X:[any], 'c2'[#id]); ~taller(X, 'c1'[#id])"], // query
+    [], // forall
+    1,
+    o);
 
-normalFormTest("block(X)",
-               ["block(X)"], o);
 
-normalFormTest("#and(block(X),box(X))",
-               ["block(X)", "box(X)"], o);
-normalFormTest("#or(block(X),box(X))",
-               ["block(X);box(X)"], o);
 
-normalFormTest("#not(#and(block(X),box(X)))",
-               ["~block(X);~box(X)"], o);
-normalFormTest("#not(#or(block(X),box(X)))",
-               ["~block(X)","~box(X)"], o);
 
-normalFormTest("#not(#not(#and(block(X),box(X))))",
-               ["block(X)", "box(X)"], o);
-
-normalFormTest("#not(#not(#not(#and(block(X),box(X)))))",
-               ["~block(X);~box(X)"], o);
-
-normalFormTest("#not(#or(block(X),#not(box(X))))",
-               ["~block(X)","box(X)"], o);
-
-normalFormTest("#and(#or(block(X), color(X,'green'[green])), #or(block(X), color(X,'red'[red])))",
-               ["block(X);color(X,'green'[green])", "block(X);color(X,'red'[red])"], o);
-
-normalFormTest("#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red])))",
-               ["block(X);block(X)",
-                "block(X);color(X,'red'[red])",
-                "color(X,'green'[green]);block(X)",
-                "color(X,'green'[green]);color(X,'red'[red])"], o);
-
-normalFormTest("#and(#or(color(X, 'green'[green]), color(X,'red'[red])), block(X))",
-               ["color(X,'green'[green]);color(X,'red'[red])",
-                "block(X)"], o);
-
-normalFormTest("#not(#or(#and(block(X), color(X,'green'[green])), #and(block(X), color(X,'red'[red]))))",
-               ["~block(X); ~color(X,'green'[green])",
-                "~block(X); ~color(X,'red'[red])"], o);
-
-normalFormTest("#not(#and(#or(color(X,'green'[green]), color(X,'red'[red])), block(X)))",
-               ["~color(X,'green'[green]); ~block(X)",
-                "~color(X,'red'[red]); ~block(X)"], o);
 

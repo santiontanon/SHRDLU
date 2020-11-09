@@ -115,7 +115,14 @@ class InterruptibleResolution
 		for(let s of target) {
 			let r:InferenceNode = new InferenceNode(s, new Bindings(), null, null);
 			this.resolutionEqualityCheck(r);
-			if (r.sentence != null && this.treatSpatialPredicatesSpecially) r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, true);
+			if (r.sentence != null && this.treatSpatialPredicatesSpecially) {
+				let n:number = r.sentence.terms.length;
+				r.sentence = this.resolutionSpatialPredicatesCheck(r.sentence, true);
+				if (n != r.sentence.terms.length && r.sentence.terms.length==1) {
+					// we need to check this again:
+					this.resolutionEqualityCheck(r);
+				}
+			}
 			if (r.sentence == null) continue;
 			this.target.push(r);
 		}
@@ -582,7 +589,7 @@ class InterruptibleResolution
 															(<ConstantTermAttribute>s.terms[i].attributes[0]).value,
 															(<ConstantTermAttribute>s.terms[i].attributes[1]).value,
 															this.ai.selfID);
-				//console.log("checkSpatialRelation: " + s.terms[i] + " -> " + truth );
+				if (DEBUG_resolution) console.log("checkSpatialRelation: " + s.terms[i] + " -> " + truth );
 				if (truth != null &&
 					truth != s.sign[i]) {
 					//console.log("    removing it from sentence");

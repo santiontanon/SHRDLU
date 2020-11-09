@@ -340,6 +340,8 @@ class SentenceContainer {
 		for(let i:number = 0;i<s.terms.length;i++) {
 			let query:Term = s.terms[i];
 			let sign:boolean = !s.sign[i];
+			// special case for this special functor:
+			if (query.functor.name == "=") continue;
 			for(let sortName in this.sentenceHash) {
 				let s2:Sort = o.getSort(sortName);
 				if (s2.is_a(query.functor) || query.functor.is_a(s2)) {

@@ -156,6 +156,7 @@
     <sort name="past-tense" super="verb-tense"/>
 
     <sort name="adjective" super="part-of-speech"/>    
+    <sort name="comparative-adjective" super="adjective"/>    
     <sort name="superlative-adjective" super="adjective"/>    
 
     <sort name="adverb" super="part-of-speech"/>    
@@ -871,8 +872,8 @@
     <sort name="tallest" super="property,superlative-adjective"/>
     <sort name="shortest-tallness" super="property,superlative-adjective"/>
 
-    <sort name="taller" super="spatial-relation"/>
-    <sort name="shorter-tallness" super="spatial-relation"/>
+    <sort name="taller" super="spatial-relation,comparative-adjective"/>
+    <sort name="shorter-tallness" super="spatial-relation,comparative-adjective"/>
 
     <sort name="length.unit" super="measuring-unit,length"/>
     <sort name="distance.unit" super="measuring-unit,distance"/>

@@ -56,6 +56,12 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			}
 			console.log("forAlls: " + forAlls);
 
+			console.log("expression: " + (<TermTermAttribute>(queryPerformative.attributes[2])).term);
+			console.log("expression to sentences: ");
+			for(let s of s_l) {
+				console.log("    " + s.toString())
+			}
+
 			// search for time-related sentences (which just indicate the time at which this query must be performed):
 			// or terms that require KB updates (e.g., property.age):
 			let toDelete:Sentence[] = [];
@@ -78,6 +84,10 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			let targets:Sentence[][] = [];
 			let negatedExpression:Term = new Term(ai.o.getSort("#not"),
 												  [new TermTermAttribute(Term.sentencesToTerm(s_l, ai.o))])
+			if (toDelete.length == 0) {
+				negatedExpression = new Term(ai.o.getSort("#not"),
+											 [new TermTermAttribute((<TermTermAttribute>(queryPerformative.attributes[2])).term)])
+			}
 			console.log("negatedExpression: " + negatedExpression);
 			let target:Sentence[] = Term.termToSentences(negatedExpression, ai.o);
 			targets.push(target)
