@@ -5857,6 +5857,16 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, NN)
 			   		 ('!'|'?')*"/>
 
+    <NLPattern name="action-superlative-noun-propernoun"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, V, PNOUN), #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#not(#cons(COMPARATIVE_ADJ,Y,V)))), [number.1], #forall(Y,#cons(NOUN, Y)))"
+    		   body="verb(VERB, N, P, T)
+    		   		 'the'
+			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
+			   		 noun(NOUN, NN)
+			   		 properNounCompound(PNOUN, PNN)
+			   		 ('!'|'?')*"
+			   priority="50"/>
+
     <!-- perf.moreresults -->
     <NLPattern name="moreresults"
 			   head="perf.moreresults(LISTENER)"

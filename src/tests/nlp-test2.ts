@@ -1602,6 +1602,8 @@ NLParseTestUnifyingListener("what things are not on top of the crate?", o.getSor
 NLParseTestUnifyingListener("which is taller, the crate or qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #or(#and(=(X,'5'[#id]), taller('5'[#id],'qwerty'[#id])), #and(=(X,'qwerty'[#id]), taller('qwerty'[#id],'5'[#id]))))");
 NLParseTestUnifyingListener("which is the tallest pyramid?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), #forall(Y,pyramid(Y)))");
 NLParseTestUnifyingListener("take the tallest pyramid", o.getSort("performative"),  context, "etaoin", "perf.request.action('etaoin'[#id], action.take('etaoin'[#id],X), #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), [number.1], #forall(Y,pyramid(Y)))");
+NLParseTestUnifyingListener("call the tallest pyramid john", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.call('etaoin'[#id], X, 'john'[symbol]), #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), [number.1], #forall(Y,pyramid(Y)))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
