@@ -48,7 +48,7 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 			        console.log("forAll values ("+forAllVariableNames[i]+"): " + allValues);
 			        inf.inferences[0].filterResultsByForAll([queryVariable.name], forAllVariableNames[i], allValues);
 			    }
-			}			
+			}
 		}
 
 

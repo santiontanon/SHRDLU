@@ -685,7 +685,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 						actions.push(action);
 
 						let needsInference:boolean = false;
-						if (perf2.attributes.length == 4 &&
+						if (perf2.attributes.length >= 4 &&
 							perf2.attributes[2] instanceof TermTermAttribute) {
 							needsInference = true;
 							for(let ih of this.intentionHandlers) {

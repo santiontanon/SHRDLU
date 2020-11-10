@@ -1576,7 +1576,7 @@ class Term {
                     let idx2:number = attributeString.indexOf("]");
                     tmp = attributeString.substring(idx,idx2);
                     if (attributeString.substring(idx2+1).trim() != "") {
-                        console.error("Term.parseAttribute: extra characters found after VariableTermAttribute!");
+                        console.error("Term.parseAttribute: extra characters found after VariableTermAttribute! parsing " + attributeString);
                         return null;
                     }
                     if (tmp.indexOf("'") >= 0) {
@@ -1606,7 +1606,7 @@ class Term {
                         idx2++;
                     }
                     if (!foundQuote) {
-                        console.error("Term.parseAttribute: unclosed quote in attribute!");
+                        console.error("Term.parseAttribute: unclosed quote in attribute!" + attributeString);
                         return null;
                     }
                     let idx3:number = attributeString.substring(idx2).indexOf("[");
@@ -1628,7 +1628,7 @@ class Term {
                         return new ConstantTermAttribute(tmp.replace("\\039","'"), a_sort);
                     }
                 } else {
-                    console.error("Term.parseAttribute: quote starts in the middle of a name! " + attributeString);
+                    console.error("Term.parseAttribute: quote starts in the middle of a name! parsing " + attributeString);
                     return null;
                 }
             } else if (c == ":") {
@@ -1641,7 +1641,7 @@ class Term {
                         let idx2:number = attributeString.indexOf("]");
                         let tmp2:string = attributeString.substring(idx+1,idx2);
                         if (attributeString.substring(idx2+1).trim() != "") {
-                            console.error("Term.parseAttribute: extra characters found after VariableTermAttribute!");
+                            console.error("Term.parseAttribute: extra characters found after VariableTermAttribute! parsing " + attributeString);
                             return null;
                         }
                         let a_sort:Sort = o.getSort(tmp2);

@@ -1586,7 +1586,6 @@ NLParseTestUnifyingListener("find a cube taller than the crate", o.getSort("perf
 NLParseTestUnifyingListener("find a cube which is taller than the crate", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(cube(X), taller(X, '5'[#id])), [number.1])");
 NLParseTestUnifyingListener("find a ship taller than the red one", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.find('etaoin'[#id], X), #and(ship(X), taller(X, '2'[#id])), [number.1])");
 
-
 // For version 3.8:
 NLParseTestUnifyingListener("hand the white key over", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.give(V0, '4'[#id], '1'[#id]))");
 NLParseTestUnifyingListener("push the crate twice", o.getSort("performative"),  context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], '2'[number.2]))");
@@ -1601,6 +1600,8 @@ NLParseTestUnifyingListener("what things are not on top of green cubes?", o.getS
 NLParseTestUnifyingListener("which blocks are taller than any pyramid?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(Q:pyramid(Y),taller(X,Y))), #forall(Y, Q))");
 NLParseTestUnifyingListener("what things are not on top of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #not(space.directly.on.top.of(X,'5'[#id]))))");
 NLParseTestUnifyingListener("which is taller, the crate or qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #or(#and(=(X,'5'[#id]), taller('5'[#id],'qwerty'[#id])), #and(=(X,'qwerty'[#id]), taller('qwerty'[#id],'5'[#id]))))");
+NLParseTestUnifyingListener("which is the tallest pyramid?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), #forall(Y,pyramid(Y)))");
+NLParseTestUnifyingListener("take the tallest pyramid", o.getSort("performative"),  context, "etaoin", "perf.request.action('etaoin'[#id], action.take('etaoin'[#id],X), #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), [number.1], #forall(Y,pyramid(Y)))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

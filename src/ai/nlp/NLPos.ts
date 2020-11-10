@@ -2008,7 +2008,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("short", "short-tallness", Term.fromString("adjective('short-tallness'[short-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("short", "short", Term.fromString("adjective('short'[short])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("shorter", "shorter-tallness", Term.fromString("comparative-adjective('shorter-tallness'[shorter-tallness])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("shortest", "shortest-tallness", Term.fromString("adjective('shortest-tallness'[shortest-tallness])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("shortest", "shortest-tallness", Term.fromString("superlative-adjective('shortest-tallness'[shortest-tallness], 'shorter-tallness'[shorter-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
@@ -2021,7 +2021,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("tall", "tall", Term.fromString("adjective('tall'[tall])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("taller", "taller", Term.fromString("comparative-adjective('taller'[taller])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("tallest", "tallest", Term.fromString("superlative-adjective('tallest'[tallest])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("tallest", "tallest", Term.fromString("superlative-adjective('tallest'[tallest], 'taller'[taller])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("thirsty", "thirsty", Term.fromString("adjective('thirsty'[thirsty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("uncharged", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("useful", "useful", Term.fromString("adjective('useful'[useful])", o), 1.0));

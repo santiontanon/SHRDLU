@@ -125,8 +125,8 @@ class BlocksWorldApp {
 
             // when any of the AIs is thinking:
             if (this.state == STATE_SHRDLU_ACTING && (this.time%32) < 16) {
-                if (this.shrdlu.currentInferenceProcess == null && this.shrdlu.queuedInferenceProcesses.length == 0) {
-                    // etaoin is thinking:
+                if (this.shrdlu.currentInferenceProcess != null || this.shrdlu.queuedInferenceProcesses.length >= 0) {
+                    // shrdlu is thinking:
                     ctx.fillStyle = MSX_COLOR_BLACK;
                     ctx.fillRect(0, 0, 130*PIXEL_SIZE, 10*PIXEL_SIZE);
                     ctx.fillStyle = MSX_COLOR_WHITE;

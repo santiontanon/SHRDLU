@@ -1206,7 +1206,7 @@ class RuleBasedAI {
 		if (perf2.attributes[1] instanceof TermTermAttribute) {
 			let action:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
 			let needsInference:boolean = false;
-			if (perf2.attributes.length == 4 &&
+			if (perf2.attributes.length >= 4 &&
 				perf2.attributes[2] instanceof TermTermAttribute) {
 				needsInference = true;
 				for(let ih of this.intentionHandlers) {
@@ -1219,6 +1219,12 @@ class RuleBasedAI {
 				}
 
 				if (needsInference) {
+					let forAlls:Term[] = [];
+					if (perf2.attributes.length >= 5) {
+						forAlls = NLParser.termsInList((<TermTermAttribute>(perf2.attributes[4])).term, "#and");
+					}
+					console.log("reactToRequestActionPerformative, forAlls: " + forAlls);
+
 					// this means that the action request has a variable and we need to start an inference process:
 					let targets:Sentence[][] = [];
 					let negatedExpression:Term = new Term(this.o.getSort("#not"),
@@ -1226,8 +1232,18 @@ class RuleBasedAI {
 					let target:Sentence[] = Term.termToSentences(negatedExpression, this.o);
 					targets.push(target)
 
+					// negate the forAlls:
+					for(let forAll of forAlls) {
+						if (forAll.attributes.length >= 2 && 
+							forAll.attributes[1] instanceof TermTermAttribute) {
+							let forAllTerm:Term = (<TermTermAttribute>(forAll.attributes[1])).term;
+					        let negatedForAll:Sentence[] = Term.termToSentences(new Term(this.o.getSort("#not"), [new TermTermAttribute(forAllTerm)]), this.o);
+					        targets.push(negatedForAll);
+					    }
+					}
+
 					// 2) start the inference process:
-					let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new ExecuteAction_InferenceEffect(action));
+					let ir:InferenceRecord = new InferenceRecord(this, [], targets, 1, 0, false, null, new ExecuteAction_InferenceEffect(perf2));
 					ir.triggeredBy = perf2;
 					ir.triggeredBySpeaker = context.speaker;
 					this.queuedInferenceProcesses.push(ir);
@@ -1235,7 +1251,7 @@ class RuleBasedAI {
 				}
 			}
 			if (perf2.attributes.length == 2 ||
-				(perf2.attributes.length == 4 && !needsInference)) {
+				(perf2.attributes.length >= 4 && !needsInference)) {
 				// First check if the actor is us:
 				let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
 				let tmp:number = this.canSatisfyActionRequest(ir);
@@ -2144,7 +2160,7 @@ class RuleBasedAI {
 				}
 			}
 			if (ir.effect instanceof ExecuteAction_InferenceEffect) {
-				(<ExecuteAction_InferenceEffect>ir.effect).action = (<ExecuteAction_InferenceEffect>ir.effect).action.applyBindings(bindings);
+				(<ExecuteAction_InferenceEffect>ir.effect).perf = (<ExecuteAction_InferenceEffect>ir.effect).perf.applyBindings(bindings);
 			}
 		}
 		for(let ir of this.queuedIntentions) {
