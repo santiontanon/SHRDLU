@@ -765,7 +765,7 @@ this.addTokenPOS(new PartOfSpeech("behind of", "space.behind", Term.fromString("
   */
 this.addTokenPOS(new PartOfSpeech("beside", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("besides", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
-//  ["between",  "PREP"],
+this.addTokenPOS(new PartOfSpeech("between", "!=", Term.fromString("preposition('space.between'[space.between])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("beyond", "space.behind", Term.fromString("preposition('space.behind'[space.behind])", o), 1.0));
 //  ["but",  "PREP"],
 //  NLPAddTokenPOS("by", PartOfSpeech.generatePreposition("by", POS_TYPE_PPREPOSITION_PLACE));

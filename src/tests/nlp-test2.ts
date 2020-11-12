@@ -1603,6 +1603,14 @@ NLParseTestUnifyingListener("which is taller, the crate or qwerty?", o.getSort("
 NLParseTestUnifyingListener("which is the tallest pyramid?", o.getSort("performative"),  context, "etaoin", "perf.q.query('etaoin'[#id], X, #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), #forall(Y,pyramid(Y)))");
 NLParseTestUnifyingListener("take the tallest pyramid", o.getSort("performative"),  context, "etaoin", "perf.request.action('etaoin'[#id], action.take('etaoin'[#id],X), #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), [number.1], #forall(Y,pyramid(Y)))");
 NLParseTestUnifyingListener("call the tallest pyramid john", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.call('etaoin'[#id], X, 'john'[symbol]), #and(pyramid(X),#and(pyramid(Y),#not(taller(Y,X)))), [number.1], #forall(Y,pyramid(Y)))");
+NLParseTestUnifyingListener("where could I find the white key?", o.getSort("performative"), context, 'etaoin', "perf.q.whereis('etaoin'[#id], '4'[#id])");
+NLParseTestUnifyingListener("please tell me how far is the crate from qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("please tell me how far is the crate located from qwerty", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("tell me how far is the crate from qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("tell me what is the distance between the crate and qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("could you tell me what is the distance between the crate and qwerty?", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+NLParseTestUnifyingListener("would you tell me how far away is the crate from qwerty", o.getSort("performative"),  context, "etaoin", "perf.q.distance('etaoin'[#id], '5'[#id], 'qwerty'[#id])");
+
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

@@ -2629,7 +2629,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] ['do' 'you' 'know']
-			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 'where' ('can'|'could'|'do') nounPhrase(X_S, N_S, P_S, C_S)
 			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
 			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefFromContext(C, SUBJECT)"
@@ -2639,7 +2639,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] ['do' 'you' 'know']
-			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 'where' ('can'|'could'|'do') nounPhrase(X_S, N_S, P_S, C_S)
 			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
 			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefQuery(C, SUBJECT, QUERY)"
@@ -2778,7 +2778,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'where' ('can'|'do') nounPhrase(X_S, N_S, P_S, C_S)
+			   		 'where' ('can'|'could'|'do') nounPhrase(X_S, N_S, P_S, C_S)
 			   		 (verb('verb.find'[symbol], N_S, P_S, [present-tense]) | verb('verb.get'[symbol], N_S, P_S, [present-tense]))
 			   		 [('the'|'some')] noun('food'[food],N) ('!'|'?')*"
     		   priority="300"/>
@@ -2798,7 +2798,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'where' ('can'|'do') subject-personal-pronoun(X1, N, G, P)
+			   		 'where' ('can'|'could'|'do') subject-personal-pronoun(X1, N, G, P)
 			   		 verb(VERB, N_S, P_S, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
 			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
@@ -2808,7 +2808,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'where' ('can'|'do') subject-personal-pronoun(X1, N, G, P)
+			   		 'where' ('can'|'could'|'do') subject-personal-pronoun(X1, N, G, P)
 			   		 verb(VERB, N_S, P_S, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2) ('!'|'?')* 
 			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)
@@ -2842,7 +2842,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'where' ('can'|'do') subject-personal-pronoun(X1, N, G, P)
+			   		 'where' ('can'|'could'|'do') subject-personal-pronoun(X1, N, G, P)
 			   		 verb('verb.do'[symbol], N_S, P_S, [present-tense])
 			   		 noun('laundry'[laundry], [singular]) ('!'|'?')* 
 			   		 #derefFromContext(subject-personal-pronoun(X1, N, G, P), SPEAKER)"
@@ -6817,11 +6817,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2)"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'far' ['away'] 
 			   		 'from'
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 verb('verb.be'[symbol], N, P, T)
-			   		 nounPhrase(X3, N3, P3, C3)
+			   		 nounPhrase(X3, N3, P3, C3) ['located']
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT1)
 			   		 #derefFromContext(C3, OBJECT2)"/>
@@ -6830,6 +6831,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'far' ['away'] 
 			   		 'from'
 			   		 nounPhrase(X2, N2, P2, C2)
@@ -6845,9 +6847,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2)"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'far' ['away'] 
 			   		 verb('verb.be'[symbol], N, P, T)
-			   		 nounPhrase(X3, N3, P3, C3)
+			   		 nounPhrase(X3, N3, P3, C3) ['located']
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C3, OBJECT2)"/>
 
@@ -6855,9 +6858,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, OBJECT3, OBJECT4)"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'far' ['away'] 
 			   		 verb('verb.be'[symbol], N, P, T)
-			   		 nounPhrase(X3, N3, P3, C3)
+			   		 nounPhrase(X3, N3, P3, C3) ['located']
 			   		 'from'
 			   		 nounPhrase(X4, N4, P4, C4)
 			   		 ('!'|'?')*
@@ -6868,9 +6872,10 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'far' ['away'] 
 			   		 verb('verb.be'[symbol], N, P, T)
-			   		 nounPhrase(X3, N3, P3, C3)
+			   		 nounPhrase(X3, N3, P3, C3) ['located']
 			   		 [','] 'in' noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C3, OBJECT2)"/>
@@ -6879,6 +6884,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2)"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'what'
 			   		 verb('verb.be'[symbol], N, P, T)
 			   		 ['the'] 'distance' 'to'
@@ -6890,6 +6896,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'what'
 			   		 verb('verb.be'[symbol], N, P, T)
 			   		 ['the'] 'distance' 'to'
@@ -6902,6 +6909,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2)"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'what'
 			   		 verb('verb.be'[symbol], N, P, T)
 			   		 ['the'] 'distance'
@@ -6917,6 +6925,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, OBJECT1, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'what'
 			   		 verb('verb.be'[symbol], N, P, T)
 			   		 ['the'] 'distance'
@@ -6933,6 +6942,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.q.distance(LISTENER, SPEAKER, OBJECT2, UNIT:[distance.unit])"
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 [['please' [',']] [('would'|'could'|'can') 'you'] 'tell' 'me']
 			   		 'how' 'many'
 			   		 noun(UNIT_SYMBOL, N4) #symbolToSort(UNIT_SYMBOL, UNIT)
 			   		 ['away']
