@@ -24,9 +24,9 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		if (this.act == "intro") {
+		// if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			this.skip_to_act_1();
+			// this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			// this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
@@ -37,7 +37,7 @@ class ShrdluGameScript {
 			// this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
 			// this.skip_to_act_3_back_from_tardis();
-		}
+		// }
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -49,7 +49,7 @@ class ShrdluGameScript {
 		this.processQueuedThoughtBubbles();
 	}
 
-	
+/*	
 	// This is a debug function, remove once the game is complete!
 	skip_to_act_end_of_intro()
 	{
@@ -153,7 +153,7 @@ class ShrdluGameScript {
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("helmet", this.game, false, false));
 	}
 
-/* 
+
 	skip_to_end_of_act_1()
 	{
 		this.skip_to_act_1();
