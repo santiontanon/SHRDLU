@@ -21,7 +21,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}			
@@ -56,7 +56,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -75,11 +75,11 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				if (denyrequestCause != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 			}
 			return true;
@@ -91,9 +91,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        for(let item of item_l) {
 	    		let s:A4Script = new A4Script(A4_SCRIPT_DROP, item.ID, null, 0, false, false);
 	        	q.scripts.push(s);
-				ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-											  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-											   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
+	        	ai.addCurrentActionLongTermTerm(alternative_actions[0]);
 
 				// If the object was not mentioned explicitly in the performative, add it to the natural language context:
 				if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);
@@ -110,7 +108,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 
 		} else {
@@ -124,7 +122,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				if (containerObjectL != null && containerObjectL.length > 0) {
 					let term2:Term = alternative_actions[0].clone([]);
 					term2.functor = ai.o.getSort("action.put-in");
-					let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.time_in_seconds);
+					let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.timeStamp);
 					ir2.alternative_actions = [];
 					for(let aa of ir.alternative_actions) {
 						let aa2:Term = aa.clone([]);
@@ -156,15 +154,15 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					// deny request:
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 					// explain cause:
 					term = new Term(ai.o.getSort("action.talk"), 
 									[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 									 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 									 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				return true;
 			}
@@ -174,7 +172,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 				return true;
 			}
@@ -200,14 +198,12 @@ class RobotDrop_IntentionAction extends IntentionAction {
 	        	if (numberConstraint <= 0) break;
 	        }
 			ai.setNewAction(alternative_actions[0], requester, q, null);
-			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-										   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
+			ai.addCurrentActionLongTermTerm(alternative_actions[0]);
 			ai.intentionsCausedByRequest.push(ir);
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 
 		}

@@ -69,9 +69,9 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 			if (recipe == null) {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(X:verb.know-how(E:'"+ai.selfID+"'[#id], action.print(E, ["+toPrint.name+"])))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				return true;				
 			}
@@ -114,9 +114,9 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 			if (bestMissingMaterials.length > 0) {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(X:verb.have('"+bestPrinter.ID+"'[#id], ["+bestMissingMaterials[0]+"]))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				return true;								
 			}
@@ -128,9 +128,9 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 		    map.addObject(obj);
 
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+ir.requester+", space.at('"+obj.ID+"'[#id], 'location-maintenance'[#id])))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 
 			// force a perception update on the maintenance room, to make sure we can talk about the newly printed object:
 			ai.perceptionFocusedOnObject([obj], obj);
@@ -144,7 +144,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}			
 		}
 		return true;

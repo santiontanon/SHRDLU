@@ -24,7 +24,7 @@ class BWPutUnder_IntentionAction extends IntentionAction {
 		// plan for this action)
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		return true;		
 	}
 

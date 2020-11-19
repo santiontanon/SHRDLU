@@ -47,7 +47,10 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 			this.specialCase1Term(s_l[0].terms[0], 
 								  s_l[0].sign[0],
 								  timeTerm, ai, requester, 
-								  intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) return true;
+								  intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) {
+			ir.succeeded = true;
+			return true;
+		}
 
 		let negated_s:Sentence = new Sentence([],[]);
 		for(let s of s_l) {
@@ -55,6 +58,7 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 			let tmp:Sentence[] = s.negate();
 			if (tmp == null || tmp.length != 1) {
 				console.error("executeIntention answer predicate: cannot negate query!: " + intention);		
+				ir.succeeded = false;
 				return true;
 			}
 			negated_s.terms = negated_s.terms.concat(tmp[0].terms);
@@ -102,16 +106,16 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 	specialCaseInternal(term:Term, sign:boolean, timeTerm:Term, kbTerm:Term, kbSign:boolean, kbTime0:number, kbTime1:number, ai:RuleBasedAI, requester:TermAttribute) : boolean
 	{
 		if (kbTerm.equalsNoBindings(term) == 1) {
-			if (TimeInference.timeMatch(ai.time_in_seconds, kbTime0, kbTime1, timeTerm)) {
+			if (TimeInference.timeMatch(ai.timeStamp, kbTime0, kbTime1, timeTerm)) {
 				if (sign == kbSign) {
 					// answer yes
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					return true;
 				} else {
 					// answer no
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					return true;
 				}
 			}

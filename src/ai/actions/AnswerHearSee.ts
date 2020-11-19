@@ -32,7 +32,8 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 							}
 
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
+							ir.succeeded = true;
 							return true;
 						} else {
 							if (best == null) best = "no";
@@ -45,7 +46,8 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 							}
 							
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
+							ir.succeeded = true;
 							return true;
 						} else {
 							if (best == null) best = "no";
@@ -65,12 +67,12 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 
 		if (best == "no") {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 		}
-
+		ir.succeeded = true;
 		return true;
 	}
 

@@ -42,6 +42,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention)));
 			} else {
 				console.error("executeIntention answer whois.name: case not handled: " + intention);
+				ir.succeeded = false;
 			}
 			return true;		
 
@@ -58,14 +59,17 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 					ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention)));
 				} else {
 					console.error("executeIntention answer whois.noname: attribute[1] or attribute[2] was not a ConstantTermAttribute: " + intention);
+					ir.succeeded = false;
 				}
 			} else {
 					console.error("executeIntention answer whois.noname: less attributes than expected!");
+					ir.succeeded = false;
 			}
 
 			return true;
 		}
 
+		ir.succeeded = false;
 		return false;
 	}
 

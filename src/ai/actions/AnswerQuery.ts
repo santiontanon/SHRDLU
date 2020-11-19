@@ -33,15 +33,18 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 					if (newIntention == null) {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 					intention = newIntention;
 				} else {
+					ir.succeeded = false;
 					return true;
 				}
 			} else {
 				console.error("executeIntention answer queryfollowup: wrong number of arguments: " + intention);					
+				ir.succeeded = false;
 				return true;
 			}
 		}
@@ -124,6 +127,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 // 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
 		} else {
 			console.error("executeIntention answer query: attribute[2] was not a TermTermAttribute: " + intention);	
+			ir.succeeded = false;
 		}
 		return true;		
 	}

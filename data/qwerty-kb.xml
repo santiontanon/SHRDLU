@@ -4,4 +4,8 @@
 	<!-- these rules are bad, but I don't know how to represent this otherwise, since this is FOL... -->
 	<sentence provenance="background" sentence="verb.know('qwerty'[#id], name(X, Y)); ~name(X, Y)"/>
 
+	<sentence provenance="background" sentence="wall-computer('infirmary-console'[#id])"/>
+	<sentence provenance="background" sentence="computer-tower('infirmary-tower'[#id])"/>
+	<sentence provenance="background" sentence="fridge('infirmary-fridge'[#id])"/>
+
 </knowledgeBase>

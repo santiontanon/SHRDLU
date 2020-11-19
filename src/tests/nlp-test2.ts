@@ -76,9 +76,9 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
             if (context != null && s.name == "performative") {
                 var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
                 for(let parsePerformative of parsePerformatives) {
-                    context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.time_in_seconds);
+                    context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.timeStamp);
                 }
-                context.ai.time_in_seconds++;
+                context.ai.timeStamp++;
             }
         }
         {
@@ -160,9 +160,9 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             if (context != null) {
                 var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
                 for(let parsePerformative of parsePerformatives) {
-                    context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.time_in_seconds);
+                    context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.timeStamp);
                 }
-                context.ai.time_in_seconds++;
+                context.ai.timeStamp++;
             }
         }
         {
@@ -372,7 +372,7 @@ NLParseTest("socrates was a man", o.getSort("performative"), context, "#list(per
 
 // we simulate memorization:
 let socrates_entity:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('H1', o.getSort("#id")),
-                                                          testAI.time_in_seconds, null,
+                                                          testAI.timeStamp, null,
                                                           [Term.fromString("name('H1'[#id],'socrates'[symbol])",o),
                                                            Term.fromString("man('H1'[#id])",o)])
 context.shortTermMemory.push(socrates_entity);
@@ -875,7 +875,7 @@ NLParseTestUnifyingListener("there is a corpse here", o.getSort("performative"),
 NLParseTestUnifyingListener("there is a crate in the kitchen", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #and(crate(X), space.at(X,'room1'[#id])))");
 
 // Notice that the "is there a corpse?" is asked twice, this is because the second was earlier parsed as "is the bedroom a corpse?"
-testAI.time_in_seconds++;
+testAI.timeStamp++;
 NLParseTestUnifyingListener("is there a corpse?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], corpse(X))"); 
 NLParseTestUnifyingListener("the bedroom is a room", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], room(V1:'room2'[#id]))");
 NLParseTestUnifyingListener("is there a corpse?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], corpse(X))"); 

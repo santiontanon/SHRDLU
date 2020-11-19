@@ -34,7 +34,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -44,7 +44,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			// we should never get here:
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -59,7 +59,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			this.targetObject.map != ai.robot.map) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -73,9 +73,9 @@ class RobotEnter_IntentionAction extends IntentionAction {
             let d:number = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 			if (d>28) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.request.action("+requester+", verb.take-to("+requester+", '"+ai.selfID+"'[#id], '"+this.targetObject.ID+"'[#id])))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				return true;
 			}
 		}
@@ -98,29 +98,27 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// deny request:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 				// explain cause:
 				term = new Term(ai.o.getSort("action.talk"), 
 								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
 
 		if (requester != null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 		ai.intentionsCausedByRequest.push(ir);
 		ai.setNewAction(intention, requester, null, this);
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+		ai.addCurrentActionLongTermTerm(intention);
 
 		return true;
 	}
@@ -142,7 +140,7 @@ class RobotEnter_IntentionAction extends IntentionAction {
 			} else {
 				if (ai.currentAction_requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+ai.currentAction_requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			}
 			return true;

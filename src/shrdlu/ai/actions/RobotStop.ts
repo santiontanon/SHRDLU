@@ -17,7 +17,7 @@ class RobotStop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 
 			app.achievement_nlp_all_robot_actions[3] = true;
@@ -32,7 +32,7 @@ class RobotStop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 
 			app.achievement_nlp_all_robot_actions[3] = true;
@@ -44,7 +44,7 @@ class RobotStop_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 		}
 

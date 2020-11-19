@@ -50,7 +50,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			}
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id])", ai.o);
 			term.attributes.push(new TermTermAttribute(term1));
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			console.log("new intention: " + term);
 		} else {
 			// get the location ID
@@ -117,7 +117,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			// otherwise just say where the target is:
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 	}
 

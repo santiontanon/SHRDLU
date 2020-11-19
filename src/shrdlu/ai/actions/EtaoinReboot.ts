@@ -44,7 +44,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 			if (target == "shrdlu") {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.game.shrdluAI.queueIntention(term2, null, null);
@@ -52,7 +52,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 			} else if (target == "qwerty") {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.game.qwertyAI.queueIntention(term2, null, null);
@@ -60,7 +60,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 			} else if (target == "etaoin") {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.queueIntention(term2, null, null);
@@ -70,7 +70,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 
 		if (requester != null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 		return true;
 	}

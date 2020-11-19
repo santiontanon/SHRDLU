@@ -22,7 +22,7 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 		console.log("query result, answer how (source): " + inf.inferences[0].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
 			// get the location ID
 			let how:Term = null;
@@ -39,12 +39,12 @@ class AnswerHow_InferenceEffect extends InferenceEffect {
 			}
 			if (how == null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				return;
 			}
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id]))", ai.o);
 			(<TermTermAttribute>term.attributes[1]).term.attributes.push(new TermTermAttribute(how));
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}	
 	}
 

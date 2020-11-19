@@ -16,6 +16,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -30,7 +31,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 				 intention.attributes[1].sort.name == "space.away")) {
 				// redirect to leave the vehicle:
 				let term2:Term = new Term(ai.o.getSort("verb.leave"), [intention.attributes[0]]);
-				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.timeStamp));
 				return true;				
 			}
 		}			
@@ -41,13 +42,13 @@ class RobotGo_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
-		let stopAfterGoingThroughABridge:boolean = false;
-		let stepByStepMovement:boolean = false;
+		// let stopAfterGoingThroughABridge:boolean = false;
 
 		let targetLocation:AILocation = null;
 		let targetLocationID:string = null;
@@ -55,6 +56,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		this.targetx = null;
 		this.targety = null;
 		this.targetMapName = null;
+		this.stepByStepMovement = false;
 
 		// process "direction.towards" (replace by a move-to(self, [cardinal direction]))
 		if (intention.functor.name == "verb.move-to" &&
@@ -105,17 +107,19 @@ class RobotGo_IntentionAction extends IntentionAction {
 					if (requester != null) {
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 						let term:Term = Term.fromString(tmp, ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.see('"+ai.selfID+"'[#id], "+requester+")))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 		} else if (intention.attributes.length == 2 && 
@@ -155,10 +159,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id])))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -170,8 +175,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
 			if (intention.attributes.length == 2 && intention.attributes[1].sort.name == "space.away") {
@@ -209,10 +215,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 						term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 
@@ -256,10 +263,11 @@ class RobotGo_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 						term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 
@@ -327,7 +335,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 					this.targetx = ai.robot.x + movementAmount*8*direction_x_inc[dir];
 					this.targety = ai.robot.y + movementAmount*8*direction_y_inc[dir];
 				}
-				stepByStepMovement = true;
+				this.stepByStepMovement = true;
 				targetMap = ai.robot.map;
 				this.targetx = Math.floor(this.targetx/8)*8;
 				this.targety = Math.floor(this.targety/8)*8;
@@ -347,8 +355,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -398,20 +407,32 @@ class RobotGo_IntentionAction extends IntentionAction {
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
 
+		} else if (intention.attributes.length == 4 && 
+			       (intention.attributes[1] instanceof ConstantTermAttribute) &&
+			       (intention.attributes[2] instanceof ConstantTermAttribute) &&
+			       (intention.attributes[3] instanceof ConstantTermAttribute) &&
+			       intention.attributes[1].sort.name == "number") {
+			// to to some specific coordinates:
+			this.targetx = Number((<ConstantTermAttribute>(intention.attributes[1])).value);
+			this.targety = Number((<ConstantTermAttribute>(intention.attributes[2])).value);
+			this.targetMapName = (<ConstantTermAttribute>(intention.attributes[3])).value;
+			targetMap = ai.game.getMap(this.targetMapName);
 		} else {
 			// we should never get here:
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -421,9 +442,10 @@ class RobotGo_IntentionAction extends IntentionAction {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -435,52 +457,53 @@ class RobotGo_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// deny request:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 				// explain cause:
 				term = new Term(ai.o.getSort("action.talk"), 
 								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
 
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+		ai.addCurrentActionLongTermTerm(intention);
 		ai.intentionsCausedByRequest.push(ir);
 		if (requester != null) {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
-		app.achievement_nlp_all_robot_actions[1] = true;
-		app.trigger_achievement_complete_alert();
+		if (!app.achievement_nlp_all_robot_actions[1]) {
+			app.achievement_nlp_all_robot_actions[1] = true;
+			app.trigger_achievement_complete_alert();
+		}
 
 		ai.setNewAction(intention, requester, null, null);
-		if (stepByStepMovement || ai.robot.isInVehicle()) {
-	        ai.setNewAction(intention, requester, null, this);
+		// if (stepByStepMovement || ai.robot.isInVehicle()) {
 			if (!this.executeContinuous(ai)) {
 				this.needsContinuousExecution = true;
+		        ai.setNewAction(intention, requester, null, this);
 			} else {
 				this.needsContinuousExecution = false;
 			}
-		} else {
-			// go to destination:
-	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, targetMap.name, null, 0, false, false);
-	        s.x = this.targetx;
-	        s.y = this.targety;
-	        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
-	        q.scripts.push(s);
-			this.needsContinuousExecution = false;
-	        ai.setNewAction(intention, requester, q, null);
-		}
+		// } else {
+		// 	// go to destination:
+	 //        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+	 //        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, targetMap.name, null, 0, false, false);
+	 //        s.x = this.targetx;
+	 //        s.y = this.targety;
+	 //        s.stopAfterGoingThroughABridge = stopAfterGoingThroughABridge;
+	 //        q.scripts.push(s);
+		// 	this.needsContinuousExecution = false;
+	 //        ai.setNewAction(intention, requester, q, null);
+		// }
 		return true;
 	}
 
@@ -498,66 +521,73 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let y:number = Math.floor(ai.robot.y/8)*8;
 		if (x == this.targetx && y == this.targety && ai.robot.map.name == this.targetMapName) {
 			// we almost made it, done!
+			if (this.ir != null) this.ir.succeeded = true;
 			return true;
-		} else if (ai.robot.map.name == this.targetMapName) {
-			if (x<this.targetx) x += 8;
-			if (x>this.targetx) x -= 8;
-			if (y<this.targety) y += 8;
-			if (y>this.targety) y -= 8;
-	        if (!ai.robot.map.walkableConsideringVehicles(x, y,
-				 		                                  ai.robot.getPixelWidth(),
-				 		                                  ai.robot.getPixelHeight(), ai.robot)) {
-	        	// obstacle!
-	        	let collisions:A4Object[] = ai.robot.map.getAllObjects(x, y,
-                                 									   ai.robot.getPixelWidth(),
-                                 									   ai.robot.getPixelHeight());
-	        	let collision:A4Object = null;
-	        	for(let o of collisions) {
-	        		if (o != ai.robot &&
-	        			!o.isWalkable()) {
-	        			// collision!
-	        			collision = o;
-	        			break;
-	        		}
-	        	}
+		} else if (this.stepByStepMovement) {
+			if (ai.robot.map.name == this.targetMapName) {
+				if (x<this.targetx) x += 8;
+				if (x>this.targetx) x -= 8;
+				if (y<this.targety) y += 8;
+				if (y>this.targety) y -= 8;
+		        if (!ai.robot.map.walkableConsideringVehicles(x, y,
+					 		                                  ai.robot.getPixelWidth(),
+					 		                                  ai.robot.getPixelHeight(), ai.robot)) {
+		        	// obstacle!
+		        	let collisions:A4Object[] = ai.robot.map.getAllObjects(x, y,
+	                                 									   ai.robot.getPixelWidth(),
+	                                 									   ai.robot.getPixelHeight());
+		        	let collision:A4Object = null;
+		        	for(let o of collisions) {
+		        		if (o != ai.robot &&
+		        			!o.isWalkable()) {
+		        			// collision!
+		        			collision = o;
+		        			break;
+		        		}
+		        	}
 
-	        	if (collision != null) {
-					ai.addEpisodeTerm("verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])", MEMORIZE_PROVENANCE);
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])))";					
-					let term:Term = Term.fromString(tmp, ai.o);
-					ai.queueIntention(term, ai.currentAction_requester, null);
-				} else {
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", #and(obstacle(X), space.at(X, [space.here]))))";					
-					let term:Term = Term.fromString(tmp, ai.o);
-					ai.queueIntention(term, ai.currentAction_requester, null);					
-				}
+		        	if (collision != null) {
+						ai.addEpisodeTerm("verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])", MEMORIZE_PROVENANCE);
+						if (ai.currentAction_requester != null) {
+							let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", verb.collide-with('"+ai.selfID+"'[#id],'"+collision.ID+"'[#id])))";					
+							let term:Term = Term.fromString(tmp, ai.o);
+							ai.queueIntention(term, ai.currentAction_requester, null);
+						}
+					} else {
+						if (ai.currentAction_requester != null) {
+							let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform("+ai.currentAction_requester+", #and(obstacle(X), space.at(X, [space.here]))))";					
+							let term:Term = Term.fromString(tmp, ai.o);
+							ai.queueIntention(term, ai.currentAction_requester, null);					
+						}
+					}
+					if (this.ir != null) this.ir.succeeded = false;
+					return true;
+		        }
 
+				// go to destination:
+		        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+		        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, ai.robot.map.name, null, 0, false, false);
+		        s.x = x;
+		        s.y = y;
+		        s.stopAfterGoingThroughABridge = true;
+		        q.scripts.push(s);
+				ai.currentAction_scriptQueue = q;
+
+		        return false;
+			} else {
+				// we changed maps, so, stop just in case:
 				return true;
-	        }
-
+			}
+		} else {
 			// go to destination:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, ai.robot.map.name, null, 0, false, false);
-	        s.x = x;
-	        s.y = y;
-	        s.stopAfterGoingThroughABridge = true;
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
+	        s.x = this.targetx;
+	        s.y = this.targety;
+	        s.stopAfterGoingThroughABridge = false;
 	        q.scripts.push(s);
-			ai.currentAction_scriptQueue = q;
-
+	        ai.currentAction_scriptQueue = q;
 	        return false;
-		} else {
-			// we changed maps, so, stop just in case:
-			return true;
-			
-			// go to destination:
-	        // let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        // let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
-	        // s.x = this.targetx;
-	        // s.y = this.targety;
-	        // s.stopAfterGoingThroughABridge = false;
-	        // q.scripts.push(s);
-	        // ai.currentAction_scriptQueue = q;
-	        // return false;
 		}
 
 	}
@@ -566,7 +596,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 	saveToXML(ai:RuleBasedAI) : string
 	{
 		let tmp:string = "<IntentionAction type=\"RobotGo_IntentionAction\" "+
-								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName+"\"/>";
+								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName+"\" stepByStepMovement=\""+this.stepByStepMovement+"\"/>";
 		return tmp;
 	}
 
@@ -577,10 +607,12 @@ class RobotGo_IntentionAction extends IntentionAction {
 		a.targetx = Number(xml.getAttribute("targetx"));
 		a.targety = Number(xml.getAttribute("targety"));
 		a.targetMapName = xml.getAttribute("targetMapName");
+		a.stepByStepMovement = xml.getAttribute("stepByStepMovement") == "true";
 		return a;
 	}
 
 	targetx:number;
 	targety:number;
 	targetMapName:string;
+	stepByStepMovement:boolean;	
 }

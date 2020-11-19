@@ -20,7 +20,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -132,7 +132,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 										   new TermTermAttribute(closestDoorIntention)]), PERCEPTION_PROVENANCE);
 			ai.intentionsCausedByRequest.push(ir);
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			return true;
 		}
 		if (closestContainer != null) {
@@ -152,16 +152,16 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 										   new TermTermAttribute(closestContainerIntention)]), PERCEPTION_PROVENANCE);
 			ai.intentionsCausedByRequest.push(ir);
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			return true;
 
 		}
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 		if (denyrequestCause == null) {
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
 
 		return true;

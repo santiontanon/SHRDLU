@@ -26,7 +26,7 @@ class BWLocate_IntentionAction extends IntentionAction {
 			}
 
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 
 			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
 			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(targetID, ai.o);
@@ -35,9 +35,9 @@ class BWLocate_IntentionAction extends IntentionAction {
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 		if (denyrequestCause == null) {
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
 		return true;		
 	}

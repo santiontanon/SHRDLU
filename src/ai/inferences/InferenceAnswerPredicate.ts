@@ -34,12 +34,12 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "yes";
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 //				console.log("new intention: " + term);
 			} else if (inf.inferences[0].endResults[0].bindings.l.length == 0) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'unknown'[symbol]))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			} else {
 				for(let tmp of inf.inferences[0].endResults[0].bindings.l) {
 					let value:TermAttribute = tmp[1];
@@ -48,7 +48,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 						// we need to add this mention to the context entity list:
 						let context:NLContext = ai.contextForSpeaker(targetCharacterID);
 						if (context != null) {
-							let ce:NLContextEntity = context.newContextEntity(value, ai.time_in_seconds, null, ai.o, false);
+							let ce:NLContextEntity = context.newContextEntity(value, ai.timeStamp, null, ai.o, false);
 							if (ce != null) {
 								let idx:number = context.mentions.indexOf(ce);
 								if (idx != -1) context.mentions.splice(idx,1);
@@ -62,7 +62,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				if (this.effectParameter.functor.is_a(ai.o.getSort("action.answer.predicate-negated"))) answer = "no";
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))", ai.o);
 				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
@@ -70,7 +70,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 	//						console.log("inference.endResults.length == 0, and inferenceNegated.endResults.length == 0");
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'unknown'[symbol]))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 	//				console.log("new intention: " + term);
 				} else {
 	//						console.log("inference.endResults.length == 0, and inferenceNegated.endResults.length != 0");
@@ -79,7 +79,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 					let term:Term = Term.fromString(tmp, ai.o);
 					let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[1].originalTarget, inf.inferences[1].endResults[0], ai);
-					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 				}
 			} else {
 				//console.log("inference.endResults.length != 0");
@@ -88,7 +88,7 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+targetCharacterID+"'[#id],'"+answer+"'[symbol]))";
 				let term:Term = Term.fromString(tmp, ai.o);
 				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
 		}
 	}

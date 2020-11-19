@@ -665,7 +665,7 @@ class ShrdluA4Game extends A4Game {
         }
 
         if (this.communicatorConnectedTo != null) {
-            if ((this.etaoinAI.time_in_seconds - this.communicatorConnectionTime) > COMMUNICATOR_CONNECTION_TIMEOUT) {
+            if ((this.etaoinAI.timeStamp - this.communicatorConnectionTime) > COMMUNICATOR_CONNECTION_TIMEOUT) {
                 this.communicatorConnectedTo = null;
                 this.communicatorConnectionTime = 0;
             }

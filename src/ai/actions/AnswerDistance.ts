@@ -29,8 +29,9 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 		if (o1ID == null || o2ID == null) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -46,8 +47,9 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// we know the answer already without inference!
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'"+d+"'["+units.name+"]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = true;
 			return true;
 		}
 
@@ -59,7 +61,7 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 		}
 		// if (requester != null) {
 		// 	let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);
-		// 	ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+		// 	ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 		// }		
 		return true;
 	}

@@ -24,7 +24,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -35,8 +35,8 @@ class RobotFollow_IntentionAction extends IntentionAction {
 				let term1:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("property.blind('"+ai.selfID+"'[#id])", ai.o);
 				let term2:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-				ai.intentions.push(new IntentionRecord(term1, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
-				ai.intentions.push(new IntentionRecord(term2, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term1, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
+				ai.intentions.push(new IntentionRecord(term2, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 			return true;
 		}
@@ -45,7 +45,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			!(intention.attributes[0] instanceof ConstantTermAttribute)) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}				
 			return true;
 		}
@@ -55,7 +55,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}				
 			return true;
 		}
@@ -66,7 +66,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}				
 			return true;
 		}
@@ -74,7 +74,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 		if (requester != null) {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 		app.achievement_nlp_all_robot_actions[0] = true;
@@ -82,9 +82,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 
 		ai.intentionsCausedByRequest.push(ir);
         ai.setNewAction(intention, requester, null, this);
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+        ai.addCurrentActionLongTermTerm(intention);
 
 		this.executeContinuous(ai);
 		return true;

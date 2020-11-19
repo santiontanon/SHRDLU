@@ -22,6 +22,7 @@ class AnswerWhatIs_IntentionAction extends IntentionAction {
 				AnswerWhatIs_InferenceEffect.executeInferenceEffect_AnswerWhatis(null, (<ConstantTermAttribute>intention.attributes[2]).value, listenerID, ai);
 			} else {
 				console.error("executeIntention answer whatis.name: attribute[1] or attribute[2] was not a ConstantTermAttribute: " + intention);
+				ir.succeeded = false;
 			}
 			return true;			
 
@@ -37,6 +38,7 @@ class AnswerWhatIs_IntentionAction extends IntentionAction {
 				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWhatIs_InferenceEffect(intention)));
 			} else {
 				console.error("executeIntention answer whatis.noname: attribute[1] or attribute[2] was not a ConstantTermAttribute: " + intention);
+				ir.succeeded = false;
 			}	
 			return true;
 		}		

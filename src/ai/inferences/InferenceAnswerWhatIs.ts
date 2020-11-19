@@ -39,15 +39,15 @@ class AnswerWhatIs_InferenceEffect extends InferenceEffect {
 		// generate the talk intentions:
 		if (name == null && mostSpecificTypes.length == 0) {
 			ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id],'unknown'[symbol]))", ai.o), 
-													 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+													 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 		} else {
 			if (name != null) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id],name('"+whatID+"'[#id],'"+name+"'[symbol])))", ai.o), 
-														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			}
 			if (mostSpecificTypes.length != 0) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id], "+mostSpecificTypes[0]+"))", ai.o), 
-														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			}
 		}
 	}

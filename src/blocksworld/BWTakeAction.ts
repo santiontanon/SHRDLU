@@ -28,7 +28,7 @@ class BWTake_IntentionAction extends IntentionAction {
 		if (world.objectInArm != null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			let cause:Term = Term.fromString("verb.have('"+ai.selfID+"'[#id], '"+world.objectInArm.ID+"'[#id])", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			return true;
 		}
 
@@ -58,16 +58,14 @@ class BWTake_IntentionAction extends IntentionAction {
 			}
 
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 
 			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
 			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(targetID, ai.o);
 
 			// Take it:
 			ai.intentionsCausedByRequest.push(ir);
-			ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-										  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-										   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+			ai.addCurrentActionLongTermTerm(intention);
 			ai.currentActionHandler = this;
 			this.executeContinuous(ai);		
 			return true;
@@ -75,9 +73,9 @@ class BWTake_IntentionAction extends IntentionAction {
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 		if (denyrequestCause == null) {
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
-			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
 		return true;		
 	}

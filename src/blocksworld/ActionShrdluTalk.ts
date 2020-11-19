@@ -47,10 +47,10 @@ class ShrdluTalk_IntentionAction extends IntentionAction {
 				txt = ai.naturalLanguageGenerator.capitalize(txt);
 
 				if (txt != null) {
-					ai.app.addMessageWithColorTime(ai.selfID + ": " + txt, MSX_COLOR_WHITE, ai.time_in_seconds);
+					ai.app.addMessageWithColorTime(ai.selfID + ": " + txt, MSX_COLOR_WHITE, ai.timeStamp);
 
 					// update natural language context:
-					if (performative != null) context.newPerformative(ai.selfID, txt, performative, null, ir.cause, ai.o, ai.time_in_seconds);
+					if (performative != null) context.newPerformative(ai.selfID, txt, performative, null, ir.cause, ai.o, ai.timeStamp);
 					for(let c2 of ai.contexts) {
 						if (c2 != context) c2.inConversation = false;
 					}
@@ -59,7 +59,7 @@ class ShrdluTalk_IntentionAction extends IntentionAction {
 		} else if (intention.attributes[1] instanceof ConstantTermAttribute) {
 			// this is just a shortcut for the 3 laws of robotics easter egg:
 			let txt:string = (<ConstantTermAttribute>intention.attributes[1]).value;					
-			ai.app.addMessageWithColorTime("SHRDLU: " + txt, MSX_COLOR_WHITE, ai.time_in_seconds);
+			ai.app.addMessageWithColorTime("SHRDLU: " + txt, MSX_COLOR_WHITE, ai.timeStamp);
 		} else {
 			console.error("ShrdluTalk_IntentionAction: malformed intention: " + intention.toString());
 		}

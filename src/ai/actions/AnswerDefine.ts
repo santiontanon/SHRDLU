@@ -23,12 +23,12 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 			if (sortToDefine.name == "three-laws-of-robotics") {
 				// easeter egg!
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.'[symbol])", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '2. A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.'[symbol])", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 				term = Term.fromString("action.talk('"+ai.selfID+"'[#id], '3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.'[symbol])", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
-
+				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
+				ir.succeeded = true;
 				return true;
 			}
 
@@ -51,19 +51,22 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 				// console.log("Cannot define: " + sortToDefine.name);
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+", 'verb.define'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+",verb.be(["+sortToDefine.name+"],"+definitionAsTerm+")))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 				}
+				ir.succeeded = true;
 			}
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 		}
 		
 		return true;

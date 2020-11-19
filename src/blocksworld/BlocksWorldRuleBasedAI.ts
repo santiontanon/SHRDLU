@@ -166,12 +166,12 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	        			// generate error message:
 	        			if (pr.requester != null) {
 							let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.denyrequest("+pr.requester+"))", this.o);
-							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.timeStamp));
 						}
 	        		} else {
 	        			if (pr.requester != null) {
 							let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok("+pr.requester+"))", this.o);
-							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.time_in_seconds));
+							this.queuedIntentions.push(new IntentionRecord(term, null, null, null, this.timeStamp));
 						}
 						console.log("pushing plan:\n" + pr.plan);
 	        			this.plans.push(pr);
@@ -200,7 +200,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	        			pr.planExecutionPointer++;
 	        			// we set the requester to null, so that we don't constantly say "ok" after each action
 	        			this.intentions.push(new IntentionRecord(action, null, 
-	        													 pr.requestingPerformative, null, this.time_in_seconds));
+	        													 pr.requestingPerformative, null, this.timeStamp));
 	        		}
 	        	}
 
@@ -227,8 +227,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	updateContext(speaker:string) : NLContext
 	{
 		let context:NLContext = this.contextForSpeaker(speaker);
-		if (context.lastTimeUpdated >= this.time_in_seconds) return context;
-		context.lastTimeUpdated = this.time_in_seconds;
+		if (context.lastTimeUpdated >= this.timeStamp) return context;
+		context.lastTimeUpdated = this.timeStamp;
 		context.shortTermMemory = [];
 
 		console.log("updateContext: speaker: " + speaker)
@@ -582,7 +582,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		}
 
 		if (context.performatives.length>0 &&
-			(this.time_in_seconds - context.performatives[0].timeStamp) >= CONVERSATION_TIMEOUT) return false;
+			(this.timeStamp - context.performatives[0].timeStamp) >= CONVERSATION_TIMEOUT) return false;
 		if (context.lastPerformativeInvolvingThisCharacterWasToUs) return true;
 		if (context.inConversation) return true;
 
@@ -710,7 +710,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 							}
 						}
 
-						let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.time_in_seconds)
+						let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(context.speaker, this.cache_sort_id), context.getNLContextPerformative(perf2), null, this.timeStamp)
 						let tmp:number = this.canSatisfyActionRequest(ir);
 						if (tmp != ACTION_REQUEST_CAN_BE_SATISFIED) {
 							canSatisfyThemAll = false;
@@ -725,14 +725,14 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 			if (allActionRequestsTalkingToUs && allRequestsForUs && canSatisfyThemAll && actions.length>0 && !anyNeedsInference) {
 				// Create an intention record with all the requested actions:
-				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, parse, null, this.o, this.time_in_seconds);
+				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, parse, null, this.o, this.timeStamp);
 				let nlcp:NLContextPerformative = null;
 				if (nlcp_l != null) nlcp = nlcp_l[0];
 				let ir:IntentionRecord = new IntentionRecord(actions[0], 
 															 new ConstantTermAttribute(context.speaker, this.cache_sort_id), 
 															 nlcp, 
 															 null, 
-															 this.time_in_seconds)
+															 this.timeStamp)
 				ir.alternative_actions = actions;
 				ir.numberConstraint = new VariableTermAttribute(this.o.getSort("all"), null);
 				this.planForAction(ir);
@@ -815,7 +815,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		console.log("planForAction, goal:");
 		console.log(goal);
 
-		this.planningProcesses.push(new PlanningRecord(this, goal, this.o, ir.requester, ir.requestingPerformative, this.time_in_seconds));
+		this.planningProcesses.push(new PlanningRecord(this, goal, this.o, ir.requester, ir.requestingPerformative, this.timeStamp));
 	}
 
 

@@ -17,7 +17,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}			
@@ -28,7 +28,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -40,14 +40,14 @@ class RobotTake_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 			return true;
 		}
 		if (!targetObjectL[targetObjectL.length-1].takeable) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -65,15 +65,15 @@ class RobotTake_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// deny request:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 				// explain cause:
 				term = new Term(ai.o.getSort("action.talk"), 
 								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -82,14 +82,14 @@ class RobotTake_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 			return true;
 		}
 		if (targetObjectL.length > 2) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		} else if (targetObjectL.length == 2) {
@@ -98,7 +98,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 						let cause:Term = Term.fromString("property.closed('"+targetObjectL[0].ID+"'[#id])", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 					}
 					return true;
 				}
@@ -106,13 +106,13 @@ class RobotTake_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("verb.have('"+targetObjectL[0].ID+"'[#id], '"+targetObjectL[1].ID+"'[#id])", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 				return true;
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				return true;
 			}
@@ -141,7 +141,7 @@ class RobotTake_IntentionAction extends IntentionAction {
 		if (requester != null) {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 		return true;

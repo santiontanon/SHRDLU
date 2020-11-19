@@ -37,18 +37,18 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 					if (lastPerf != null) newIntention = this.convertPerformativeToWhereQuestionAnswerIntention(lastPerf, ai);
 					if (newIntention != null) {
 						// intention = newIntention;
-						ai.intentions.push(new IntentionRecord(newIntention, newIntention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(newIntention, newIntention.attributes[1], null, null, ai.timeStamp));
 						return true;
 					} else {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 					return true;
 				}
 			}
@@ -90,19 +90,19 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 						} else {
 							// this should never happen
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 							return true;
 						}
 					} else {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 					return true;
 				}
 			}

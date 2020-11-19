@@ -39,13 +39,15 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 						} else {
 							// this should never happen
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+							ir.succeeded = false;
 							return true;
 						}
 					} else {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 				}
@@ -59,6 +61,7 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 				let tmp:Sentence[] = s.negate();
 				if (tmp == null || tmp.length != 1) {
 					console.error("executeIntention answer query: cannot negate query!: " + intention);		
+					ir.succeeded = false;
 					return true;
 				}
 				negated_s.terms = negated_s.terms.concat(tmp[0].terms);
@@ -67,7 +70,8 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 //				console.log("executeIntention answer query: negated_s = " + negated_s);
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, null, new AnswerHowMany_InferenceEffect(intention)));
 		} else {
-			console.error("executeIntention answer howmany: attribute[2] was not a TermTermAttribute: " + intention);	
+			console.error("executeIntention answer howmany: attribute[2] was not a TermTermAttribute: " + intention);
+			ir.succeeded = false;
 		}
 		return true;
 	}

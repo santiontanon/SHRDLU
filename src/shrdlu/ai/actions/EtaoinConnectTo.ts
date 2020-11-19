@@ -23,7 +23,7 @@ class EtaoinConnectTo_IntentionAction extends IntentionAction {
 		let target:string = (<ConstantTermAttribute>intention.attributes[2]).value;
 		if (target == "etaoin") {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #and(#and(X:verb.can("+requester+", #and(Y:action.talk("+requester+"), relation.target(Y, '"+target+"'[#id]))), relation.tool(X, 'communicator'[#id]), time.now(X)))))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
 			let targetObject:A4Object = game.findObjectByIDJustObject(target);
 			if (targetObject != null &&
@@ -33,22 +33,22 @@ class EtaoinConnectTo_IntentionAction extends IntentionAction {
 					target == "shrdlu") {
 
 					game.communicatorConnectedTo = target;
-					game.communicatorConnectionTime = ai.time_in_seconds;
+					game.communicatorConnectionTime = ai.timeStamp;
 				
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #and(#and(X:verb.can("+requester+", #and(Y:action.talk("+requester+"), relation.target(Y, '"+target+"'[#id]))), relation.tool(X, 'communicator'[#id]), time.now(X)))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 
 		        	app.achievement_nlp_all_etaoin_actions[0] = true;
 		        	app.trigger_achievement_complete_alert();
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("#not(verb.can('"+target+"'[#id], action.talk('"+target+"'[#id])))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 			} else {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id],'"+target+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 		}
 

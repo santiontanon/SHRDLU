@@ -28,8 +28,8 @@ class Call_IntentionAction extends IntentionAction {
 			let action:Term = new Term(ai.o.getSort("action.talk"),
 									   [intention.attributes[0], // this is "self"
 									    new TermTermAttribute(question)]);
-			ai.intentions.push(new IntentionRecord(action, null, null, null, ai.time_in_seconds));
-
+			ai.intentions.push(new IntentionRecord(action, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 		} else if (intention.attributes[2] instanceof ConstantTermAttribute) {
 			// see if we were waiting for an answer to this question:
 			if (requester instanceof ConstantTermAttribute) {
@@ -53,7 +53,8 @@ class Call_IntentionAction extends IntentionAction {
 									   [intention.attributes[0], // this is "self"
 									    ir.requester,
 									    new TermTermAttribute(fact)]);
-			ai.intentions.push(new IntentionRecord(action, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(action, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 		} else {
 			// ???
 		}

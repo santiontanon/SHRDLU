@@ -17,7 +17,7 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 
 		if (intention.attributes.length == 2) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.q.how("+requester+", verb.help('"+ai.selfID+"'[#id],"+intention.attributes[1]+")))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else if (intention.attributes.length == 3 && (intention.attributes[2] instanceof TermTermAttribute)) {
 			let nestedIntention:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			if (nestedIntention.attributes.length > 0 &&
@@ -46,20 +46,20 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
 				}
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			}
 
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 		}
 

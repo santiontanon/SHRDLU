@@ -28,13 +28,13 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 						intention = newIntention;
 					} else {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
 					return true;
 				}
 			}
@@ -68,7 +68,7 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 				/*
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 				}
 				*/
 			}

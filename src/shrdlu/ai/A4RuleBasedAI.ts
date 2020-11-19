@@ -406,7 +406,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 		// internal clock:
 		let timeTerm:Term = new Term(this.cache_sort_time_current,
-									 [new ConstantTermAttribute(this.time_in_seconds, this.o.getSort("number"))]);
+									 [new ConstantTermAttribute(this.timeStamp, this.o.getSort("number"))]);
 		this.addTermToPerception(timeTerm);
 	}
 
@@ -635,8 +635,8 @@ class A4RuleBasedAI extends RuleBasedAI {
 	updateContext(speaker:string) : NLContext
 	{
 		let context:NLContext = this.contextForSpeaker(speaker);
-		if (context.lastTimeUpdated >= this.time_in_seconds) return context;
-		context.lastTimeUpdated = this.time_in_seconds;
+		if (context.lastTimeUpdated >= this.timeStamp) return context;
+		context.lastTimeUpdated = this.timeStamp;
 		context.shortTermMemory = [];
 
 //		console.log("updateContext: speaker: " + speakerObject)
@@ -1425,7 +1425,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		for(let location of this.locationsWherePlayerIsNotPermitted) {
 			// remove the long term permission term and add a negated one:
 			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o));
-			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
+			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.timeStamp);
 		}
 		this.locationsWherePlayerIsNotPermitted = [];
 		this.doorsPlayerIsNotPermittedToOpen = [];
@@ -1440,7 +1440,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 			// remove the long term permission term and add a negated one:
 			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o));
-			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.time_in_seconds);
+			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.timeStamp);
 		}
 		idx = this.doorsPlayerIsNotPermittedToOpen.indexOf(door);
 		if (idx != -1) this.doorsPlayerIsNotPermittedToOpen.splice(idx,1);

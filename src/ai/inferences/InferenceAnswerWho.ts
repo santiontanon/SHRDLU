@@ -67,27 +67,27 @@ class AnswerWho_InferenceEffect extends InferenceEffect {
 			//mostSpecificTypes.length == 0 && 
 			mostSpecificRoles1.length == 0 && mostSpecificRoles2.length == 0 && !playerMentionedName) {
 			ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id],'unknown'[symbol]))", ai.o), 
-													 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+													 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 		} else if (name == null && 
 			mostSpecificTypes.length == 0 && 
 			mostSpecificRoles1.length == 0 && mostSpecificRoles2.length == 0 && playerMentionedName) {
 			ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id],'unknown'[symbol]))", ai.o), 
-							     new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+							     new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 		} else {
 			if (name != null) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id],name('"+whoID+"'[#id],'"+name+"'[symbol])))", ai.o), 
-									 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+									 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			}
 			if (mostSpecificTypes.length != 0) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id], "+mostSpecificTypes[0]+"))", ai.o), 
-														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			}
 			if (mostSpecificRoles2.length != 0) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id], "+mostSpecificRoles2[0]+"))", ai.o), 
-														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			} else if (mostSpecificRoles1.length != 0) {
 				ai.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+listenerID+"'[#id], "+mostSpecificRoles1[0]+"))", ai.o), 
-														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.time_in_seconds));
+														 new ConstantTermAttribute(listenerID, ai.o.getSort("#id")), null, null, ai.timeStamp));
 			}
 		}
 	}

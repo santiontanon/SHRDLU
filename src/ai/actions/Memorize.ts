@@ -34,7 +34,8 @@ class Memorize_IntentionAction extends IntentionAction {
 			console.log("time modifiers present, not memorizing for now...");
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 			return true;			
 		}
 
@@ -57,7 +58,8 @@ class Memorize_IntentionAction extends IntentionAction {
 					let queryTerm:Term = new Term(ai.o.getSort("perf.q.query"),
 												  [requester, term2.attributes[1], term.attributes[1]]);
 					let actionTerm:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], "+queryTerm+")", ai.o);
-					ai.intentions.push(new IntentionRecord(actionTerm, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(actionTerm, null, null, null, ai.timeStamp));
+					ir.succeeded = true;
 					return true;
 				}
 			}
@@ -78,7 +80,7 @@ class Memorize_IntentionAction extends IntentionAction {
 					console.error("executeIntention memorize: cannot negate sentences in intention!: " + intention);		
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.unsure("+requester+"))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					return true;
 				}
 				negated_s.terms = negated_s.terms.concat(tmp[0].terms);

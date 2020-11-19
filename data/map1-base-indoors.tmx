@@ -1013,8 +1013,8 @@
   <object id="499" type="stasis-pod" x="96" y="48" width="24" height="16"/>
   <object id="500" type="stasis-pod" x="16" y="48" width="24" height="16"/>
   <object id="501" type="computer-tower" x="24" y="192" width="8" height="24"/>
-  <object id="502" type="computer-tower" x="32" y="192" width="8" height="24"/>
-  <object id="503" type="wall-computer" x="72" y="192" width="16" height="24"/>
+  <object id="infirmary-tower" type="computer-tower" x="32" y="192" width="8" height="24"/>
+  <object id="infirmary-console" type="wall-computer" x="72" y="192" width="16" height="24"/>
   <object id="505" type="infirmary-bed" x="24" y="224" width="24" height="16">
    <properties>
     <property name="direction" type="int" value="2"/>
@@ -1031,7 +1031,7 @@
    </properties>
   </object>
   <object id="514" type="fridge" x="64" y="120" width="16" height="24"/>
-  <object id="515" type="fridge" x="80" y="120" width="16" height="24"/>
+  <object id="infirmary-fridge" type="fridge" x="80" y="120" width="16" height="24"/>
   <object id="516" type="shelves" x="64" y="152" width="16" height="24">
    <properties>
     <property name="direction" type="int" value="3"/>

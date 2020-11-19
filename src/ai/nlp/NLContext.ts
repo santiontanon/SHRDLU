@@ -370,14 +370,14 @@ class NLContext {
 			}
 		}
 
-		if (this.ai.time_in_seconds <= e.lastUpdateTime) {
+		if (this.ai.timeStamp <= e.lastUpdateTime) {
 			// no need to reupdate it...
 			return e;
 		}
 
-		// console.log("newContextEntity: "+this.ai.selfID+" updating " + ID + "(" + e.lastUpdateTime + " -> " + this.ai.time_in_seconds + ")");
+		// console.log("newContextEntity: "+this.ai.selfID+" updating " + ID + "(" + e.lastUpdateTime + " -> " + this.ai.timeStamp + ")");
 		e.terms = [];		// entities need to be updated every time, otherwise, info is outdated!
-		e.lastUpdateTime = this.ai.time_in_seconds;
+		e.lastUpdateTime = this.ai.timeStamp;
 
 		// find everything we can about it:
 		let typeSorts:Sort[] = []

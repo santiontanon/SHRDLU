@@ -52,9 +52,11 @@ class RobotAI extends A4RuleBasedAI {
         if (this.currentActionHandler != null &&
         	this.currentActionHandler.needsContinuousExecution) {
         	if (this.currentActionHandler.executeContinuous(this)) {
-				this.addLongTermTerm(new Term(this.o.getSort("verb.do"),
-											  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
-											   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
+        		if (this.currentGoal == null) {
+					this.addLongTermTerm(new Term(this.o.getSort("verb.do"),
+												  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
+												   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
+				}
 				this.clearCurrentAction();
         	}
         }
@@ -64,7 +66,7 @@ class RobotAI extends A4RuleBasedAI {
         	this.intentions.length == 0 &&
         	this.queuedIntentions.length == 0 &&
         	this.currentAction == null &&
-        	this.time_in_seconds > this.lastActionRequestTime) {
+        	this.timeStamp > this.lastActionRequestTime) {
         	this.queueIntentionRecord(this.intentionsToExecuteAfterTheCurrentAction[0]);
         	this.intentionsToExecuteAfterTheCurrentAction.splice(0, 1);
         }
@@ -265,8 +267,9 @@ class RobotAI extends A4RuleBasedAI {
                 this.currentAction_scriptQueue.scripts.splice(0,1);
                 if (this.currentAction_scriptQueue.scripts.length == 0) {
                 	this.currentAction_scriptQueue = null;
-                	if (this.currentActionHandler == null || 
-                		!this.currentActionHandler.needsContinuousExecution) {
+                	if (this.currentGoal == null &&
+                		(this.currentActionHandler == null || 
+                		 !this.currentActionHandler.needsContinuousExecution)) {
                 		this.clearCurrentAction();
                     	this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
                     }
@@ -288,7 +291,9 @@ class RobotAI extends A4RuleBasedAI {
             } else if (retval == SCRIPT_FAILED) {
             	if (this.currentActionHandler != null) this.currentActionHandler.actionScriptsFailed(this, this.currentAction_requester);
             	this.clearCurrentAction();
-                this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
+            	if (this.currentGoal == null) {
+                	this.addLongTermTerm(Term.fromString("verb.do('"+this.selfID+"'[#id], 'nothing'[nothing])", this.o), PERCEPTION_PROVENANCE);
+                }
             }
         }        
     }
@@ -298,7 +303,7 @@ class RobotAI extends A4RuleBasedAI {
 	{
 		let tmp:number = super.canSatisfyActionRequest(ir);
 		if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
-			if (this.time_in_seconds == this.lastActionRequestTime) {
+			if (this.timeStamp == this.lastActionRequestTime) {
 				// multiple requests in the same performative, just queue them:
 				this.intentionsToExecuteAfterTheCurrentAction.push(ir);
 				return ACTION_REQUEST_WILL_BE_HANDLED_EXTERNALLY;
@@ -306,7 +311,7 @@ class RobotAI extends A4RuleBasedAI {
 				// clear the queue, as there will be a new request, that overwrites the previous requests:
 				this.intentionsToExecuteAfterTheCurrentAction = [];
 			}
-			this.lastActionRequestTime = this.time_in_seconds;
+			this.lastActionRequestTime = this.timeStamp;
 		}
 		return tmp;
 	}
@@ -375,6 +380,16 @@ class RobotAI extends A4RuleBasedAI {
 		}
 		return null;
 	}
+
+
+	// Returns "true" if the AI is still trying to execute "ir"
+	IRpendingCompletion(ir:IntentionRecord) : boolean
+	{
+		if (this.currentActionHandler != null &&
+			this.currentActionHandler.ir == ir) return true;
+		return super.IRpendingCompletion(ir);
+	}
+
 
 
 	restoreFromXML(xml:Element)

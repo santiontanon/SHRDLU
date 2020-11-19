@@ -25,25 +25,25 @@ class Memorize_InferenceEffect extends InferenceEffect {
 				// there was no contradiction...
 				// We are not sure..., let's not memorize, just in case...
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.unsure('"+targetCharacterID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			} else {
 				// we already knew, just say ok:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
 				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
 				// there was no contradiction... we can add the sentence safely
 				// we already knew, just say ok:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				memorize = true;
 			} else {
 				// contradiction:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.contradict('"+targetCharacterID+"'[#id]))", ai.o);
 				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
 		}
 

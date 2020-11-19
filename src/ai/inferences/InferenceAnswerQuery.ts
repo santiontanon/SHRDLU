@@ -127,27 +127,27 @@ class AnswerQuery_InferenceEffect extends InferenceEffect {
 					if (results.length == 1) {
 						// if we only have one result, record the reason for the result:
 						let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), causeRecord, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), causeRecord, ai.timeStamp));
 					} else {
-						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, context.getNLContextPerformative(queryPerformative), null, ai.timeStamp));
 					}
 				} else {
 					if (results.length == 1) {
 						// if we only have one result, record the reason for the result:
 						let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
-						ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 					} else {
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
 				}
 			} else {
 				console.error("Inference produced a result, but none of the resulting variables is the query variable!");
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+negativeAnswer+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 	}

@@ -22,7 +22,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 		console.log("query result, answer how goto (source): " + inf.inferences[0].endResults);
 		if (inf.inferences[0].endResults.length == 0) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		} else {
 			// get the location ID
 			let sourceLocation:AILocation = null;
@@ -82,7 +82,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 			}
 			if (path == null) {
 //				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol]))", ai.o);
-//				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+//				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 
 				// we don't know! Default to a standard query, to see if we can figure it out that way:
 				let action:Term = (<TermTermAttribute>intention.attributes[2]).term;
@@ -95,10 +95,10 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 			} else if (path.length == 1) {
 				if (action.functor.is_a(ai.o.getSort("verb.leave"))) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],#not(space.at("+action.attributes[0]+","+action.attributes[1]+"))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],space.at("+action.attributes[0]+","+action.attributes[1]+")))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			} else {
 				let answer:Term = null;
@@ -140,7 +140,7 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 											  new TermTermAttribute(new Term(ai.o.getSort("perf.inform.answer"),
 											  		   			  	 	     [new ConstantTermAttribute(speakerCharacterID, ai.cache_sort_id),
 											  		    				      new TermTermAttribute(answer)]))]);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				} else {
 					let term1:Term = new Term(ai.o.getSort("perf.request.action"),
 			     		   			  		  [action.attributes[0],
@@ -152,13 +152,13 @@ class AnswerHowGoto_InferenceEffect extends InferenceEffect {
 											  		    				      new TermTermAttribute(new Term(ai.o.getSort("action.talk"),
 											  		    				      					    [new ConstantTermAttribute(speakerCharacterID, ai.cache_sort_id),
 											  		    				      					     new TermTermAttribute(term1)]))]))]);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 				if (startIndoors && needsSpacesuit) {
 					let term:Term = new Term(ai.o.getSort("action.talk"),
 											 [new ConstantTermAttribute(ai.selfID, ai.cache_sort_id),
 											  new TermTermAttribute(Term.fromString("perf.inform.answer('"+speakerCharacterID+"'[#id],#and(X:verb.need("+action.attributes[0]+",[spacesuit]),time.future(X)))", ai.o))]);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			}
 		}	

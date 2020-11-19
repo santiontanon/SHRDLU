@@ -11,9 +11,6 @@ Note (santi):
 */
 
 
-var QWERTY_AGENDA_DELAY:number = 30*60;	// 30 seconds
-// var QWERTY_AGENDA_DELAY:number = 5*60;	// 5 seconds
-
 class ShrdluGameScript {
 	constructor(game:ShrdluA4Game, app:ShrdluApp)
 	{
@@ -27,9 +24,9 @@ class ShrdluGameScript {
 
 	update() 
 	{
-		// if (this.act == "intro") {
+		if (this.act == "intro") {
 			//this.skip_to_act_end_of_intro();
-			//this.skip_to_act_1();
+			this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			// this.skip_to_act_2();
 			//this.skip_to_act_2_shrdluback();
@@ -40,7 +37,7 @@ class ShrdluGameScript {
 			// this.skip_to_tardis8();
 			//this.skip_to_tardis8_computer_room();
 			// this.skip_to_act_3_back_from_tardis();
-		// }
+		}
 
 		if (this.act == "intro") this.update_act_intro();
 		if (this.act == "1") this.update_act_1();
@@ -52,7 +49,7 @@ class ShrdluGameScript {
 		this.processQueuedThoughtBubbles();
 	}
 
-	/*
+	
 	// This is a debug function, remove once the game is complete!
 	skip_to_act_end_of_intro()
 	{
@@ -115,6 +112,8 @@ class ShrdluGameScript {
 		this.game.shrdluAI.respondToPerformatives = true;	// start responding to random questions from the player
 		this.act = "1";
 
+		this.setupQwertyAgenda();
+
 		// start in the infirmary:
 		this.game.currentPlayer.x = 12*8;
 		this.game.currentPlayer.y = 28*8;
@@ -154,7 +153,7 @@ class ShrdluGameScript {
 		this.game.currentPlayer.inventory.push(this.game.objectFactory.createObject("helmet", this.game, false, false));
 	}
 
-
+/* 
 	skip_to_end_of_act_1()
 	{
 		this.skip_to_act_1();
@@ -926,6 +925,7 @@ class ShrdluGameScript {
 				this.game.textInputAllowed = true;
 				this.act = "1";
 				this.act_1_state = 0;
+				this.setupQwertyAgenda();
 			}
 			break;
 		}
@@ -1578,8 +1578,6 @@ class ShrdluGameScript {
 			}
 			break;
 		}
-
-		this.qwertyAgendaUpdate();
 
 		if (previous_state == this.act_1_state) {
 			this.act_1_state_timer++;
@@ -2325,7 +2323,6 @@ class ShrdluGameScript {
 		}
 
 		this.shrdluAct2AgendaUpdate();
-		this.qwertyAgendaUpdate();
 		this.repairDatapadUpdate();
 
 		if (previous_state == this.act_2_state) {
@@ -2793,8 +2790,6 @@ class ShrdluGameScript {
 			case 15: // story events are over! now just waiting for the player to finish the game...
 					break;
 		}
-
-		this.qwertyAgendaUpdate();
 
 		if (previous_state == this.act_3_state) {
 			this.act_3_state_timer++;
@@ -3687,164 +3682,42 @@ class ShrdluGameScript {
 	}
 
 
-	// Controls the behavior of SHRDLU during act 2 (when does it go repair the different parts of the station, etc.)
-	qwertyAgendaUpdate()
+	setupQwertyAgenda()
 	{
-		let previous_state:number = this.qwerty_agenda_state;
+		this.game.qwertyAI.goals = [];
 
-		if (this.contextQwerty == null) this.contextQwerty = this.game.qwertyAI.contextForSpeaker(this.playerID);
+		let o:Ontology = this.game.qwertyAI.o;		
+		let time:number = this.game.qwertyAI.timeStamp;
+		let goal:AIGoal = new AIGoal(Term.fromString("verb.analyze('qwerty'[#id],'infirmary-console'[#id])", o), 
+									 [Term.fromString("verb.go-to('qwerty'[#id],'"+9*8+"'[number],'"+27*8+"'[number],'Aurora Station'[symbol])", o),
+									  Term.fromString("action.stay('qwerty'[#id],'"+9*8+"'[number],'"+27*8+"'[number],'Aurora Station'[symbol],'"+30*60+"'[number])", o)],
+									 100, time, 8*60*60);
+		this.game.qwertyAI.goals.push(goal);
 
-		// if qwerty is doing something, then stop the agenda:
-		if (this.act_1_stasis_thread_state > 0 && this.act_1_stasis_thread_state < 10) return;
-		if (this.act_2_datapad_state != 0) return;
+		goal = new AIGoal(Term.fromString("verb.fill('qwerty'[#id])", o), 
+						  [Term.fromString("verb.go-to('qwerty'[#id],'"+3*8+"'[number],'"+27*8+"'[number],'Aurora Station'[symbol])", o),
+						   Term.fromString("action.stay('qwerty'[#id],'"+3*8+"'[number],'"+27*8+"'[number],'Aurora Station'[symbol],'"+30*60+"'[number])", o)],
+						  100, time+2*60*60, 8*60*60);
+		this.game.qwertyAI.goals.push(goal);
 
-		switch(this.qwerty_agenda_state) {
-			// Random destinations loop:
-			case 0: 
-					if (this.game.qwertyAI.robot.x == 8*8 &&
-						this.game.qwertyAI.robot.y == 29*8 &&
-						this.game.qwertyAI.robot.map.name == "Aurora Station") {
-						this.qwerty_agenda_state = 1;
-					}
-					// resume:
-					if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
-					}
-					break;
-			case 1: 
-					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY) {
-						if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-							!this.contextQwerty.inConversation) {
-							let nextStates:number[] = [10, 20, 30, 40];
-							let choice:number =  Math.floor(Math.random() * nextStates.length);
-							this.qwerty_agenda_state = nextStates[choice];
-						} else {
-							this.qwerty_agenda_state_timer = 0;
-						}
-					}
-					// resume:
-					if (this.game.qwertyAI.robot.x != 8*8 ||
-						this.game.qwertyAI.robot.y != 29*8) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
+		goal = new AIGoal(Term.fromString("verb.analyze('qwerty'[#id],'infirmary-fridge'[#id])", o), 
+					 	  [Term.fromString("verb.go-to('qwerty'[#id],'"+10*8+"'[number],'"+18*8+"'[number],'Aurora Station'[symbol])", o),
+					 	   Term.fromString("action.stay('qwerty'[#id],'"+10*8+"'[number],'"+18*8+"'[number],'Aurora Station'[symbol],'"+30*60+"'[number])", o)],
+						  100, time+4*60*60, 8*60*60);
+		this.game.qwertyAI.goals.push(goal);
 
-			case 10: 
-					this.qwertyMovesOverrideable(9*8, 27*8, this.game.qwertyAI.robot.map, null);
-					this.qwerty_agenda_state = 11;
-					break;
-			case 11: 
-					if (this.game.qwertyAI.robot.x == 9*8 &&
-						this.game.qwertyAI.robot.y == 27*8) {
-						this.qwerty_agenda_state = 12;
-					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
-			case 12: 
-					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
-						this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
-					}
-					// resume:
-					if (this.game.qwertyAI.robot.x != 9*8 ||
-						this.game.qwertyAI.robot.y != 27*8) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
-		
-			case 20: 
-					this.qwertyMovesOverrideable(3*8, 27*8, this.game.qwertyAI.robot.map, null);
-					this.qwerty_agenda_state = 21;
-					break;
-			case 21: 
-					if (this.game.qwertyAI.robot.x == 3*8 &&
-						this.game.qwertyAI.robot.y == 27*8) {
-						this.qwerty_agenda_state = 22;
-					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
-			case 22: 
-					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
-						this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
-					}
-					// resume:
-					if (this.game.qwertyAI.robot.x != 3*8 ||
-						this.game.qwertyAI.robot.y != 27*8) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;	
+		goal = new AIGoal(Term.fromString("verb.analyze('qwerty'[#id],'location-as22'[#id])", o), 
+						  [Term.fromString("verb.go-to('qwerty'[#id],'"+34*8+"'[number],'"+14*8+"'[number],'Aurora Station'[symbol])", o),
+						   Term.fromString("action.stay('qwerty'[#id],'"+34*8+"'[number],'"+14*8+"'[number],'Aurora Station'[symbol],'"+30*60+"'[number])", o)],
+						  100, time+6*60*60, 8*60*60);
+		this.game.qwertyAI.goals.push(goal);
 
-			case 30: 
-					this.qwertyMovesOverrideable(10*8, 18*8, this.game.qwertyAI.robot.map, null);
-					this.qwerty_agenda_state = 31;
-					break;
-			case 31: 
-					if (this.game.qwertyAI.robot.x == 10*8 &&
-						this.game.qwertyAI.robot.y == 18*8) {
-						this.qwerty_agenda_state = 32;
-					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
-			case 32: 
-					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
-						this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 29*8, this.game.qwertyAI.robot.map, null);
-					}
-					// resume:
-					if (this.game.qwertyAI.robot.x != 10*8 ||
-						this.game.qwertyAI.robot.y != 18*8) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;	
+		// default goal of going back:
+		goal = new AIGoal(Term.fromString("verb.go-to('qwerty'[#id],'location-as25'[#id])", o), 
+						  [Term.fromString("verb.go-to('qwerty'[#id],'"+8*8+"'[number],'"+29*8+"'[number],'Aurora Station'[symbol])", o)],
+						  0, time, 10*60);
+		this.game.qwertyAI.goals.push(goal);
 
-			case 40: 
-					this.qwertyMovesOverrideable(34*8, 14*8, this.game.qwertyAI.robot.map, null);
-					this.qwerty_agenda_state = 41;
-					break;
-			case 41: 
-					if (this.game.qwertyAI.robot.x == 34*8 &&
-						this.game.qwertyAI.robot.y == 14*8) {
-						this.qwerty_agenda_state = 42;
-					} else if (this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;
-			case 42: 
-					if (this.qwerty_agenda_state_timer >= QWERTY_AGENDA_DELAY &&
-						this.game.qwertyAI.currentAction_scriptQueue == null &&
-						!this.contextQwerty.inConversation) {
-						this.qwerty_agenda_state = 0;
-						this.qwertyMovesOverrideable(8*8, 27*8, this.game.qwertyAI.robot.map, null);
-					}
-					// resume:
-					if (this.game.qwertyAI.robot.x != 34*8 ||
-						this.game.qwertyAI.robot.y != 14*8) {
-						this.qwerty_agenda_state = 0;
-					}
-					break;											
-		}
-
-		// udpate timers:
-		if (previous_state == this.qwerty_agenda_state) {
-			this.qwerty_agenda_state_timer++;
-		} else {
-			this.qwerty_agenda_state_timer = 0;
-		}
 	}
 
 
@@ -4036,9 +3909,6 @@ class ShrdluGameScript {
         xmlString += "act_3_repair_tardis_cable_state=\""+this.act_3_repair_tardis_cable_state+"\"\n";   
         xmlString += "act_3_repair_tardis_cable_state_timer=\""+this.act_3_repair_tardis_cable_state_timer+"\"\n";   
 
-        xmlString += "qwerty_agenda_state=\""+this.qwerty_agenda_state+"\"\n";   
-        xmlString += "qwerty_agenda_state_timer=\""+this.qwerty_agenda_state_timer+"\"\n";   
-
         xmlString += "finding_life_side_plot_taken_question=\""+this.finding_life_side_plot_taken_question+"\"\n";   
         xmlString += "finding_life_side_plot_analyzed_question=\""+this.finding_life_side_plot_analyzed_question+"\"\n"; 
         xmlString += "what_is_dust_side_plot_taken_question=\""+this.what_is_dust_side_plot_taken_question+"\"\n";
@@ -4105,9 +3975,6 @@ class ShrdluGameScript {
     	this.act_3_repair_tardis_console_state_timer = Number(xml.getAttribute("act_3_repair_tardis_console_state_timer"));
     	this.act_3_repair_tardis_cable_state = Number(xml.getAttribute("act_3_repair_tardis_cable_state"));
     	this.act_3_repair_tardis_cable_state_timer = Number(xml.getAttribute("act_3_repair_tardis_cable_state_timer"));
-
-    	this.qwerty_agenda_state = Number(xml.getAttribute("qwerty_agenda_state"));
-    	this.qwerty_agenda_state_timer = Number(xml.getAttribute("qwerty_agenda_state_timer"));
 
     	this.finding_life_side_plot_taken_question = xml.getAttribute("finding_life_side_plot_taken_question") == "true";
     	this.finding_life_side_plot_analyzed_question = xml.getAttribute("finding_life_side_plot_analyzed_question") == "true";
@@ -4177,9 +4044,6 @@ class ShrdluGameScript {
 
 	act_2_repair_shuttle_state:number = 0;
 	act_2_repair_shuttle_state_timer:number = 0;
-
-	qwerty_agenda_state:number = 0;
-	qwerty_agenda_state_timer:number = 0;
 
 	act_3_state:number = 0;
 	act_3_state_timer:number = 0;

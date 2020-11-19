@@ -48,7 +48,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 			}
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id])", ai.o);
 			term.attributes.push(new TermTermAttribute(term1));
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			console.log("new intention: " + term);
 		} else {
 			// get the location ID
@@ -139,22 +139,22 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						if (relations != null && relations.length>0) {
 							let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[relations.length-1].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
 							let term:Term = Term.fromString(tmp, ai.o);
-							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 							return;
 						}
 					} else if (targetObject_l[0].ID == ai.selfID) {
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],verb.have('"+ai.selfID+"'[#id], "+targetTermString+")))";
 						let term:Term = Term.fromString(tmp, ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					} else if (targetObject_l[0].ID == speakerCharacterID) {
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],verb.have('"+speakerCharacterID+"'[#id], "+targetTermString+")))";
 						let term:Term = Term.fromString(tmp, ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					} else {
 						console.warn("executeInferenceEffect.answer_where: We cannot find target or speaker! " + targetID + ", " + speakerCharacterID);
 						let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
 						let term:Term = Term.fromString(tmp, ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
 				}
 			} else {					
@@ -176,7 +176,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						if (relations != null && relations.length>0) {
 							let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+relations[relations.length-1].name+"("+targetTermString+",'"+speakerCharacterID+"'[#id])))";
 							let term:Term = Term.fromString(tmp, ai.o);
-							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 							return;
 						}
 
@@ -203,19 +203,19 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 						if (l != -1) {
 							let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],#and("+where_preposition+"(TARGET:"+targetTermString+",'"+targetLocationID+"'[#id]), space.outside.of(TARGET, '"+ai.game.locations[l].id+"'[#id]) )))";
 							let term:Term = Term.fromString(tmp, ai.o);
-							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 							return;
 						}
 					}
 					// otherwise just say where the target is:
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				} else {
 					// otherwise just say where the target is:
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+speakerCharacterID+"'[#id],"+where_preposition+"("+targetTermString+",'"+targetLocationID+"'[#id])))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			}
 		}

@@ -38,8 +38,9 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 						}
 						for(let causeTerm2 of causeTerms) {
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+context.speaker+"'[#id], relation.cause([any],"+causeTerm2+")))", ai.o);
-							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, lastPerf.cause.cause, ai.time_in_seconds));
+							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, lastPerf.cause.cause, ai.timeStamp));
 						}
+						ir.succeeded = true;
 						return true;
 					}
 
@@ -49,13 +50,15 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 						intention = newIntention;
 					} else {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+					ir.succeeded = false;
 					return true;
 				}
 			}
@@ -75,8 +78,8 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 					let term2:Term = new Term(ai.o.getSort("relation.cause"), [new TermTermAttribute(toExplain), new TermTermAttribute(term)]);
 					let term3:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+"))", ai.o);
 					(<TermTermAttribute>(term3.attributes[1])).term.attributes.push(new TermTermAttribute(term2));
-					ai.intentions.push(new IntentionRecord(term3, requester, null, null, ai.time_in_seconds));
-					
+					ai.intentions.push(new IntentionRecord(term3, requester, null, null, ai.timeStamp));
+					ir.succeeded = true;
 					return true;	
 				}
 			}
@@ -111,6 +114,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 					let tmp:Sentence[] = s.negate();
 					if (tmp == null || tmp.length != 1) {
 						console.error("executeIntention answer predicate: cannot negate query!: " + intention);		
+						ir.succeeded = false;
 						return true;
 					}
 					negated_toExplain.terms = negated_toExplain.terms.concat(tmp[0].terms);
@@ -123,8 +127,9 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 		}			
 		return true;
 

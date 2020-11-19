@@ -21,7 +21,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 		if (ai.robot.isInVehicle()) {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -43,7 +43,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -70,11 +70,11 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				if (denyrequestCause != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 				} else {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+itemID_l[0]+"'[#id]))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 			}
 			return true;
@@ -87,7 +87,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (targetLocation != null) {
 				let term2:Term = alternative_actions[0].clone([]);
 				term2.functor = ai.o.getSort("action.drop");
-				let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.time_in_seconds);
+				let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.timeStamp);
 				ir2.alternative_actions = [];
 				for(let aa of ir.alternative_actions) {
 					let aa2:Term = aa.clone([]);
@@ -102,7 +102,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+containerID_l[0]+"'[#id]))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 			return true;
 		}
@@ -118,15 +118,15 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// deny request:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 				// explain cause:
 				term = new Term(ai.o.getSort("action.talk"), 
 								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
 			return true;
 		}
@@ -135,7 +135,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
 			return true;
 		}
@@ -145,7 +145,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					let cause:Term = Term.fromString("property.closed('"+containerObjectL[0].ID+"'[#id])", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 				return true;
 			}
@@ -156,13 +156,13 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				   ai.game.gameScript.act_2_repair_shuttle_state == 0) {
 			// special case of repairing the shuttle:
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			ai.game.gameScript.act_2_repair_shuttle_state = 1;
 			ai.game.gameScript.act_2_repair_shuttle_state_timer = 0;
 			return true;
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			return true;
 		}
 
@@ -200,13 +200,11 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 	    }
 
         ai.setNewAction(alternative_actions[0], requester, q, null);
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(alternative_actions[0])]), PERCEPTION_PROVENANCE);
+        ai.addCurrentActionLongTermTerm(alternative_actions[0]);
 		ai.intentionsCausedByRequest.push(ir);
 		if (requester != null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 		return true;

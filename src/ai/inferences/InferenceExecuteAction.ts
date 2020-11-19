@@ -49,7 +49,7 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 			}
 
 			let action:Term = raw_action.applyBindings(inf.inferences[0].endResults[0].bindings);
-			let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds);
+			let ir:IntentionRecord = new IntentionRecord(action, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.timeStamp);
 			let tmp:number = ai.canSatisfyActionRequest(ir);
 			if (tmp == ACTION_REQUEST_CAN_BE_SATISFIED) {
 				ir.alternative_actions = [];
@@ -62,14 +62,14 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 			} else if (tmp == ACTION_REQUEST_CANNOT_BE_SATISFIED) {
 				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+speaker+"'[#id]))";
 				let term:Term = Term.fromString(tmp2, ai.o);
-				ai.intentions.push(new IntentionRecord(term, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, new ConstantTermAttribute(speaker, ai.cache_sort_id), nlcp, null, ai.timeStamp));
 			}
 		} else {
 			if (raw_action.functor.is_a(ai.o.getSort("verb.hear")) ||
 				raw_action.functor.is_a(ai.o.getSort("verb.see"))) {
 				let tmp2:string = "action.talk('"+ai.selfID+"'[#id], perf.inform.answer('"+inf.triggeredBySpeaker+"'[#id],'no'[symbol]))";
 				let term:Term = Term.fromString(tmp2, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			} else {
 				let speaker:string = inf.triggeredBySpeaker;
 				let context:NLContext = ai.contextForSpeaker(speaker);
@@ -77,9 +77,9 @@ class ExecuteAction_InferenceEffect extends InferenceEffect {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest('"+inf.triggeredBySpeaker+"'[#id]))", ai.o);
 				if (nlcp.performative.attributes.length >= 3) {
 					let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], "+nlcp.performative.attributes[2]+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.time_in_seconds), ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				} else {
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
 			}
 		}		

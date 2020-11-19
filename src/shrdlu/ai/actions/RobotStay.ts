@@ -11,6 +11,7 @@ class RobotStay_IntentionAction extends IntentionAction {
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.stay")) &&
 		    (intention.attributes.length == 1 ||
+	    	 intention.attributes.length == 5 ||
 		     (intention.attributes.length == 2 &&
 		 	  ((intention.attributes[1] instanceof VariableTermAttribute) ||
 			   (intention.attributes[1] instanceof ConstantTermAttribute))))) {
@@ -22,6 +23,7 @@ class RobotStay_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -63,17 +65,19 @@ class RobotStay_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 						term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.see('"+ai.selfID+"'[#id], "+requester+")))))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 		} else if (intention.attributes.length == 2 && 
@@ -111,10 +115,11 @@ class RobotStay_IntentionAction extends IntentionAction {
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(verb.can('"+ai.selfID+"'[#id], verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id])))))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -126,8 +131,9 @@ class RobotStay_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
 			if (intention.attributes.length == 2 && intention.attributes[1].sort.name == "space.away") {
@@ -164,10 +170,11 @@ class RobotStay_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 						term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 
@@ -209,10 +216,11 @@ class RobotStay_IntentionAction extends IntentionAction {
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 						term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 
@@ -221,8 +229,9 @@ class RobotStay_IntentionAction extends IntentionAction {
 				if (requester != null) {
 					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -271,20 +280,35 @@ class RobotStay_IntentionAction extends IntentionAction {
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", property.blind('"+ai.selfID+"'[#id])))", ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
+
+		} else if (intention.attributes.length == 5 && 
+			       (intention.attributes[1] instanceof ConstantTermAttribute) &&
+			       (intention.attributes[2] instanceof ConstantTermAttribute) &&
+			       (intention.attributes[3] instanceof ConstantTermAttribute) &&
+			       (intention.attributes[4] instanceof ConstantTermAttribute) &&
+			       intention.attributes[1].sort.name == "number") {
+			// to to some specific coordinates:
+			this.targetx = Number((<ConstantTermAttribute>(intention.attributes[1])).value);
+			this.targety = Number((<ConstantTermAttribute>(intention.attributes[2])).value);
+			this.targetMapName = (<ConstantTermAttribute>(intention.attributes[3])).value;
+			this.stayUntil = ai.timeStamp + Number((<ConstantTermAttribute>(intention.attributes[4])).value);
+			targetMap = ai.game.getMap(this.targetMapName);
 
 		} else {
 			// we should never get here:
 			if (requester != null) {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -294,9 +318,10 @@ class RobotStay_IntentionAction extends IntentionAction {
 				let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))";
 				let term:Term = Term.fromString(tmp, ai.o);
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -310,27 +335,26 @@ class RobotStay_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				// deny request:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
-				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.time_in_seconds)
-				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.time_in_seconds));
+				let causeRecord:CauseRecord = new CauseRecord(cannotGoCause, null, ai.timeStamp)
+				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
 
 				// explain cause:
 				term = new Term(ai.o.getSort("action.talk"), 
 								[new ConstantTermAttribute(ai.selfID, ai.o.getSort("#id")),
 								 new TermTermAttribute(new Term(ai.o.getSort("perf.inform"),
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
-				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
-		ai.addLongTermTerm(new Term(ai.o.getSort("verb.do"),
-									  [new ConstantTermAttribute(ai.selfID,ai.cache_sort_id),
-									   new TermTermAttribute(intention)]), PERCEPTION_PROVENANCE);
+		ai.addCurrentActionLongTermTerm(intention);
 		ai.intentionsCausedByRequest.push(ir);
 		if (requester != null) {
 			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
-			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.time_in_seconds));
+			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
 		app.achievement_nlp_all_robot_actions[13] = true;
@@ -351,6 +375,11 @@ class RobotStay_IntentionAction extends IntentionAction {
 			return false;
 		}
 
+		if (this.stayUntil != null && ai.timeStamp >= this.stayUntil) {
+			if (this.ir != null) this.ir.succeeded = true;
+			return true;
+		}
+
 		// go to destination:
         let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
         let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
@@ -366,7 +395,11 @@ class RobotStay_IntentionAction extends IntentionAction {
 	saveToXML(ai:RuleBasedAI) : string
 	{
 		let tmp:string = "<IntentionAction type=\"RobotStay_IntentionAction\" "+
-								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName + "\"/>";
+								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName+"\"";
+		if (this.stayUntil != null) {
+			tmp += " stayUntil=\""+this.stayUntil+"\""
+		}								
+		tmp += "/>";
 		return tmp;
 	}
 
@@ -377,10 +410,14 @@ class RobotStay_IntentionAction extends IntentionAction {
 		a.targetx = Number(xml.getAttribute("targetx"));
 		a.targety = Number(xml.getAttribute("targety"));
 		a.targetMapName = xml.getAttribute("targetMapName");
+		if (xml.getAttribute("stayUntil") != null) {
+			a.stayUntil = Number(xml.getAttribute("stayUntil"));
+		}
 		return a;
 	}
 
 	targetx:number;
 	targety:number;
 	targetMapName:string;
+	stayUntil:number = null;
 }
