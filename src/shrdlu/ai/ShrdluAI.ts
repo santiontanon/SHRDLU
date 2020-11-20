@@ -93,7 +93,7 @@ class ShrdluAI extends RobotAI {
 	considerGoals() : boolean
 	{
 		// Shrdlu only has goals that are within the station:
-		if (this.robot.map.name != "Aurora Station" && this.robot.map.name == "Aurora Station Outdoors") return false;
+		if (this.robot.map.name != "Aurora Station" && this.robot.map.name != "Aurora Station Outdoors") return false;
 		return super.considerGoals();
 	}
 
