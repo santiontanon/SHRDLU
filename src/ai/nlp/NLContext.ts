@@ -485,6 +485,21 @@ class NLContext {
 		}
 	}
 
+
+	addMention(id:string, timeStamp:number, o:Ontology)
+	{
+		if (id == null) return;
+		let newID:ConstantTermAttribute = new ConstantTermAttribute(id, o.getSort("#id"));
+		let ce:NLContextEntity = this.newContextEntity(newID, timeStamp, null, o, false);			
+		if (ce != null) {
+			let idx:number = this.mentions.indexOf(ce);
+			if (idx != -1) this.mentions.splice(idx,1);
+			this.mentions.unshift(ce);
+		} else {
+			console.error("addMention: could not create NLContextEntity!");
+		}
+	}
+
 	
 	newPerformative(speakerID:string, perfText:string, perf:Term, parse:NLParseRecord, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
 	{

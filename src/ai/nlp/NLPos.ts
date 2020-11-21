@@ -1913,6 +1913,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.need-for","for", "need","needs","needed","needed","needing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.wake-up","up", "wake","wakes","woke","woken","waking", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("verb.help", "with", "help","helps","helped","helped","helping", false, multitokens_raw, o);
 
   // adjectives (synonims) (added first, so NLG does not used them):
   this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));
@@ -2072,6 +2073,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("slightly", "small-amount", Term.fromString("adverb('small-amount'[small-amount])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("already", "time.already", Term.fromString("adverb('time.already'[time.already])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("ever", "time.ever", Term.fromString("adverb('time.ever'[time.ever])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("respectively", "respectively", Term.fromString("adverb('respectively'[respectively])", o), 1.0));
 
   this.addTokenPOS(new PartOfSpeech("too", "in-addition", Term.fromString("adverb('in-addition'[in-addition])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("in addition", "in-addition", Term.fromString("adverb('in-addition'[in-addition])", o), 1.0));

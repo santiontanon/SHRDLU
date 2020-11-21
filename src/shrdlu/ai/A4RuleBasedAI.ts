@@ -1420,6 +1420,34 @@ class A4RuleBasedAI extends RuleBasedAI {
 	}
 
 
+	handlePerfInform(perf2: Term, speaker:TermAttribute, context:NLContext) 
+	{
+		if (perf2.attributes.length == 2) {
+			let predicate:Term = (<TermTermAttribute>(perf2.attributes[1])).term;
+			let pattern:Term = Term.fromString("#not(verb.can('player'[#id], X))", this.o);
+			if (pattern.subsumes(predicate, OCCURS_CHECK, new Bindings())) {
+				// the player probably means "please help me do X", so, convert into an action request for help
+				let X:TermAttribute = (<TermTermAttribute>(predicate.attributes[0])).term.attributes[1];
+				let newPerf:Term = new Term(this.o.getSort("perf.request.action"),
+											[perf2.attributes[0],
+											 new TermTermAttribute(new Term(this.o.getSort("verb.help"),
+											 		  						[perf2.attributes[0], speaker, X]))]);
+				console.log("A4RuleBasedAI.handlePerfInform perf converted to: " + newPerf);
+				this.reactToRequestActionPerformative(newPerf, speaker, context);
+				return;
+			}
+		}
+		super.handlePerfInform(perf2, speaker, context);
+	}
+
+
+	handlePerfQPredicate(perf2: Term, speaker:TermAttribute, context:NLContext) 
+	{
+		if (this.game.gameScript.perfQPredicateHandleByScript(perf2)) return;
+		super.handlePerfQPredicate(perf2, speaker, context);
+	}	
+
+
 	allowPlayerIntoEveryWhere()
 	{
 		for(let location of this.locationsWherePlayerIsNotPermitted) {

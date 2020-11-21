@@ -840,6 +840,7 @@
     <sort name="verb.contains" super="spatial-relation,relation-verb"/>
 
     <sort name="in-addition" super="adverb"/>
+    <sort name="respectively" super="adverb"/>
 
     <sort name="celestial-entity" super="object,space.location"/>
     <sort name="outer-space" super="space,celestial-entity"/>

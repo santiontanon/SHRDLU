@@ -215,6 +215,7 @@ class ShrdluGameScript {
 		this.game.shrdluAI.robot.strength = 8;
 	}
 
+
 	skip_to_act_2_crash_site()
 	{
 		this.skip_to_act_2_shrdluback_repair_outside();
@@ -446,7 +447,6 @@ class ShrdluGameScript {
 
 		case 6:	// QWERTY asks the player if he remembers his name
 			if (this.act_intro_state_timer == 0) {
-//				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER,#and(X:verb.remember($PLAYER,#and(#query(Y), name($PLAYER,Y))), time.present(X))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER, X:verb.remember($PLAYER,#and(#query(Y), name($PLAYER,Y)))))");
 			} else {
 				if (this.game.qwertyAI.intentions.length == 0 && 
@@ -474,12 +474,6 @@ class ShrdluGameScript {
 						// or it could be that the answer was complex, and had a counter question (which makes the answer NOT be the "lastPerformativeBy")
 						this.act_intro_state = 9;
 					}
-//				} else {
-//					// still waiting for an answer, check for a timeout:
-//					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
-//						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 6;
-//					}
 				}
 			}
 			break;
@@ -516,12 +510,6 @@ class ShrdluGameScript {
 						// this can only mean the player answered with a statement, from which QWERTY could infer his name
 						this.act_intro_state = 9;
 					}
-//				} else {
-//					// still waiting for an answer, check for a timeout:
-//					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
-//						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 6;
-//					}
 				}
 			}
 			break;
@@ -530,10 +518,6 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.greet($PLAYER))");		
-
-				// tell ETAOIN the player's name:
-				// ...
-
 			} else {
 				if (this.game.qwertyAI.intentions.length == 0 &&
 					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 10;
@@ -571,12 +555,6 @@ class ShrdluGameScript {
 						console.error("update_act_intro, state 9: unexpected answer " + lastPerformative.performative);
 						this.act_intro_state = 12;
 					}
-//				} else {
-//					// still waiting for an answer, check for a timeout:
-//					if (this.contextQwerty.expectingAnswerToQuestion_stack.length > 0) {
-//						let idx:number = this.contextQwerty.expectingAnswerToQuestion_stack.length-1;
-//						if (this.game.in_game_seconds - this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack[idx] >= 1200) this.act_intro_state = 11;
-//					}
 				}
 			}
 			break;
@@ -818,7 +796,6 @@ class ShrdluGameScript {
 				let term:Term = Term.fromString("goal(D:'player'[#id],action.take(X, 'communicator'[#id]))",this.game.ontology);
 				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
 			} else if (!this.game.qwertyAI.robot.isTalking()) {
-//			} else if (this.act_intro_state_timer == 180) {
 				this.app.tutorialMessages.push([" To take objects, walk onto them and ",
 												" press *SPACE*. Access your inventory  ",
 												" by pressing the *TAB* key. Take the   ",
@@ -837,7 +814,6 @@ class ShrdluGameScript {
 
 		case 110:
 			if (this.act_intro_state_timer == 0) {
-//				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($ETAOIN, action.talk($ETAOIN, $PLAYER))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.can($PLAYER, #and(Y:action.talk($PLAYER), relation.target(Y, $ETAOIN))), relation.tool(X, 'communicator'[#id]))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.need($PLAYER, verb.sleep($PLAYER)), #and(time.first(X), conjunction-contrast(X)))))");
 				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, #and(X:verb.go($PLAYER, verb.sleep($PLAYER)), time.now(X))))");
@@ -871,24 +847,13 @@ class ShrdluGameScript {
 			break;
 
 		case 112:
-		/*
-			if (this.act_intro_state_timer == 0) {
-				this.app.tutorialMessages.push([" To interact with objects, just walk ",
-												" on to them and press *SPACE*. Walk up ",
-												" to your bed now and press *SPACE* to  ", 
-												" sleep.                              ", 
-											    "",
-											    "  [press *ESC* to close this message]  "]);
-			} else {
-				*/
-				if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
-					this.game.currentPlayer.y >= 208 && this.game.currentPlayer.y<256 &&
-					this.game.currentPlayer.state == A4CHARACTER_STATE_IN_BED) {
-					// player went to bed in bedroom 5
-					this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
-					this.act_intro_state = 113;
-				}
-//			}
+			if (this.game.currentPlayer.x >= 528 && this.game.currentPlayer.x<576 &&
+				this.game.currentPlayer.y >= 208 && this.game.currentPlayer.y<256 &&
+				this.game.currentPlayer.state == A4CHARACTER_STATE_IN_BED) {
+				// player went to bed in bedroom 5
+				this.game.currentPlayer.state = A4CHARACTER_STATE_IN_BED_CANNOT_GETUP;
+				this.act_intro_state = 113;
+			}
 			break;
 
 		case 113:
@@ -1094,12 +1059,7 @@ class ShrdluGameScript {
 						}
 					}
 				}
-			}
-
-				// perf.q.whois.name(LISTENER_0:[any], V_0:[any], V2:name(V_0, V3:'bruce alper'[symbol]))
-				// perf.inform.answer(V0:'player'[#id], V1:'unknown'[symbol])
-
-			
+			}			
 		}
 
 		switch(this.act_1_state) {
@@ -1186,7 +1146,6 @@ class ShrdluGameScript {
 			if (p1!=null) {
 				if (p1.timeStamp == this.game.in_game_seconds - 1) {
 					// it just happened:
-//					console.log("6: p1.performative.functor.name = " + p1.performative.functor.name);
 					if (p1.performative.functor.name == "perf.inform.parseerror") this.act_1_number_of_useless_etaoin_answers++;
 					if (p1.performative.functor.name == "perf.inform.answer" &&
 						p1.performative.attributes[1] instanceof ConstantTermAttribute &&
@@ -1394,8 +1353,6 @@ class ShrdluGameScript {
 			}
 			break;
 
-		// state 17 used to be necessary, but was removed, since the AI now handles it automatically
-
 		case 18:
 			// player agreed to go search for SHRDLU:
 			if (this.act_1_state_timer == 0) {
@@ -1458,10 +1415,8 @@ class ShrdluGameScript {
 							}
 						}
 					}
-					// perf.q.whereis(LISTENER_0:[any], SUBJECT_0:[any], LOCATION_0:[any], V3:tool(SUBJECT_0))
 					if (toolsFound) {
 						this.act_1_asked_about_tools = true;
-//							console.log("this.act_1_asked_about_tools = true");
 						this.etaoinSays("perf.inform('player'[#id], verb.have('qwerty'[#id], 'maintenance-key'[#id]))");
 						let idx:number = this.game.qwertyAI.objectsNotAllowedToGive.indexOf("maintenance-key");
 						this.game.qwertyAI.objectsNotAllowedToGive.splice(idx,1);
@@ -1535,7 +1490,6 @@ class ShrdluGameScript {
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
-//							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('player'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}						
 					} else if ((perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||
@@ -1547,7 +1501,6 @@ class ShrdluGameScript {
 						let b:Bindings = new Bindings();
 						if (pattern1.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
-//							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('player'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}						
 					} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whereis")) &&
@@ -1561,7 +1514,6 @@ class ShrdluGameScript {
 						if (pattern1.subsumes(argument, true, b) ||
 							pattern2.subsumes(argument, true, b)) {
 							this.act_1_stated_spacesuit_is_broken = true;
-//							console.log("update_act_1, state 19: detected spacesuit is broken");
 							this.etaoinSays("perf.inform('player'[#id], verb.can('qwerty'[#id], verb.repair('qwerty'[#id], 'spacesuit'[#id])))");
 						}
 					}
@@ -2155,13 +2107,6 @@ class ShrdluGameScript {
 			}
 			break;
 
-		// case 113:
-		// 	// waiting for Shrdlu to repair the comm's tower
-		// 	if (this.game.shrdluAI.goals.length == 0) {
-		// 		this.act_2_state = 201;
-		// 	}
-		// 	break;
-
 		case 120:
 			if (this.act_2_state_timer == 0) {
 				this.game.eyesClosedState = 3;
@@ -2280,6 +2225,9 @@ class ShrdluGameScript {
 		case 221:
 			// waiting for David to examine the tactical map
 			if (this.game.getStoryStateVariable("distress-signals")=="seen") {
+				// put the first distress signal in the mentions of etaoin, so that he would disambiguate to it:
+				this.contextEtaoin.addMention("distress-signal1", this.game.etaoinAI.timeStamp, this.game.etaoinAI.o);
+
 				if (this.player_has_asked_to_take_shrdlu) {
 					this.queueThoughtBubble("Maybe now Etaoin will let me take Shrdlu with me to investigate...");
 				}
@@ -2427,25 +2375,6 @@ class ShrdluGameScript {
 
 	updateKnowledgeAfterRepairingCommTower()
 	{
-		// remove all the knowledge about communicator-range:
-		/*
-		{
-			let toRemove:Sentence[] = [];
-			let s:Sentence = this.game.etaoinAI.longTermMemory.firstSingleTermMatch(this.game.ontology.getSort("space.at"), 2, this.game.ontology);
-			while(s != null) {
-				if ((s.terms[0].attributes[1] instanceof ConstantTermAttribute) &&
-					(<ConstantTermAttribute>s.terms[0].attributes[1]).value == "communicator-range") {
-					toRemove.push(s);
-				}
-				s = this.game.etaoinAI.longTermMemory.nextSingleTermMatch();
-			}
-			for(let s2 of toRemove) {
-				this.game.etaoinAI.longTermMemory.removeSentence(s2);
-			}
-		}
-		*/
-		//this.game.etaoinAI.addLongTermTerm(Term.fromString("space.at('aurora'[#id],'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
-		//this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("space.at(X,'aurora'[#id]);~space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 		this.game.etaoinAI.addLongTermRuleNow(Sentence.fromString("~space.at(X,'aurora'[#id]);space.at(X,'communicator-range'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
 
 		this.game.etaoinAI.addLongTermTerm(Term.fromString("distress-signal('distress-signal1'[#id])",this.game.ontology), PERCEPTION_PROVENANCE);
@@ -2952,6 +2881,14 @@ class ShrdluGameScript {
 	}
 
 
+	perfQPredicateHandleByScript(perf2:Term) : boolean
+	{
+		if (perf2.attributes.length == 2 &&
+			this.predicateIsAboutTakingShrdlu((<TermTermAttribute>(perf2.attributes[1])).term)) return true;
+		return false;
+	}
+
+
 	update_sideplots()
 	{
 		// Finding life in Aurora subplot:
@@ -3222,6 +3159,9 @@ class ShrdluGameScript {
 					let action:Term = (<TermTermAttribute>(perf.attributes[1])).term;
 
 					if (this.actionRequestIsAboutTakingShrdlu(action)) return perf;
+				} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate"))) {
+					let predicate:Term = (<TermTermAttribute>(perf.attributes[1])).term;
+					if (this.predicateIsAboutTakingShrdlu(predicate)) return perf;
 				}
 			}
 		}
@@ -3244,6 +3184,16 @@ class ShrdluGameScript {
 		if (pattern4.subsumes(action, true, new Bindings())) return true;
 		if (pattern5.subsumes(action, true, new Bindings())) return true;
 		if (pattern6.subsumes(action, true, new Bindings())) return true;	
+		return false;	
+	}
+
+
+	predicateIsAboutTakingShrdlu(predicate:Term) : boolean
+	{
+		let pattern1:Term = Term.fromString("verb.can('shrdlu'[#id], verb.help('shrdlu'[#id],'player'[#id], 'distress-signal1'[#id]))", this.game.ontology);
+		let pattern2:Term = Term.fromString("verb.can('shrdlu'[#id], verb.help('shrdlu'[#id],'player'[#id], 'distress-signal2'[#id]))", this.game.ontology);
+		if (pattern1.subsumes(predicate, true, new Bindings())) return true;
+		if (pattern2.subsumes(predicate, true, new Bindings())) return true;
 		return false;	
 	}
 
@@ -3314,7 +3264,7 @@ class ShrdluGameScript {
 		// when this function is called, SHRDLU has already repaired the stasis pod:
 		for(let ai of [this.game.etaoinAI, this.game.qwertyAI, this.game.shrdluAI]) {
 			let se:SentenceEntry = ai.longTermMemory.findSentenceEntry(Sentence.fromString("property.broken('broken-stasis-pod'[#id])", this.game.ontology));
-			se.sentence.sign[0] = false;
+			if (se != null) se.sentence.sign[0] = false;
 		}
 
 		this.game.shrdluAI.goals = [];

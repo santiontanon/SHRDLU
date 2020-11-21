@@ -770,6 +770,24 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, OBJ1)
 			   		 #derefFromContext(C3, OBJ3)"/>
 
+	<NLPattern name="inform-cannot-verb"
+			   head="perf.inform.internal(LISTENER, #not(verb.can(O3, #cons(VERB:[symbol], O3))))"
+			   body="nounPhrase(X3, N3:[singular], P3, C3)
+			   		 verb('verb.can'[symbol], N, P, [present-tense])
+			   		 'not'
+			   		 verb(VERB, N2, P2, T2)
+			   		 #derefFromContext(C3, O3)"/>
+
+	<NLPattern name="inform-cannot-verb-obj"
+			   head="perf.inform.internal(LISTENER, #not(verb.can(O3, #cons(VERB:[symbol], O3, O4))))"
+			   body="nounPhrase(X3, N3:[singular], P3, C3)
+			   		 verb('verb.can'[symbol], N, P, [present-tense])
+			   		 'not'
+			   		 verb(VERB, N2, P2, T2)
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 #derefFromContext(C3, O3)
+			   		 #derefFromContext(C4, O4)"/>
+
 	<!-- special case for having a collision, which is a way to say you collided with -->
 	<NLPattern name="inform-have-collision-with-a-context"
 			   head="perf.inform.internal(LISTENER, verb.collide-with(SUBJECT, OBJECT))"
@@ -2539,6 +2557,36 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb(VERB, N3, P3, [participle-tense]) #symbolToSort(VERB, VERBSORT) #subsumes([relation-verb], VERBSORT)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT2)"/>
+
+	<NLPattern name="q.predicate-be-anything-prep-obj"
+			   head="perf.q.predicate(LISTENER, #and(object(X), #cons(PREP, X, O2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] ('tell' 'me'|'know') 'if']
+			   		 verb('verb.be'[symbol], N, P, T) 'there' 
+			   		 ('anything'|'something')
+			   		 preposition(PREP)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C2, O2)"/>
+
+	<NLPattern name="q.predicate-can-phrasal-verb-obj"
+			   head="perf.q.predicate(LISTENER, verb.can(O1, #cons(VERB:[symbol], O1, O2, O3)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.can'[symbol], N, P, T)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 phrasal-verb(VERB, NV, PV, TV, PREP)
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #token(PREP)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C1, O1)
+			   		 #derefFromContext(C2, O2)
+			   		 #derefFromContext(C3, O3)"
+			   priority="50"/>
 
 	<!-- Passive voice question: -->
     <NLPattern name="q.predicate-passive"
@@ -5854,8 +5902,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="verb(VERB, N, P, T)
     		   		 'the'
 			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
-			   		 noun(NOUN, NN)
-			   		 ('!'|'?')*"/>
+			   		 noun(NOUN, NN)"/>
 
     <NLPattern name="action-superlative-noun-propernoun"
     		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, V, PNOUN), #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#not(#cons(COMPARATIVE_ADJ,Y,V)))), [number.1], #forall(Y,#cons(NOUN, Y)))"
@@ -5863,9 +5910,105 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 'the'
 			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
 			   		 noun(NOUN, NN)
-			   		 properNounCompound(PNOUN, PNN)
-			   		 ('!'|'?')*"
+			   		 properNounCompound(PNOUN, PNN)"
 			   priority="50"/>
+
+
+    <NLPattern name="perf.request.action-phrasal-verb-respectively"
+    		   head="#list(perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, OBJ1, OBJ3)),
+    		   			   perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJ2, OBJ4)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
+    		   		 ['go']
+    		   		 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 'and'
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		   		 'respectively'
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefFromContext(C2, OBJ2)
+    		   		 #derefFromContext(C3, OBJ3)
+    		   		 #derefFromContext(C4, OBJ4)
+    		   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'.')*"/>
+
+    <NLPattern name="perf.q.action-phrasal-verb-respectively"
+    		   head="#list(perf.q.action(LISTENER, #cons(VERB:[symbol], LISTENER, OBJ1, OBJ3)),
+    		   			   perf.q.action(LISTENER, #cons(VERB, LISTENER, OBJ2, OBJ4)))"
+    		   body="[('please'|'now') [',']] 
+    		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
+    		   		 subject-personal-pronoun(X1, N, G, [second-person])
+    		   		 ['please'] ['go'] 
+    		   		 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 'and'
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		   		 'respectively'
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefFromContext(C2, OBJ2)
+    		   		 #derefFromContext(C3, OBJ3)
+    		   		 #derefFromContext(C4, OBJ4)
+    		   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'?')*"/>
+
+    <NLPattern name="perf.request.action-phrasal-verb-query-respectively"
+    		   head="#list(perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, V1, OBJ3), QUERY1, [number.1]),
+    		   			   perf.request.action(LISTENER, #cons(VERB, LISTENER, V2, OBJ4), QUERY2, [number.1]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
+    		   		 ['go']
+    		   		 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 'and'
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		   		 'respectively'
+    		   		 #derefQuery(C1, V1, QUERY1)
+    		   		 #derefQuery(C2, V2, QUERY2)
+    		   		 #derefFromContext(C3, OBJ3)
+    		   		 #derefFromContext(C4, OBJ4)
+    		   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'.')*"/>
+
+    <NLPattern name="perf.q.action-phrasal-verb-query-respectively"
+    		   head="#list(perf.q.action(LISTENER, #cons(VERB:[symbol], LISTENER, V1, OBJ3), QUERY1, [number.1]),
+    		   			   perf.q.action(LISTENER, #cons(VERB, LISTENER, V2, OBJ4), QUERY2, [number.1]))"
+    		   body="[('please'|'now') [',']] 
+    		   		 (verb('verb.will'[symbol], N, P, T) | verb('verb.may'[symbol], N, P, T) | verb('verb.can'[symbol], N, P, T)) 
+    		   		 subject-personal-pronoun(X1, N, G, [second-person])
+    		   		 ['please'] ['go'] 
+    		   		 phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+		   		 	 #token(PREP)
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 'and'
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		   		 'respectively'
+    		   		 #derefQuery(C1, V1, QUERY1)
+    		   		 #derefQuery(C2, V2, QUERY2)
+    		   		 #derefFromContext(C3, OBJ3)
+    		   		 #derefFromContext(C4, OBJ4)
+    		   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'?')*"/>    		         
 
     <!-- perf.moreresults -->
     <NLPattern name="moreresults"

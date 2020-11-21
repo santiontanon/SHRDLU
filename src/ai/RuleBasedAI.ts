@@ -1081,20 +1081,14 @@ class RuleBasedAI {
 			} else if (perf2.functor.name == "perf.ack.contradict") {
 				console.error("RuleBasedAI.reactToPerformative: not sure how to react to " + perf2);
 			} else if (perf2.functor.name == "perf.inform") {
-				let t2:Term = Term.fromString("action.memorize('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
-				t2.addAttribute(perf2.attributes[1]);
-				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
+				this.handlePerfInform(perf2, speaker, context);
 			} else if (perf2.functor.name == "perf.inform.answer") {
 				if (!this.reportDereferenceErrorIfNoTokensLeftToParse(context)) {
 					let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform('"+context.speaker+"'[#id], #and(#not(X:verb.ask('"+this.selfID+"'[#id], 'pronoun.anything'[pronoun.anything])), time.past(X))))", this.o);
 					this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
 				}
 			} else if (perf2.functor.name == "perf.q.predicate") {
-				let t2:Term = Term.fromString("action.answer.predicate('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
-				for(let i:number = 1;i<perf2.attributes.length;i++) {
-					t2.addAttribute(perf2.attributes[i]);
-				}
-				this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
+				this.handlePerfQPredicate(perf2, speaker, context);
 			} else if (perf2.functor.name == "perf.q.predicate-negated") {
 				let t2:Term = Term.fromString("action.answer.predicate-negated('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
 				for(let i:number = 1;i<perf2.attributes.length;i++) {
@@ -1299,6 +1293,24 @@ class RuleBasedAI {
 		context.expectingFarewell = false;		
 
 		return reaction;
+	}
+
+
+	handlePerfInform(perf2: Term, speaker:TermAttribute, context:NLContext) 
+	{
+		let t2:Term = Term.fromString("action.memorize('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
+		t2.addAttribute(perf2.attributes[1]);
+		this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
+	}
+
+
+	handlePerfQPredicate(perf2: Term, speaker:TermAttribute, context:NLContext) 
+	{
+		let t2:Term = Term.fromString("action.answer.predicate('"+this.selfID+"'[#id], '"+context.speaker+"'[#id])", this.o);
+		for(let i:number = 1;i<perf2.attributes.length;i++) {
+			t2.addAttribute(perf2.attributes[i]);
+		}
+		this.intentions.push(new IntentionRecord(t2, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
 	}
 
 
