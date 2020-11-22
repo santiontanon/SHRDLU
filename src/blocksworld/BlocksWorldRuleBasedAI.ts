@@ -375,7 +375,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		} else if (relation.name == "shorter-tallness") {
 			return o2.dy > o1.dy;
 
-		} else if (relation.name == "space.next-to") {
+		} else if (relation.name == "space.next-to" ||
+				   relation.name == "relation.neighbor") {
 			let dx:number = 0;
 			let dz:number = 0;
 			if (o1.x+o1.dx < o2.x) {

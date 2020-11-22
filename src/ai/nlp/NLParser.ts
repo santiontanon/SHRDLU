@@ -88,7 +88,7 @@ class NLParser {
 		// STEP 3: Part of Speech Tagging
 		this.posParser.unrecognizedTokens = [];
 		this.posParser.POSTagging(tokens2, this.o);
-		//console.log("POS Tagging:\n" + tokens2.toString());
+		// console.log("POS Tagging:\n" + tokens2.toString());
 
 		this.error_semantic = [];
 		this.error_deref = [];

@@ -606,6 +606,7 @@ class POSParser {
     this.addTokenPOS(new PartOfSpeech("not", "no", Term.fromString("no()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("sure", "yes", Term.fromString("yes()", o), 1.0));
     this.addTokenPOS(new PartOfSpeech("and", "#and", Term.fromString("#and()", o), 1.0));
+    this.addTokenPOS(new PartOfSpeech("or", "#or", Term.fromString("#or()", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("on", "particle.on", Term.fromString("particle.on()", o), 1.0));
 //    this.addTokenPOS(new PartOfSpeech("off", "particle.off", Term.fromString("particle.off()", o), 1.0));
     

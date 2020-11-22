@@ -525,13 +525,12 @@ class CompiledNLPatternTransition {
 	{
 		let parses:NLParseRecord[] = [];
 		let term2:Term = this.term.applyBindings(parse.bindings);
-//				console.log("Matching POS, before: " + this.term.toString() + "\n  bindings: " + parse.bindings + "\n  Matching POS, after: " + term2.toString());
+		// console.log("Matching POS, before: " + this.term.toString() + "\n  bindings: " + parse.bindings + "\n  Matching POS, after: " + term2.toString());
 		for(let nextToken of parse.nextTokens) {
 			if (nextToken.token == null) {
 				let parses2:NLParseRecord[] = this.parsePOS(new NLParseRecord(nextToken.next, parse.previousPOS, parse.bindings, parse.derefs, parse.ruleNames, parse.priorities), context, rule, parser, AI, filterPartialParses);
 				if (parses2 != null) parses = parses.concat(parses2);
 			} else {
-//						console.log("Matching POS "+term2.toString()+" with: " + nextToken.token);
 				for(let POS of nextToken.POS) {
 					let bindings:Bindings = new Bindings();
 					if (POS.term.unify(term2, OCCURS_CHECK, bindings)) {

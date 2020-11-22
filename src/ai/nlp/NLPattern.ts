@@ -1240,6 +1240,24 @@ class NLPattern {
 		}
 	}
 
+	/*
+	applyBindings(bindings:Bindings) : NLPattern
+	{
+		console.log("NLPattern.applyBindings: " + bindings);
+		let pattern2:NLPattern = new NLPattern(this.type);
+		pattern2.string = this.string;
+		pattern2.term = (this.term == null ? null : this.term.applyBindings(bindings));
+		if (this.children != null) {
+			pattern2.children = [];
+			for(let child of this.children) {
+				pattern2.children.push(child.applyBindings(bindings));
+			}
+		}
+		pattern2.lastDerefErrorType = this.lastDerefErrorType;
+
+		return pattern2;
+	}
+	*/
 
 	static fromString(str:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : NLPattern
 	{

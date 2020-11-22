@@ -1437,7 +1437,7 @@ class Term {
                 c == ',') {
                 tmp = tmp.trim();
                 if (tmp == "") {
-                    console.error("Term.fromString: empty attribute string!");
+                    console.error("Term.fromString: empty attribute string parsing: " + str);
                     return null;
                 }
                 attributeStrings.push(tmp);
@@ -1449,7 +1449,7 @@ class Term {
                        c == ')') {
                 tmp = tmp.trim();
                 if (tmp == "" && expectingAttribute) {
-                    console.error("Term.fromString: empty attribute string!");
+                    console.error("Term.fromString: empty attribute string parsing: " + str);
                     return null;
                 } 
                 if (tmp != "") {

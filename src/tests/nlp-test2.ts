@@ -1620,6 +1620,21 @@ NLParseTestUnifyingListener("what blocks are red and next to a crate?", o.getSor
 NLParseTestUnifyingListener("does the crate have any neighbors?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(object(X), relation.neighbor('5'[#id], X)))");
 NLParseTestUnifyingListener("what are the neighbors of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), relation.neighbor(X, '5'[#id])))");
 NLParseTestUnifyingListener("which blocks are neighbors of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), relation.neighbor(X, '5'[#id])))");
+NLParseTestUnifyingListener("does the crate like any cube?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.like('5'[#id], X), cube(X)))");
+NLParseTestUnifyingListener("does the crate like any of his neighbors?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.like('5'[#id], X), #and(object(X), relation.neighbor('5'[#id], X))))");
+NLParseTestUnifyingListener("does the crate like itself?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('5'[#id], '5'[#id]))");
+NLParseTestUnifyingListener("which of his neighbors does the crate like?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(verb.like('5'[#id], X), #and(object(X), relation.neighbor('5'[#id], X))))");
+NLParseTestUnifyingListener("all pyramids like crates", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], V1:#or(#not(pyramid(X:[#id])), #or(#not(crate(Y)), verb.like(X,Y))))");
+NLParseTestUnifyingListener("all pyramids like red crates", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], V1:#or(#not(pyramid(X:[#id])), #or(#not(#and(crate(Y), color(Y,'red'[red]))), verb.like(X,Y))))");
+NLParseTestUnifyingListener("the crate likes red cubes", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], V1:#or(#not(#and(cube(Y), color(Y, 'red'[red]))), verb.like('5'[#id],Y)))");
+NLParseTestUnifyingListener("the crate likes cubes or white keys", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(cube(Y)), verb.like('5'[#id],Y))),perf.inform('etaoin'[#id], #or(#not(#and(key(Z), color(Z, 'white'[white]))), verb.like('5'[#id],Z))))");
+NLParseTestUnifyingListener("the crate only likes red cubes", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(#and(cube(Y), color(Y, 'red'[red]))), verb.like('5'[#id],Y))), perf.inform('etaoin'[#id], #or(#and(cube(Z), color(Z, 'red'[red])), #not(verb.like('5'[#id],Z)))))");
+NLParseTestUnifyingListener("the crate only likes cubes and white keys", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(cube(Y)), verb.like('5'[#id],Y))), #list(perf.inform('etaoin'[#id], #or(#not(#and(key(Z), color(Z, 'white'[white]))), verb.like('5'[#id],Z))), perf.inform('etaoin'[#id], #or(#not(#and(#not(cube(Y)), #not(#and(key(Z), color(Z, 'white'[white]))))), #not(verb.like('5'[#id],Z))))))");
+
+// NLParseTestUnifyingListener("all pyramids only like red cubes", o.getSort("performative"), context, 'etaoin', "");
+// NLParseTestUnifyingListener("all pyramids like only cubes and white keys", o.getSort("performative"), context, 'etaoin', "");
+// NLParseTestUnifyingListener("put a block next to the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, space.next-to(X, '5'[#id])), block(X), [number.1])");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
