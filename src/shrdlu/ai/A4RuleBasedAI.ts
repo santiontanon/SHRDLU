@@ -829,6 +829,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 						}
 					}
 				}
+
 				return this.checkSpatialRelationBetweenCoordinates(relation, dx, dy, inFrontDirection);
 			} else {
 				if (o1 == null) {
@@ -948,8 +949,31 @@ class A4RuleBasedAI extends RuleBasedAI {
 					}
 				}
 			}
+		} else if (relation.name == "space.next-to") {
+			if (o1ID == o2ID) return false;
+			let o1:A4Object = this.game.findObjectByIDJustObject(o1ID);
+			let o2:A4Object = this.game.findObjectByIDJustObject(o2ID);
+			if (o1 != null && o2 != null) {
+				let dx2:number = 0;
+				let dy2:number = 0;
+				if (o1.x == null || o2.x == null) return null;
+				if (o1.x+o1.getPixelWidth() < o2.x) {
+					dx2 = o2.x - (o1.x+o1.getPixelWidth());
+				} else if (o2.x+o2.getPixelWidth() < o1.x) {
+					dx2 = o1.x - (o2.x+o2.getPixelWidth());
+				}
+				if (o1.y+o1.getPixelHeight() < o2.y) {
+					dy2 = o2.y - (o1.y+o1.getPixelHeight());
+				} else if (o2.y+o2.getPixelHeight() < o1.y) {
+					dy2 = o1.y - (o2.y+o2.getPixelHeight());
+				}
+				if (dx2 == 0 && dy2 == 0) {
+					if (o1.findObjectByID(o2ID) == null && 
+						o2.findObjectByID(o1ID) == null) return true;
+				}
+				return false;
+			}
 		}
-
 		return null;
 	}
 
@@ -1062,6 +1086,25 @@ class A4RuleBasedAI extends RuleBasedAI {
 				relations.push(this.o.getSort("space.west.of"));
 				if (o2.direction == A4_DIRECTION_LEFT) relations.push(this.o.getSort("space.in.front.of"));
 				if (o2.direction == A4_DIRECTION_RIGHT) relations.push(this.o.getSort("space.behind"));
+			}
+		}
+
+		{
+			let dx2:number = 0;
+			let dy2:number = 0;
+			if (o1.x+o1.getPixelWidth() < o2.x) {
+				dx2 = o2.x - (o1.x+o1.getPixelWidth());
+			} else if (o2.x+o2.getPixelWidth() < o1.x) {
+				dx2 = o1.x - (o2.x+o2.getPixelWidth());
+			}
+			if (o1.y+o1.getPixelHeight() < o2.y) {
+				dy2 = o2.y - (o1.y+o1.getPixelHeight());
+			} else if (o2.y+o2.getPixelHeight() < o1.y) {
+				dy2 = o1.y - (o2.y+o2.getPixelHeight());
+			}
+			if (dx2 == 0 && dy2 == 0) {
+				if (o1.findObjectByID(o2ID) == null && 
+					o2.findObjectByID(o1ID) == null) relations.push(this.o.getSort("space.next-to"));
 			}
 		}
 

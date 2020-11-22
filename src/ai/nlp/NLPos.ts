@@ -914,8 +914,7 @@ this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromStrin
   */
 this.addTokenPOS(new PartOfSpeech("near to", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("not including", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
-  /*
-NLPAddTokenPOS("next to", PartOfSpeech.generatePreposition("next to", POS_TYPE_PPREPOSITION_PLACE));
+this.addTokenPOS(new PartOfSpeech("next to", "space.next-to", Term.fromString("preposition('space.next-to'[space.next-to])", o), 1.0));
   /*
   "opposite of",
   "opposite to",
@@ -1459,6 +1458,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardNounPOS("vg 8020", "vg8020.computer", o, multitokens_raw);
   this.addStandardNounPOS("vg8020", "vg8020.computer", o, multitokens_raw);
   this.addTokenPOS(new PartOfSpeech("name", "name", Term.fromString("noun('name'[name], [singular])", o), 1.0));
+  this.addStandardNounPOS("neighbor", "relation.neighbor", o, multitokens_raw);  
   this.addUncountableNounPOS("nitrogen", "nitrogen", o);
   this.addTokenPOS(new PartOfSpeech("north", "north", Term.fromString("noun('north'[north], [singular])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("northeast", "northeast", Term.fromString("noun('northeast'[northeast], [singular])", o), 1.0));

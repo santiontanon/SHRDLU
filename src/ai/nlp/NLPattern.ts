@@ -239,6 +239,13 @@ class NLPattern {
 			term2 = term2.applyBindings(listenerBindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_doesnotsubsume(parse, term2.attributes[0], term2.attributes[1], parser.o);
 			return nlprl;
+		} else if (this.term.functor.name == "#equal") {
+			let term2:Term = this.term.applyBindings(parse.bindings);
+			let listenerBindings:Bindings = new Bindings();
+			listenerBindings.l.push([rule.listenerVariable, new ConstantTermAttribute(context.ai.selfID, parser.o.getSort("#id"))]);
+			term2 = term2.applyBindings(listenerBindings);
+			let  nlprl:NLParseRecord[] = this.specialfunction_equal(parse, term2.attributes[0], term2.attributes[1], parser.o);
+			return nlprl;
 		} else if (this.term.functor.name == "#notequal") {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let listenerBindings:Bindings = new Bindings();
@@ -1018,6 +1025,17 @@ class NLPattern {
 	}
 
 
+	specialfunction_equal(parse:NLParseRecord, att1:TermAttribute, att2:TermAttribute, o:Ontology) : NLParseRecord[]
+	{
+		let bindings:Bindings = new Bindings();
+		if (Term.unifyAttribute(att1, att2, true, bindings)) {
+			let parse2:NLParseRecord = new NLParseRecord(parse.nextTokens, parse.previousPOS, parse.bindings.concat(bindings), parse.derefs, parse.ruleNames, parse.priorities);
+			return [parse2];
+		}
+		return null;
+	}
+
+
 	specialfunction_notequal(parse:NLParseRecord, att1:TermAttribute, att2:TermAttribute, o:Ontology) : NLParseRecord[]
 	{
 		if (att1 instanceof VariableTermAttribute) {
@@ -1270,11 +1288,11 @@ class NLPattern {
 			console.error("Unclosed quotation while parsing NLPattern: " + str);
 			return null;
 		}
-		if (parentheses > 0) {
+		if (parentheses != 0) {
 			console.error("Unclosed parenthesis while parsing NLPattern: " + str);
 			return null;
 		}
-		if (squareBrackets > 0) {
+		if (squareBrackets != 0) {
 			console.error("Unclosed square brackets while parsing NLPattern: " + str);
 			return null;
 		}
@@ -1340,6 +1358,8 @@ class NLPattern {
 
 	static fromStringAlternative(str:string, o:Ontology, variableNames:string[], variableValues:TermAttribute[]) : NLPattern
 	{
+		// console.log("fromStringAlternative: " + str);
+
 		if (str.charAt(0) != '(' ||
 			str.charAt(str.length-1) != ')') {
 			console.error("NLPattern.fromStringAlternative: string does not start and end with parentheses!");

@@ -1614,7 +1614,12 @@ NLParseTestUnifyingListener("put a small cube and a pyramid on the crate and the
 NLParseTestUnifyingListener("can qwerty help me with the crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.can('qwerty'[#id], verb.help('qwerty'[#id], '1'[#id], '5'[#id])))");
 NLParseTestUnifyingListener("i cannot get in the kitchen", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], #not(verb.can('1'[#id], verb.enter('1'[#id], 'room1'[#id]))))");
 NLParseTestUnifyingListener("i cannot sleep", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], #not(verb.can('1'[#id], verb.sleep('1'[#id]))))");
-
+NLParseTestUnifyingListener("what blocks are red and small?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(color(X, 'red'[red]), small(X))))");
+NLParseTestUnifyingListener("what blocks are red and next to the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(color(X, 'red'[red]), space.next-to(X, '5'[#id]))))");
+NLParseTestUnifyingListener("what blocks are red and next to a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), #and(color(X, 'red'[red]), #and(space.next-to(X, Y), crate(Y)))))");
+NLParseTestUnifyingListener("does the crate have any neighbors?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(object(X), relation.neighbor('5'[#id], X)))");
+NLParseTestUnifyingListener("what are the neighbors of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), relation.neighbor(X, '5'[#id])))");
+NLParseTestUnifyingListener("which blocks are neighbors of the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(block(X), relation.neighbor(X, '5'[#id])))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

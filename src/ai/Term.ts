@@ -1548,12 +1548,18 @@ class Term {
         }
 
         let attributeStrings:string[] = Term.tokenizeStringByAttribute(str.substring(idx));
-        if (attributeStrings == null) return null;
+        if (attributeStrings == null) {
+            console.error("Term.parseFromString: attributeStrings is null!");
+            return null;
+        }
 
         for(let attributeString of attributeStrings)
         {
             let att:TermAttribute = Term.parseAttribute(attributeString, o, variableNames, variableValues);
-            if (att == null) return null;
+            if (att == null) {
+                console.error("Term.parseFromString: Term.parseAttribute returned null!");
+                return null;
+            }
             term.attributes.push(att);
         }
 
@@ -1649,6 +1655,12 @@ class Term {
                             console.error("Term.parseAttribute: unknown sort " + tmp2);
                             return null;
                         }
+
+                        if (tmp.charAt(tmp.length-1) == "]") {
+                            console.error("Variable name ends in ], something went wrong!: " + tmp);
+                        }
+                        // console.log("   variableName(1): " + tmp);
+
                         let a_term:TermAttribute = new VariableTermAttribute(a_sort, tmp);
                         if (variableNames.indexOf(tmp) == -1) {
                             variableNames.push(tmp);
@@ -1710,15 +1722,22 @@ class Term {
             } else if (c == "(") {
                 // functor( ... )
                 let a_term:TermAttribute = Term.fromStringInternal(attributeString, o, variableNames, variableValues);
-                if (a_term == null) return null;
+                if (a_term == null) {
+                    console.error("Term.parseAttribute: Term.parseFromString returned null!");            
+                    return null;
+                }
                 return a_term;
             } 
             tmp += c;
         }
 
+        if (tmp.charAt(tmp.length-1) == "]") {
+            console.error("Variable name ends in ], something went wrong!: " + tmp);
+        }
+
         // VariableName
 //        console.log("variableNames: " + variableNames);
-//        console.log("   variableName: " + tmp);
+        // console.log("   variableName(2): " + tmp);
         idx = variableNames.indexOf(tmp);
         if (idx == -1) {
 //            console.log("   it's a new one");

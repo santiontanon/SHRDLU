@@ -2472,7 +2472,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C3, OBJECT3)"/>
 
     <NLPattern name="q.predicate-does-X-have-any-haveable-relation"
-    		   head="perf.q.predicate(LISTENER, #cons(RELATION:[haveable-relation], OBJECT, V))"
+    		   head="perf.q.predicate(LISTENER, QUERY)"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
@@ -2480,9 +2480,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X2, [singular], P2, C2)
 			   		 verb('verb.have'[symbol], N3, P3, [infinitive-tense])
 			   		 ('any'|'some'|indefinite-article('a'[symbol], [singular]))
-			   		 noun(RELATION, N4)
+			   		 noun(RELATION:[haveable-relation], N4)
 			   		 ('!'|'?')*
-			   		 #derefFromContext(C2, OBJECT)"
+			   		 #derefFromContext(C2, OBJECT)
+			   		 (
+			   		 	#subsumes([spatial-relation], RELATION) #equal(QUERY, #and(object(V), #cons(RELATION, OBJECT, V))) |
+			   		 	#doesnotsubsume([spatial-relation], RELATION) #equal(QUERY, #cons(RELATION, OBJECT, V))
+			   		 )"
 			   priority="250"/>
 
     <NLPattern name="q.predicate-is-propernoun-here"
@@ -3136,13 +3140,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 'who' verb(VERB, N, P, [present-tense]) ('!'|'?')* "/>
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] 'who' verb(VERB, N, P, [present-tense]) ('!'|'?')* "/>
     <NLPattern name="q.query-is-query"
     		   head="perf.q.query(LISTENER, V, QUERY)"	
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
-			   		 [[('can'|'could'|'would') 'you'] 'tell' 'me'] 'what' verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
+			   		 [[('can'|'could'|'would') 'you'] 'tell' 'me'] 'what' 
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefQuery(C, V, QUERY)"/>
     <NLPattern name="q.query-is-preposition-noun"
     		   head="perf.q.query(LISTENER, X, #and(object(X), #and(#cons(NOUN, Y), #cons(PREPOSITION, X, Y))))"	
@@ -3244,6 +3249,34 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 ('!'|'?')*
 			   		 #derefFromContext(C2, OBJECT2)"/>
+
+    <NLPattern name="q.query-noun-is-adj|prep-and-adj|prep"
+    		   head="perf.q.query(LISTENER, X, #and(#cons(NOUN, X), #and(QUERY1, QUERY2)))"	
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which') 
+			   		 noun(NOUN, N1) verb('verb.be'[symbol], N, P, [present-tense]) 
+			   		 (
+			   		 	adjective(ADJ1:[property-with-value]) #sortParent(ADJ1, ADJ1_PARENT:[property-with-value]) #equal(QUERY1, #cons(ADJ1_PARENT, X, ADJ1)) |
+			   		 	adjective(ADJ1B) #doesnotsubsume([property-with-value], ADJ1B) #equal(QUERY1, #cons(ADJ1B, X)) |
+			   		 	preposition(PREP1) nounPhrase(X1, N1, P1, C1) 
+			   		 	(
+			   		 		#derefFromContext(C1, OBJECT1) #equal(QUERY1, #cons(PREP1, X, OBJECT1)) |
+			   		 		#derefQuery(C1, Y, SUBQUERY1) #equal(QUERY1, #and(#cons(PREP1, X, Y), SUBQUERY1))
+			   		 	)
+			   		 )
+			   		 'and'
+			   		 (
+			   		 	adjective(ADJ2:[property-with-value]) #sortParent(ADJ2, ADJ2_PARENT:[property-with-value]) #equal(QUERY2, #cons(ADJ2_PARENT, X, ADJ2)) |
+			   		 	adjective(ADJ2B) #doesnotsubsume([property-with-value], ADJ2B) #equal(QUERY2, #cons(ADJ2B, X)) |
+			   		 	preposition(PREP2) nounPhrase(X2, N2, P2, C2)
+			   		 	(
+			   		 		#derefFromContext(C2, OBJECT2) #equal(QUERY2, #cons(PREP2, X, OBJECT2)) |
+			   		 		#derefQuery(C2, Y, SUBQUERY2) #equal(QUERY2, #and(#cons(PREP2, X, Y), SUBQUERY2))
+			   		 	)			   		 	
+			   		 )
+			   		 ('!'|'?')*"/>
 
     <NLPattern name="q.query-what-do-obj-verb"
 			   head="perf.q.query(LISTENER, V, #cons(V2,QUERY_ARG1,V))"
@@ -4341,6 +4374,36 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
 			   		 noun(NOUN, NN)
 			   		 ('!'|'?')*"/>
+
+    <NLPattern name="q.query-what-be-the-haveable-relation-of-obj"
+    		   head="perf.q.query(LISTENER, V, QUERY)"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
+			   		 ('who'|'which'|'what')
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 ['the'] noun(RELATION:[haveable-relation], NR) 'of'
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C1, OBJ1)
+			   		 (
+			   		 	#subsumes([spatial-relation], RELATION) #equal(QUERY, #and(object(V), #cons(RELATION, V, OBJ1))) |
+			   		  	#doesnotsubsume([spatial-relation], RELATION) #equal(QUERY, #cons(RELATION, V, OBJ1))
+			   		 )"/>
+
+    <NLPattern name="q.query-what-query-be-the-haveable-relation-of-obj"
+    		   head="perf.q.query(LISTENER, V, #and(QUERY1, #cons(RELATION:[haveable-relation], V, OBJ2)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] 
+			   		 ('who'|'which'|'what')
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 verb('verb.be'[symbol], N, P, [present-tense])
+			   		 ['the'] noun(RELATION, NR) 'of'
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ('!'|'?')*
+			   		 #derefQuery(C1, V, QUERY1)
+			   		 #derefFromContext(C2, OBJ2)"/>
 
     <!-- Patterns for performative "perf.q.whois.name" and "'perf.q.whois.no'name" -->
     <NLPattern name="q.whois.name-propernoun"

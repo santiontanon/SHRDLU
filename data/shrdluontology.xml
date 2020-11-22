@@ -181,6 +181,7 @@
     <sort name="#concatenateSymbols" super="parser-function"/>
     <sort name="#subsumes" super="parser-function"/>
     <sort name="#doesnotsubsume" super="parser-function"/>
+    <sort name="#equal" super="parser-function"/>
     <sort name="#notequal" super="parser-function"/>
     <sort name="#sortParent" super="parser-function"/>
     <sort name="#completeVerbArgumentsFromContext" super="parser-function"/>
@@ -836,8 +837,11 @@
     <sort name="space.farthest-from" super="spatial-relation,superlative-adjective"/>
     <sort name="space.far" super="spatial-relation"/>
     <sort name="space.between" super="spatial-relation"/>
+    <sort name="space.next-to" super="spatial-relation"/>
     <sort name="ground" super="space.location"/>
     <sort name="verb.contains" super="spatial-relation,relation-verb"/>
+
+    <sort name="relation.neighbor" super="symmetric-relation,haveable-relation,spatial-relation"/>
 
     <sort name="in-addition" super="adverb"/>
     <sort name="respectively" super="adverb"/>

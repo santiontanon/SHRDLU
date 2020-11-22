@@ -283,7 +283,11 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	checkSpatialRelation(relation:Sort, o1ID:string, o2ID:string, referenceObject:string) : boolean
 	{
 		if (o1ID == "shrdlu") o1ID = "shrdlu-arm";
-		if (o2ID == "shrdlu") o2ID = "shrdlu-arm";		
+		if (o2ID == "shrdlu") o2ID = "shrdlu-arm";
+		
+		// there is no spatial relation between an object and itself:
+		if (o1ID == o2ID) return false;
+
 		let o1:ShrdluBlock = this.world.getObject(o1ID);
 		let o2:ShrdluBlock = this.world.getObject(o2ID);
 		if (o1 == null || o2 == null) return null;
@@ -291,22 +295,28 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (relation.name == "space.outside.of") {
 			if (!o1.isInside(o2)) return true;
 			return false;
+
 		} else if (relation.name == "space.inside.of") {			
 			return o1.isInside(o2);
+
 		} else if (relation.name == "space.directly.on.top.of") {
 			return o1.isOnTopOf(o2);
+
 		} else if (relation.name == "space.directly.under") {
 			return o2.isOnTopOf(o1);
+
 		} else if (relation.name == "space.near") {
 			let distance:number = this.world.distanceBetweenObjects(o1, o2);
 			if (distance == null) return null;
 			if (distance < SPACE_NEAR_FAR_THRESHOLD) return true;
 			return false;
+
 		} else if (relation.name == "space.far") {
 			let distance:number = this.world.distanceBetweenObjects(o1, o2);
 			if (distance == null) return null;
 			if (distance >= SPACE_NEAR_FAR_THRESHOLD) return true;
 			return false;
+
 		} else if (relation.name == "space.north.of" ||
 			relation.name == "space.east.of" ||
 			relation.name == "space.west.of" ||
@@ -331,7 +341,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			if (o1.z+o1.dz < o2.z) {
 				dz = o2.z - (o1.z+o1.dz);
 			} else if (o2.z+o2.dz < o1.z) {
-				dx = o1.z - (o2.z+o2.dz);
+				dz = o1.z - (o2.z+o2.dz);
 			}
 			if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
 				let angle:number = Math.atan2(dz_raw,dx_raw);
@@ -358,14 +368,40 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 					return angle>-(7*Math.PI/8) && angle<=-(5*Math.PI/8) && (dx > 0 || dz > 0);
 				}
 			}
+
 		} else if (relation.name == "taller") {
 			return o1.dy > o2.dy;
+
 		} else if (relation.name == "shorter-tallness") {
 			return o2.dy > o1.dy;
+
+		} else if (relation.name == "space.next-to") {
+			let dx:number = 0;
+			let dz:number = 0;
+			if (o1.x+o1.dx < o2.x) {
+				dx = o2.x - (o1.x+o1.dx);
+			} else if (o2.x+o2.dx < o1.x) {
+				dx = o1.x - (o2.x+o2.dx);
+			}
+			if (o1.z+o1.dz < o2.z) {
+				dz = o2.z - (o1.z+o1.dz);
+			} else if (o2.z+o2.dz < o1.z) {
+				dz = o1.z - (o2.z+o2.dz);
+			}
+			if (dx==0 && dz==0) {
+				if (o1.y+o1.dy > o2.y &&
+					o2.y+o2.dy > o1.y) {
+					if (o1.isInside(o2) || o2.isInside(o1)) return false;
+					return true;
+				}
+			}
+			return false;
+
 		} else if (relation.is_a(this.cache_sort_space_at)) {
 			if (o1 == this.world.objectInArm && o1 == this.world.shrdluArm) return true;
 			if (o1.isInside(o2) || o1.isOnTopOf(o2)) return true;
 			return false;
+
 		}
 
 		return null;
@@ -385,6 +421,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		let o2:ShrdluBlock = this.world.getObject(o2ID);
 		if (relations == null) relations = [];
 		if (o1 == null || o2 == null) return null;
+		if (o1ID == o2ID) return relations;
 
 		if (o1.isInside(o2)) {
 			relations.push(this.o.getSort("space.inside.of"))
@@ -420,7 +457,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		if (o1.z+o1.dz < o2.z) {
 			dz = o2.z - (o1.z+o1.dz);
 		} else if (o2.z+o2.dz < o1.z) {
-			dx = o1.z - (o2.z+o2.dz);
+			dz = o1.z - (o2.z+o2.dz);
 		}
 		if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
 			let angle:number = Math.atan2(dz_raw,dx_raw);
@@ -452,6 +489,15 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				if (dx > 0) {
 					relations.push(this.o.getSort("space.west.of"));
 					relations.push(this.o.getSort("space.left.of"));
+				}
+			}
+		}
+		// space.next-to:
+		if (dx==0 && dz==0) {
+			if (o1.y+o1.dy > o2.y &&
+				o2.y+o2.dy > o1.y) {
+				if (!o1.isInside(o2) && !o2.isInside(o1)) {
+					relations.push(this.o.getSort("space.next-to"));
 				}
 			}
 		}
