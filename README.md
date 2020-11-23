@@ -1,6 +1,6 @@
-# Play on your browser (v3.7)
+# Play on your browser (v3.8)
 
-https://braingames.santiontanon.dev/games/shrdlu/v37/shrdlu.html
+https://braingames.santiontanon.dev/games/shrdlu/v38/shrdlu.html
 
 # SHRDLU
 
