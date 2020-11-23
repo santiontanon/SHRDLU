@@ -31,11 +31,11 @@ class Memorize_InferenceEffect extends InferenceEffect {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
 				let causeRecord:CauseRecord = this.generateCauseRecord(inf.inferences[0].originalTarget, inf.inferences[0].endResults[0], ai);
 				ai.intentions.push(new IntentionRecord(term, null, null, causeRecord, ai.timeStamp));
+				console.log("Memorize_InferenceEffect, we already knew: " + inf.inferences[0].endResults);
 			}
 		} else {
 			if (inf.inferences[0].endResults.length == 0) {
 				// there was no contradiction... we can add the sentence safely
-				// we already knew, just say ok:
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok('"+targetCharacterID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				memorize = true;
@@ -51,8 +51,10 @@ class Memorize_InferenceEffect extends InferenceEffect {
 			let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>(this.effectParameter.attributes[2])).term, ai.o);
 			for(let s of s_l) {
 				if (s.terms.length == 1 && s.sign[0] == true) {
+					console.log("Memorize_InferenceEffect, term: " + s);
 					ai.addLongTermTerm(s.terms[0], MEMORIZE_PROVENANCE);
 				} else {
+					console.log("Memorize_InferenceEffect, sentence: " + s);
 					ai.addLongTermRuleNow(s, MEMORIZE_PROVENANCE);
 				}
 			}				

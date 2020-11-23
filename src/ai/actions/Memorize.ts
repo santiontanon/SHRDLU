@@ -21,7 +21,6 @@ class Memorize_IntentionAction extends IntentionAction {
 		let timeModifierPresent:boolean = false;
 
 		// 1) see if it has variables AND is more than one sentence:
-		let negated_s_l:Sentence[] = [];
 		for(let s of s_l) {
 			if (s.getAllVariables().length > 0) variablesPresent = true;
 			for(let t of s.terms) {
@@ -31,8 +30,8 @@ class Memorize_IntentionAction extends IntentionAction {
 		}
 
 		if (timeModifierPresent) {
-			console.log("time modifiers present, not memorizing for now...");
-			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))";
+			console.warn("time modifiers present, not memorizing for now...");
+			let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.unsure("+requester+"))";
 			let term:Term = Term.fromString(tmp, ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			ir.succeeded = true;
@@ -65,29 +64,45 @@ class Memorize_IntentionAction extends IntentionAction {
 			}
 		}
 
+
 		if (s_l.length > 1 && variablesPresent) {
+			// Note: I added this case earlier in the development of the game, but I cannot figure out what case was it covering,
+			// so, I removed it as I cannot find any sentence for which this is needed.
+
 			// this is the complicated case, we can just launch an inference process to see if we need to memorize or we already knew
-			console.log("executeIntention memorize: sentence of length > 1 with variables, this is a complex case, we need to try to negate the sentences: " + s_l);
-			let negated_s:Sentence = new Sentence([],[]);
-			for(let s of s_l) {
-				if (s.getAllVariables().length > 0) variablesPresent = true;
-				for(let t of s.terms) {
-					if (t.functor.is_a(ai.o.getSort("time.past"))) timeModifierPresent = true;
-					if (t.functor.is_a(ai.o.getSort("time.future"))) timeModifierPresent = true;
-				}
-				let tmp:Sentence[] = s.negate();
-				if (tmp == null || tmp.length != 1) {
-					console.error("executeIntention memorize: cannot negate sentences in intention!: " + intention);		
-					let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.unsure("+requester+"))";
-					let term:Term = Term.fromString(tmp, ai.o);
-					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
-					return true;
-				}
-				negated_s.terms = negated_s.terms.concat(tmp[0].terms);
-				negated_s.sign = negated_s.sign.concat(tmp[0].sign);
-			}
-			negated_s_l = [negated_s];
-			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, true)));
+			// console.log("executeIntention memorize: sentence of length > 1 with variables, this is a complex case, we need to try to negate the sentences: " + s_l);
+			// let negated_s_l:Sentence[] = [];
+			// let negated_s:Sentence = new Sentence([],[]);
+			// for(let s of s_l) {
+			// 	if (s.getAllVariables().length > 0) variablesPresent = true;
+			// 	for(let t of s.terms) {
+			// 		if (t.functor.is_a(ai.o.getSort("time.past"))) timeModifierPresent = true;
+			// 		if (t.functor.is_a(ai.o.getSort("time.future"))) timeModifierPresent = true;
+			// 	}
+			// 	let tmp:Sentence[] = s.negate();
+			// 	if (tmp == null || tmp.length != 1) {
+			// 		console.error("executeIntention memorize: cannot negate sentences in intention!: " + intention);		
+			// 		let tmp:string = "action.talk('"+ai.selfID+"'[#id], perf.ack.unsure("+requester+"))";
+			// 		let term:Term = Term.fromString(tmp, ai.o);
+			// 		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			// 		return true;
+			// 	}
+			// 	negated_s.terms = negated_s.terms.concat(tmp[0].terms);
+			// 	negated_s.sign = negated_s.sign.concat(tmp[0].sign);
+			// }
+			// negated_s_l = [negated_s];
+			// ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, true)));
+
+
+			// Alternative code with better negation:
+			// let targets:Sentence[][] = [];
+			// let negatedExpression:Term = new Term(ai.o.getSort("#not"),
+			// 								 	  [new TermTermAttribute((<TermTermAttribute>(intention.attributes[2])).term)])
+			// console.log("Memorize, negatedExpression: " + negatedExpression);
+			// let target:Sentence[] = Term.termToSentences(negatedExpression, ai.o);
+			// targets.push(target)			
+			// ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, false, null, new Memorize_InferenceEffect(intention, true)));
+			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, false)));
 		} else {
 			if (s_l.length == 1 && s_l[0].terms.length == 1) {
 				// Check for the special case, where the player is just correcting a wrong statement she stated in the past:

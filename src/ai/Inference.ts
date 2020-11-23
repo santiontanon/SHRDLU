@@ -501,7 +501,7 @@ class InterruptibleResolution
 			}
 
 			if (this.total_resolutions >= INFERENCE_MAX_TOTAL_RESOLUTIONS) {
-				console.log("step_internal: final interruption with #resolutions = " + resolutions + "(" + this.total_resolutions + ") end results: " + this.endResults.length);
+				console.log("step_internal: final interruption with #resolutions = " + resolutions + " (" + this.total_resolutions + ") end results: " + this.endResults.length);
 				this.internal_step_state = 2;
 				return null;
 			}
@@ -509,12 +509,12 @@ class InterruptibleResolution
 //			console.log("resolvents.length (after target): " + resolvents.length);
 			if (resolutions >= INFERENCE_MAX_RESOLUTIONS_PER_STEP) {
 				// we need to interrupt:
-				console.log("step_internal: interrupted with #resolutions = " + resolutions + "(" + this.total_resolutions + "), closed "+this.closed.length+", end results: " + this.endResults.length);
+				console.log("step_internal: interrupted with #resolutions = " + resolutions + " (" + this.total_resolutions + "), closed "+this.closed.length+", end results: " + this.endResults.length);
 				return null;
 			}
 		}
 
-		console.log("step_internal: finished with #resolutions = " + resolutions + "(" + this.total_resolutions + "), closed: "+this.closed.length+", end results: " + this.endResults.length);
+		console.log("step_internal: finished with #resolutions = " + resolutions + " (" + this.total_resolutions + "), closed: "+this.closed.length+", end results: " + this.endResults.length);
 		//console.log("closed: " + this.closed)
 		this.internal_step_state = 1;
 		return this.newResolvents;

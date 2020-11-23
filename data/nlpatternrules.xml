@@ -338,6 +338,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, OBJ)
 			   		 #derefQuery(C3, V3, QUERY3)"
 			   priority="125"/>
+	<NLPattern name="inform-obj-not-verb-query"
+		       head="perf.inform.internal(LISTENER, #or(#not(QUERY3),#not(#cons(VERB, OBJ, V3))))"
+			   body="nounPhrase(X, N, P, C) ('do'|'does') 'not' verb(VERB, N, P, T) 
+			   		 #notequal(VERB, 'verb.be'[symbol])
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C, OBJ)
+			   		 #derefQuery(C3, V3, QUERY3)"/>
 	<NLPattern name="inform-obj-verb-query-and-query"
 		       head="perf.inform.internal(LISTENER, #list(#or(#not(QUERY3),#cons(VERB:[symbol], OBJ, V3)), 
 		       											  #or(#not(QUERY4),#cons(VERB, OBJ, V4))))"
@@ -374,8 +381,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 
 	<NLPattern name="inform-obj-only-verb-query-and-query"
 		       head="perf.inform.internal(LISTENER, #list(#or(#not(QUERY3),#cons(VERB:[symbol], OBJ, V3)), 
-		       											  #or(#not(QUERY4),#cons(VERB, OBJ, V4)),
-		       											  #or(#not(#and(#not(QUERY3),#not(QUERY4))),#not(#cons(VERB, OBJ, V4))) ))"
+		       											  #or(#not(QUERY4),#cons(VERB, OBJ, V3)),
+		       											  #or(#not(#and(#not(QUERY3),#not(QUERY4))),#not(#cons(VERB, OBJ, V3))) ))"
 			   body="nounPhrase(X, N, P, C) 
 			   		 #derefFromContext(C, OBJ)
 			   		 'only' verb(VERB, VN, VP, VT)
@@ -383,11 +390,11 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [','] ('or'|'and')
 			   		 nounPhrase(X4, N4, P4, C4)
 			   		 #derefQuery(C3, V3, QUERY3)
-			   		 #derefQuery(C4, V4, QUERY4)"/>
+			   		 #derefQuery(C4, V3, QUERY4)"/>
 
 	<NLPattern name="inform-obj-only-verb-query-and-query2"
 		       head="perf.inform.internal(LISTENER, #list(#or(#not(QUERY3),#cons(VERB:[symbol], OBJ, V3)), 
-		       											  #or(#not(QUERY4),#cons(VERB, OBJ, V4)),
+		       											  #or(#not(QUERY4),#cons(VERB, OBJ, V3)),
 		       											  #or(#not(#and(#not(QUERY3),#not(QUERY4))),#not(#cons(VERB, OBJ, V4))) ))"
 			   body="nounPhrase(X, N, P, C) 
 			   		 #derefFromContext(C, OBJ)
@@ -396,7 +403,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('or'|'and')
 			   		 nounPhrase(X4, N4, P4, C4)
 			   		 #derefQuery(C3, V3, QUERY3)
-			   		 #derefQuery(C4, V4, QUERY4)"/>
+			   		 #derefQuery(C4, V3, QUERY4)"/>
 
 	<NLPattern name="inform-universal-verb-object"
 		       head="perf.inform.internal(LISTENER, #or(#not(LEFTSIDE), #cons(VERB, V:[#id], OBJECT)))"
@@ -521,26 +528,29 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 indefinite-article('a'[symbol], [singular])
 			   		 noun(X2, N2)
 					 #derefFromContext(C, SUBJECT)"/>
-	<NLPattern name="inform-relationverb-noun"
+
+	<!-- These are old rules that parsed sentences in a deprecated format -->
+	<!--NLPattern name="inform-relationverb-noun"
 			   head="perf.inform.internal(LISTENER, #list(#cons(VERB, SUBJECT, X2), #or(#not(#cons(X2, V:[#id])), #cons(VERB, SUBJECT, V))))"
 			   body="nounPhrase(X, N, P, C) verb(VERB, N, P, T) #symbolToSort(VERB, VERB_SORT:[relation-verb])
 			   		 #notequal(VERB, 'verb.have'[symbol])
 			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
 					 #derefFromContext(C, SUBJECT)"
 			   priority="150"/>	
-	<NLPattern name="inform-relationverb-have-noun"
-			   head="perf.inform.internal(LISTENER, verb.have(SUBJECT, X2))"
-			   body="nounPhrase(X, N, P, C) verb(VERB:'verb.have'[symbol], N, P, T)
-			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
-					 #derefFromContext(C, SUBJECT)"
-			   priority="125"/>	
 	<NLPattern name="inform-not-relationverb-noun"
 			   head="perf.inform.internal(LISTENER, #list(#not(#cons(VERB, SUBJECT, X2)), #or(#not(#cons(X2, V:[#id])), #not(#cons(VERB, SUBJECT, V)))))"
 			   body="nounPhrase(X, N, P, C) 
 			   		 verb('verb.do'[symbol], ND, PD, [present-tense]) 'not'
 			   		 verb(VERB, NV, PV, TV) #symbolToSort(VERB, VERB_SORT:[relation-verb])
 			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
-					 #derefFromContext(C, SUBJECT)"/>	
+					 #derefFromContext(C, SUBJECT)"/-->
+
+	<NLPattern name="inform-relationverb-have-noun"
+			   head="perf.inform.internal(LISTENER, verb.have(SUBJECT, X2))"
+			   body="nounPhrase(X, N, P, C) verb(VERB:'verb.have'[symbol], N, P, T)
+			   		 (noun(X2, [plural])|noun(X2, [uncountable]))
+					 #derefFromContext(C, SUBJECT)"
+			   priority="125"/>	
 	<NLPattern name="inform-not-relationverb-have-noun"
 			   head="perf.inform.internal(LISTENER, #not(verb.have(SUBJECT, X2)))"
 			   body="nounPhrase(X, N, P, C) 
@@ -2421,7 +2431,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefFromContext(C2, SUBJECT)
     		   		 #derefFromContext(C3, OBJECT)"/> 
 
-    <NLPattern name="q.predicate-do-obj-verb-noun"
+    <!-- deprecated rule -->
+    <!--NLPattern name="q.predicate-do-obj-verb-noun"
     		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, X3))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
@@ -2431,7 +2442,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb(VERB, N, P, [present-tense]) #symbolToSort(VERB, VERB_SYMBOL:[relation-verb])
 			   		 (noun(X3, [plural])|noun(X3, [uncountable]))
     		   		 ('!'|'?')* 
-    		   		 #derefFromContext(C2, SUBJECT)"/> 
+    		   		 #derefFromContext(C2, SUBJECT)"/--> 
+
     <NLPattern name="q.predicate-do-i-verb-a-noun-past"
     		   head="perf.q.predicate(LISTENER, #and(V:#cons(VERB, SUBJECT, V2:[#id]), #and(time.past(V), #cons(X3, V2))))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2690,6 +2702,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C1, O1)
 			   		 #derefQuery(C2, V, QUERY2)"/>
 
+	<NLPattern name="q.predicate-obj-verb-noun"
+			   head="perf.q.predicate(LISTENER, #cons(VERB, O1, 'hypothetical-object'[#id]), #cons(X2, 'hypothetical-object'[#id]))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.do'[symbol], N, P, T)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 verb(VERB, NV, PV, TV)
+			   		 noun(X2, N2) #doesnotsubsume([time], X2) #doesnotsubsume([space.here], X2)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C1, O1)"
+			   priority="150"/>
+
 	<NLPattern name="q.predicate-obj-verb-reflexive"
 			   head="perf.q.predicate(LISTENER, #cons(VERB, O1, O1))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2760,7 +2785,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
 			   		 verb('verb.do'[symbol], N, P, T) nounPhrase(X, N, P, C) verb('verb.see'[symbol], N, P, T) 
 			   		 (noun(NOUN, [plural]) | noun(NOUN, [uncountable])) ('!'|'?')*
-					 #derefFromContext(C, SUBJECT)"/>
+					 #derefFromContext(C, SUBJECT)"
+			   priority="200"/>
     <NLPattern name="q.action-see4"
     		   head="perf.q.action(LISTENER, verb.see(LISTENER, QUERY_VARIABLE), QUERY, [number.1])"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -6124,6 +6150,26 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 noun(NOUN, NN)
 			   		 properNounCompound(PNOUN, PNN)"
 			   priority="50"/>
+
+    <NLPattern name="action-put-obj-prep-obj"
+    		   head="perf.request.action.internal(LISTENER, action.put-in(LISTENER, OBJ1, #cons(PREP, OBJ1, OBJ2)))"
+    		   body="('put'|'drop')
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 preposition(PREP) #subsumes([spatial-relation], PREP) #doesnotsubsume([space.at], PREP)
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefFromContext(C2, OBJ2)"
+			   priority="200"/>
+
+    <NLPattern name="action-put-query-prep-obj"
+    		   head="perf.request.action.internal(LISTENER, action.put-in(LISTENER, V, #cons(PREP, V, OBJ2)), QUERY, [number.1])"
+    		   body="('put'|'drop')
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 preposition(PREP) #subsumes([spatial-relation], PREP) #doesnotsubsume([space.at], PREP)
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #derefQuery(C1, V, QUERY)
+    		   		 #derefFromContext(C2, OBJ2)"
+			   priority="200"/>
 
 
     <NLPattern name="perf.request.action-phrasal-verb-respectively"

@@ -174,4 +174,19 @@
 	<sentence provenance="background" sentence="~space.next-to(X,Y); relation.neighbor(X,Y)"/>
 	<sentence provenance="background" sentence="space.next-to(X,Y); ~relation.neighbor(X,Y)"/>
 
+	<sentence provenance="background" sentence="~cube(X); ~box(X)"/>
+	<sentence provenance="background" sentence="~cube(X); ~table(X)"/>
+	<sentence provenance="background" sentence="~cube(X); ~pyramid(X)"/>
+	<sentence provenance="background" sentence="~cube(X); ~sphere(X)"/>
+	<sentence provenance="background" sentence="~box(X); ~table(X)"/>
+	<sentence provenance="background" sentence="~box(X); ~block(X)"/>
+	<sentence provenance="background" sentence="~box(X); ~pyramid(X)"/>
+	<sentence provenance="background" sentence="~box(X); ~sphere(X)"/>
+	<sentence provenance="background" sentence="~table(X); ~block(X)"/>
+	<sentence provenance="background" sentence="~table(X); ~pyramid(X)"/>
+	<sentence provenance="background" sentence="~table(X); ~sphere(X)"/>
+	<sentence provenance="background" sentence="~block(X); ~pyramid(X)"/>
+	<sentence provenance="background" sentence="~block(X); ~sphere(X)"/>
+	<sentence provenance="background" sentence="~pyramid(X); ~sphere(X)"/>
+
 </knowledgeBase>

@@ -1138,9 +1138,15 @@ NLParseTestUnifyingListener("who else is in the station too", o.getSort("perform
 NLParseTestUnifyingListener("who else is in the station as well", o.getSort("performative"), context, "etaoin", "perf.q.query(L:'etaoin'[#id], X, #and(character(X), #and(space.at(X,'location-aurora-station'[#id]), #and(!=(X,'1'[#id]), !=(X,L)))))")
 NLParseTestUnifyingListener("am i a video game protagonist?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], role('1'[#id], 'game-protagonist'[game-protagonist]))"); 
 NLParseTestUnifyingListener("is this a game?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], game('4'[#id]))");
-NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza])), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), verb.like('1'[#id], X))))");
-NLParseTestUnifyingListener("i do not like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], #not(verb.like('1'[#id], 'pizza':[pizza]))), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), #not(verb.like('1'[#id], X)))))");
-NLParseTestUnifyingListener("do i like pizza?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza]))");
+
+// deprecated (replaced by the 3 below):
+// NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza])), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), verb.like('1'[#id], X))))");
+// NLParseTestUnifyingListener("i do not like pizza", o.getSort("performative"), context, 'etaoin', "#list( perf.inform('etaoin'[#id], #not(verb.like('1'[#id], 'pizza':[pizza]))), perf.inform('etaoin'[#id], #or(#not(pizza(X:[#id])), #not(verb.like('1'[#id], X)))))");
+// NLParseTestUnifyingListener("do i like pizza?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], 'pizza':[pizza]))");
+NLParseTestUnifyingListener("i like pizza", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(pizza(X)), verb.like('1'[#id], X)))");
+NLParseTestUnifyingListener("i do not like pizza", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], #or(#not(pizza(X)), #not(verb.like('1'[#id], X))))");
+NLParseTestUnifyingListener("do i like pizza?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], 'hypothetical-object'[#id]), pizza('hypothetical-object'[#id]))");
+
 NLParseTestUnifyingListener("do i like this ship?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.like('1'[#id], '2':[#id]))");
 NLParseTestUnifyingListener("do you see any rover?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X), rover(X), [number.1])");
 NLParseTestUnifyingListener("do you see wheels?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], verb.see(V0,X:[#id]), wheel(X), [number.1])");
@@ -1629,11 +1635,9 @@ NLParseTestUnifyingListener("all pyramids like red crates", o.getSort("performat
 NLParseTestUnifyingListener("the crate likes red cubes", o.getSort("performative"), context, 'etaoin', "perf.inform('etaoin'[#id], V1:#or(#not(#and(cube(Y), color(Y, 'red'[red]))), verb.like('5'[#id],Y)))");
 NLParseTestUnifyingListener("the crate likes cubes or white keys", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(cube(Y)), verb.like('5'[#id],Y))),perf.inform('etaoin'[#id], #or(#not(#and(key(Z), color(Z, 'white'[white]))), verb.like('5'[#id],Z))))");
 NLParseTestUnifyingListener("the crate only likes red cubes", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(#and(cube(Y), color(Y, 'red'[red]))), verb.like('5'[#id],Y))), perf.inform('etaoin'[#id], #or(#and(cube(Z), color(Z, 'red'[red])), #not(verb.like('5'[#id],Z)))))");
-NLParseTestUnifyingListener("the crate only likes cubes and white keys", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(cube(Y)), verb.like('5'[#id],Y))), #list(perf.inform('etaoin'[#id], #or(#not(#and(key(Z), color(Z, 'white'[white]))), verb.like('5'[#id],Z))), perf.inform('etaoin'[#id], #or(#not(#and(#not(cube(Y)), #not(#and(key(Z), color(Z, 'white'[white]))))), #not(verb.like('5'[#id],Z))))))");
-
-// NLParseTestUnifyingListener("all pyramids only like red cubes", o.getSort("performative"), context, 'etaoin', "");
-// NLParseTestUnifyingListener("all pyramids like only cubes and white keys", o.getSort("performative"), context, 'etaoin', "");
-// NLParseTestUnifyingListener("put a block next to the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, space.next-to(X, '5'[#id])), block(X), [number.1])");
+NLParseTestUnifyingListener("the crate only likes cubes and white keys", o.getSort("performative"), context, 'etaoin', "#list(perf.inform('etaoin'[#id], #or(#not(cube(Z)), verb.like('5'[#id],Z))), #list(perf.inform('etaoin'[#id], #or(#not(#and(key(Z), color(Z, 'white'[white]))), verb.like('5'[#id],Z))), perf.inform('etaoin'[#id], #or(#not(#and(#not(cube(Z)), #not(#and(key(Z), color(Z, 'white'[white]))))), #not(verb.like('5'[#id],Z))))))");
+NLParseTestUnifyingListener("put the crate next to the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], space.next-to('5'[#id], 'room1'[#id])))");
+NLParseTestUnifyingListener("put a block next to the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, space.next-to(X, '5'[#id])), block(X), [number.1])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
