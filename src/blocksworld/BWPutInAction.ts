@@ -13,8 +13,7 @@ class BWPutIn_IntentionAction extends IntentionAction {
 		if (intention.functor.is_a(ai.o.getSort("action.put-in"))) return true;
 		if ((intention.functor.is_a(ai.o.getSort("action.drop")) ||
 		     intention.functor.is_a(ai.o.getSort("verb.leave"))) &&
-			(intention.attributes.length == 3 ||
-			 intention.attributes.length == 2)) return true;
+			intention.attributes.length >= 2) return true;
 		return false;
 	}
 
@@ -29,10 +28,19 @@ class BWPutIn_IntentionAction extends IntentionAction {
 		let denyrequestCause:Term = null;
 
 		for(let intention of alternative_actions) {
-			if (intention.attributes.length != 3) continue;
+			if (intention.attributes.length < 3) continue;
 			let objectID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
 			let destinationID:string = (<ConstantTermAttribute>(intention.attributes[2])).value;
 			let objectToPut:ShrdluBlock = null;
+			let specificX:number = null;
+			let specificZ:number = null;
+
+			if (intention.attributes.length>=5 &&
+				(intention.attributes[3] instanceof ConstantTermAttribute) &&
+				(intention.attributes[4] instanceof ConstantTermAttribute)) {
+				specificX = Number((<ConstantTermAttribute>intention.attributes[3]).value);
+				specificZ = Number((<ConstantTermAttribute>intention.attributes[4]).value);
+			}
 
 			// Check if we are holding the target object:
 			this.pickupObject = undefined;
@@ -96,6 +104,12 @@ class BWPutIn_IntentionAction extends IntentionAction {
 			// find the position closest to the arm:
 			let distance:number = null;
 			for(let position of positions) {
+				if (specificX != null) {
+					if (position[0] != specificX) continue;
+				}
+				if (specificZ != null) {
+					if (position[2] != specificZ) continue;
+				}
 				let d:number = (position[0] - world.shrdluArm.x)*(position[0] - world.shrdluArm.x) + 
 							   (position[1] - world.shrdluArm.y)*(position[1] - world.shrdluArm.y) + 
 							   (position[2] - world.shrdluArm.z)*(position[2] - world.shrdluArm.z);

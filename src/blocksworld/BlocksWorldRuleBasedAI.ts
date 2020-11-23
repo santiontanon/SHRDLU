@@ -809,14 +809,27 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			} else if ((action.functor.is_a_string("action.put-in") ||
 				 	    action.functor.is_a_string("action.drop") ||
 				 	    action.functor.is_a_string("verb.leave")) && 
-					   action.attributes.length==3 &&
-					   (action.attributes[2] instanceof ConstantTermAttribute)) {
-				let o1:TermAttribute = action.attributes[1];
-				let o2:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[2];
-				if (this.world.getObject(o2.value).type == SHRDLU_BLOCKTYPE_BOX) {
-					predicates.push(new PlanningPredicate(Term.fromString("space.inside.of("+o1+","+o2+")", this.o), true));
-				} else {
-					predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+","+o2+")", this.o), true));
+					   action.attributes.length==3) {
+				if ((action.attributes[1] instanceof ConstantTermAttribute) &&
+					(action.attributes[2] instanceof ConstantTermAttribute)) {
+					let o1:TermAttribute = action.attributes[1];
+					let o2:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[2];
+					if (this.world.getObject(o2.value).type == SHRDLU_BLOCKTYPE_BOX) {
+						predicates.push(new PlanningPredicate(Term.fromString("space.inside.of("+o1+","+o2+")", this.o), true));
+					} else {
+						predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+","+o2+")", this.o), true));
+					}
+				} else if ((action.attributes[1] instanceof ConstantTermAttribute) &&
+						   (action.attributes[2] instanceof TermTermAttribute)) {
+					let o1:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[1];
+					let arg2:Term = (<TermTermAttribute>action.attributes[2]).term;
+					if (arg2.functor.is_a_string("spatial-relation") &&
+						arg2.attributes.length == 2 &&
+						(arg2.attributes[0] instanceof ConstantTermAttribute) &&
+						(arg2.attributes[1] instanceof ConstantTermAttribute) &&
+						o1.value == (<ConstantTermAttribute>arg2.attributes[0]).value) {
+						predicates.push(new PlanningPredicate(arg2, true));
+					}
 				}
 			} else if (action.functor.is_a_string("action.put-under") && 
 					   action.attributes.length==3 &&

@@ -231,7 +231,7 @@ class ShrdluBlocksWorld {
 		this.objects.push(table);
 
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_BLOCK, "red", BW_SIZE_LARGE, 
-										  0, 4, 10,
+										  0, 4, 12,
 										  8, 10, 8));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "red", BW_SIZE_SMALL, 
 	 									  4, 4, 4,
@@ -240,7 +240,7 @@ class ShrdluBlocksWorld {
 									 	  8, 4, 28,
 									 	  4, 12, 4));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
-									 	  14, 4, 10,
+									 	  14, 4, 12,
 									 	  8, 8, 8));
 		this.objects.push(new ShrdluBlock(SHRDLU_BLOCKTYPE_CUBE, "green", BW_SIZE_MEDIUM, 
 									 	  12, 4, 0,

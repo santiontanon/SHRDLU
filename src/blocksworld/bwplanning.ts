@@ -199,6 +199,53 @@ class BWPlannerState {
 				}
 				break;
 
+			case "space.next-to":
+				{
+					let a1:TermAttribute = predicate.attributes[0];
+					let a2:TermAttribute = predicate.attributes[1];
+					if ((a1 instanceof ConstantTermAttribute) &&
+					    (a2 instanceof ConstantTermAttribute)) {
+						let id1:string = (<ConstantTermAttribute>a1).value;
+						let id2:string = (<ConstantTermAttribute>a2).value;
+						if (this.isNextTo(this.bw.idHash[id1], this.bw.idHash[id2])) return [[]];
+						return [];
+					}  else if ((a1 instanceof VariableTermAttribute) &&
+					    		(a2 instanceof ConstantTermAttribute)) {
+						let id2:string = (<ConstantTermAttribute>a2).value;
+						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
+							if (this.isNextTo(idx1, this.bw.idHash[id2])) {
+								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
+							}
+						}
+						return bindings;
+					}  else if ((a1 instanceof ConstantTermAttribute) &&
+					    		(a2 instanceof VariableTermAttribute)) {
+						let id1:string = (<ConstantTermAttribute>a1).value;
+						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+						for(let idx2:number = 0; idx2<this.x.length; idx2++) {
+							if (this.isNextTo(this.bw.idHash[id1], idx2)) {
+								bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+							}
+						}
+						return bindings;
+					}  else if ((a1 instanceof VariableTermAttribute) &&
+					    		(a2 instanceof VariableTermAttribute)) {
+						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
+							for(let idx2:number = 0; idx2<this.x.length; idx2++) {
+								if (this.isNextTo(idx1, idx2)) {
+									bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
+												   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+								}
+							}
+						}
+						return bindings;
+					}
+				}
+				break;
+
+
 			case SHRDLU_BLOCKTYPE_BLOCK:
 			case SHRDLU_BLOCKTYPE_CUBE:
 			case SHRDLU_BLOCKTYPE_PYRAMID:
@@ -382,6 +429,38 @@ class BWPlannerState {
 	}
 
 
+	isNextTo(o1:number, o2:number) : boolean
+	{
+		if (o1 == null || o2 == null) return false;
+		if (o1 == o2) return false;
+
+		let dx:number = 0;
+		let dz:number = 0;
+		if (this.x[o1]+this.bw.objects[o1].dx < this.x[o2]) {
+			dx = this.x[o2] - (this.x[o1]+this.bw.objects[o1].dx);
+		} else if (this.x[o2]+this.bw.objects[o2].dx < this.x[o1]) {
+			dx = this.x[o1] - (this.x[o2]+this.bw.objects[o2].dx);
+		}
+		if (this.z[o1]+this.bw.objects[o1].dz < this.z[o2]) {
+			dz = this.z[o2] - (this.z[o1]+this.bw.objects[o1].dz);
+		} else if (this.z[o2]+this.bw.objects[o2].dz < this.z[o1]) {
+			dz = this.z[o1] - (this.z[o2]+this.bw.objects[o2].dz);
+		}
+		if (dx == 0 && dz == 0) {
+			if (this.y[o1]+this.bw.objects[o1].dy > this.y[o2] &&
+				this.y[o2]+this.bw.objects[o2].dy > this.y[o1]) {
+				if (!this.isInsideOf(o1, o2) && !this.isInsideOf(o2, o1)) {
+					// console.log("isNextTo, true: o1:(" + this.x[o1] + ", " + this.y[o1] + ", " + this.z[o1] + ") - (" + (this.x[o1]+this.bw.objects[o1].dx) + ", " + (this.y[o1]+this.bw.objects[o1].dy) + ", " + (this.z[o1]+this.bw.objects[o1].dz) + ")\n"+
+					// 			"                o2:(" + this.x[o2] + ", " + this.y[o2] + ", " + this.z[o2] + ") - (" + (this.x[o2]+this.bw.objects[o2].dx) + ", " + (this.y[o2]+this.bw.objects[o2].dy) + ", " + (this.z[o2]+this.bw.objects[o2].dz) + ")");
+					// console.log("dx: " + dx + ", dz: " + dz);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 	collide(o1:number, o2:number): boolean
 	{
 		if (o1 == null || o2 == null) return false;
@@ -394,14 +473,15 @@ class BWPlannerState {
 	}
 
 
-	positionToPutObjectOn(o_idx:number, base_idx:number) : [number,number,number]
+	positionsToPutObjectOn(o_idx:number, base_idx:number) : [number,number,number][]
 	{
+		let positions:[number, number, number][] = [];
 		let base:ShrdluBlock = this.bw.objects[base_idx];
 
 		if (base.type != SHRDLU_BLOCKTYPE_BLOCK &&
 			base.type != SHRDLU_BLOCKTYPE_CUBE &&
 			base.type != SHRDLU_BLOCKTYPE_BOX &&
-			base.type != SHRDLU_BLOCKTYPE_TABLE) return null;
+			base.type != SHRDLU_BLOCKTYPE_TABLE) return positions;
 
 		let x1:number = this.x[base_idx];
 		let y:number = this.y[base_idx] + base.dy;
@@ -417,9 +497,10 @@ class BWPlannerState {
 		}
 
 		let o:ShrdluBlock = this.bw.objects[o_idx];
-
-		for(let x:number = x1; x <= x2-o.dx; x++) {
-			for(let z:number = z1; z <= z2-o.dz; z++) {
+		let resolution:number = 2;
+		if (base.type == SHRDLU_BLOCKTYPE_TABLE) resolution = 4;
+		for(let x:number = x1; x <= x2-o.dx; x+=resolution) {
+			for(let z:number = z1; z <= z2-o.dz; z+=resolution) {
 				let collision:boolean = false;
 				for(let o2_idx:number = 0; o2_idx<this.x.length; o2_idx++) {
 					if (this.bw.objects[o2_idx].type == SHRDLU_BLOCKTYPE_BOX &&
@@ -434,12 +515,12 @@ class BWPlannerState {
 					}
 				}
 				if (!collision) {
-					return [x,y,z];
+					positions.push([x,y,z]);
 				}
 			}
 		}
 
-		return null;
+		return positions;
 	}	
 
 
@@ -461,13 +542,32 @@ class BWPlanningPlan {
 			if (action[0] == BW_PLANNING_ACTION_TAKE) {
 				p.actions.push(new PlanningOperator(Term.fromString("action.take('shrdlu'[#id], '"+action[1]+"'[#id])", o), [], []));
 			} else if (action[0] == BW_PLANNING_ACTION_PUT_IN) {
-				p.actions.push(new PlanningOperator(Term.fromString("action.put-in('shrdlu'[#id], '"+action[1]+"'[#id], '"+action[2]+"'[#id])", o), [], []));
+				if (action.length == 3) {
+					p.actions.push(new PlanningOperator(Term.fromString("action.put-in('shrdlu'[#id], '"+action[1]+"'[#id], '"+action[2]+"'[#id])", o), [], []));
+				} else if (action.length == 5) {
+					p.actions.push(new PlanningOperator(Term.fromString("action.put-in('shrdlu'[#id], '"+action[1]+"'[#id], '"+action[2]+"'[#id], '"+action[3]+"'[number], '"+action[4]+"'[number])", o), [], []));
+				}
 			} else {
 				console.error("convertToTerms: unsupported action " + action);
 			}
 		}
 
 		return p;
+	}
+
+	clone() : BWPlanningPlan
+	{
+		let plan:BWPlanningPlan = new BWPlanningPlan();
+		for(let action of this.actions) {
+			plan.actions.push([...action]);
+		}
+		return plan;
+	}
+
+	betterThan(plan:BWPlanningPlan) : boolean
+	{
+		if (this.actions.length < plan.actions.length) return true;
+		return false;
 	}
 
 	actions:string[][] = [];
@@ -486,12 +586,15 @@ class BWPlanner {
 
 	plan(goal:PlanningCondition, maxDepth:number) : PlanningPlan
 	{
-		let plan:BWPlanningPlan = new BWPlanningPlan();
+		let initialPlan:BWPlanningPlan = new BWPlanningPlan();
 		let s0:BWPlannerState = BWPlannerState.fromBlocksWorld(this.bw);
+		this.steps = 0;
 		// iterative deepening:
 		for(let depth:number = 1;depth<=maxDepth;depth++) {
 			if (this.DEBUG >= 1) console.log("- plan -------- max depth: " + depth + " - ");
-			if (this.planInternal(s0, goal, plan, depth)) {
+			let plan:BWPlanningPlan = this.planInternal(s0, goal, initialPlan, depth);
+			console.log("plan, steps: " + this.steps);
+			if (plan != null) {
 				// plan.autoCausalLinks(s0, this.occursCheck);
 				return plan.convertToTerms(this.o);
 			}
@@ -500,8 +603,9 @@ class BWPlanner {
 	}
 
 
-	planInternal(state:BWPlannerState, goal:PlanningCondition, plan:BWPlanningPlan, maxDepth:number) : boolean
+	planInternal(state:BWPlannerState, goal:PlanningCondition, plan:BWPlanningPlan, maxDepth:number) : BWPlanningPlan
 	{
+		this.steps ++;
 		if (this.DEBUG >= 1) {
 			console.log("- planInternal -------- depth left: " + maxDepth + " - ");
 			if (this.DEBUG >= 2) {
@@ -511,12 +615,14 @@ class BWPlanner {
 		}
 	
 		// check if we are done:
-		if (state.checkGoal(goal, this.o)) return true;
-		if (maxDepth <= 0) return false;
+		if (state.checkGoal(goal, this.o)) {
+			return plan.clone();
+		}
+		if (maxDepth <= 0) return null;
 
 		// obtain candidate actions:
 		let children:[string[],BWPlannerState][] = [];
-		this.generateChildren(state, children);
+		this.generateChildren(state, children, plan);
 		if (this.DEBUG >= 1) {
 			for(let tmp of children) {
 				console.log("    candidate action: " + tmp[0]);
@@ -527,17 +633,24 @@ class BWPlanner {
 		for(let [action,next_state] of children) {
 			plan.actions.push(action)
 			if (this.DEBUG >= 1) console.log("Executing action: " + action);
-			if (this.planInternal(next_state, goal, plan, maxDepth-1)) return true;
+			let plan2:BWPlanningPlan = this.planInternal(next_state, goal, plan, maxDepth-1);
+			if (plan2 != null) return plan2;
 			plan.actions.pop();
 		}
 
-		return false;
+		return null;
 	}
 
 
-	generateChildren(state:BWPlannerState, children:[string[],BWPlannerState][])
+	generateChildren(state:BWPlannerState, children:[string[],BWPlannerState][], plan:BWPlanningPlan)
 	{
 		if (state.objectInArm == -1) {
+			let forbidden:string = null;
+			if (plan.actions.length > 0 &&
+				plan.actions[plan.actions.length-1][0] == BW_PLANNING_ACTION_PUT_IN) {
+				forbidden = plan.actions[plan.actions.length-1][1];
+			}
+
 			// take actions:
 			for(let idx:number = 0; idx<state.x.length; idx++) {
 				if (this.bw.objects[idx].type == SHRDLU_BLOCKTYPE_BLOCK ||
@@ -552,8 +665,9 @@ class BWPlanner {
 							break;
 						}
 					}
-					if (canBeTaken) {
-						let op:string[] = [BW_PLANNING_ACTION_TAKE, this.bw.objects[idx].ID];
+					if (canBeTaken && this.bw.objects[idx].ID != forbidden) {
+						// We also store the position we took the object from for prunning the search:
+						let op:string[] = [BW_PLANNING_ACTION_TAKE, this.bw.objects[idx].ID, ""+state.x[idx], ""+state.z[idx]];
 						let nextState:BWPlannerState = BWPlannerState.clone(state);
 						nextState.y[idx] = 10000;
 						nextState.objectInArm = idx;
@@ -563,10 +677,17 @@ class BWPlanner {
 			}
 		} else {
 			// put in actions:
+			let forbidden:[number, number] = null;
+			if (plan.actions.length > 0 &&
+				plan.actions[plan.actions.length-1][0] == BW_PLANNING_ACTION_TAKE) {
+				forbidden = [Number(plan.actions[plan.actions.length-1][2]), Number(plan.actions[plan.actions.length-1][3])];
+			}
 			for(let idx:number = 0; idx<state.x.length; idx++) {
-				let position:[number, number, number] = state.positionToPutObjectOn(state.objectInArm, idx);
-				if (position != null) {
-					let op:string[] = [BW_PLANNING_ACTION_PUT_IN, this.bw.objects[state.objectInArm].ID, this.bw.objects[idx].ID];
+				if (this.bw.objects[state.objectInArm].ID == this.bw.objects[idx].ID) continue;
+				let positions:[number, number, number][] = state.positionsToPutObjectOn(state.objectInArm, idx);
+				for(let position of positions) {
+					if (forbidden != null && position[0] == forbidden[0] && position[2] == forbidden[1]) continue;
+					let op:string[] = [BW_PLANNING_ACTION_PUT_IN, this.bw.objects[state.objectInArm].ID, this.bw.objects[idx].ID, "" + position[0], "" + position[2]];
 					let nextState:BWPlannerState = BWPlannerState.clone(state);
 					nextState.x[state.objectInArm] = position[0];
 					nextState.y[state.objectInArm] = position[1];
@@ -583,6 +704,7 @@ class BWPlanner {
 	bw:ShrdluBlocksWorld = null;
 	o:Ontology = null;
 	occursCheck:boolean = false;
+	steps:number = 0;
 
 	static s_id_sort:Sort = null;
 }
