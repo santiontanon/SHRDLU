@@ -85,6 +85,77 @@ class BWPlannerState {
 	}
 
 
+	minimumStepsLeft(goal:PlanningCondition, o:Ontology) : number
+	{
+		let stepsLeft:number[] = [];
+
+		for(let conjunct of goal.predicates) {
+			stepsLeft.push(this.minimumStepsLeftForConjunct(conjunct, null, 0, o, []));
+		}
+
+		// Since it could be that an action for addressing one of the conjuncts also addresses another of the conjuncts,
+		// we return the minimum number of steps required for one of them (the max of the minimum required):
+		stepsLeft.sort();
+		let idx:number = goal.number_constraint-1;
+		if (idx >= stepsLeft.length) idx = stepsLeft.length-1;
+
+		return stepsLeft[idx];
+	}
+
+
+	/*
+		This function calculates an estimation of the minimum number of steps required to accomplish the goals.
+		Note: it some times over estimates, so, it can prune valid plans. However, it makes planning very fast,
+		so, I decided to leave it as is.
+	*/
+	minimumStepsLeftForConjunct(predicates:PlanningPredicate[], b:Bindings, index:number, o:Ontology,
+								unsatisfiedPredicates:PlanningPredicate[]) : number
+	{
+		if (index >= predicates.length) {
+			let minSteps:number = 0;
+			for(let predicate of unsatisfiedPredicates) {
+				if (predicate.term.functor.name == "space.directly.on.top.of" ||
+					predicate.term.functor.name == "space.inside.of" ||
+					predicate.term.functor.name == "space.next-to") {
+					if (this.objectInArm == -1) minSteps ++;
+					minSteps ++;
+				}
+			}
+			return minSteps;
+		}
+		let term:Term = predicates[index].term;
+		let stepsLeft:number = null;
+		if (b != null) term = term.applyBindings(b);			
+		if (predicates[index].sign) {
+			let possibleBindings:[VariableTermAttribute,TermAttribute][][] = this.checkPredicate(term, o);
+			for(let bindings of possibleBindings) {
+				let b2:Bindings = b;
+				if (bindings.length > 0) {
+					b2 = new Bindings();
+					if (b == null) {
+						b2.l = bindings;
+					} else {
+						b2.l = b.l.concat(bindings); 
+					}
+				}
+				// recursive call:
+				let stepsLeft2:number = this.minimumStepsLeftForConjunct(predicates, b2, index+1, o,
+																		 unsatisfiedPredicates);
+				if (stepsLeft == null || stepsLeft2 < stepsLeft) stepsLeft = stepsLeft2;
+			}
+			let stepsLeft2:number = this.minimumStepsLeftForConjunct(predicates, b, index+1, o, unsatisfiedPredicates.concat([predicates[index]]));
+			if (stepsLeft == null || stepsLeft2 < stepsLeft) stepsLeft = stepsLeft2;
+			return stepsLeft;
+		} else {
+			if (this.checkPredicate(term, o).length > 0) {
+				return this.minimumStepsLeftForConjunct(predicates, b, index+1, o, unsatisfiedPredicates.concat([predicates[index]]));
+			} else {
+				return this.minimumStepsLeftForConjunct(predicates, b, index+1, o, unsatisfiedPredicates);
+			}
+		}
+	}
+
+
 	checkPredicate(predicate:Term, o:Ontology) : [VariableTermAttribute,TermAttribute][][]
 	{
 		switch(predicate.functor.name) {
@@ -619,6 +690,9 @@ class BWPlanner {
 			return plan.clone();
 		}
 		if (maxDepth <= 0) return null;
+
+		// prune when the search is futile:
+		if (state.minimumStepsLeft(goal, this.o) > maxDepth) return null;
 
 		// obtain candidate actions:
 		let children:[string[],BWPlannerState][] = [];

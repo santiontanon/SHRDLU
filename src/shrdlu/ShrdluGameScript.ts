@@ -45,7 +45,6 @@ class ShrdluGameScript {
 		if (this.act == "3") this.update_act_3();
 		
 		this.update_sideplots();
-
 		this.processQueuedThoughtBubbles();
 	}
 
