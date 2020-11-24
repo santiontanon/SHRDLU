@@ -448,9 +448,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER, X:verb.remember($PLAYER,#and(#query(Y), name($PLAYER,Y)))))");
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 && 
-					this.game.qwertyAI.queuedIntentions.length == 0 &&
-					this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
+				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
@@ -487,9 +485,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.q.query($PLAYER, Y, name($PLAYER,Y)))");
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 && 
-					this.game.qwertyAI.queuedIntentions.length == 0 &&
-					this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
+				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
@@ -518,8 +514,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.greet($PLAYER))");		
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 &&
-					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 10;
+				if (this.qwertyIdle()) this.act_intro_state = 10;
 			}
 			break;
 
@@ -529,9 +524,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, role($QWERTY, 'location-aurora-station'[#id], 'medic'[medic])))")
 				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER,verb.remember($PLAYER,'location-aurora-station'[#id])))");
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 && 
-					this.game.qwertyAI.queuedIntentions.length == 0 &&
-					this.contextQwerty.expectingAnswerToQuestionTimeStamp_stack.length == 0) {
+				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
@@ -562,8 +555,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 &&
-					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 13;
+				if (this.qwertyIdle()) this.act_intro_state = 13;
 			}
 			break;
 
@@ -577,8 +569,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.tell('etaoin'[#id], $PLAYER), time.later(X))))");
 				
 			} else {
-				if (this.game.qwertyAI.intentions.length == 0 &&
-					this.game.qwertyAI.queuedIntentions.length == 0) this.act_intro_state = 13;
+				if (this.qwertyIdle()) this.act_intro_state = 13;
 			}
 			break;
 
@@ -634,12 +625,8 @@ class ShrdluGameScript {
 			} else if (this.game.qwertyAI.robot.x == 11*8 &&
 					   this.game.qwertyAI.robot.y == 32*8) {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, verb.want($QWERTY, verb.test($QWERTY, #and(C:[strength], verb.belong(C, $PLAYER))))))");
-				// 512 is the ID of the chair in the infirmary
-				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.push($PLAYER, '512'[#id])))");
-
-				let term:Term = Term.fromString("goal(D:'player'[#id],action.push(X, '512'[#id]))",this.game.ontology);
-				this.game.qwertyAI.addLongTermTerm(term, MEMORIZE_PROVENANCE);
-
+				this.qwertyIntention("action.talk($QWERTY, perf.request.action($PLAYER, action.push($PLAYER, '512'[#id])))"); // 512 is the ID of the chair in the infirmary
+				this.game.qwertyAI.addLongTermTerm(Term.fromString("goal(D:'player'[#id],action.push(X, '512'[#id]))",this.game.ontology), MEMORIZE_PROVENANCE);
 				let chair:A4Object = this.game.findObjectByIDJustObject("512");
 				this.act_intro_chair_x = chair.x;
 				this.act_intro_chair_y = chair.y;
@@ -664,10 +651,7 @@ class ShrdluGameScript {
 
 		case 100:
 			let chair:A4Object = this.game.findObjectByIDJustObject("512");
-			if (chair.x != this.act_intro_chair_x ||
-				chair.y != this.act_intro_chair_y) {
-				this.act_intro_state = 101;
-			}
+			if (chair.x != this.act_intro_chair_x || chair.y != this.act_intro_chair_y) this.act_intro_state = 101;
 			// give the player 15 seconds to figure it out, and otherwise, just show the tutorial message again
 			if (this.act_intro_state_timer >= 1200) this.act_intro_state = 99
 			break;
@@ -699,15 +683,12 @@ class ShrdluGameScript {
 		case 102:
             if (this.game.qwertyAI.robot.x == 104 &&
             	this.game.qwertyAI.robot.y == 232) {
-            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	let d2:number = (dx*dx)+(dy*dy);
-            	if (d2 < 32*32) {
+            	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 103;
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
     	        this.qwertyMoves(104, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -716,15 +697,12 @@ class ShrdluGameScript {
 		case 103:
             if (this.game.qwertyAI.robot.x == 136 &&
             	this.game.qwertyAI.robot.y == 232) {
-            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	let d2:number = (dx*dx)+(dy*dy);
-            	if (d2 < 32*32) {
+            	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 104;
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
     	        this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -733,15 +711,12 @@ class ShrdluGameScript {
 		case 104:
             if (this.game.qwertyAI.robot.x == 136 &&
             	this.game.qwertyAI.robot.y == 288) {
-            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	let d2:number = (dx*dx)+(dy*dy);
-            	if (d2 < 32*32) {
+            	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 105;
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
     	        this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -750,15 +725,12 @@ class ShrdluGameScript {
 		case 105:
             if (this.game.qwertyAI.robot.x == 256 &&
             	this.game.qwertyAI.robot.y == 288) {
-            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	let d2:number = (dx*dx)+(dy*dy);
-            	if (d2 < 32*32) {
+            	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 106;
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
     	        this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -767,13 +739,10 @@ class ShrdluGameScript {
 		case 106:
             if (this.game.qwertyAI.robot.x == 544 &&
             	this.game.qwertyAI.robot.y == 288) {
-            	let dx:number = this.game.qwertyAI.robot.x - this.game.currentPlayer.x;
-            	let dy:number = this.game.qwertyAI.robot.y - this.game.currentPlayer.y;
-            	let d2:number = (dx*dx)+(dy*dy);
-            	if (d2 < 32*32) {
+            	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 107;
             	}
-			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.intentions.length == 0) {
+			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
         		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -931,7 +900,6 @@ class ShrdluGameScript {
 					let pattern:Term = Term.fromString("perf.inform.answer('player'[#id], ai('etaoin'[#id]))", this.game.ontology);
 					if (p1.performative.equals(pattern)) {
 						this.act_1_know_etaoin_is_an_AI = true;
-						console.log("this.act_1_know_etaoin_is_an_AI = true");
 					}
 				}
 				if (p2!=null &&
@@ -939,7 +907,6 @@ class ShrdluGameScript {
 					let pattern:Term = Term.fromString("perf.inform.answer('player'[#id], ai('etaoin'[#id]))", this.game.ontology);
 					if (p2.performative.equals(pattern)) {
 						this.act_1_know_etaoin_is_an_AI = true;
-						console.log("this.act_1_know_etaoin_is_an_AI = true");
 					}
 				}
 			}
@@ -952,7 +919,6 @@ class ShrdluGameScript {
 				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
 					this.act_1_asked_about_being_alone_to_etaoin = true;
-					console.log("this.act_1_asked_about_being_alone_to_etaoin = true");
 				}
 			}
 		}
@@ -964,43 +930,9 @@ class ShrdluGameScript {
 				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
 					this.act_1_asked_about_being_alone_to_qwerty = true;
-					console.log("this.act_1_asked_about_being_alone_to_qwerty = true");
 				}
 			}
 		}		
-
-		if (!this.act_1_asked_about_being_alone_to_etaoin && this.contextEtaoin != null) {
-			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
-				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				let perf:Term = p1.performative;
-				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
-					perf.attributes.length>=2 && 
-					perf.attributes[1] instanceof TermTermAttribute) {
-					let patterna:Term = Term.fromString("alone('player'[#id])", this.game.ontology);
-					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
-						this.act_1_asked_about_being_alone_to_etaoin = true;
-						console.log("this.act_1_asked_about_being_alone_to_etaoin = true");
-					}
-				}
-			}
-		}
-		if (!this.act_1_asked_about_being_alone_to_qwerty && this.contextEtaoin != null) {
-			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
-				p1.timeStamp == this.game.in_game_seconds - 1) {	
-				let perf:Term = p1.performative;
-				if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
-					perf.attributes.length>=2 && 
-					perf.attributes[1] instanceof TermTermAttribute) {
-					let patterna:Term = Term.fromString("alone('player'[#id])", this.game.ontology);
-					if (patterna.subsumes((<TermTermAttribute>perf.attributes[1]).term, true, new Bindings())) {
-						this.act_1_asked_about_being_alone_to_qwerty = true;
-						console.log("this.act_1_asked_about_being_alone_to_qwerty = true");
-					}
-				}
-			}
-		}
 
 		let act_1_asked_about_bruce_alper_to_anyone:boolean = false;
 		let act_1_asked_about_corpse_to_anyone:boolean = false;
@@ -1142,7 +1074,7 @@ class ShrdluGameScript {
 			// counting useless answers by etaoin or player getting tired:
 			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
 			let p2:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-			if (p1!=null) {
+			if (p1 != null) {
 				if (p1.timeStamp == this.game.in_game_seconds - 1) {
 					// it just happened:
 					if (p1.performative.functor.name == "perf.inform.parseerror") this.act_1_number_of_useless_etaoin_answers++;
@@ -1154,7 +1086,7 @@ class ShrdluGameScript {
 					this.act_1_state = 7;
 				}
 			}
-			if (p2!=null) {
+			if (p2 != null) {
 				if (p2.performative.functor.name == "perf.farewell") {
 					this.act_1_state = 7;
 				}
@@ -1234,11 +1166,8 @@ class ShrdluGameScript {
 
 		case 11:
 			// waiting for player to ask about other humans (and for etaoin not to be answering anything):
-			if (this.act_1_asked_about_being_alone_to_etaoin &&
-				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0) this.act_1_state = 12;
-			if (this.act_1_asked_about_being_alone_to_qwerty &&
-				this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
-				this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0) this.act_1_state = 13;
+			if (this.act_1_asked_about_being_alone_to_etaoin && this.etaoinIdle()) this.act_1_state = 12;
+			if (this.act_1_asked_about_being_alone_to_qwerty && this.etaoinIdle() && this.qwertyIdle()) this.act_1_state = 13;
 			if (this.act_1_state == 11 && this.act_1_state_timer == 3600) {
 				// after a while, remind the player to actually ask Etaoin about being alone:
 				this.act_1_state_timer = 0;
@@ -1257,8 +1186,7 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.inform(D:'player'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), plural(Q)))), time.past(V))))");
 				this.etaoinSays("perf.inform('player'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
-				if (this.game.etaoinAI.intentions.length == 0 &&
-					this.game.etaoinAI.queuedIntentions.length == 0) this.act_1_state = 14;
+				if (this.etaoinIdle()) this.act_1_state = 14;
 			}
 			break;
 
@@ -1272,8 +1200,7 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.inform(D:'player'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), #and(relation.target(Q, 'qwerty'[#id]), plural(Q))))), time.past(V))))");
 				this.etaoinSays("perf.inform('player'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
-				if (this.game.etaoinAI.intentions.length == 0 &&
-					this.game.etaoinAI.queuedIntentions.length == 0) this.act_1_state = 14;
+				if (this.etaoinIdle()) this.act_1_state = 14;
 			}
 			break;
 		
@@ -1294,8 +1221,7 @@ class ShrdluGameScript {
 				this.game.etaoinAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 				this.game.qwertyAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 			} else {
-				if (this.game.etaoinAI.intentions.length == 0 &&
-					this.game.etaoinAI.queuedIntentions.length == 0) this.act_1_state = 15;
+				if (this.etaoinIdle()) this.act_1_state = 15;
 			}
 			break;
 
@@ -1313,9 +1239,7 @@ class ShrdluGameScript {
 				if (p!=null) {
 					if (p.timeStamp == this.game.in_game_seconds - 1) {
 						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
-							this.game.etaoinAI.intentions.length == 0 &&
-							this.game.etaoinAI.queuedIntentions.length == 0 &&
-							this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0) {
+							this.etaoinIdle()) {
 							let answer:TermAttribute = p.performative.attributes[1];
 							if (answer instanceof ConstantTermAttribute) {
 								if ((<ConstantTermAttribute>answer).value == "no" ||
@@ -1573,12 +1497,7 @@ class ShrdluGameScript {
 						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
 					}
 				} else {
-					if (this.game.qwertyAI.robot.isIdle() &&
-						this.game.qwertyAI.intentions.length == 0 && 
-						this.game.qwertyAI.queuedIntentions.length == 0 &&
-						this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
-						this.act_1_stasis_thread_state = 2;
-					}					
+					if (this.qwertyIdle()) this.act_1_stasis_thread_state = 2;
 				}
 				break;
 
@@ -1589,11 +1508,7 @@ class ShrdluGameScript {
 					this.act_1_stasis_thread_state = 0;
 					this.game.qwertyAI.respondToPerformatives = true;
 				} else {
-					let x1:number = this.game.qwertyAI.robot.x;
-					let y1:number = this.game.qwertyAI.robot.y;
-					let x2:number = target_l[0].x;
-					let y2:number = target_l[0].y;
-					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+					let d:number = this.game.qwertyAI.robot.pixelDistance(target_l[0]);
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
 						if (d>0) {
@@ -1644,10 +1559,7 @@ class ShrdluGameScript {
 				break;
 
 			case 4:
-				if (this.game.qwertyAI.robot.isIdle() &&
-					this.game.qwertyAI.intentions.length == 0 && 
-					this.game.qwertyAI.queuedIntentions.length == 0 &&
-					this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
+				if (this.qwertyIdle()) {
 					// open the door:
 					this.game.qwertyAI.robot.issueCommandWithArguments(A4CHARACTER_COMMAND_INTERACT, -1, A4_DIRECTION_UP, null, this.game);
 					this.act_1_stasis_thread_state = 5;
@@ -1673,12 +1585,7 @@ class ShrdluGameScript {
 
 			case 7:
 				// give the suit back to the player
-				let x1:number = this.game.qwertyAI.robot.x;
-				let y1:number = this.game.qwertyAI.robot.y;
-				let x2:number = this.game.currentPlayer.x;
-				let y2:number = this.game.currentPlayer.y;
-				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-				if (d>16) {
+				if (this.game.currentPlayer.pixelDistance(this.game.qwertyAI.robot)>16) {
 					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer, this.game);
 				} else {
 					// give the space suit:
@@ -1953,9 +1860,7 @@ class ShrdluGameScript {
 			break;
 
 		case 101:
-			if (this.game.shrdluAI.intentions.length == 0 && 
-				this.game.shrdluAI.queuedIntentions.length == 0 &&
-				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+			if (this.shrdluIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
 				if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
@@ -2001,9 +1906,7 @@ class ShrdluGameScript {
 		case 104:
 			// player is interacting with SHRDLU, as long as the player keeps doing things, we are fine, when she stops
 			// asking shrdlu to do things, we give a clue
-			if (this.game.shrdluAI.intentions.length == 0 && 
-				this.game.shrdluAI.queuedIntentions.length == 0 &&
-				this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0) {
+			if (this.shrdluIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
 				if (lastPerformative.performative.functor.is_a_string("perf.request.action") ||
@@ -2057,8 +1960,7 @@ class ShrdluGameScript {
 
 		case 108:
 			if (this.act_2_state_timer >= 50*2 &&
-				this.game.shrdluAI.intentions.length == 0 &&
-				this.game.shrdluAI.queuedIntentions.length == 0) {
+				this.shrdluIdle()) {
 				this.setupShrdluSelfRepairGoals();
 				this.act_2_state = 109;
 			}
@@ -2444,12 +2346,7 @@ class ShrdluGameScript {
 						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
 					}
 				} else {
-					if (this.game.qwertyAI.robot.isIdle() &&
-						this.game.qwertyAI.intentions.length == 0 && 
-						this.game.qwertyAI.queuedIntentions.length == 0 &&
-						this.contextQwerty.expectingAnswerToQuestion_stack.length == 0) {
-						this.act_2_datapad_state = 2;
-					}					
+					if (this.qwertyIdle()) this.act_2_datapad_state = 2;
 				}
 				break;
 
@@ -2702,17 +2599,13 @@ class ShrdluGameScript {
 					break;
 
 			case 12:
-					if (this.game.qwertyAI.robot.isIdle() &&
-						this.game.qwertyAI.intentions.length == 0 && 
-						this.game.qwertyAI.queuedIntentions.length == 0) {
+					if (this.qwertyIdle()) {
 						this.qwertyIntention("action.talk('qwerty'[#id], perf.request.action('player'[#id], action.take('player'[#id], 'player-masterkey'[#id])))");
 						this.act_3_state = 13;
 					}
 
 			case 13:
-					if (this.game.qwertyAI.robot.isIdle() &&
-						this.game.qwertyAI.intentions.length == 0 && 
-						this.game.qwertyAI.queuedIntentions.length == 0) {
+					if (this.qwertyIdle()) {
 						this.qwertyIntention("action.give('qwerty'[#id], 'player-masterkey'[#id], 'player'[#id])");
 						this.act_3_state = 14;
 					}
@@ -2990,18 +2883,27 @@ class ShrdluGameScript {
 
 	questionAboutBeingAlone(perf:Term) : boolean
 	{
-		let queryTerms:TermAttribute[] = null;
+		let query:Term = null;
 		if (perf.functor.is_a(this.game.ontology.getSort("perf.q.query")) && perf.attributes.length == 3) {
-			let query:Term = (<TermTermAttribute>perf.attributes[2]).term;
-			queryTerms = NLParser.elementsInList(query, "#and");
+			query = (<TermTermAttribute>perf.attributes[2]).term;
 		} else if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate")) ||
 				   perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate-negated"))) {
-			let query:Term = (<TermTermAttribute>perf.attributes[1]).term;
-			queryTerms = NLParser.elementsInList(query, "#and");
+			query = (<TermTermAttribute>perf.attributes[1]).term;
+		} else if (perf.functor.is_a(this.game.ontology.getSort("perf.question")) &&
+				   perf.attributes.length>=2 && 
+				   perf.attributes[1] instanceof TermTermAttribute) {
+			query = (<TermTermAttribute>perf.attributes[1]).term;
 		}
-		if (queryTerms != null) {
+
+		if (query != null) {
+			let queryTerms:TermAttribute[] = NLParser.elementsInList(query, "#and");
 			let humanFound:boolean = false;
-			let differentThanDavidFound:boolean = false;
+			let differentFromPlayerFound:boolean = false;
+			let patterna:Term = Term.fromString("alone('player'[#id])", this.game.ontology);
+			if (patterna.subsumes(query, true, new Bindings())) {
+				return true;
+			}
+
 			for(let ta of queryTerms) {
 				if (!(ta instanceof TermTermAttribute)) continue;
 				let t:Term = (<TermTermAttribute>ta).term;
@@ -3027,14 +2929,14 @@ class ShrdluGameScript {
 						(t2.attributes[0] instanceof VariableTermAttribute) &&
 						(t2.attributes[1] instanceof ConstantTermAttribute) &&
 						(<ConstantTermAttribute>t2.attributes[1]).value == "player") {
-						differentThanDavidFound = true;
+						differentFromPlayerFound = true;
 					}
 				 	if (t2.functor.name=="=" &&
 						t2.attributes.length == 2 &&
 						(t2.attributes[1] instanceof VariableTermAttribute) &&
 						(t2.attributes[0] instanceof ConstantTermAttribute) &&
 						(<ConstantTermAttribute>t2.attributes[0]).value == "player") {
-						differentThanDavidFound = true;
+						differentFromPlayerFound = true;
 					}
 				}
 			 	if (t.functor.name=="!=" &&
@@ -3042,18 +2944,17 @@ class ShrdluGameScript {
 					if ((t.attributes[1] instanceof VariableTermAttribute) &&
 						(t.attributes[0] instanceof ConstantTermAttribute) &&
 						(<ConstantTermAttribute>t.attributes[0]).value == "player") {
-						differentThanDavidFound = true;
+						differentFromPlayerFound = true;
 					}
 					if ((t.attributes[0] instanceof VariableTermAttribute) &&
 						(t.attributes[1] instanceof ConstantTermAttribute) &&
 						(<ConstantTermAttribute>t.attributes[1]).value == "player") {
-						differentThanDavidFound = true;
+						differentFromPlayerFound = true;
 					}
 				}
 			}
-			if (humanFound && differentThanDavidFound) return true;
+			if (humanFound && differentFromPlayerFound) return true;
 		}
-
 		return false;
 	}
 
@@ -3374,6 +3275,32 @@ class ShrdluGameScript {
 			if (item.ID == itemId) return true;
 		}
 		return false;
+	}
+
+
+	qwertyIdle() : boolean
+	{
+		return this.game.qwertyAI.robot.isIdle() &&
+			   this.game.qwertyAI.intentions.length == 0 && this.game.qwertyAI.queuedIntentions.length == 0 &&
+			   this.contextQwerty.expectingAnswerToQuestion_stack.length == 0 &&
+			   this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0;
+	}
+
+
+	shrdluIdle() : boolean
+	{
+		return this.game.shrdluAI.robot.isIdle() &&
+			   this.game.shrdluAI.intentions.length == 0 && this.game.shrdluAI.queuedIntentions.length == 0 &&
+			   this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0 &&
+			   this.game.shrdluAI.currentInferenceProcess == null && this.game.shrdluAI.queuedInferenceProcesses.length == 0;
+	}
+
+
+	etaoinIdle() : boolean
+	{
+		return this.game.etaoinAI.intentions.length == 0 && this.game.etaoinAI.queuedIntentions.length == 0 &&
+			   this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0 &&
+			   this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0;
 	}
 
 
