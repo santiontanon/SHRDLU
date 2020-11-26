@@ -505,7 +505,13 @@ class NLParser {
 	static termsInList(list:Term, listFunctor:string) : Term[]
 	{
 		let output:Term[] = [];
-
+		for(let element of NLParser.elementsInList(list, listFunctor)) {
+			if (element instanceof TermTermAttribute) {
+				output.push((<TermTermAttribute>element).term);
+			}
+		}
+		return output;
+		/*
 		while(list.functor.name == listFunctor) {
 			if (list.attributes[0] instanceof TermTermAttribute &&
 				(<TermTermAttribute>list.attributes[0]).term.functor.name == listFunctor) {
@@ -524,6 +530,7 @@ class NLParser {
 		// this means that the whole thing was not a list to begin with, so, just return an array of one:
 		output.push(list);
 		return output;
+		*/
 	}
 
 

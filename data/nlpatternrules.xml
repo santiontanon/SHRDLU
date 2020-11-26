@@ -720,6 +720,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefFromContext(C, OBJECT)
 			   		 #derefFromContext(C3, OBJECT3)"/>
 
+	<NLPattern name="inform-X-can-verb-query"
+			   head="perf.inform.internal(LISTENER, #or(#not(QUERY3), verb.can(OBJECT, #cons(VERB,OBJECT,QUERY_V))))"
+			   body="nounPhrase(X2, N, P, C) verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C, OBJECT)
+			   		 #derefQuery(C3, QUERY_V, QUERY3)"
+			   priority="150"/>
+
 	<NLPattern name="inform-X-does-noun"
 			   head="perf.inform.internal(LISTENER, verb.do(OBJECT, NOUN))"
 			   body="nounPhrase(X2, N, P, C) verb('verb.do'[symbol], N, P, [present-tense]) 
@@ -1727,6 +1736,15 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 					 #derefFromContext(C, SUBJECT)
 			   		 #derefFromContext(proper-noun(X3, N3), OBJECT)"
 			   priority="200"/>
+	<NLPattern name="q.predicate-can-noun"
+			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, 'hypothetical-object'[#id])), #cons(NOUN, 'hypothetical-object'[#id]))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.can'[symbol], N, P, T) nounPhrase(X, N, P, C) verb(VERB, N2, P2, [infinitive-tense]) 
+			   		 noun(NOUN, [plural]) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)"
+			   priority="150"/>
 
 	<NLPattern name="q.predicate-can-X-verb-a-noun-with-Y"
 			   head="perf.q.predicate(LISTENER, verb.can(SUBJECT, #cons(VERB, SUBJECT, NOUN, OBJECT)))"
@@ -3976,7 +3994,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 'who' verb('verb.can'[symbol], N, P, [present-tense]) 
 			   		 verb(VERB, N2, P2, [infinitive-tense]) 
 			   		 nounPhrase(X3, N3, P3, C3)  ('!'|'?')* 
-    		   		 #derefQuery(C3, QUERY_V, QUERY)"/>
+    		   		 #derefQuery(C3, QUERY_V, QUERY)"
+    		   priority="150"/>
 
     <NLPattern name="q.query-what-do-X-verb-past"
     		   head="perf.q.query(LISTENER, V, #and(PRED:#cons(V2,QUERY_ARG1,V), time.past(PRED)))"
@@ -6632,6 +6651,29 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('!'|'?')* 
     		   		 #derefQuery(C0, QUERY_VARIABLE, QUERY)
     		   		 #derefFromContext(C2, SUBJECT)"/>
+    <NLPattern name="which-query-is-relation-obj"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE, #and(#cons(PREP, QUERY_VARIABLE, OBJECT1), QUERY))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('which'|'what') nounPhrase(X0, N0, P0, C0)
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 preposition(PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 ('!'|'?')* 
+    		   		 #derefQuery(C0, QUERY_VARIABLE, QUERY)
+    		   		 #derefFromContext(C1, OBJECT1)"/>
+
+    <NLPattern name="which-query-is-relation-query"
+    		   head="perf.q.query(LISTENER, QUERY_VARIABLE0, #and(#cons(PREP, QUERY_VARIABLE0, QUERY_VARIABLE1), #and(QUERY0, QUERY1)))"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 ('which'|'what') nounPhrase(X0, N0, P0, C0)
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 preposition(PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 ('!'|'?')* 
+    		   		 #derefQuery(C0, QUERY_VARIABLE0, QUERY0)
+    		   		 #derefQuery(C1, QUERY_VARIABLE1, QUERY1)"/>
 
     <NLPattern name="which-is-superlative-to-object"
     		   head="perf.q.query(LISTENER, V, #and(#cons(NOUN, V), #cons(SUPERLATIVE, V, OBJECT)))"

@@ -41,6 +41,17 @@
 	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.walk(X))"/>
 	<sentence provenance="background" sentence="~human(X:[#id]); verb.can(X, verb.move(X))"/>
 
+	<sentence provenance="background" sentence="~furniture(X:[#id]); ~verb.can(X, action.take(X, Y))"/>
+	<sentence provenance="background" sentence="~furniture(X:[#id]); ~verb.can(X, action.put-in(X, Y))"/>
+	<sentence provenance="background" sentence="~block(X:[#id]); ~verb.can(X, action.take(X, Y))"/>
+	<sentence provenance="background" sentence="~block(X:[#id]); ~verb.can(X, action.put-in(X, Y))"/>
+	<sentence provenance="background" sentence="~pyramid(X:[#id]); ~verb.can(X, action.take(X, Y))"/>
+	<sentence provenance="background" sentence="~pyramid(X:[#id]); ~verb.can(X, action.put-in(X, Y))"/>
+	<sentence provenance="background" sentence="~box(X:[#id]); ~verb.can(X, action.take(X, Y))"/>
+	<sentence provenance="background" sentence="~box(X:[#id]); ~verb.can(X, action.put-in(X, Y))"/>
+	<sentence provenance="background" sentence="~robot(X:[#id]); verb.can(X, action.take(X, Y))"/>
+	<sentence provenance="background" sentence="~robot(X:[#id]); verb.can(X, action.put-in(X, Y))"/>
+
 	<!-- other general knowledge -->
 	<!-- 10 most spoken languages according to wikipedia, I thought 10 was enough :), plus Catalan, since I speak it :) -->
 	<sentence provenance="background" sentence="language('english'[#id])"/>

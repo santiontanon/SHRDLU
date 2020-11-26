@@ -2,6 +2,114 @@
 var BW_PLANNING_ACTION_TAKE:string = "action.take";
 var BW_PLANNING_ACTION_PUT_IN:string = "action.put-in";
 
+
+function isOnTopOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	if (o1 == null || o2 == null) return false;
+	if (o1 == o2) return false;
+	if (state.x[o1]+state.bw.objects[o1].dx > state.x[o2] && state.x[o2]+state.bw.objects[o2].dx > state.x[o1] &&
+		state.y[o1] == state.y[o2]+state.bw.objects[o2].dy &&
+		state.z[o1]+state.bw.objects[o1].dz > state.z[o2] && state.z[o2]+state.bw.objects[o2].dz > state.z[o1]) {
+		return true;
+	}
+	return false;
+}
+
+
+function isInsideOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	if (o1 == null || o2 == null) return false;
+	if (o1 == o2) return false;
+	if (state.collide(o1, o2)) {
+		// they overlap:
+		if (state.x[o2] <= state.x[o1] && state.z[o2] <= state.z[o1]) {
+			// o1 inside o2:
+			return true;
+		}
+	}
+	return false;
+}
+
+
+function isNextTo(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	if (o1 == null || o2 == null) return false;
+	if (o1 == o2) return false;
+
+	let dx:number = state.getDxO1O2(o1, o2);
+	let dz:number = state.getDzO1O2(o1, o2);
+	if (dx == 0 && dz == 0) {
+		if (state.y[o1]+state.bw.objects[o1].dy > state.y[o2] &&
+			state.y[o2]+state.bw.objects[o2].dy > state.y[o1]) {
+			if (!isInsideOf(o1, o2, state) && !isInsideOf(o2, o1, state)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+function isNorthOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, 1, 7, false, true);
+}
+
+
+function isEastOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, -3, 3, true, false);
+}
+
+
+function isWestOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, 5, -5, true, false);
+}
+
+
+function isSouthOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, -7, -1, false, true);
+}
+
+
+function isNortheastOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, 1, 3, true, true);
+}
+
+
+function isNorthwestOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, 5, 7, true, true);
+}
+
+
+function isSouthwestOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, -7, -5, true, true);
+}
+
+
+function isSoutheastOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, -3, -1, true, true);
+}
+
+
+function isBehindOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, 3, 5, false, true);
+}
+
+
+function isInFrontOf(o1:number, o2:number, state:BWPlannerState) : boolean
+{
+	return state.isWithinAngleOf(o1, o2, -5, -3, false, true);
+}
+
+
 class BWPlannerState {
 
 	constructor(bw:ShrdluBlocksWorld)
@@ -179,143 +287,35 @@ class BWPlannerState {
 				break;
 
 			case "space.directly.on.top.of":
-				{
-					let a1:TermAttribute = predicate.attributes[0];
-					let a2:TermAttribute = predicate.attributes[1];
-					if ((a1 instanceof ConstantTermAttribute) &&
-					    (a2 instanceof ConstantTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						if (this.isOnTopOf(this.bw.idHash[id1], this.bw.idHash[id2])) return [[]];
-						return [];
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof ConstantTermAttribute)) {
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							if (this.isOnTopOf(idx1, this.bw.idHash[id2])) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof ConstantTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-							if (this.isOnTopOf(this.bw.idHash[id1], idx2)) {
-								bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-								if (this.isOnTopOf(idx1, idx2)) {
-									bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
-												   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-								}
-							}
-						}
-						return bindings;
-					}
-				}
-				break;
-
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isOnTopOf);
 			case "space.inside.of":
-				{
-					let a1:TermAttribute = predicate.attributes[0];
-					let a2:TermAttribute = predicate.attributes[1];
-					if ((a1 instanceof ConstantTermAttribute) &&
-					    (a2 instanceof ConstantTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						if (this.isInsideOf(this.bw.idHash[id1], this.bw.idHash[id2])) return [[]];
-						return [];
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof ConstantTermAttribute)) {
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							if (this.isInsideOf(idx1, this.bw.idHash[id2])) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof ConstantTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-							if (this.isInsideOf(this.bw.idHash[id1], idx2)) {
-								bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-								if (this.isInsideOf(idx1, idx2)) {
-									bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
-												   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-								}
-							}
-						}
-						return bindings;
-					}
-				}
-				break;
-
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isInsideOf);
 			case "space.next-to":
-				{
-					let a1:TermAttribute = predicate.attributes[0];
-					let a2:TermAttribute = predicate.attributes[1];
-					if ((a1 instanceof ConstantTermAttribute) &&
-					    (a2 instanceof ConstantTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						if (this.isNextTo(this.bw.idHash[id1], this.bw.idHash[id2])) return [[]];
-						return [];
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof ConstantTermAttribute)) {
-						let id2:string = (<ConstantTermAttribute>a2).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							if (this.isNextTo(idx1, this.bw.idHash[id2])) {
-								bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof ConstantTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let id1:string = (<ConstantTermAttribute>a1).value;
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-							if (this.isNextTo(this.bw.idHash[id1], idx2)) {
-								bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-							}
-						}
-						return bindings;
-					}  else if ((a1 instanceof VariableTermAttribute) &&
-					    		(a2 instanceof VariableTermAttribute)) {
-						let bindings:[VariableTermAttribute,TermAttribute][][] = [];
-						for(let idx1:number = 0; idx1<this.x.length; idx1++) {
-							for(let idx2:number = 0; idx2<this.x.length; idx2++) {
-								if (this.isNextTo(idx1, idx2)) {
-									bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
-												   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
-								}
-							}
-						}
-						return bindings;
-					}
-				}
-				break;
-
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isNextTo);
+			case "space.north.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isNorthOf);
+			case "space.east.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isEastOf);
+			case "space.west.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isWestOf);
+			case "space.south.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isSouthOf);
+			case "space.northeast.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isNortheastOf);
+			case "space.northwest.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isNorthwestOf);
+			case "space.southeast.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isSoutheastOf);
+			case "space.southwest.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isSouthwestOf);
+			case "space.in.front.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isInFrontOf);
+			case "space.behind":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isBehindOf);
+			case "space.right.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isEastOf);
+			case "space.left.of":
+				return this.checkPredicateRelation(predicate.attributes[0], predicate.attributes[1], isWestOf);
 
 			case SHRDLU_BLOCKTYPE_BLOCK:
 			case SHRDLU_BLOCKTYPE_CUBE:
@@ -472,61 +472,89 @@ class BWPlannerState {
 	}
 
 
-	isOnTopOf(o1:number, o2:number) : boolean
+	checkPredicateRelation(a1:TermAttribute, a2:TermAttribute, f:(o1:number, o2:number, state:BWPlannerState) => boolean) : [VariableTermAttribute,TermAttribute][][]
 	{
-		if (o1 == null || o2 == null) return false;
-		if (o1 == o2) return false;
-		if (this.x[o1]+this.bw.objects[o1].dx > this.x[o2] && this.x[o2]+this.bw.objects[o2].dx > this.x[o1] &&
-			this.y[o1] == this.y[o2]+this.bw.objects[o2].dy &&
-			this.z[o1]+this.bw.objects[o1].dz > this.z[o2] && this.z[o2]+this.bw.objects[o2].dz > this.z[o1]) {
-			return true;
-		}
-		return false;
-	}
-
-
-	isInsideOf(o1:number, o2:number) : boolean
-	{
-		if (o1 == null || o2 == null) return false;
-		if (o1 == o2) return false;
-		if (this.collide(o1, o2)) {
-			// they overlap:
-			if (this.x[o2] <= this.x[o1] && this.z[o2] <= this.z[o1]) {
-				// o1 inside o2:
-				return true;
+		if ((a1 instanceof ConstantTermAttribute) &&
+		    (a2 instanceof ConstantTermAttribute)) {
+			let id1:string = (<ConstantTermAttribute>a1).value;
+			let id2:string = (<ConstantTermAttribute>a2).value;
+			if (f(this.bw.idHash[id1], this.bw.idHash[id2], this)) return [[]];
+			return [];
+		}  else if ((a1 instanceof VariableTermAttribute) &&
+		    		(a2 instanceof ConstantTermAttribute)) {
+			let id2:string = (<ConstantTermAttribute>a2).value;
+			let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+			for(let idx1:number = 0; idx1<this.x.length; idx1++) {
+				if (f(idx1, this.bw.idHash[id2], this)) {
+					bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)]]);
+				}
 			}
+			return bindings;
+		}  else if ((a1 instanceof ConstantTermAttribute) &&
+		    		(a2 instanceof VariableTermAttribute)) {
+			let id1:string = (<ConstantTermAttribute>a1).value;
+			let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+			for(let idx2:number = 0; idx2<this.x.length; idx2++) {
+				if (f(this.bw.idHash[id1], idx2, this)) {
+					bindings.push([[a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+				}
+			}
+			return bindings;
+		}  else if ((a1 instanceof VariableTermAttribute) &&
+		    		(a2 instanceof VariableTermAttribute)) {
+			let bindings:[VariableTermAttribute,TermAttribute][][] = [];
+			for(let idx1:number = 0; idx1<this.x.length; idx1++) {
+				for(let idx2:number = 0; idx2<this.x.length; idx2++) {
+					if (f(idx1, idx2, this)) {
+						bindings.push([[a1, new ConstantTermAttribute(this.bw.objects[idx1].ID, BWPlanner.s_id_sort)],
+									   [a2, new ConstantTermAttribute(this.bw.objects[idx2].ID, BWPlanner.s_id_sort)]]);
+					}
+				}
+			}
+			return bindings;
 		}
-		return false;
-	}
+		return [];
+	}	
 
 
-	isNextTo(o1:number, o2:number) : boolean
+	getDxO1O2(o1:number, o2:number) : number
 	{
-		if (o1 == null || o2 == null) return false;
-		if (o1 == o2) return false;
-
 		let dx:number = 0;
-		let dz:number = 0;
 		if (this.x[o1]+this.bw.objects[o1].dx < this.x[o2]) {
 			dx = this.x[o2] - (this.x[o1]+this.bw.objects[o1].dx);
 		} else if (this.x[o2]+this.bw.objects[o2].dx < this.x[o1]) {
 			dx = this.x[o1] - (this.x[o2]+this.bw.objects[o2].dx);
 		}
+		return dx;
+	}
+
+
+	getDzO1O2(o1:number, o2:number) : number
+	{
+		let dz:number = 0;
 		if (this.z[o1]+this.bw.objects[o1].dz < this.z[o2]) {
 			dz = this.z[o2] - (this.z[o1]+this.bw.objects[o1].dz);
 		} else if (this.z[o2]+this.bw.objects[o2].dz < this.z[o1]) {
 			dz = this.z[o1] - (this.z[o2]+this.bw.objects[o2].dz);
 		}
-		if (dx == 0 && dz == 0) {
-			if (this.y[o1]+this.bw.objects[o1].dy > this.y[o2] &&
-				this.y[o2]+this.bw.objects[o2].dy > this.y[o1]) {
-				if (!this.isInsideOf(o1, o2) && !this.isInsideOf(o2, o1)) {
-					// console.log("isNextTo, true: o1:(" + this.x[o1] + ", " + this.y[o1] + ", " + this.z[o1] + ") - (" + (this.x[o1]+this.bw.objects[o1].dx) + ", " + (this.y[o1]+this.bw.objects[o1].dy) + ", " + (this.z[o1]+this.bw.objects[o1].dz) + ")\n"+
-					// 			"                o2:(" + this.x[o2] + ", " + this.y[o2] + ", " + this.z[o2] + ") - (" + (this.x[o2]+this.bw.objects[o2].dx) + ", " + (this.y[o2]+this.bw.objects[o2].dy) + ", " + (this.z[o2]+this.bw.objects[o2].dz) + ")");
-					// console.log("dx: " + dx + ", dz: " + dz);
-					return true;
-				}
-			}
+		return dz;
+	}
+
+
+	isWithinAngleOf(o1:number, o2:number, min:number, max:number, check_dx:boolean, check_dz:boolean) : boolean
+	{
+		if (o1 == null || o2 == null) return false;
+		if (o1 == o2) return false;
+
+		let dx_raw:number = (this.x[o1]+this.bw.objects[o1].dx/2)-(this.x[o2]+this.bw.objects[o2].dx/2);
+		let dz_raw:number = (this.z[o1]+this.bw.objects[o1].dz/2)-(this.z[o2]+this.bw.objects[o2].dz/2);
+		let dx:number = this.getDxO1O2(o1, o2);
+		let dz:number = this.getDzO1O2(o1, o2);
+		if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
+			let angle:number = Math.atan2(dz_raw,dx_raw);
+			if (check_dx && dx <= 0) return false;
+			if (check_dz && dz <= 0) return false;
+			return angle>(min*Math.PI/8) && angle<=(max*Math.PI/8);
 		}
 		return false;
 	}
@@ -733,8 +761,8 @@ class BWPlanner {
 					this.bw.objects[idx].type == SHRDLU_BLOCKTYPE_BOX) {
 					let canBeTaken:boolean = true;
 					for(let idx2:number = 0; idx2<state.x.length; idx2++) {
-						if (state.isOnTopOf(idx2, idx) ||
-							state.isInsideOf(idx2, idx)) {
+						if (isOnTopOf(idx2, idx, state) ||
+							isInsideOf(idx2, idx, state)) {
 							canBeTaken = false;
 							break;
 						}

@@ -135,6 +135,8 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 
 	convertPerformativeToQueryfollowupQuestionAnswerIntention(nlcp:NLContextPerformative, sortToLookFor:Sort, ai:RuleBasedAI) : Term
 	{
+		console.log("nlcp.performative: " + nlcp.performative);
+		console.log("sortToLookFor: " + sortToLookFor);
 		if (nlcp.performative.functor.is_a(ai.o.getSort("perf.q.predicate")) &&
 			nlcp.performative.attributes.length == 2 &&
 			nlcp.performative.attributes[1] instanceof TermTermAttribute) {

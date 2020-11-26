@@ -346,8 +346,11 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			if (Math.abs(dx_raw) >= 1 || Math.abs(dz_raw) >= 1) {
 				let angle:number = Math.atan2(dz_raw,dx_raw);
 
-				if (relation.name == "space.north.of" ||
-					relation.name == "space.behind") {
+				if (relation.name == "space.behind") {
+					return angle>(3*Math.PI/8) && angle<=(5*Math.PI/8) && dz > 0;
+				} else if (relation.name == "space.in.front.of") {
+					return angle>-(5*Math.PI/8) && angle<=-(3*Math.PI/8) && dz > 0;
+				} else if (relation.name == "space.north.of") {
 					return angle>(1*Math.PI/8) && angle<=(7*Math.PI/8) && dz > 0;
 				} else if (relation.name == "space.east.of" ||
 						   relation.name == "space.right.of") {
@@ -355,8 +358,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				} else if (relation.name == "space.west.of" ||
 						   relation.name == "space.left.of") {
 					return angle<=-(5*Math.PI/8) || angle>(5*Math.PI/8) && dx > 0;
-				} else if (relation.name == "space.south.of" ||
-						   relation.name == "space.in.front.of") {
+				} else if (relation.name == "space.south.of") {
 					return angle>-(7*Math.PI/8) && angle<=-(1*Math.PI/8) && dz > 0;
 				} else if (relation.name == "space.northeast.of") {
 					return angle>(1*Math.PI/8) && angle<=(3*Math.PI/8) && (dx > 0 || dz > 0);

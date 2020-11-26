@@ -1639,6 +1639,19 @@ NLParseTestUnifyingListener("the crate only likes cubes and white keys", o.getSo
 NLParseTestUnifyingListener("put the crate next to the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], space.next-to('5'[#id], 'room1'[#id])))");
 NLParseTestUnifyingListener("put a block next to the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, space.next-to(X, '5'[#id])), block(X), [number.1])");
 
+// For version 3.9:
+NLParseTestUnifyingListener("can I pick up crates?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], verb.can('1'[#id], action.take('1'[#id], 'hypothetical-object'[#id])), crate('hypothetical-object'[#id]))");
+NLParseTestUnifyingListener("who can pick up crates?", o.getSort("performative"), context, "etaoin", "perf.q.query(V0:'etaoin'[#id], X,  #and(character(X), #and(verb.can(X, action.take(X, Y)), crate(Y))))");
+NLParseTestUnifyingListener("I can pick up crates", o.getSort("performative"), context, "etaoin", "perf.inform(V0:'etaoin'[#id], #or(#not(crate(X)), verb.can('1'[#id], action.take('1'[#id], X))))");
+NLParseTestUnifyingListener("which large block is behind the crate?", o.getSort("performative"), context, "etaoin", "perf.q.query(V0:'etaoin'[#id], X, #and(block(X), #and(big(X), space.behind(X, '5'[#id]))))");
+NLParseTestUnifyingListener("which large block is behind a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.query(V0:'etaoin'[#id], X, #and(block(X), #and(big(X), #and(space.behind(X, Y), pyramid(Y)))))");
+
+// "is there a door that belongs to a kitchen?"
+// "where is the door that belongs to a kitchen?"
+// "where is the door that belongs to the kitchen?"
+// NLParseTestUnifyingListener("put a small one onto the door which belongs to a kitchen?", o.getSort("performative"), context, "etaoin", "");
+
+// NLParseTestUnifyingListener("put the littlest crate on top of the kitchen?", o.getSort("performative"), context, "etaoin", "");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
