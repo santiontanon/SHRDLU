@@ -1,5 +1,4 @@
 /*
-
 Note (santi):
 - This class implements the game story script. All the events that constitute the main storyline are controlled from this class.
 - Notice that all the sentences said by the NPCs are actually generated using natural language generation, rather than being
@@ -7,7 +6,6 @@ Note (santi):
 - Only the text said by the player character in thought bubbles is hardcoded directly as text.
 - I should probably turn this class into some sort of XML or JSON file with the events properly defined, since it very quickly
   grew into a mess. But the flexibility of having it all here in code is hard to match :)
-
 */
 
 
@@ -25,17 +23,17 @@ class ShrdluGameScript {
 	update() 
 	{
 		// if (this.act == "intro") {
-			//this.skip_to_act_end_of_intro();
+			// this.skip_to_act_end_of_intro();
 			// this.skip_to_act_1();
 			// this.skip_to_end_of_act_1();
 			// this.skip_to_act_2();
 			// this.skip_to_act_2_shrdluback();
 			// this.skip_to_act_2_shrdluback_repair_outside();
 			// this.skip_to_act_2_crash_site();
-			//this.skip_to_act_2_after_crash_site();
+			// this.skip_to_act_2_after_crash_site();
 			// this.skip_to_end_of_act_2();
 			// this.skip_to_tardis8();
-			//this.skip_to_tardis8_computer_room();
+			// this.skip_to_tardis8_computer_room();
 			// this.skip_to_act_3_back_from_tardis();
 		// }
 
@@ -49,7 +47,7 @@ class ShrdluGameScript {
 	}
 
 /*
-	// This is a debug function, remove once the game is complete!
+	// These are debug functions, remove once the game is complete!
 	skip_to_act_end_of_intro()
 	{
 		if (this.act_intro_state>=101) return;
@@ -74,7 +72,6 @@ class ShrdluGameScript {
 	}
 
 
-	// This is a debug function, remove once the game is complete!
 	skip_to_act_1()
 	{
 		this.game.currentPlayer.getOutOfBed(this.game);
@@ -1803,14 +1800,14 @@ class ShrdluGameScript {
 								} else if ((<ConstantTermAttribute>answer).value == "yes") {
 									this.act_2_state = 10;
 								} else {
-									console.error("update_act_2, state 5: unexpected answer " + p.performative);
+									console.error("update_act_2, state 7: unexpected answer " + p.performative);
 								}	
 							} else {
 								// this can only mean the player answered with a name
-								console.error("update_act_2, state 5: unexpected answer " + p.performative);
+								console.error("update_act_2, state 7: unexpected answer " + p.performative);
 							}
 						} else if (p.performative.functor.is_a(this.game.ontology.getSort("perf.ack.ok"))) {
-							console.error("update_act_2, state 5: unexpected answer " + p.performative);
+							console.error("update_act_2, state 7: unexpected answer " + p.performative);
 						}						
 					}
 				}
@@ -1927,10 +1924,7 @@ class ShrdluGameScript {
 
 		case 105:
 			// same as 104, but we have already given the hint
-			if (this.game.shrdluAI.robot.x < 128) {
-				// SHRDLU is free!
-				this.act_2_state = 106;
-			}
+			if (this.game.shrdluAI.robot.x < 128) this.act_2_state = 106;
 			break;
 
 		case 106:
@@ -1968,9 +1962,7 @@ class ShrdluGameScript {
 
 		case 109:
 			if (this.act_2_state_timer >= 50*2 &&
-				this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+				this.etaoinIdle()) {
 				let term_h:Term = Term.fromString("verb.need(E:'etaoin'[#id], verb.help(D:'player'[#id], E, verb.find(D, 'shrdlu'[#id])))",this.game.ontology);
 				this.game.etaoinAI.addLongTermTermWithSign(term_h, MEMORIZE_PROVENANCE, false);
 				term_h = Term.fromString("verb.need(S:'shrdlu'[#id], verb.help(D:'player'[#id], S, verb.take-to(D, 'shrdlu'[#id], 'location-aurora-station'[#id])))",this.game.ontology);
@@ -1981,18 +1973,14 @@ class ShrdluGameScript {
 			break;
 
 		case 110:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+			if (this.etaoinIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.future(X)))")
 				this.act_2_state = 111;
 			}
 			break;
 
 		case 111:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+			if (this.etaoinIdle()) {
 				this.queueThoughtBubble("Ok, it seems Shrdlu needs to fix itself first. So, repairs might take a while...");
 				this.queueThoughtBubble("I could go explore outside a bit more, now that I have the rover... or maybe I could just have a nap...");
 				this.act_2_state = 112;
@@ -2058,9 +2046,7 @@ class ShrdluGameScript {
 			break;
 		
 		case 201:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+			if (this.etaoinIdle()) {
 				this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
@@ -2071,9 +2057,7 @@ class ShrdluGameScript {
 			break;
 
 		case 202:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+			if (this.etaoinIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:erased('etaoin-memory'[#id]), time.past(X, time.date('42956019000'[number], [time.day]))))");
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'location-aurora-station'[#id]), time.subsequently(X)))");
 				this.act_2_state = 210;
@@ -2088,24 +2072,18 @@ class ShrdluGameScript {
 			break;
 
 		case 211:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
+			if (this.etaoinIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'comm-tower'[#id]), time.past(X)))");
 				this.setupShrdluAgendaGoals();
 				this.act_2_state = 212;
 			}
 			break;
 		case 212:
-			if (this.game.etaoinAI.intentions.length == 0 &&
-				this.game.etaoinAI.queuedIntentions.length == 0 &&
-				this.game.currentPlayer.map.textBubbles.length == 0) {
-		
+			if (this.etaoinIdle()) {
 				this.updateKnowledgeAfterRepairingCommTower();
 				this.etaoinSays("perf.inform('player'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
 				this.etaoinSays("perf.request.action('player'[#id], #and(V1:verb.go-to('player'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('player'[#id]))))");
 				this.etaoinSays("perf.inform('player'[#id], verb.have('qwerty'[#id], 'command-key'[#id]))");
-
 				this.act_2_state = 220;
 			}
 			break;
@@ -2191,7 +2169,6 @@ class ShrdluGameScript {
 			this.act_2_state_timer = 0;
 			this.act_2_state_start_time = this.game.in_game_seconds;
 		}
-
 
 		previous_state = this.act_2_repair_shuttle_state;
 		switch(this.act_2_repair_shuttle_state) {
@@ -2301,13 +2278,11 @@ class ShrdluGameScript {
 		let requestee:string = null;
 		if (request != null && (request.attributes[0] instanceof ConstantTermAttribute)) {
 			requestee = (<ConstantTermAttribute>(request.attributes[0])).value;
-
 			// if asked to Shrdlu, say it is too delicate:
 			if (requestee == "shrdlu") {
 				this.shrdluSays("perf.inform('player'[#id], too-small('shuttle-datapad'[#id]))");
 			}
 		}
-
 
 		let previous_state:number = this.act_2_datapad_state;
 		switch(this.act_2_datapad_state) {
@@ -2357,11 +2332,7 @@ class ShrdluGameScript {
 					this.act_2_datapad_state = 0;
 					this.game.qwertyAI.respondToPerformatives = true;
 				} else {
-					let x1:number = this.game.qwertyAI.robot.x;
-					let y1:number = this.game.qwertyAI.robot.y;
-					let x2:number = target_l[0].x;
-					let y2:number = target_l[0].y;
-					let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+					let d:number = this.game.qwertyAI.robot.pixelDistance(target_l[0]);
 					if (target_l.length == 1) {
 						// the spacesuit is in the floor:
 						if (d>0) {
@@ -2413,11 +2384,7 @@ class ShrdluGameScript {
 
 			case 5:
 				// give the datapad back to the player
-				let x1:number = this.game.qwertyAI.robot.x;
-				let y1:number = this.game.qwertyAI.robot.y;
-				let x2:number = this.game.currentPlayer.x;
-				let y2:number = this.game.currentPlayer.y;
-				let d:number = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+				let d:number = this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer);
 				if (d>16) {
 					this.game.qwertyAI.robot.AI.addPFTargetObject(A4CHARACTER_COMMAND_IDLE, 10, false, this.game.currentPlayer, this.game);
 				} else {
@@ -2543,8 +2510,7 @@ class ShrdluGameScript {
 						this.act_3_state = 8;
 					}
 					break;
-			case 8: if (this.game.etaoinAI.intentions.length == 0 &&
-						this.game.etaoinAI.queuedIntentions.length == 0) {
+			case 8: if (this.etaoinIdle()) {
 						// make sure Etaoin knows about this object, that has disappeared from the game:
 						this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
 						this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
@@ -2630,7 +2596,6 @@ class ShrdluGameScript {
 			this.act_3_state_start_time = this.game.in_game_seconds;
 		}
 
-
 		previous_state = this.act_3_repair_tardis_console_state;
 		switch(this.act_3_repair_tardis_console_state) {
 			case 0: if (this.playerAsksShrdluToFix("tardis-wall-computer")) {
@@ -2642,7 +2607,6 @@ class ShrdluGameScript {
 						}
 					}
 					break;
-
 			case 1:
 					if (this.act_3_repair_tardis_console_state_timer == 0) {
 						this.shrdluMoves(85*8, 16*8, this.game.maps[8]);
@@ -2665,7 +2629,6 @@ class ShrdluGameScript {
 						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-2")).canBeOpen = true;
 						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-3")).canBeOpen = true;
 						(<A4Door>this.game.findObjectByIDJustObject("tardis-east-door-4")).canBeOpen = true;
-
 						this.act_3_repair_tardis_console_state = 3;
 					}
 					break;
@@ -2675,7 +2638,6 @@ class ShrdluGameScript {
 		} else {
 			this.act_3_repair_tardis_console_state_timer = 0;
 		}
-
 
 		previous_state = this.act_3_repair_tardis_cable_state;
 		switch(this.act_3_repair_tardis_cable_state) {
@@ -3300,7 +3262,8 @@ class ShrdluGameScript {
 	{
 		return this.game.etaoinAI.intentions.length == 0 && this.game.etaoinAI.queuedIntentions.length == 0 &&
 			   this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0 &&
-			   this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0;
+			   this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
+			   this.game.currentPlayer.map.textBubbles.length == 0;
 	}
 
 
@@ -3421,9 +3384,7 @@ class ShrdluGameScript {
 		if (this.game.currentPlayer.isIdle() &&
 			!this.game.qwertyAI.robot.isTalking() &&
 			!this.game.shrdluAI.robot.isTalking() &&
-			this.game.etaoinAI.intentions.length == 0 &&
-			this.game.etaoinAI.queuedIntentions.length == 0 &&
-			this.game.currentPlayer.map.textBubbles.length == 0) {
+			this.etaoinIdle()) {
 			this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, this.thoughtBubbleQueue[0], A4_DIRECTION_NONE, this.game);
 			this.thoughtBubbleQueue.splice(0,1);
 		}
