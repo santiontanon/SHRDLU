@@ -488,42 +488,6 @@
 	<sentence provenance="background" sentence="action.open('bedroom5-key'[#id], 'location-as8'[#id])"/>
 	<sentence provenance="background" sentence="action.open('bedroom5-key'[#id], 'bedroom5-door'[#id])"/>
 
-	<!-- permissions -->
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as1'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as2'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as3'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as4'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as5'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as6'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as7'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as8'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as9'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as10'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as11'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as12'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as13'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as14'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as15'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as16'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as17'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as18'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as19'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as20'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as21'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as22'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as23'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as24'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as25'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as26'[#id])"/>
-	<!--sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as27'[#id])"/-->
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-maintenance'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-as29'[#id])"/>
-	<sentence provenance="background" sentence="~permitted-in('player'[#id], 'location-garage'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as31'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as32'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as33'[#id])"/>
-	<sentence provenance="background" sentence="permitted-in('player'[#id], 'location-as34'[#id])"/>
-
 	<!-- other general knowledge -->
 	<sentence provenance="background" sentence="communicator('communicator'[#id])"/>
 	<sentence provenance="background" sentence="stasis-pod('player-stasis-pod'[#id])"/>

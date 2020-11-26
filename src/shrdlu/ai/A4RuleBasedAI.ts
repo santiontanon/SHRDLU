@@ -23,37 +23,40 @@ class A4RuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new AnswerDistance_IntentionAction());
 	    this.intentionHandlers.push(new A4Locate_IntentionAction());
 
-		this.locationsWherePlayerIsNotPermitted.push("location-as4");	// bedroom 1
-		this.locationsWherePlayerIsNotPermitted.push("location-as5");	// bedroom 2
-		this.locationsWherePlayerIsNotPermitted.push("location-as6");	// bedroom 3
-		this.locationsWherePlayerIsNotPermitted.push("location-as7");	// bedroom 4
-		this.locationsWherePlayerIsNotPermitted.push("location-as9");	// bedroom 6
-		this.locationsWherePlayerIsNotPermitted.push("location-as10");	// bedroom 7
-		this.locationsWherePlayerIsNotPermitted.push("location-as11");	// bedroom 8
-		this.locationsWherePlayerIsNotPermitted.push("location-as12");	// bedroom 9
-		this.locationsWherePlayerIsNotPermitted.push("location-as13");	// bedroom 10
-		this.locationsWherePlayerIsNotPermitted.push("location-as14");	// bedroom 11
-		this.locationsWherePlayerIsNotPermitted.push("location-as15");	// bedroom 12
-		this.locationsWherePlayerIsNotPermitted.push("location-as26");
-		this.locationsWherePlayerIsNotPermitted.push("location-maintenance");
-		this.locationsWherePlayerIsNotPermitted.push("location-as29");
-		this.locationsWherePlayerIsNotPermitted.push("location-garage");
-
-		this.doorsPlayerIsNotPermittedToOpen.push("STASIS");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM1");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM2");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM3");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM4");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM6");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM7");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM8");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM9");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM10");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM11");
-		this.doorsPlayerIsNotPermittedToOpen.push("BEDROOM12");
-		this.doorsPlayerIsNotPermittedToOpen.push("MAINTENANCE");
-		this.doorsPlayerIsNotPermittedToOpen.push("GARAGE");
-		this.doorsPlayerIsNotPermittedToOpen.push("COMMAND");
+	    this.allowPlayerInto("location-as1", null);
+	    this.allowPlayerInto("location-as2", null);
+	    this.allowPlayerInto("location-as3", null);
+	    this.doNotAllowPlayerInto("location-as4", "BEDROOM1");
+	    this.doNotAllowPlayerInto("location-as5", "BEDROOM2");
+	    this.doNotAllowPlayerInto("location-as6", "BEDROOM3");
+	    this.doNotAllowPlayerInto("location-as7", "BEDROOM4");
+	    this.allowPlayerInto("location-as8", "BEDROOM5");	    
+	    this.doNotAllowPlayerInto("location-as9", "BEDROOM6");
+	    this.doNotAllowPlayerInto("location-as10", "BEDROOM7");
+	    this.doNotAllowPlayerInto("location-as11", "BEDROOM8");
+	    this.doNotAllowPlayerInto("location-as12", "BEDROOM9");
+	    this.doNotAllowPlayerInto("location-as13", "BEDROOM10");
+	    this.doNotAllowPlayerInto("location-as14", "BEDROOM11");
+	    this.doNotAllowPlayerInto("location-as15", "BEDROOM12");
+	    this.allowPlayerInto("location-as16", null);
+	    this.allowPlayerInto("location-as17", null);
+	    this.allowPlayerInto("location-as18", null);
+	    this.allowPlayerInto("location-as19", null);
+	    this.allowPlayerInto("location-as20", null);
+	    this.allowPlayerInto("location-as21", null);
+	    this.allowPlayerInto("location-as22", null);
+	    this.allowPlayerInto("location-as23", null);
+	    this.allowPlayerInto("location-as24", null);
+	    this.allowPlayerInto("location-as25", null);
+	    this.doNotAllowPlayerInto("location-as26", "STASIS");
+	    this.allowPlayerInto("location-as27", null);
+	    this.doNotAllowPlayerInto("location-maintenance", "MAINTENANCE");
+	    this.doNotAllowPlayerInto("location-as29", "GARAGE");
+	    this.doNotAllowPlayerInto("location-garage", "COMMAND");
+	    this.allowPlayerInto("location-as31", null);
+	    this.allowPlayerInto("location-as32", null);
+	    this.allowPlayerInto("location-as33", null);
+	    this.allowPlayerInto("location-as34", null);
 
 		this.cache_sort_bright = this.o.getSort("bright");
 		this.cache_sort_dark = this.o.getSort("dark");
@@ -1513,8 +1516,27 @@ class A4RuleBasedAI extends RuleBasedAI {
 			this.longTermMemory.removeSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o));
 			this.longTermMemory.addSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.timeStamp);
 		}
-		idx = this.doorsPlayerIsNotPermittedToOpen.indexOf(door);
-		if (idx != -1) this.doorsPlayerIsNotPermittedToOpen.splice(idx,1);
+		if (door != null) {
+			idx = this.doorsPlayerIsNotPermittedToOpen.indexOf(door);
+			if (idx != -1) this.doorsPlayerIsNotPermittedToOpen.splice(idx,1);
+		}
+	}
+
+
+	doNotAllowPlayerInto(location:string, door:string)
+	{
+		let idx:number = this.locationsWherePlayerIsNotPermitted.indexOf(location);
+		if (idx == -1) {
+			this.locationsWherePlayerIsNotPermitted.push(location);
+
+			// remove the long term permission term and add a negated one:
+			this.longTermMemory.removeSentence(Sentence.fromString("permitted-in('player'[#id], '"+location+"'[#id])", this.o));
+			this.longTermMemory.addSentence(Sentence.fromString("~permitted-in('player'[#id], '"+location+"'[#id])", this.o), BACKGROUND_PROVENANCE, 1, this.timeStamp);
+		}
+		if (door != null) {
+			idx = this.doorsPlayerIsNotPermittedToOpen.indexOf(door);
+			if (idx == -1) this.doorsPlayerIsNotPermittedToOpen.push(door);
+		}
 	}
 
 
