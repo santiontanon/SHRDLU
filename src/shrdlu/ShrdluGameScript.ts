@@ -1313,7 +1313,7 @@ class ShrdluGameScript {
 							queryTerms = [v];
 						} else if (v instanceof TermTermAttribute) {
 							let query:Term = (<TermTermAttribute>v).term;
-							queryTerms = NLParser.elementsInList(query, "#and");							
+							queryTerms = Term.elementsInList(query, "#and");							
 						}
 						if (queryTerms != null) {
 							for(let ta of queryTerms) {
@@ -2858,7 +2858,7 @@ class ShrdluGameScript {
 		}
 
 		if (query != null) {
-			let queryTerms:TermAttribute[] = NLParser.elementsInList(query, "#and");
+			let queryTerms:TermAttribute[] = Term.elementsInList(query, "#and");
 			let humanFound:boolean = false;
 			let differentFromPlayerFound:boolean = false;
 			let patterna:Term = Term.fromString("alone('player'[#id])", this.game.ontology);

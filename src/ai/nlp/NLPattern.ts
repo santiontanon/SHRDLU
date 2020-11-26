@@ -339,7 +339,7 @@ class NLPattern {
 		}
 
 		let all_found:boolean = false;
-		for(let tmp of NLParser.elementsInList((<TermTermAttribute>clause).term, "#and")) {
+		for(let tmp of Term.elementsInList((<TermTermAttribute>clause).term, "#and")) {
 			if (tmp instanceof TermTermAttribute) {
 				let tmp2:Term = (<TermTermAttribute>tmp).term;
 				if (tmp2.functor.name == "all") {
@@ -443,7 +443,7 @@ class NLPattern {
 
 //		console.log("specialfunction_derefHypothetical: context.deref failed");
 
-		let clauses:TermAttribute[] =  NLParser.elementsInList((<TermTermAttribute>clause).term, "#and");
+		let clauses:TermAttribute[] =  Term.elementsInList((<TermTermAttribute>clause).term, "#and");
 
 		for(let tmp of clauses) {
 			if (tmp instanceof TermTermAttribute) {
@@ -582,7 +582,7 @@ class NLPattern {
 //		console.log("specialfunction_derefQuery: query = " + query);
 //		console.log("specialfunction_derefQuery: context.ai.selfID = " + context.ai.selfID);
 		let queryTerm:TermAttribute = null;
-		let terms:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>clause).term, "#and");
+		let terms:TermAttribute[] = Term.elementsInList((<TermTermAttribute>clause).term, "#and");
 		let myDeterminer:Term = null;
 		let ourDeterminer:Term = null;
 		let yourDeterminer:Term = null;

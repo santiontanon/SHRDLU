@@ -22,10 +22,23 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 		let speakerCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
 		let targetID:string = null;
 		let targetTermString:string = null;
+		let nresults:number = 0;
+		let prepositions:string[] = ["space.directly.on.top.of", "space.inside.of", "space.at"];
 
-		console.log("query result, answer where space.directly.on.top.of (target): " + inf.inferences[0].endResults);
-		console.log("query result, answer where space.inside.of (target): " + inf.inferences[1].endResults);
-		console.log("query result, answer where space.at (target): " + inf.inferences[2].endResults);
+		if (inf.inferences.length == 3) {
+			console.log("query result, answer where space.directly.on.top.of (target): " + inf.inferences[0].endResults);
+			console.log("query result, answer where space.inside.of (target): " + inf.inferences[1].endResults);
+			console.log("query result, answer where space.at (target): " + inf.inferences[2].endResults);
+			nresults = inf.inferences[0].endResults.length + 
+					   inf.inferences[1].endResults.length +
+					   inf.inferences[2].endResults.length;
+		} else {
+			console.log("query result, answer where custom constraint (target): " + inf.inferences[0].endResults);
+			console.log("query result, answer where space.at (target): " + inf.inferences[1].endResults);
+			nresults = inf.inferences[0].endResults.length + 
+					   inf.inferences[1].endResults.length;
+			prepositions = ["space.at", "space.at"];
+		}
 
 		if (this.effectParameter.attributes[2] instanceof ConstantTermAttribute) {
 			targetID = (<ConstantTermAttribute>(this.effectParameter.attributes[2])).value;
@@ -39,9 +52,7 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			targetTermString = "["+this.effectParameter.attributes[2].sort+"]";
 		}
 
-		if (inf.inferences[0].endResults.length == 0 &&
-			inf.inferences[1].endResults.length == 0 &&
-			inf.inferences[2].endResults.length == 0) {
+		if (nresults == 0) {
 			let term1:Term = null;
 			if (targetID != null) {
 				term1 = Term.fromString("perf.inform.answer('"+speakerCharacterID+"'[#id],'unknown'[symbol],"+query_perf+"('"+ai.selfID+"'[#id],"+targetTermString+"))", ai.o);
@@ -56,41 +67,17 @@ class BWAnswerWhere_InferenceEffect extends InferenceEffect {
 			// get the location ID
 			let selectedBindings:Bindings = null;
 			let targetLocationID:string = null;
-			for(let result of inf.inferences[0].endResults) {
-				for(let b of result.bindings.l) {
-					if (b[0].name == "WHERE") {
-						let v:TermAttribute = b[1];
-						if (v instanceof ConstantTermAttribute) {
-							targetLocationID = (<ConstantTermAttribute>v).value;
-							selectedBindings = result.bindings;
-							where_preposition = "space.directly.on.top.of";
-						}
-					}
-				}
-			}			
-			if (targetLocationID == null) {
-				for(let result of inf.inferences[1].endResults) {
-					for(let b of result.bindings.l) {
-						if (b[0].name == "WHERE") {
-							let v:TermAttribute = b[1];
-							if (v instanceof ConstantTermAttribute) {
-								targetLocationID = (<ConstantTermAttribute>v).value;
-								selectedBindings = result.bindings;
-								where_preposition = "space.inside.of";
-							}
-						}
-					}
-				}
-			}
-			if (targetLocationID == null) {
-				for(let result of inf.inferences[2].endResults) {
-					for(let b of result.bindings.l) {
-						if (b[0].name == "WHERE") {
-							let v:TermAttribute = b[1];
-							if (v instanceof ConstantTermAttribute) {
-								targetLocationID = (<ConstantTermAttribute>v).value;
-								selectedBindings = result.bindings;
-								where_preposition = "space.at";
+			for(let i:number = 0; i<inf.inferences.length; i++) {
+				if (targetLocationID == null) {
+					for(let result of inf.inferences[i].endResults) {
+						for(let b of result.bindings.l) {
+							if (b[0].name == "WHERE") {
+								let v:TermAttribute = b[1];
+								if (v instanceof ConstantTermAttribute) {
+									targetLocationID = (<ConstantTermAttribute>v).value;
+									selectedBindings = result.bindings;
+									where_preposition = prepositions[i];
+								}
 							}
 						}
 					}

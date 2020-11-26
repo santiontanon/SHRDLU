@@ -299,7 +299,7 @@ class NLParser {
 		} else if (parse.functor.name == "#list") {
 			let result:Term = null;
 			// we go through them in reverse, since this function reverses their order:
-			for(let perf of NLParser.elementsInList(parse, "#list").reverse()) {
+			for(let perf of Term.elementsInList(parse, "#list").reverse()) {
 				if (!(perf instanceof TermTermAttribute)) return null;
 				let perf2:Term = this.unifyListener((<TermTermAttribute>perf).term, listener);
 				if (perf2 != null) {
@@ -459,7 +459,7 @@ class NLParser {
 			if (parse.attributes[ii] instanceof TermTermAttribute) {
 				let childTerm:Term = (<TermTermAttribute>parse.attributes[ii]).term;
 				if (childTerm.functor.name == "#list" && parse.functor.name != "#list") {
-					let l:TermAttribute[] = NLParser.elementsInList(childTerm, "#list");
+					let l:TermAttribute[] = Term.elementsInList(childTerm, "#list");
 					let output:Term = null;
 //					console.log("resolveListsInternal (elements in list): " + l);
 //					console.log("resolveListsInternal (before resolving the list): " + parse);
@@ -505,78 +505,14 @@ class NLParser {
 	static termsInList(list:Term, listFunctor:string) : Term[]
 	{
 		let output:Term[] = [];
-		for(let element of NLParser.elementsInList(list, listFunctor)) {
+		for(let element of Term.elementsInList(list, listFunctor)) {
 			if (element instanceof TermTermAttribute) {
 				output.push((<TermTermAttribute>element).term);
 			}
 		}
 		return output;
-		/*
-		while(list.functor.name == listFunctor) {
-			if (list.attributes[0] instanceof TermTermAttribute &&
-				(<TermTermAttribute>list.attributes[0]).term.functor.name == listFunctor) {
-				if (list.attributes[1] instanceof TermTermAttribute) output.push((<TermTermAttribute>(list.attributes[1])).term);
-				list = (<TermTermAttribute>list.attributes[0]).term;
-			} else if (list.attributes[1] instanceof TermTermAttribute &&
-				(<TermTermAttribute>list.attributes[1]).term.functor.name == listFunctor) {
-				if (list.attributes[0] instanceof TermTermAttribute) output.push((<TermTermAttribute>(list.attributes[0])).term);
-				list = (<TermTermAttribute>list.attributes[1]).term;
-			} else {
-				if (list.attributes[0] instanceof TermTermAttribute) output.push((<TermTermAttribute>(list.attributes[0])).term);
-				if (list.attributes[1] instanceof TermTermAttribute) output.push((<TermTermAttribute>(list.attributes[1])).term);
-				return output;
-			}
-		}
-		// this means that the whole thing was not a list to begin with, so, just return an array of one:
-		output.push(list);
-		return output;
-		*/
 	}
 
-
-	static elementsInList(list:Term, listFunctor:string) : TermAttribute[]
-	{
-		let output:TermAttribute[] = [];
-		if (list.functor.name == listFunctor) {
-			for(let i = 0;i<list.attributes.length;i++) {
-				if ((list.attributes[i] instanceof TermTermAttribute) &&
-					(<TermTermAttribute>list.attributes[i]).term.functor.name == listFunctor) {
-					output = output.concat(NLParser.elementsInList((<TermTermAttribute>(list.attributes[i])).term, listFunctor));
-				} else {
-					output.push(list.attributes[i]);
-				}
-			}
-		} else {
-			output.push(new TermTermAttribute(list));
-		}
-		return output;
-	}
-
-/*
-	static elementsInList(list:Term, listFunctor:string) : TermAttribute[]
-	{
-		let output:TermAttribute[] = [];
-
-		while(list.functor.name == listFunctor) {
-			if (list.attributes[0] instanceof TermTermAttribute &&
-				(<TermTermAttribute>list.attributes[0]).term.functor.name == listFunctor) {
-				output.push(list.attributes[1]);
-				list = (<TermTermAttribute>list.attributes[0]).term;
-			} else if (list.attributes[1] instanceof TermTermAttribute &&
-				(<TermTermAttribute>list.attributes[1]).term.functor.name == listFunctor) {
-				output.push(list.attributes[0]);
-				list = (<TermTermAttribute>list.attributes[1]).term;
-			} else {
-				output.push(list.attributes[0]);
-				output.push(list.attributes[1]);
-				return output;
-			}
-		}
-		// this means that the whole thing was not a list to begin with, so, just return an array of one:
-		output.push(new TermTermAttribute(list));
-		return output;
-	}
-*/
 
 	cloneTermReplacingIthAttribute(term:Term, i:number, replacement:TermAttribute) : Term
 	{

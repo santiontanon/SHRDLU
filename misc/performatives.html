@@ -52,8 +52,10 @@ Most of the following performatives could just be defined as perf.q.query, but i
 <ul>
 	<li><b>perf.q.whereis(listener)</b>: this is a follow up to a previous sentence. The AI will try to infer which object are you asking about.</li>
 	<li><b>perf.q.whereis(listener, object)</b>:</li>
-	<li><b>perf.q.whereis(listener, location_variable, constraint_on_location_variable)</b>: the object is inferred from context, and you are just specifying a constraint on where to look for</li>
-	<li><b>perf.q.whereis(listener, object, location_variable, constraint_on_location_variable)</b></li>
+	<li><b>perf.q.whereis(listener, location_variable, constraint)</b>: the object is inferred from context, and you are just specifying a constraint on where to look for</li>
+	<li><b>perf.q.whereis(listener, object, location_variable, constraint)</b></li>
+	<li><b>perf.q.whereis(listener, object_variable, location_variable, constraint)</b></li>
+
 	<li><b>perf.q.whereto(listener, ...)</b>: ...</li>
 	<li><b>perf.q.query-followup(listener, ...)</b>: ...</li>
 	<li><b>perf.q.whois.name(listener, ...)</b>: ...</li>

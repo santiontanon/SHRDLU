@@ -240,7 +240,7 @@ class NLGenerator {
 		if (t.attributes[1] instanceof TermTermAttribute &&
 			(<TermTermAttribute>(t.attributes[1])).term.functor.name == "#and") {
 			let o:Ontology = context.ai.o;
-			let t_l:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>(t.attributes[1])).term, "#and");
+			let t_l:TermAttribute[] = Term.elementsInList((<TermTermAttribute>(t.attributes[1])).term, "#and");
 			let timeTerm:TermAttribute = null;
 			// console.log("t_l: " + t_l);
 			// this "list" rendering format is only for when we want to generate text for lists of answers:
@@ -484,12 +484,12 @@ class NLGenerator {
 			console.error("termToEnglish_Inform: could not render " + pt);
 			return pt.toString();
 		}
-		let or_tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#or");
+		let or_tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#or");
 		if (or_tl.length > 1) {
 			// we are trying to render a sentence, not just a term:
 			return this.termToEnglish_Inform_ComplexSentence(or_tl, speakerID, context);
 		}
-		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
+		let tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
 		for(let tmp_t of tl) {
 			if (!(tmp_t instanceof TermTermAttribute)) {
 				console.error("termToEnglish_Inform: could not render (one of the elements in the list is not a term) " + pt);	
@@ -1064,7 +1064,7 @@ class NLGenerator {
 			console.error("termToEnglish_Q_Predicate: could not render " + pt);
 			return pt.toString();
 		}
-		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
+		let tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
 		for(let tmp_t of tl) {
 			if (!(tmp_t instanceof TermTermAttribute)) {
 				console.error("termToEnglish_Q_Predicate: could not render (one of the elements in the list is not a term) " + pt);	
@@ -1163,7 +1163,7 @@ class NLGenerator {
 			console.error("termToEnglish_RequestAction: could not render " + pt);
 			return pt.toString();
 		}
-		let actionSequence:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"time.subsequently");
+		let actionSequence:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"time.subsequently");
 		let actionSequenceStrings:string[] = [];
 		for(let actionAtt of actionSequence) {
 			if (!(actionAtt instanceof TermTermAttribute)) {
@@ -1172,7 +1172,7 @@ class NLGenerator {
 			}
 			let action:Term = (<TermTermAttribute>actionAtt).term;
 			let actionString:string = null;
-			let tl:TermAttribute[] = NLParser.elementsInList(action,"#and");
+			let tl:TermAttribute[] = Term.elementsInList(action,"#and");
 			for(let tmp_t of tl) {
 				if (!(tmp_t instanceof TermTermAttribute)) {
 					console.error("termToEnglish_RequestAction: could not render (one of the elements in the list is not a term) " + pt);	
@@ -1371,7 +1371,7 @@ class NLGenerator {
 			console.error("termToEnglish_QuestionAction: could not render " + pt);
 			return pt.toString();
 		}
-		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
+		let tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt.attributes[1]).term,"#and");
 		for(let tmp_t of tl) {
 			if (!(tmp_t instanceof TermTermAttribute)) {
 				console.error("termToEnglish_QuestionAction: could not render (one of the elements in the list is not a term) " + pt);	
@@ -1464,7 +1464,7 @@ class NLGenerator {
 			console.error("renderTypeStatement: could not render " + pt);
 			return pt.toString();
 		}
-		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>pt).term,"#and");
+		let tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>pt).term,"#and");
 		for(let tmp_t of tl) {
 			if (!(tmp_t instanceof TermTermAttribute)) {
 				console.error("renderTypeStatement: could not render (one of the elements in the list is not a term) " + pt);	
@@ -1571,7 +1571,7 @@ class NLGenerator {
 		let tl:TermAttribute[] = [entityRaw];
 		if (entityRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>entityRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
+				tl = Term.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
 			}
 		}
 		let entity:TermAttribute = null;
@@ -1642,14 +1642,14 @@ class NLGenerator {
 		let tl:TermAttribute[] = [entityRaw];
 		if (entityRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>entityRaw).term.functor.name == "#or") {
-				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#or");
+				tl = Term.elementsInList((<TermTermAttribute>entityRaw).term,"#or");
 				if (tl.length > 1) {
 					// we are trying to render a sentence, not just a term:
 					return [this.termToEnglish_Inform_ComplexSentence(tl, speakerID, context), 2, null, 0];
 				}
 			}
 			if ((<TermTermAttribute>tl[0]).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>tl[0]).term,"#and");
+				tl = Term.elementsInList((<TermTermAttribute>tl[0]).term,"#and");
 			}
 		}
 		let entity:TermAttribute = null;
@@ -1902,7 +1902,7 @@ class NLGenerator {
 		let tl:TermAttribute[] = [propertyRaw];
 		if (propertyRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>propertyRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>propertyRaw).term,"#and");
+				tl = Term.elementsInList((<TermTermAttribute>propertyRaw).term,"#and");
 			}
 		}
 		let property:TermAttribute = tl[0];	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
@@ -1959,7 +1959,7 @@ class NLGenerator {
 		let tl:TermAttribute[] = [propertyRaw];
 		if (propertyRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>propertyRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>propertyRaw).term,"#and");
+				tl = Term.elementsInList((<TermTermAttribute>propertyRaw).term,"#and");
 			}
 		}
 		let relation:TermAttribute = tl[0];	// ASSUMPTION!!!: the main term is the first in case there is a list, and the rest should be qualifiers
@@ -2025,7 +2025,7 @@ class NLGenerator {
 		let tl:TermAttribute[] = [entityRaw];
 		if (entityRaw instanceof TermTermAttribute) {
 			if ((<TermTermAttribute>entityRaw).term.functor.name == "#and") {
-				tl = NLParser.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
+				tl = Term.elementsInList((<TermTermAttribute>entityRaw).term,"#and");
 			}
 		}
 //		console.log("termToEnglish_ConceptEntity: " + entityRaw);
@@ -2598,7 +2598,7 @@ class NLGenerator {
 	*/
 	termToEnglish_Query(variable:TermAttribute, rest:TermAttribute, speakerID:string, context:NLContext) : string
 	{
-		let tl:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>rest).term,"#and");
+		let tl:TermAttribute[] = Term.elementsInList((<TermTermAttribute>rest).term,"#and");
 		for(let tmp_t of tl) {
 			if (!(tmp_t instanceof TermTermAttribute)) {
 				console.error("termToEnglish_Query: could not render (one of the elements in the list is not a term) " + rest);	
@@ -2811,7 +2811,7 @@ class NLGenerator {
 //		console.log("termToEnglish_NestedVerb: mainVerbSubjectID " + mainVerbSubjectID);
 		let tl:TermAttribute[];
 		if (t_raw.functor.name == "#and") {
-			tl = NLParser.elementsInList(t_raw,"#and");
+			tl = Term.elementsInList(t_raw,"#and");
 			for(let tmp_t of tl) {
 				if (!(tmp_t instanceof TermTermAttribute)) {
 					console.error("termToEnglish_NestedVerb: could not render (one of the elements in the list is not a term) " + t_raw);	

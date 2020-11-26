@@ -1729,7 +1729,7 @@ class RuleBasedAI {
 		// if there are variables, that means there was a query involved, so, we don't know how to do it:
 		if (queryTerm.getAllVariables().length != 0) return [];
 
-		let queryTerms:TermAttribute[] = NLParser.elementsInList(queryTerm,"#and");
+		let queryTerms:TermAttribute[] = Term.elementsInList(queryTerm,"#and");
 
 		if (answer) {
 			// we need to memorize each term:
@@ -1766,7 +1766,7 @@ class RuleBasedAI {
 
 		if (!(predicateQuestion.attributes[1] instanceof TermTermAttribute)) return [];
 		let queryTerm:TermAttribute = predicateQuestion.attributes[1];
-		let queryTerms:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>queryTerm).term,"#and");	
+		let queryTerms:TermAttribute[] = Term.elementsInList((<TermTermAttribute>queryTerm).term,"#and");	
 		if (!(queryTerms[0] instanceof TermTermAttribute)) return [];
 		let mainQueryTerm:Term = (<TermTermAttribute>(queryTerms[0])).term;
 		if (mainQueryTerm.functor.name == "verb.remember" ||
@@ -1778,7 +1778,7 @@ class RuleBasedAI {
 			// replace the query term by the hidden one inside:
 			if (!(mainQueryTerm.attributes[1] instanceof TermTermAttribute)) return null;
 			queryTerm = mainQueryTerm.attributes[1];
-			queryTerms = NLParser.elementsInList((<TermTermAttribute>queryTerm).term,"#and");
+			queryTerms = Term.elementsInList((<TermTermAttribute>queryTerm).term,"#and");
 			if (!(queryTerms[0] instanceof TermTermAttribute)) return null;
 			if (!(queryTerms[1] instanceof TermTermAttribute)) return null;
 			if (queryTerms.length != 2) return null;

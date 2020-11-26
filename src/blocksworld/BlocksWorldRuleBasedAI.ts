@@ -659,7 +659,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
 	    	console.log("BlocksWorldRuleBasedAI("+this.selfID+"): parsed sentence '" + text + "'\n  " + HPparse.result);
 	    	// the parse might contain several performatives combined with a "#list" construct
-			let parsePerformatives:TermAttribute[] = NLParser.elementsInList(HPparse.result, "#list");
+			let parsePerformatives:TermAttribute[] = Term.elementsInList(HPparse.result, "#list");
 			let actionTerms2:Term[] = [];
     		for(let actionTerm of actionTerms) {
         		for(let parsePerformative of parsePerformatives) {

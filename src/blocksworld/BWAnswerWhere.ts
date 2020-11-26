@@ -80,7 +80,7 @@ class BWAnswerWhere_IntentionAction extends IntentionAction {
 							// insert the missing subject of the where:
 							intention.attributes.splice(2, 0, lastPerf.performative.attributes[1]);
 							// add additional query terms:
-							let queryTermsList:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>lastPerf.performative.attributes[3]).term, "#and");
+							let queryTermsList:TermAttribute[] = Term.elementsInList((<TermTermAttribute>lastPerf.performative.attributes[3]).term, "#and");
 							for(let queryTerm of queryTermsList) {
 								if (queryTerm instanceof TermTermAttribute) {
 									intention.attributes[4] = new TermTermAttribute(new Term(ai.o.getSort("#and"),
@@ -132,7 +132,7 @@ class BWAnswerWhere_IntentionAction extends IntentionAction {
 			let whereVariable:TermAttribute = intention.attributes[3];
 			(<VariableTermAttribute>whoVariable).name = "WHO";
 			(<VariableTermAttribute>whereVariable).name = "WHERE";
-			let additionalTermsTmp:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>(intention.attributes[4])).term, "#and");
+			let additionalTermsTmp:TermAttribute[] = Term.elementsInList((<TermTermAttribute>(intention.attributes[4])).term, "#and");
 			let target1Terms:Term[] = [new Term(ai.o.getSort("space.at"),
 								 		 	    [whoVariable,
 								 	 			 whereVariable])];
@@ -165,7 +165,7 @@ class BWAnswerWhere_IntentionAction extends IntentionAction {
 			let whoVariable:TermAttribute = intention.attributes[2];
 			let whereVariable:TermAttribute = intention.attributes[3];
 			(<VariableTermAttribute>whereVariable).name = "WHERE";
-			let additionalTermsTmp:TermAttribute[] = NLParser.elementsInList((<TermTermAttribute>(intention.attributes[4])).term, "#and");
+			let additionalTermsTmp:TermAttribute[] = Term.elementsInList((<TermTermAttribute>(intention.attributes[4])).term, "#and");
 			let additionalTerms:Sentence[] = [];
 			let target1Terms:Term[] = [new Term(ai.o.getSort("space.at"),
 								 		 	    [whoVariable,

@@ -505,7 +505,7 @@ class NLContext {
 	{
 		let newPerformatives:NLContextPerformative[] = [];
 		if (perf.functor.name=="#list") {
-			let parsePerformatives:TermAttribute[] = NLParser.elementsInList(perf, "#list");
+			let parsePerformatives:TermAttribute[] = Term.elementsInList(perf, "#list");
 			for(let parsePerformative of parsePerformatives) {
 				if (parsePerformative instanceof TermTermAttribute) {
 					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, parse, cause, o, timeStamp));
@@ -666,7 +666,7 @@ class NLContext {
 
 	deref(clause:Term, listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
-		return this.derefInternal(NLParser.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI);;
+		return this.derefInternal(Term.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI);;
 	}
 
 

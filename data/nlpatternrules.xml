@@ -1492,6 +1492,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 #derefQuery(C, V, QUERY)
 					 #derefQuery(C2, V2, QUERY2)"/>
 
+	<NLPattern name="predicate-is-there-relationverb-2query"
+			   head="perf.q.predicate(LISTENER, #and(#cons(RELATIONVERB, V, V2), #and(QUERY, QUERY2)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.be'[symbol], NV, P, TV) ['there'] nounPhrase(X, N, P, C)
+			   		 ('that'|'which') 
+			   		 verb(RELATIONVERB, NV2, P2, TV2) #symbolToSort(RELATIONVERB, VERB_SYMBOL:[relation-verb])
+			   		 nounPhrase(X2, [singular], P2, C2)  ('!'|'?')*
+			   		 #derefQuery(C, V, QUERY)
+					 #derefQuery(C2, V2, QUERY2)"/>
+
 	<NLPattern name="predicate-is-there-gerund-verb"
 			   head="perf.q.predicate(LISTENER, #and(PREDICATE, #cons(VERB, V, OBJECT)))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -2842,6 +2854,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ('where' verb('verb.be'[symbol], N, P, [present-tense]) | verb('verb.locate'[symbol], N, P, [present-tense]))
 			   		 nounPhrase(X, N, P, C) ('!'|'?')* 
     		   		 #derefQuery(C, SUBJECT, QUERY)"/>
+    <NLPattern name="q.whereis-complex-query"
+			   head="perf.q.whereis(LISTENER, QV, LOCATION, #and(QUERY, #and(#cons(RELATIONVERB, QV, QV3), QUERY3)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]] ['do' 'you' 'know']
+			   		 ('where' verb('verb.be'[symbol], N, P, [present-tense]) | verb('verb.locate'[symbol], N, P, [present-tense]))
+			   		 ('the'|'a') 
+			   		 nounPhrase(X, N, P, C) 
+			   		 'that' 
+			   		 verb(RELATIONVERB, NV2, P2, TV2) #symbolToSort(RELATIONVERB, VERB_SYMBOL:[relation-verb])
+			   		 nounPhrase(X3, N3, P3, C3) 
+			   		 ('!'|'?')* 
+    		   		 #derefQuery(C, QV, QUERY)
+    		   		 #derefQuery(C3, QV3, QUERY3)"/>
     <NLPattern name="where-is-this"
     		   head="perf.q.whereis(LISTENER, LOCATION, LOCATION2, space.at(SPEAKER, LOCATION))"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
@@ -6190,6 +6216,31 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefFromContext(C2, OBJ2)"
 			   priority="200"/>
 
+    <NLPattern name="action-phrasal-query-complexquery"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, QV1, QV2), #and(QUERY1, #and(QUERY2, #and(#cons(RELATIONVERB, QV2, QV3), QUERY3))), [number.1])"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 #token(PREP)
+    		   		 ('the'|'a') nounPhrase(X2, N2, P2, C2)
+    		   		 ('that'|'which')
+    		   		 verb(RELATIONVERB, NV2, P2, TV2) #symbolToSort(RELATIONVERB, VERB_SYMBOL:[relation-verb])
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 #derefQuery(C1, QV1, QUERY1)
+    		   		 #derefQuery(C2, QV2, QUERY2)
+    		   		 #derefQuery(C3, QV3, QUERY3)"/>
+
+    <NLPattern name="action-phrasal-obj-complexquery"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJ1, QV2), #and(QUERY2, #and(#cons(RELATIONVERB, QV2, QV3), QUERY3)), [number.1])"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 #token(PREP)
+    		   		 ('the'|'a') nounPhrase(X2, N2, P2, C2)
+    		   		 ('that'|'which')
+    		   		 verb(RELATIONVERB, NV2, P2, TV2) #symbolToSort(RELATIONVERB, VERB_SYMBOL:[relation-verb])
+    		   		 nounPhrase(X3, N3, P3, C3)
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefQuery(C2, QV2, QUERY2)
+    		   		 #derefQuery(C3, QV3, QUERY3)"/>    		   		 
 
     <NLPattern name="perf.request.action-phrasal-verb-respectively"
     		   head="#list(perf.request.action(LISTENER, #cons(VERB:[symbol], LISTENER, OBJ1, OBJ3)),

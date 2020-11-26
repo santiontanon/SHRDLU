@@ -74,7 +74,7 @@ function NLParseTest(sentence:string, s:Sort, context:NLContext, expectedResultS
             return false;
         } else {
             if (context != null && s.name == "performative") {
-                var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
+                var parsePerformatives:TermAttribute[] = Term.elementsInList(expectedResult, "#and");
                 for(let parsePerformative of parsePerformatives) {
                     context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.timeStamp);
                 }
@@ -158,7 +158,7 @@ function NLParseTestUnifyingListener(sentence:string, s:Sort, context:NLContext,
             //console.log("  highest priority parse ruleNames: " + parse.ruleNames);
             //console.log("  highest priority parse bindings: " + parse.bindings);
             if (context != null) {
-                var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
+                var parsePerformatives:TermAttribute[] = Term.elementsInList(expectedResult, "#and");
                 for(let parsePerformative of parsePerformatives) {
                     context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, parse, null, o, testAI.timeStamp);
                 }
@@ -1645,14 +1645,15 @@ NLParseTestUnifyingListener("who can pick up crates?", o.getSort("performative")
 NLParseTestUnifyingListener("I can pick up crates", o.getSort("performative"), context, "etaoin", "perf.inform(V0:'etaoin'[#id], #or(#not(crate(X)), verb.can('1'[#id], action.take('1'[#id], X))))");
 NLParseTestUnifyingListener("which large block is behind the crate?", o.getSort("performative"), context, "etaoin", "perf.q.query(V0:'etaoin'[#id], X, #and(block(X), #and(big(X), space.behind(X, '5'[#id]))))");
 NLParseTestUnifyingListener("which large block is behind a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.query(V0:'etaoin'[#id], X, #and(block(X), #and(big(X), #and(space.behind(X, Y), pyramid(Y)))))");
-
-// "is there a door that belongs to a kitchen?"
-// "where is the door that belongs to a kitchen?"
-// "where is the door that belongs to the kitchen?"
-// NLParseTestUnifyingListener("put a small one onto the door which belongs to a kitchen?", o.getSort("performative"), context, "etaoin", "");
+NLParseTestUnifyingListener("is there a door that belongs to a kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(door(X), #and(verb.belong(X, Y), kitchen(Y))))");
+NLParseTestUnifyingListener("where is the door that belongs to a kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.whereis(V0:'etaoin'[#id], X, L, #and(door(X), #and(verb.belong(X, Y), kitchen(Y))))");
+NLParseTestUnifyingListener("put a small block onto the door which belongs to the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, 'door1'[#id]), #and(small(X), block(X)), [number.1])");
+NLParseTestUnifyingListener("put a small block onto the door which belongs to a kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(small(X), #and(block(X), #and(door(Y), #and(verb.belong(Y, Z), kitchen(Z))))), [number.1])");
+NLParseTestUnifyingListener("put the crate onto the door which belongs to a kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], Y), #and(door(Y), #and(verb.belong(Y, Z), kitchen(Z))), [number.1])");
 
 // NLParseTestUnifyingListener("put the littlest crate on top of the kitchen?", o.getSort("performative"), context, "etaoin", "");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
+
 

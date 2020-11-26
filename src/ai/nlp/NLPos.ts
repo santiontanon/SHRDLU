@@ -808,7 +808,9 @@ this.addTokenPOS(new PartOfSpeech("of", "relation.origin", Term.fromString("prep
 this.addTokenPOS(new PartOfSpeech("of", "verb.belong", Term.fromString("preposition('verb.belong'[verb.belong])", o), 1.0));
 /*
   ["off",  "PREP"],
-  ["onto",  "PREP"],
+*/
+this.addTokenPOS(new PartOfSpeech("onto", "relation.target", Term.fromString("preposition('relation.target'[relation.target])", o), 1.0));
+/*
   ["opposite",  "PREP"],
 NLPAddTokenPOS("out", PartOfSpeech.generatePreposition("out", POS_TYPE_PPREPOSITION_PLACE));
 */

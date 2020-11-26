@@ -750,8 +750,8 @@ class Term {
         if (this.functor.name == "#and" ||
             this.functor.name == "#list") {
             // special case!
-            let tl1:TermAttribute[] = Term.elementsInGenericList(this, this.functor.name);
-            let tl2:TermAttribute[] = Term.elementsInGenericList(t, this.functor.name);
+            let tl1:TermAttribute[] = Term.elementsInList(this, this.functor.name);
+            let tl2:TermAttribute[] = Term.elementsInList(t, this.functor.name);
 
             if (tl1.length != tl2.length) return false;
             for(let t1 of tl1) {
@@ -783,40 +783,33 @@ class Term {
 
     static elementsInAndList(list:Term) : TermAttribute[]
     {
-        return Term.elementsInGenericList(list, "#and");
+        return Term.elementsInList(list, "#and");
     }
 
 
     static elementsInListList(list:Term) : TermAttribute[]
     {
-        return Term.elementsInGenericList(list, "#list");
+        return Term.elementsInList(list, "#list");
     }
 
-
-    static elementsInGenericList(list:Term, functor:string) : TermAttribute[]
+    
+    static elementsInList(list:Term, listFunctor:string) : TermAttribute[]
     {
         let output:TermAttribute[] = [];
-
-        while(list.functor.name == functor) {
-            if (list.attributes[0] instanceof TermTermAttribute &&
-                (<TermTermAttribute>list.attributes[0]).term.functor.name == functor) {
-                output.push(list.attributes[1]);
-                list = (<TermTermAttribute>list.attributes[0]).term;
-            } else if (list.attributes[1] instanceof TermTermAttribute &&
-                (<TermTermAttribute>list.attributes[1]).term.functor.name == functor) {
-                output.push(list.attributes[0]);
-                list = (<TermTermAttribute>list.attributes[1]).term;
-            } else {
-                output.push(list.attributes[0]);
-                output.push(list.attributes[1]);
-                return output;
+        if (list.functor.name == listFunctor) {
+            for(let i = 0;i<list.attributes.length;i++) {
+                if ((list.attributes[i] instanceof TermTermAttribute) &&
+                    (<TermTermAttribute>list.attributes[i]).term.functor.name == listFunctor) {
+                    output = output.concat(Term.elementsInList((<TermTermAttribute>(list.attributes[i])).term, listFunctor));
+                } else {
+                    output.push(list.attributes[i]);
+                }
             }
+        } else {
+            output.push(new TermTermAttribute(list));
         }
-        // this means that the whole thing was not a list to begin with, so, just return an array of one:
-        output.push(new TermTermAttribute(list));
         return output;
     }
-
 
 
     static equalsAttribute(att1:TermAttribute, att2:TermAttribute, bindings:Bindings) : boolean
@@ -1124,12 +1117,12 @@ class Term {
         // First thing is to convert to CNF, which has 2 steps:
         term = Term.convertToCNF(term, o);
 
-        let sentenceTermAs:TermAttribute[] = NLParser.elementsInList(term, "#and");
+        let sentenceTermAs:TermAttribute[] = Term.elementsInList(term, "#and");
   
         for(let sentenceTermA of sentenceTermAs) {
             if (!(sentenceTermA instanceof TermTermAttribute)) return null;
             let sentenceTerm:Term = (<TermTermAttribute>sentenceTermA).term;
-            let termTermAs:TermAttribute[] = NLParser.elementsInList(sentenceTerm, "#or");
+            let termTermAs:TermAttribute[] = Term.elementsInList(sentenceTerm, "#or");
     
             let terms:Term[] = [];
             let signs:boolean[] = [];

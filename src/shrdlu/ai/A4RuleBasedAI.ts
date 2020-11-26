@@ -448,7 +448,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
 		    	console.log("AIRuleBasedAI("+this.selfID+"): parsed sentence '" + pbr.directObjectSymbol + "'\n  " + HPparse.result);
 		    	// the parse might contain several performatives combined with a "#list" construct
-				let parsePerformatives:TermAttribute[] = NLParser.elementsInList(HPparse.result, "#list");
+				let parsePerformatives:TermAttribute[] = Term.elementsInList(HPparse.result, "#list");
 				let actionTerms2:Term[] = [];
         		for(let actionTerm of actionTerms) {
 	        		for(let parsePerformative of parsePerformatives) {

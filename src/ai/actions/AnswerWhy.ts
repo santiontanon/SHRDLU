@@ -27,7 +27,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 						let causeTerm:Term = lastPerf.cause.term;
 						let causeTerms:Term[] = [];
 						if (causeTerm.functor.name == "#and") {
-							let tal:TermAttribute[] = NLParser.elementsInList(causeTerm,"#and");
+							let tal:TermAttribute[] = Term.elementsInList(causeTerm,"#and");
 							for(let ta of tal) {
 								if (ta instanceof TermTermAttribute) {
 									causeTerms.push((<TermTermAttribute>ta).term);

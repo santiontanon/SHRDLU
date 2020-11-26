@@ -67,7 +67,7 @@ function NLGTest2ParseUnifyingListener(sentence:string, s:Sort, context:NLContex
 	        return false;
 	    } else {
 	        if (context != null) {
-	            var parsePerformatives:TermAttribute[] = NLParser.elementsInList(expectedResult, "#and");
+	            var parsePerformatives:TermAttribute[] = Term.elementsInList(expectedResult, "#and");
 	            for(let parsePerformative of parsePerformatives) {
 	                context.newPerformative(context.speaker, sentence, (<TermTermAttribute>parsePerformative).term, null, null, o, g_ai.timeStamp);
 	            }

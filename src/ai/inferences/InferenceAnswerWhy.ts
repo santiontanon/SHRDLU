@@ -50,7 +50,7 @@ class AnswerWhy_InferenceEffect extends InferenceEffect {
 				let causeTerm:Term = causeRecord.term;
 				let causeTerms:Term[] = [];
 				if (causeTerm.functor.name == "#and") {
-					let tal:TermAttribute[] = NLParser.elementsInList(causeTerm,"#and");
+					let tal:TermAttribute[] = Term.elementsInList(causeTerm,"#and");
 					for(let ta of tal) {
 						if (ta instanceof TermTermAttribute) {
 							causeTerms.push((<TermTermAttribute>ta).term);
