@@ -353,6 +353,17 @@ class ShrdluBlocksWorld {
 	}
 
 
+	objectsSupportingObject(object:ShrdluBlock) : ShrdluBlock
+	{
+		for(let object2 of this.objects) {
+			if (object2 != object && object.isOnTopOf(object2)) {
+				return object2;
+			}
+		}
+		return null;
+	}
+
+
 	objectsInsideObject(object:ShrdluBlock): ShrdluBlock[]
 	{
 		let l:ShrdluBlock[] = [];

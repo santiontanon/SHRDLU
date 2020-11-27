@@ -12,7 +12,8 @@ class BWPutIn_IntentionAction extends IntentionAction {
 	{
 		if (intention.functor.is_a(ai.o.getSort("action.put-in"))) return true;
 		if ((intention.functor.is_a(ai.o.getSort("action.drop")) ||
-		     intention.functor.is_a(ai.o.getSort("verb.leave"))) &&
+		     intention.functor.is_a(ai.o.getSort("verb.leave")) ||
+		     intention.functor.is_a(ai.o.getSort("verb.move"))) &&
 			intention.attributes.length >= 2) return true;
 		return false;
 	}

@@ -1780,8 +1780,9 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.feel", "feel","feels","felt","felt","feeling", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.find", "find","finds","found","found","finding", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.fill", "fill","fills","filled","filled","filling", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.occupy", "occupy","occupies","occupied","occupied","occupying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.repair", "fix","fixes","fixed","fixed","fixing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.flip", "turn over","turns over","turned over","turned over","turning over", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.flip", "flip","flips","flipped","flipped","flipping", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.fly", "fly","flies","flew","flown","flying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.follow", "follow","follows","followed","followed","following", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.gather", "gather","gathers","gathered","gathered","gathering", false, multitokens_raw, o);
@@ -1828,6 +1829,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.move", "move","moves","moved","moved","moving", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.move-to", "move to","moves to","moved to","moved to","moving to", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.need", "need","needs","needed","needed","needing", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.occupy", "occupy","occupies","occupied","occupied","occupying", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.obtain", "obtain","obtains","obtained","obtained","obtaining", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.open", "open","opens","opened","opened","opening", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.own", "own","owns","owned","owned","owning", false, multitokens_raw, o);

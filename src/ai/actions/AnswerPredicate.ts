@@ -15,11 +15,20 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 
 		let s_l:Sentence[] = Term.termToSentences((<TermTermAttribute>intention.attributes[2]).term, ai.o);
 		let additional_sentences:Sentence[] = [];
+		let forAlls:Term[] = [];
 		let variablesPresent:boolean = false;
 
-		if (intention.attributes.length == 4) {
+		if (intention.attributes.length == 5) {
 			additional_sentences = Term.termToSentences((<TermTermAttribute>intention.attributes[3]).term, ai.o);
+			forAlls = NLParser.termsInList((<TermTermAttribute>(intention.attributes[3])).term, "#and");
+		} else if (intention.attributes.length == 4) {
+			forAlls = NLParser.termsInList((<TermTermAttribute>(intention.attributes[3])).term, "#and");
+			if (forAlls.length == 0 || forAlls[0].functor.name != "#forall") {
+				forAlls = [];
+				additional_sentences = Term.termToSentences((<TermTermAttribute>intention.attributes[3]).term, ai.o);
+			}
 		}
+		console.log("forAlls: " + forAlls);
 
 		console.log(ai.selfID + " answer predicate: " + intention.attributes[2]);	
 		console.log("term to sentences: " + s_l);
@@ -65,13 +74,23 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 			negated_s.sign = negated_s.sign.concat(tmp[0].sign);
 		}
 		console.log("executeIntention answer predicate: negated_s = " + negated_s);
+		let targets:Sentence[][];
 		if (variablesPresent) {
 			// if there are variables in the query, we should only add the negated version, since otherwise, we get spurious results!
-			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
+			targets = [[negated_s]];
 		} else {
-			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, [s_l,[negated_s]], 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
+			targets = [s_l,[negated_s]];
 		}
-		
+		// negate the forAlls:
+		for(let forAll of forAlls) {
+			if (forAll.attributes.length >= 2 && 
+				forAll.attributes[1] instanceof TermTermAttribute) {
+				let forAllTerm:Term = (<TermTermAttribute>(forAll.attributes[1])).term;
+		        let negatedForAll:Sentence[] = Term.termToSentences(new Term(ai.o.getSort("#not"), [new TermTermAttribute(forAllTerm)]), ai.o);
+		        targets.push(negatedForAll);
+		    }
+		}
+		ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, targets, 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
 		return true;
 	}
 

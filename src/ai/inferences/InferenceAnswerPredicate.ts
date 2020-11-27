@@ -24,9 +24,55 @@ class AnswerPredicate_InferenceEffect extends InferenceEffect {
 			console.error("AnswerPredicate_InferenceEffect.execute: Trying to talk to a character for which we don't know the ID!");
 			return;
 		}
-		let targetCharacterID:string = (<ConstantTermAttribute>(this.effectParameter.attributes[1])).value;
+		let intention:Term = this.effectParameter;
+		let targetCharacterID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
+		let forAlls:Term[] = [];
+		let forAllVariableNames:string[] = [];
+		let predicateVariables:VariableTermAttribute[] = (<TermTermAttribute>intention.attributes[2]).term.getAllVariables();
+		let predicateVariableNames:string[] = [];
+		for(let v of predicateVariables) {
+			predicateVariableNames.push(v.name);
+		}
 
-		if (inf.inferences.length == 1) {
+		if (intention.attributes.length == 5) {
+			forAlls = NLParser.termsInList((<TermTermAttribute>(intention.attributes[3])).term, "#and");
+		} else if (intention.attributes.length == 4) {
+			forAlls = NLParser.termsInList((<TermTermAttribute>(intention.attributes[3])).term, "#and");
+			if (forAlls.length == 0 || forAlls[0].functor.name != "#forall") {
+				forAlls = [];
+			}
+		}
+		for(let forAll of forAlls) {
+			if (forAll.attributes.length>=1 &&
+				forAll.attributes[0] instanceof VariableTermAttribute) {
+				forAllVariableNames.push((<VariableTermAttribute>forAll.attributes[0]).name);
+			}
+		}
+		let nBaseInferences:number = inf.inferences.length - forAllVariableNames.length;
+
+		console.log("predicateVariableNames: " + predicateVariableNames);
+		for(let v of forAllVariableNames) {
+			let idx:number = predicateVariableNames.indexOf(v);
+			if (idx >= 0) predicateVariableNames.splice(idx, 1);
+		}
+		console.log("predicateVariableNames (without forAll): " + predicateVariableNames);
+		console.log("forAllVariableNames: " + forAllVariableNames);
+		// filter by the forAll results:
+		for(let j:number = 0;j<nBaseInferences; j++) {	
+			for(let i:number = 0;i<forAllVariableNames.length;i++) {
+				if (inf.inferences.length >= i+nBaseInferences) {
+			        let allValues:TermAttribute[] = [];
+			        for(let result of inf.inferences[i+nBaseInferences].endResults) {
+			            let v:TermAttribute = result.getValueForVariableName(forAllVariableNames[i]);
+			            if (v != null) allValues.push(v);
+			        }
+			        console.log("forAll values ("+forAllVariableNames[i]+"): " + allValues);
+			        inf.inferences[j].filterResultsByForAll(predicateVariableNames, forAllVariableNames[i], allValues);
+			    }
+			}
+		}
+
+		if (nBaseInferences == 1) {
 			// this means that there was a variable in the query, and thus only the negation was launched:
 			if (inf.inferences[0].endResults.length == 0) {
 //					console.log("inference.endResults.length == 0, and no inferenceNegated");

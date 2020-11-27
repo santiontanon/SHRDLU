@@ -2786,6 +2786,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 	#doesnotsubsume([spatial-relation], RELATION) #equal(QUERY, #cons(RELATION, O1, V))
 			   		 )"/>
 
+	<NLPattern name="q.predicate-be-obj-relation-superlative" 
+			   head="perf.q.predicate(LISTENER, #and(#cons(PREP, OBJ1, X), #and(#cons(NOUN, X), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, X))))), #forall(Y, #cons(NOUN, Y)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.be'[symbol], N, P, T)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 preposition(PREP)
+			   		 ['the'] superlative-adjective(SUPERLATIVE, COMPARATIVE)
+			   		 noun(NOUN, NN)
+			   		 ('!'|'?')*
+			   		 #derefFromContext(C1, OBJ1)"/>
+
 	<!-- Passive voice question: -->
     <NLPattern name="q.predicate-passive"
     		   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT, OBJECT))"
@@ -2998,7 +3011,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
 			   		 'where' verb('verb.be'[symbol], N, P, [present-tense]) 
-			   		 'the' adjective(SUPERLATIVE) #subsumes([superlative-adjective], SUPERLATIVE)
+			   		 ['the'] adjective(SUPERLATIVE) #subsumes([superlative-adjective], SUPERLATIVE)
 			   		 noun(NOUN, N2) 
 			   		 ('to'|'from')
 			   		 nounPhrase(X3, N3, P3, C3) 
@@ -5662,12 +5675,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, OBJECT, DIRECTION_SORT:[direction]))"
     		   body="verb(V2, N2, P2, [infinitive-tense])
     		         nounPhrase(X3, N3, P3, CO) 
+    		         ['to' 'the']
     		         noun(DIRECTION, [singular]) #symbolToSort(DIRECTION, DIRECTION_SORT)
     		         #derefFromContext(CO, OBJECT)"/>
     <NLPattern name="action-verb-np-direction-twice"
     		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, OBJECT, DIRECTION_SORT:[direction], '2'[number.2]))"
     		   body="verb(V2, N2, P2, [infinitive-tense])
     		         nounPhrase(X3, N3, P3, CO) 
+    		         ['to' 'the']
     		         noun(DIRECTION, [singular]) #symbolToSort(DIRECTION, DIRECTION_SORT)
     		         'twice'
     		         #derefFromContext(CO, OBJECT)"/>
@@ -5675,6 +5690,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, OBJECT, DIRECTION_SORT:[direction], NUMBER))"
     		   body="verb(V2, N2, P2, [infinitive-tense])
     		         nounPhrase(X3, N3, P3, CO) 
+    		         ['to' 'the']
     		         noun(DIRECTION, [singular]) #symbolToSort(DIRECTION, DIRECTION_SORT)
     		         cardinal(NUMBER) 'times'
     		         #derefFromContext(CO, OBJECT)"/>

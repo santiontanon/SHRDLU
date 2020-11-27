@@ -606,6 +606,7 @@
     <sort name="verb.locate" super="verb-with-optional-location-3rd-argument"/>
     <sort name="verb.find" super="verb.locate"/>
     <sort name="verb.fill" super="verb"/>
+    <sort name="verb.flip" super="verb"/>
     <sort name="verb.follow" super="verb"/>
     <sort name="verb.happen" super="verb,#stateSort"/>
     <sort name="verb.keep" super="verb"/>

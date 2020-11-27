@@ -892,7 +892,8 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				predicates.push(new PlanningPredicate(Term.fromString("verb.hold('"+this.selfID+"'[#id], "+target+")", this.o), true));
 			} else if ((action.functor.is_a_string("action.put-in") ||
 				 	    action.functor.is_a_string("action.drop") ||
-				 	    action.functor.is_a_string("verb.leave")) && 
+				 	    action.functor.is_a_string("verb.leave") ||
+				 	    action.functor.is_a_string("verb.move")) && 
 					   action.attributes.length==3) {
 				if ((action.attributes[1] instanceof ConstantTermAttribute) &&
 					(action.attributes[2] instanceof ConstantTermAttribute)) {
@@ -915,6 +916,29 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 						predicates.push(new PlanningPredicate(arg2, true));
 					}
 				}
+
+			} else if (action.functor.is_a_string("verb.move") && 
+					   action.attributes.length == 2) {
+				if ((action.attributes[1] instanceof ConstantTermAttribute)) {
+					let o1:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[1];
+					// goal is to put it somewhere different:
+					let object1:ShrdluBlock = this.world.getObject(o1.value);
+					if (object1 != null) {
+						let supporter:ShrdluBlock = this.world.objectsSupportingObject(object1);
+						if (supporter != null) {
+							predicates.push(new PlanningPredicate(Term.fromString("space.directly.on.top.of("+o1+",'"+supporter.ID+"'[#id])", this.o), false));
+						} else {
+							// unsupported action, just execute directly without planning:
+							this.intentions.push(ir);
+							return;
+						}
+					} else {
+						// unsupported action, just execute directly without planning:
+						this.intentions.push(ir);
+						return;
+					}
+				}
+
 			} else if (action.functor.is_a_string("action.put-under") && 
 					   action.attributes.length==3 &&
 					   (action.attributes[2] instanceof ConstantTermAttribute)) {
