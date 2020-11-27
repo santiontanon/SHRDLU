@@ -73,6 +73,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    this.intentionHandlers.push(new BWPutIn_IntentionAction());
 	    this.intentionHandlers.push(new BWPutUnder_IntentionAction());
 	    this.intentionHandlers.push(new BWLocate_IntentionAction());
+	    this.intentionHandlers.push(new BWStack_IntentionAction());
 
 		// load specific knowledge:
 		for(let rulesFileName of rulesFileNames) {
@@ -926,6 +927,18 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 					   (action.attributes[1] instanceof ConstantTermAttribute)) {
 				let o1:TermAttribute = action.attributes[1];
 				predicates.push(new PlanningPredicate(Term.fromString("verb.hold('shrdlu'[#id], "+o1+")", this.o), false));
+			} else if (action.functor.is_a_string("action.stack") && 
+					   action.attributes.length>=3) {
+				let str:string = "action.stack(";
+				for(let i:number = 1; i<action.attributes.length; i++) {
+					if (i == 1) {
+						str += action.attributes[i];
+					} else {
+						str +="," + action.attributes[i];
+					}
+				}
+				str += ")";
+				predicates.push(new PlanningPredicate(Term.fromString(str, this.o), true));
 			} else {
 				// unsupported action, just execute directly without planning:
 				this.intentions.push(ir);

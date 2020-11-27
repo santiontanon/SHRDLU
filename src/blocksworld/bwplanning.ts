@@ -465,6 +465,34 @@ class BWPlannerState {
 					}					
 				}
 				break;
+			case "action.stack":
+				{
+					// Check if the objects are stacked:
+					let objects:number[] = [];
+					for(let a of predicate.attributes) {
+						if (a instanceof ConstantTermAttribute) {
+							let id:string = (<ConstantTermAttribute>a).value;
+							let idx:number = this.bw.idHash[id];
+							if (idx < 0) return [];
+							if (objects.indexOf(idx) >= 0) return [];
+							objects.push(idx);
+						} else {
+							return [];
+						}
+					}
+					objects.sort((a,b) =>{
+						if (this.y[a] < this.y[b]) return -1;
+						if (this.y[a] > this.y[b]) return 1;
+						return 0;
+				    });
+
+				    for(let i:number = 0; i<objects.length-1; i++) {
+				    	if (!isOnTopOf(objects[i+1], objects[i], this)) return [];
+				    }
+				    console.log("action.stack succeeds with: " + objects);
+				    return [[]];
+				}
+				break;
 		}
 
 		console.error("checkPredicate: unsupported predicate: " + predicate);

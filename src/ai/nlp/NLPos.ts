@@ -1870,6 +1870,8 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.suck", "suck","sucks","sucked","sucked","sucking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.support", "support","supports","supported","supported","supporting", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.supervise", "supervise","supervises","supervised","supervised","supervising", false, multitokens_raw, o);
+  this.addStandardVerbPOS("action.stack", "stack up","stacks up","stacked up","stacked up","stacking up", false, multitokens_raw, o);
+  this.addStandardVerbPOS("action.stack", "stack","stacks","stacked","stacked","stacking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.switch", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addStandardVerbPOS("action.take", "take","takes","took","taken","taking", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.take-out", "extract","extracts","extracted","extracted","extracting", false, multitokens_raw, o);
@@ -1917,6 +1919,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.get-from","from", "get","gets","got","gotten","getting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.wake-up","up", "wake","wakes","woke","woken","waking", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.help", "with", "help","helps","helped","helped","helping", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.stack","up", "stack","stacks","stacked","stacked","stacking", false, multitokens_raw, o);
 
   // adjectives (synonims) (added first, so NLG does not used them):
   this.addTokenPOS(new PartOfSpeech("odd", "property.strange", Term.fromString("adjective('property.strange'[property.strange])", o), 1.0));

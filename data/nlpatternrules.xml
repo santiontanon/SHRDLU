@@ -2292,7 +2292,18 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
 			   		 (noun(NOUN1, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN1, [singular]))
 			   		 verb(VERB, N3, P3, [infinitive-tense]) 
-			   		 (noun(NOUN2, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN2, [singular]))
+			   		 (noun(NOUN2, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN2, [singular]) | 'another' noun(NOUN2, [singular]))
+			   		 ('!'|'?')*"/>
+
+	<NLPattern name="q.predicate-can-noun-passiveaction-noun"
+			   head="perf.q.predicate(LISTENER, verb.can(HO1:'hypothetical-object1'[#id], #cons(VERB, HO1, HO2:'hypothetical-object2'[#id])), #and(#cons(NOUN1, HO2), #cons(NOUN2, HO1)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.can'[symbol], N, P, [present-tense]) 
+			   		 (noun(NOUN1, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN1, [singular]))
+			   		 'be' verb(VERB, N3, P3, [participle-tense]) 'by'
+			   		 (noun(NOUN2, [plural]) | indefinite-article('a'[symbol], [singular]) noun(NOUN2, [singular]) | 'another' noun(NOUN2, [singular]))
 			   		 ('!'|'?')*"/>
 
     <!-- "action.print" is special, since you create NEW objects, so the hypothetical-object parse, does not make sense -->
@@ -6373,8 +6384,69 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefFromContext(C3, OBJ3)
     		   		 #derefFromContext(C4, OBJ4)
     		   		 ['again']
-    		         [[','] 'please'] 
-    		         ('!'|'?')*"/>    		         
+    		         [[','] 'please']
+    		         ('!'|'?')*"/>
+
+    <NLPattern name="action-stack-obj-obj"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, OBJ1, OBJ2))"
+    		   body="verb('action.stack'[symbol], N, P, T)
+    		   		 nounPhrase(X1, N1, P1, C1)
+					 'and'    		   		 
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefFromContext(C2, OBJ2)"
+    		   priority="200"/>
+
+    <NLPattern name="action-phrasalstack-obj-obj"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, OBJ1, OBJ2))"
+    		   body="phrasal-verb('action.stack'[symbol], N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+					 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #token(PREP)
+    		   		 #derefFromContext(C1, OBJ1)
+    		   		 #derefFromContext(C2, OBJ2)"
+    		   priority="200"/>
+
+    <NLPattern name="action-stack-two-query"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, QV1, QV2), #and(QUERY1, QUERY2), [number.1])"
+    		   body="verb('action.stack'[symbol], N, P, T)
+    		   		 'two'
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 #derefQuery(C1, QV1, QUERY1)
+    		   		 #derefQuery(C1, QV2, QUERY2)"
+    		   priority="200"/>
+
+    <NLPattern name="action-phrasalstack-two-query"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, QV1, QV2), #and(QUERY1, QUERY2), [number.1])"
+    		   body="phrasal-verb('action.stack'[symbol], N, P, T, PREP)
+    		   		 'two'
+    		   		 nounPhrase(X1, N1, P1, C1)
+    		   		 #token(PREP)
+    		   		 #derefQuery(C1, QV1, QUERY1)
+    		   		 #derefQuery(C1, QV2, QUERY2)"
+    		   priority="200"/>
+
+    <NLPattern name="action-stack-query-query"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, QV1, QV2), #and(QUERY1, QUERY2), [number.1])"
+    		   body="verb('action.stack'[symbol], N, P, T)
+    		   		 nounPhrase(X1, N1, P1, C1)
+					 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #derefQuery(C1, QV1, QUERY1)
+    		   		 #derefQuery(C2, QV2, QUERY2)"
+    		   priority="200"/>
+
+    <NLPattern name="action-phrasalstack-query-query"
+    		   head="perf.request.action.internal(LISTENER, action.stack(LISTENER, QV1, QV2), #and(QUERY1, QUERY2), [number.1])"
+    		   body="phrasal-verb('action.stack'[symbol], N, P, T, PREP)
+    		   		 nounPhrase(X1, N1, P1, C1)
+					 'and'
+    		   		 nounPhrase(X2, N2, P2, C2)
+    		   		 #token(PREP)
+    		   		 #derefQuery(C1, QV1, QUERY1)
+    		   		 #derefQuery(C2, QV2, QUERY2)"
+    		   priority="200"/>
 
     <!-- perf.moreresults -->
     <NLPattern name="moreresults"
