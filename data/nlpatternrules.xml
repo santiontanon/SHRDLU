@@ -6196,6 +6196,44 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 properNounCompound(PNOUN, PNN)"
 			   priority="50"/>
 
+    <NLPattern name="action-phrasal-superlative-obj"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, V, OBJ1), #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#not(#cons(COMPARATIVE_ADJ,Y,V)))), [number.1], #forall(Y,#cons(NOUN, Y)))"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+    		   		 'the'
+			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
+			   		 noun(NOUN, NN)
+			   		 #token(PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 #derefFromContext(C1, OBJ1)"/>
+
+    <NLPattern name="action-phrasal-obj-superlative"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, OBJ1, V), #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#not(#cons(COMPARATIVE_ADJ,Y,V)))), [number.1], #forall(Y,#cons(NOUN, Y)))"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 #token(PREP)
+    		   		 'the' superlative-adjective(ADJ,COMPARATIVE_ADJ)
+			   		 noun(NOUN, NN)
+			   		 #derefFromContext(C1, OBJ1)"/>
+
+    <NLPattern name="action-phrasal-superlative-query"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, V, QV1), #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#and(#not(#cons(COMPARATIVE_ADJ,Y,V), QUERY1)))), [number.1], #forall(Y,#cons(NOUN, Y)))"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+    		   		 'the'
+			   		 superlative-adjective(ADJ,COMPARATIVE_ADJ)
+			   		 noun(NOUN, NN)
+			   		 #token(PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 #derefQuery(C1, QV1, QUERY1)"/>
+
+    <NLPattern name="action-phrasal-query-superlative"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB:[symbol], LISTENER, QV1, V), #and(QUERY1, #and(#cons(NOUN, V),#and(#cons(NOUN, Y),#not(#cons(COMPARATIVE_ADJ,Y,V))))), [number.1], #forall(Y,#cons(NOUN, Y)))"
+    		   body="phrasal-verb(VERB, N, P, T, PREP)
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 #token(PREP)
+    		   		 'the' superlative-adjective(ADJ,COMPARATIVE_ADJ)
+			   		 noun(NOUN, NN)
+			   		 #derefQuery(C1, QV1, QUERY1)"/>
+
     <NLPattern name="action-put-obj-prep-obj"
     		   head="perf.request.action.internal(LISTENER, action.put-in(LISTENER, OBJ1, #cons(PREP, OBJ1, OBJ2)))"
     		   body="('put'|'drop')

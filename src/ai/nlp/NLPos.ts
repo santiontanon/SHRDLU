@@ -2011,8 +2011,6 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("red", "red", Term.fromString("adjective('red'[red])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("short", "short-tallness", Term.fromString("adjective('short-tallness'[short-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("short", "short", Term.fromString("adjective('short'[short])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("shorter", "shorter-tallness", Term.fromString("comparative-adjective('shorter-tallness'[shorter-tallness])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("shortest", "shortest-tallness", Term.fromString("superlative-adjective('shortest-tallness'[shortest-tallness], 'shorter-tallness'[shorter-tallness])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sick", "sick", Term.fromString("adjective('sick'[sick])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sighted", "property.sighted", Term.fromString("adjective('property.sighted'[property.sighted])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("small", "small", Term.fromString("adjective('small'[small])", o), 1.0));
@@ -2024,8 +2022,6 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("strong", "strength", Term.fromString("adjective('strength'[strength])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("sure", "sure", Term.fromString("adjective('sure'[sure])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("tall", "tall", Term.fromString("adjective('tall'[tall])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("taller", "taller", Term.fromString("comparative-adjective('taller'[taller])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("tallest", "tallest", Term.fromString("superlative-adjective('tallest'[tallest], 'taller'[taller])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("thirsty", "thirsty", Term.fromString("adjective('thirsty'[thirsty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("uncharged", "empty", Term.fromString("adjective('empty'[empty])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("useful", "useful", Term.fromString("adjective('useful'[useful])", o), 1.0));
@@ -2036,8 +2032,19 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("incorrect", "incorrect", Term.fromString("adjective('incorrect'[incorrect])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("correct", "correct", Term.fromString("adjective('correct'[correct])", o), 1.0));
 
-  this.addTokenPOS(new PartOfSpeech("larger", "relation.larger", Term.fromString("adjective('relation.larger'[relation.larger])", o), 1.0));
-  this.addTokenPOS(new PartOfSpeech("smaller", "relation.smaller", Term.fromString("adjective('relation.smaller'[relation.smaller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("shorter", "shorter-tallness", Term.fromString("comparative-adjective('shorter-tallness'[shorter-tallness])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("taller", "taller", Term.fromString("comparative-adjective('taller'[taller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("bigger", "relation.larger", Term.fromString("comparative-adjective('relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("littler", "relation.smaller", Term.fromString("comparative-adjective('relation.smaller'[relation.smaller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("larger", "relation.larger", Term.fromString("comparative-adjective('relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("smaller", "relation.smaller", Term.fromString("comparative-adjective('relation.smaller'[relation.smaller])", o), 1.0));
+
+  this.addTokenPOS(new PartOfSpeech("shortest", "shortest-tallness", Term.fromString("superlative-adjective('shortest-tallness'[shortest-tallness], 'shorter-tallness'[shorter-tallness])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("tallest", "tallest", Term.fromString("superlative-adjective('tallest'[tallest], 'taller'[taller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("biggest", "largest", Term.fromString("superlative-adjective('largest'[largest], 'relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("largest", "largest", Term.fromString("superlative-adjective('largest'[largest], 'relation.larger'[relation.larger])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("littlest", "smallest", Term.fromString("superlative-adjective('smallest'[smallest], 'relation.smaller'[relation.smaller])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("smallest", "smallest", Term.fromString("superlative-adjective('smallest'[smallest], 'relation.smaller'[relation.smaller])", o), 1.0));
 
   // adverbs
   this.addTokenPOS(new PartOfSpeech("here", "space.here", Term.fromString("adverb('space.here'[space.here])", o), 1.0));

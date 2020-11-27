@@ -558,9 +558,6 @@
     <sort name="relation.tool" super="relation"/>
     <sort name="relation.through" super="relation"/>
 
-    <sort name="relation.smaller" super="relation"/>
-    <sort name="relation.larger" super="relation"/>
-
     <sort name="permitted-in" super="relation"/>
     <sort name="permission-to" super="abstract-entity,haveable-property-with-value"/>
 
@@ -877,9 +874,13 @@
 
     <sort name="tallest" super="property,superlative-adjective"/>
     <sort name="shortest-tallness" super="property,superlative-adjective"/>
+    <sort name="largest" super="property,superlative-adjective"/>
+    <sort name="smallest" super="property,superlative-adjective"/>
 
     <sort name="taller" super="spatial-relation,comparative-adjective"/>
     <sort name="shorter-tallness" super="spatial-relation,comparative-adjective"/>
+    <sort name="relation.smaller" super="spatial-relation,comparative-adjective"/>
+    <sort name="relation.larger" super="spatial-relation,comparative-adjective"/>
 
     <sort name="length.unit" super="measuring-unit,length"/>
     <sort name="distance.unit" super="measuring-unit,distance"/>

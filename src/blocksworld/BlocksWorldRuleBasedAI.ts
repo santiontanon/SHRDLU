@@ -377,6 +377,12 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 		} else if (relation.name == "shorter-tallness") {
 			return o2.dy > o1.dy;
 
+		} else if (relation.name == "relation.larger") {
+			return o1.dx*o1.dy*o1.dz > o2.dx*o2.dy*o2.dz;
+
+		} else if (relation.name == "relation.smaller") {
+			return o1.dx*o1.dy*o1.dz < o2.dx*o2.dy*o2.dz;
+
 		} else if (relation.name == "space.next-to" ||
 				   relation.name == "relation.neighbor") {
 			let dx:number = 0;
@@ -504,6 +510,19 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 				}
 			}
 		}
+		// relative size:
+		if (o1.dy > o2.dy) {
+			relations.push(this.o.getSort("taller"));
+		}
+		if (o1.dy < o2.dy) {
+			relations.push(this.o.getSort("shorter-tallness"));
+		}
+		if (o1.dx*o1.dy*o1.dz > o2.dx*o2.dy*o2.dz) {
+			relations.push(this.o.getSort("relation.larger"));
+		}
+		if (o1.dx*o1.dy*o1.dz < o2.dx*o2.dy*o2.dz) {
+			relations.push(this.o.getSort("relation.smaller"));
+		}
 
 		return relations;
 	}
@@ -569,6 +588,68 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 			console.log("processSuperlatives: best = " + best);
 			return [best];
+
+/*
+		} else if (superlative.terms.length == 1 &&
+			superlative.terms[0].functor.name == "largest" &&
+			superlative.terms[0].attributes.length == 1) {
+			let best:InferenceNode = null;
+			let best_size:number = null;
+			for(let result of results) {
+				let tmp:Term = superlative.terms[0].applyBindings(result.bindings);
+				if ((tmp.attributes[0] instanceof ConstantTermAttribute)) {
+					let id:string = (<ConstantTermAttribute>tmp.attributes[0]).value;
+					let o1:ShrdluBlock = this.world.getObject(id);
+					let size:number = o1.dx * o1.dy * o1.dz;
+					if (!superlative.sign[0] && size != null) size = -size;
+					console.log("processSuperlatives: size = " + size);
+					if (best_size == null) {
+						best = result;
+						best_size = size;
+					} else if (size != null && 
+							   best_size > size) {
+						best = result;
+						best_size = size;
+					}
+				} else {
+					if (best == null) {
+						best = result;
+					}
+				}
+			}
+			console.log("processSuperlatives: best = " + best);
+			return [best];	
+
+		} else if (superlative.terms.length == 1 &&
+			superlative.terms[0].functor.name == "smallest" &&
+			superlative.terms[0].attributes.length == 1) {
+			let best:InferenceNode = null;
+			let best_size:number = null;
+			for(let result of results) {
+				let tmp:Term = superlative.terms[0].applyBindings(result.bindings);
+				if ((tmp.attributes[0] instanceof ConstantTermAttribute)) {
+					let id:string = (<ConstantTermAttribute>tmp.attributes[0]).value;
+					let o1:ShrdluBlock = this.world.getObject(id);
+					let size:number = o1.dx * o1.dy * o1.dz;
+					if (!superlative.sign[0] && size != null) size = -size;
+					console.log("processSuperlatives: size = " + size);
+					if (best_size == null) {
+						best = result;
+						best_size = size;
+					} else if (size != null && 
+							   best_size < size) {
+						best = result;
+						best_size = size;
+					}
+				} else {
+					if (best == null) {
+						best = result;
+					}
+				}
+			}
+			console.log("processSuperlatives: best = " + best);
+			return [best];	
+*/
 		}
 		return results;
 	}

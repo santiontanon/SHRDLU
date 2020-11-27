@@ -1650,10 +1650,12 @@ NLParseTestUnifyingListener("where is the door that belongs to a kitchen?", o.ge
 NLParseTestUnifyingListener("put a small block onto the door which belongs to the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, 'door1'[#id]), #and(small(X), block(X)), [number.1])");
 NLParseTestUnifyingListener("put a small block onto the door which belongs to a kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(small(X), #and(block(X), #and(door(Y), #and(verb.belong(Y, Z), kitchen(Z))))), [number.1])");
 NLParseTestUnifyingListener("put the crate onto the door which belongs to a kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], Y), #and(door(Y), #and(verb.belong(Y, Z), kitchen(Z))), [number.1])");
+NLParseTestUnifyingListener("put the littlest crate on top of the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.put-in('etaoin'[#id], X, 'room1'[#id]), #and(crate(X),#and(crate(Y),#not(relation.smaller(Y,X)))), [number.1], #forall(Y,crate(Y)))");
+NLParseTestUnifyingListener("put the crate on top of the largest kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.put-in('etaoin'[#id], '5'[#id], X), #and(kitchen(X),#and(kitchen(Y),#not(relation.larger(Y,X)))), [number.1], #forall(Y,kitchen(Y)))");
+NLParseTestUnifyingListener("put the littlest crate on top of a kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.put-in('etaoin'[#id], X, Z), #and(crate(X),#and(crate(Y),#and(#not(relation.smaller(Y,X), kitchen(Z))))), [number.1], #forall(Y,crate(Y)))");
+NLParseTestUnifyingListener("put a crate on top of the largest kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.put-in('etaoin'[#id], Z, X), #and(crate(Z), #and(kitchen(X),#and(kitchen(Y),#not(relation.larger(Y,X))))), [number.1], #forall(Y,kitchen(Y)))");
 
-// NLParseTestUnifyingListener("put the littlest crate on top of the kitchen?", o.getSort("performative"), context, "etaoin", "");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
-
 
