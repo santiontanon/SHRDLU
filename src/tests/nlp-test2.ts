@@ -307,7 +307,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-/*
+
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1659,8 +1659,6 @@ NLParseTestUnifyingListener("can a pyramid be supported by another block?", o.ge
 NLParseTestUnifyingListener("stack up the crate and the ship", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.stack('etaoin'[#id], '5'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("stack up two pyramids", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.stack('etaoin'[#id], X, Y), #and(pyramid(X), pyramid(Y)), [number.1])");
 NLParseTestUnifyingListener("stack a cube and a crate up", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.stack('etaoin'[#id], X, Y), #and(cube(X), crate(Y)), [number.1])");
-*/
-
 NLParseTestUnifyingListener("push the crate to the left", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], [direction.left]))");
 NLParseTestUnifyingListener("roll the crate to the left", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.roll(V0, '5'[#id], [direction.left]))");
 NLParseTestUnifyingListener("is the crate taller than the tallest ship?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(taller('5'[#id], X), #and(ship(X),#and(ship(Y),#not(taller(Y,X))))), #forall(Y,ship(Y)))");

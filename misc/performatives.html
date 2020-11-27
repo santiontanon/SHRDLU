@@ -43,8 +43,9 @@ Just a small log of the performatives the game is using and what are the paramet
 <ul>
 	<li><b>perf.q.predicate(listener, predicate)</b></li>
 	<li><b>perf.q.predicate(listener, predicate, additional_sentences)</b>: checks if "predicate" is true, assuming "additional_sentences" are true.</li>
-	<li><b>perf.q.predicate-negated(listener, predicate)</b>: same as perf.q.predicate, but it will test the negation of the predicate</li>
-	<li><b>perf.q.predicate-negated(listener, predicate, additional_sentences)</b></li>
+	<li><b>perf.q.predicate(listener, predicate, forall)</b>: checks if "predicate" is true, assuming "additional_sentences" are true.</li>
+	<li><b>perf.q.predicate(listener, predicate, additional_sentences, forall)</b>: checks if "predicate" is true, assuming "additional_sentences" are true.</li>
+	<li><b>perf.q.predicate-negated(...)</b>: same as perf.q.predicate, but it will test the negation of the predicate</li>
 	<li><b>perf.q.query(listener, variable, query)</b></li>
 	<li><b>perf.q.query(listener, variable, query, forall)</b>: The same, but with "forall" variable quantifiers.</li>
 </ul>
