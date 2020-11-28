@@ -1083,14 +1083,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 ['not'] (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="q.predicate-1-present2"
-			   head="perf.q.predicate(LISTENER, #cons(X2,SUBJECT))"
+			   head="perf.q.predicate(LISTENER, #cons(X3,SUBJECT))"
 			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
     		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
 			   		 [('would'|'could') 'you'] ['please'] 'tell' 'me' 'if' 
 			   		 nounPhrase(X, N, P, C)
-			   		 verb('verb.be'[symbol], N, P, [present-tense]) ['not']
-			   		 (adjective(X2)|indefinite-article(ART, [singular]) noun(X2, N)) ('!'|'?'|'.')*
+			   		 verb('verb.be'[symbol], N2, P2, [present-tense]) ['not']
+			   		 (adjective(X3)|indefinite-article(ART, [singular]) noun(X3, N3)) ('!'|'?'|'.')*
 			   		 #derefFromContext(C, SUBJECT)"/>
 	<NLPattern name="q.predicate-1-past"
 			   head="perf.q.predicate(LISTENER, #and(PRED:#cons(X2,SUBJECT), time.past(PRED)))"

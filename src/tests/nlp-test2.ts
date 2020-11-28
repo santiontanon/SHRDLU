@@ -1671,6 +1671,7 @@ NLParseTestUnifyingListener("what does the crate's support support?", o.getSort(
 NLParseTestUnifyingListener("does the crate's support support anything green?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(verb.support(X, '5'[#id]), #and(verb.support(X, Y), color(Y, 'green'[green]))))");
 NLParseTestUnifyingListener("how many blocks can you pick up?", o.getSort("performative"), context, "etaoin", "perf.q.howmany('etaoin'[#id], X, #and(verb.can('etaoin'[#id], action.take('etaoin'[#id], X)), block(X)))");
 NLParseTestUnifyingListener("would a cube roll off a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.roll-off(H1, H2), #and(cube(H1:'hypothetical-object1'[#id]), pyramid(H2:'hypothetical-object2'[#id])))");
+NLParseTestUnifyingListener("would you tell me if me is closed?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], property.closed('1'[#id]))");
 
 
 
