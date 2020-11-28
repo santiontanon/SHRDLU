@@ -178,8 +178,8 @@
 	<sentence provenance="background" sentence="~pyramid(X); ~verb.can(X, verb.roll(X))"/>
 	<sentence provenance="background" sentence="~sphere(X); verb.can(X, verb.roll(X))"/>
 
-	<sentence provenance="background" sentence="~verb.can(X, verb.roll(X)); ~object(Y); verb.can(X, verb.roll-of(X, Y))"/>
-	<sentence provenance="background" sentence="verb.can(X, verb.roll(X)); ~object(Y); ~verb.can(X, verb.roll-of(X, Y))"/>
+	<sentence provenance="background" sentence="~verb.can(X, verb.roll(X)); ~object(Y); verb.can(X, verb.roll-off(X, Y))"/>
+	<sentence provenance="background" sentence="verb.can(X, verb.roll(X)); ~object(Y); ~verb.can(X, verb.roll-off(X, Y))"/>
 
 	<sentence provenance="background" sentence="~tall(X); ~short-tallness(X)"/>
 	<sentence provenance="background" sentence="~space.next-to(X,Y); relation.neighbor(X,Y)"/>

@@ -67,8 +67,8 @@ Most of the following performatives could just be defined as perf.q.query, but i
 <ul>
 	<li><b>perf.q.action(listener, action)</b></li>
 	<li><b>perf.q.action(listener, action, constraint, number-constraint)</b>: like the previous one, but where "action" contains a variable, and inference will be launched to resolve it based on "constraint". The numeric constraint specifies how many of the possible matches by inference should be acted upon. E.g., "take a green block" will have a "number.1", and "switch on all the lights" will have a "all". Other values are possible.</li>
+	<li><b>perf.q.howmany(listener, variable, constraint)</b>: counts the number of instantiations of "variable" given the constraint.</li>
 	<li><b>perf.q.when(listener, ...)</b>: ...</li>
-	<li><b>perf.q.howmany(listener, ...)</b>: ...</li>
 	<li><b>perf.q.why(listener, ...)</b>: ...</li>
 	<li><b>perf.q.how(listener, ...)</b>: ...</li>
 	<li><b>perf.q.distance(listener, o1, o2)</b></li>: how far is o1 from o2

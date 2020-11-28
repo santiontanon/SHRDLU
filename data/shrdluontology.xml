@@ -195,7 +195,8 @@
     <sort name="haveable-property" super="property"/>
     <sort name="haveable-property-with-value" super="haveable-property,property-with-value"/>
     <sort name="relation-with-value" super="relation"/>
-    <sort name="haveable-relation" super="relation"/>
+    <sort name="haveable-relation" super="relation"/>   <!-- r(X,Y): X has Y -->
+    <sort name="lefthaveable-relation" super="relation"/>  <!-- r(X,Y): Y has X -->
     <sort name="symmetric-relation" super="relation"/>
 
     <sort name="relation.cause" super="relation"/>
@@ -669,7 +670,7 @@
     <sort name="verb.injure" super="verb.damage"/>
     <sort name="verb.rotate" super="verb"/>
     <sort name="verb.roll" super="verb.rotate"/>
-    <sort name="verb.roll-of" super="verb.roll"/>
+    <sort name="verb.roll-off" super="verb.roll"/>
     <sort name="verb.investigate" super="verb"/>
     <sort name="verb.read" super="verb"/>
     <sort name="verb.save" super="verb"/>
@@ -695,7 +696,7 @@
     <sort name="verb.maintain" super="verb"/>
     <sort name="verb.search" super="verb"/>
     <sort name="verb.reboot" super="verb"/>
-    <sort name="verb.support" super="relation-verb,haveable-relation,#stateSort"/>
+    <sort name="verb.support" super="relation-verb,lefthaveable-relation,#stateSort"/>
     <sort name="verb.rest-on" super="relation-verb,#stateSort"/>
 
     <sort name="verb.hold" super="verb.have"/>

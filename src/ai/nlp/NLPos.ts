@@ -1852,7 +1852,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addStandardVerbPOS("verb.rest-on", "rest on","rests on","rested on","rested on","resting on", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.retreat", "retreat","retreats","retreated","retreated","retreating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.roll", "roll","rolls","rolled","rolled","rolling", false, multitokens_raw, o);
-  this.addStandardVerbPOS("verb.roll-of", "roll of","rolls of","rolled of","rolled of","rolling of", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.roll-off", "roll off","rolls off","rolled off","rolled off","rolling off", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.rotate", "rotate","rotates","rotated","rotated","rotating", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.run", "run","runs","ran","run","running", false, multitokens_raw, o);

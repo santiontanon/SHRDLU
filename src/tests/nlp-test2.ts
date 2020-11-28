@@ -1445,7 +1445,7 @@ NLParseTestUnifyingListener("the top of the white key is clear", o.getSort("perf
 NLParseTestUnifyingListener("the top of the white key is not clear", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], top-clear-status('4'[#id], 'clear-status-not-clear'[clear-status-not-clear]))");
 NLParseTestUnifyingListener("now put the white key in the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
 NLParseTestUnifyingListener("can pyramids roll?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll(HO)), pyramid(HO))");
-NLParseTestUnifyingListener("can a cube roll of the crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll-of(HO, '5'[#id])), cube(HO))");
+NLParseTestUnifyingListener("can a cube roll off the crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.can(HO:'hypothetical-object'[#id], verb.roll-off(HO, '5'[#id])), cube(HO))");
 NLParseTestUnifyingListener("can a table support a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.can('hypothetical-object1'[#id],verb.support('hypothetical-object1'[#id], 'hypothetical-object2'[#id])), #and(table('hypothetical-object1'[#id]), pyramid('hypothetical-object2'[#id])))");
 NLParseTestUnifyingListener("can you put a block on a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, Y), #and(block(X), pyramid(Y)), [number.1])");
 NLParseTestUnifyingListener("put a block on the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], X, '5'[#id]), block(X), [number.1])");
@@ -1666,9 +1666,11 @@ NLParseTestUnifyingListener("roll the crate to the left", o.getSort("performativ
 NLParseTestUnifyingListener("is the crate taller than the tallest ship?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(taller('5'[#id], X), #and(ship(X),#and(ship(Y),#not(taller(Y,X))))), #forall(Y,ship(Y)))");
 NLParseTestUnifyingListener("what is the crate's support?", o.getSort("performative"), context, "etaoin", "perf.q.query('etaoin'[#id], X, verb.support(X, '5'[#id]))");
 NLParseTestUnifyingListener("where is the crate's support?", o.getSort("performative"), context, "etaoin", "perf.q.whereis('etaoin'[#id], X, L, verb.support(X, '5'[#id]))");
-
-// NLParseTestUnifyingListener("does the crate's support support anything green?", o.getSort("performative"), context, "etaoin", "");
-// NLParseTestUnifyingListener("does the shortest thing the crate's support supports support anything green?", o.getSort("performative"), context, "etaoin", "");
+NLParseTestUnifyingListener("take the support of the crate", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.take('etaoin'[#id], X), verb.support(X, '5'[#id]), [number.1])");
+NLParseTestUnifyingListener("what does the crate's support support?", o.getSort("performative"), context, "etaoin", "perf.q.query('etaoin'[#id], Y, #and(verb.support(X, '5'[#id]), verb.support(X, Y)))");
+NLParseTestUnifyingListener("does the crate's support support anything green?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(verb.support(X, '5'[#id]), #and(verb.support(X, Y), color(Y, 'green'[green]))))");
+NLParseTestUnifyingListener("how many blocks can you pick up?", o.getSort("performative"), context, "etaoin", "perf.q.howmany('etaoin'[#id], X, #and(verb.can('etaoin'[#id], action.take('etaoin'[#id], X)), block(X)))");
+NLParseTestUnifyingListener("would a cube roll off a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.roll-off(H1, H2), #and(cube(H1:'hypothetical-object1'[#id]), pyramid(H2:'hypothetical-object2'[#id])))");
 
 
 
