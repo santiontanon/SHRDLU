@@ -195,7 +195,8 @@ var ce2:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('2', o.g
                                               0, 100, 
                                               [Term.fromString("ship('2'[#id])",o),
                                                Term.fromString("color('2'[#id],'red'[red])",o),
-                                               Term.fromString("verb.belong('2'[#id],'etaoin'[#id])",o)]);
+                                               Term.fromString("verb.belong('2'[#id],'etaoin'[#id])",o),
+                                               Term.fromString("verb.support('2'[#id], '5'[#id])",o)]);
 var ce3:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('etaoin', o.getSort("#id")),
                                               0, 10, 
                                               [Term.fromString("disembodied-ai('etaoin'[#id])",o),
@@ -212,7 +213,8 @@ var ce4:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('4', o.g
 var ce5:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('5', o.getSort("#id")),
                                               0, 5, 
                                               [Term.fromString("crate('5'[#id])",o),
-                                               Term.fromString("property.opened('5'[#id])",o)]);
+                                               Term.fromString("property.opened('5'[#id])",o),
+                                               Term.fromString("verb.support('2'[#id], '5'[#id])",o)]);
 var ce6:NLContextEntity = new NLContextEntity(new ConstantTermAttribute('6', o.getSort("#id")),
                                               0, 4, 
                                               [Term.fromString("red-key('6'[#id])",o),
@@ -1662,7 +1664,11 @@ NLParseTestUnifyingListener("stack a cube and a crate up", o.getSort("performati
 NLParseTestUnifyingListener("push the crate to the left", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.push(V0, '5'[#id], [direction.left]))");
 NLParseTestUnifyingListener("roll the crate to the left", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.roll(V0, '5'[#id], [direction.left]))");
 NLParseTestUnifyingListener("is the crate taller than the tallest ship?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(taller('5'[#id], X), #and(ship(X),#and(ship(Y),#not(taller(Y,X))))), #forall(Y,ship(Y)))");
-// NLParseTestUnifyingListener("does the shortest thing the crate's support supports anything green?", o.getSort("performative"), context, "etaoin", "");
+NLParseTestUnifyingListener("what is the crate's support?", o.getSort("performative"), context, "etaoin", "perf.q.query('etaoin'[#id], X, verb.support(X, '5'[#id]))");
+NLParseTestUnifyingListener("where is the crate's support?", o.getSort("performative"), context, "etaoin", "perf.q.whereis('etaoin'[#id], X, L, verb.support(X, '5'[#id]))");
+
+// NLParseTestUnifyingListener("does the crate's support support anything green?", o.getSort("performative"), context, "etaoin", "");
+// NLParseTestUnifyingListener("does the shortest thing the crate's support supports support anything green?", o.getSort("performative"), context, "etaoin", "");
 
 
 
