@@ -225,7 +225,7 @@ class InferenceRecord {
 		for(let target of this.targets) {
 			// let occurs_check:boolean = OCCURS_CHECK;
 			let occurs_check:boolean = true;
-			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, occurs_check, true, this.timeTerm == null, ai));
+			this.inferences.push(new InterruptibleResolution(ltm, additionalSentences, target, occurs_check, this.timeTerm == null, ai));
 		}
 	}
 
@@ -1971,7 +1971,7 @@ class RuleBasedAI {
 
 			} else {
 				if (max_anxiety_inference.findAllAnswers) {
-					if (max_anxiety_inference.inferences[idx].stepAccumulatingResults()) {
+					if (max_anxiety_inference.inferences[idx].stepAccumulatingResults(true)) {
 						max_anxiety_inference.completedInferences.push(max_anxiety_inference.inferences[idx]);
 					}
 				} else {

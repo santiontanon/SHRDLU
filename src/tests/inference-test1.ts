@@ -106,7 +106,7 @@ function resolutionTest(KB_str:string[], query_str_l:string[], expectedResult:bo
 // inference test, it checks whether the query_str contradicts KB_str
 function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[], expectedResult:boolean, o:Ontology)
 {
-    //DEBUG_resolution = true;
+    // DEBUG_resolution = true;
     
     let KB:SentenceContainer = new SentenceContainer();
     for(let str of KB_str) {
@@ -124,7 +124,7 @@ function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[],
         query.push(Sentence.fromString(query_str, o));
     }
 //    console.log("parsed query sentence: " + query.toString());
-    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
+    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, testAI);
 //    let steps:number = 0;
     while(!r.step()) {
 //        steps++;
@@ -134,8 +134,9 @@ function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[],
     if (result != expectedResult) {
         console.error("failed resolutionTest, query: " + query_str_l);
     } else {
-        console.log("resolutionTest ok!");
+        console.log("resolutionTest ok! ("+r.total_resolutions+" inference steps)");
     }
+    /*
     if (r.endResults.length > 0) {
         let baseSentences:Sentence[] = r.endResults[0].getBaseSentences(query);
         console.log("Base sentences ("+baseSentences.length+"):");
@@ -143,6 +144,7 @@ function resolutionTest2(KB_str:string[], AS_str:string[], query_str_l:string[],
             console.log(" - " + s.toString());
         }
     }
+    */
 }
 
 
@@ -194,14 +196,14 @@ function resolutionQueryTest2ForAll(KB_str:string[], AS_str:string[], query_str_
     //     console.log("query variable: " + v);
     // }
 
-    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, true, testAI);
-    while(!r.stepAccumulatingResults());
+    let r:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, query, true, true, testAI);
+    while(!r.stepAccumulatingResults(true));
 
     for(let i:number = 0;i<forAlls.length;i++) {
         // console.log("inference for forAll: " + forAlls[i][1]);
         let negatedForAll:Sentence[] = Term.termToSentences(new Term(o.getSort("#not"), [new TermTermAttribute(forAlls[i][1])]), o);
-        let r2:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, negatedForAll, true, true, true, testAI);
-        while(!r2.stepAccumulatingResults());
+        let r2:InterruptibleResolution = new InterruptibleResolution(KB, additionalSentences, negatedForAll, true, true, testAI);
+        while(!r2.stepAccumulatingResults(true));
         let allValues:TermAttribute[] = [];
         for(let result of r2.endResults) {
             let v:TermAttribute = result.getValueForVariableName(forAlls[i][0].name);
@@ -248,6 +250,9 @@ function normalFormTest(term_str:string, result_str_l:string[], o:Ontology)
 }
 
 
+// ---------------- Tests begin here ----------------
+
+
 for(let pair of term_unification_l) {
     let term1:Term = Term.fromString(pair[0], o);
     let term2:Term = Term.fromString(pair[1], o);
@@ -263,7 +268,6 @@ for(let pair of term_unification_l) {
     }
     if (result != pair[2]) console.error("Unification result incorrect!!");
 }
-
 
 normalFormTest("block(X)",
                ["block(X)"], o);
@@ -323,7 +327,6 @@ resolutionTest(
     o);
 
 
-
 o.newSort("IsA", []);
 o.newSort("Weight", []);
 resolutionTest(
@@ -334,6 +337,7 @@ resolutionTest(
     ["~Weight('Bolt3'[symbol],'18'[number])"],
     true,    // contradicts
     o);
+
 
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
@@ -347,6 +351,7 @@ resolutionTest(
     true,    // contradicts
     o);
 
+
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
@@ -358,6 +363,7 @@ resolutionTest(
     ["space.at('c1'[#id],'station1'[#id])"],
     false,    // does not contradict
     o);
+
 
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
@@ -383,7 +389,6 @@ resolutionTest(
     false,    // does not contradict
     o);
 
-
 resolutionTest(
     ["~space.at(X:[#id],L1:[#id]); ~space.at(X,L2:[#id]); =(L1,L2); space.at(L1,L2); space.at(L2,L1)",
      "~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)",
@@ -396,7 +401,6 @@ resolutionTest(
     ["~character(X);~space.at(X,'room1'[#id])"],
     true,    // contradicts
     o);
-
 
 
 // scalability test:
@@ -695,7 +699,6 @@ o.newSortStrings("rover-wheel-stack", ["wheel", "obstacle"]);
 o.newSortStrings("rover-wheel", ["wheel", "obstacle"]);
 o.newSortStrings("garage-shuttle", ["shuttle", "vehicle"]);
 
-
 resolutionQueryTest2(
     [
     "~space.inside.of(X_0:[#id], L1_0:[#id]); ~space.inside.of(L1_0, L2_0:[#id]); space.inside.of(X_0, L2_0)",
@@ -794,6 +797,7 @@ resolutionQueryTest2(
     4,
     o);
 
+
 resolutionQueryTest2(
     ["action.print('1'[#id], 'plastic-cup'[plastic-cup])",
      "action.print('1'[#id], 'plastic-cup'[plastic-plate])",
@@ -819,6 +823,21 @@ resolutionQueryTest2(
     [],
     ["~=('1'[#id], X)"],
     1,
+    o);
+
+
+resolutionTest2(
+    ["block('b1'[#id])", "color('b1'[#id], 'blue'[blue])",
+     "cube('c1'[#id])",
+     "~table(X); ~block(X)",
+     "~table(X); ~pyramid(X)",
+     "~block(X); ~pyramid(X)",
+     "~pyramid(X); verb.like('c1'[#id], X)",
+     "~table(X); verb.like('c1'[#id], X)",
+     "pyramid(X); table(X); ~verb.like('c1'[#id], X)"],
+    [],
+    ["verb.like('c1'[#id], 'b1'[#id])"],
+    true,
     o);
 
 
@@ -864,8 +883,3 @@ resolutionQueryTest2ForAll(
     [], // forall
     1,
     o);
-
-
-
-
-
