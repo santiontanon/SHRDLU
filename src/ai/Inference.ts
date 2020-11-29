@@ -296,7 +296,7 @@ class InterruptibleResolution
 		// this.internal_step_state_index = 0;
 		if (this.open.length == 0) return [];
 
-		// pick the smallest:
+		// pick the smallest (noticed that this is NOT a time bottleneck, so, although it can be easily done, there is little to gain optimizing this loop):
 		let n1_idx:number = 0;
 		for(let i:number = 1; i<this.open.length; i++) {
 			if (this.open[i].sentence.terms.length < this.open[n1_idx].sentence.terms.length) {
