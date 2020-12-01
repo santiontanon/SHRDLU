@@ -23,7 +23,7 @@ var INFERENCE_allow_increasing_sentences:boolean = true;
 var INFERENCE_allow_variable_to_variable_substitutions:boolean = true;
 
 var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 4000;
-var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 2000000;	// at this point, inference will stop
+var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 1000000;	// at this point, inference will stop
 
 // var INFERENCE_STEP_STATE_STILL_RUNNING:number = 0;
 var INFERENCE_STEP_STATE_DONE:number = 1;

@@ -95,7 +95,7 @@ class AIGoal {
 		let nextTimeToTrigger:number = Number(xml.getAttribute("nextTimeToTrigger"));
 		let periodicity:number = Number(xml.getAttribute("periodicity"));
 		let remainingActions:number = null;
-		if (xml.getAttribute("periodicity") != null) remainingActions = Number(xml.getAttribute("periodicity"));
+		if (xml.getAttribute("remainingActions") != null) remainingActions = Number(xml.getAttribute("remainingActions"));
 		let actions:Term[] = [];
 		for(let goalxml of getElementChildrenByTag(xml, "action")) {
 			actions.push(Term.fromString(goalxml.getAttribute("term"), o));

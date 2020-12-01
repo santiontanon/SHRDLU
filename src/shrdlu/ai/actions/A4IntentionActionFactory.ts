@@ -12,6 +12,7 @@ class A4IntentionActionFactory extends IntentionActionFactory {
 		if (xml.getAttribute("type") == "EtaoinTalk_IntentionAction") return EtaoinTalk_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "EtaoinConnectTo_IntentionAction") return EtaoinConnectTo_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "Etaoin3DPrint_IntentionAction") return Etaoin3DPrint_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "EtaoinRead_IntentionAction") return EtaoinRead_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotFollow_IntentionAction") return RobotFollow_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotGive_IntentionAction") return RobotGive_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotGo_IntentionAction") return RobotGo_IntentionAction.loadFromXML(xml, ai);
@@ -25,6 +26,9 @@ class A4IntentionActionFactory extends IntentionActionFactory {
 		if (xml.getAttribute("type") == "RobotPushPull_IntentionAction") return RobotPushPull_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotEnter_IntentionAction") return RobotEnter_IntentionAction.loadFromXML(xml, ai);
 		if (xml.getAttribute("type") == "RobotExit_IntentionAction") return RobotExit_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotReboot_IntentionAction") return RobotReboot_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotTurn_IntentionAction") return RobotTurn_IntentionAction.loadFromXML(xml, ai);
+		if (xml.getAttribute("type") == "RobotStay_IntentionAction") return RobotStay_IntentionAction.loadFromXML(xml, ai);
 
 		return super.loadFromXML(xml, ai);
 	}
