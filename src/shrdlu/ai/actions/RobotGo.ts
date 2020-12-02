@@ -485,7 +485,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 			app.trigger_achievement_complete_alert();
 		}
 
-		ai.setNewAction(intention, requester, null, null);
+ 		// ai.setNewAction(intention, requester, null, null);
 		// if (stepByStepMovement || ai.robot.isInVehicle()) {
 			if (!this.executeContinuous(ai)) {
 				this.needsContinuousExecution = true;

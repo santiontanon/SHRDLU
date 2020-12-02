@@ -1672,6 +1672,9 @@ NLParseTestUnifyingListener("would a cube roll off a pyramid?", o.getSort("perfo
 NLParseTestUnifyingListener("would you tell me if me is closed?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], property.closed('1'[#id]))");
 NLParseTestUnifyingListener("would you tell me how do I go to the kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.how('etaoin'[#id], verb.go-to('1'[#id],'room1'[#id]))");
 NLParseTestUnifyingListener("could you tell me how do I fix a battery?", o.getSort("performative"), context, "etaoin", "perf.q.how('etaoin'[#id], verb.repair('1'[#id], [battery]))");
+NLParseTestUnifyingListener("could you please put the ship on the floor", o.getSort("performative"), context, "etaoin", "perf.q.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
+NLParseTestUnifyingListener("can you put any ship in the floor?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], action.drop('etaoin'[#id], X), ship(X), [number.1])");
+NLParseTestUnifyingListener("please put any ship in the floor", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.drop('etaoin'[#id], X), ship(X), [number.1])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

@@ -5698,7 +5698,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 nounPhrase(X2, N2, P2, CO)
     		   		 (preposition('space.at'[space.at]) | preposition('space.directly.on.top.of'[space.directly.on.top.of])) 
     		   		 'the' noun('ground'[ground], [singular])
-    		         #derefFromContext(CO, TARGET)"/>
+    		         #derefFromContext(CO, TARGET)"
+    		   priority="200"/>
+
+    <NLPattern name="action-drop-query-to-floor"
+    		   head="perf.request.action.internal(LISTENER, action.drop(LISTENER, QV), QUERY, [number.1])"
+    		   body="(verb('action.drop'[symbol], N, [second-person], T) | 
+    		   		  verb('verb.put'[symbol], N, [second-person], T) |
+    		   		  verb('verb.leave'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X2, N2, P2, CO)
+    		   		 (preposition('space.at'[space.at]) | preposition('space.directly.on.top.of'[space.directly.on.top.of])) 
+    		   		 'the' noun('ground'[ground], [singular])
+    		         #derefQuery(CO, QV, QUERY)"
+    		   priority="200"/>
 
     <NLPattern name="q.predicate-verb-generic-object"
     		   head="perf.q.predicate(LISTENER, #and(verb.can(LISTENER, #cons(V2, LISTENER, QUERY_VARIABLE)), #cons(OBJECTNOUN, QUERY_VARIABLE)))"

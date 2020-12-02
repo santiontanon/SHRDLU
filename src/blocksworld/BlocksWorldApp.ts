@@ -60,7 +60,7 @@ class BlocksWorldApp {
                                                  this.world, this, 1, 0, DEFAULT_QUESTION_PATIENCE_TIMER,
                                                  ["data/blocksworld-kb.xml"]);
 
-        this.addMessageWithColorTime("Welcome to block world!", MSX_COLOR_GREY, this.time);
+        this.addMessageWithColorTime("Welcome to blocks world!", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("Inspired by the original SHRDLU system by Terry Winograd, but using the NLP", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("engine used by the SHRDLU game.", MSX_COLOR_GREY, this.time);
         this.addMessageWithColorTime("(Check https://github.com/santiontanon/SHRDLU for more info about the game)", MSX_COLOR_GREY, this.time);
