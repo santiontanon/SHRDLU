@@ -1268,7 +1268,6 @@ NLParseTestUnifyingListener("I can help you", o.getSort("performative"), context
 NLParseTestUnifyingListener("I changed my mind", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
 NLParseTestUnifyingListener("I take that back", o.getSort("performative"), context, 'etaoin', "perf.changemind(V0:'etaoin'[#id])");
 
-
 // For version 3.5:
 NLParseTestUnifyingListener("what is on top of a block?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(block(Y), space.directly.on.top.of(X, Y))))"); 
 NLParseTestUnifyingListener("what is on top of a green block?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(object(X), #and(block(Y), #and(color(Y, 'green'[green]), space.directly.on.top.of(X, Y)))))"); 
@@ -1546,7 +1545,6 @@ NLParseTestUnifyingListener("you are friends with qwerty", o.getSort("performati
 NLParseTestUnifyingListener("the station has oxygen", o.getSort("performative"), context, "etaoin", "perf.inform(V0:'etaoin'[#id], verb.have('location-aurora-station'[#id], 'oxygen'[oxygen]))");
 NLParseTestUnifyingListener("the station does not have oxygen", o.getSort("performative"), context, "etaoin", "perf.inform(V0:'etaoin'[#id], #not(verb.have('location-aurora-station'[#id], 'oxygen'[oxygen])))");
 
-
 // For version 3.7:
 NLParseTestUnifyingListener("leave the ship on the floor", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("drop the ship on the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action('etaoin'[#id], action.drop-in('etaoin'[#id], '2'[#id], 'room1'[#id]))");
@@ -1670,10 +1668,10 @@ NLParseTestUnifyingListener("take the support of the crate", o.getSort("performa
 NLParseTestUnifyingListener("what does the crate's support support?", o.getSort("performative"), context, "etaoin", "perf.q.query('etaoin'[#id], Y, #and(verb.support(X, '5'[#id]), verb.support(X, Y)))");
 NLParseTestUnifyingListener("does the crate's support support anything green?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(verb.support(X, '5'[#id]), #and(verb.support(X, Y), color(Y, 'green'[green]))))");
 NLParseTestUnifyingListener("how many blocks can you pick up?", o.getSort("performative"), context, "etaoin", "perf.q.howmany('etaoin'[#id], X, #and(verb.can('etaoin'[#id], action.take('etaoin'[#id], X)), block(X)))");
-NLParseTestUnifyingListener("would a cube roll off a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.roll-off(H1, H2), #and(cube(H1:'hypothetical-object1'[#id]), pyramid(H2:'hypothetical-object2'[#id])))");
+NLParseTestUnifyingListener("would a cube roll off a pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.roll-off(H1:'hypothetical-object1'[#id], H2:'hypothetical-object2'[#id]), #and(cube(H1), pyramid(H2)))");
 NLParseTestUnifyingListener("would you tell me if me is closed?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], property.closed('1'[#id]))");
-
-
+NLParseTestUnifyingListener("would you tell me how do I go to the kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.how('etaoin'[#id], verb.go-to('1'[#id],'room1'[#id]))");
+NLParseTestUnifyingListener("could you tell me how do I fix a battery?", o.getSort("performative"), context, "etaoin", "perf.q.how('etaoin'[#id], verb.repair('1'[#id], [battery]))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

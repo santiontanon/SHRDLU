@@ -7803,6 +7803,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -7814,6 +7815,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -7826,6 +7828,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -7839,6 +7842,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7852,6 +7856,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7866,6 +7871,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7880,6 +7886,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' verb('verb.do'[symbol], N, P, [past-tense])
 		           	 nounPhrase(X, N, P, C)
 		           	 verb('verb.get'[symbol], N2, P2, [infinitive-tense])
@@ -7891,6 +7898,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7904,6 +7912,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7919,6 +7928,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7933,6 +7943,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7949,6 +7960,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' 'to' verb(VERB, N2, P2, [infinitive-tense])
 					 nounPhrase(X3, N3, P3, C3) ('!'|'?')*
 					 #derefFromContext(C3, OBJECT)"/>
@@ -7957,6 +7969,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7974,6 +7987,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' (verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		verb('verb.shall'[symbol], N, P, T))
@@ -7992,6 +8006,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -8006,6 +8021,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -8022,6 +8038,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -8037,6 +8054,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
@@ -8051,6 +8069,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
 		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
 		           	 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+		           	 [('would'|'could') 'you' 'tell' 'me']
 		           	 'how' [(verb('verb.do'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.can'[symbol], N, P, [present-tense]) | 
 		           	 		 verb('verb.shall'[symbol], N, P, T))]
