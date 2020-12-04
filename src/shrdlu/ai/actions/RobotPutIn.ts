@@ -89,7 +89,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				term2.functor = ai.o.getSort("action.drop");
 				let ir2:IntentionRecord = new IntentionRecord(term2, null, null, null, ai.timeStamp);
 				ir2.alternative_actions = [];
-				for(let aa of ir.alternative_actions) {
+				for(let aa of alternative_actions) {
 					let aa2:Term = aa.clone([]);
 					aa2.functor = ai.o.getSort("action.drop");
 					ir2.alternative_actions.push(aa2);

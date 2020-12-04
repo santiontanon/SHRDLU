@@ -726,6 +726,14 @@ class A4Object {
     }
 
 
+    pixelDistanceBetweenCentersOffset(o2:A4Object, o2xoff:number, o2yoff:number) : number
+    {
+        let dx:number = (this.x + this.getPixelWidth()/2) - (o2xoff+o2.x+o2.getPixelWidth()/2);
+        let dy:number = (this.y + this.getPixelHeight()/2) - (o2yoff+o2.y+o2.getPixelHeight()/2);
+        return Math.sqrt(dx*dx+dy*dy);
+    }
+
+
     addAgenda(a:Agenda)
     {
         this.removeAgenda(a.name);

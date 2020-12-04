@@ -1675,7 +1675,9 @@ NLParseTestUnifyingListener("could you tell me how do I fix a battery?", o.getSo
 NLParseTestUnifyingListener("could you please put the ship on the floor", o.getSort("performative"), context, "etaoin", "perf.q.action('etaoin'[#id], action.drop('etaoin'[#id], '2'[#id]))");
 NLParseTestUnifyingListener("can you put any ship in the floor?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], action.drop('etaoin'[#id], X), ship(X), [number.1])");
 NLParseTestUnifyingListener("please put any ship in the floor", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.drop('etaoin'[#id], X), ship(X), [number.1])");
-
+NLParseTestUnifyingListener("could you please, go to the kitchen?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], verb.go-to(V0, 'room1'[#id]))"); 
+NLParseTestUnifyingListener("can you go to kitchen", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], verb.go-to(V0, 'room1'[#id]))"); 
+NLParseTestUnifyingListener("turn around", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.rotate(V0, [backward]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

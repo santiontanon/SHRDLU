@@ -78,6 +78,10 @@ class RobotTurn_IntentionAction extends IntentionAction {
 					targetx = ai.robot.x + movementAmount*8*direction_x_inc[dir];
 					targety = ai.robot.y + movementAmount*8*direction_y_inc[dir];
 				}
+				if (intention.attributes[1].sort.name == "backward") {
+					targetx = ai.robot.x + movementAmount*8*direction_x_inc[(ai.robot.direction+2)%A4_NDIRECTIONS];
+					targety = ai.robot.y + movementAmount*8*direction_y_inc[(ai.robot.direction+2)%A4_NDIRECTIONS];
+				}
 
 				let x:number = Math.floor(ai.robot.x/8)*8;
 				let y:number = Math.floor(ai.robot.y/8)*8;

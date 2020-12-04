@@ -71,6 +71,47 @@ class RobotAI extends A4RuleBasedAI {
         	this.intentionsToExecuteAfterTheCurrentAction.splice(0, 1);
         }
 
+        // get out of the way of the player:
+        if (this.robot.map == this.game.currentPlayer.map && this.robot.scriptQueues.length == 0 && this.visionActive) {
+        	let d:number = this.robot.pixelDistance(this.game.currentPlayer);
+        	if (d == 0) {
+        		// see if the player were to advance in its current facing will collide with us, and in this case, move way:
+
+        		if (this.game.currentPlayer.collisionObjectOffset(direction_x_inc[this.game.currentPlayer.direction], 
+        														  direction_y_inc[this.game.currentPlayer.direction], 
+        														  this.robot)) {
+	        		// find a nearby position further from from the player and move there to get out of the way of the player:
+	        		d = this.game.currentPlayer.pixelDistanceBetweenCentersOffset(this.robot, 0, 0);
+	        		let targetx:number = null;
+	        		let targety:number = null;
+	        		for(let offy:number = -1; offy<=1; offy+=1) {
+		        		for(let offx:number = -1; offx<=1; offx+=1) {
+		        			let d2:number = this.game.currentPlayer.pixelDistanceBetweenCentersOffset(this.robot, offx*this.robot.map.tileWidth, offy*this.robot.map.tileHeight);
+		        			if (d2 > d) {
+		        				if (this.robot.map.walkable(this.robot.x+offx*this.robot.map.tileWidth, 
+		        											this.robot.y+offy*this.robot.map.tileHeight, 
+		        											this.robot.getPixelWidth(),
+		        											this.robot.getPixelHeight(),
+		        											this.robot)) {
+		        					targetx = this.robot.x+offx*this.robot.map.tileWidth;
+		        					targety = this.robot.y+offy*this.robot.map.tileHeight;
+		        					d = d2;
+		        				}
+		        			}
+						}
+	        		}
+	        		if (targetx != null) {
+				        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.robot, this.robot.map, this.game, null);
+				        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, this.robot.map.name, null, 0, false, false);
+				        s.x = targetx;
+				        s.y = targety;        
+				        q.scripts.push(s);			
+	        			this.robot.addScriptQueue(q);
+	        		}
+	        	}
+	        }
+        }
+
 		this.executeScriptQueues();
 	}
 

@@ -764,6 +764,31 @@ class A4Game {
             map.update(this);
         }
 
+        this.processWarpRequests();
+
+        for(let o of this.deletionRequests) {
+            o.event(A4_EVENT_END, null, o.map, this);
+            this.objectRemoved(o);
+        }
+        this.deletionRequests = [];
+
+        // rules:
+        if (this.eventScripts[A4_EVENT_TIMER]!=null) {
+            for(let r of this.eventScripts[A4_EVENT_TIMER]) r.execute(null,null,this,null);
+        }
+        if (this.eventScripts[A4_EVENT_STORYSTATE]!=null) {
+            for(let r of this.eventScripts[A4_EVENT_STORYSTATE]) r.execute(null,null,this,null);
+        }
+        if (this.currentPlayer==null) return false;
+
+        this.executeScriptQueues();
+
+        return true;        
+    }
+
+
+    processWarpRequests()
+    {
         for(let wr of this.warpRequests) {
             let m:A4Map = wr.map;
             let createRecord:boolean = wr.o.isCharacter() || wr.o.isVehicle();
@@ -787,28 +812,9 @@ class A4Game {
             }
             
         }
-        this.warpRequests = [];
-
-        for(let o of this.deletionRequests) {
-            o.event(A4_EVENT_END, null, o.map, this);
-            this.objectRemoved(o);
-        }
-        this.deletionRequests = [];
-
-        // rules:
-        if (this.eventScripts[A4_EVENT_TIMER]!=null) {
-            for(let r of this.eventScripts[A4_EVENT_TIMER]) r.execute(null,null,this,null);
-        }
-        if (this.eventScripts[A4_EVENT_STORYSTATE]!=null) {
-            for(let r of this.eventScripts[A4_EVENT_STORYSTATE]) r.execute(null,null,this,null);
-        }
-        if (this.currentPlayer==null) return false;
-
-        this.executeScriptQueues();
-
-        return true;        
+        this.warpRequests = [];        
     }
-
+    
 
     draw(screen_width:number, screen_height:number)
     {
