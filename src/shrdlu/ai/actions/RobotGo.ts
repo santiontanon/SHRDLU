@@ -55,6 +55,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let targetMap:A4Map = null;
 		this.targetx = null;
 		this.targety = null;
+		this.targetObjectID = null;
 		this.targetMapName = null;
 		this.stepByStepMovement = false;
 
@@ -99,6 +100,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 					targetMap = targetObject.map;
 					this.targetx = targetObject.x;
 					this.targety = targetObject.y;
+					this.targetObjectID = targetObject.ID;
 					targetLocation = ai.game.getAILocation(targetObject);
 					if (targetLocation != null) targetLocationID = targetLocation.id;
 				}
@@ -132,6 +134,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 					targetMap = targetObject.map;
 					this.targetx = targetObject.x;
 					this.targety = targetObject.y;
+					this.targetObjectID = targetObject.ID;
 					targetLocation = ai.game.getAILocation(targetObject);
 					if (targetLocation != null) targetLocationID = targetLocation.id;
 				} else {
@@ -579,6 +582,14 @@ class RobotGo_IntentionAction extends IntentionAction {
 				return true;
 			}
 		} else {
+			if (this.targetObjectID != null) {
+				let targetObject:A4Object[] = ai.game.findObjectByID(this.targetObjectID);
+				if (targetObject != null && targetObject.length>0 &&
+					ai.robot.pixelDistance(targetObject[0]) == 0) {
+					// we made it!
+					return true;
+				}
+			}
 			// go to destination:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
 	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO_OPENING_DOORS, this.targetMapName, null, 0, false, false);
@@ -596,7 +607,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 	saveToXML(ai:RuleBasedAI) : string
 	{
 		let tmp:string = "<IntentionAction type=\"RobotGo_IntentionAction\" "+
-								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName+"\" stepByStepMovement=\""+this.stepByStepMovement+"\"/>";
+								"targetx=\""+this.targetx+"\" targety=\""+this.targety+"\" targetMapName=\""+this.targetMapName+"\"";
+		if (this.targetObjectID != null) tmp += " targetObjectID=\""+this.targetObjectID+"\"";
+		tmp += " stepByStepMovement=\""+this.stepByStepMovement+"\"/>";
 		return tmp;
 	}
 
@@ -606,6 +619,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		let a:RobotGo_IntentionAction = new RobotGo_IntentionAction();
 		a.targetx = Number(xml.getAttribute("targetx"));
 		a.targety = Number(xml.getAttribute("targety"));
+		a.targetObjectID = xml.getAttribute("targetObjectID");
 		a.targetMapName = xml.getAttribute("targetMapName");
 		a.stepByStepMovement = xml.getAttribute("stepByStepMovement") == "true";
 		return a;
@@ -613,6 +627,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 
 	targetx:number;
 	targety:number;
+	targetObjectID:string;
 	targetMapName:string;
 	stepByStepMovement:boolean;	
 }

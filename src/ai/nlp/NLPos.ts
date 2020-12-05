@@ -1688,6 +1688,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   // these are synonims of the verbs below, but I have them earlier, so that they are overwritten by the ones below for use
   // by the natural language generator:
   this.addStandardVerbPOS("verb.colonize", "populate","populates","populated","populated","populating", false, multitokens_raw, o);
+  this.addStandardVerbPOS("verb.enter", "go into","goes into","went into","gone into","going into", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "get in","gets in","got in","gotten in","getting in", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "get into","gets into","got into","gotten into","getting into", false, multitokens_raw, o);
   this.addStandardVerbPOS("verb.enter", "get on","gets on","got on","gotten on","getting on", false, multitokens_raw, o);

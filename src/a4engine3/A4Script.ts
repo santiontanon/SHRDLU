@@ -261,6 +261,10 @@ scriptFunctions[A4_SCRIPT_TELEPORT] = function(script:A4Script, o:A4Object, map:
 
 scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
+    if (script.timeOut != null) {
+        script.timeOut--;
+        if (script.timeOut <= 0) return SCRIPT_FAILED;
+    }
     if (o.isAICharacter()) {
         let priority:number = 10;
         let aic:A4AICharacter = <A4AICharacter>o;
@@ -285,6 +289,10 @@ scriptFunctions[A4_SCRIPT_GOTO] = function(script:A4Script, o:A4Object, map:A4Ma
 
 scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
+    if (script.timeOut != null) {
+        script.timeOut--;
+        if (script.timeOut <= 0) return SCRIPT_FAILED;
+    }    
     if (o.isAICharacter()) {
         let priority:number = 10;
         let aic:A4AICharacter = <A4AICharacter>o;
@@ -359,6 +367,10 @@ scriptFunctions[A4_SCRIPT_GOTO_OPENING_DOORS] = function(script:A4Script, o:A4Ob
 
 scriptFunctions[A4_SCRIPT_GOTO_CHARACTER] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
+    if (script.timeOut != null) {
+        script.timeOut--;
+        if (script.timeOut <= 0) return SCRIPT_FAILED;
+    }    
     if (o.isAICharacter()) {
         let aic:A4AICharacter = <A4AICharacter>o;
         let ai:A4PathFinding = aic.AI;
@@ -1449,6 +1461,9 @@ class A4Script {
                         s.x = Number(xml.getAttribute("x"));
                         s.y = Number(xml.getAttribute("y"));
                         s.ID = xml.getAttribute("map");
+                        if (xml.getAttribute("timeOut") != null) {
+                            s.timeOut = Number(xml.getAttribute("timeOut"));
+                        }
                         if (xml.getAttribute("stopAfterGoingThroughABridge") == "true") s.stopAfterGoingThroughABridge = true;
                         //console.log("goto XML: " + xml);
                         //console.log("goto XML.ID: " + s.ID);
@@ -1456,6 +1471,9 @@ class A4Script {
                     case A4_SCRIPT_GOTO_CHARACTER:
                     case A4_SCRIPT_INTERACT_WITH_OBJECT:
                         s.ID = xml.getAttribute("id");
+                        if (xml.getAttribute("timeOut") != null) {
+                            s.timeOut = Number(xml.getAttribute("timeOut"));
+                        }
                         //console.log("goto XML: " + xml);
                         //console.log("goto XML.ID: " + s.ID);
                         break;
@@ -1725,12 +1743,14 @@ class A4Script {
                 xmlString += " x=\"" + this.x + "\"";
                 xmlString += " y=\"" + this.y + "\"";
                 if (this.ID!=null) xmlString += " map=\"" + this.ID + "\"";
+                if (this.timeOut!=null) xmlString += " timeOut=\"" + this.timeOut + "\"";
                 if (this.stopAfterGoingThroughABridge) xmlString += " stopAfterGoingThroughABridge=\"" + this.stopAfterGoingThroughABridge + "\"";
                 break;
             }
             case A4_SCRIPT_GOTO_CHARACTER:
             case A4_SCRIPT_INTERACT_WITH_OBJECT:
             {
+                if (this.timeOut!=null) xmlString += " timeOut=\"" + this.timeOut + "\"";
                 xmlString += " id=\"" + this.ID + "\"";
                 break;
             }
@@ -2049,6 +2069,7 @@ class A4Script {
     wait:boolean = false;
     consume:boolean = false;
     stopAfterGoingThroughABridge:boolean = false;    // used in the GOTO script
+    timeOut:number = null;    // in some scripts, after this much time, just give up
 
     state:number = 0;
     if_state:number = 0;

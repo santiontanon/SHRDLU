@@ -104,7 +104,8 @@ class RobotAI extends A4RuleBasedAI {
 				        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(this.robot, this.robot.map, this.game, null);
 				        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, this.robot.map.name, null, 0, false, false);
 				        s.x = targetx;
-				        s.y = targety;        
+				        s.y = targety;
+				        s.timeOut = 4;	// just try it for a little bit of time, otherwise, give up
 				        q.scripts.push(s);			
 	        			this.robot.addScriptQueue(q);
 	        		}

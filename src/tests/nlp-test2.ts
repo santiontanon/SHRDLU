@@ -1680,6 +1680,7 @@ NLParseTestUnifyingListener("can you go to kitchen", o.getSort("performative"), 
 NLParseTestUnifyingListener("turn around", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.rotate(V0, [backward]))");
 NLParseTestUnifyingListener("leave the white key into the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], '5'[#id]))");
 NLParseTestUnifyingListener("leave the white key into yourself", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.put-in('etaoin'[#id], '4'[#id], 'etaoin'[#id]))");
+NLParseTestUnifyingListener("go into the ship", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.enter(V0, '2'[#id]))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
