@@ -160,6 +160,8 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			ai.game.gameScript.act_2_repair_shuttle_state = 1;
 			ai.game.gameScript.act_2_repair_shuttle_state_timer = 0;
 			return true;
+		} else if (containerObjectL[0].ID == ai.selfID) {
+			// put something into ourselves (weird, but, ok...):
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
@@ -187,9 +189,11 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			        q.scripts.push(s);
 		        }
         	}
-	        let s:A4Script = new A4Script(A4_SCRIPT_PUT_IN_CONTAINER, containerObjectL[0].ID, null, 0, false, false);
-	        s.ID2 = item.ID;	// the object we want to put in
-	        q.scripts.push(s);
+        	if (containerObjectL[0].ID != ai.selfID) {
+	        	let s:A4Script = new A4Script(A4_SCRIPT_PUT_IN_CONTAINER, containerObjectL[0].ID, null, 0, false, false);
+	        	s.ID2 = item.ID;	// the object we want to put in
+	        	q.scripts.push(s);
+	        }
 
 			// If the object was not mentioned explicitly in the performative, add it to the natural language context:
 			if (ir.requestingPerformative != null) ir.requestingPerformative.addMentionToPerformative(item.ID, ai.o);
@@ -199,8 +203,10 @@ class RobotPutIn_IntentionAction extends IntentionAction {
         	if (numberConstraint <= 0) break;
 	    }
 
-        ai.setNewAction(alternative_actions[0], requester, q, null);
-        ai.addCurrentActionLongTermTerm(alternative_actions[0]);
+	    if (q.scripts.length > 0) {
+	        ai.setNewAction(alternative_actions[0], requester, q, null);
+	        ai.addCurrentActionLongTermTerm(alternative_actions[0]);
+		}
 		ai.intentionsCausedByRequest.push(ir);
 		if (requester != null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);

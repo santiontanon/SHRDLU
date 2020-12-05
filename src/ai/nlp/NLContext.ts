@@ -677,6 +677,7 @@ class NLContext {
 		let nounSort:Sort = o.getSort("noun");
 		let pronounSort:Sort = o.getSort("pronoun");
 		let personalPronounSort:Sort = o.getSort("personal-pronoun");
+		let reflexivePronounSort:Sort = o.getSort("reflexive-pronoun");
 		let adjectiveSort:Sort = o.getSort("adjective");
 		let determinerSort:Sort = o.getSort("determiner");
 		let possessiveDeterminerSort:Sort = o.getSort("possessive-determiner");
@@ -777,7 +778,8 @@ class NLContext {
 
 			let output:TermAttribute[] = [];
 			for(let pronounTerm of pronounTerms) {
-				if (pronounTerm.functor.is_a(personalPronounSort)) {
+				if (pronounTerm.functor.is_a(personalPronounSort) ||
+					pronounTerm.functor.is_a(reflexivePronounSort)) { 
 					if (pronounTerm.attributes[3].sort.is_a(firstPerson)) {
 						output.push(new ConstantTermAttribute(this.speaker, o.getSort("#id")));
 					} else if (pronounTerm.attributes[3].sort.is_a(secondPerson)) {

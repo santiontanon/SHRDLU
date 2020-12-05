@@ -127,8 +127,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			app.trigger_achievement_complete_alert();
 		}
 
-		this.executeContinuous(ai);
-		return true;
+		return this.executeContinuous(ai)
 	}
 
 
@@ -168,13 +167,24 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 
 		} else if (this.guideeObject instanceof A4Item) {
 			if (ai.robot.inventory.indexOf(this.guideeObject) == -1) {
-				// we don't have the item, go pick it up!
-				let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-				let s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
-				s.x = this.guideeObject.x;
-				s.y = this.guideeObject.y;
-				q.scripts.push(s);
-				ai.currentAction_scriptQueue = q;
+				let object_l:A4Object[] = ai.game.findObjectByID(this.guideeObject.ID);
+				if (object_l.length == 1) {
+					// we don't have the item, go pick it up!
+					let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
+					let s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
+					s.x = this.guideeObject.x;
+					s.y = this.guideeObject.y;
+					q.scripts.push(s);
+					ai.currentAction_scriptQueue = q;
+				} else {
+					// the item is in a container or character, just fail:
+					if (ai.currentAction_requester != null) {
+						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+ai.currentAction_requester+"))", ai.o);
+						let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+this.guideeObject.ID+"'[#id]))", ai.o);
+						ai.queueIntentionRecord(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
+						return true;
+					}
+				}
 
 			} else {
 				// we have it, good!
@@ -184,7 +194,6 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			        let s:A4Script = new A4Script(A4_SCRIPT_DROP, this.guideeObject.ID, null, 0, false, false);
 			        q.scripts.push(s);
 					ai.currentAction_scriptQueue = q;
-
 					return true;
 				} else {
 					// go to destination:

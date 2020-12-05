@@ -432,6 +432,13 @@ class RobotAI extends A4RuleBasedAI {
 	}
 
 
+	considerGoals() : boolean
+	{
+		// If the robot is doing something for the player, then ignore the goals:
+		if (this.currentAction != null && this.currentAction_requester != null) return false;
+		return super.considerGoals();
+	}
+
 
 	restoreFromXML(xml:Element)
 	{

@@ -8178,6 +8178,9 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="nounphrase-object-pronoun"
 			   head="nounPhrase(X, N, P, object-personal-pronoun(X, N, G, P))"
 			   body="object-personal-pronoun(X, N, G, P)"/>
+	<NLPattern name="nounphrase-reflexive-pronoun"
+			   head="nounPhrase(X, N, P, reflexive-pronoun(X, N, G, P))"
+			   body="reflexive-pronoun(X, N, G, P)"/>
 	<NLPattern name="nounphrase-indefinite-pronoun"
 			   head="nounPhrase(X, N, P, indefinite-pronoun(X, N, G, P))"
 			   body="indefinite-pronoun(X, N, G, P)"/>

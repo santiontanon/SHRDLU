@@ -1907,7 +1907,18 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addPhrasalVerbPOS("verb.switch-on","on", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-off","off", "switch","switches","switched","switched","switching", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.drop-in","on", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.drop-in","onto", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.drop-in","into", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.drop-in","in", "drop","drops","drop","drop","dropping", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","over", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","on", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","onto", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","on top of", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","at", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","into", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-in","in", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-under","under", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
+  this.addPhrasalVerbPOS("action.put-under","underneath", "leave","leaves","left","left","leaving", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","over", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","on", "put","puts","put","put","putting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("action.put-in","onto", "put","puts","put","put","putting", false, multitokens_raw, o);
