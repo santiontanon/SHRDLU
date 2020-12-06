@@ -192,7 +192,7 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefFromContext(parse, term2.attributes[0], term2.attributes[1], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
-				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(context.lastDerefErrorType, parse.tokensLeftToParse());
+				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(context.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
 				nlper.derefFromContextErrors.push(term2.attributes[0]);
 				rule.lastDerefErrors.push(nlper)
 			}
@@ -201,7 +201,7 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefUniversal(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], parser.o);
 			if (nlprl == null) {
-				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse());
+				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
 				nlper.derefUniversalErrors.push(term2.attributes[0]);
 				rule.lastDerefErrors.push(nlper)
 			}
@@ -210,7 +210,7 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefHypothetical(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
-				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse());
+				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
 				nlper.derefHypotheticalErrors.push(term2.attributes[0]);
 				rule.lastDerefErrors.push(nlper)
 			}
@@ -219,7 +219,7 @@ class NLPattern {
 			let term2:Term = this.term.applyBindings(parse.bindings);
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefQuery(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
-				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse());
+				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
 				nlper.derefQueryErrors.push(term2.attributes[0]);
 				rule.lastDerefErrors.push(nlper)
 			}
@@ -583,6 +583,7 @@ class NLPattern {
 //		console.log("specialfunction_derefQuery: context.ai.selfID = " + context.ai.selfID);
 		let queryTerm:TermAttribute = null;
 		let terms:TermAttribute[] = Term.elementsInList((<TermTermAttribute>clause).term, "#and");
+		// console.log("specialfunction_derefQuery: terms = " + terms);
 		let myDeterminer:Term = null;
 		let ourDeterminer:Term = null;
 		let yourDeterminer:Term = null;
@@ -703,7 +704,7 @@ class NLPattern {
 					}
 				}
 			}
-			let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, parse, o, pos, AI);
+			let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, parse, o, pos, AI, false);
 //			console.log("ownerTerms: " + ownerTerms);
 //			console.log("dereffedOwner: " + dereffedOwner);
 			if (dereffedOwner == null) {
@@ -1191,6 +1192,16 @@ class NLPattern {
 						if (pos.term.functor.name == "noun") {
 							noun = pos;
 						}
+					}
+				}
+				if (p.derefErrors != null) {
+					for(let error of p.derefErrors) {
+						for(let pos of error.previousPOS) {
+							if (pos.term.functor.name == "noun") {
+								noun = pos;
+							}
+						}
+						if (noun != null) break;
 					}
 				}
 				if (noun != null) break;

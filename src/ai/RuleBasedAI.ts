@@ -877,7 +877,7 @@ class RuleBasedAI {
 						let nQueuedIntentions:number = this.queuedIntentions.length;
 						let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
 						if (tmp!=null) toAdd = toAdd.concat(tmp);
-						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, this.o, this.timeStamp);
+						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, null, this.o, this.timeStamp);
 						// add this performative to all the new intentions:
 						if (nlcp.length > 0) {
 							for(let i:number = nIntentions;i<this.intentions.length;i++) {

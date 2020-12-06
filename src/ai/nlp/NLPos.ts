@@ -13,6 +13,20 @@ class PartOfSpeech {
   }
 
 
+  equals(pos:PartOfSpeech) : boolean
+  {
+    if (this.token != pos.token) return false;
+    if (this.negatedSort != pos.negatedSort) return false;
+    if (this.term == null) {
+      if (pos.term != null) return false;
+    } else {
+      if (pos.term == null) return false;
+      if (this.term.equalsNoBindings(pos.term) != 1) return false;
+    }
+    return true;
+  }
+
+
   toString() : string
   {
     return this.term.toString();

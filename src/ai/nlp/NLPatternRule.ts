@@ -62,6 +62,7 @@ class NLDerefErrorRecord {
 	derefUniversalErrors:TermAttribute[] = [];
 	derefHypotheticalErrors:TermAttribute[] = [];
 	derefQueryErrors:TermAttribute[] = [];
+	previousPOS:PartOfSpeech[] = [];
 
 	derefErrorType:number = -1;
 	tokensLeftToParse:number = -1;
@@ -76,9 +77,37 @@ class NLDerefErrorRecord {
 			   ")";
 	}
 
-	constructor(errorType:number, tokensLeftToParse:number) {
+	constructor(errorType:number, tokensLeftToParse:number, previousPOS:PartOfSpeech[]) {
 		this.derefErrorType = errorType;
 		this.tokensLeftToParse = tokensLeftToParse;
+		this.previousPOS = previousPOS;
+	}
+
+	equals(e:NLDerefErrorRecord) : boolean
+	{
+		if (this.derefErrorType != e.derefErrorType) return false;
+		if (this.tokensLeftToParse != e.tokensLeftToParse) return false;
+		if (this.derefFromContextErrors.length != e.derefFromContextErrors.length) return false;
+		for(let i:number = 0;i<this.derefFromContextErrors.length;i++) {
+			if (Term.equalsNoBindingsAttribute(this.derefFromContextErrors[i], e.derefFromContextErrors[i]) != 1) return false;
+		}
+		if (this.derefUniversalErrors.length != e.derefUniversalErrors.length) return false;
+		for(let i:number = 0;i<this.derefUniversalErrors.length;i++) {
+			if (Term.equalsNoBindingsAttribute(this.derefUniversalErrors[i], e.derefUniversalErrors[i]) != 1) return false;
+		}
+		if (this.derefHypotheticalErrors.length != e.derefHypotheticalErrors.length) return false;
+		for(let i:number = 0;i<this.derefHypotheticalErrors.length;i++) {
+			if (Term.equalsNoBindingsAttribute(this.derefHypotheticalErrors[i], e.derefHypotheticalErrors[i]) != 1) return false;
+		}
+		if (this.derefQueryErrors.length != e.derefQueryErrors.length) return false;
+		for(let i:number = 0;i<this.derefQueryErrors.length;i++) {
+			if (Term.equalsNoBindingsAttribute(this.derefQueryErrors[i], e.derefQueryErrors[i]) != 1) return false;
+		}
+		if (this.previousPOS.length != e.previousPOS.length) return false;
+		for(let i:number = 0;i<this.previousPOS.length;i++) {
+			if (!this.previousPOS[i].equals(e.previousPOS[i])) return false;
+		}
+		return true;
 	}
 }
 

@@ -153,12 +153,13 @@ class NLContextEntity {
 
 
 class NLContextPerformative {
-	constructor(t:string, speaker:string, p:Term, parse:NLParseRecord, c:CauseRecord, context:NLContext, timeStamp:number)
+	constructor(t:string, speaker:string, p:Term, parse:NLParseRecord, derefErrors:NLDerefErrorRecord[], c:CauseRecord, context:NLContext, timeStamp:number)
 	{
 		this.text = t;
 		this.speaker = speaker;
 		this.performative = p;
 		this.parse = parse;
+		this.derefErrors = derefErrors;
 		this.cause = c;
 		this.context = context;
 		this.timeStamp = timeStamp;
@@ -169,56 +170,16 @@ class NLContextPerformative {
 	// find all the entities mentioned in the clause:
 	IDsInPerformative(o:Ontology) : ConstantTermAttribute[]
 	{
-		let perf:Term = this.performative;
-
 		if (this.IDs != null) return this.IDs;
 		this.IDs = [];
-		if (perf.functor.is_a(o.getSort("perf.callattention")) ||
-			perf.functor.is_a(o.getSort("perf.greet")) ||
-			perf.functor.is_a(o.getSort("perf.nicetomeetyou")) ||
-			perf.functor.is_a(o.getSort("perf.nicetomeetyoutoo")) ||
-			perf.functor.is_a(o.getSort("perf.farewell")) ||
-			perf.functor.is_a(o.getSort("perf.ack.ok")) ||
-			perf.functor.is_a(o.getSort("perf.ack.unsure")) ||
-			perf.functor.is_a(o.getSort("perf.ack.contradict")) ||
-			perf.functor.is_a(o.getSort("perf.ack.invalidanswer")) ||
-			perf.functor.is_a(o.getSort("perf.ack.denyrequest")) ||
-			perf.functor.is_a(o.getSort("perf.ackresponse")) ||
-			perf.functor.is_a(o.getSort("perf.thankyou")) ||
-			perf.functor.is_a(o.getSort("perf.youarewelcome")) ||
-			perf.functor.is_a(o.getSort("perf.sentiment")) ||
-			perf.functor.is_a(o.getSort("perf.q.howareyou")) ||
-			perf.functor.is_a(o.getSort("perf.moreresults")) ||
-			perf.functor.is_a(o.getSort("perf.request.repeataction")) ||
-			perf.functor.is_a(o.getSort("perf.inform")) ||
-		    perf.functor.is_a(o.getSort("perf.q.predicate")) ||
-		    perf.functor.is_a(o.getSort("perf.q.predicate-negated")) ||
-		    perf.functor.is_a(o.getSort("perf.request.action")) ||
-		    perf.functor.is_a(o.getSort("perf.request.stopaction")) ||
-		    perf.functor.is_a(o.getSort("perf.q.action")) ||
-		    perf.functor.is_a(o.getSort("perf.q.why")) ||
-		    perf.functor.is_a(o.getSort("perf.q.how")) ||
-			perf.functor.is_a(o.getSort("perf.q.query")) ||
-	 	    perf.functor.is_a(o.getSort("perf.q.howmany")) ||
-			perf.functor.is_a(o.getSort("perf.rephrase.entity")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whereis")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whereto")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whois.name")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whois.noname")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whatis.name")) ||
-		    perf.functor.is_a(o.getSort("perf.q.whatis.noname")) ||
-			perf.functor.is_a(o.getSort("perf.q.when")) ||
-			perf.functor.is_a(o.getSort("perf.q.distance")) ||
-			perf.functor.is_a(o.getSort("perf.changemind"))) {
-			for(let i:number = 0;i<perf.attributes.length;i++) {
-				if (perf.attributes[i] instanceof ConstantTermAttribute) {
-					this.IDs.push(<ConstantTermAttribute>(perf.attributes[i]));
-				} else if (perf.attributes[i] instanceof TermTermAttribute) {
-					NLContext.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, this.IDs, o);
-				}
+		let perf:Term = this.performative;
+		if (perf == null) return this.IDs;
+		for(let i:number = 0;i<perf.attributes.length;i++) {
+			if (perf.attributes[i] instanceof ConstantTermAttribute) {
+				this.IDs.push(<ConstantTermAttribute>(perf.attributes[i]));
+			} else if (perf.attributes[i] instanceof TermTermAttribute) {
+				NLContext.searchForIDsInClause((<TermTermAttribute>perf.attributes[i]).term, this.IDs, o);
 			}
-		} else {
-			console.error("NLContext.newPerformative: unsupported performative " + perf.functor.name);
 		}
 		return this.IDs;
 	}	
@@ -261,6 +222,7 @@ class NLContextPerformative {
 										 xml.getAttribute("speaker"),
 										 Term.fromString(xml.getAttribute("performative"), o),
 										 null,  // TODO: save/load NLParseRecord
+										 null,  // TODO: save/load NLDerefErrorRecord[]
 										 cause,
 										 context,
 										 Number(xml.getAttribute("timeStamp")));
@@ -292,6 +254,7 @@ class NLContextPerformative {
 	speaker:string = null;
 	performative:Term = null;
 	parse:NLParseRecord = null;
+	derefErrors:NLDerefErrorRecord[] = null;	// for those performatives that cannot be parsed properly
 	cause:CauseRecord = null;			// the cause of having said this performative
 	context:NLContext = null;
 	timeStamp:number = 0;				// cycle when it was recorded
@@ -501,20 +464,20 @@ class NLContext {
 	}
 
 	
-	newPerformative(speakerID:string, perfText:string, perf:Term, parse:NLParseRecord, cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
+	newPerformative(speakerID:string, perfText:string, perf:Term, parse:NLParseRecord, derefErrors:NLDerefErrorRecord[], cause:CauseRecord, o:Ontology, timeStamp:number) : NLContextPerformative[]
 	{
 		let newPerformatives:NLContextPerformative[] = [];
-		if (perf.functor.name=="#list") {
+		if (perf!=null && perf.functor.name=="#list") {
 			let parsePerformatives:TermAttribute[] = Term.elementsInList(perf, "#list");
 			for(let parsePerformative of parsePerformatives) {
 				if (parsePerformative instanceof TermTermAttribute) {
-					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, parse, cause, o, timeStamp));
+					newPerformatives = newPerformatives.concat(this.newPerformative(speakerID, perfText, (<TermTermAttribute>parsePerformative).term, parse, derefErrors, cause, o, timeStamp));
 				}
 			}
 			return newPerformatives;
 		}
 
-		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, parse, cause, this, timeStamp);
+		let cp:NLContextPerformative = new NLContextPerformative(perfText, speakerID, perf, parse, derefErrors, cause, this, timeStamp);
 		let IDs:ConstantTermAttribute[] = cp.IDsInPerformative(o);
 
 		for(let id of IDs) {
@@ -540,7 +503,8 @@ class NLContext {
 
 		// update conversation context:
 		this.inConversation = true;
-		if (speakerID == this.ai.selfID) {
+		if (perf != null &&
+			speakerID == this.ai.selfID) {
 			this.expectingThankYou = false;
 			this.expectingYouAreWelcome = false;
 			if (perf.functor.name == "perf.inform.answer") {
@@ -666,11 +630,12 @@ class NLContext {
 
 	deref(clause:Term, listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
-		return this.derefInternal(Term.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI);;
+		return this.derefInternal(Term.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI, false);;
 	}
 
 
-	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
+	derefInternal(clauseElements:TermAttribute[], listenerVariable:TermAttribute, nlpr:NLParseRecord, 
+				  o:Ontology, pos:POSParser, AI:RuleBasedAI, returnAllCandidatesBeforeDisambiguation:boolean) : TermAttribute[]
 	{
 		this.lastDerefErrorType = 0; 
 		let properNounSort:Sort = o.getSort("proper-noun");
@@ -1101,25 +1066,24 @@ class NLContext {
 								});
 						}
 
-						/*
-						// if we are asking about "other" things, then we refer to those "other than" those we were just talking about,
-						// thus, remove all matches from short term memory or mentions:
-						if (other_determiner) {
-							for(let e of entities_mpl[0]) {
-								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+						if (returnAllCandidatesBeforeDisambiguation) {
+							let pool:NLContextEntity[] = null;
+							if (entities_mpl[0].length > 0) {
+								pool = entities_mpl[0];
+							} else if (entities_mpl[1].length > 0) {
+								pool = entities_mpl[1];
+							} else {
+								pool = entities_mpl[2];
 							}
-							for(let e of entities_mpl[1]) {
-								if (entities_mpl[2].indexOf(e) != -1) entities_mpl[2].splice(entities_mpl[2].indexOf(e),1);
+							pool = removeListDuplicates(pool);
+							let output:TermAttribute[] = [];
+							for(let e of pool) {
+								output.push(e.objectID);
 							}
-							entities_mpl[0] = [];
-							entities_mpl[1] = [];
+							return output;
 						}
-						*/	
 
-//						console.log("Before determiners: \nM: " + entities_mpl[0] + "\nP: " + entities_mpl[1] + "\nL: " + entities_mpl[2]);
-//						if (determinerTerms.length > 0) {
-//							console.log("Context: \nM:" + this.mentions + "\nP:" + this.shortTermMemory);
-//						}
+						// console.log("Before determiners: \nM: " + entities_mpl[0] + "\nP: " + entities_mpl[1] + "\nL: " + entities_mpl[2]);
 						// apply determiners:
 						// If there is no determiners, assume a "the":
 						if (determinerTerms.length == 0) the_determiner = true;
@@ -1415,9 +1379,9 @@ class NLContext {
 			pool = msl[1];
 		} else {
 			pool = msl[2];
-		}
-
-
+		}		
+		// console.log("applySingularTheDeterminer (before), M: " + msl[0] + "\nP: " + msl[1] + "\nL: " + msl[2]);
+		// console.log("pool: " + pool);
 		if (pool.length == 1) {
 			// mentions:
 			return [pool[0]];
@@ -1431,31 +1395,6 @@ class NLContext {
 			} else {
 				// the two closest entities were mentioned at the same time.
 				// Since we cannot disambiguate just by time, try to disambiguate by distance:
-				// let best:NLContextEntity = null;
-				// let newBest:boolean = false;
-				// for(let e of msl[0]) {
-				// 	if (best == null) {
-				// 		best = e;
-				// 	} else {
-				// 		if (e.mentionTime < best.mentionTime) {
-				// 			best = e;
-				// 			newBest = true;
-				// 		} else if (e.mentionTime == best.mentionTime) {
-				// 			if (e.distanceFromSpeaker != null && best.distanceFromSpeaker != null) {
-				// 				if (e.distanceFromSpeaker < best.distanceFromSpeaker) {
-				// 					best = e;
-				// 					newBest = true;
-				// 				} else if (e.distanceFromSpeaker == best.distanceFromSpeaker) {
-				// 					newBest = false;
-				// 				}
-				// 			} else {
-				// 				return [];
-				// 			}
-				// 		}
-				// 	}
-				// }
-				// if (best != null && newBest) return [best];
-
 				let candidates:NLContextEntity[] = []
 				let bestTime:number = null;
 				for(let e of pool) {
@@ -1482,6 +1421,8 @@ class NLContext {
 							return e1.distanceFromSpeaker - e2.distanceFromSpeaker;
 						}
 					});
+				// console.log("sorted candidates: " + candidates);
+				// console.log("SPACE_NEAR_FAR_THRESHOLD: " + SPACE_NEAR_FAR_THRESHOLD);
 				// if the closest one is clearly closer (and the others are far), disambiguate:
 				if (candidates[0].distanceFromSpeaker < candidates[1].distanceFromSpeaker &&
 					candidates[0].distanceFromSpeaker < SPACE_NEAR_FAR_THRESHOLD &&
@@ -1491,22 +1432,6 @@ class NLContext {
 
 				return [];
 			}
-		// } else if (msl[1].length==1) {
-		// 	// short term memory:
-		// 	return [msl[1][0]];
-		// } else if (msl[1].length>1) {
-		// 	// short term memory:
-		// 	let d1:number = msl[1][0].distanceFromSpeaker;
-		// 	let d2:number = msl[1][1].distanceFromSpeaker;
-		// 	// if the distance d1 is smaller than d2:
-		// 	if (d1 != null && d2 != null) {
-		// 		// if the distance d1 is SIGNIFICANTLY smaller than d2:
-		// 		//if (d1 <= 32 && d2 >= 64) return [msl[1][0]];
-		// 		if (d1 < d2) return [msl[1][0]];
-		// 	}
-		// 	return [];
-		// } else if (msl[2].length==1) {
-		// 	return [msl[2][0]];
 		}
 		return [];
 	}

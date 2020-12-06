@@ -21,8 +21,10 @@ Just a small log of the performatives the game is using and what are the paramet
 <ul>
 	<li><b>perf.inform(listener, statement)</b>: the speaker states that "statement" is true. The AI will run an inference procedure to see if statement creates a contradiction, and if it does not, it will memorize it.</li>
 	<li><b>perf.inform.parseerror(listener, statement)</b>: exactly the same as perf.inform. We just separate it for internal reasons.</li>
-	<li><b>perf.inform.answer(listener, constant)</b>: expresses an answer to a question. The constant is 'yes', 'no', 'unknown'</li>
+	<li><b>perf.inform.answer(listener, constant)</b>: expresses an answer to a question.</li>
 	<li><b>perf.inform.answer(listener, constant, statement)</b>: same as above, but adds an additional statement that complements the answer. For example, when saying "yes, I have the key", constant will be 'yes', and statement will encode 'I have the key'.</li>
+	<li><b>perf.inform.answer(listener, variable, constraint)</b>: expresses an answer to a question.</li>
+	<li><b>perf.inform.answer(listener, variable, constraint, forall)</b>: expresses an answer to a question.</li>
 </ul>
 <ul>
 	<li><b>perf.ack.ok(listener)</b></li>
@@ -75,6 +77,8 @@ Most of the following performatives could just be defined as perf.q.query, but i
 	<li><b>perf.q.distance(listener, o1, o2, units)</b></li>: how far is o1 from o2 measured in "units"
 	<li><b>perf.moreresults(listener, ...)</b>: ...</li>
 	<li><b>perf.rephrase.entity(listener, entity)</b></li>
+	<li><b>perf.rephrase.entity(listener, variable, constraint)</b></li>
+	<li><b>perf.rephrase.entity(listener, variable, constraint, forall)</b></li>
 	<li><b>perf.changemind(listener)</b>: this is for things like "I changed my mind", when the player answers yes or no to a question, but wants to change the answer.</li>
 </ul>
 </ul>

@@ -213,6 +213,8 @@ class NLParser {
 				// just grammatically not correct:
 				this.error_grammatical = true;
 			}
+
+			this.removeDuplicateDerefErrors();
 		}
 
 		// for debugging purposes:
@@ -221,6 +223,26 @@ class NLParser {
 //		}
 
 		return results;
+	}
+
+
+	removeDuplicateDerefErrors()
+	{
+		let l:NLDerefErrorRecord[] = [];
+		for(let e of this.error_deref) {
+			let found:boolean = false;
+			for(let e2 of l) {
+				if (e.equals(e2)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				l.push(e);
+			}
+		}
+		// console.log("removeDuplicateDerefErrors: from " + this.error_deref.length + " to " + l.length);
+		this.error_deref = l;
 	}
 
 
@@ -373,6 +395,18 @@ class NLParser {
 				(parse.attributes[1] instanceof ConstantTermAttribute) &&
 				((<ConstantTermAttribute>parse.attributes[1]).value == "yes" ||
 				 (<ConstantTermAttribute>parse.attributes[1]).value == "no")) return true;
+
+			// check if the previous sentence was a parse error with a problem in dereference,
+			// and convert this to a 'perf.rephrase.entity':
+			let lastPerformative:NLContextPerformative = context.lastPerformativeBy(context.speaker);
+			if (lastPerformative != null && lastPerformative.parse == null &&
+				lastPerformative.derefErrors != null && lastPerformative.derefErrors.length > 0) {
+				if (parse.attributes.length == 2) {
+					parse.functor = this.o.getSort("perf.rephrase.entity");
+					return true;
+				}
+			}
+
 			return false;
 		}
 
