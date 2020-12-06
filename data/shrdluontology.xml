@@ -841,6 +841,8 @@
     <sort name="ground" super="space.location"/>
     <sort name="verb.contains" super="spatial-relation,relation-verb"/>
 
+
+
     <sort name="relation.neighbor" super="symmetric-relation,haveable-relation,spatial-relation"/>
 
     <sort name="in-addition" super="adverb"/>
@@ -874,6 +876,11 @@
 
     <sort name="short-tallness" super="tallness,small"/>
     <sort name="tall" super="tallness,big"/>
+
+    <sort name="eastmost" super="property,superlative-adjective"/>
+    <sort name="westmost" super="property,superlative-adjective"/>
+    <sort name="northmost" super="property,superlative-adjective"/>
+    <sort name="southmost" super="property,superlative-adjective"/>
 
     <sort name="tallest" super="property,superlative-adjective"/>
     <sort name="shortest-tallness" super="property,superlative-adjective"/>

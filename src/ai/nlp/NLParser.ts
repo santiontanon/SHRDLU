@@ -401,10 +401,8 @@ class NLParser {
 			let lastPerformative:NLContextPerformative = context.lastPerformativeBy(context.speaker);
 			if (lastPerformative != null && lastPerformative.parse == null &&
 				lastPerformative.derefErrors != null && lastPerformative.derefErrors.length > 0) {
-				if (parse.attributes.length == 2) {
-					parse.functor = this.o.getSort("perf.rephrase.entity");
-					return true;
-				}
+				parse.functor = this.o.getSort("perf.rephrase.entity");
+				return true;
 			}
 
 			return false;

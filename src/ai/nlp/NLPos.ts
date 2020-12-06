@@ -929,6 +929,10 @@ this.addTokenPOS(new PartOfSpeech("inside of", "space.inside.of", Term.fromStrin
   "instead of",
   "left of",
   */
+this.addTokenPOS(new PartOfSpeech("closest", "space.nearest-to", Term.fromString("preposition('space.nearest-to'[space.nearest-to])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("nearest", "space.nearest-to", Term.fromString("preposition('space.nearest-to'[space.nearest-to])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("furthest", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
+this.addTokenPOS(new PartOfSpeech("farthest", "space.farthest-from", Term.fromString("preposition('space.farthest-from'[space.farthest-from])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("near to", "space.near", Term.fromString("preposition('space.near'[space.near])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("not including", "!=", Term.fromString("preposition('!='[!=])", o), 1.0));
 this.addTokenPOS(new PartOfSpeech("next to", "space.next-to", Term.fromString("preposition('space.next-to'[space.next-to])", o), 1.0));
@@ -2076,6 +2080,11 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
   this.addTokenPOS(new PartOfSpeech("largest", "largest", Term.fromString("superlative-adjective('largest'[largest], 'relation.larger'[relation.larger])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("littlest", "smallest", Term.fromString("superlative-adjective('smallest'[smallest], 'relation.smaller'[relation.smaller])", o), 1.0));
   this.addTokenPOS(new PartOfSpeech("smallest", "smallest", Term.fromString("superlative-adjective('smallest'[smallest], 'relation.smaller'[relation.smaller])", o), 1.0));
+
+  this.addTokenPOS(new PartOfSpeech("eastmost", "eastmost", Term.fromString("superlative-adjective('eastmost'[eastmost], 'space.east.of'[space.east.of])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("westmost", "westmost", Term.fromString("superlative-adjective('westmost'[westmost], 'space.west.of'[space.west.of])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("northmost", "northmost", Term.fromString("superlative-adjective('northmost'[northmost], 'space.north.of'[space.north.of])", o), 1.0));
+  this.addTokenPOS(new PartOfSpeech("southmost", "southmost", Term.fromString("superlative-adjective('southmost'[southmost], 'space.south.of'[space.south.of])", o), 1.0));
 
   // adverbs
   this.addTokenPOS(new PartOfSpeech("here", "space.here", Term.fromString("adverb('space.here'[space.here])", o), 1.0));

@@ -1064,6 +1064,30 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   	     #concatenateSymbols(NAME1,' '[symbol],NAME2,NAME_SYMBOL)"
 			   priority="25"/>
 
+	<NLPattern name="answer-superlative" 
+			   head="perf.inform.answer(LISTENER, V1, #and(#cons(NOUN, V1), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, V1)))), #forall(Y, #cons(NOUN, Y)))"
+			   body="['the'] superlative-adjective(SUPERLATIVE, COMPARATIVE)
+			   		 nounOrOne(noun(NOUN, NN))
+			   		 ('!'|'?')*"/>
+
+	<NLPattern name="answer-superlative2" 
+			   head="perf.inform.answer(LISTENER, V1, #and(#cons(NOUN, V1), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, V1)))), #forall(Y, #cons(NOUN, Y)))"
+			   body="['the'] nounOrOne(noun(NOUN, NN)) 'more' ['to' 'the']
+			   		 (
+			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
+			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
+			   		 	'north' #equal(COMPARATIVE, 'space.north.of'[symbol]) |
+			   		 	'south' #equal(COMPARATIVE, 'space.south.of'[symbol])
+			   		 )
+			   		 ('!'|'?')*"/>
+
+    <NLPattern name="answer-query"
+    		   head="perf.inform.answer(LISTENER, QV1, QUERY1)"
+		   	   body="nounPhrase(X1, N1, P1, C1)
+					 ('!'|'.')*
+					 #derefQuery(C1, QV1, QUERY1)"/>
+
+
 	<!-- Patterns for performative "perf.q.predicate" -->
 	<NLPattern name="q.predicate-verb"
 			   head="perf.q.predicate(LISTENER, #cons(VERB, SUBJECT))"
@@ -8112,7 +8136,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhrase(X, N, P, C)
 		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
 		           	 nounPhrase(X3, N3, P3, C3)
-					 ('!'|'?')*
+					 ('!'|'.')*
 					 #derefFromContext(C, SPEAKER)
 					 #derefFromContext(C3, OBJECT)"
 			   priority="200"/>
@@ -8124,7 +8148,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhrase(X, N, P, C)
 		           	 verb('verb.want'[symbol], N2, P2, T2) 'to' 'say'
 		           	 nounPhrase(X3, N3, P3, C3)
-					 ('!'|'?')*
+					 ('!'|'.')*
 					 #derefFromContext(C, SPEAKER)
 					 #derefFromContext(C3, OBJECT)"/>
 
@@ -8137,8 +8161,38 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
 			   		 ['the'] superlative-adjective(SUPERLATIVE, COMPARATIVE)
 			   		 nounOrOne(noun(NOUN, NN))
-			   		 ('!'|'?')*
+			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SPEAKER)"/>
+
+	<NLPattern name="rephrase.entity-superlative2" 
+			   head="perf.rephrase.entity(LISTENER, V1, #and(#cons(NOUN, V1), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, V1)))), #forall(Y, #cons(NOUN, Y)))"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 ['no' [(','|'!'*)]]
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
+					 ['the'] nounOrOne(noun(NOUN, NN)) 'more' ['to' 'the']
+			   		 (
+			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
+			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
+			   		 	'north' #equal(COMPARATIVE, 'space.north.of'[symbol]) |
+			   		 	'south' #equal(COMPARATIVE, 'space.south.of'[symbol])
+			   		 )
+			   		 ('!'|'.')*"/>
+
+    <NLPattern name="rephrase.entity-query"
+    		   head="perf.rephrase.entity(LISTENER, QV3, QUERY3)"
+		   	   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+		           	 nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+		           	 ['no' [(','|'!'*)]]
+		           	 nounPhrase(X, N, P, C)
+		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
+		           	 nounPhrase(X3, N3, P3, C3)
+					 ('!'|'.')*
+					 #derefFromContext(C, SPEAKER)
+					 #derefQuery(C3, QV3, QUERY3)"
+			   priority="200"/>
+
 
     <!-- Noun phrases: 
     	X: the root "noun" or "proper noun"
@@ -8207,6 +8261,29 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 														#and(noun(X2, N2),
 														#and(#cons(ART, X, N), C))))"
 			   body="determiner(ART, N) nounPhraseNoDeterminer(X, N, P, C) '\'s' noun(X2, N2)"/>
+	<NLPattern name="nounphrase-superlative-phrase"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X, N), #cons(PREPOSITION, X, O3)))"
+			   body="['the'] preposition(PREPOSITION) #subsumes([superlative-adjective], PREPOSITION)
+			   		 nounOrOne(noun(X, N))
+			   		 ('to'|'from')
+			   		 nounPhrase(X3, [singular], P3, C3)
+					 #derefFromContext(C3, O3)"/>
+	<NLPattern name="nounphrase-superlative-phrase2"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X, N), #cons(PREPOSITION, X, O3)))"
+			   body="['the'] nounOrOne(noun(X, N))
+			   		 preposition(PREPOSITION) #subsumes([superlative-adjective], PREPOSITION)
+			   		 ('to'|'from')
+			   		 nounPhrase(X3, [singular], P3, C3)
+					 #derefFromContext(C3, O3)"/>
+	<!-- In this pattern, the referenc to which the object is "closest", "farthest", etc. is ommitted. So, we default
+	     to the SPEAKER: -->
+	<NLPattern name="nounphrase-superlative-phrase-missing-referent"
+			   head="nounPhrase(X, N, [third-person], #and(noun(X, N), #cons(PREPOSITION, X, SPEAKER)))"
+			   body="['the'] preposition(PREPOSITION) 
+			   		 #subsumes([superlative-adjective], PREPOSITION)
+			   		 #subsumes([spatial-relation], PREPOSITION)
+			   		 nounOrOne(noun(X, N))
+			   		 #derefFromContext(subject-personal-pronoun('subject-personal-pronoun.i'[symbol], [singular], [gender], [first-person]), SPEAKER)"/>
 
 	<NLPattern name="nounphrase-adjective-phrase"
 			   head="nounPhraseNoDeterminer(X, N, [third-person], #and(adjective(X, A), noun(X, N)))"
@@ -8320,6 +8397,14 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   body="[('that'|'which'|'who') 'is'] preposition(PREPOSITION) 
 			   		 nounPhrase(X2, [singular], P2, C2) 
 					 #derefFromContext(C2, O2)"/>
+	<NLPattern name="prepositional-phrase-to-your-left"
+			   head="maybeNegatedPrepositionalPhrase(X, space.left.of(X, LISTENER))"
+			   body="'to' 'your' 'left'
+			   		 #derefFromContext(subject-personal-pronoun('subject-personal-pronoun.you'[symbol],[grammatical-number],[gender],[second-person]), LISTENER)"/>
+	<NLPattern name="prepositional-phrase-to-your-right"
+			   head="maybeNegatedPrepositionalPhrase(X, space.right.of(X, LISTENER))"
+			   body="'to' 'your' 'right'
+			   		 #derefFromContext(subject-personal-pronoun('subject-personal-pronoun.you'[symbol],[grammatical-number],[gender],[second-person]), LISTENER)"/>
 
 	<NLPattern name="noun-phrase-list-last"
 			   head="nounPhraseListFromContext(O)"

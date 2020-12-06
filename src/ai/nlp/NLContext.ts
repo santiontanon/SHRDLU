@@ -935,7 +935,7 @@ class NLContext {
 //								console.log("nounTerm: " + nounTerm);
 //								console.log("adjectiveTerm: " + adjectiveTerm);
 								let adjectiveStr:string = <string>((<ConstantTermAttribute>adjectiveTerm.attributes[1]).value);
-								let specificAdjectiveSort:Sort = o.getSort(adjectiveStr);
+								let specificAdjectiveSort:Sort = o.getSortSilent(adjectiveStr);
 								if (specificAdjectiveSort != null) {
 //										console.log("adjective sort: " + specificAdjectiveSort.name);
 									entities_mpl = this.filterByAdjective(specificAdjectiveSort, entities_mpl, o);
@@ -949,21 +949,28 @@ class NLContext {
 						// apply relations:
 						for(let relationTermL of relationTerms) {
 							let relationTerm:Term = relationTermL[0];
-//							console.log("Before " + relationTerm + ": " + entities_mpl[0].length + ", " + entities_mpl[1].length + ", " + entities_mpl[2].length);
 							// check if it's a spatial relation (which are not in the logic representation, to save computation requirements):
 							if (relationTerm.functor.is_a(spatialRelationSort)) {
 								if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   relationTerm.attributes[0]) == 1 &&
-									relationTerm.attributes[1] instanceof ConstantTermAttribute) {
-									let otherEntityID:string = (<ConstantTermAttribute>(relationTerm.attributes[1])).value;
+									((relationTerm.attributes[1] instanceof ConstantTermAttribute) ||
+									  relationTerm.attributes[1] == listenerVariable)) {
+									let otherEntityID:string;
+									if (relationTerm.attributes[1] == listenerVariable) {
+										// in this case, we synthesize a relation with the variable replaced by a constant, since otherwise
+										// the matching functions will fail:
+									    otherEntityID = this.ai.selfID;
+									    relationTerm = relationTerm.clone([]);
+									    relationTerm.attributes[1] = new ConstantTermAttribute(otherEntityID, this.ai.cache_sort_id);
+									} else {
+										otherEntityID = (<ConstantTermAttribute>(relationTerm.attributes[1])).value;
+									}
 									let results_mpl:NLContextEntity[][] = [];
 									for(let entities of entities_mpl) {
 										let results:NLContextEntity[] = [];
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
-	//											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
 											if (spatialRelations != null) {
-												//console.log("    spatialRelations != null");
 												for(let sr of spatialRelations) {
 													if (relationTerm.functor.subsumes(sr)) {
 														results.push(entity);
@@ -973,7 +980,6 @@ class NLContext {
 											} else {
 												let tmp:TermAttribute = relationTerm.attributes[0];
 												relationTerm.attributes[0] = entity.objectID;
-												//console.log("    spatialRelations == null, checking manually (1) for " + relationTerm);
 												if (results.indexOf(entity) == -1 && 
 													entity.relationMatch(relationTerm, o, pos)) results.push(entity);
 												relationTerm.attributes[0] = tmp;
@@ -982,16 +988,27 @@ class NLContext {
 										results_mpl.push(results);
 									}
 									entities_mpl = results_mpl;
+
+
 								} else if (Term.equalsNoBindingsAttribute(nounTerm.attributes[0], 
 																   		  relationTerm.attributes[1]) == 1 &&
-									relationTerm.attributes[0] instanceof ConstantTermAttribute) {
-									let otherEntityID:string = (<ConstantTermAttribute>(relationTerm.attributes[0])).value;
+									((relationTerm.attributes[0] instanceof ConstantTermAttribute) ||
+									  relationTerm.attributes[0] == listenerVariable)) {
+									let otherEntityID:string;
+									if (relationTerm.attributes[1] == listenerVariable) {
+										// in this case, we synthesize a relation with the variable replaced by a constant, since otherwise
+										// the matching functions will fail:
+									    otherEntityID = this.ai.selfID;
+									    relationTerm = relationTerm.clone([]);
+									    relationTerm.attributes[0] = new ConstantTermAttribute(otherEntityID, this.ai.cache_sort_id);
+									} else {
+										otherEntityID = (<ConstantTermAttribute>(relationTerm.attributes[0])).value;
+									}
 									let results_mpl:NLContextEntity[][] = [];
 									for(let entities of entities_mpl) {
 										let results:NLContextEntity[] = [];
 										for(let entity of entities) {
 											let spatialRelations:Sort[] = AI.spatialRelations(entity.objectID.value, otherEntityID);
-//											console.log("spatialRelations ("+entity.objectID.value+"): " + spatialRelations);
 											if (spatialRelations != null) {
 												console.log("    spatialRelations != null");
 												for(let sr of spatialRelations) {
