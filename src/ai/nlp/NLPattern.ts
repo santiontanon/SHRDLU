@@ -193,7 +193,7 @@ class NLPattern {
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefFromContext(parse, term2.attributes[0], term2.attributes[1], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
 				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(context.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
-				nlper.derefFromContextErrors.push(term2.attributes[0]);
+				nlper.derefFromContextError = term2.attributes[0];
 				rule.lastDerefErrors.push(nlper)
 			}
 			return nlprl;
@@ -202,7 +202,7 @@ class NLPattern {
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefUniversal(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], parser.o);
 			if (nlprl == null) {
 				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
-				nlper.derefUniversalErrors.push(term2.attributes[0]);
+				nlper.derefUniversalError = term2.attributes[0];
 				rule.lastDerefErrors.push(nlper)
 			}
 			return nlprl;
@@ -211,7 +211,7 @@ class NLPattern {
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefHypothetical(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
 				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
-				nlper.derefHypotheticalErrors.push(term2.attributes[0]);
+				nlper.derefHypotheticalError = term2.attributes[0];
 				rule.lastDerefErrors.push(nlper)
 			}
 			return nlprl;
@@ -220,7 +220,7 @@ class NLPattern {
 			let  nlprl:NLParseRecord[] = this.specialfunction_derefQuery(parse, term2.attributes[0], term2.attributes[1], term2.attributes[2], context, rule.listenerVariable, parser.o, parser.posParser, AI);
 			if (nlprl == null) {
 				let nlper:NLDerefErrorRecord = new NLDerefErrorRecord(this.lastDerefErrorType, parse.tokensLeftToParse(), parse.previousPOS);
-				nlper.derefQueryErrors.push(term2.attributes[0]);
+				nlper.derefQueryError = term2.attributes[0];
 				rule.lastDerefErrors.push(nlper)
 			}
 			return nlprl;

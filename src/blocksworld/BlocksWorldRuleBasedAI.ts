@@ -761,7 +761,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 	    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
 	    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
-	    	this.reactToParseError(speaker);
+	    	this.reactToParseError(speaker, text);
 	    }
 	}
 

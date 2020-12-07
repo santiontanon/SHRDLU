@@ -79,7 +79,10 @@ class NLParser {
 		// STEP 1: Tokenization
 		let tokens:string[] = this.posParser.tokenize(sentence);
 		//console.log("Tokenization:\n" + tokens);
-		if (tokens == null || tokens.length == 0) return [];
+		if (tokens == null || tokens.length == 0) {
+			this.dereference_hints = [];
+			return [];
+		}
 
 		// STEP 2: Dictionary-based multi-token word detection (merge tokens)
 		let tokens2:TokenizationElement = this.posParser.identifyMultiTokenWords(tokens);
@@ -222,6 +225,7 @@ class NLParser {
 //			console.log("parse: " + r.ruleNames + ", " + r.priorities);
 //		}
 
+		this.dereference_hints = [];
 		return results;
 	}
 
@@ -572,7 +576,12 @@ class NLParser {
 	rules:NLPatternRule[] = [];
 	compiledRules:{ [sort: string] : CompiledNLPatternRules; } = {};
 
-	talkingTargets:string[] = null;
+	talkingTargets:string[] = null;	 // If this is != null, it restricts the possible objects we can talk to (for easier disambiguation)
+
+	// Entity rephrasing: If the user's sentence could not be parsed due to a dereference error, and the user issued a clarification
+	// such as "I meant the one to your right", this list will contain the clarification, so that when it comes time to parse the
+	// previous sentence again, this can be used:
+	dereference_hints:NLDereferenceHint[] = [];  // These are cleared automatically upon the next successful parse
 
 	// errors from the last parse:
 	error_semantic:NLParseRecord[] = [];	// stores the parses that were properly parsed, but failed semantic checks

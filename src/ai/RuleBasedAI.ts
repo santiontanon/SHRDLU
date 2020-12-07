@@ -903,7 +903,7 @@ class RuleBasedAI {
 	}
 
 
-	reactToParseError(speakerID:string)
+	reactToParseError(speakerID:string, sentence:string)
 	{
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
@@ -913,36 +913,41 @@ class RuleBasedAI {
 	    			console.log(this.selfID + ": semantic error when parsing a performative from " + speakerID);
 	    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular]))))))", this.o), null, null, null, this.timeStamp));
 	    		} else if (this.naturalLanguageParser.error_deref.length > 0) {
+	    			let error:NLDerefErrorRecord = null;
 	    			let tmp:TermAttribute = null;
 	    			let errorType:number = 0;
 	    			let tokensLeftToParse:number = null;
 	    			for(let e of this.naturalLanguageParser.error_deref) {
-		    			if (e.derefFromContextErrors.length>0) {
+		    			if (e.derefFromContextError != null) {
 		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
-		    					tmp = e.derefFromContextErrors[0];
+		    					error = e;
+		    					tmp = e.derefFromContextError;
 		    					errorType = e.derefErrorType;
 		    					tokensLeftToParse = e.tokensLeftToParse;
-			    				console.log("reporting derefFromContextErrors:"  + tmp);
+			    				console.log("reporting derefFromContextError:"  + tmp);
 			    			}
-		    			} else if (e.derefUniversalErrors.length>0) {
+		    			} else if (e.derefUniversalError != null) {
 		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
-		    					tmp = e.derefUniversalErrors[0];
+		    					error = e;
+		    					tmp = e.derefUniversalError;
 		    					errorType = e.derefErrorType;
 		    					tokensLeftToParse = e.tokensLeftToParse;
-			    				console.log("reporting derefUniversalErrors: " + tmp);
+			    				console.log("reporting derefUniversalError: " + tmp);
 			    			}
-		    			} else if (e.derefHypotheticalErrors.length>0) {
+		    			} else if (e.derefHypotheticalError != null) {
 		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
-			    				tmp = e.derefHypotheticalErrors[0];
+		    					error = e;
+			    				tmp = e.derefHypotheticalError;
 			    				errorType = e.derefErrorType;
 			    				tokensLeftToParse = e.tokensLeftToParse;
-				    			console.log("reporting derefHypotheticalErrors: " + tmp);
+				    			console.log("reporting derefHypotheticalError: " + tmp);
 				    		}
-		    			} else if (e.derefQueryErrors.length>0) {
+		    			} else if (e.derefQueryError != null) {
 		    				if (tokensLeftToParse == null || e.tokensLeftToParse < tokensLeftToParse) {
-			    				tmp = e.derefQueryErrors[0];
+		    					error = e;
+			    				tmp = e.derefQueryError;
 			    				errorType = e.derefErrorType;
-				    			console.log("reporting derefQueryErrors: " + tmp);
+				    			console.log("reporting derefQueryError: " + tmp);
 				    			tokensLeftToParse = e.tokensLeftToParse;
 				    		}
 		    			}
@@ -951,6 +956,9 @@ class RuleBasedAI {
 		    			//if (errorType == DEREF_ERROR_NO_REFERENTS ||
 		    			//	errorType == DEREF_ERROR_CANNOT_DISAMBIGUATE) break;
 	    			}
+
+	    			// record the performative, even if we could not parse it (just in case there is a "perf.rephrase.entity" afterwards):
+		            context.newPerformative(context.speaker, sentence, null, null, [error], null, this.o, this.timeStamp);
 
 	    			if (errorType == DEREF_ERROR_NO_REFERENTS) {
 		    			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.see('"+this.selfID+"'[#id], "+tmp+"))))", this.o), null, null, null, this.timeStamp));
@@ -1250,35 +1258,8 @@ class RuleBasedAI {
 				let term:Term = Term.fromString("action.talk('"+this.selfID+"'[#id], perf.ack.ok('"+context.speaker+"'[#id]))", this.o);
 				this.intentions.push(new IntentionRecord(term, speaker, context.getNLContextPerformative(perf2), null, this.timeStamp));
 
-			} else if (perf2.functor.name == "perf.rephrase.entity" &&
-					   perf2.attributes.length == 2) {
-				// Find the previous performative:
-				let previous:NLContextPerformative = context.lastPerformativeByExcept(context.speaker, perf2);
-				if (previous == null) {
-					// do not understand:
-					this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
-				} else {
-					// see if it has a single mention to an entity (other than attribute 0, which is the listener):
-					let previousPerf:Term = previous.performative;
-					let IDs:ConstantTermAttribute[] = [];
-					for(let i:number = 1;i<previousPerf.attributes.length;i++) {
-						if (previousPerf.attributes[i] instanceof ConstantTermAttribute) {
-							IDs.push(<ConstantTermAttribute>(previousPerf.attributes[i]));
-						} else if (previousPerf.attributes[i] instanceof TermTermAttribute) {
-							NLContext.searchForIDsInClause((<TermTermAttribute>previousPerf.attributes[i]).term, IDs, this.o);
-						}
-					}
-					console.log("IDs: " + IDs);
-					if (IDs.length == 1) {
-						// repeat the previous performative, but replacing the previous ID by the new ID:
-						let newPerf:Term = previousPerf.clone([]);
-						this.replaceID(newPerf, IDs[0], perf2.attributes[1]);
-						return this.reactToPerformative(newPerf, speaker, context);
-					} else {
-						// do not understand:
-						this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
-					}
-				}
+			} else if (perf2.functor.name == "perf.rephrase.entity") {
+				this.reactToRephraseEntityPerformative(perf2, speaker, context);
 			} else if (perf2.functor.name == "perf.changemind") {
 				console.log("RuleBasedAI.reactToPerformative: nothing to do for " + perf2);
 			} else {
@@ -1468,6 +1449,69 @@ class RuleBasedAI {
 	}
 
 
+	reactToRephraseEntityPerformative(perf:Term, speaker:TermAttribute, context:NLContext)
+	{
+		// Find the previous performative:
+		let previous:NLContextPerformative = context.lastPerformativeByExcept(context.speaker, perf);
+		if (previous == null) {
+			// do not understand:
+			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+		}
+		if (previous.performative != null) {
+			if (perf.attributes.length == 2 && 
+				(perf.attributes[1] instanceof ConstantTermAttribute)) {
+				// see if it has a single mention to an entity (other than attribute 0, which is the listener):
+				let previousPerf:Term = previous.performative;
+				let IDs:ConstantTermAttribute[] = [];
+				for(let i:number = 1;i<previousPerf.attributes.length;i++) {
+					if (previousPerf.attributes[i] instanceof ConstantTermAttribute) {
+						IDs.push(<ConstantTermAttribute>(previousPerf.attributes[i]));
+					} else if (previousPerf.attributes[i] instanceof TermTermAttribute) {
+						NLContext.searchForIDsInClause((<TermTermAttribute>previousPerf.attributes[i]).term, IDs, this.o);
+					}
+				}
+				console.log("IDs: " + IDs);
+				if (IDs.length == 1) {
+					// repeat the previous performative, but replacing the previous ID by the new ID:
+					let newPerf:Term = previousPerf.clone([]);
+					this.replaceID(newPerf, IDs[0], perf.attributes[1]);
+					this.reactToPerformative(newPerf, speaker, context);
+				} else {
+					// do not understand:
+					this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+				}
+			} else {
+				// TODO: Case not handled:
+				// do not understand:
+				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+			}
+
+		} else if (previous.derefErrors != null && previous.derefErrors.length > 0) {
+			if (perf.attributes.length == 2 && 
+				(perf.attributes[1] instanceof ConstantTermAttribute)) {
+				// The previous performative was a parse error:
+				let result:string = (<ConstantTermAttribute>(perf.attributes[1])).value;
+				let error:NLDerefErrorRecord = previous.derefErrors[0];
+				console.log("reactToRephraseEntityPerformative: and previous performative was a deref error: "+error.derefFromContextError+" -> " + result);
+				this.naturalLanguageParser.dereference_hints = [new NLDereferenceHint(error.derefFromContextError, result)];
+					
+				// ...
+
+				this.naturalLanguageParser.dereference_hints = [];
+			} else {
+				// TODO: this probably needs inference, handle...
+				// ...
+				
+				// Just returning an error for now:
+				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+			}
+		} else {
+			// do not understand:
+			this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+		}
+	}
+
+
 	canSatisfyActionRequest(ir:IntentionRecord) : number
 	{
 		let actionRequest:Term = ir.action;
@@ -1520,21 +1564,21 @@ class RuleBasedAI {
 		let errorType:number = 0;
 		for(let e of this.naturalLanguageParser.error_deref) {
 			if (e.tokensLeftToParse > 0) continue;
-			if (e.derefFromContextErrors.length>0) {
+			if (e.derefFromContextError != null) {
 				if (errorType > e.derefErrorType) continue;
-				tmp = e.derefFromContextErrors[0];
+				tmp = e.derefFromContextError;
 				errorType = e.derefErrorType;
-			} else if (e.derefUniversalErrors.length>0) {
+			} else if (e.derefUniversalError != null) {
 				if (errorType > e.derefErrorType) continue;
-				tmp = e.derefUniversalErrors[0];
+				tmp = e.derefUniversalError;
 				errorType = e.derefErrorType;
-			} else if (e.derefHypotheticalErrors.length>0) {
+			} else if (e.derefHypotheticalError != null) {
 				if (errorType > e.derefErrorType) continue;
-				tmp = e.derefHypotheticalErrors[0];
+				tmp = e.derefHypotheticalError;
 				errorType = e.derefErrorType;
-			} else if (e.derefQueryErrors.length>0) {
+			} else if (e.derefQueryError != null) {
 				if (errorType > e.derefErrorType) continue;
-				tmp = e.derefQueryErrors[0];
+				tmp = e.derefQueryError;
 				errorType = e.derefErrorType;
 			}
 		}

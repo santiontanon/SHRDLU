@@ -2787,7 +2787,9 @@ class ShrdluGameScript {
 			if (context != null) {
 				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
 				let p2:NLContextPerformative = context.lastPerformativeBy(context.ai.selfID);
-				if (p1 != null && p2 != null && p2.timeStamp == this.game.in_game_seconds - 1) {	
+				if (p1 != null && p2 != null && 
+					p1.performative != null && p2.performative != null &&
+					p2.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.predicate"))  &&
 						perf.attributes.length>1 &&
@@ -2822,7 +2824,9 @@ class ShrdluGameScript {
 			if (context != null) {
 				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
 				let p2:NLContextPerformative = context.lastPerformativeBy(context.ai.selfID);
-				if (p1 != null && p2 != null && p2.timeStamp == this.game.in_game_seconds - 1) {	
+				if (p1 != null && p2 != null && 
+					p1.performative != null && p2.performative != null &&
+					p2.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.whatis.noname"))  &&
 						perf.attributes.length>1 &&
@@ -2928,7 +2932,7 @@ class ShrdluGameScript {
 		if (ai == "shrdlu") context = this.contextShrdlu;
 		if (context != null) {
 			let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
+			if (p1 != null && p1.performative != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
@@ -2989,7 +2993,7 @@ class ShrdluGameScript {
 	{
 		if (this.contextShrdlu != null) {
 			let p1:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
+			if (p1 != null && p1.performative != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))  &&
@@ -3014,7 +3018,7 @@ class ShrdluGameScript {
 		let context:NLContext = this.contextEtaoin;
 		if (context != null) {
 			let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
-			if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
+			if (p1 != null && p1.performative != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||
 					perf.functor.is_a(this.game.ontology.getSort("perf.request.action"))) {
@@ -3072,7 +3076,7 @@ class ShrdluGameScript {
 		for(let context of [this.contextQwerty, this.contextEtaoin, this.contextShrdlu]) {
 			if (context != null) {
 				let p1:NLContextPerformative = context.lastPerformativeBy(this.playerID);
-				if (p1 != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
+				if (p1 != null && p1.performative != null && p1.timeStamp == this.game.in_game_seconds - 1) {	
 					let pattern1:Term = Term.fromString("verb.repair(X:[#id], 'shuttle-datapad'[#id])", this.game.ontology);
 					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.q.action")) ||

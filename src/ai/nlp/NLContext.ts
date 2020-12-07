@@ -2,6 +2,18 @@ var MAX_PERFORMATIVE_MEMORY:number = 10;
 var MAXIMUM_DISTANCE_TO_BE_CONSIDERED_THIS:number = 128;
 
 
+class NLDereferenceHint {
+	constructor(c:TermAttribute, r:string)
+	{
+		this.clause = c;
+		this.result = r;
+	}
+
+	clause:TermAttribute;  // should be a TermTermAttribute most likely
+	result:string;
+}
+
+
 class NLContextEntity {
 	constructor(id:ConstantTermAttribute, time:number, distance:number, tl:Term[])
 	{

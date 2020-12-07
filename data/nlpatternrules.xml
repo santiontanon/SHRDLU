@@ -1067,12 +1067,12 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="answer-superlative" 
 			   head="perf.inform.answer(LISTENER, V1, #and(#cons(NOUN, V1), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, V1)))), #forall(Y, #cons(NOUN, Y)))"
 			   body="['the'] superlative-adjective(SUPERLATIVE, COMPARATIVE)
-			   		 nounOrOne(noun(NOUN, NN))
+			   		 (nounOrOne(noun(NOUN, NN)) | #findLastNoun(noun(NOUN, NN)))
 			   		 ('!'|'?')*"/>
 
 	<NLPattern name="answer-superlative2" 
 			   head="perf.inform.answer(LISTENER, V1, #and(#cons(NOUN, V1), #and(#cons(NOUN, Y), #not(#cons(COMPARATIVE, Y, V1)))), #forall(Y, #cons(NOUN, Y)))"
-			   body="['the'] nounOrOne(noun(NOUN, NN)) 'more' ['to' 'the']
+			   body="['the'] nounOrOne(noun(NOUN, NN)) ('more'|'further'|'farther') ['to' 'the']
 			   		 (
 			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
 			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
@@ -8160,7 +8160,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 nounPhrase(X, N, P, C)
 		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
 			   		 ['the'] superlative-adjective(SUPERLATIVE, COMPARATIVE)
-			   		 nounOrOne(noun(NOUN, NN))
+			   		 (nounOrOne(noun(NOUN, NN)) | #findLastNoun(noun(NOUN, NN)))
 			   		 ('!'|'.')*
 			   		 #derefFromContext(C, SPEAKER)"/>
 
@@ -8171,7 +8171,7 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 		           	 ['no' [(','|'!'*)]]
 		           	 nounPhrase(X, N, P, C)
 		           	 verb('verb.mean'[symbol], N2, P2, T2) ['to' 'say']
-					 ['the'] nounOrOne(noun(NOUN, NN)) 'more' ['to' 'the']
+					 ['the'] nounOrOne(noun(NOUN, NN)) ('more'|'further'|'farther') ['to' 'the']
 			   		 (
 			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
 			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
@@ -8264,13 +8264,13 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 	<NLPattern name="nounphrase-superlative-phrase"
 			   head="nounPhrase(X, N, [third-person], #and(noun(X, N), #cons(PREPOSITION, X, O3)))"
 			   body="['the'] preposition(PREPOSITION) #subsumes([superlative-adjective], PREPOSITION)
-			   		 nounOrOne(noun(X, N))
+			   		 (nounOrOne(noun(X, N)) | #findLastNoun(noun(X, N)))
 			   		 ('to'|'from')
 			   		 nounPhrase(X3, [singular], P3, C3)
 					 #derefFromContext(C3, O3)"/>
 	<NLPattern name="nounphrase-superlative-phrase2"
 			   head="nounPhrase(X, N, [third-person], #and(noun(X, N), #cons(PREPOSITION, X, O3)))"
-			   body="['the'] nounOrOne(noun(X, N))
+			   body="['the'] (nounOrOne(noun(X, N)) | #findLastNoun(noun(X, N)))
 			   		 preposition(PREPOSITION) #subsumes([superlative-adjective], PREPOSITION)
 			   		 ('to'|'from')
 			   		 nounPhrase(X3, [singular], P3, C3)

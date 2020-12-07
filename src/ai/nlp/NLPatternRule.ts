@@ -58,10 +58,10 @@ class NLParseRecord {
 
 
 class NLDerefErrorRecord {
-	derefFromContextErrors:TermAttribute[] = [];
-	derefUniversalErrors:TermAttribute[] = [];
-	derefHypotheticalErrors:TermAttribute[] = [];
-	derefQueryErrors:TermAttribute[] = [];
+	derefFromContextError:TermAttribute = null;
+	derefUniversalError:TermAttribute = null;
+	derefHypotheticalError:TermAttribute = null;
+	derefQueryError:TermAttribute = null;
 	previousPOS:PartOfSpeech[] = [];
 
 	derefErrorType:number = -1;
@@ -70,10 +70,10 @@ class NLDerefErrorRecord {
 	toString() : string
 	{
 		return "NLDerefErrorRecord("+
-			   (this.derefFromContextErrors.length>0 ? "context: " + this.derefFromContextErrors:"")+
-			   (this.derefUniversalErrors.length>0 ? "universal: " + this.derefUniversalErrors:"")+
-			   (this.derefHypotheticalErrors.length>0 ? "hypothetical: " + this.derefHypotheticalErrors:"")+
-			   (this.derefQueryErrors.length>0 ? "query: " + this.derefQueryErrors:"")+
+			   (this.derefFromContextError != null ? "context: " + this.derefFromContextError:"")+
+			   (this.derefUniversalError != null ? "universal: " + this.derefUniversalError:"")+
+			   (this.derefHypotheticalError != null ? "hypothetical: " + this.derefHypotheticalError:"")+
+			   (this.derefQueryError != null ? "query: " + this.derefQueryError:"")+
 			   ")";
 	}
 
@@ -87,22 +87,27 @@ class NLDerefErrorRecord {
 	{
 		if (this.derefErrorType != e.derefErrorType) return false;
 		if (this.tokensLeftToParse != e.tokensLeftToParse) return false;
-		if (this.derefFromContextErrors.length != e.derefFromContextErrors.length) return false;
-		for(let i:number = 0;i<this.derefFromContextErrors.length;i++) {
-			if (Term.equalsNoBindingsAttribute(this.derefFromContextErrors[i], e.derefFromContextErrors[i]) != 1) return false;
+		if ((this.derefFromContextError == null) != (e.derefFromContextError == null)) return false;
+		if (this.derefFromContextError!= null &&
+			Term.equalsNoBindingsAttribute(this.derefFromContextError, e.derefFromContextError) != 1) {
+			return false;
 		}
-		if (this.derefUniversalErrors.length != e.derefUniversalErrors.length) return false;
-		for(let i:number = 0;i<this.derefUniversalErrors.length;i++) {
-			if (Term.equalsNoBindingsAttribute(this.derefUniversalErrors[i], e.derefUniversalErrors[i]) != 1) return false;
+		if ((this.derefUniversalError == null) != (e.derefUniversalError == null)) return false;
+		if (this.derefUniversalError!= null &&
+			Term.equalsNoBindingsAttribute(this.derefUniversalError, e.derefUniversalError) != 1) {
+			return false;
 		}
-		if (this.derefHypotheticalErrors.length != e.derefHypotheticalErrors.length) return false;
-		for(let i:number = 0;i<this.derefHypotheticalErrors.length;i++) {
-			if (Term.equalsNoBindingsAttribute(this.derefHypotheticalErrors[i], e.derefHypotheticalErrors[i]) != 1) return false;
+		if ((this.derefHypotheticalError == null) != (e.derefHypotheticalError == null)) return false;
+		if (this.derefHypotheticalError!= null &&
+			Term.equalsNoBindingsAttribute(this.derefHypotheticalError, e.derefHypotheticalError) != 1) {
+			return false;
 		}
-		if (this.derefQueryErrors.length != e.derefQueryErrors.length) return false;
-		for(let i:number = 0;i<this.derefQueryErrors.length;i++) {
-			if (Term.equalsNoBindingsAttribute(this.derefQueryErrors[i], e.derefQueryErrors[i]) != 1) return false;
+		if ((this.derefQueryError == null) != (e.derefQueryError == null)) return false;
+		if (this.derefQueryError!= null &&
+			Term.equalsNoBindingsAttribute(this.derefQueryError, e.derefQueryError) != 1) {
+			return false;
 		}
+
 		if (this.previousPOS.length != e.previousPOS.length) return false;
 		for(let i:number = 0;i<this.previousPOS.length;i++) {
 			if (!this.previousPOS[i].equals(e.previousPOS[i])) return false;

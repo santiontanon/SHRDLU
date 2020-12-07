@@ -465,7 +465,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
 		    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
 		    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
-		    	if (this.respondToPerformatives) this.reactToParseError(pbr.subjectID);
+		    	if (this.respondToPerformatives) this.reactToParseError(pbr.subjectID, pbr.directObjectSymbol);
 		    }
     	}
     	if (pbr.indirectObjectID != null) {
@@ -1443,7 +1443,7 @@ class A4RuleBasedAI extends RuleBasedAI {
     }
 
 
-	reactToParseError(speakerID:string)
+	reactToParseError(speakerID:string, sentence:string)
 	{
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
@@ -1452,7 +1452,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		    	app.achievement_nlp_parse_error = true;
 		    	app.trigger_achievement_complete_alert();
 
-		    	super.reactToParseError(speakerID);
+		    	super.reactToParseError(speakerID, sentence);
 		    }
 		}
 	}
