@@ -439,34 +439,7 @@ class A4RuleBasedAI extends RuleBasedAI {
     		}
 
 			// parse the text:
-		    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(pbr.directObjectSymbol, this.cache_sort_performative, context, this);
-		    if (parses == null || parses.length == 0 && this.naturalLanguageParser.error_semantic.length > 0) {
-		    	// if we cannot parse sentences in any other way, at least consider the semantic errors as the parses:
-		    	parses = this.naturalLanguageParser.error_semantic;
-		    }
-		    if (parses != null && parses.length > 0) {
-		    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
-		    	console.log("AIRuleBasedAI("+this.selfID+"): parsed sentence '" + pbr.directObjectSymbol + "'\n  " + HPparse.result);
-		    	// the parse might contain several performatives combined with a "#list" construct
-				let parsePerformatives:TermAttribute[] = Term.elementsInList(HPparse.result, "#list");
-				let actionTerms2:Term[] = [];
-        		for(let actionTerm of actionTerms) {
-	        		for(let parsePerformative of parsePerformatives) {
-	        			let tmp:Term = actionTerm.clone([]);
-				    	tmp.addAttribute(parsePerformative);
-				    	actionTerms2.push(tmp);
-	        		}
-        		}
-        		actionTerms = actionTerms2;
-        		this.reactToParsedPerformatives(parsePerformatives, pbr.directObjectSymbol, speaker, HPparse);
-		    } else {
-		    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + pbr.directObjectSymbol);
-		    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
-		    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
-		    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
-		    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
-		    	if (this.respondToPerformatives) this.reactToParseError(pbr.subjectID, pbr.directObjectSymbol);
-		    }
+			this.parsePerceivedText(pbr.directObjectSymbol, speaker, context, actionTerms);
     	}
     	if (pbr.indirectObjectID != null) {
     		for(let actionTerm of actionTerms) {
@@ -476,7 +449,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 		for(let actionTerm of actionTerms) {
 			// console.log(actionTerm + " added to perception");
 			this.addTermToPerception(actionTerm);
-		}		
+		}		    		
 	}
 
 
@@ -1445,6 +1418,7 @@ class A4RuleBasedAI extends RuleBasedAI {
 
 	reactToParseError(speakerID:string, sentence:string)
 	{
+		if (!this.respondToPerformatives) return;
     	let context:NLContext = this.contextForSpeakerWithoutCreatingANewOne(speakerID);
     	if (context != null) {
     		if (this.talkingToUs(context, speakerID, null)) {

@@ -730,8 +730,14 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
     	let actionTerms:Term[] = [Term.fromString("action.talk("+
     										      "'"+time+"'[number],"+
     											  "'"+speaker+"'[#id])", this.o)];
-
 		// parse the text:
+		this.parsePerceivedText(text, speaker, context, actionTerms);
+		for(let actionTerm of actionTerms2) {
+			// console.log(actionTerm + " added to perception");
+			this.addTermToPerception(actionTerm);
+		}
+
+/*
 	    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(text, this.cache_sort_performative, context, this);
 	    if (parses == null || parses.length == 0 && this.naturalLanguageParser.error_semantic.length > 0) {
 	    	// if we cannot parse sentences in any other way, at least consider the semantic errors as the parses:
@@ -763,6 +769,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 	    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
 	    	this.reactToParseError(speaker, text);
 	    }
+*/
 	}
 
 

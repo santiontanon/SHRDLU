@@ -858,6 +858,42 @@ class RuleBasedAI {
 	}
 
 
+	parsePerceivedText(text:string, speaker:string, context:NLContext, actionTerms:Term[])
+	{
+	    let parses:NLParseRecord[] = this.naturalLanguageParser.parse(text, this.cache_sort_performative, context, this);
+	    if (parses == null || parses.length == 0 && this.naturalLanguageParser.error_semantic.length > 0) {
+	    	// if we cannot parse sentences in any other way, at least consider the semantic errors as the parses:
+	    	parses = this.naturalLanguageParser.error_semantic;
+	    }
+	    if (parses != null && parses.length > 0) {
+	    	let HPparse:NLParseRecord = this.naturalLanguageParser.chooseHighestPriorityParse(parses);
+	    	console.log("AIRuleBasedAI("+this.selfID+"): parsed sentence '" + text + "'\n  " + HPparse.result);
+	    	// the parse might contain several performatives combined with a "#list" construct
+			let parsePerformatives:TermAttribute[] = Term.elementsInList(HPparse.result, "#list");
+			let actionTerms2:Term[] = [];
+    		for(let actionTerm of actionTerms) {
+        		for(let parsePerformative of parsePerformatives) {
+        			let tmp:Term = actionTerm.clone([]);
+			    	tmp.addAttribute(parsePerformative);
+			    	actionTerms2.push(tmp);
+        		}
+    		}
+    		actionTerms.splice(0, actionTerms.length);
+			for(let actionTerm of actionTerms2) {
+				actionTerms.push(actionTerm);
+			}		    		
+    		this.reactToParsedPerformatives(parsePerformatives, text, speaker, HPparse);
+	    } else {
+	    	console.warn("A4RuleBasedAI ("+this.selfID+"): cannot parse sentence: " + text);
+	    	if (this.naturalLanguageParser.error_semantic.length > 0) console.warn("    semantic error!");
+	    	if (this.naturalLanguageParser.error_deref.length > 0) console.warn("    ("+this.selfID+") could not deref expressions: " + this.naturalLanguageParser.error_deref);
+	    	if (this.naturalLanguageParser.error_unrecognizedTokens.length > 0) console.warn("    unrecognized tokens: " + this.naturalLanguageParser.error_unrecognizedTokens);
+	    	if (this.naturalLanguageParser.error_grammatical) console.warn("    grammatical error!");
+	    	this.reactToParseError(speaker, text);
+	    }
+	}
+
+
 	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string, parse:NLParseRecord)
 	{
 		let toAdd:Term[] = [];
@@ -1495,13 +1531,14 @@ class RuleBasedAI {
 				console.log("reactToRephraseEntityPerformative: and previous performative was a deref error: "+error.derefFromContextError+" -> " + result);
 				this.naturalLanguageParser.dereference_hints = [new NLDereferenceHint(error.derefFromContextError, result)];
 					
+				// TODO:
 				// ...
 
 				this.naturalLanguageParser.dereference_hints = [];
 			} else {
 				// TODO: this probably needs inference, handle...
 				// ...
-				
+
 				// Just returning an error for now:
 				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
 			}
