@@ -748,6 +748,7 @@
     <sort name="action.answer.why" super="actionverb"/>
     <sort name="action.answer.how" super="actionverb"/>
     <sort name="action.answer.distance" super="actionverb"/>
+    <sort name="action.answer.rephrase" super="actionverb"/>
     
     <sort name="verb.bring" super="verb.take-to,action.give"/>
 

@@ -693,18 +693,27 @@ class NLPattern {
 		} else if (ownsRelation!=null) {
 			// case 3: if there is a "verb.own":
 			let ownerVariable:TermAttribute = ownsRelation.attributes[0];
-			let ownerTerms:TermAttribute[] = [];
+			// let ownerTerms:TermAttribute[] = [];
+			let ownerClause:Term = null;
 			queryFunctor = ownsRelation.attributes[1];
 			for(let t of terms) {
 				if (t instanceof TermTermAttribute) {
 					let t2:Term = (<TermTermAttribute>t).term;
 					if (t2 == ownsRelation) continue;
 					for(let i:number = 0;i<t2.attributes.length;i++) {
-						if (t2.attributes[i] == ownerVariable) ownerTerms.push(t);
+						if (t2.attributes[i] == ownerVariable) {
+							// ownerTerms.push(t);
+							if (ownerClause == null) {
+								ownerClause = (<TermTermAttribute>t).term;
+							} else {
+								ownerClause = new Term(o.getSort("#and"), [new TermTermAttribute(ownerClause), t]);
+							}
+						}
 					}
 				}
 			}
-			let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, parse, o, pos, AI, false);
+			// let dereffedOwner:TermAttribute[] = context.derefInternal(ownerTerms, listenerVariable, parse, o, pos, AI, false);
+			let dereffedOwner:TermAttribute[] = context.deref(ownerClause, listenerVariable, parse, o, pos, AI);
 //			console.log("ownerTerms: " + ownerTerms);
 //			console.log("dereffedOwner: " + dereffedOwner);
 			if (dereffedOwner == null) {

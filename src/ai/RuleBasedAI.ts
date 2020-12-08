@@ -1522,25 +1522,26 @@ class RuleBasedAI {
 				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
 			}
 
-		} else if (previous.derefErrors != null && previous.derefErrors.length > 0) {
+		} else if (previous.derefErrors != null && previous.derefErrors.length > 0 &&
+				   previous.derefErrors[0].derefFromContextError != null &&
+				   (previous.derefErrors[0].derefFromContextError instanceof TermTermAttribute)) {
+			let error:TermTermAttribute = <TermTermAttribute>(previous.derefErrors[0].derefFromContextError);
 			if (perf.attributes.length == 2 && 
 				(perf.attributes[1] instanceof ConstantTermAttribute)) {
 				// The previous performative was a parse error:
-				let result:string = (<ConstantTermAttribute>(perf.attributes[1])).value;
-				let error:NLDerefErrorRecord = previous.derefErrors[0];
-				console.log("reactToRephraseEntityPerformative: and previous performative was a deref error: "+error.derefFromContextError+" -> " + result);
-				this.naturalLanguageParser.dereference_hints = [new NLDereferenceHint(error.derefFromContextError, result)];
+				console.log("reactToRephraseEntityPerformative: and previous performative was a deref error: "+error+" -> " + perf.attributes[1]);
 					
-				// TODO:
-				// ...
-
-				this.naturalLanguageParser.dereference_hints = [];
-			} else {
-				// TODO: this probably needs inference, handle...
-				// ...
-
-				// Just returning an error for now:
-				this.intentions.push(new IntentionRecord(Term.fromString("action.talk('"+this.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.can('"+this.selfID+"'[#id], verb.understand('"+this.selfID+"'[#id], #and(S:[sentence],the(S, [singular])))))))", this.o), null, null, null, this.timeStamp));
+				HandleRephrasing_InferenceEffect.handleRephrasing(previous.text, perf.attributes[1], error, context.speaker, this);				
+			} else if (perf.attributes.length >= 3 &&
+					   (perf.attributes[1] instanceof VariableTermAttribute)) {
+				// Needs inference:
+				let intention:Term = new Term(this.o.getSort("action.answer.rephrase"),
+											  [new ConstantTermAttribute(this.selfID, this.o.getSort("#id")),
+											   speaker,
+											   new TermTermAttribute(perf),
+											   new ConstantTermAttribute(previous.text, this.o.getSort("symbol")),
+											   error]);
+				AnswerQuery_IntentionAction.launchQueryInference(intention, null, this, "HandleRephrasing_InferenceEffect");
 			}
 		} else {
 			// do not understand:
@@ -2165,7 +2166,7 @@ class RuleBasedAI {
 					this.debugActionLog.push(intention);
 				}
 			} else {
-				console.error("Unsuported intention: " + intention.action);
+				console.error("Unsuported intention ("+this.selfID+"): " + intention.action);
 				intention.succeeded = false;
 			}
 			toDelete.push(intention);

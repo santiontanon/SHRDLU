@@ -3,13 +3,13 @@ var MAXIMUM_DISTANCE_TO_BE_CONSIDERED_THIS:number = 128;
 
 
 class NLDereferenceHint {
-	constructor(c:TermAttribute, r:string)
+	constructor(c:TermTermAttribute, r:string)
 	{
 		this.clause = c;
 		this.result = r;
 	}
 
-	clause:TermAttribute;  // should be a TermTermAttribute most likely
+	clause:TermTermAttribute;
 	result:string;
 }
 
@@ -642,6 +642,12 @@ class NLContext {
 
 	deref(clause:Term, listenerVariable:TermAttribute, nlpr:NLParseRecord, o:Ontology, pos:POSParser, AI:RuleBasedAI) : TermAttribute[]
 	{
+		// check if there are any deref hints:
+		for(let hint of this.dereference_hints) {
+			if (hint.clause.term.equalsNoBindings(clause) == 1) {
+				return [new ConstantTermAttribute(hint.result, o.getSort("#id"))];
+			}
+		}
 		return this.derefInternal(Term.elementsInList(clause, "#and"), listenerVariable, nlpr, o, pos, AI, false);;
 	}
 
@@ -2024,4 +2030,9 @@ class NLContext {
 	lastDerefErrorType:number = 0;	
 
 	lastTimeUpdated:number = -1;
+
+	// Entity rephrasing: If the user's sentence could not be parsed due to a dereference error, and the user issued a clarification
+	// such as "I meant the one to your right", this list will contain the clarification, so that when it comes time to parse the
+	// previous sentence again, this can be used:
+	dereference_hints:NLDereferenceHint[] = [];
 }

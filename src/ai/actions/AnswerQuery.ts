@@ -49,6 +49,12 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			}
 		}
 
+		return AnswerQuery_IntentionAction.launchQueryInference(intention, ir, ai, "AnswerQuery_InferenceEffect");
+	}
+
+
+	static launchQueryInference(intention:Term, ir:IntentionRecord, ai:RuleBasedAI, InferenceEffectName:string) : boolean
+	{
 		console.log(ai.selfID + " answer query: " + intention.attributes[0] + " - " + intention.attributes[1] + " - "  + intention.attributes[2]);
 		if (intention.attributes[2] instanceof TermTermAttribute) {
 			let queryPerformative:Term = (<TermTermAttribute>intention.attributes[2]).term;
@@ -111,7 +117,13 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			}
 
 			// 2) start the inference process:
-			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
+			let requestingPerformative:NLContextPerformative = null;
+			if (ir != null) ir.requestingPerformative = ir.requestingPerformative
+			if (InferenceEffectName == "HandleRephrasing_InferenceEffect") {
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, true, timeTerm, new HandleRephrasing_InferenceEffect(intention, requestingPerformative)));
+			} else {
+				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, requestingPerformative)));
+			}
 
 // 			let  negated_s:Sentence = new Sentence([],[]);
 // 			for(let s of s_l) {
@@ -127,9 +139,9 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 // 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, timeTerm, new AnswerQuery_InferenceEffect(intention, ir.requestingPerformative)));
 		} else {
 			console.error("executeIntention answer query: attribute[2] was not a TermTermAttribute: " + intention);	
-			ir.succeeded = false;
+			if (ir != null) ir.succeeded = false;
 		}
-		return true;		
+		return true;
 	}
 
 

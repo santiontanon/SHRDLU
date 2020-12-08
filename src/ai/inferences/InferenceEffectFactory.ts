@@ -9,7 +9,9 @@ class InferenceEffectFactory {
 		if (xml.getAttribute("type") == "AnswerWho_InferenceEffect") return AnswerWho_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
 		if (xml.getAttribute("type") == "AnswerWhy_InferenceEffect") return AnswerWhy_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
 		if (xml.getAttribute("type") == "ExecuteAction_InferenceEffect") return ExecuteAction_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
+		if (xml.getAttribute("type") == "HandleRephrasing_InferenceEffect") return HandleRephrasing_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
 		if (xml.getAttribute("type") == "Memorize_InferenceEffect") return Memorize_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
+		if (xml.getAttribute("type") == "StopAction_InferenceEffect") return StopAction_InferenceEffect.loadFromXML(xml, ai, o, variables, variableNames);
 
 		return null;
 	}
