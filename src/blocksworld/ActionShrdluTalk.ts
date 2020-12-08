@@ -50,7 +50,7 @@ class ShrdluTalk_IntentionAction extends IntentionAction {
 					ai.app.addMessageWithColorTime(ai.selfID + ": " + txt, MSX_COLOR_WHITE, ai.timeStamp);
 
 					// update natural language context:
-					if (performative != null) context.newPerformative(ai.selfID, txt, performative, null, ir.cause, ai.o, ai.timeStamp);
+					if (performative != null) context.newPerformative(ai.selfID, txt, performative, null, null, ir.cause, ai.o, ai.timeStamp);
 					for(let c2 of ai.contexts) {
 						if (c2 != context) c2.inConversation = false;
 					}

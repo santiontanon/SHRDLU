@@ -732,7 +732,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
     											  "'"+speaker+"'[#id])", this.o)];
 		// parse the text:
 		this.parsePerceivedText(text, speaker, context, actionTerms);
-		for(let actionTerm of actionTerms2) {
+		for(let actionTerm of actionTerms) {
 			// console.log(actionTerm + " added to perception");
 			this.addTermToPerception(actionTerm);
 		}
@@ -863,7 +863,7 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 			}
 			if (allActionRequestsTalkingToUs && allRequestsForUs && canSatisfyThemAll && actions.length>0 && !anyNeedsInference) {
 				// Create an intention record with all the requested actions:
-				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, parse, null, this.o, this.timeStamp);
+				let nlcp_l:NLContextPerformative[] = context.newPerformative(speaker, text, first_performative, parse, null, null, this.o, this.timeStamp);
 				let nlcp:NLContextPerformative = null;
 				if (nlcp_l != null) nlcp = nlcp_l[0];
 				let ir:IntentionRecord = new IntentionRecord(actions[0], 
