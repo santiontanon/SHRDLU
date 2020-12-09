@@ -448,7 +448,8 @@ class ShrdluGameScript {
 				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
+					if (lastPerformative != null && lastPerformative.performative != null &&
+						lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
 						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof ConstantTermAttribute) {
 							if ((<ConstantTermAttribute>answer).value == "no" ||
@@ -485,7 +486,8 @@ class ShrdluGameScript {
 				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
+					if (lastPerformative != null && lastPerformative.performative != null &&
+						lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
 						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof VariableTermAttribute) {
 							if (answer.sort.name == "unknown") {
@@ -524,7 +526,8 @@ class ShrdluGameScript {
 				if (this.qwertyIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-					if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
+					if (lastPerformative != null && lastPerformative.performative != null &&
+						lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
 						let answer:TermAttribute = lastPerformative.performative.attributes[1];
 						if (answer instanceof ConstantTermAttribute) {
 							if ((<ConstantTermAttribute>answer).value == "no" ||
@@ -892,7 +895,7 @@ class ShrdluGameScript {
 			if (!this.act_1_know_etaoin_is_an_AI) {
 				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
 				let p2:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.game.qwertyAI.selfID);
-				if (p1!=null && 
+				if (p1!=null && p1.performative != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {
 					let pattern:Term = Term.fromString("perf.inform.answer('player'[#id], ai('etaoin'[#id]))", this.game.ontology);
 					if (p1.performative.equals(pattern)) {
@@ -911,7 +914,7 @@ class ShrdluGameScript {
 
 		if (!this.act_1_asked_about_being_alone_to_etaoin && this.contextEtaoin != null) {
 			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
+			if (p1 != null && p1.performative != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
@@ -922,7 +925,7 @@ class ShrdluGameScript {
 
 		if (!this.act_1_asked_about_being_alone_to_qwerty && this.contextQwerty != null) {
 			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
+			if (p1 != null && p1.performative != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (this.questionAboutBeingAlone(perf)) {
@@ -951,15 +954,16 @@ class ShrdluGameScript {
 			if (ctx != null) {
 				let p1:NLContextPerformative = ctx.lastPerformativeBy(this.playerID);
 				let p2:NLContextPerformative = ctx.lastPerformativeBy(ctx.ai.selfID);
-				if (p2 != null && 
+				if (p2 != null && p2.performative != null &&
 					p2.timeStamp == this.game.in_game_seconds - 1 &&
-					p1 != null) {
+					p1 != null && p1.performative != null) {
 					if (!this.act_1_asked_about_bruce_alper[i]) {
 						let patternq:Term = Term.fromString("perf.q.whois.name(X:[any], Y:[any], name(Y, 'bruce alper'[symbol]))", this.game.ontology);
 						let patterna:Term = Term.fromString("perf.inform.answer('player'[#id], 'unknown'[symbol])", this.game.ontology);
 						let perfq:Term = p1.performative;
 						let perfa:Term = p2.performative;
-						if (patternq.subsumes(perfq, true, new Bindings()) &&
+						if (perfq != null && perfa != null &&
+							patternq.subsumes(perfq, true, new Bindings()) &&
 							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
 							this.act_1_asked_about_bruce_alper[i] = true;
@@ -975,7 +979,8 @@ class ShrdluGameScript {
 						let patterna:Term = Term.fromString("perf.inform.answer('player'[#id], 'unknown'[symbol])", this.game.ontology);
 						let perfq:Term = p1.performative;
 						let perfa:Term = p2.performative;
-						if (patternq.subsumes(perfq, true, new Bindings()) &&
+						if (perfq != null && perfa != null &&
+							patternq.subsumes(perfq, true, new Bindings()) &&
 							patterna.subsumes(perfa, true, new Bindings())) {
 							// asked about bruce!
 							this.act_1_asked_about_corpse[i] = true;
@@ -1071,7 +1076,7 @@ class ShrdluGameScript {
 			// counting useless answers by etaoin or player getting tired:
 			let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.game.etaoinAI.selfID);
 			let p2:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-			if (p1 != null) {
+			if (p1 != null && p1.performative != null) {
 				if (p1.timeStamp == this.game.in_game_seconds - 1) {
 					// it just happened:
 					if (p1.performative.functor.name == "perf.inform.parseerror") this.act_1_number_of_useless_etaoin_answers++;
@@ -1083,7 +1088,7 @@ class ShrdluGameScript {
 					this.act_1_state = 7;
 				}
 			}
-			if (p2 != null) {
+			if (p2 != null && p2.performative != null) {
 				if (p2.performative.functor.name == "perf.farewell") {
 					this.act_1_state = 7;
 				}
@@ -1233,7 +1238,7 @@ class ShrdluGameScript {
 			} else {
 				// waiting for an answer from the player to "would you please find shrdlu?"
 				let p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-				if (p!=null) {
+				if (p!=null && p.performative != null) {
 					if (p.timeStamp == this.game.in_game_seconds - 1) {
 						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
 							this.etaoinIdle()) {
@@ -1301,7 +1306,7 @@ class ShrdluGameScript {
 			// detect when player asks about where are the tools:
 			if (!this.act_1_asked_about_tools && this.contextEtaoin != null) {
 				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-				if (p1 != null &&
+				if (p1 != null && p1.performative != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					let v:TermAttribute = null;
@@ -1349,7 +1354,7 @@ class ShrdluGameScript {
 
 			if (!this.act_1_asked_about_battery && this.contextEtaoin != null) {
 				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-				if (p1 != null &&
+				if (p1 != null && p1.performative != null &&
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
@@ -1397,7 +1402,7 @@ class ShrdluGameScript {
 			// detect when player mentions the spacesuit is broken:
 			if (!this.act_1_stated_spacesuit_is_broken && this.contextEtaoin != null) {
 				let p1:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-				if (p1 != null &&
+				if (p1 != null && p1.performative != null && 
 					p1.timeStamp == this.game.in_game_seconds - 1) {	
 					let perf:Term = p1.performative;
 					if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&
@@ -1786,7 +1791,7 @@ class ShrdluGameScript {
 				this.act_2_state = 6;
 			} else {
 				let p:NLContextPerformative = this.contextEtaoin.lastPerformativeBy(this.playerID);
-				if (p!=null) {
+				if (p!=null && p.performative != null) {
 					if (p.timeStamp == this.game.in_game_seconds - 1) {
 						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
 							this.game.etaoinAI.intentions.length == 0 &&
@@ -1860,7 +1865,8 @@ class ShrdluGameScript {
 			if (this.shrdluIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
-				if (lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
+				if (lastPerformative != null && lastPerformative.performative != null &&
+					lastPerformative.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer"))) {
 					let answer:TermAttribute = lastPerformative.performative.attributes[1];
 					if (answer instanceof ConstantTermAttribute) {
 						if ((<ConstantTermAttribute>answer).value == "no" ||
@@ -1906,7 +1912,8 @@ class ShrdluGameScript {
 			if (this.shrdluIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
-				if (lastPerformative.performative.functor.is_a_string("perf.request.action") ||
+				if (lastPerformative != null && lastPerformative.performative != null &&
+					lastPerformative.performative.functor.is_a_string("perf.request.action") ||
 					lastPerformative.performative.functor.is_a_string("perf.q.action")) {
 					this.act_2_state_timer = 0;
 				}
@@ -2675,7 +2682,7 @@ class ShrdluGameScript {
 						// change the graphic of the cable:
 						let map:A4Map = this.game.getMap("Tardis 8");
 						map.layers[0].tiles[44+16*map.layers[0].width] = this.game.mapTiles[661];
-						map.layers[1].tiles[43+16*map.layers[0].width] = this.game.mapTiles[629];
+						// map.layers[1].tiles[43+16*map.layers[0].width] = this.game.mapTiles[629];
 						map.layers[0].cacheDrawTiles();
 						map.layers[1].cacheDrawTiles();
 
@@ -2959,7 +2966,7 @@ class ShrdluGameScript {
 	{
 		if (this.contextQwerty != null) {
 			let p1:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
-			if (p1 != null &&
+			if (p1 != null && p1.performative != null &&
 				p1.timeStamp == this.game.in_game_seconds - 1) {	
 				let perf:Term = p1.performative;
 				if (perf.functor.is_a(this.game.ontology.getSort("perf.inform")) &&

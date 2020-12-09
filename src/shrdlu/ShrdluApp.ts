@@ -58,7 +58,7 @@ class ShrdluApp {
                 return s;
             },
             function(s:A4Script) : string {
-                return " cutscene=\"" + this.value + "\"";
+                return " cutscene=\"" + s.value + "\"";
             },
             function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
             {

@@ -421,7 +421,7 @@ class NLPattern {
 		let indefiniteArticleSort:Sort = o.getSort("indefinite-article");
 //		let adjectiveSort:Sort = o.getSort("adjective");
 		let result:Term = null;
-//		let foundIndefiniteArticle:boolean = false;
+		let foundIndefiniteArticle:boolean = false;
 		let hadName:boolean = false;	// if there is a name for the new hypothetical, then we need to generate an ID for it
 		let outputVariableSort:Sort = null;
 
@@ -450,7 +450,7 @@ class NLPattern {
 				let tmp2:Term = (<TermTermAttribute>tmp).term;
 				if (tmp2.functor.is_a(determinerSort)) {
 					if (tmp2.functor.is_a(indefiniteArticleSort)) {
-//						foundIndefiniteArticle = true;
+						foundIndefiniteArticle = true;
 						// an indefinite article is fine
 					} else {
 						// if a determiner is used, then this is not a hypothetical
@@ -476,7 +476,7 @@ class NLPattern {
 				} else if (tmp2.functor.is_a(nounSort) &&
 						   tmp2.attributes.length>=1 &&
 						   tmp2.attributes[0] instanceof ConstantTermAttribute) {
-//					if (foundIndefiniteArticle) {
+					if (foundIndefiniteArticle) {
 						let resultTmp:Term = new Term(o.getSort((<ConstantTermAttribute>(tmp2.attributes[0])).value),
 										  			  [outputVariable]);
 						outputVariableSort = resultTmp.functor;
@@ -486,11 +486,11 @@ class NLPattern {
 							result = new Term(o.getSort("#and"), [new TermTermAttribute(resultTmp), 
 																  new TermTermAttribute(result)]);
 						}
-//					} else {
-//						console.log("specialfunction_derefHypothetical: noun found without an indefinite article!");
-//						this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
-//						return null;
-//					}
+					} else {
+						console.log("specialfunction_derefHypothetical: noun found without an indefinite article!");
+						this.lastDerefErrorType = DEREF_ERROR_CANNOT_PROCESS_EXPRESSION;
+						return null;
+					}
 				} else if (tmp2.functor.is_a(relationSort)) {
 					let resultTmp:Term = new Term(relationSort, [outputVariable, tmp2.attributes[0]]);
 					if (result == null) {

@@ -230,9 +230,11 @@ class NLContextPerformative {
 		if (p_xml != null) {
 			cause = CauseRecord.fromXML(p_xml, o);
 		}
+		let performative:Term = null;
+		if (xml.getAttribute("performative") != null) performative = Term.fromString(xml.getAttribute("performative"), o);
 		return new NLContextPerformative(xml.getAttribute("text"),
 										 xml.getAttribute("speaker"),
-										 Term.fromString(xml.getAttribute("performative"), o),
+										 performative,
 										 null,  // TODO: save/load NLParseRecord
 										 null,  // TODO: save/load NLDerefErrorRecord[]
 										 cause,

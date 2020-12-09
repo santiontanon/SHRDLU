@@ -293,6 +293,9 @@
 		<tile ID="851" tiles="915,883,851" walkable="false" seeThrough="false"/>
 		<tile ID="882" tiles="882,882,882" walkable="false" seeThrough="false"/>
 
+		<!-- repaired cord -->
+		<tile ID="661" tiles="661,629" walkable="false" seeThrough="true"/>
+
 	</tiles>	
 
 	<!-- Game Definition -->

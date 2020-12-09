@@ -63,8 +63,8 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 					if (b[0].name == "WHERE") {
 						let v:TermAttribute = b[1];
 						if (v instanceof ConstantTermAttribute) {
-							// select the most specific one:
-							if (targetLocation == null) {
+							// select the most specific one (and also, we do not like "communicator range" as an answer):
+							if (targetLocation == null || targetLocationID == "communicator-range") {
 								targetLocationID = (<ConstantTermAttribute>v).value;
 								targetLocation = ai.game.getAILocationByID(targetLocationID);
 								selectedBindings = result.bindings;
@@ -90,7 +90,7 @@ class AnswerWhere_InferenceEffect extends InferenceEffect {
 							let v:TermAttribute = b[1];
 							if (v instanceof ConstantTermAttribute) {
 								// select the most specific one:
-								if (speakerLocation == null) {
+								if (speakerLocation == null || speakerLocationID == "communicator-range") {
 									speakerLocationID = (<ConstantTermAttribute>v).value;
 									speakerLocation = ai.game.getAILocationByID(speakerLocationID);
 								} else {

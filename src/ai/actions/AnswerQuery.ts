@@ -118,7 +118,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 
 			// 2) start the inference process:
 			let requestingPerformative:NLContextPerformative = null;
-			if (ir != null) ir.requestingPerformative = ir.requestingPerformative
+			if (ir != null) requestingPerformative = ir.requestingPerformative
 			if (InferenceEffectName == "HandleRephrasing_InferenceEffect") {
 				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], targets, 1, 0, true, timeTerm, new HandleRephrasing_InferenceEffect(intention, requestingPerformative)));
 			} else {

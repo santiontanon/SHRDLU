@@ -1714,7 +1714,7 @@ NLClarificationParseTestUnifyingListener("take the key", "I mean the closest one
 NLClarificationParseTestUnifyingListener("take the key", "the closest one", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'1'[#id])))");
 NLClarificationParseTestUnifyingListener("take the key", "the one closest to you", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'etaoin'[#id])))");
 NLClarificationParseTestUnifyingListener("take the key", "the closest to me", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'1'[#id])))");
-
+NLParseTestUnifyingListener("etaoin salvaged some entries", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], #and(verb.salvage('etaoin'[#id],X:'entry'[entry]), entry(X)))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

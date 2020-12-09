@@ -1999,9 +1999,11 @@ class A4Script {
 
             default:
                 {
-                    if (this.type in A4Script.customScriptSaveFns) {
-                        let savefn:(script:A4Script) => string = A4Script.customScriptSaveFns[this.type];
+                    if (scriptNames[this.type] in A4Script.customScriptSaveFns) {
+                        let savefn:(script:A4Script) => string = A4Script.customScriptSaveFns[scriptNames[this.type]];
                         xmlString += savefn(this);
+                    } else {
+                        console.error("Trying to save unregistered script: " + this.type + ", " + scriptNames[this.type]);
                     }
                 }
         }

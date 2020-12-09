@@ -51,10 +51,19 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 				// the second is the ID of a location, or a sort identifying the location
 				let subject:ConstantTermAttribute = <ConstantTermAttribute>action.attributes[0];
 				console.log(ai.selfID + " answer how (with verb.go): " + intention.attributes[2]);	
-				// we add the sentence with positive sign, to see if it introduces a contradiction
+
+				// we don't like "communicator-range" as a possible answer, so, we forbid it:
+				let comrange:ConstantTermAttribute = new ConstantTermAttribute("communicator-range", ai.o.getSort("#id"));
+				let where1:VariableTermAttribute = new VariableTermAttribute(ai.o.getSort("#id"), "WHERE");
 				let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("space.at"),
 																[subject,
-																 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
+																 where1]),
+														new Term(ai.o.getSort("="),
+																[where1, comrange])],[false, true])];
+
+
+
+
 				ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHowGoto_InferenceEffect(intention)));
 
 			} else {

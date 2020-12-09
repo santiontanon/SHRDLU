@@ -112,16 +112,22 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 		console.log(ai.selfID + " answer where: " + intention);	
 		if (intention.attributes[2] instanceof ConstantTermAttribute &&
 			intention.attributes.length == 3) {
-			// we add the sentence with positive sign, to see if it introduces a contradiction
+			// We look for a place different from "communicator-range", which we do not like as an answer...
+			let comrange:ConstantTermAttribute = new ConstantTermAttribute("communicator-range", ai.o.getSort("#id"));
+			let where1:VariableTermAttribute = new VariableTermAttribute(ai.o.getSort("#id"), "WHERE");
 			let target1:Sentence[] = [new Sentence([new Term(ai.o.getSort("space.at"),
 															[intention.attributes[2],
-															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
-//				console.log("target1: " + target1);
+															 where1]),
+													new Term(ai.o.getSort("="),
+															[where1, comrange])],[false, true])];
+			let where2:VariableTermAttribute = new VariableTermAttribute(ai.o.getSort("#id"), "WHERE");
 			let target2:Sentence[] = [new Sentence([new Term(ai.o.getSort("space.at"),
 															[intention.attributes[1],
-															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
-//				console.log("target2: " + target2);
+															 where2]),
+													new Term(ai.o.getSort("="),
+															[where2, comrange])],[false, true])];
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
+
 		} else if (intention.attributes.length >= 5 &&
 			      (intention.attributes[2] instanceof VariableTermAttribute) &&
 			      (intention.attributes[3] instanceof VariableTermAttribute) &&
@@ -153,7 +159,6 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 			let target2:Sentence[] = [new Sentence([new Term(ai.o.getSort("space.at"),
 															[intention.attributes[1],
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
-//				console.log("target2: " + target2);
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
 			
 		} else if (intention.attributes.length >= 5 &&
