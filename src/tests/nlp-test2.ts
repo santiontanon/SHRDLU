@@ -1716,6 +1716,14 @@ NLClarificationParseTestUnifyingListener("take the key", "the one closest to you
 NLClarificationParseTestUnifyingListener("take the key", "the closest to me", o.getSort("performative"), context, 'etaoin', "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'1'[#id])))");
 NLParseTestUnifyingListener("etaoin salvaged some entries", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], #and(verb.salvage('etaoin'[#id],X:'entry'[entry]), entry(X)))");
 
+// For version 4.0:
+NLParseTestUnifyingListener("are you holding the crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], verb.hold('etaoin'[#id],'5'[#id]))");
+NLParseTestUnifyingListener("are you holding a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.hold('etaoin'[#id],X), crate(X)))");
+NLParseTestUnifyingListener("what is the thing you are holding?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(verb.hold('etaoin'[#id],X), object(X)))");
+NLParseTestUnifyingListener("which color is the white key?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, color('4'[#id], X))");
+
+// "which pyramid is more to the east?"
+
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
 
