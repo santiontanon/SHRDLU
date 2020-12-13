@@ -701,75 +701,172 @@ class BWPlanningPlan {
 }
 
 
+class BWPlannerStackNode {
+	plan:BWPlanningPlan = null;
+	state:BWPlannerState = null;
+	children:[string[],BWPlannerState][] = null;
+	nextChild:number = 0;
+	nPlanActions:number = 0;	// to keep track of what actions to pop
+}
+
+
 class BWPlanner {
-	constructor(bw:ShrdluBlocksWorld, o:Ontology) {
+	constructor(bw:ShrdluBlocksWorld, o:Ontology, goal:PlanningCondition, maxDepth:number) {
 		this.bw = bw;
 		this.o = o;
+		this.goal = goal;
+		this.maxDepth = maxDepth;
+		this.currentDepth = 0;
+		this.accumSteps = 0;
+		this.stack = [];
+		this.stackIndex = -1;
+		for(let i:number = 0; i<this.maxDepth+1; i++) {
+			this.stack.push(new BWPlannerStackNode());
+		}
+		this.result = null;
 		if (BWPlanner.s_id_sort == null) {
 			BWPlanner.s_id_sort = o.getSort("#id");
 		}
 	}
 
 
-	plan(goal:PlanningCondition, maxDepth:number) : PlanningPlan
+	plan(steps:number) : boolean
 	{
-		let initialPlan:BWPlanningPlan = new BWPlanningPlan();
-		let s0:BWPlannerState = BWPlannerState.fromBlocksWorld(this.bw);
-		this.steps = 0;
-		// iterative deepening:
-		for(let depth:number = 1;depth<=maxDepth;depth++) {
-			if (this.DEBUG >= 1) console.log("- plan -------- max depth: " + depth + " - ");
-			let plan:BWPlanningPlan = this.planInternal(s0, goal, initialPlan, depth);
-			console.log("plan, steps: " + this.steps);
-			if (plan != null) {
-				// plan.autoCausalLinks(s0, this.occursCheck);
-				return plan.convertToTerms(this.o);
+		// depth-first search
+		for(let step:number = 0; step<steps; step++) {
+			if (this.stackIndex < 0) {
+				this.currentDepth++;
+				if (this.currentDepth > this.maxDepth) return false;
+
+				// initialize the planning process:
+				this.stackIndex = 0;
+				this.stack[0].plan = new BWPlanningPlan();
+				this.stack[0].state = BWPlannerState.fromBlocksWorld(this.bw);
+				this.stack[0].children = null;
+				this.stack[0].nextChild = 0;
+				this.stack[0].nPlanActions = 0;
+				console.log("- Starting search at depth --------  " + this.currentDepth + " - ");				
+			}
+
+			this.accumSteps++;
+			let node:BWPlannerStackNode = this.stack[this.stackIndex];
+			if (this.DEBUG >= 1) {
+				console.log("- plan --------  " + this.stackIndex + " / " + this.currentDepth + " - ");
+				if (this.DEBUG >= 2) {
+					console.log("State:");
+					console.log(node.state.toString());
+				}
+			}
+
+			// check if we are done:
+			if (node.state.checkGoal(this.goal, this.o)) {
+				this.result = node.plan.convertToTerms(this.o);
+				return true;
+			}
+
+			// make sure we don't search too deep:
+			if (this.stackIndex < this.currentDepth &&
+				this.stackIndex + node.state.minimumStepsLeft(this.goal, this.o) <= this.currentDepth) {
+
+				if (node.children == null) {
+					// obtain candidate actions:
+					node.children = [];
+					this.generateChildren(node.state, node.children, node.plan);
+					if (this.DEBUG >= 1) {
+						for(let tmp of node.children) {
+							console.log("    candidate action: " + tmp[0]);
+						}
+					}
+				}
+
+				if (node.nextChild >= node.children.length) {
+					// backtrack!
+					this.stackIndex--;		
+					if (this.stackIndex >= 0) {
+						node = this.stack[this.stackIndex];	
+						while(node.plan.actions.length > node.nPlanActions) node.plan.actions.pop();
+					}
+				} else {
+					let action:string[] = node.children[node.nextChild][0];
+					let nextState:BWPlannerState = node.children[node.nextChild][1]
+					node.nextChild++;
+					if (this.DEBUG >= 1) console.log("Plan length "+node.plan.actions.length+", adding action: " + action);
+					this.stackIndex++;
+					let child:BWPlannerStackNode = this.stack[this.stackIndex];
+					child.plan = node.plan;
+					child.state = nextState;
+					child.plan.actions.push(action)
+					child.children = null;
+					child.nextChild = 0;
+					child.nPlanActions = node.nPlanActions + 1;
+				}
+			} else {
+				// backtrack!
+				this.stackIndex--;		
+				if (this.stackIndex >= 0) {
+					node = this.stack[this.stackIndex];	
+					while(node.plan.actions.length > node.nPlanActions) node.plan.actions.pop();
+				}
 			}
 		}
+
+		console.log("planning interrupted after " + this.accumSteps + " steps...");
 		return null;
+		
+		// // iterative deepening:
+		// for(let depth:number = 1;depth<=maxDepth;depth++) {
+		// 	if (this.DEBUG >= 1) console.log("- plan -------- max depth: " + depth + " - ");
+		// 	let plan:BWPlanningPlan = this.planInternal(s0, goal, initialPlan, depth);
+		// 	console.log("plan, steps: " + this.accumSteps);
+		// 	if (plan != null) {
+		// 		// plan.autoCausalLinks(s0, this.occursCheck);
+		// 		return plan.convertToTerms(this.o);
+		// 	}
+		// }
+		// return null;
 	}
 
 
-	planInternal(state:BWPlannerState, goal:PlanningCondition, plan:BWPlanningPlan, maxDepth:number) : BWPlanningPlan
-	{
-		this.steps ++;
-		if (this.DEBUG >= 1) {
-			console.log("- planInternal -------- depth left: " + maxDepth + " - ");
-			if (this.DEBUG >= 2) {
-				console.log("State:");
-				console.log(state.toString());
-			}
-		}
+	// planInternal(state:BWPlannerState, goal:PlanningCondition, plan:BWPlanningPlan, maxDepth:number) : BWPlanningPlan
+	// {
+	// 	this.accumSteps++;
+	// 	if (this.DEBUG >= 1) {
+	// 		console.log("- planInternal -------- depth left: " + maxDepth + " - ");
+	// 		if (this.DEBUG >= 2) {
+	// 			console.log("State:");
+	// 			console.log(state.toString());
+	// 		}
+	// 	}
 	
-		// check if we are done:
-		if (state.checkGoal(goal, this.o)) {
-			return plan.clone();
-		}
-		if (maxDepth <= 0) return null;
+	// 	// check if we are done:
+	// 	if (state.checkGoal(goal, this.o)) {
+	// 		return plan.clone();
+	// 	}
+	// 	if (maxDepth <= 0) return null;
 
-		// prune when the search is futile:
-		if (state.minimumStepsLeft(goal, this.o) > maxDepth) return null;
+	// 	// prune when the search is futile:
+	// 	if (state.minimumStepsLeft(goal, this.o) > maxDepth) return null;
 
-		// obtain candidate actions:
-		let children:[string[],BWPlannerState][] = [];
-		this.generateChildren(state, children, plan);
-		if (this.DEBUG >= 1) {
-			for(let tmp of children) {
-				console.log("    candidate action: " + tmp[0]);
-			}
-		}
+	// 	// obtain candidate actions:
+	// 	let children:[string[],BWPlannerState][] = [];
+	// 	this.generateChildren(state, children, plan);
+	// 	if (this.DEBUG >= 1) {
+	// 		for(let tmp of children) {
+	// 			console.log("    candidate action: " + tmp[0]);
+	// 		}
+	// 	}
 
-		// search:
-		for(let [action,next_state] of children) {
-			plan.actions.push(action)
-			if (this.DEBUG >= 1) console.log("Executing action: " + action);
-			let plan2:BWPlanningPlan = this.planInternal(next_state, goal, plan, maxDepth-1);
-			if (plan2 != null) return plan2;
-			plan.actions.pop();
-		}
+	// 	// search:
+	// 	for(let [action,next_state] of children) {
+	// 		plan.actions.push(action)
+	// 		if (this.DEBUG >= 1) console.log("Executing action: " + action);
+	// 		let plan2:BWPlanningPlan = this.planInternal(next_state, goal, plan, maxDepth-1);
+	// 		if (plan2 != null) return plan2;
+	// 		plan.actions.pop();
+	// 	}
 
-		return null;
-	}
+	// 	return null;
+	// }
 
 
 	generateChildren(state:BWPlannerState, children:[string[],BWPlannerState][], plan:BWPlanningPlan)
@@ -834,7 +931,14 @@ class BWPlanner {
 	bw:ShrdluBlocksWorld = null;
 	o:Ontology = null;
 	occursCheck:boolean = false;
-	steps:number = 0;
+
+	accumSteps:number = 0;
+	maxDepth:number = 8;
+	currentDepth:number = 1;
+	stack:BWPlannerStackNode[] = null;
+	stackIndex:number = -1;
+	goal:PlanningCondition = null;
+	result:PlanningPlan = null;
 
 	static s_id_sort:Sort = null;
 }

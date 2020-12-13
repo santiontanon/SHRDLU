@@ -1,25 +1,34 @@
 
 var SPACE_NEAR_FAR_THRESHOLD:number = 8;
-
+var BW_PLANNING_STEPS_PER_CYCLE:number = 20000;
+var BW_PLANNING_MAX_STEPS:number = 5000000;
 
 
 class PlanningRecord {
 	constructor(ai:BlocksWorldRuleBasedAI, goal:PlanningCondition, o:Ontology, requester:TermAttribute, 
 				requestingPerformative:NLContextPerformative, timeStamp:number)
 	{
-		this.planner = new BWPlanner(ai.world, o);		
 		this.goal = goal;
 		this.o = o;
 		this.requester = requester;
 		this.requestingPerformative = requestingPerformative;
 		this.timeStamp = timeStamp;
+		this.planner = new BWPlanner(ai.world, o, this.goal, this.maxDepth);		
 	}
 
 
 	// executes one step of plannning, and returns "true" if planning is over
 	step() : boolean
 	{
-		this.plan = this.planner.plan(this.goal, this.maxDepth)
+		let succeeded:boolean = this.planner.plan(BW_PLANNING_STEPS_PER_CYCLE)
+		if (succeeded == null) {
+			if (this.planner.accumSteps >= BW_PLANNING_MAX_STEPS) {
+				// time out!
+				return true;
+			}
+			return false;	// planning is not yet complete
+		}
+		this.plan = this.planner.result;
 		return true;
 	}
 

@@ -1,7 +1,8 @@
 /*
 Notes: 
 - Standard GraphPlan cannot handle negated preconditions. 
-- This version can handle them to a limited extent. To be safe, only use negative preconditions that ideally do get changed by other operators (i.e., only those that should match the initial state)
+- This version can handle them to a limited extent. To be safe, only use negative preconditions that do not get changed by other operators (i.e., only those that should match the initial state)
+- I ended up NOT using this planner, as it is too limited. But I keep it in the repo just because it took a while to code, and it's a shame to lose it, hehe
 */
 
 class GraphPlanLayer {
