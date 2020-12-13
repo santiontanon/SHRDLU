@@ -1721,8 +1721,8 @@ NLParseTestUnifyingListener("are you holding the crate?", o.getSort("performativ
 NLParseTestUnifyingListener("are you holding a crate?", o.getSort("performative"), context, 'etaoin', "perf.q.predicate('etaoin'[#id], #and(verb.hold('etaoin'[#id],X), crate(X)))");
 NLParseTestUnifyingListener("what is the thing you are holding?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(verb.hold('etaoin'[#id],X), object(X)))");
 NLParseTestUnifyingListener("which color is the white key?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, color('4'[#id], X))");
-
-// "which pyramid is more to the east?"
+NLParseTestUnifyingListener("which key is more to the east?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(key(X),#and(key(Y),#not(space.east.of(Y,X)))), #forall(Y,key(Y)))");
+NLParseTestUnifyingListener("who is more to the east?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X),#and(character(Y),#not(space.east.of(Y,X)))), #forall(Y,character(Y)))");
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);

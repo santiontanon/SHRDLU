@@ -4704,6 +4704,41 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 nounOrOne(noun(NOUN, NN))
 			   		 ('!'|'?')*"/>
 
+    <NLPattern name="q.query-which-query-be-more-to-the-direction"
+    		   head="perf.q.query(LISTENER, QV1, #and(QUERY1,#and(QUERY2,#not(#cons(COMPARATIVE,QV2,QV1)))), #forall(QV2,QUERY2))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('what'|'which')
+			   		 nounPhrase(X1, N1, P1, C1)
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+					 ('more'|'further'|'farther') ['to' 'the']
+			   		 (
+			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
+			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
+			   		 	'north' #equal(COMPARATIVE, 'space.north.of'[symbol]) |
+			   		 	'south' #equal(COMPARATIVE, 'space.south.of'[symbol])
+			   		 )
+			   		 ('!'|'?')*
+			   		 #derefQuery(C1, QV1, QUERY1)
+			   		 #derefQuery(C1, QV2, QUERY2)"/>
+
+    <NLPattern name="q.query-who-be-more-to-the-direction"
+    		   head="perf.q.query(LISTENER, QV1, #and(character(QV1),#and(character(QV2),#not(#cons(COMPARATIVE,QV2,QV1)))), #forall(QV2,character(QV2)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 [[('would'|'can'|'could') 'you'] 'tell' 'me'] ('who')
+			   		 verb('verb.be'[symbol], N, P, [present-tense]) 
+					 ('more'|'further'|'farther') ['to' 'the']
+			   		 (
+			   		 	'east' #equal(COMPARATIVE, 'space.east.of'[symbol]) |
+			   		 	'west' #equal(COMPARATIVE, 'space.west.of'[symbol]) |
+			   		 	'north' #equal(COMPARATIVE, 'space.north.of'[symbol]) |
+			   		 	'south' #equal(COMPARATIVE, 'space.south.of'[symbol])
+			   		 )
+			   		 ('!'|'?')*"/>
+
     <NLPattern name="q.query-what-be-the-haveable-relation-of-obj"
     		   head="perf.q.query(LISTENER, V, QUERY)"
     		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
