@@ -193,6 +193,9 @@ class BWPlannerState {
 	}
 
 
+	// It returns Number.POSITIVE_INFINITY if there is any impossible condition
+	// - something on top of a pyramid
+	// - a bigger object on top of a smaller one
 	minimumStepsLeft(goal:PlanningCondition, o:Ontology) : number
 	{
 		let stepsLeft:number[] = [];
@@ -215,6 +218,10 @@ class BWPlannerState {
 		This function calculates an estimation of the minimum number of steps required to accomplish the goals.
 		Note: it some times over estimates, so, it can prune valid plans. However, it makes planning very fast,
 		so, I decided to leave it as is.
+
+		It returns Number.POSITIVE_INFINITY if there is any impossible condition
+		- something on top of a pyramid
+		- a bigger object on top of a smaller one
 	*/
 	minimumStepsLeftForConjunct(predicates:PlanningPredicate[], b:Bindings, index:number, o:Ontology,
 								unsatisfiedPredicates:PlanningPredicate[]) : number
@@ -227,6 +234,34 @@ class BWPlannerState {
 					predicate.term.functor.name == "space.next-to") {
 					if (this.objectInArm == -1) minSteps ++;
 					minSteps ++;
+
+					if (predicate.term.functor.name == "space.directly.on.top.of" &&
+						predicate.term.attributes.length == 2 &&
+						(predicate.term.attributes[0] instanceof ConstantTermAttribute) &&
+						(predicate.term.attributes[1] instanceof ConstantTermAttribute)) {
+						let id1:string = (<ConstantTermAttribute>predicate.term.attributes[0]).value;
+						let id2:string = (<ConstantTermAttribute>predicate.term.attributes[1]).value;
+						let o1:ShrdluBlock = this.bw.getObject(id1);
+						let o2:ShrdluBlock = this.bw.getObject(id2);
+						if (o1 != null && o2 != null) {
+							if (o2.type == SHRDLU_BLOCKTYPE_PYRAMID) return Number.POSITIVE_INFINITY;
+							if (o1.dx > o2.dx ||
+								o1.dz > o2.dz) return Number.POSITIVE_INFINITY;
+						}
+					} else if (predicate.term.functor.name == "space.inside.of" &&
+						predicate.term.attributes.length == 2 &&
+						(predicate.term.attributes[0] instanceof ConstantTermAttribute) &&
+						(predicate.term.attributes[1] instanceof ConstantTermAttribute)) {
+						let id1:string = (<ConstantTermAttribute>predicate.term.attributes[0]).value;
+						let id2:string = (<ConstantTermAttribute>predicate.term.attributes[1]).value;
+						let o1:ShrdluBlock = this.bw.getObject(id1);
+						let o2:ShrdluBlock = this.bw.getObject(id2);
+						if (o1 != null && o2 != null) {
+							if (o2.type != SHRDLU_BLOCKTYPE_BOX) return Number.POSITIVE_INFINITY;
+							if (o1.dx > o2.dx-2 ||
+								o1.dz > o2.dz-2) return Number.POSITIVE_INFINITY;
+						}
+					}
 				}
 			}
 			return minSteps;
