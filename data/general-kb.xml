@@ -561,6 +561,9 @@
 	<sentence provenance="background" sentence="~alone-in(X:[#id],LOC:[#id]); ~space.at(Y,LOC); ~character(Y); =(X,Y)"/>
 	<sentence provenance="background" sentence="property.opened(X:[#id]); property.closed(X)"/>
 	<sentence provenance="background" sentence="~property.opened(X:[#id]); ~property.closed(X)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id],Y:[#id]); ~space.at(Y,X)"/>
+	<sentence provenance="background" sentence="~space.at(X:[#id],L1:[#id]); ~space.at(L1,L2:[#id]); space.at(X,L2)"/>
+	<sentence provenance="background" sentence="~space.inside.of(X:[#id],Y:[#id]); ~space.inside.of(Y,X)"/>	
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(L1,L2:[#id]); space.inside.of(X,L2)"/>
 	<sentence provenance="background" sentence="~space.inside.of(X:[#id],L1:[#id]); ~space.inside.of(X,L2:[#id]); =(L1,L2); space.inside.of(L1,L2); space.inside.of(L2,L1)"/>
 	<sentence provenance="background" sentence="~time.current(X:[number]); ~time.current(Y:[number]); =(X,Y)"/>

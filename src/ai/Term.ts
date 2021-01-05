@@ -897,13 +897,11 @@ class Term {
 
         // for each attribute:
         let result:number = 1;
+        let tmp:number;
         for(let i:number = 0;i<this.attributes.length;i++) {
-            let att1:TermAttribute = this.attributes[i];
-            let att2:TermAttribute = t.attributes[i];
-
-            let tmp:number = Term.equalsNoBindingsAttribute(att1, att2);
-            if (tmp==-1) return -1;
-            if (tmp==0 && result==1) result = 0;
+            tmp = Term.equalsNoBindingsAttribute(this.attributes[i], t.attributes[i]);
+            if (tmp == -1) return -1;
+            if (tmp == 0) result = 0;
         }
 
         return result;

@@ -24,6 +24,7 @@ var INFERENCE_allow_variable_to_variable_substitutions:boolean = true;
 
 var INFERENCE_MAX_RESOLUTIONS_PER_STEP:number = 4000;
 var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 1000000;	// at this point, inference will stop
+// var INFERENCE_MAX_TOTAL_RESOLUTIONS:number = 400000;	// at this point, inference will stop
 
 // var INFERENCE_STEP_STATE_STILL_RUNNING:number = 0;
 var INFERENCE_STEP_STATE_DONE:number = 1;
@@ -248,7 +249,6 @@ class InterruptibleResolution
 						}
 					}
 					if (!found) {
-						// this.closed.push(newResolvent);
 						this.open.push(newResolvent);
 						// anyNewResolvent = true;
 					}
@@ -296,7 +296,7 @@ class InterruptibleResolution
 		// this.internal_step_state_index = 0;
 		if (this.open.length == 0) return [];
 
-		// pick the smallest (noticed that this is NOT a time bottleneck, so, although it can be easily done, there is little to gain optimizing this loop):
+		// pick the smallest (notice that this is NOT a time bottleneck, so, although it can be easily done, there is little to gain optimizing this loop):
 		let n1_idx:number = 0;
 		for(let i:number = 1; i<this.open.length; i++) {
 			if (this.open[i].sentence.terms.length < this.open[n1_idx].sentence.terms.length) {
@@ -687,43 +687,30 @@ class InterruptibleResolution
 	// --> If previousR subset r (the non contained do not have any variables that can affect the final bindings) -> filter
 	resultCanBeFilteredOut(r:InferenceNode, previousSentence:Sentence, previousBindings:Bindings): boolean
 	{
-		if (r.sentence.terms.length < previousSentence.terms.length) return false;
+		let rl:number = r.sentence.terms.length;
+		let psl:number = previousSentence.terms.length;
+		if (r.sentence.terms.length < psl) return false;
 		if (previousBindings != null && !r.bindings.equals(previousBindings)) return false;
 
-		for(let j:number = 0;j<previousSentence.terms.length;j++) {
+		let used:boolean[] = [];
+		for(let i:number = 0; i<rl; i++) {
+			used.push(false);
+		}
+
+		for(let j:number = 0; j<psl; j++) {
 			let found:boolean = false;
-			for(let i:number = 0;i<r.sentence.terms.length;i++) {
+			for(let i:number = 0; i<rl; i++) {
+				if (used[i]) continue;
 				if (r.sentence.sign[i] == previousSentence.sign[j] &&
 					r.sentence.terms[i].equalsNoBindings(previousSentence.terms[j]) == 1) {
 					found = true;
+					used[i] = true;
 					break;
 				}
 			}
-			if (!found) {
-				return false;
-			}
+			if (!found) return false;
 		}
 		return true;
-		// let anyNotFound:boolean = false;
-		// for(let i:number = 0;i<r.sentence.terms.length;i++) {
-		// 	let found:boolean = false;
-		// 	for(let j:number = 0;j<previousSentence.terms.length;j++) {
-		// 		if (r.sentence.sign[i] == previousSentence.sign[j] &&
-		// 			r.sentence.terms[i].equalsNoBindings(previousSentence.terms[j]) == 1) {
-		// 			found = true;
-		// 			break;
-		// 		}
-		// 	}
-		// 	if (!found) {
-		// 		return false;
-		// 	}
-		// }
-		// if (anyNotFound) {
-		// 	if (previousBindings == null) return false;
-		// 	return true;
-		// } else {
-		// 	return true;
-		// }
 	}
 
 
