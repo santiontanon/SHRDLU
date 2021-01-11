@@ -676,6 +676,7 @@ class NLContext {
 		let nounTerms:Term[] = [];
 		let pronounTerms:Term[] = [];
 		let adjectiveTerms:Term[] = [];
+		let negatedAdjectiveTerms:Term[] = [];
 		let determinerTerms:Term[] = [];
 		let relationTerms:Term[][] = [];
 		let otherTerms:Term[] = [];
@@ -698,6 +699,12 @@ class NLContext {
 					pronounTerms.push(tmp2);
 				} else if (tmp2.functor.is_a(adjectiveSort)) {
 					adjectiveTerms.push(tmp2);
+				} else if (tmp2.functor.name == "#not" && tmp2.attributes.length == 1 &&
+						   (tmp2.attributes[0] instanceof TermTermAttribute) &&
+						   ((<TermTermAttribute>tmp2.attributes[0]).term.functor.is_a(adjectiveSort))) {
+					negatedAdjectiveTerms.push((<TermTermAttribute>tmp2.attributes[0]).term);
+					// console.log("negated adjectives are not supported in #derefFromContext!");
+					return null;					
 				} else if (tmp2.functor.is_a(determinerSort)) {
 					determinerTerms.push(tmp2);
 				} else if (tmp2.functor.is_a(relationSort)) {

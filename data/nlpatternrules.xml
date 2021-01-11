@@ -3740,7 +3740,8 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
 			   		 'tell' 'me' 'the' noun(PROPERTY,N3) 'of'
 			   		 nounPhrase(X2, N2, P2, C2)
 			   		 ('!'|'.')* 
-    		   		 #derefFromContext(C2, OBJECT)"/>
+    		   		 #derefFromContext(C2, OBJECT)"
+    		   priority="150"/>
 
     <NLPattern name="q.query-who-is-prep-this"
     		   head="perf.q.query(LISTENER, V, #and(character(V), #cons(PREPOSITION, V, LOCATION)))"
@@ -5280,9 +5281,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.request.action.internal(LISTENER, action.give(LISTENER,OBJECT_LIST,SPEAKER))"
     		   body="'hand' 'over'
     		         nounPhraseListFromContext(OBJECT_LIST)"/>
+    <NLPattern name="request.give-hand-over-query"
+    		   head="perf.request.action.internal(LISTENER, action.give(LISTENER,V1,SPEAKER), QUERY1, [number.1])"
+    		   body="'hand' 'over'
+    		         ['the'] nounPhrase(X1, N1, P1, CO1)
+    		         #derefQuery(CO1, V1, QUERY1)"
+    		   priority="75"/>
     <NLPattern name="request.give-hand-over2"
     		   head="perf.request.action.internal(LISTENER, action.give(LISTENER,OBJECT_LIST,SPEAKER))"
     		   body="'hand' nounPhraseListFromContext(OBJECT_LIST) 'over'"/>
+    <NLPattern name="request.give-hand-over2-query"
+    		   head="perf.request.action.internal(LISTENER, action.give(LISTENER,V1,SPEAKER), QUERY1, [number.1])"
+    		   body="'hand' ['the'] nounPhrase(X1, N1, P1, CO1) 'over'
+    		   		 #derefQuery(CO1, V1, QUERY1)"
+    		   priority="75"/>
     <NLPattern name="action-can-give-query"
     		   head="perf.request.action.internal(LISTENER, action.give(LISTENER,QUERY_VARIABLE,TARGET), QUERY, [number.1])"
     		   body="verb('action.give'[symbol], N, P, T) 
@@ -5463,12 +5475,88 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"
     		   body="verb(VERB, N, P, [present-tense])
 			   		 nounPhrase(X2, N2, P2, C2)
-			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C2, OBJECT2)
+			   		 nounPhrase(X3, N3, P3, C3)
 			   		 #derefFromContext(C3, OBJECT3)
 			   		 #derefFromContext(subject-personal-pronoun('subject-personal-pronoun.you'[symbol],[grammatical-number],[gender],[second-person]), LISTENER)
 			   		 #notequal(OBJECT3, LISTENER)"
     		   priority="50"/>
+
+	<NLPattern name="action-2-objects-list"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJECT2, #list(O3, O4)))"
+    		   body="verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 nounPhrase(X3, N3, P3, C3) #derefFromContext(C3, O3)
+			   		 'and' 
+			   		 nounPhrase(X4, N4, P4, C4) #derefFromContext(C4, O4)"
+    		   priority="40"/>
+
+	<NLPattern name="action-object-query"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJECT2, V3), QUERY3, [number.1])"
+    		   body="verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 ['the'] nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 #derefQuery(C3, V3, QUERY3)"
+    		   priority="40"/>
+
+	<NLPattern name="action-object-object-and-query"
+    		   head="#list(perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3)),
+    		   			   perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, V4), QUERY4, [number.1]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
+    		   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 nounPhrase(X3, N3, P3, C3)
+			   		 #derefFromContext(C3, OBJECT3)
+			   		 'and'
+			   		 ['the'] nounPhrase(X4, N4, P4, C4)
+			   		 #derefQuery(C4, V4, QUERY4)
+			   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'.')*"
+    		   priority="45"/>
+
+	<NLPattern name="action-object-query-and-object"
+    		   head="#list(perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, V3), QUERY3, [number.1]),
+    		   			   perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT4)))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
+    		   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 ['the'] nounPhrase(X3, N3, P3, C3)
+			   		 #derefQuery(C3, V3, QUERY3)
+			   		 'and'
+			   		 nounPhrase(X4, N4, P4, C4)
+			   		 #derefFromContext(C4, OBJECT4)
+			   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'.')*"
+    		   priority="45"/>    		   
+
+	<NLPattern name="action-object-query-and-query"
+    		   head="#list(perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, V3), QUERY3, [number.1]),
+    		   			   perf.request.action(LISTENER, #cons(VERB, LISTENER, OBJECT2, V4), QUERY4, [number.1]))"
+    		   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+    		   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please'|'now') [('!'|',')]]
+    		   		 verb(VERB, N, P, [present-tense])
+			   		 nounPhrase(X2, N2, P2, C2)
+			   		 #derefFromContext(C2, OBJECT2)
+			   		 ['the'] nounPhrase(X3, N3, P3, C3)
+			   		 #derefQuery(C3, V3, QUERY3)
+			   		 'and'
+			   		 ['the'] nounPhrase(X4, N4, P4, C4)
+			   		 #derefQuery(C4, V4, QUERY4)
+			   		 ['again']
+    		         [[','] 'please'] 
+    		         ('!'|'.')*"
+    		   priority="40"/>
 
 	<NLPattern name="action-to"
 			   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, OBJECT2, OBJECT3))"

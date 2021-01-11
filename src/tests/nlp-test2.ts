@@ -1723,6 +1723,12 @@ NLParseTestUnifyingListener("what is the thing you are holding?", o.getSort("per
 NLParseTestUnifyingListener("which color is the white key?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, color('4'[#id], X))");
 NLParseTestUnifyingListener("which key is more to the east?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(key(X),#and(key(Y),#not(space.east.of(Y,X)))), #forall(Y,key(Y)))");
 NLParseTestUnifyingListener("who is more to the east?", o.getSort("performative"), context, 'etaoin', "perf.q.query('etaoin'[#id], X, #and(character(X),#and(character(Y),#not(space.east.of(Y,X)))), #forall(Y,character(Y)))");
+NLParseTestUnifyingListener("bring me the non red key", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], X), #and(#not(color(X,'red'[red])),key(X)), [number.1])");
+NLParseTestUnifyingListener("hand over the non red key", o.getSort("performative"), context, 'etaoin', "perf.request.action(V0:'etaoin'[#id], action.give(V0, X, '1'[#id]), #and(#not(color(X,'red'[red])),key(X)), [number.1])");
+NLParseTestUnifyingListener("bring me the crate and the white key", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], '5'[#id])), perf.request.action(V0, verb.bring(V0, '1'[#id], '4'[#id])))");
+NLParseTestUnifyingListener("bring me the crate and the non white key", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], '5'[#id])), perf.request.action(V0, verb.bring(V0, '1'[#id], X), #and(#not(color(X,'white'[white])),key(X)), [number.1]))");
+NLParseTestUnifyingListener("bring me the non white key and the crate", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], X), #and(#not(color(X,'white'[white])),key(X)), [number.1]), perf.request.action(V0, verb.bring(V0, '1'[#id], '5'[#id])))");
+
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
 console.log(nParametersPerPerformative);
