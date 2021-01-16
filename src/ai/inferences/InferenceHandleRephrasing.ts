@@ -53,6 +53,7 @@ class HandleRephrasing_InferenceEffect extends InferenceEffect {
 		if (inf.inferences[0].endResults.length != 0) {
 			let results:TermAttribute[] = [];
 			for(let result of inf.inferences[0].endResults) {
+				if (result == null || result.bindings == null) continue;
 				for(let [variable, value] of result.bindings.l) {
 					if (variable == queryVariable) {
 						// we have a result! check for duplicates:

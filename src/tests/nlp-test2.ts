@@ -1728,6 +1728,8 @@ NLParseTestUnifyingListener("hand over the non red key", o.getSort("performative
 NLParseTestUnifyingListener("bring me the crate and the white key", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], '5'[#id])), perf.request.action(V0, verb.bring(V0, '1'[#id], '4'[#id])))");
 NLParseTestUnifyingListener("bring me the crate and the non white key", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], '5'[#id])), perf.request.action(V0, verb.bring(V0, '1'[#id], X), #and(#not(color(X,'white'[white])),key(X)), [number.1]))");
 NLParseTestUnifyingListener("bring me the non white key and the crate", o.getSort("performative"), context, 'etaoin', "#list(perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], X), #and(#not(color(X,'white'[white])),key(X)), [number.1]), perf.request.action(V0, verb.bring(V0, '1'[#id], '5'[#id])))");
+NLParseTestUnifyingListener("could you please, put the white key and the red key in a crate?", o.getSort("performative"), context, 'etaoin', "#list(perf.q.action(V0:'etaoin'[#id], action.put-in(V0, '4'[#id], X), crate(X), N:[number.1]), perf.q.action(V0, action.put-in(V0, '6'[#id], X), crate(X), N))");
+NLParseTestUnifyingListener("could you please, put the white key and the red key in the crate?", o.getSort("performative"), context, 'etaoin', "#list(perf.q.action(V0:'etaoin'[#id], action.put-in(V0, '4'[#id], '5'[#id])), perf.q.action(V0, action.put-in(V0, '6'[#id], '5'[#id])))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

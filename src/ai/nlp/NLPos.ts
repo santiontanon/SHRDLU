@@ -1920,6 +1920,7 @@ this.addTokenPOS(new PartOfSpeech("third", "number.3", Term.fromString("ordinal(
 
   // I only define as phrasal verbs those for which there might be something in between the verb and the preposision, otherwise,
   // they are just regular verbs:
+  this.addPhrasalVerbPOS("verb.take-to","to", "bring","brings","brought","brought","bringing", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.wait-for","for", "wait","waits","waited","waited","waiting", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-on","on", "turn","turns","turned","turned","turning", false, multitokens_raw, o);
   this.addPhrasalVerbPOS("verb.switch-off","off", "turn","turns","turned","turned","turning", false, multitokens_raw, o);

@@ -35,7 +35,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			return true;
 		}			
 
-		// execute the memorize action:
+		// execute the take-to action:
 		console.log(ai.selfID + " take-to: " + intention);	
 
 		let destinationMap:A4Map = null;
@@ -49,6 +49,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 		let targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
 		if (targetObject != null) {
 			destinationMap = targetObject.map;
+			this.destinationMapName = destinationMap.name;
 			this.destinationX = targetObject.x;
 			this.destinationY = targetObject.y;
 			destinationLocation = ai.game.getAILocation(targetObject);
@@ -60,6 +61,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				let tmp2:[number,number] = targetLocation.centerWalkableCoordinatesInMap(ai.robot.map, ai.robot);
 				if (tmp2 != null) {
 					destinationMap = ai.robot.map;
+					this.destinationMapName = destinationMap.name;
 					this.destinationX = tmp2[0];
 					this.destinationY = tmp2[1];
 				} else {
@@ -112,6 +114,15 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			return true;
 		}
 
+		if (intention.functor.is_a(ai.o.getSort("verb.bring")) &&
+			(this.guideeObject instanceof A4Character) &&
+			(targetObject instanceof A4Item)) {
+			// This is not a "take-to", but a "give", change intention:
+			let term:Term = Term.fromString("action.give('"+ai.selfID+"'[#id], '"+targetObject.ID+"'[#id], '"+this.guideeObject.ID+"'[#id])", ai.o);
+			ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
+			return true;
+		}
+
 		ai.setNewAction(intention, requester, null, this);
 		ai.addCurrentActionLongTermTerm(intention);
 		ai.intentionsCausedByRequest.push(ir);
@@ -127,7 +138,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			app.trigger_achievement_complete_alert();
 		}
 
-		return this.executeContinuous(ai)
+		return true;
 	}
 
 
@@ -146,20 +157,14 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			let d:number = (this.guideeObject.x - ai.robot.x)*(this.guideeObject.x - ai.robot.x) + 
 						   (this.guideeObject.y - ai.robot.y)*(this.guideeObject.y - ai.robot.y);
 			if (d >= RobotTakeTo_IntentionAction.distanceThreshold*RobotTakeTo_IntentionAction.distanceThreshold) {
-				// too far! stop
+				// too far! stop to wait for the character
 				ai.currentAction_scriptQueue = null;
 				return false;
 			}
 
-			// if we are at the destination, stop!
-			if (ai.robot.x == this.destinationX && ai.robot.y == this.destinationY) {
-				// arrived!
-				return true;
-			}
-
 			// go to destination:
 	        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, ai.robot.map.name, null, 0, false, false);
+	        let s:A4Script = new A4Script(A4_SCRIPT_GOTO, this.destinationMapName, null, 0, false, false);
 	        s.x = this.destinationX;
 	        s.y = this.destinationY;
 	        q.scripts.push(s);
@@ -169,9 +174,15 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			if (ai.robot.inventory.indexOf(this.guideeObject) == -1) {
 				let object_l:A4Object[] = ai.game.findObjectByID(this.guideeObject.ID);
 				if (object_l.length == 1) {
+					if (object_l[0].x == this.destinationX && 
+						object_l[0].y == this.destinationY && 
+						object_l[0].map.name == this.destinationMapName) {
+						// object is at destination, we are done!
+						return true;
+					}
 					// we don't have the item, go pick it up!
 					let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
-					let s:A4Script = new A4Script(A4_SCRIPT_TAKE, ai.robot.map.name, null, 0, false, false);
+					let s:A4Script = new A4Script(A4_SCRIPT_TAKE, this.destinationMapName, null, 0, false, false);
 					s.x = this.guideeObject.x;
 					s.y = this.guideeObject.y;
 					q.scripts.push(s);
@@ -194,7 +205,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			        let s:A4Script = new A4Script(A4_SCRIPT_DROP, this.guideeObject.ID, null, 0, false, false);
 			        q.scripts.push(s);
 					ai.currentAction_scriptQueue = q;
-					return true;
+					return false;
 				} else {
 					// go to destination:
 			        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
@@ -203,7 +214,6 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			        s.y = this.destinationY;
 			        q.scripts.push(s);
 					ai.currentAction_scriptQueue = q;
-
 				}
 			}
 		} else {
@@ -235,6 +245,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			a.guideeObject = o;
 			a.destinationX = Number(xml.getAttribute("destinationX"));
 			a.destinationY = Number(xml.getAttribute("destinationY"));
+			a.destinationMapName = xml.getAttribute("destinationMapName");
 		}
 		return a;
 	}
@@ -243,6 +254,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 	guideeObject:A4Object = null;
 	destinationX:number = 0;
 	destinationY:number = 0;
+	destinationMapName:string = null;
 
 	static distanceThreshold:number = 64;
 }

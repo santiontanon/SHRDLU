@@ -5792,6 +5792,19 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefFromContext(C3, OBJ3)
     		         #derefFromContext(C4, OBJ4)"
     		   priority="150"/>
+
+    <NLPattern name="action-phrasal-2obj-2args"
+    		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, #list(OBJ3A, OBJ3B), OBJ4))"
+    		   body="phrasal-verb(VERB, N, [second-person], T, PREP)
+    		   		 nounPhrase(X3A, N3A, P3A, C3A)
+    		   		 'and'
+    		   		 nounPhrase(X3B, N3B, P3B, C3B)
+    		         #derefFromContext(C3A, OBJ3A)
+    		         #derefFromContext(C3B, OBJ3B)
+    		   		 #token(PREP)
+    		   		 nounPhrase(X4, N4, P4, C4)
+    		         #derefFromContext(C4, OBJ4)"/>
+
     <NLPattern name="action-phrasal2-a-noun"
     		   head="perf.request.action.internal(LISTENER, #cons(VERB, LISTENER, V), #cons(NOUN, V), [number.1])"
     		   body="phrasal-verb(VERB, N, [second-person], T, PREP)
@@ -6061,6 +6074,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		          indefinite-article('a'[symbol], [singular]) noun(NOUN, NUMBER))
     		         #derefFromContext(CO, OBJECT)
     		         #derefQuery(noun(NOUN, NUMBER), X, QUERY)"/>
+
+    <NLPattern name="action-phrasalverb-2objs-noun"
+    		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, #list(OBJ1, OBJ2), X), QUERY, [number.1])"
+    		   body="phrasal-verb(V2, N2, [second-person], T2, PREP)
+    		         nounPhrase(X3, N3, P3, CO)
+    		         #derefFromContext(CO, OBJ1)
+    		         'and'
+    		         nounPhrase(X4, N4, P4, CO2)
+    		         #derefFromContext(CO2, OBJ2)
+    		         #token(PREP)
+    		         (['some'] noun(NOUN, NUMBER) | 
+    		          indefinite-article('a'[symbol], [singular]) noun(NOUN, NUMBER))
+    		         #derefQuery(noun(NOUN, NUMBER), X, QUERY)"/>
+
     <NLPattern name="action-phrasalverb-obj-adjective-noun"
     		   head="perf.request.action.internal(LISTENER, #cons(V2, LISTENER, OBJECT, X), QUERY, [number.1])"
     		   body="phrasal-verb(V2, N2, [second-person], T2, PREP)
