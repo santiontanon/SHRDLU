@@ -67,11 +67,22 @@ class RobotTalk_IntentionAction extends IntentionAction {
 		}
 
 		if (txt != null) {
+			if (txt == "Ok" ||
+				txt == "I cannot do that") {
+				// prevent two "ok" or "I cannot do that" in a row when requests are parsed to more than one
+				// performative:
+				if (context.performatives[0].text == txt && 
+					context.performatives[0].timeStamp > ai.timeStamp - 60*60) {
+					// we are done, prevent repeating the text:
+					return true;
+				}
+			}
+
 			if (!ai.robot.issueCommandWithString(A4CHARACTER_COMMAND_TALK, txt, 0, ai.game)) {
 				return null;	// not yet!
 			}
 
-			// see if we also need to create a speech bubble, since david can hear this character through the communicator:
+			// see if we also need to create a speech bubble, since the player can hear this character through the communicator:
 			if (ai.game.communicatorConnectedTo == ai.selfID) {
 				ai.game.currentPlayer.map.textBubbles.push(
 					[new A4TextBubble(ai.selfID + ": " + txt, 32, fontFamily8px, 6, 8, ai.game, null),
