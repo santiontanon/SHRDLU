@@ -57,13 +57,14 @@ var A4_SCRIPT_ANIMATION:number = 49;
 var A4_SCRIPT_ATTRIBUTE:number = 52;
 var A4_SCRIPT_INMAPCHECK:number = 53;
 var A4_SCRIPT_HASITEMCHECK:number = 54;
+var A4_SCRIPT_OTHERTYPECHECK:number = 12;
 
 var A4_SCRIPT_ADDPERCEPTIONPROPERTY:number = 55;
 var A4_SCRIPT_REMOVEPERCEPTIONPROPERTY:number = 56;
 
 var A4_SCRIPT_IN_VEHICLE:number = 14;
 
-var A4_N_SCRIPTS:number = 69;        // #12, #15 and #29 are available
+var A4_N_SCRIPTS:number = 69;        // #15 and #29 are available
 var A4_MAX_N_SCRIPTS:number = 100;   // some space for custom scripts 
 
 var SCRIPT_FINISHED:number = 0;
@@ -129,6 +130,7 @@ scriptNames[A4_SCRIPT_ANIMATION] = "animation";
 scriptNames[A4_SCRIPT_ATTRIBUTE] = "attribute";
 scriptNames[A4_SCRIPT_INMAPCHECK] = "inMapCheck";
 scriptNames[A4_SCRIPT_HASITEMCHECK] = "hasItemCheck";
+scriptNames[A4_SCRIPT_OTHERTYPECHECK] = "otherTypeCheck";
 
 scriptNames[A4_SCRIPT_ADDPERCEPTIONPROPERTY] = "addPerceptionProperty";
 scriptNames[A4_SCRIPT_REMOVEPERCEPTIONPROPERTY] = "removePerceptionProperty";
@@ -1345,6 +1347,13 @@ scriptFunctions[A4_SCRIPT_INMAPCHECK] = function(script:A4Script, o:A4Object, ma
 }
 
 
+scriptFunctions[A4_SCRIPT_OTHERTYPECHECK] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
+{
+    if (otherCharacter != null && otherCharacter.sort.is_a_string(script.ID)) return SCRIPT_FINISHED;
+    return SCRIPT_FAILED;
+}
+
+
 scriptFunctions[A4_SCRIPT_HASITEMCHECK] = function(script:A4Script, o:A4Object, map:A4Map, game:A4Game, otherCharacter:A4Character) : number
 {
     if (o.isCharacter()) {
@@ -1692,6 +1701,10 @@ class A4Script {
                         s.text = xml.getAttribute("type");
                         break;
 
+                    case A4_SCRIPT_OTHERTYPECHECK:
+                        s.ID = xml.getAttribute("type");
+                        break;
+
                     case A4_SCRIPT_ADDPERCEPTIONPROPERTY:
                     case A4_SCRIPT_REMOVEPERCEPTIONPROPERTY:
                         s.ID = xml.getAttribute("property");
@@ -1982,6 +1995,11 @@ class A4Script {
             {
                 if (this.ID!=null) xmlString += " inventory=\"" + this.ID + "\"";
                 if (this.text!=null) xmlString += " type=\"" + this.ID + "\"";
+                break;
+            }
+            case A4_SCRIPT_OTHERTYPECHECK:
+            {
+                xmlString += " type=\"" + this.ID + "\"";
                 break;
             }
 

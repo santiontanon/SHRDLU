@@ -5907,6 +5907,20 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		         #derefFromContext(CO, TARGET)"
     		   priority="200"/>
 
+    <NLPattern name="action-drop-2objects-to-floor"
+    		   head="perf.request.action.internal(LISTENER, action.drop(LISTENER, #list(TARGET2, TARGET3)))"
+    		   body="(verb('action.drop'[symbol], N, [second-person], T) | 
+    		   		  verb('verb.put'[symbol], N, [second-person], T) |
+    		   		  verb('verb.leave'[symbol], N, [second-person], T))
+    		   		 nounPhrase(X2, N2, P2, CO2)
+    		   		 #derefFromContext(CO2, TARGET2)
+    		   		 'and'
+    		   		 nounPhrase(X3, N3, P3, CO3)
+    		   		 #derefFromContext(CO3, TARGET3)
+    		   		 (preposition('space.at'[space.at]) | preposition('space.directly.on.top.of'[space.directly.on.top.of])) 
+    		   		 'the' noun('ground'[ground], [singular])"
+    		   priority="200"/>
+
     <NLPattern name="action-drop-query-to-floor"
     		   head="perf.request.action.internal(LISTENER, action.drop(LISTENER, QV), QUERY, [number.1])"
     		   body="(verb('action.drop'[symbol], N, [second-person], T) | 

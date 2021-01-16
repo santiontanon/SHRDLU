@@ -254,15 +254,17 @@ class A4RuleBasedAI extends RuleBasedAI {
 		for(let o of l) {
 			let tile_ox:number = Math.floor(o.x/map.tileWidth);
 			let tile_oy:number = Math.floor(o.y/map.tileHeight);
+			let tile_ow:number = Math.floor(o.getPixelWidth()/map.tileWidth);
+			let tile_oh:number = Math.floor(o.getPixelHeight()/map.tileWidth);
 			let offset:number = tile_ox + tile_oy*map.width;
 			// - Doors are usually in between visibility regions, and thus, we just perceive them all, and that's it!
 			// - East cave is also an exception, since the rocks are just to prevent the player from seeing Shrdlu, but
 			//   Shrdlu should be able to hear the player from a different visibilityRegion
 			if (map.visibilityRegions[offset] == visibilityRegion ||
 				(tile_ox>0 && map.visibilityRegions[offset-1] == visibilityRegion) ||
-				(tile_ox<map.width-1 && map.visibilityRegions[offset+1] == visibilityRegion) ||
+				(tile_ox<map.width-tile_ow && map.visibilityRegions[offset+tile_ow] == visibilityRegion) ||
 				(tile_oy>0 && map.visibilityRegions[offset-map.width] == visibilityRegion) ||
-				(tile_oy<map.height-1 && map.visibilityRegions[offset+map.width] == visibilityRegion) ||
+				(tile_oy<map.height-tile_oh && map.visibilityRegions[offset+tile_oh*map.width] == visibilityRegion) ||
 				o instanceof A4Door ||
 				o.ID == "tardis-broken-cable" || 	// exception: since this is inside the wall, they don't see it otherwise!
 			    map.name == "East Cave") {

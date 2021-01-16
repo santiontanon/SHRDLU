@@ -49,7 +49,11 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 		let targetObject:A4Object = ai.game.findObjectByIDJustObject(targetID);
 		if (targetObject != null) {
 			destinationMap = targetObject.map;
-			this.destinationMapName = destinationMap.name;
+			if (destinationMap != null) {
+				this.destinationMapName = destinationMap.name;
+			} else {
+				this.destinationMapName = ai.robot.map.name;
+			}
 			this.destinationX = targetObject.x;
 			this.destinationY = targetObject.y;
 			destinationLocation = ai.game.getAILocation(targetObject);
@@ -122,6 +126,13 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
 			return true;
 		}
+		if ((this.guideeObject instanceof A4Item) &&
+ 		    (targetObject instanceof A4Character)) {
+			// This is not a "take-to", but a "give", change intention:
+			let term:Term = Term.fromString("action.give('"+ai.selfID+"'[#id], '"+this.guideeObject.ID+"'[#id], '"+targetObject.ID+"'[#id])", ai.o);
+			ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
+			return true;
+		} 
 
 		ai.setNewAction(intention, requester, null, this);
 		ai.addCurrentActionLongTermTerm(intention);

@@ -2575,7 +2575,7 @@ class RuleBasedAI {
 		str += "</longTermMemory>\n";
 
 		for(let et of this.currentEpisodeTerms) {
-			str += "<currentEpisodeTerm str=\""+et+"\">\n";
+			str += "<currentEpisodeTerm str=\""+et+"\"/>\n";
 		}
 
 		for(let t of this.intentions) {

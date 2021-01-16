@@ -490,12 +490,12 @@ class RobotGo_IntentionAction extends IntentionAction {
 
  		// ai.setNewAction(intention, requester, null, null);
 		// if (stepByStepMovement || ai.robot.isInVehicle()) {
-			if (!this.executeContinuous(ai)) {
+			// if (!this.executeContinuous(ai)) {
 				this.needsContinuousExecution = true;
 		        ai.setNewAction(intention, requester, null, this);
-			} else {
-				this.needsContinuousExecution = false;
-			}
+			// } else {
+			// 	this.needsContinuousExecution = false;
+			// }
 		// } else {
 		// 	// go to destination:
 	 //        let q:A4ScriptExecutionQueue = new A4ScriptExecutionQueue(ai.robot, ai.robot.map, ai.game, null);
@@ -585,6 +585,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 			if (this.targetObjectID != null) {
 				let targetObject:A4Object[] = ai.game.findObjectByID(this.targetObjectID);
 				if (targetObject != null && targetObject.length>0 &&
+					ai.robot.map == targetObject[0].map &&
 					ai.robot.pixelDistance(targetObject[0]) == 0) {
 					// we made it!
 					return true;

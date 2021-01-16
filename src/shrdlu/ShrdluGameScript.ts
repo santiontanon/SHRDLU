@@ -2150,7 +2150,6 @@ class ShrdluGameScript {
 			if (this.player_has_asked_to_take_shrdlu) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:permission-to(V3:'player'[#id], action.take('player'[#id], 'shrdlu'[#id])), time.already(X)))");
 			} else {
-				this.player_has_asked_to_take_shrdlu = true;
 				// The player has asked to take SHRDLU
 				if (this.act_2_state < 107) {
 					// we have not yet found SHRDLU:
@@ -2163,6 +2162,7 @@ class ShrdluGameScript {
 					this.etaoinSays("perf.ack.ok('player'[#id])");
 					this.game.etaoinAI.addLongTermTerm(Term.fromString("permission-to(V3:'player'[#id], action.take('player'[#id], 'shrdlu'[#id]))",this.game.ontology), PERCEPTION_PROVENANCE);
 					this.game.setStoryStateVariable("permission-to-take-shrdlu", "true");
+					this.player_has_asked_to_take_shrdlu = true;
 				}
 			}
 		}
