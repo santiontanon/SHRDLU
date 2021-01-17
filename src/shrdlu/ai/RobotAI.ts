@@ -72,7 +72,8 @@ class RobotAI extends A4RuleBasedAI {
         }
 
         // get out of the way of the player:
-        if (this.robot.map == this.game.currentPlayer.map && this.robot.scriptQueues.length == 0 && this.visionActive) {
+        if (this.getOutOfTheWay &&
+        	this.robot.map == this.game.currentPlayer.map && this.robot.scriptQueues.length == 0 && this.visionActive) {
         	let d:number = this.robot.pixelDistance(this.game.currentPlayer);
         	if (d == 0) {
         		// see if the player were to advance in its current facing will collide with us, and in this case, move way:
@@ -114,6 +115,15 @@ class RobotAI extends A4RuleBasedAI {
         }
 
 		this.executeScriptQueues();
+	}
+
+
+	isIdle() : boolean
+	{
+		if (!this.robot.isIdle()) return false;
+		if (this.currentActionHandler != null ||
+			this.currentAction_scriptQueue != null) return false;
+		return super.isIdle();
 	}
 
 
@@ -540,4 +550,5 @@ class RobotAI extends A4RuleBasedAI {
 	etaoin_perception_term:Term = null;
 
 	perceptionRadius:number = 16;
+	getOutOfTheWay:boolean = true;
 }

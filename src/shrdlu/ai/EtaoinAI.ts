@@ -94,6 +94,13 @@ class EtaoinAI extends A4RuleBasedAI {
 	}	
 
 
+	isIdle() : boolean
+	{
+		if (this.game.currentPlayer.map.textBubbles.length != 0) return false;
+		return super.isIdle();
+	}
+
+
 	attentionAndPerception()
 	{
 		// attention selection:

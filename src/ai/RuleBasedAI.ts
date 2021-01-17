@@ -589,6 +589,27 @@ class RuleBasedAI {
 
 		// 6) Intention execution:
 		this.executeIntentions();
+
+		if (this.queuedParsedPerformatives.length > 0 && this.isIdle()) {
+			let tmp:[Term, string, string, NLParseRecord] = this.queuedParsedPerformatives[0];
+			this.reactToParsedPerformativeInternal(tmp[0], tmp[1], tmp[2], tmp[3]);
+			this.queuedParsedPerformatives.splice(0, 1);
+		} 
+	}
+
+
+	isIdle() : boolean
+	{
+		let expectingAnswerToQuestion:boolean = false;
+		for(let context of this.contexts) {
+			if (context.expectingAnswerToQuestion_stack.length > 0) {
+				expectingAnswerToQuestion = true;
+				break;
+			}
+		}
+		return this.intentions.length == 0 && this.queuedIntentions.length == 0 &&
+			   !expectingAnswerToQuestion &&
+			   this.currentInferenceProcess == null && this.queuedInferenceProcesses.length == 0;
 	}
 
 
@@ -896,42 +917,62 @@ class RuleBasedAI {
 
 	reactToParsedPerformatives(performatives:TermAttribute[], text:string, speaker:string, parse:NLParseRecord)
 	{
-		let toAdd:Term[] = [];
 		if (speaker != this.selfID) {
+			// When an utterance results in more than one performative, we just process the first, and queue the
+			// rest. This is because requests consisting of several actions in a row would fail otherwise. 
+			// For example: "open the crate and take a cable from it". The "take a cable from it" would fail until
+			// the crate is open, since the crate is innitially closed.
+			let first:boolean = true;
 			for(let performative_att of performatives) {
-				if (performative_att instanceof TermTermAttribute) {
+				if (first) {
 					let performative:Term = (<TermTermAttribute>performative_att).term;
 					// is it talking to us?
 					let context:NLContext = this.contextForSpeaker(speaker);
 
-					if (this.talkingToUs(context, speaker, performative)) {
-		    			// Since now we know they are talking to us, we can unify the LISTENER with ourselves:
-		    			this.terminateConversationAfterThisPerformative = false;
-						let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
-						if (perf2 == null) perf2 = performative;
-						let nIntentions:number = this.intentions.length;
-						let nQueuedIntentions:number = this.queuedIntentions.length;
-						let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
-						if (tmp!=null) toAdd = toAdd.concat(tmp);
-						let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, null, this.o, this.timeStamp);
-						// add this performative to all the new intentions:
-						if (nlcp.length > 0) {
-							for(let i:number = nIntentions;i<this.intentions.length;i++) {
-								if (this.intentions[i].requestingPerformative == null) {
-									this.intentions[i].requestingPerformative = nlcp[0];
-								}
-							}
-							for(let i:number = nQueuedIntentions;i<this.queuedIntentions.length;i++) {
-								if (this.queuedIntentions[i].requestingPerformative == null) {
-									this.queuedIntentions[i].requestingPerformative = nlcp[0];
-								}
-							}
-						}
-						if (this.terminateConversationAfterThisPerformative) context.endConversation();
+					if (this.talkingToUs(context, speaker, performative)) {					
+						this.reactToParsedPerformativeInternal(performative, text, speaker, parse);
+						first = false;
+					} else {
+						// not talking to us, ignore the rest
+						break;
 					}
+				} else {
+					let performative:Term = (<TermTermAttribute>performative_att).term;
+					this.queuedParsedPerformatives.push([performative, text, speaker, parse]);
 				}
 			}
 		}
+	}
+
+
+	reactToParsedPerformativeInternal(performative:Term, text:string, speaker:string, parse:NLParseRecord)
+	{
+		let toAdd:Term[] = [];
+		let context:NLContext = this.contextForSpeaker(speaker);
+		// Since now we know they are talking to us, we can unify the LISTENER with ourselves:
+		this.terminateConversationAfterThisPerformative = false;
+		let perf2:Term = this.naturalLanguageParser.unifyListener(performative, this.selfID);
+		if (perf2 == null) perf2 = performative;
+		let nIntentions:number = this.intentions.length;
+		let nQueuedIntentions:number = this.queuedIntentions.length;
+		let tmp:Term[] = this.reactToPerformative(perf2, new ConstantTermAttribute(speaker, this.cache_sort_id), context);
+		if (tmp!=null) toAdd = toAdd.concat(tmp);
+		let nlcp:NLContextPerformative[] = context.newPerformative(speaker, text, perf2, parse, null, null, this.o, this.timeStamp);
+		// add this performative to all the new intentions:
+		if (nlcp.length > 0) {
+			for(let i:number = nIntentions;i<this.intentions.length;i++) {
+				if (this.intentions[i].requestingPerformative == null) {
+					this.intentions[i].requestingPerformative = nlcp[0];
+				}
+			}
+			for(let i:number = nQueuedIntentions;i<this.queuedIntentions.length;i++) {
+				if (this.queuedIntentions[i].requestingPerformative == null) {
+					this.queuedIntentions[i].requestingPerformative = nlcp[0];
+				}
+			}
+		}
+		if (this.terminateConversationAfterThisPerformative) context.endConversation();
+
 		for(let t2 of toAdd) {
 			console.log("reactToParsedPerformatives.toAdd: " + t2);
 			this.addShortTermTerm(t2, REACTION_PROVENANCE);
@@ -2729,6 +2770,7 @@ class RuleBasedAI {
 
 	contexts:NLContext[] = [];	// contexts for natural language processing (one per entity we speak to)
 	terminateConversationAfterThisPerformative:boolean = false;
+	queuedParsedPerformatives:[Term, string, string, NLParseRecord][] = [];
 
 	currentEpisodeTerms:string[] = [];	// Terms that are to be remembered or the current "episode" (i.e., while the AI is executing an action),
 										// but that will be erased when a new action is started.
