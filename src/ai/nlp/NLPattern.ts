@@ -727,10 +727,8 @@ class NLPattern {
 			querySubjectID_l = [dereffedOwner[0]];
 		} else if (aDeterminer != null) {
 			queryFunctor = aDeterminer.attributes[0];
-		} else if (definiteArticle != null ||
-				   demonstrativeDeterminer != null ||
+		} else if (demonstrativeDeterminer != null ||
 				   demonstrativePronoun != null) {
-			// in this case, this is not a query expression, probably a context dereference
 			return null;
 		} else if (nounTerm != null) {
 			potentialQueryFunctor = nounTerm.attributes[0];
@@ -783,6 +781,12 @@ class NLPattern {
 					//console.log("Not considered: " + t);
 				}
 			}
+		}
+
+		if (definiteArticle != null && negatedAdjectives.length == 0) {
+   			// Notice the exception for when we have a definite article, but negated articles,
+			// this allows parsing expressions like "the non blue key" as queries
+			return null;
 		}
 
 		let verbOrRelationTerm:TermAttribute = null;	// this is so that if we have an adverb of time, we know which term to qualify
