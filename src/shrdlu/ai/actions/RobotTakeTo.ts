@@ -23,6 +23,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -32,6 +33,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}			
 
@@ -86,6 +88,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -105,6 +108,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -115,6 +119,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -123,15 +128,19 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			(targetObject instanceof A4Item)) {
 			// This is not a "take-to", but a "give", change intention:
 			let term:Term = Term.fromString("action.give('"+ai.selfID+"'[#id], '"+targetObject.ID+"'[#id], '"+this.guideeObject.ID+"'[#id])", ai.o);
-			ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
-			return true;
+			ir.action = term;
+			// ai.intentions.push(ir);
+			// ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
+			return null;
 		}
 		if ((this.guideeObject instanceof A4Item) &&
  		    (targetObject instanceof A4Character)) {
 			// This is not a "take-to", but a "give", change intention:
 			let term:Term = Term.fromString("action.give('"+ai.selfID+"'[#id], '"+this.guideeObject.ID+"'[#id], '"+targetObject.ID+"'[#id])", ai.o);
-			ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
-			return true;
+			ir.action = term;
+			// ai.intentions.push(ir);
+			// ai.intentions.push(new IntentionRecord(term, requester, ir.requestingPerformative, null, ai.timeStamp));
+			return null;
 		} 
 
 		ai.setNewAction(intention, requester, null, this);
@@ -149,6 +158,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 			app.trigger_achievement_complete_alert();
 		}
 
+		this.ir.succeeded = true;	// temporarily set this to success
 		return true;
 	}
 
@@ -204,6 +214,7 @@ class RobotTakeTo_IntentionAction extends IntentionAction {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+ai.currentAction_requester+"))", ai.o);
 						let cause:Term = Term.fromString("#not(verb.have('"+ai.selfID+"'[#id], '"+this.guideeObject.ID+"'[#id]))", ai.o);
 						ai.queueIntentionRecord(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
+						this.ir.succeeded = false;
 						return true;
 					}
 				}

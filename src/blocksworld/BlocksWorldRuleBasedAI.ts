@@ -161,6 +161,13 @@ class BlocksWorldRuleBasedAI extends RuleBasedAI {
 											  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
 											   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
 				this.currentActionHandler = null;		
+
+				// if (this.currentActionHandler.ir.succeeded == null) {
+				// 	throw new Error("continuous action handler for " + this.currentActionHandler.ir.action + "  did not set succeeded!");
+				// }			
+				if (!this.currentActionHandler.ir.succeeded) {
+					this.removeQueuedPerformativesDependingOnIntentionSuccess(this.currentActionHandler.ir);
+				}
         	}
         }
 

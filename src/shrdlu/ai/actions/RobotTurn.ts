@@ -10,6 +10,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -23,6 +24,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -41,6 +43,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 					let term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
 
@@ -111,6 +114,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 					let term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -121,6 +125,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -131,6 +136,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -153,6 +159,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}		
 
@@ -173,6 +180,7 @@ class RobotTurn_IntentionAction extends IntentionAction {
 			let term:Term = Term.fromString(tmp, ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
+		ir.succeeded = true;
 		return true;
 	}
 

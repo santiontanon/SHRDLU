@@ -11,6 +11,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -20,6 +21,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}			
 
@@ -30,6 +32,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -48,6 +51,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 						let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 				if (targetObjectL.length != 1) {
@@ -55,6 +59,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 					return true;
 				}
 				targetObject = targetObjectL[0];
@@ -125,6 +130,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -149,6 +155,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 		
@@ -158,6 +165,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -188,6 +196,7 @@ class RobotPushPull_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
+		ir.succeeded = true;
 		return true;
 	}
 

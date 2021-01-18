@@ -11,6 +11,7 @@ class RobotReboot_IntentionAction extends IntentionAction {
 	
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 

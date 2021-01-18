@@ -16,6 +16,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -38,6 +39,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term1, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				ai.intentions.push(new IntentionRecord(term2, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -46,7 +48,8 @@ class RobotFollow_IntentionAction extends IntentionAction {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
-			}				
+			}			
+			ir.succeeded = false;	
 			return true;
 		}
 		let targetID:string = (<ConstantTermAttribute>(intention.attributes[1])).value;
@@ -57,6 +60,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+targetID+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}				
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -68,6 +72,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}				
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -85,6 +90,7 @@ class RobotFollow_IntentionAction extends IntentionAction {
         ai.addCurrentActionLongTermTerm(intention);
 
 		this.executeContinuous(ai);
+		ir.succeeded = true;
 		return true;
 	}
 

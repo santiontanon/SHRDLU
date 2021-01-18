@@ -10,6 +10,7 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 
 		if (intention.functor.is_a(ai.o.getSort("action.answer.whois.name"))) {
@@ -57,6 +58,9 @@ class AnswerWhoIs_IntentionAction extends IntentionAction {
 																	[intention.attributes[2],
 																	 new VariableTermAttribute(ai.o.getSort("symbol"), "NAME")])],[false])];
 					ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerWho_InferenceEffect(intention)));
+					// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+					// that is then replaced with true/false after inference/continuous is done
+					ir.succeeded = true;
 				} else {
 					console.error("executeIntention answer whois.noname: attribute[1] or attribute[2] was not a ConstantTermAttribute: " + intention);
 					ir.succeeded = false;

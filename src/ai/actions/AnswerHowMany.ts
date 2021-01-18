@@ -9,6 +9,7 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 
 		console.log(ai.selfID + " answer howmany: " + intention.attributes[0] + " - " + intention.attributes[1] + " - "  + intention.attributes[2]);
@@ -69,6 +70,9 @@ class AnswerHowMany_IntentionAction extends IntentionAction {
 			}
 //				console.log("executeIntention answer query: negated_s = " + negated_s);
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [[negated_s]], 1, 0, true, null, new AnswerHowMany_InferenceEffect(intention)));
+			// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+			// that is then replaced with true/false after inference/continuous is done
+			ir.succeeded = true;
 		} else {
 			console.error("executeIntention answer howmany: attribute[2] was not a TermTermAttribute: " + intention);
 			ir.succeeded = false;

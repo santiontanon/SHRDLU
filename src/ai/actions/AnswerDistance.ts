@@ -9,6 +9,7 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -58,6 +59,9 @@ class AnswerDistance_IntentionAction extends IntentionAction {
 			let newPerformative:Term = Term.fromString("action.answer.distance('"+ai.selfID+"'[#id], "+requester+", perf.q.query('"+ai.selfID+"'[#id], DISTANCE, distance('"+o1ID+"'[#id],'"+o2ID+"'[#id], DISTANCE)))", ai.o);
 			let negated_s_l:Sentence[] = Term.termToSentences(new Term(ai.o.getSort("#not"), [(<TermTermAttribute>(newPerformative.attributes[2])).term.attributes[2]]), ai.o);
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [negated_s_l], 1, 0, false, null, new AnswerQuery_InferenceEffect(newPerformative, ir.requestingPerformative)));
+			// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+			// that is then replaced with true/false after inference/continuous is done
+			ir.succeeded = true;
 		}
 		// if (requester != null) {
 		// 	let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+intention.attributes[1]+",'unknown'[symbol]))", ai.o);

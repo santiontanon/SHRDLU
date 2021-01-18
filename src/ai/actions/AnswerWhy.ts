@@ -9,6 +9,7 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -130,7 +131,10 @@ class AnswerWhy_IntentionAction extends IntentionAction {
 				ai.intentions.push(new IntentionRecord(term, requester, null, null, ai.timeStamp));
 			}
 			ir.succeeded = false;
-		}			
+		}
+		// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+		// that is then replaced with true/false after inference/continuous is done
+		ir.succeeded = true;
 		return true;
 
 	}

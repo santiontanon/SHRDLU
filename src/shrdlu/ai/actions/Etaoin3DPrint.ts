@@ -28,6 +28,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -73,6 +74,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(X:verb.know-how(E:'"+ai.selfID+"'[#id], action.print(E, ["+toPrint.name+"])))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;				
 			}
 
@@ -118,6 +120,7 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 					term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", #not(X:verb.have('"+bestPrinter.ID+"'[#id], ["+bestMissingMaterials[0]+"]))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;								
 			}
 
@@ -140,12 +143,13 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 			app.achievement_interact_3d_printed_one_of_each_kind[recipe_idx] = true;
 			app.achievement_nlp_all_etaoin_actions[5] = true;
 			app.trigger_achievement_complete_alert();
-
+			ir.succeeded = true;
 		} else {
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
-			}			
+			}
+			ir.succeeded = false;
 		}
 		return true;
 	}

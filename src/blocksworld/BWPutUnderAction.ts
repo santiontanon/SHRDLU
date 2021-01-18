@@ -17,6 +17,7 @@ class BWPutUnder_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:BlocksWorldRuleBasedAI = <BlocksWorldRuleBasedAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 
@@ -25,6 +26,7 @@ class BWPutUnder_IntentionAction extends IntentionAction {
 
 		let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 		ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+		this.ir.succeeded = false;
 		return true;		
 	}
 

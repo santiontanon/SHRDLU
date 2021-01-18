@@ -9,6 +9,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -61,6 +62,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 						if (context.performatives[0].text == txt && 
 							context.performatives[0].timeStamp > ai.timeStamp - 60*60) {
 							// we are done, prevent repeating the text:
+							this.ir.succeeded = true;	// temporarily set this to success
 							return true;
 						}
 					}
@@ -103,6 +105,7 @@ class EtaoinTalk_IntentionAction extends IntentionAction {
 			console.error("EtaoinAI.executeIntention: malformed intention: " + intention.toString());
 		}
 
+		this.ir.succeeded = true;	// temporarily set this to success
 		return true;
 	}
 

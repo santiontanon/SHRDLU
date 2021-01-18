@@ -9,6 +9,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 	
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -74,6 +75,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 				if (context.performatives[0].text == txt && 
 					context.performatives[0].timeStamp > ai.timeStamp - 60*60) {
 					// we are done, prevent repeating the text:
+					this.ir.succeeded = true;	// temporarily set this to success
 					return true;
 				}
 			}
@@ -99,6 +101,7 @@ class RobotTalk_IntentionAction extends IntentionAction {
 			return false;	// empty txt!
 		}
 
+		this.ir.succeeded = true;
 		return true;
 	}
 

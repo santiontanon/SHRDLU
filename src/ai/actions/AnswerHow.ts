@@ -9,6 +9,7 @@ class AnswerHow_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -52,6 +53,9 @@ class AnswerHow_IntentionAction extends IntentionAction {
 															[new TermTermAttribute(action),
 															 new VariableTermAttribute(ai.o.getSort("any"), "HOW")])],[false])];
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1], 1, 0, false, null, new AnswerHow_InferenceEffect(intention)));
+			// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+			// that is then replaced with true/false after inference/continuous is done
+			ir.succeeded = true;
 			/*
 			if (requester != null) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);

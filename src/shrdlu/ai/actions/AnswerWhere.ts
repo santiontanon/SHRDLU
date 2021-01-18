@@ -10,6 +10,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 
 //		let where_answer:number = INFERENCE_RECORD_EFFECT_ANSWER_WHEREIS;
@@ -38,17 +39,20 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 					if (newIntention != null) {
 						// intention = newIntention;
 						ai.intentions.push(new IntentionRecord(newIntention, newIntention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = true;
 						return true;
 					} else {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+					ir.succeeded = false;
 					return true;
 				}
 			}
@@ -91,18 +95,21 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 							// this should never happen
 							let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 							ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+							ir.succeeded = false;
 							return true;
 						}
 					} else {
 						// this should never happen
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+					ir.succeeded = false;
 					return true;
 				}
 			}
@@ -127,7 +134,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 													new Term(ai.o.getSort("="),
 															[where2, comrange])],[false, true])];
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
-
+			ir.succeeded = true;
 		} else if (intention.attributes.length >= 5 &&
 			      (intention.attributes[2] instanceof VariableTermAttribute) &&
 			      (intention.attributes[3] instanceof VariableTermAttribute) &&
@@ -160,7 +167,7 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 															[intention.attributes[1],
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
-			
+			ir.succeeded = true;
 		} else if (intention.attributes.length >= 5 &&
 			       (intention.attributes[2] instanceof ConstantTermAttribute) &&
 			       (intention.attributes[3] instanceof VariableTermAttribute) &&
@@ -210,10 +217,12 @@ class AnswerWhere_IntentionAction extends IntentionAction {
 															 new VariableTermAttribute(ai.o.getSort("#id"), "WHERE")])],[false])];
 //				console.log("target2: " + target2);
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additionalTerms, [target1,target2], 1, 0, false, null, new AnswerWhere_InferenceEffect(intention, intention.functor == ai.o.getSort("action.answer.whereto"))));
+			ir.succeeded = true;
 		} else {
 			console.error("executeIntention answer where: attribute[2] was not a ConstantTermAttribute nor a VariableTermAttribute: " + intention.attributes[2]);
 		}
 
+		ir.succeeded = true;
 		return true;
 	}
 

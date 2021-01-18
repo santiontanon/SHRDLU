@@ -10,6 +10,7 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -91,6 +92,9 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		    }
 		}
 		ai.queuedInferenceProcesses.push(new InferenceRecord(ai, additional_sentences, targets, 1, 0, false, timeTerm, new AnswerPredicate_InferenceEffect(intention)));
+		// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+		// that is then replaced with true/false after inference/continuous is done
+		ir.succeeded = true;
 		return true;
 	}
 

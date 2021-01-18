@@ -17,6 +17,7 @@ class BWTake_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:BlocksWorldRuleBasedAI = <BlocksWorldRuleBasedAI>ai_raw;
 		let world:ShrdluBlocksWorld = ai.world;
 		let requester:TermAttribute = ir.requester;
@@ -29,6 +30,7 @@ class BWTake_IntentionAction extends IntentionAction {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			let cause:Term = Term.fromString("verb.have('"+ai.selfID+"'[#id], '"+world.objectInArm.ID+"'[#id])", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -68,6 +70,7 @@ class BWTake_IntentionAction extends IntentionAction {
 			ai.addCurrentActionLongTermTerm(intention);
 			ai.currentActionHandler = this;
 			this.executeContinuous(ai);		
+			this.ir.succeeded = true;
 			return true;
 		}
 
@@ -77,6 +80,7 @@ class BWTake_IntentionAction extends IntentionAction {
 		} else {
 			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
+		this.ir.succeeded = false;
 		return true;		
 	}
 

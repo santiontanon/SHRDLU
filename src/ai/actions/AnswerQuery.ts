@@ -10,6 +10,7 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 
 		if (intention.functor == ai.o.getSort("action.answer.query-followup")) {
@@ -141,6 +142,9 @@ class AnswerQuery_IntentionAction extends IntentionAction {
 			console.error("executeIntention answer query: attribute[2] was not a TermTermAttribute: " + intention);	
 			if (ir != null) ir.succeeded = false;
 		}
+		// TODO: this should have some temporary value (in all actions that require inference or continuous execution)
+		// that is then replaced with true/false after inference/continuous is done
+		if (ir != null) ir.succeeded = true;
 		return true;
 	}
 

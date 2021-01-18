@@ -9,6 +9,7 @@ class AnswerDefine_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 

@@ -9,6 +9,7 @@ class Memorize_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -119,7 +120,7 @@ class Memorize_IntentionAction extends IntentionAction {
 			ai.queuedInferenceProcesses.push(new InferenceRecord(ai, [], [s_l], 1, 0, false, null, new Memorize_InferenceEffect(intention, false)));
 		}
 
-
+		ir.succeeded = true;
 		return true;
 	}
 

@@ -10,6 +10,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 		let alternative_actions:Term[] = ir.alternative_actions;
@@ -22,6 +23,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -133,6 +135,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 			ai.intentionsCausedByRequest.push(ir);
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 			return true;
 		}
 		if (closestContainer != null) {
@@ -153,6 +156,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 			ai.intentionsCausedByRequest.push(ir);
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+ir.requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 			return true;
 
 		}
@@ -163,7 +167,7 @@ class RobotOpenClose_IntentionAction extends IntentionAction {
 		} else {
 			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
-
+		ir.succeeded = false;
 		return true;
 	}
 

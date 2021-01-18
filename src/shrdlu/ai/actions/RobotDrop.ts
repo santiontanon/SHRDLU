@@ -9,6 +9,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 		let alternative_actions:Term[] = ir.alternative_actions;
@@ -23,6 +24,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}			
 
@@ -58,6 +60,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -82,6 +85,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 			}
+			ir.succeeded = false;
 			return true;
 		}
 
@@ -110,7 +114,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
-
+			ir.succeeded = true;
 		} else {
 			let targetLocation:AILocation = ai.game.getAILocationByID(locationID_l[0]);
 			let destinationMap:A4Map = null;
@@ -131,6 +135,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 					}
 					ir2.numberConstraint = ir.numberConstraint;
 					ai.intentions.push(ir2);
+					ir.succeeded = true;
 					return true;
 				}
 			} else {
@@ -164,6 +169,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 									 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -174,6 +180,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 					let term:Term = Term.fromString(tmp, ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
+				ir.succeeded = false;
 				return true;
 			}
 
@@ -207,7 +214,7 @@ class RobotDrop_IntentionAction extends IntentionAction {
 			}
 
 		}
-
+		ir.succeeded = true;
 		return true;
 	}
 

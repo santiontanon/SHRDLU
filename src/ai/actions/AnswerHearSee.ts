@@ -10,6 +10,7 @@ class AnswerHearSee_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let requester:TermAttribute = ir.requester;
 		let best:string = null;
 		let l:Term[] = [ir.action];

@@ -10,6 +10,7 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -18,6 +19,7 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 		if (intention.attributes.length == 2) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.q.how("+requester+", verb.help('"+ai.selfID+"'[#id],"+intention.attributes[1]+")))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = true;
 		} else if (intention.attributes.length == 3 && (intention.attributes[2] instanceof TermTermAttribute)) {
 			let nestedIntention:Term = (<TermTermAttribute>intention.attributes[2]).term;
 			if (nestedIntention.attributes.length > 0 &&
@@ -42,18 +44,21 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 				}
 				if (handler != null) {
 					let newIr:IntentionRecord = new IntentionRecord(newNestedIntention, ir.requester, ir.requestingPerformative, ir.cause, ir.timeStamp);
+					ir.succeeded = true;
 					return handler.execute(newIr, ai);
 				} else {
 					if (requester != null) {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 					}
+					ir.succeeded = false;
 				}
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ir.succeeded = false;
 			}
 
 		} else {
@@ -61,6 +66,7 @@ class EtaoinHelp_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ir.succeeded = false;
 		}
 
 		return true;

@@ -19,6 +19,7 @@ class EtaoinRead_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;	
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -31,16 +32,20 @@ class EtaoinRead_IntentionAction extends IntentionAction {
 			if (targetID == "tardis-memory-core") {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+requester+", action.put-in("+requester+", '"+targetID+"'[#id], [console])))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+				ir.succeeded = true;
 			} else {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+				ir.succeeded = false;
 			}
 		} else if (item_tmp == null) {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = false;
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			ir.succeeded = false;
 		}
 
 		return true;

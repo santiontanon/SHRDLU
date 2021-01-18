@@ -31,8 +31,9 @@ class RobotGo_IntentionAction extends IntentionAction {
 				 intention.attributes[1].sort.name == "space.away")) {
 				// redirect to leave the vehicle:
 				let term2:Term = new Term(ai.o.getSort("verb.leave"), [intention.attributes[0]]);
-				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.timeStamp));
-				return true;				
+				ir.action = term2;
+				// ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.timeStamp));
+				return null;
 			}
 		}			
 
@@ -507,6 +508,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		// 	this.needsContinuousExecution = false;
 	 //        ai.setNewAction(intention, requester, q, null);
 		// }
+		this.ir.succeeded = true;	// temporarily set this to success
 		return true;
 	}
 
@@ -579,6 +581,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 		        return false;
 			} else {
 				// we changed maps, so, stop just in case:
+				if (this.ir != null) this.ir.succeeded = false;
 				return true;
 			}
 		} else {
@@ -588,6 +591,7 @@ class RobotGo_IntentionAction extends IntentionAction {
 					ai.robot.map == targetObject[0].map &&
 					ai.robot.pixelDistance(targetObject[0]) == 0) {
 					// we made it!
+					if (this.ir != null) this.ir.succeeded = true;
 					return true;
 				}
 			}

@@ -9,6 +9,7 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
 
@@ -29,12 +30,14 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 					} else {
 						let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'unknown'[symbol]))", ai.o);
 						ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+						ir.succeeded = false;
 						return true;
 					}
 				} else {
 					// this should never happen
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.parseerror('"+context.speaker+"'[#id], #not(verb.understand('"+ai.selfID+"'[#id],#and(the(NOUN:'perf.question'[perf.question],S:[singular]),noun(NOUN,S))))))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, intention.attributes[1], null, null, ai.timeStamp));
+					ir.succeeded = false;
 					return true;
 				}
 			}
@@ -82,6 +85,7 @@ class A4AnswerHow_IntentionAction extends IntentionAction {
 				*/
 			}
 		}
+		ir.succeeded = true;
 		return true;		
 	}
 

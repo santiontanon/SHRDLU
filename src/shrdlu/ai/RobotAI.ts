@@ -57,6 +57,12 @@ class RobotAI extends A4RuleBasedAI {
 												  [new ConstantTermAttribute(this.selfID,this.cache_sort_id),
 												   new ConstantTermAttribute("nothing",this.o.getSort("nothing"))]), PERCEPTION_PROVENANCE);
 				}
+				// if (this.currentActionHandler.ir.succeeded == null) {
+				// 	throw new Error("continuous action handler for " + this.currentActionHandler.ir.action + "  did not set succeeded!");
+				// }
+				if (!this.currentActionHandler.ir.succeeded) {
+					this.removeQueuedPerformativesDependingOnIntentionSuccess(this.currentActionHandler.ir);
+				}
 				this.clearCurrentAction();
         	}
         }

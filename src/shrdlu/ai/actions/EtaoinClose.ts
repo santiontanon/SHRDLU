@@ -9,6 +9,7 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 		let alternative_actions:Term[] = ir.alternative_actions;
@@ -99,7 +100,7 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 
         	app.achievement_nlp_all_etaoin_actions[1] = true;
         	app.trigger_achievement_complete_alert();
-
+        	ir.succeeded = true;
 	    } else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			if (denyrequestCause == null) {
@@ -107,6 +108,7 @@ class EtaoinClose_IntentionAction extends IntentionAction {
 			} else {
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 			}
+			ir.succeeded = false;
 		}
 		return true;
 	}

@@ -590,6 +590,7 @@ class RuleBasedAI {
 		// 6) Intention execution:
 		this.executeIntentions();
 
+		// 7) Performatives that have already been parsed, but are queued:
 		if (this.queuedParsedPerformatives.length > 0 && this.isIdle()) {
 			let tmp:[Term, string, string, NLParseRecord] = this.queuedParsedPerformatives[0];
 			this.reactToParsedPerformativeInternal(tmp[0], tmp[1], tmp[2], tmp[3]);
@@ -2210,6 +2211,12 @@ class RuleBasedAI {
 				console.error("Unsuported intention ("+this.selfID+"): " + intention.action);
 				intention.succeeded = false;
 			}
+			// if (intention.succeeded == null) {
+			// 	throw new Error("action handler for " + intention.action + "  did not set succeeded!");
+			// }
+			if (!intention.succeeded) {
+				this.removeQueuedPerformativesDependingOnIntentionSuccess(intention);
+			}
 			toDelete.push(intention);
 		}
 		for(let t of toDelete) {
@@ -2244,6 +2251,22 @@ class RuleBasedAI {
 		if (this.queuedIntentions.indexOf(ir) == -1) {
 			this.queuedIntentions.push(ir);
 		}
+	}
+
+
+	removeQueuedPerformativesDependingOnIntentionSuccess(ir:IntentionRecord)
+	{
+		// remove all other pending queued performatives from the same utterance:
+		let toDelete:[Term, string, string, NLParseRecord][] = [];
+		for(let tmp of this.queuedParsedPerformatives) {
+			if (ir.requestingPerformative != null &&
+			    ir.requestingPerformative.parse == tmp[3]) {
+				toDelete.push(tmp);
+			}
+		}
+		for(let tmp of toDelete) {
+			this.queuedParsedPerformatives.splice(this.queuedParsedPerformatives.indexOf(tmp));
+		}		
 	}
 
 
@@ -2474,6 +2497,9 @@ class RuleBasedAI {
 		}
 		for(let ir of this.queuedIntentions) {
 			ir.action = ir.action.applyBindings(bindings);
+		}
+		for(let tmp of this.queuedParsedPerformatives) {
+			tmp[0] = tmp[0].applyBindings(bindings);
 		}
 	}
 	

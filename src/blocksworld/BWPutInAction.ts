@@ -21,6 +21,7 @@ class BWPutIn_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:BlocksWorldRuleBasedAI = <BlocksWorldRuleBasedAI>ai_raw;
 		let world:ShrdluBlocksWorld = ai.world;
 		let requester:TermAttribute = ir.requester;
@@ -126,7 +127,8 @@ class BWPutIn_IntentionAction extends IntentionAction {
 			ai.intentionsCausedByRequest.push(ir);
 			ai.addCurrentActionLongTermTerm(intention);
 			ai.currentActionHandler = this;
-			this.executeContinuous(ai);		
+			this.executeContinuous(ai);
+			this.ir.succeeded = true;
 			return true;
 		}
 
@@ -136,6 +138,7 @@ class BWPutIn_IntentionAction extends IntentionAction {
 		} else {
 			ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(denyrequestCause, null, ai.timeStamp), ai.timeStamp));
 		}
+		this.ir.succeeded = false;
 		return true;		
 	}
 

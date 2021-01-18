@@ -362,6 +362,7 @@ class RobotStay_IntentionAction extends IntentionAction {
 
         ai.setNewAction(intention, requester, null, this);
 		this.executeContinuous(ai);
+		this.ir.succeeded = true;	// temporarily set this to success
 		return true;
 	}
 

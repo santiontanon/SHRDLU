@@ -12,6 +12,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 	
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:EtaoinAI = <EtaoinAI>ai_raw;
 		let intention:Term = ir.action;
 		let requester:TermAttribute = ir.requester;
@@ -48,6 +49,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.game.shrdluAI.queueIntention(term2, null, null);
+				ir.succeeded = true;
 				return true;
 			} else if (target == "qwerty") {
 				if (requester != null) {
@@ -56,6 +58,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.game.qwertyAI.queueIntention(term2, null, null);
+				ir.succeeded = true;
 				return true;
 			} else if (target == "etaoin") {
 				if (requester != null) {
@@ -64,6 +67,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 				}
 				let term2:Term = new Term(ai.o.getSort("verb.reboot"),[intention.attributes[0]]);
 				ai.queueIntention(term2, null, null);
+				ir.succeeded = true;
 				return true;
 			}
 		}
@@ -72,6 +76,7 @@ class EtaoinReboot_IntentionAction extends IntentionAction {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
+		ir.succeeded = false;
 		return true;
 	}
 

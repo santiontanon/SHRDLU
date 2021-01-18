@@ -9,6 +9,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 
 	execute(ir:IntentionRecord, ai_raw:RuleBasedAI) : boolean
 	{
+		this.ir = ir;		
 		let ai:RobotAI = <RobotAI>ai_raw;
 		let requester:TermAttribute = ir.requester;
 		let alternative_actions:Term[] = ir.alternative_actions;
@@ -23,6 +24,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -45,6 +47,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString(tmp, ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -77,6 +80,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -96,6 +100,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				}
 				ir2.numberConstraint = ir.numberConstraint;
 				ai.intentions.push(ir2);
+				this.ir.succeeded = true;
 				return true;
 			}
 
@@ -104,6 +109,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				let cause:Term = Term.fromString("#not(verb.see('"+ai.selfID+"'[#id], '"+containerID_l[0]+"'[#id]))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -128,6 +134,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 								 		  			   [requester, new TermTermAttribute(cannotGoCause)]))]);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -137,6 +144,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 				let cause:Term = Term.fromString("#not(verb.know('"+ai.selfID+"'[#id], #and(the(P:'path'[path], N:[singular]), noun(P, N))))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 			}
+			this.ir.succeeded = false;
 			return true;
 		}
 		if (containerObjectL[0] instanceof A4ObstacleContainer) {
@@ -147,6 +155,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 					let cause:Term = Term.fromString("property.closed('"+containerObjectL[0].ID+"'[#id])", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, new CauseRecord(cause, null, ai.timeStamp), ai.timeStamp));
 				}
+				this.ir.succeeded = false;
 				return true;
 			}
 		} else if (ai.selfID == "shrdlu" &&
@@ -159,12 +168,14 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			ai.game.gameScript.act_2_repair_shuttle_state = 1;
 			ai.game.gameScript.act_2_repair_shuttle_state_timer = 0;
+			this.ir.succeeded = true;
 			return true;
 		} else if (containerObjectL[0].ID == ai.selfID) {
 			// put something into ourselves (weird, but, ok...):
 		} else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			this.ir.succeeded = false;
 			return true;
 		}
 
@@ -213,6 +224,7 @@ class RobotPutIn_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 		}
 
+		this.ir.succeeded = true;
 		return true;
 	}
 
