@@ -134,7 +134,8 @@ class Etaoin3DPrint_IntentionAction extends IntentionAction {
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform("+ir.requester+", space.at('"+obj.ID+"'[#id], 'location-maintenance'[#id])))", ai.o);
 			ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
-
+			ai.intentionsCausedByRequest.push(ir);
+			
 			// force a perception update on the maintenance room, to make sure we can talk about the newly printed object:
 			ai.perceptionFocusedOnObject([obj], obj);
 			// add the object existence to long term memory:

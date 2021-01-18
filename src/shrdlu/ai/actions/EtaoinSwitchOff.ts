@@ -52,6 +52,7 @@ class EtaoinSwitchOff_IntentionAction extends IntentionAction {
 			if (anyTurnedOff) {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+				ai.intentionsCausedByRequest.push(ir);
 			} else {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 				if (denyrequestCause == null) {

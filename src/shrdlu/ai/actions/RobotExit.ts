@@ -33,14 +33,14 @@ class RobotExit_IntentionAction extends IntentionAction {
 				let term2:Term = new Term(ai.o.getSort("verb.go"), [intention.attributes[0], new VariableTermAttribute(ai.o.getSort("space.outside"), null)]);
 				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.timeStamp));
 				ir.succeeded = true;
-				return true;				
+				return true;
 			} else if (intention.attributes.length == 2) {
 				let term2:Term = new Term(ai.o.getSort("verb.go"), [intention.attributes[0], 
 																	new TermTermAttribute(new Term(ai.o.getSort("space.outside.of"), 
 																						  		   [intention.attributes[1]]))]);
 				ai.intentions.push(new IntentionRecord(term2, requester, null, null, ai.timeStamp));
 				ir.succeeded = true;
-				return true;				
+				return true;
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
@@ -80,6 +80,7 @@ class RobotExit_IntentionAction extends IntentionAction {
 				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 			}
+			ai.intentionsCausedByRequest.push(ir);
 		} else if (intention.attributes.length >= 2 &&
 				   (intention.attributes[1] instanceof ConstantTermAttribute)) {
 			// make sure ID and vehicle match:
@@ -90,6 +91,7 @@ class RobotExit_IntentionAction extends IntentionAction {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.ok("+requester+"))", ai.o);
 					ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
 				}
+				ai.intentionsCausedByRequest.push(ir);
 			} else {
 				if (requester != null) {
 					let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);

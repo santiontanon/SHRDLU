@@ -24,7 +24,6 @@ class RobotReboot_IntentionAction extends IntentionAction {
 		ai.queuedInferenceProcesses = [];
 		ai.respondToPerformatives = true;
 		ai.terminateConversationAfterThisPerformative = false;
-		ai.currentEpisodeTerms = [];
 		ai.clearCurrentAction();
 
 		app.achievement_nlp_all_robot_actions[14] = true;

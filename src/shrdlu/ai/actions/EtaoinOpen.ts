@@ -101,6 +101,7 @@ class EtaoinOpen_IntentionAction extends IntentionAction {
         	app.achievement_nlp_all_etaoin_actions[1] = true;
         	app.trigger_achievement_complete_alert();
         	ir.succeeded = true;
+        	ai.intentionsCausedByRequest.push(ir);
 	    } else {
 			let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.ack.denyrequest("+requester+"))", ai.o);
 			if (denyrequestCause == null) {
