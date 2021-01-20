@@ -445,7 +445,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER, X:verb.remember($PLAYER,#and(#query(Y), name($PLAYER,Y)))))");
 			} else {
-				if (this.qwertyIdle()) {
+				if (this.game.qwertyAI.isIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative != null && lastPerformative.performative != null &&
@@ -483,7 +483,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.q.query($PLAYER, Y, name($PLAYER,Y)))");
 			} else {
-				if (this.qwertyIdle()) {
+				if (this.game.qwertyAI.isIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative != null && lastPerformative.performative != null &&
@@ -513,7 +513,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 				this.qwertyIntention("action.talk($QWERTY, perf.greet($PLAYER))");		
 			} else {
-				if (this.qwertyIdle()) this.act_intro_state = 10;
+				if (this.game.qwertyAI.isIdle()) this.act_intro_state = 10;
 			}
 			break;
 
@@ -523,7 +523,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, role($QWERTY, 'location-aurora-station'[#id], 'medic'[medic])))")
 				this.qwertyIntention("action.talk($QWERTY, perf.q.predicate($PLAYER,verb.remember($PLAYER,'location-aurora-station'[#id])))");
 			} else {
-				if (this.qwertyIdle()) {
+				if (this.game.qwertyAI.isIdle()) {
 					// the question has been answered:
 					let lastPerformative:NLContextPerformative = this.contextQwerty.lastPerformativeBy(this.playerID);
 					if (lastPerformative != null && lastPerformative.performative != null &&
@@ -555,7 +555,7 @@ class ShrdluGameScript {
 			if (this.act_intro_state_timer == 0) {
 				this.qwertyIntention("action.talk($QWERTY, perf.sentiment($PLAYER, 'good'[symbol]))");
 			} else {
-				if (this.qwertyIdle()) this.act_intro_state = 13;
+				if (this.game.qwertyAI.isIdle()) this.act_intro_state = 13;
 			}
 			break;
 
@@ -569,7 +569,7 @@ class ShrdluGameScript {
 				this.qwertyIntention("action.talk($QWERTY, perf.inform($PLAYER, #and(X:verb.tell('etaoin'[#id], $PLAYER), time.later(X))))");
 				
 			} else {
-				if (this.qwertyIdle()) this.act_intro_state = 13;
+				if (this.game.qwertyAI.isIdle()) this.act_intro_state = 13;
 			}
 			break;
 
@@ -688,7 +688,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.isIdle()) {
     	        this.qwertyMoves(104, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -702,7 +702,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.isIdle()) {
     	        this.qwertyMoves(136, 232, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -716,7 +716,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.isIdle()) {
     	        this.qwertyMoves(136, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -730,7 +730,7 @@ class ShrdluGameScript {
 					this.game.qwertyAI.clearCurrentAction();
             		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
             	}
-			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.isIdle()) {
     	        this.qwertyMoves(256, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -742,7 +742,7 @@ class ShrdluGameScript {
             	if (this.game.qwertyAI.robot.pixelDistance(this.game.currentPlayer) < 32) {
             		this.act_intro_state = 107;
             	}
-			} else if (this.act_intro_state_timer > 240 && this.qwertyIdle()) {
+			} else if (this.act_intro_state_timer > 240 && this.game.qwertyAI.isIdle()) {
         		this.qwertyMoves(544, 288, this.game.qwertyAI.robot.map);
     	        this.act_intro_state_timer = 0;
 			}
@@ -1168,8 +1168,8 @@ class ShrdluGameScript {
 
 		case 11:
 			// waiting for player to ask about other humans (and for etaoin not to be answering anything):
-			if (this.act_1_asked_about_being_alone_to_etaoin && this.etaoinIdle()) this.act_1_state = 12;
-			if (this.act_1_asked_about_being_alone_to_qwerty && this.etaoinIdle() && this.qwertyIdle()) this.act_1_state = 13;
+			if (this.act_1_asked_about_being_alone_to_etaoin && this.game.etaoinAI.isIdle()) this.act_1_state = 12;
+			if (this.act_1_asked_about_being_alone_to_qwerty && this.game.etaoinAI.isIdle() && this.game.qwertyAI.isIdle()) this.act_1_state = 13;
 			if (this.act_1_state == 11 && this.act_1_state_timer == 3600) {
 				// after a while, remind the player to actually ask Etaoin about being alone:
 				this.act_1_state_timer = 0;
@@ -1188,7 +1188,7 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.inform(D:'player'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), plural(Q)))), time.past(V))))");
 				this.etaoinSays("perf.inform('player'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
-				if (this.etaoinIdle()) this.act_1_state = 14;
+				if (this.game.etaoinAI.isIdle()) this.act_1_state = 14;
 			}
 			break;
 
@@ -1202,7 +1202,7 @@ class ShrdluGameScript {
 				this.etaoinSays("perf.inform(D:'player'[#id],#and(V:verb.run('etaoin'[#id], [analysis]), #and(relation.effect(V, #and(Q:[perf.question], #and(verb.own(D, Q), #and(relation.target(Q, 'qwerty'[#id]), plural(Q))))), time.past(V))))");
 				this.etaoinSays("perf.inform('player'[#id],#and(V:verb.find(E:'etaoin'[#id], X:[anomaly]), #and(time.past(V), space.at(V, M:'etaoin-memory'[#id]))))");
 			} else if (this.act_1_state_timer > 300) {
-				if (this.etaoinIdle()) this.act_1_state = 14;
+				if (this.game.etaoinAI.isIdle()) this.act_1_state = 14;
 			}
 			break;
 		
@@ -1223,7 +1223,7 @@ class ShrdluGameScript {
 				this.game.etaoinAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 				this.game.qwertyAI.addLongTermTerm(term3, PERCEPTION_PROVENANCE);
 			} else {
-				if (this.etaoinIdle()) this.act_1_state = 15;
+				if (this.game.etaoinAI.isIdle()) this.act_1_state = 15;
 			}
 			break;
 
@@ -1241,7 +1241,7 @@ class ShrdluGameScript {
 				if (p!=null && p.performative != null) {
 					if (p.timeStamp == this.game.in_game_seconds - 1) {
 						if (p.performative.functor.is_a(this.game.ontology.getSort("perf.inform.answer")) &&
-							this.etaoinIdle()) {
+							this.game.etaoinAI.isIdle()) {
 							let answer:TermAttribute = p.performative.attributes[1];
 							if (answer instanceof ConstantTermAttribute) {
 								if ((<ConstantTermAttribute>answer).value == "no" ||
@@ -1499,7 +1499,7 @@ class ShrdluGameScript {
 						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
 					}
 				} else {
-					if (this.qwertyIdle()) this.act_1_stasis_thread_state = 2;
+					if (this.game.qwertyAI.isIdle()) this.act_1_stasis_thread_state = 2;
 				}
 				break;
 
@@ -1561,7 +1561,7 @@ class ShrdluGameScript {
 				break;
 
 			case 4:
-				if (this.qwertyIdle()) {
+				if (this.game.qwertyAI.isIdle()) {
 					// open the door:
 					this.game.qwertyAI.robot.issueCommandWithArguments(A4CHARACTER_COMMAND_INTERACT, -1, A4_DIRECTION_UP, null, this.game);
 					this.act_1_stasis_thread_state = 5;
@@ -1862,7 +1862,7 @@ class ShrdluGameScript {
 			break;
 
 		case 101:
-			if (this.shrdluIdle()) {
+			if (this.game.shrdluAI.isIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
 				if (lastPerformative != null && lastPerformative.performative != null &&
@@ -1909,7 +1909,7 @@ class ShrdluGameScript {
 		case 104:
 			// player is interacting with SHRDLU, as long as the player keeps doing things, we are fine, when she stops
 			// asking shrdlu to do things, we give a clue
-			if (this.shrdluIdle()) {
+			if (this.game.shrdluAI.isIdle()) {
 				// the question has been answered:
 				let lastPerformative:NLContextPerformative = this.contextShrdlu.lastPerformativeBy(this.playerID);
 				if (lastPerformative != null && lastPerformative.performative != null &&
@@ -1961,7 +1961,7 @@ class ShrdluGameScript {
 
 		case 108:
 			if (this.act_2_state_timer >= 50*2 &&
-				this.shrdluIdle()) {
+				this.game.shrdluAI.isIdle()) {
 				this.setupShrdluSelfRepairGoals();
 				this.act_2_state = 109;
 			}
@@ -1969,7 +1969,7 @@ class ShrdluGameScript {
 
 		case 109:
 			if (this.act_2_state_timer >= 50*2 &&
-				this.etaoinIdle()) {
+				this.game.etaoinAI.isIdle()) {
 				let term_h:Term = Term.fromString("verb.need(E:'etaoin'[#id], verb.help(D:'player'[#id], E, verb.find(D, 'shrdlu'[#id])))",this.game.ontology);
 				this.game.etaoinAI.addLongTermTermWithSign(term_h, MEMORIZE_PROVENANCE, false);
 				term_h = Term.fromString("verb.need(S:'shrdlu'[#id], verb.help(D:'player'[#id], S, verb.take-to(D, 'shrdlu'[#id], 'location-aurora-station'[#id])))",this.game.ontology);
@@ -1980,14 +1980,14 @@ class ShrdluGameScript {
 			break;
 
 		case 110:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'etaoin-memory'[#id]), time.future(X)))")
 				this.act_2_state = 111;
 			}
 			break;
 
 		case 111:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.queueThoughtBubble("Ok, it seems Shrdlu needs to fix itself first. So, repairs might take a while...");
 				this.queueThoughtBubble("I could go explore outside a bit more, now that I have the rover... or maybe I could just have a nap...");
 				this.act_2_state = 112;
@@ -2053,7 +2053,7 @@ class ShrdluGameScript {
 			break;
 		
 		case 201:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
 				this.game.shrdluAI.loadLongTermRulesFromFile("data/additional-kb-memoryrepair.xml");
@@ -2064,7 +2064,7 @@ class ShrdluGameScript {
 			break;
 
 		case 202:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:erased('etaoin-memory'[#id]), time.past(X, time.date('42956019000'[number], [time.day]))))");
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'location-aurora-station'[#id]), time.subsequently(X)))");
 				this.act_2_state = 210;
@@ -2079,14 +2079,14 @@ class ShrdluGameScript {
 			break;
 
 		case 211:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.etaoinSays("perf.inform('player'[#id], #and(X:verb.repair('shrdlu'[#id], 'comm-tower'[#id]), time.past(X)))");
 				this.setupShrdluAgendaGoals();
 				this.act_2_state = 212;
 			}
 			break;
 		case 212:
-			if (this.etaoinIdle()) {
+			if (this.game.etaoinAI.isIdle()) {
 				this.updateKnowledgeAfterRepairingCommTower();
 				this.etaoinSays("perf.inform('player'[#id], verb.detect('etaoin'[#id], #and(V:[distress-signal], plural(V))))");
 				this.etaoinSays("perf.request.action('player'[#id], #and(V1:verb.go-to('player'[#id], 'location-as29'[#id]), relation.purpose(V1, verb.investigate('player'[#id]))))");
@@ -2328,7 +2328,7 @@ class ShrdluGameScript {
 						this.qwertyIntention("action.talk($QWERTY, perf.request.action(V0:$PLAYER, verb.follow(V0, $QWERTY)))");
 					}
 				} else {
-					if (this.qwertyIdle()) this.act_2_datapad_state = 2;
+					if (this.game.qwertyAI.isIdle()) this.act_2_datapad_state = 2;
 				}
 				break;
 
@@ -2517,7 +2517,7 @@ class ShrdluGameScript {
 						this.act_3_state = 8;
 					}
 					break;
-			case 8: if (this.etaoinIdle()) {
+			case 8: if (this.game.etaoinAI.isIdle()) {
 						// make sure Etaoin knows about this object, that has disappeared from the game:
 						this.game.etaoinAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
 						this.game.qwertyAI.loadLongTermRulesFromFile("data/additional-kb-ending-"+this.game.playerGender+".xml");
@@ -2572,13 +2572,13 @@ class ShrdluGameScript {
 					break;
 
 			case 12:
-					if (this.qwertyIdle()) {
+					if (this.game.qwertyAI.isIdle()) {
 						this.qwertyIntention("action.talk('qwerty'[#id], perf.request.action('player'[#id], action.take('player'[#id], 'player-masterkey'[#id])))");
 						this.act_3_state = 13;
 					}
 
 			case 13:
-					if (this.qwertyIdle()) {
+					if (this.game.qwertyAI.isIdle()) {
 						this.qwertyIntention("action.give('qwerty'[#id], 'player-masterkey'[#id], 'player'[#id])");
 						this.act_3_state = 14;
 					}
@@ -3251,33 +3251,6 @@ class ShrdluGameScript {
 	}
 
 
-	qwertyIdle() : boolean
-	{
-		return this.game.qwertyAI.robot.isIdle() &&
-			   this.game.qwertyAI.intentions.length == 0 && this.game.qwertyAI.queuedIntentions.length == 0 &&
-			   this.contextQwerty.expectingAnswerToQuestion_stack.length == 0 &&
-			   this.game.qwertyAI.currentInferenceProcess == null && this.game.qwertyAI.queuedInferenceProcesses.length == 0;
-	}
-
-
-	shrdluIdle() : boolean
-	{
-		return this.game.shrdluAI.robot.isIdle() &&
-			   this.game.shrdluAI.intentions.length == 0 && this.game.shrdluAI.queuedIntentions.length == 0 &&
-			   this.contextShrdlu.expectingAnswerToQuestion_stack.length == 0 &&
-			   this.game.shrdluAI.currentInferenceProcess == null && this.game.shrdluAI.queuedInferenceProcesses.length == 0;
-	}
-
-
-	etaoinIdle() : boolean
-	{
-		return this.game.etaoinAI.intentions.length == 0 && this.game.etaoinAI.queuedIntentions.length == 0 &&
-			   this.contextEtaoin.expectingAnswerToQuestion_stack.length == 0 &&
-			   this.game.etaoinAI.currentInferenceProcess == null && this.game.etaoinAI.queuedInferenceProcesses.length == 0 &&
-			   this.game.currentPlayer.map.textBubbles.length == 0;
-	}
-
-
 	qwertyIntention(pattern:string)
 	{
 		pattern = pattern.split("$QWERTY").join("'"+this.qwertyID+"'[#id]");
@@ -3395,7 +3368,7 @@ class ShrdluGameScript {
 		if (this.game.currentPlayer.isIdle() &&
 			!this.game.qwertyAI.robot.isTalking() &&
 			!this.game.shrdluAI.robot.isTalking() &&
-			this.etaoinIdle()) {
+			this.game.etaoinAI.isIdle()) {
 			this.game.currentPlayer.issueCommandWithString(A4CHARACTER_COMMAND_THOUGHT_BUBBLE, this.thoughtBubbleQueue[0], A4_DIRECTION_NONE, this.game);
 			this.thoughtBubbleQueue.splice(0,1);
 		}

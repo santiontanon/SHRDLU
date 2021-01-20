@@ -327,7 +327,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1738,7 +1738,12 @@ NLParseTestUnifyingListener("take the vitamins from the bedroom", o.getSort("per
 NLParseTestUnifyingListener("bring me the vitamins from the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], verb.bring(V0, '1'[#id], 'vitamins'[#id]))");
 NLParseTestUnifyingListener("take the vitamins from the kitchen", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.take('etaoin'[#id], 'vitamins'[#id]))");
 NLParseTestUnifyingListener("take a pyramid from the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.take(V0, X), #and(pyramid(X), space.at(X, '5'[#id])), [number.1])");
+*/
 
+NLParseTestUnifyingListener("have you ever taken a crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:action.take(V0, X), #and(crate(X), time.ever(V))))");
+NLParseTestUnifyingListener("have you ever seen a blue pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:verb.see(V0, X), #and(pyramid(X), #and(blue(X), time.ever(V)))))");
+NLParseTestUnifyingListener("had you been at the kitchen before?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:space.at(V0, 'room1'[#id]), time.past(V)))");
+NLParseTestUnifyingListener("were you at the kitchen yesterday?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:space.at(V0, 'room1'[#id]), time.yesterday(V)))");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");
