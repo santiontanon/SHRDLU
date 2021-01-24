@@ -11,14 +11,14 @@ class TermEntry {
 	provenance:string;
 	activation:number;
 	time:number;
+	timeEnd:number;
+	previousInTime:TermEntry;	// if this sentence has been overwritten by another one, this points to the previous one
 }
 
 
 class TermContainer {
-	addTerm(t:Term, provenance:string, activation:number, time:number)
+	addTerm(t:Term, provenance:string, activation:number, time:number) : TermEntry
 	{
-//		console.log("addTerm " + t.toString() + " - " + a);
-		
 		let te:TermEntry = new TermEntry(t, provenance, activation, time);
 		this.plainTermList.push(te);
 		let l:TermEntry[] = this.termHash[t.functor.name];
@@ -27,6 +27,7 @@ class TermContainer {
 			this.termHash[t.functor.name] = l;
 		}
 		l.push(te);
+		return te;
 	}
 
 
@@ -63,15 +64,20 @@ class TermContainer {
 				}				
 			} else {
 				// replace old with new, and store old:
+				let previous_t_single:TermEntry = null;
 				for(let previous_t of previous_t_l) {
 					// even if it's a state term, if we have multiple of them in the same cycle, we assume they can coexist:
 					if (previous_t.time != time) {
-						this.plainPreviousTermList.push(new TermEntry(previous_t.term, previous_t.provenance, previous_t.activation, previous_t.time));
+						previous_t_single = new TermEntry(previous_t.term, previous_t.provenance, previous_t.activation, previous_t.time)
+						previous_t_single.timeEnd = time;
+						previous_t_single.previousInTime = previous_t.previousInTime;
+						this.plainPreviousTermList.push(previous_t_single);
 						if (this.plainPreviousTermList.length > MAXIMUM_MEMORY_OF_PREVIOUS_STATES) this.plainPreviousTermList.splice(0,1);
 						this.removeInternal(previous_t);
 					}
 				}
-				this.addTerm(t, provenance, activation, time);
+				let new_t:TermEntry = this.addTerm(t, provenance, activation, time);
+				new_t.previousInTime = previous_t_single;
 				return true;
 			}
 		}

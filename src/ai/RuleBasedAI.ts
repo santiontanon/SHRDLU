@@ -215,7 +215,7 @@ class InferenceRecord {
 			// edit the long term memory to match the time of the query:
 			if (this.timeTerm.functor.name == "time.past") {
 				ltm = TimeInference.applyTimePast(ai.longTermMemory)
-			} else if (this.timeTerm.functor.is_a(o.getSort("time.now"))) {
+			} else if (this.timeTerm.functor.is_a(o.getSort("time.present")) ) {
 				// do nothing
 			} else {
 				console.error("InferenceRecord timeTerm not supported: " + this.timeTerm);
