@@ -130,6 +130,16 @@ class Bindings {
         return true;
     }
 
+    clone() : Bindings
+    {
+        let b:Bindings = new Bindings();
+        for(let pair of this.l) {
+            b.l.push(pair);
+        }
+        return b;
+    }
+
+
     l:[VariableTermAttribute,TermAttribute][] = [];
 }
 
@@ -1071,6 +1081,19 @@ class Term {
         }
         return false;
     }
+
+
+    containsAnyVariable() : boolean
+    {
+        for(let att of this.attributes) {
+            if (att instanceof VariableTermAttribute) {
+                return true;
+            } else if (att instanceof TermTermAttribute) {
+                if ((<TermTermAttribute>att).term.containsAnyVariable()) return true;
+            }
+        }
+        return false;
+    }    
 
 
     findSubtermWithFunctorSort(s:Sort) : Term

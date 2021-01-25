@@ -52,12 +52,22 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		console.log("    additional sentences: " + additional_sentences);
 
 		// special cases:
-		if (s_l.length == 1 && 
-			s_l[0].terms.length == 1 &&
-			this.specialCase1Term(s_l[0].terms[0], 
-								  s_l[0].sign[0],
-								  timeTerms, ai, requester, 
-								  intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) {
+		let conjunction:boolean = true;
+		let conjunction_terms:Term[] = [];
+		let conjunction_signs:boolean[] = [];
+		for(let sentence of s_l) {
+			if (sentence.terms.length != 1) {
+				conjunction = false;
+			} else {
+				conjunction_terms.push(sentence.terms[0]);
+				conjunction_signs.push(sentence.sign[0]);
+			}
+		}
+		if (conjunction &&
+			this.specialCaseConjunction(conjunction_terms, 
+						  				conjunction_signs,
+									  	timeTerms, ai, requester, 
+								  		intention.functor.is_a(ai.o.getSort("action.answer.predicate-negated")))) {
 			ir.succeeded = true;
 			return true;
 		}
@@ -101,7 +111,7 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		return true;
 	}
 
-
+	/*
 	// if we are just checking for the truth value of a single term, and we can find it or it's negation in the KB, then we are done!
 	specialCase1Term(term:Term, sign:boolean, timeTerms:Term[], ai:RuleBasedAI, requester:TermAttribute, negated:boolean) : boolean
 	{
@@ -113,7 +123,8 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 			// add constraints to the time range:
 			if (timeTerm.functor.is_a_string("time.past")) {
 				if (timeTerm.functor.is_a_string("time.yesterday")) {
-					// ...
+					timeRangeEnd = Math.floor(ai.timeStamp / (24*60*60)) * (24*60*60);
+					timeRangeStart = timeRangeEnd - (24*60*60);
 				} else {
 					timeRangeStart = 0;
 					timeRangeEnd = ai.timeStamp;
@@ -177,6 +188,145 @@ class AnswerPredicate_IntentionAction extends IntentionAction {
 		}
 		return false;
 	}
+	*/
+
+	specialCaseConjunction(terms:Term[], sign:boolean[], timeTerms:Term[], ai:RuleBasedAI, requester:TermAttribute, negated:boolean) : boolean
+	{
+		let timeRangeStart:number = ai.timeStamp;
+		let timeRangeEnd:number = ai.timeStamp;
+		let ignoreCurrentIfTheresPrevious:boolean = false;
+		for(let timeTerm of timeTerms) {
+			// add constraints to the time range:
+			if (timeTerm.functor.is_a_string("time.past")) {
+				if (timeTerm.functor.is_a_string("time.yesterday")) {
+					timeRangeEnd = Math.floor(ai.timeStamp / (24*60*60)) * (24*60*60);
+					timeRangeStart = timeRangeEnd - (24*60*60);
+				} else {
+					timeRangeStart = 0;
+					timeRangeEnd = ai.timeStamp;
+					ignoreCurrentIfTheresPrevious = true;
+				}
+			} else if (timeTerm.functor.is_a_string("time.future")) {
+				timeRangeStart = ai.timeStamp;
+				timeRangeEnd = Number.MAX_VALUE;
+			}
+		}	
+		console.log("    specialCaseConjunction: " + timeRangeStart + " - " + timeRangeEnd);
+		console.log("    memory: " + ai.shortTermMemory.plainTermList.length + "-" + ai.shortTermMemory.plainPreviousTermList.length + ", " +
+								     ai.longTermMemory.plainSentenceList.length + "-" + ai.longTermMemory.plainPreviousSentenceList.length + "-" + ai.longTermMemory.previousSentencesWithNoCurrentSentence.length);
+
+		let ret:boolean = this.specialCaseConjunctionRecursive(0, terms, sign, new Bindings(), timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai);
+		if (ret == null) {
+			return false;
+		} else {
+			if (negated) ret = !ret;
+			if (ret) {
+				// answer no
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'yes'[symbol]))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			} else {
+				// answer yes
+				let term:Term = Term.fromString("action.talk('"+ai.selfID+"'[#id], perf.inform.answer("+requester+",'no'[symbol]))", ai.o);
+				ai.intentions.push(new IntentionRecord(term, null, null, null, ai.timeStamp));
+			}
+			return true;
+		}
+	}
+
+
+	/*
+	Return values:
+	- true: match! term is true
+	- null: no match
+	- false: we found a match with opposite sign and there were no variables, so, we know the inference result is negative
+	*/
+	specialCaseConjunctionRecursive(idx:number, terms:Term[], sign:boolean[], bindings:Bindings, timeRangeStart:number, timeRangeEnd:number, ignoreCurrentIfTheresPrevious:boolean, ai:RuleBasedAI) : boolean
+	{
+		// console.log("        specialCaseConjunctionRecursive: " + idx + ", bindings: " + bindings);
+		if (idx >= terms.length) return true;
+		
+		let trail:number = bindings.l.length;
+		for(let t of ai.shortTermMemory.plainTermList) {
+			if (ignoreCurrentIfTheresPrevious && t.previousInTime != null) continue;
+			let ret:boolean = this.specialCaseMatchTermInternal(terms[idx], sign[idx], bindings, timeRangeStart, timeRangeEnd, t.term, true, t.time, t.timeEnd);
+			if (ret == true) {
+				if (this.specialCaseConjunctionRecursive(idx+1, terms, sign, bindings, timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai)) return true;
+				if (bindings.l.length > trail) bindings.l.splice(trail, bindings.l.length - trail);
+			} else if (ret == false) {
+				return false;
+			}
+		}
+		for(let t of ai.shortTermMemory.plainPreviousTermList) {
+			let ret:boolean = this.specialCaseMatchTermInternal(terms[idx], sign[idx], bindings, timeRangeStart, timeRangeEnd, t.term, true, t.time, t.timeEnd);
+			if (ret == true) {
+				if (this.specialCaseConjunctionRecursive(idx+1, terms, sign, bindings, timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai)) return true;
+				if (bindings.l.length > trail) bindings.l.splice(trail, bindings.l.length - trail);
+			} else if (ret == false) {
+				return false;
+			}
+		}
+		for(let s of ai.longTermMemory.plainSentenceList) {
+			if (ignoreCurrentIfTheresPrevious && s.previousInTime != null) continue;
+			if (s.sentence.terms.length == 1) {
+				let ret:boolean = this.specialCaseMatchTermInternal(terms[idx], sign[idx], bindings, timeRangeStart, timeRangeEnd, s.sentence.terms[0], s.sentence.sign[0], s.time, s.timeEnd);
+				if (ret == true) {
+					if (this.specialCaseConjunctionRecursive(idx+1, terms, sign, bindings, timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai)) return true;
+					if (bindings.l.length > trail) bindings.l.splice(trail, bindings.l.length - trail);
+				} else if (ret == false) {
+					return false;
+				}
+			}
+		}
+		for(let s of ai.longTermMemory.plainPreviousSentenceList) {
+			if (s.sentence.terms.length == 1) {
+				let ret:boolean = this.specialCaseMatchTermInternal(terms[idx], sign[idx], bindings, timeRangeStart, timeRangeEnd, s.sentence.terms[0], s.sentence.sign[0], s.time, s.timeEnd);
+				if (ret == true) {				
+					if (this.specialCaseConjunctionRecursive(idx+1, terms, sign, bindings, timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai)) return true;
+					if (bindings.l.length > trail) bindings.l.splice(trail, bindings.l.length - trail);
+				} else if (ret == false) {
+					return false;
+				}
+			}
+		}
+		for(let s of ai.longTermMemory.previousSentencesWithNoCurrentSentence) {
+			if (s.sentence.terms.length == 1) {
+				let ret:boolean = this.specialCaseMatchTermInternal(terms[idx], sign[idx], bindings, timeRangeStart, timeRangeEnd, s.sentence.terms[0], s.sentence.sign[0], s.time, s.timeEnd);
+				if (ret == true) {
+					if (this.specialCaseConjunctionRecursive(idx+1, terms, sign, bindings, timeRangeStart, timeRangeEnd, ignoreCurrentIfTheresPrevious, ai)) return true;
+					if (bindings.l.length > trail) bindings.l.splice(trail, bindings.l.length - trail);
+				} else if (ret == false) {
+					return false;
+				}
+			}
+		}
+		// console.log("        specialCaseConjunctionRecursive: " + idx + ", backtracking");
+		return null;
+	}
+
+
+	/*
+	Return values:
+	- true: match! term is true
+	- null: no match
+	- false: we found a match with opposite sign and there were no variables, so, we know the inference result is negative
+	*/
+	specialCaseMatchTermInternal(term:Term, sign:boolean, bindings:Bindings, timeRangeStart:number, timeRangeEnd:number, kbTerm:Term, kbSign:boolean, kbTime0:number, kbTime1:number) : boolean
+	{
+		// console.log("    specialCaseInternal: " + kbTerm + "  [" + kbTime0 + " - " + kbTime1 + "]");
+		if ((timeRangeEnd > kbTime0 || kbTime0 == undefined) && 
+			(timeRangeStart < kbTime1 || kbTime1 == undefined)) {
+			if (sign == kbSign) {
+				if (term.subsumes(kbTerm, false, bindings)) {
+					return true;
+				}
+			} else if (term.equalsNoBindings(kbTerm) == 1 &&
+					   !term.containsAnyVariable()) {
+				return false;
+			}
+		}
+		return null;
+	}
+
 
 
 	saveToXML(ai:RuleBasedAI) : string
