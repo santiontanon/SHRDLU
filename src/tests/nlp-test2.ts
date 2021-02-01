@@ -327,7 +327,7 @@ for(let ce of context.shortTermMemory) {
   }
 }
 
-
+/*
 NLParseTest("ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:noun(V0, V1))");
 NLParseTest("the ship", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[singular], V2:[third-person], V3:#and(the(V0, V1), V4:noun(V0, V1)))");
 NLParseTest("some ships", o.getSort("nounPhrase"), context, "nounPhrase(V0:'ship'[ship], V1:[plural], V2:[third-person], V3:#and(some(V0, V1), V4:noun(V0, V1)))");
@@ -1717,7 +1717,7 @@ NLClarificationParseTestUnifyingListener("take the key", "the closest one", o.ge
 NLClarificationParseTestUnifyingListener("take the key", "the one closest to you", o.getSort("performative"), context, "etaoin", "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'etaoin'[#id])))");
 NLClarificationParseTestUnifyingListener("take the key", "the closest to me", o.getSort("performative"), context, "etaoin", "perf.rephrase.entity('etaoin'[#id], X, #and(key(X), space.nearest-to(X,'1'[#id])))");
 NLParseTestUnifyingListener("etaoin salvaged some entries", o.getSort("performative"), context, "etaoin", "perf.inform('etaoin'[#id], #and(verb.salvage('etaoin'[#id],X:'entry'[entry]), entry(X)))");
-
+*/
 // For version 4.0:
 NLParseTestUnifyingListener("are you holding the crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], verb.hold('etaoin'[#id],'5'[#id]))");
 NLParseTestUnifyingListener("are you holding a crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate('etaoin'[#id], #and(verb.hold('etaoin'[#id],X), crate(X)))");
@@ -1740,9 +1740,10 @@ NLParseTestUnifyingListener("take the vitamins from the kitchen", o.getSort("per
 NLParseTestUnifyingListener("take a pyramid from the crate", o.getSort("performative"), context, "etaoin", "perf.request.action(V0:'etaoin'[#id], action.take(V0, X), #and(pyramid(X), space.at(X, '5'[#id])), [number.1])");
 NLParseTestUnifyingListener("have you taken a crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:action.take(V0, X), crate(X)))");
 NLParseTestUnifyingListener("have you ever taken a crate?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:action.take(V0, X), #and(crate(X), time.ever(V))))");
-NLParseTestUnifyingListener("have you ever seen a blue pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:verb.see(V0, X), #and(pyramid(X), #and(color(X, 'blue'[blue]), time.ever(V)))))");
+NLParseTestUnifyingListener("have you ever seen a blue pyramid?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], V:verb.see(V0, X), #and(pyramid(X), #and(color(X, 'blue'[blue]), time.ever(X))), [number.1])");
 NLParseTestUnifyingListener("had you been at the kitchen before?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:space.at(V0, 'room1'[#id]), time.past(V)))");
 NLParseTestUnifyingListener("were you at the kitchen yesterday?", o.getSort("performative"), context, "etaoin", "perf.q.predicate(V0:'etaoin'[#id], #and(V:space.at(V0, 'room1'[#id]), time.yesterday(V)))");
+NLParseTestUnifyingListener("did you see a blue pyramid yesterday?", o.getSort("performative"), context, "etaoin", "perf.q.action(V0:'etaoin'[#id], V:verb.see(V0, X), #and(pyramid(X), #and(color(X, 'blue'[blue]), time.yesterday(X))), [number.1])");
 
 
 console.log(successfulTests + "/" + totalTests + " successtul parses");

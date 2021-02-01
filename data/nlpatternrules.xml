@@ -2950,6 +2950,31 @@ The special variable "SPEAKER" is pre-bound with the ID of the speaker agent.
     		   		 #derefQuery(CO, QUERY_VARIABLE, QUERY)"
     		   priority="200"/>
 
+	<NLPattern name="q.action-see2-ever"
+			   head="perf.q.action(LISTENER, V:verb.see(SUBJECT, QUERY_V), #and(QUERY_EXP, time.ever(QUERY_V)), [number.1])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.have'[symbol], N, P, T) nounPhrase(X, N, P, C) 'ever' verb('verb.see'[symbol], N2, P2, [participle-tense]) 
+			   		 (nounPhrase(X3, [singular], P3, C3)|nounPhrase(X3, [uncountable], P3, C3)) ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefQuery(C3, QUERY_V, QUERY_EXP)"
+			   priority="200"/>
+
+	<NLPattern name="q.action-see2-time-interval"
+			   head="perf.q.action(LISTENER, V:verb.see(SUBJECT, QUERY_V), #and(QUERY_EXP, #cons(TIMEADV:[time], QUERY_V)), [number.1])"
+			   body="[(nounPhraseNoDeterminer(X_L, [singular], [second-person], C_L) |
+    		           nounPhraseNoDeterminer(X_L, [singular], [third-person], C_L)) #derefFromContext(C_L, LISTENER) [',']]
+			   		 [(conjunction-contrast()|conjunction-consequence()|'ok'|'okay'|'great'|'and'|'alright'|'hey'|'please') [('!'|',')]]
+			   		 verb('verb.do'[symbol], N, P, T) nounPhrase(X, N, P, C) verb('verb.see'[symbol], N2, P2, [infinitive-tense]) 
+			   		 (nounPhrase(X3, [singular], P3, C3)|nounPhrase(X3, [uncountable], P3, C3))
+			   		 adverb(TIMEADV)
+			   		 ('!'|'?')*
+					 #derefFromContext(C, SUBJECT)
+			   		 #derefQuery(C3, QUERY_V, QUERY_EXP)"
+			   priority="200"/>
+
+
     <!-- Patterns for performative "perf.q.whereis" (for where are objects or characters)-->
     <NLPattern name="q.whereis-obj"
 			   head="perf.q.whereis(LISTENER, SUBJECT)"

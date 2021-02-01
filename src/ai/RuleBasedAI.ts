@@ -1407,6 +1407,10 @@ class RuleBasedAI {
 				}
 
 				if (needsInference) {
+					// Extract the time terms:
+					// ...
+
+
 					let forAlls:Term[] = [];
 					if (perf2.attributes.length >= 5) {
 						forAlls = NLParser.termsInList((<TermTermAttribute>(perf2.attributes[4])).term, "#and");
